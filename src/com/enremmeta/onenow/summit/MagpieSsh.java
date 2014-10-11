@@ -1,0 +1,53 @@
+package com.enremmeta.onenow.summit;
+
+import java.io.File;
+import java.security.PublicKey;
+
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Command;
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
+import net.schmizz.sshj.userauth.keyprovider.PKCS8KeyFile;
+import net.schmizz.sshj.userauth.method.AuthPublickey;
+
+public class MagpieSsh {
+
+	public MagpieSsh() {
+		super();
+		ssh = new SSHClient();
+	}
+
+	public static final Command exec(String cmdStr) throws Exception {
+		MagpieSsh ssh = new MagpieSsh();
+		ssh.connect();
+		Session session = ssh.getSession();
+		final Command cmd = session.exec(cmdStr);
+		return cmd;
+	}
+
+	private SSHClient ssh;
+
+	private Session session;
+
+	public void connect() throws Exception {
+		ssh.loadKnownHosts();
+		ssh.addHostKeyVerifier(new HostKeyVerifier() {
+			// Danger :)
+			public boolean verify(String hostname, int port, PublicKey key) {
+				return true;
+			}
+		});
+		ssh.connect("ec2-54-235-51-113.compute-1.amazonaws.com");
+
+		PKCS8KeyFile keyFile = new PKCS8KeyFile();
+		keyFile.init(new File("/Users/admin/.ssh/enrado2.pem"));
+		ssh.auth("hadoop", new AuthPublickey(keyFile));
+
+		session = ssh.startSession();
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+}
