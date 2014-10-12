@@ -5,11 +5,12 @@ public class HiveLogParser implements OutputParser {
 	static String PARSING_COMMAND_MARKER_1 = "Parsing command: ";
 	static String SUBMIT_JOB_MARKER_1 = "Submitting tokens for job: ";
 
-	public HiveLogParser() {
-		// TODO Auto-generated constructor stub
+	public HiveLogParser(boolean active) {
+		this.active = active;
 	}
 
-	
+	private boolean active;
+
 	private MagpieSsh ssh = new MagpieSsh();
 
 	public void handle(String s) {
@@ -29,15 +30,16 @@ public class HiveLogParser implements OutputParser {
 		}
 		String job = null;
 		if (s.indexOf(SUBMIT_JOB_MARKER_1) > -1) {
-			 job = s.substring(s.indexOf("job_"), s.lastIndexOf("\n"));
+			job = s.substring(s.indexOf("job_"), s.lastIndexOf("\n"));
 			Statistics.getInstance().setJob(job);
 			Statistics.getInstance().getJobs().add(job);
 			// Do we know this job or not?
 			// Let's fake this...
-			if (Statistics.getInstance().getJobs().size() == 1) {
+			if (!active || Statistics.getInstance().getJobs().size() == 1) {
 				// Let this job run...
-				
+
 			} else {
+
 				// Kill it
 				try {
 					MagpieSsh.exec("echo I will kill job " + job + " | wall");

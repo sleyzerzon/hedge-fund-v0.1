@@ -6,6 +6,7 @@ import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -31,7 +32,7 @@ public class Yak {
 		return jdbc;
 	}
 
-	private static Yak getInstance() {
+	public static Yak getInstance() {
 		return yak;
 	}
 
@@ -49,6 +50,7 @@ public class Yak {
 
 	public void readPricing() throws MalformedURLException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 		String jsonp = IOUtils.toString(new URL(
 				"https://a0.awsstatic.com/pricing/1.0.19/ec2/linux-od.min.js")
 				.openStream());
