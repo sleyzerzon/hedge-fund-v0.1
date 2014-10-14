@@ -78,7 +78,6 @@ public class EmrFacade {
 		InstanceGroup taskGroup = getTaskGroup(clusterId);
 		if (taskGroup == null) {
 			return 0;
-
 		}
 		String instType = taskGroup.getInstanceType();
 		int instCount = taskGroup.getRunningInstanceCount();
