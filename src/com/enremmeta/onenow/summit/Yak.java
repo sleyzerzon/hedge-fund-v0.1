@@ -9,11 +9,7 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * Controls the surface over Olaine. Also, related to Crow.
- * 
- * @see http://en.wikipedia.org/wiki/Olaine
- */
+
 public class Yak {
 
 	private Yak() {
