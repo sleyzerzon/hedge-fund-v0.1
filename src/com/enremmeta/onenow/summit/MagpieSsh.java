@@ -12,13 +12,16 @@ import net.schmizz.sshj.userauth.method.AuthPublickey;
 
 public class MagpieSsh {
 
-	public MagpieSsh() {
+	public MagpieSsh(String keyFile) {
 		super();
 		ssh = new SSHClient();
+		this.keyFile = keyFile;
 	}
+	
+	private String keyFile;
 
-	public static final Command exec(String cmdStr) throws Exception {
-		MagpieSsh ssh = new MagpieSsh();
+	public static final Command exec(String keyFile, String cmdStr) throws Exception {
+		MagpieSsh ssh = new MagpieSsh(keyFile);
 		ssh.connect();
 		Session session = ssh.getSession();
 		final Command cmd = session.exec(cmdStr);
@@ -40,7 +43,7 @@ public class MagpieSsh {
 		ssh.connect("ec2-54-235-51-113.compute-1.amazonaws.com");
 
 		PKCS8KeyFile keyFile = new PKCS8KeyFile();
-		keyFile.init(new File("/Users/admin/.ssh/enrado2.pem"));
+		keyFile.init(new File(this.keyFile));
 		ssh.auth("hadoop", new AuthPublickey(keyFile));
 
 		session = ssh.startSession();

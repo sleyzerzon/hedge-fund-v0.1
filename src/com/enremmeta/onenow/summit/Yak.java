@@ -35,7 +35,7 @@ public class Yak {
 	private static final Yak yak = new Yak();
 
 	public static void main(String[] argv) throws Exception {
-		getInstance().go(argv[0], argv[1]);
+		getInstance().go(argv[0], argv[1], argv[2]);
 	}
 
 	private AwsPricing awsPricing;
@@ -56,16 +56,20 @@ public class Yak {
 		awsPricing = mapper.readValue(jsonp, AwsPricing.class);
 	}
 
-	private void go(String access, String secret) throws Exception {
+	private void go(String access, String secret, String keyFile) throws Exception {
 		readPricing();
 		
 		emr = new EmrFacade(access, secret, "j-2XGI9OQZRY6QG");
 
 		// emr.resize("m3.2xlarge", 3);
 
-		HiveLogParser parser = new HiveLogParser();
+		// Parse old stuff.
+		HiveLogParser parser0 = new HiveLogParser(false);
+		
+		
+		HiveLogParser parser1 = new HiveLogParser(true);
 		TailHair tailHair = new TailHair(new MagpieSsh(),
-				"/mnt/var/log/apps/hive.log", parser);
+				"/mnt/var/log/apps/hive.log", parser1);
 		tailHair.start();
 
 		HiveServer hs = new HiveServer(new MagpieSsh());
