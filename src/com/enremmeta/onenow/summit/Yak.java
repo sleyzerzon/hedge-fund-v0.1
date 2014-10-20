@@ -73,10 +73,10 @@ public class Yak {
 		tailHair.start();
 
 		HiveServer hs = new HiveServer(new MagpieSsh(keyFile));
-		hs.start();
+	//	hs.start();
 
 		jdbc = new JdbcFacade();
-		jdbc.connect();
+		//jdbc.connect();
 
 		// hs.join();
 
