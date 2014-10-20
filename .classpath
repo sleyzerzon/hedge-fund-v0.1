@@ -26,6 +26,5 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/TCLIServiceClient.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sshj"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

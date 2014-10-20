@@ -107,8 +107,8 @@ public class EmrFacade {
 
 				}
 			}
-			return -2;
 		}
+		return -1;
 	}
 
 	public void resize(String type, int count, String bid) {

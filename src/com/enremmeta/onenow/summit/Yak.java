@@ -64,15 +64,15 @@ public class Yak {
 		// emr.resize("m3.2xlarge", 3);
 
 		// Parse old stuff.
-		HiveLogParser parser0 = new HiveLogParser(false);
+		HiveLogParser parser0 = new HiveLogParser(keyFile, false);
 		
 		
-		HiveLogParser parser1 = new HiveLogParser(true);
-		TailHair tailHair = new TailHair(new MagpieSsh(),
+		HiveLogParser parser1 = new HiveLogParser(keyFile, true);
+		TailHair tailHair = new TailHair(new MagpieSsh(keyFile),
 				"/mnt/var/log/apps/hive.log", parser1);
 		tailHair.start();
 
-		HiveServer hs = new HiveServer(new MagpieSsh());
+		HiveServer hs = new HiveServer(new MagpieSsh(keyFile));
 		hs.start();
 
 		jdbc = new JdbcFacade();

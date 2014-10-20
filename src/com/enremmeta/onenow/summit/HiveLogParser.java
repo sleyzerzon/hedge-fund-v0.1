@@ -5,13 +5,18 @@ public class HiveLogParser implements OutputParser {
 	static String PARSING_COMMAND_MARKER_1 = "Parsing command: ";
 	static String SUBMIT_JOB_MARKER_1 = "Submitting tokens for job: ";
 
-	public HiveLogParser(boolean active) {
+	public HiveLogParser(String keyFile, boolean active) {
+		super();
 		this.active = active;
+		this.keyFile = keyFile;
+		this.ssh = new MagpieSsh(keyFile);
 	}
+
+	private String keyFile;
 
 	private boolean active;
 
-	private MagpieSsh ssh = new MagpieSsh();
+	private final MagpieSsh ssh;
 
 	public void handle(String s) {
 		Logger.log("Tail: " + s);
@@ -42,8 +47,10 @@ public class HiveLogParser implements OutputParser {
 
 				// Kill it
 				try {
-					MagpieSsh.exec("echo I will kill job " + job + " | wall");
-					MagpieSsh.exec("/home/hadoop/bin/hadoop job -kill " + job);
+					MagpieSsh.exec(keyFile, "echo I will kill job " + job
+							+ " | wall");
+					MagpieSsh.exec(keyFile,
+							"/home/hadoop/bin/hadoop job -kill " + job);
 
 				} catch (Exception e) {
 					e.printStackTrace();
