@@ -40,7 +40,7 @@ public class MagpieSsh {
 				return true;
 			}
 		});
-		ssh.connect("ec2-54-235-51-113.compute-1.amazonaws.com");
+		ssh.connect("54.81.12.30");
 
 		PKCS8KeyFile keyFile = new PKCS8KeyFile();
 		keyFile.init(new File(this.keyFile));
