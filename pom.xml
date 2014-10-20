@@ -18,6 +18,11 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>net.schmizz</groupId>
+			<artifactId>sshj</artifactId>
+			<version>0.4.1</version>
+		</dependency>
 
 
 		<dependency>
