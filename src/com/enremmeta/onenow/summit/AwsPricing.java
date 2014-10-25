@@ -9,6 +9,7 @@ public class AwsPricing {
 
 	public AwsPricing() {
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	private String vers;

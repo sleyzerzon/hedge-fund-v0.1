@@ -3,9 +3,6 @@ package com.enremmeta.onenow.summit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsRequest;
 import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsResult;
 import com.amazonaws.services.ec2.model.SpotInstanceRequest;
@@ -26,33 +23,26 @@ import com.amazonaws.services.elasticmapreduce.model.ModifyInstanceGroupsRequest
 import com.enremmeta.onenow.summit.AwsPricing.Region;
 import com.enremmeta.onenow.summit.AwsPricing.Size;
 
-public class EmrFacade {
-
-	private String access;
-	private String secret;
-	private String clusterId;
-
-	public EmrFacade(final String access, final String secret, String clusterId) {
-		super();
-		this.access = access;
-		this.secret = secret;
+public class EmrFacade extends AwsFacade {
+	
+	public EmrFacade(String access, String secret) {
+		this(access, secret, null);
+	}
+	
+	public EmrFacade(String access, String secret, String clusterId) {
+		super(access, secret);
 		this.clusterId = clusterId;
-		AWSCredentials creds = new AWSCredentials() {
-
-			public String getAWSSecretKey() {
-				return secret;
-			}
-
-			public String getAWSAccessKeyId() {
-				return access;
-			}
-		};
 		emr = new AmazonElasticMapReduceClient(creds);
-		cw = new AmazonCloudWatchClient(creds);
-		ec2 = new AmazonEC2Client(creds);
 	}
 
-	public InstanceGroup getTaskGroup(String clusterId) {
+	private final String clusterId;
+	protected final AmazonElasticMapReduceClient emr;
+
+	public AmazonElasticMapReduceClient getEmr() {
+		return emr;
+	}
+	
+	public InstanceGroup getTaskGroup() {
 		ListInstanceGroupsResult lsInstGrpRes = emr
 				.listInstanceGroups(new ListInstanceGroupsRequest()
 						.withClusterId(clusterId));
@@ -72,10 +62,8 @@ public class EmrFacade {
 		return taskGroup;
 	}
 
-	private String emrRegion = "us-east-1";
-
-	public int getTaskCost() {
-		InstanceGroup taskGroup = getTaskGroup(clusterId);
+	public int getTaskCost(String clusterId) {
+		InstanceGroup taskGroup = getTaskGroup();
 		if (taskGroup == null) {
 			return 0;
 		}
@@ -112,7 +100,7 @@ public class EmrFacade {
 	}
 
 	public void resize(String type, int count, String bid) {
-		InstanceGroup taskGroup = getTaskGroup(clusterId);
+		InstanceGroup taskGroup = getTaskGroup();
 		if (taskGroup != null) {
 			Logger.log("Resizing " + taskGroup.getId() + " to  " + 0);
 			InstanceGroupModifyConfig instGrpModCfg = new InstanceGroupModifyConfig(
@@ -154,9 +142,5 @@ public class EmrFacade {
 		 */
 
 	}
-
-	private AmazonCloudWatchClient cw;
-	private AmazonElasticMapReduceClient emr;
-	private AmazonEC2Client ec2;
 
 }

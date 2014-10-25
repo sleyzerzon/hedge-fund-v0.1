@@ -1,26 +1,30 @@
 package com.enremmeta.onenow.summit;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import net.schmizz.sshj.connection.channel.direct.Session.Command;
 
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 public class Yak {
+
+	public static final String HIVE_LOG_FILE = "/mnt/var/log/apps/hive.log";
 
 	private Yak() {
 		super();
 	}
 
-	public final EmrFacade getEmr() {
+	public final AwsFacade getEmr() {
 		return emr;
 	}
 
-	private EmrFacade emr;
+	private AwsFacade emr;
 
 	private JdbcFacade jdbc;
 
@@ -35,7 +39,7 @@ public class Yak {
 	private static final Yak yak = new Yak();
 
 	public static void main(String[] argv) throws Exception {
-		getInstance().go(argv[0], argv[1], argv[2]);
+		getInstance().go();
 	}
 
 	private AwsPricing awsPricing;
@@ -56,27 +60,48 @@ public class Yak {
 		awsPricing = mapper.readValue(jsonp, AwsPricing.class);
 	}
 
-	private void go(String access, String secret, String keyFile) throws Exception {
+	private void go() throws Exception {
 		readPricing();
-		
-		emr = new EmrFacade(access, secret, "j-2XGI9OQZRY6QG");
+		YakConfig config = Utils.readConfig();
+
+		Account acc = config.getAccounts().get(0);
+
+		emr = new EmrFacade(acc.getAws().getAccess(), acc.getAws().getSecret());
+		String keyFile = acc.getAws().getKeyPath();
 
 		// emr.resize("m3.2xlarge", 3);
 
 		// Parse old stuff.
 		HiveLogParser parser0 = new HiveLogParser(keyFile, false);
-		
-		
+		final Command cmd = MagpieSsh.exec(keyFile, "cat " + HIVE_LOG_FILE
+				+ ".*");
+		InputStream is = cmd.getInputStream();
+		while (true) {
+			int avail = is.available();
+
+			if (avail > 0) {
+				byte[] bs = new byte[avail];
+				if (bs.length == 1 && bs[0] == -1) {
+					break;
+				}
+				is.read(bs);
+				String s = new String(bs);
+				parser0.handle(s);
+			}
+
+		}
+		Logger.log("Done!");
+
 		HiveLogParser parser1 = new HiveLogParser(keyFile, true);
-		TailHair tailHair = new TailHair(new MagpieSsh(keyFile),
-				"/mnt/var/log/apps/hive.log", parser1);
+		TailHair tailHair = new TailHair(new MagpieSsh(keyFile), HIVE_LOG_FILE,
+				parser1);
 		tailHair.start();
 
 		HiveServer hs = new HiveServer(new MagpieSsh(keyFile));
-	//	hs.start();
+		// hs.start();
 
 		jdbc = new JdbcFacade();
-		//jdbc.connect();
+		// jdbc.connect();
 
 		// hs.join();
 

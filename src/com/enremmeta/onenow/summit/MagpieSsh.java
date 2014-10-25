@@ -24,6 +24,7 @@ public class MagpieSsh {
 		MagpieSsh ssh = new MagpieSsh(keyFile);
 		ssh.connect();
 		Session session = ssh.getSession();
+		
 		final Command cmd = session.exec(cmdStr);
 		return cmd;
 	}
@@ -45,7 +46,7 @@ public class MagpieSsh {
 		PKCS8KeyFile keyFile = new PKCS8KeyFile();
 		keyFile.init(new File(this.keyFile));
 		ssh.auth("hadoop", new AuthPublickey(keyFile));
-
+		
 		session = ssh.startSession();
 	}
 

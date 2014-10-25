@@ -2,7 +2,9 @@ package com.enremmeta.onenow.summit;
 
 public class HiveLogParser implements OutputParser {
 
-	static String PARSING_COMMAND_MARKER_1 = "Parsing command: ";
+	public static final String HIVE_LOG_DATE_FORMAT = "2014-10-21 00:19:46,330";
+
+	static String PARSING_COMMAND_MARKER_1 = "]: parse.ParseDriver (ParseDriver.java:parse(185)) - Parsing command: ";
 	static String SUBMIT_JOB_MARKER_1 = "Submitting tokens for job: ";
 
 	public HiveLogParser(String keyFile, boolean active) {
@@ -16,13 +18,31 @@ public class HiveLogParser implements OutputParser {
 
 	private boolean active;
 
+	private String state = "";
+
 	private final MagpieSsh ssh;
 
+	/**
+	 * Example:
+	 * 
+	 */
 	public void handle(String s) {
+		s = state + s;
+		this.state = "";
+
+		String lines[] = s.split("\n");
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
+			if (line.length() < HIVE_LOG_DATE_FORMAT.length()) {
+				// We are in some state...
+			}
+		}
+
 		Logger.log("Tail: " + s);
 		String hql = null;
 		if (s.indexOf(PARSING_COMMAND_MARKER_1) > -1) {
-			hql = s.substring(s.indexOf(PARSING_COMMAND_MARKER_1)
+			String threadName = hql = s.substring(s
+					.indexOf(PARSING_COMMAND_MARKER_1)
 					+ PARSING_COMMAND_MARKER_1.length());
 			hql = hql.substring(0,
 					hql.indexOf("INFO  [main]: parse.ParseDriver"));
