@@ -43,18 +43,19 @@ public class OpenTsdbConnection implements Runnable {
 		send(System.currentTimeMillis(), metric, value, tags);
 	}
 
-	public void send(long timestamp, String metric, Number value,
+	public void send(long timestamp, String metric, Object value,
 			String... tags) throws IOException {
-		String msg = "put " + timestamp + " " + metric + " " + value;
+		String msg = "put " + metric + " " + timestamp + " " + value;
 		for (String tag : tags) {
 			msg += " " + tag;
 		}
 		msg += "\n";
+		Logger.log(msg);
 		os.write(msg.getBytes());
 		os.flush();
 	}
 
-	public void send(long timestamp, String metric, Number value,
+	public void send(long timestamp, String metric, Object value,
 			Map<String, String> tags) throws IOException {
 		String tagArr[] = new String[tags.keySet().size()];
 		int i = 0;

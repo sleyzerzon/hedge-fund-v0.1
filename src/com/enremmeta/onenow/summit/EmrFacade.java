@@ -20,29 +20,48 @@ import com.amazonaws.services.elasticmapreduce.model.ListInstancesRequest;
 import com.amazonaws.services.elasticmapreduce.model.ListInstancesResult;
 import com.amazonaws.services.elasticmapreduce.model.MarketType;
 import com.amazonaws.services.elasticmapreduce.model.ModifyInstanceGroupsRequest;
-import com.enremmeta.onenow.summit.AwsPricing.Region;
+import com.enremmeta.onenow.summit.AwsPricing.RegionPricing;
 import com.enremmeta.onenow.summit.AwsPricing.Size;
 
 public class EmrFacade extends AwsFacade {
-	
+
 	public EmrFacade(String access, String secret) {
 		this(access, secret, null);
 	}
-	
+
 	public EmrFacade(String access, String secret, String clusterId) {
 		super(access, secret);
 		this.clusterId = clusterId;
 		emr = new AmazonElasticMapReduceClient(creds);
 	}
 
-	private final String clusterId;
+	private String clusterId;
+
+	public String getClusterId() {
+		return clusterId;
+	}
+
+	public void setClusterId(String clusterId) {
+		this.clusterId = clusterId;
+	}
+
 	protected final AmazonElasticMapReduceClient emr;
 
 	public AmazonElasticMapReduceClient getEmr() {
 		return emr;
 	}
-	
+
+	public List<Instance> getTaskInstances() {
+		ListInstancesRequest lsInstReq = new ListInstancesRequest()
+				.withClusterId(clusterId).withInstanceGroupTypes("TASK");
+		ListInstancesResult lsInstRes = emr.listInstances(lsInstReq);
+		List<Instance> instances = lsInstRes.getInstances();
+		return instances;
+
+	}
+
 	public InstanceGroup getTaskGroup() {
+
 		ListInstanceGroupsResult lsInstGrpRes = emr
 				.listInstanceGroups(new ListInstanceGroupsRequest()
 						.withClusterId(clusterId));
@@ -71,8 +90,8 @@ public class EmrFacade extends AwsFacade {
 		int instCount = taskGroup.getRunningInstanceCount();
 		if (taskGroup.getMarket().equalsIgnoreCase(MarketType.ON_DEMAND.name())) {
 			AwsPricing awsPricing = Yak.getInstance().getAwsPricing();
-			Region region = awsPricing.getConfig().findRegion(emrRegion);
-			Size size = region.findSize(instType);
+			RegionPricing regionPricing = awsPricing.getConfig().findRegion(emrRegion);
+			Size size = regionPricing.findSize(instType);
 			size.getValueColumns().get(0).getPrices().getUsd();
 		} else {
 			ListInstancesResult lsInstRes = emr
@@ -109,9 +128,11 @@ public class EmrFacade extends AwsFacade {
 					.withInstanceGroups(instGrpModCfg));
 		}
 		InstanceGroupConfig instGrpCfg = new InstanceGroupConfig("TASK", type,
-				count).withName("OneNowTask").withMarket(MarketType.SPOT)
-				.withBidPrice("0.4");
-
+				count).withName("OneNowTask");
+		if (bid != null) {
+			instGrpCfg = instGrpCfg.withMarket(MarketType.SPOT).withBidPrice(
+					"0.4");
+		}
 		AddInstanceGroupsResult addInstGrpRes = emr
 				.addInstanceGroups(new AddInstanceGroupsRequest()
 						.withJobFlowId(clusterId)
@@ -120,23 +141,17 @@ public class EmrFacade extends AwsFacade {
 
 		/*
 		 * ResizeJobFlowStep rjfStep = new ResizeJobFlowStep()
-		 * 
 		 * .withResizeAction( new AddInstanceGroup().withInstanceGroup("task")
 		 * .withInstanceCount(10) .withInstanceType("m1.small"))
 		 * .withOnArrested(OnArrested.Continue)
 		 * .withOnFailure(OnFailure.Continue); HadoopJarStepConfig hjsConfig =
-		 * rjfStep.toHadoopJarStepConfig();
-		 * 
-		 * StepConfig sConfig = new StepConfig("Resize", hjsConfig);
-		 * 
-		 * AddJobFlowStepsResult ajfsRes = emr .addJobFlowSteps(new
-		 * AddJobFlowStepsRequest("") .withSteps(sConfig)); String stepId =
-		 * ajfsRes.getStepIds().get(0);
+		 * rjfStep.toHadoopJarStepConfig(); StepConfig sConfig = new
+		 * StepConfig("Resize", hjsConfig); AddJobFlowStepsResult ajfsRes = emr
+		 * .addJobFlowSteps(new AddJobFlowStepsRequest("") .withSteps(sConfig));
+		 * String stepId = ajfsRes.getStepIds().get(0);
 		 * Logger.log(ajfsRes.getStepIds().toString()); String state =
-		 * "PENDING";
-		 * 
-		 * while (state.equals("PENDING")) { DescribeStepResult dsRes = emr
-		 * .describeStep(new DescribeStepRequest().withClusterId(
+		 * "PENDING"; while (state.equals("PENDING")) { DescribeStepResult dsRes
+		 * = emr .describeStep(new DescribeStepRequest().withClusterId(
 		 * "j-2XGI9OQZRY6QG").withStepId(stepId)); state =
 		 * dsRes.getStep().getStatus().getState(); Logger.log(state); }
 		 */

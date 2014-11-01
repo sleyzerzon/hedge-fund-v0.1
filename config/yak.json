@@ -4,8 +4,7 @@
    "accounts" : [ { "name" : "muchado", 
                  "aws" : { "access" :  "AKIAJODKZK2XRSAZ2BQQ",
   			               "secret" :  "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",
-  			               "keyPath" : "/Users/admin/.ssh/enrado2.pem",
-  			               "emrHosts" : ["ec2-54-237-158-205.compute-1.amazonaws.com"]
+  			               "keyPath" : "/Users/admin/.ssh/adotube01.pem"
   			              }
   			      }
   			   ]

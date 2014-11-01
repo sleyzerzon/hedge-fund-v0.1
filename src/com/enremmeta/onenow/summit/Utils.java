@@ -22,6 +22,6 @@ public class Utils {
 
 	public static final YakConfig readConfig() throws JsonParseException,
 			JsonMappingException, IOException {
-		return readConfig("./config/yak.conf");
+		return readConfig("./config/yak.json");
 	}
 }

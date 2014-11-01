@@ -35,23 +35,26 @@ public class AwsPricing {
 	public static class Config {
 		private String rate;
 		private List<String> valueColumns;
-		private List<Region> regions;
+		private List<RegionPricing> regionPricings;
 
-		public Region findRegion(String r) {
-			for (Region region : regions) {
-				if (region.getRegion().equals(r)) {
-					return region;
+		public RegionPricing findRegion(String r) {
+			if (r.equals("us-east-1")) {
+				r = "us-east";
+			}
+			for (RegionPricing regionPricing : regionPricings) {
+				if (regionPricing.getRegion().equals(r)) {
+					return regionPricing;
 				}
 			}
-			return null;
+			throw new RuntimeException("Region not found: " + r);
 		}
 
-		public List<Region> getRegions() {
-			return regions;
+		public List<RegionPricing> getRegions() {
+			return regionPricings;
 		}
 
-		public void setRegions(List<Region> regions) {
-			this.regions = regions;
+		public void setRegions(List<RegionPricing> regionPricings) {
+			this.regionPricings = regionPricings;
 		}
 
 		public String getRate() {
@@ -82,7 +85,7 @@ public class AwsPricing {
 
 	}
 
-	public static class Region {
+	public static class RegionPricing {
 		public String toString() {
 			return region;
 		}
@@ -235,13 +238,13 @@ public class AwsPricing {
 
 	public static class Prices {
 		@JsonProperty("USD")
-		private float usd;
+		private String usd;
 
-		public float getUsd() {
+		public String getUsd() {
 			return usd;
 		}
 
-		public void setUsd(float usd) {
+		public void setUsd(String usd) {
 			this.usd = usd;
 		}
 	}
