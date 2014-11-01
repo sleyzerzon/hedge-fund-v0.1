@@ -81,6 +81,7 @@ public class SpendPoller {
 				boolean spot = taskGroup.getMarket().equalsIgnoreCase("SPOT");
 				String instType = taskGroup.getInstanceType();
 				String state = "unknown";
+				String resInstReasonCode = "";
 				for (Instance inst : instances) {
 					InstanceStatus status = inst.getStatus();
 					InstanceTimeline timeline = status.getTimeline();
@@ -115,6 +116,7 @@ public class SpendPoller {
 							Logger.log(stateReason.getMessage());
 						}
 						state = resInst.getState().getName();
+						resInstReasonCode = resInst.getStateReason().getCode();
 					}
 					List<Tick> curTicks = ticks.get(ec2Id);
 					if (curTicks == null) {
@@ -142,9 +144,18 @@ public class SpendPoller {
 							DateTime lastTime = curTicks.get(
 									curTicks.size() - 1).getTime();
 							DateTime nextTime = lastTime.plusHours(1);
-							if (state.equals("terminated")
+							if ((state.equals("terminated") || state
+									.equals("unknown"))
 									&& nextTime.isAfter(endTime)) {
 								break;
+							}
+							switch (state) {
+							case "terminated":
+							case "unknown":
+							case "running":
+								break;
+							default:
+								Logger.log(state);
 							}
 							if (nextTime.isBefore(now)) {
 								addTick(curTicks, new Tick("onenow", cluster,
@@ -156,7 +167,15 @@ public class SpendPoller {
 						}
 					} else {
 						if (resInst == null) {
-							throw new RuntimeException();
+							switch (taskGroup.getStatus().getState()) {
+							case "PROVISIONING":
+							case "RESIZING":
+								break;
+							default:
+								Logger.log(taskGroup.getStatus().getState());
+							}
+							
+							continue;
 						}
 						String spotRequestId = resInst
 								.getSpotInstanceRequestId();
@@ -184,8 +203,7 @@ public class SpendPoller {
 											&& nextTime.isAfter(endTime)) {
 										break;
 									}
-									String cost = spotInstReq
-											.getSpotPrice();
+									String cost = spotInstReq.getSpotPrice();
 									if (nextTime.isBefore(now)) {
 										addTick(curTicks, new Tick("onenow",
 												cluster, region, az, ec2Id,
@@ -195,6 +213,8 @@ public class SpendPoller {
 										break;
 									}
 								}
+							} else {
+								Logger.log("SPOT CODE: " + code);
 							}
 
 						}
