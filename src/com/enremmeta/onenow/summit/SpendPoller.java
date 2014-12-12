@@ -78,6 +78,8 @@ public class SpendPoller {
 
 				List<Instance> instances = emr.getTaskInstances();
 				InstanceGroup taskGroup = emr.getTaskGroup();
+				String tgState = taskGroup.getStatus().getState();
+
 				boolean spot = taskGroup.getMarket().equalsIgnoreCase("SPOT");
 				String instType = taskGroup.getInstanceType();
 				String state = "unknown";
@@ -115,8 +117,13 @@ public class SpendPoller {
 						if (stateReason != null) {
 							Logger.log(stateReason.getMessage());
 						}
-						state = resInst.getState().getName();
-						resInstReasonCode = resInst.getStateReason().getCode();
+						if (resInst != null) {
+							state = resInst.getState().getName();
+							if (resInst.getStateReason() != null) {
+								resInstReasonCode = resInst.getStateReason()
+										.getCode();
+							}
+						}
 					}
 					List<Tick> curTicks = ticks.get(ec2Id);
 					if (curTicks == null) {
@@ -166,17 +173,44 @@ public class SpendPoller {
 							}
 						}
 					} else {
+
+						Logger.log("Instance "
+								+ inst.getId()
+								+ ": "
+								+ inst.getStatus().getState()
+								+ "; Reservation: "
+								+ (resInst == null ? "[]" : resInst
+										.getInstanceType()));
 						if (resInst == null) {
-							switch (taskGroup.getStatus().getState()) {
+
+							switch (tgState) {
 							case "PROVISIONING":
 							case "RESIZING":
 								break;
+							// case "RUNNING":
+							// throw new RuntimeException("WTF state is "
+							// + tgState + " but no resInst???");
 							default:
 								Logger.log(taskGroup.getStatus().getState());
 							}
-							
+
 							continue;
 						}
+						Logger.log("Instance " + inst.getId() + ": "
+								+ inst.getStatus().getState());
+						switch (inst.getStatus().getState()) {
+
+						case "PROVISIONING":
+						case "RESIZING":
+							break;
+						case "RUNNING":
+							break;
+						case "TERMINATED":
+							break;
+						default:
+							break;
+						}
+
 						String spotRequestId = resInst
 								.getSpotInstanceRequestId();
 						DescribeSpotInstanceRequestsRequest descSpotInstReq = new DescribeSpotInstanceRequestsRequest()
