@@ -4,21 +4,21 @@ import java.util.List;
 
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 
-public class SummitWorkflow  implements SummitWorkflowIfc {
+public class SummitWorkflow implements SummitWorkflowIfc {
 
 	public SummitWorkflow() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public void fetchPrices() {
-		
+
 	}
-	
-	private CloudLister cloudLister = new SforceCloudLister();
+
+	private CloudListerClient cloudLister = new CloudListerClientImpl();
 
 	@Override
 	public void mainFlow() {
-		List<String> clouds = cloudLister.getCloudList();
+		Promise<List<String>> clouds = cloudLister.getCloudList();
 		System.out.println(clouds);
 	}
 }

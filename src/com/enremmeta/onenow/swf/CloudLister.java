@@ -12,8 +12,9 @@ import com.enremmeta.onenow.summit.Constants;
 @ActivityRegistrationOptions(defaultTaskScheduleToStartTimeoutSeconds = 300,
                              defaultTaskStartToCloseTimeoutSeconds = 10,
                              defaultTaskList=Constants.AWS_SWF_TASK_LIST_NAME)
-@Activities(version="5.0")
+@Activities(version="6.0")
 public interface CloudLister {
 	@Asynchronous
 	List<String> getCloudList();
 }
+ 

@@ -9,6 +9,7 @@ import com.enremmeta.onenow.summit.Constants;
 @WorkflowRegistrationOptions(defaultExecutionStartToCloseTimeoutSeconds = 3600, defaultTaskList = Constants.AWS_SWF_TASK_LIST_NAME)
 public interface SummitWorkflowIfc {
 
-	@Execute(version = "5.0")
+	@Execute(version = "6.0")
 	void mainFlow();
 }
+  

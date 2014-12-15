@@ -29,10 +29,10 @@ public class YakSwfStarter {
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 		StartWorkflowExecutionRequest swer = new StartWorkflowExecutionRequest()
 				.withDomain(Constants.AWS_SWF_DOMAIN)
-				.withWorkflowId("39068@Gregory-Golberg-Macbook-Air.local")
+				.withWorkflowId("40283@Gregory-Golberg-Macbook-Air.local")
 				.withWorkflowType(
 						new WorkflowType().withName("SummitWorkflowIfc.mainFlow").withVersion(
-								"5.0"));
+								"6.0"));
 		Run run = service.startWorkflowExecution(swer);
 		System.out.println(run.getRunId());
 	}
