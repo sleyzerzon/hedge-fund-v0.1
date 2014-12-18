@@ -8,6 +8,7 @@ public class Constants {
 	public static final String AWS_SWF_DOMAIN = "summityak";
 	public static final String AWS_SWF_TASK_LIST_NAME = "SummitYakTaskList";
 
+	public static final String AWS_SWF_VERSION = "8.0";
 	public Constants() {
 		// TODO Auto-generated constructor stub
 	}

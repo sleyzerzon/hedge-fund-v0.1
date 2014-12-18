@@ -29,7 +29,7 @@ public class YakWorkflowWorker {
 
 		WorkflowWorker wfw = new WorkflowWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		wfw.addWorkflowImplementationType(SummitWorkflow.class);
+		wfw.addWorkflowImplementationType(SummitWorkflowImpl.class);
 		wfw.start();
 		System.out.println(wfw.getIdentity());
 

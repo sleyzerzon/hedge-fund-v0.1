@@ -1,24 +1,14 @@
 package com.enremmeta.onenow.swf;
 
-import java.util.List;
+import com.amazonaws.services.simpleworkflow.flow.annotations.Execute;
+import com.amazonaws.services.simpleworkflow.flow.annotations.Workflow;
+import com.amazonaws.services.simpleworkflow.flow.annotations.WorkflowRegistrationOptions;
+import com.enremmeta.onenow.summit.Constants;
 
-import com.amazonaws.services.simpleworkflow.flow.core.Promise;
+@Workflow
+@WorkflowRegistrationOptions(defaultTaskStartToCloseTimeoutSeconds = 3600, defaultExecutionStartToCloseTimeoutSeconds = 3600, defaultTaskList = Constants.AWS_SWF_TASK_LIST_NAME)
+public interface SummitWorkflow {
 
-public class SummitWorkflow implements SummitWorkflowIfc {
-
-	public SummitWorkflow() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public void fetchPrices() {
-
-	}
-
-	private CloudListerClient cloudLister = new CloudListerClientImpl();
-
-	@Override
-	public void mainFlow() {
-		Promise<List<String>> clouds = cloudLister.getCloudList();
-		System.out.println(clouds);
-	}
+	@Execute(version = Constants.AWS_SWF_VERSION)
+	public void mainFlow();
 }

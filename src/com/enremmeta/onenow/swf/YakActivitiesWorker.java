@@ -27,8 +27,9 @@ public class YakActivitiesWorker {
 
 		ActivityWorker aw = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		aw.addActivitiesImplementation(new SforceCloudLister());
+		aw.addActivitiesImplementation(new CloudListerImpl());
 		aw.start();
+		System.out.println(aw.getIdentity());
 	}
 
 }

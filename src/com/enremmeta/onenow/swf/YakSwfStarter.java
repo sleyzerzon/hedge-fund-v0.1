@@ -5,7 +5,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
-import com.amazonaws.services.simpleworkflow.flow.WorkflowWorker;
 import com.amazonaws.services.simpleworkflow.model.Run;
 import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
 import com.amazonaws.services.simpleworkflow.model.WorkflowType;
@@ -27,13 +26,10 @@ public class YakSwfStarter {
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
-		StartWorkflowExecutionRequest swer = new StartWorkflowExecutionRequest()
-				.withDomain(Constants.AWS_SWF_DOMAIN)
-				.withWorkflowId("40283@Gregory-Golberg-Macbook-Air.local")
-				.withWorkflowType(
-						new WorkflowType().withName("SummitWorkflowIfc.mainFlow").withVersion(
-								"6.0"));
-		Run run = service.startWorkflowExecution(swer);
-		System.out.println(run.getRunId());
+		SummitWorkflowClientExternalFactory factory = new SummitWorkflowClientExternalFactoryImpl(
+				service, Constants.AWS_SWF_DOMAIN);
+		SummitWorkflowClientExternal client = factory.getClient();
+		client.mainFlow();
+
 	}
 }
