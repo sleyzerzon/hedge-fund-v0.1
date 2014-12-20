@@ -14,13 +14,12 @@ public class CloudListerImpl implements CloudLister {
 	}
 	
 	@Override
-	public List<AccountCloud> getCloudList() {
-		setCloudList();
+	public List<AccountCloud> getCloudList() {  // Connect to Salesforce: read list of clouds
 		return clouds;
 	}
 	
 	@Override
-	public void setCloudList() { // Connect to Salesforce here: get list of clouds
+	public void setCloudList() { // Connect to Salesforce here: write list of clouds
 		
 	}
 	
@@ -29,12 +28,5 @@ public class CloudListerImpl implements CloudLister {
 		System.out.println("Clouds:" + cloudList);
 		return cloudList;
 	}
-	
-
-//	@Override
-//	public List<Integer> getPriceData(String cloud) {
-//		return Arrays.asList(new Integer[] {1,2,3,4});
-//	}
-
 	
 }
