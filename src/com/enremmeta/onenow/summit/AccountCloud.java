@@ -2,12 +2,15 @@ package com.enremmeta.onenow.summit;
 
 import java.util.List;
 
-public class AWSAccount {
+import com.enremmeta.onenow.swf.AccountCloudEnum;
 
-	public AWSAccount() {
-		// TODO Auto-generated constructor stub
+public class AccountCloud {
+
+	Enum provider;
+	
+	public AccountCloud() {
+		this.provider = AccountCloudEnum.AWS;
 	}
-
 	
 	private String secret;
 	private String access;

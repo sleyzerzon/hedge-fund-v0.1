@@ -64,10 +64,10 @@ public class Yak {
 	awsPricing = readPricing();
 	YakConfig config = Utils.readConfig();
 
-	Account acc = config.getAccounts().get(0);
+	CustomerAccount acc = config.getAccounts().get(0);
 
-	emr = new EmrFacade(acc.getAws().getAccess(), acc.getAws().getSecret());
-	String keyFile = acc.getAws().getKeyPath();
+	emr = new EmrFacade(acc.getCloud().getAccess(), acc.getCloud().getSecret());
+	String keyFile = acc.getCloud().getKeyPath();
 
 	// emr.resize("m3.2xlarge", 3);
 
