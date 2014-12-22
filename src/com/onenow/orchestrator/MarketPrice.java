@@ -10,16 +10,16 @@ public class MarketPrice {
 	}
 	
 	public void setInvestmentPrice(Investment investment, Double buyPrice, Double sellPrice) {
-		getPrices().put(getLookupKey(investment, InvestmentTradeTypeEnum.BUY), buyPrice);
-		getPrices().put(getLookupKey(investment, InvestmentTradeTypeEnum.SELL), sellPrice);
+		getPrices().put(getLookupKey(investment, TradeType.BUY), buyPrice);
+		getPrices().put(getLookupKey(investment, TradeType.SELL), sellPrice);
 	}
 	
 	public Double getBuyPrice(Investment investment) {
-		return (Double) (getPrices().get(getLookupKey(investment, InvestmentTradeTypeEnum.BUY)));
+		return (Double) (getPrices().get(getLookupKey(investment, TradeType.BUY)));
 	}
 
 	public Double getSellPrice(Investment investment, Enum InvestmentTradeType) {
-		return (Double) (getPrices().get(getLookupKey(investment, InvestmentTradeTypeEnum.SELL)));
+		return (Double) (getPrices().get(getLookupKey(investment, TradeType.SELL)));
 	}
 
 	private String getLookupKey (Investment investment, Enum InvestmentTradeType) {

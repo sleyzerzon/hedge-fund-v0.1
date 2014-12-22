@@ -1,5 +1,5 @@
 package com.onenow.orchestrator;
 
-public enum InvestmentTypeEnum {
+public enum InvType {
 	STOCK, CALL, PUT
 }

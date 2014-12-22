@@ -19,16 +19,16 @@ public class Orchestrator {
 		// Trade trade = new Trade(
 		Date expDate = new Date();
 		expDate.setTime(1000000);
-		Investment call = marketPortfolio.getBestCall(apl, expDate, 405.00);
-		Investment put = marketPortfolio.getBestPut(apl, expDate, 390.00);
-		Investment stock = marketPortfolio.getBestStock(apl);
+		Investment stock = marketPortfolio.getBest(apl, InvType.STOCK);
+		Investment call = marketPortfolio.getBest(apl, InvType.CALL, expDate, 405.00);
+		Investment put = marketPortfolio.getBest(apl, InvType.PUT, expDate, 390.00);
 		
 		System.out.println(call.toString() + " @$ " + marketPrices.getBuyPrice(call));
 		put.toString();
 		stock.toString();
 
 		TradeTransaction transaction = new TradeTransaction();
-		Trade trade = new Trade(call, InvestmentTradeTypeEnum.BUY, 100, marketPrices);
+		Trade trade = new Trade(call, TradeType.BUY, 100, marketPrices);
 		transaction.addTrade(trade);
 		System.out.println("1 call contract " + trade.getNetCost() + " " + transaction.getNetCost());
 		
@@ -43,10 +43,10 @@ public class Orchestrator {
 		expDate.setTime(1000000);
 
 		Investment stock = new InvestmentStock(under);
-		Investment call1 = new InvestmentOption(under, InvestmentTypeEnum.CALL, expDate, 405.00);
-		Investment call2 = new InvestmentOption(under, InvestmentTypeEnum.CALL, expDate, 400.00);
-		Investment put1 = new InvestmentOption(under, InvestmentTypeEnum.PUT, expDate, 390.00);
-		Investment put2 = new InvestmentOption(under, InvestmentTypeEnum.PUT, expDate, 385.00);
+		Investment call1 = new InvestmentOption(under, InvType.CALL, expDate, 405.00);
+		Investment call2 = new InvestmentOption(under, InvType.CALL, expDate, 400.00);
+		Investment put1 = new InvestmentOption(under, InvType.PUT, expDate, 390.00);
+		Investment put2 = new InvestmentOption(under, InvType.PUT, expDate, 385.00);
 
 		port.addInvestment(stock);
 		port.addInvestment(call1);

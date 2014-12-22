@@ -20,7 +20,7 @@ public class Trade {
 	public void setNetCost() {	
 		Double cost = getQuantity() * getMarketPrice().getBuyPrice(getInvestment());
 		
-		if (getTradeType().equals(InvestmentTradeTypeEnum.BUY)) {
+		if (getTradeType().equals(TradeType.BUY)) {
 			this.netCost = -cost;
 		} else { 
 			this.netCost = cost;		
@@ -31,20 +31,10 @@ public class Trade {
 		return(this.netCost);
 	}
 	
-	public Double getNetStock() {	
-		if(getInvestment().getInvestmentType().equals(InvestmentTypeEnum.STOCK)) {
-			return(getNetCost());
-		} else return (0.0);
-	}
-	public Double getNetCall() {
-		if(getInvestment().getInvestmentType().equals(InvestmentTypeEnum.CALL)) {
+	public Double getNet(InvType invType) {
+		if(getInvestment().getInvestmentType().equals(invType)) {
 			return(getNetCost());
 		} else return (0.0);		
-	}
-	public Double getNetPut() {
-		if(getInvestment().getInvestmentType().equals(InvestmentTypeEnum.PUT)) {
-			return(getNetCost());
-		} else return (0.0);
 	}
 	
 	

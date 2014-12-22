@@ -16,55 +16,39 @@ public class Portfolio {
 		investments.add(inv);
 	}
 	
-	public Investment getBestStock(Underlying under) { // just grabs the first one for now
-		return(searchStock(under).get(0));
+	public Investment getBest(Underlying under, Enum invType) { // generic
+		return(search(under, invType).get(0));
 	}
-
-	public Investment getBestCall(Underlying under, Date expiration, Double strike) {
-		return(searchCalls(under, expiration, strike).get(0));
+	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // generic
+		return(search(under, invType, expiration, strike).get(0));
+	}
+			
+	public List<Investment> search(Underlying under, Enum invType) { // generic
+		List<Investment> foundInvestments = new ArrayList<Investment>();
+		for(Investment investment : getInvestments()) {
+			if(under.getTicker().equals(investment.getunderlying().getTicker()) &&
+				investment.getInvestmentType().equals(invType)) {
+				foundInvestments.add(investment);
+			}
+		}
+		return foundInvestments;
 	}
 	
-	public Investment getBestPut(Underlying under, Date expiration, Double strike) {
-		return(searchPuts(under, expiration, strike).get(0));
-	}
-		
-	public List<Investment> searchStock(Underlying under) {
+	public List<Investment> search(Underlying under, Enum invType, Date expiration, Double strike) {
 		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for(Investment investment : getStocks()) {
-			if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
-				investment.getInvestmentType()==InvestmentTypeEnum.STOCK) {
-				foundInvestments.add(investment);
-			} else { System.out.println("skip.."); }
+		for(Investment investment : getInvestments()) {
+			if(investment.getInvestmentType().equals(InvType.CALL) || investment.getInvestmentType().equals(InvType.PUT)) {					
+				InvestmentOption option = (InvestmentOption) investment;
+				if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
+					option.getExpirationDate().equals(expiration) && 
+					option.getStrikePrice().equals(strike)) {
+						foundInvestments.add(investment);
+				} 
+			}
 		}
 		return foundInvestments;						
 	}
 	
-	public List<Investment> searchCalls(Underlying under, Date expiration, Double strike) {
-		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for(Investment investment : getCalls()) {
-			InvestmentOption option = (InvestmentOption) investment;
-			if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
-				option.getExpirationDate().equals(expiration) && 
-				option.getStrikePrice().equals(strike)) {
-					foundInvestments.add(investment);
-			} else { System.out.println("skip.."); }
-		}
-		return foundInvestments;				
-	}
-
-	public List<Investment> searchPuts(Underlying under, Date expiration, Double strike) {
-		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for(Investment investment : getPuts()) {
-			InvestmentOption option = (InvestmentOption) investment;
-			if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
-				option.getExpirationDate().equals(expiration) && 
-				option.getStrikePrice().equals(strike)) {
-					foundInvestments.add(investment);
-			} else { System.out.println("skip.."); }
-		}
-		return foundInvestments;				
-	}
-
 	public String toString() {
 		String string = "";
 		for(Investment investment : investments) {
@@ -77,36 +61,6 @@ public class Portfolio {
 		return investments;
 	}
 	
-	public List<Investment> getStocks() {
-		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for(Investment investment : getInvestments()) {
-			if (investment.getInvestmentType()==InvestmentTypeEnum.STOCK) {
-				foundInvestments.add(investment);
-			}
-		}
-		return foundInvestments;							
-	}
-	
-	public List<Investment> getCalls() {
-		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for(Investment investment : getInvestments()) {
-			if (investment.getInvestmentType()==InvestmentTypeEnum.CALL) {
-				foundInvestments.add(investment);
-			}
-		}
-		return foundInvestments;									
-	}
-
-	public List<Investment> getPuts() {
-		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for(Investment investment : getInvestments()) {
-			if (investment.getInvestmentType()==InvestmentTypeEnum.PUT) {
-				foundInvestments.add(investment);
-			}
-		}
-		return foundInvestments;									
-	}
-
 	public void setInvestments(List<Investment> investments) {
 		this.investments = investments;
 	}

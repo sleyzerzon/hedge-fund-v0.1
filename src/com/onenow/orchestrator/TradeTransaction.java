@@ -29,36 +29,22 @@ public class TradeTransaction {
 	}
 	
 	public Double getNetCost() {
-		return (getNetStock()+getNetCall()+getNetPut());
-	}
-	public Double getNetStock() {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
-			if(trade.getInvestment().getInvestmentType().equals(InvestmentTypeEnum.STOCK)){
-				sum+=trade.getNetStock();
-			}
+			sum+=trade.getNetCost();
 		}
-		return sum;
+		return sum;		
 	}
-	public Double getNetCall() {
+	public Double getNetCost(InvType invType) {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
-			if(trade.getInvestment().getInvestmentType().equals(InvestmentTypeEnum.CALL)){
-				sum+=trade.getNetCall();
-				System.out.println("hit..." + trade.getNetCall());
+			if(trade.getInvestment().getInvestmentType().equals(invType)){
+				sum+=trade.getNetCost();
 			}
 		}
-		return sum;
+		return sum;		
 	}
-	public Double getNetPut() {
-		Double sum=0.0;
-		for(Trade trade:getTrades()){
-			if(trade.getInvestment().getInvestmentType().equals(InvestmentTypeEnum.PUT)){
-				sum+=trade.getNetPut();
-			}
-		}
-		return sum;
-	}
+	
 	
 	public List<Trade> getTrades() {
 		return this.trades;

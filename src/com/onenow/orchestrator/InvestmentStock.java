@@ -3,7 +3,7 @@ package com.onenow.orchestrator;
 public class InvestmentStock extends Investment {
 
 	public InvestmentStock (Underlying underlying) {
-		super(underlying, InvestmentTypeEnum.STOCK);
+		super(underlying, InvType.STOCK);
 	}
 	
 	public String toString() {
