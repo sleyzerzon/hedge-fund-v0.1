@@ -4,23 +4,50 @@ public class Trade {
 	
 	private Investment investment; // INTC, option, call
 	private Enum tradeType; // ie. buy
-	private int quantity; // 50 shares, 50 contracts
-	private Float netCost; // +$10 net, -$23 net
+	private int quantity; // 50 shares
+	private Double netCost; // +$10 net, -$23 net
+	private MarketPrice marketPrice;  // $7.50 per share
 	
-	
-	public Trade(Investment inv, Enum tradeType, int quantity) {
-		// constructor
-		
+
+	public Trade(Investment inv, Enum tradeType, int quantity, MarketPrice market) {
+		setInvestment(inv);
+		setTradeType(tradeType);
+		setQuantity(quantity);
+		setMarketPrice(market);
+		setNetCost();
 	}
 	
-	public Double getNetCost() {
-		Double cost = this.quantity * investment.getmarketPrice();
-		if (tradeType == InvestmentTradeTypeEnum.BUY) {
-			cost = -cost;
+	public void setNetCost() {	
+		Double cost = getQuantity() * getMarketPrice().getBuyPrice(getInvestment());
+		
+		if (getTradeType().equals(InvestmentTradeTypeEnum.BUY)) {
+			this.netCost = -cost;
+		} else { 
+			this.netCost = cost;		
 		}
-		return(cost);		
 	}
 
+	public Double getNetCost() {
+		return(this.netCost);
+	}
+	
+	public Double getNetStock() {	
+		if(getInvestment().getInvestmentType().equals(InvestmentTypeEnum.STOCK)) {
+			return(getNetCost());
+		} else return (0.0);
+	}
+	public Double getNetCall() {
+		if(getInvestment().getInvestmentType().equals(InvestmentTypeEnum.CALL)) {
+			return(getNetCost());
+		} else return (0.0);		
+	}
+	public Double getNetPut() {
+		if(getInvestment().getInvestmentType().equals(InvestmentTypeEnum.PUT)) {
+			return(getNetCost());
+		} else return (0.0);
+	}
+	
+	
 	public String toString() {
 		String string = investment.toString() + " " + getTradeType() + " " + getQuantity() + " " + getNetCost();
 		System.out.println("Trade: " + string);
@@ -29,12 +56,12 @@ public class Trade {
 
 	
 	
-	public Investment getVehicle() {
+	public Investment getInvestment() {
 		return investment;
 	}
 
-	public void setVehicle(Investment vehicle) {
-		this.investment = vehicle;
+	public void setInvestment(Investment inv) {
+		this.investment = inv;
 	}
 
 	public Enum getTradeType() {
@@ -51,6 +78,13 @@ public class Trade {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	public MarketPrice getMarketPrice() {
+		return this.marketPrice;
+	}
+
+	public void setMarketPrice(MarketPrice marketPrice) {
+		this.marketPrice = marketPrice;
 	}
 
 }

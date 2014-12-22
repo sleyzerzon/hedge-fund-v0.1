@@ -4,26 +4,35 @@ import java.util.HashMap;
 
 public class MarketPrice {
 
-	Portfolio market = new Portfolio();
-	
 	HashMap prices = new HashMap();
 	
 	public MarketPrice() {
 	}
 	
 	public void setInvestmentPrice(Investment investment, Double buyPrice, Double sellPrice) {
-		
-		this.prices.put(getPriceLookup(investment, InvestmentTradeTypeEnum.BUY), buyPrice);
-		this.prices.put(getPriceLookup(investment, InvestmentTradeTypeEnum.SELL), sellPrice);
+		getPrices().put(getLookupKey(investment, InvestmentTradeTypeEnum.BUY), buyPrice);
+		getPrices().put(getLookupKey(investment, InvestmentTradeTypeEnum.SELL), sellPrice);
 	}
 	
-	public void getInvestmentPrice(Investment investment, Enum InvestmentTradeType) {
-		this.prices.get(getPriceLookup(investment, InvestmentTradeType));
+	public Double getBuyPrice(Investment investment) {
+		return (Double) (getPrices().get(getLookupKey(investment, InvestmentTradeTypeEnum.BUY)));
 	}
-	
-	private String getPriceLookup (Investment investment, Enum InvestmentTradeType) {
+
+	public Double getSellPrice(Investment investment, Enum InvestmentTradeType) {
+		return (Double) (getPrices().get(getLookupKey(investment, InvestmentTradeTypeEnum.SELL)));
+	}
+
+	private String getLookupKey (Investment investment, Enum InvestmentTradeType) {
 		String lookup = investment.getunderlying().getTicker() + investment.getInvestmentType() + InvestmentTradeType;
 		return(lookup);
+	}
+	
+	public HashMap getPrices() {
+		return prices;
+	}
+
+	public void setPrices(HashMap prices) {
+		this.prices = prices;
 	}
 	
 }

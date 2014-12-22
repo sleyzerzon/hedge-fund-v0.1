@@ -15,6 +15,18 @@ public class Portfolio {
 	public void addInvestment(Investment inv) {
 		investments.add(inv);
 	}
+	
+	public Investment getBestStock(Underlying under) { // just grabs the first one for now
+		return(searchStock(under).get(0));
+	}
+
+	public Investment getBestCall(Underlying under, Date expiration, Double strike) {
+		return(searchCalls(under, expiration, strike).get(0));
+	}
+	
+	public Investment getBestPut(Underlying under, Date expiration, Double strike) {
+		return(searchPuts(under, expiration, strike).get(0));
+	}
 		
 	public List<Investment> searchStock(Underlying under) {
 		List<Investment> foundInvestments = new ArrayList<Investment>();

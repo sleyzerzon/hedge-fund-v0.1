@@ -19,12 +19,18 @@ public class Orchestrator {
 		// Trade trade = new Trade(
 		Date expDate = new Date();
 		expDate.setTime(1000000);
-		List<Investment> calltsToTrade = marketPortfolio.searchCalls(apl, expDate, 405.00);
-		List<Investment> putsToTrade = marketPortfolio.searchPuts(apl, expDate, 405.00);
-		List<Investment> stockToTrade = marketPortfolio.searchStock(apl);
-		calltsToTrade.toString();
-		putsToTrade.toString();
-		stockToTrade.toString();
+		Investment call = marketPortfolio.getBestCall(apl, expDate, 405.00);
+		Investment put = marketPortfolio.getBestPut(apl, expDate, 390.00);
+		Investment stock = marketPortfolio.getBestStock(apl);
+		
+		System.out.println(call.toString() + " @$ " + marketPrices.getBuyPrice(call));
+		put.toString();
+		stock.toString();
+
+		TradeTransaction transaction = new TradeTransaction();
+		Trade trade = new Trade(call, InvestmentTradeTypeEnum.BUY, 100, marketPrices);
+		transaction.addTrade(trade);
+		System.out.println("1 call contract " + trade.getNetCost() + " " + transaction.getNetCost());
 		
 		// get buy/sell price and act
 		
