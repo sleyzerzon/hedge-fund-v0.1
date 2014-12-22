@@ -7,7 +7,7 @@ import com.enremmeta.onenow.summit.AccountCloud;
 
 public class CloudListerImpl implements CloudLister {
 
-	List<AccountCloud> clouds;
+	private List<AccountCloud> clouds;
 		
 	public CloudListerImpl() {
 		clouds = new ArrayList<AccountCloud>();

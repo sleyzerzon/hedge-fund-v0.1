@@ -1,20 +1,33 @@
-package com.onenow.exchange;
+package com.onenow.orchestrator;
 import java.util.Date;
 
 
 public class InvestmentOption extends Investment {
-	
-	private Float strikePrice;
+
+	private	Enum optionType; // call, put	
+	private Double strikePrice;
 	private Date expirationDate;
-	private	Enum optionType; // call, put
-	
 	private int sharesPerContract=100;
 
-	public Float getStrikePrice() {
+	public InvestmentOption(Underlying underlying, Enum optionType, Date expirationDate, Double strikePrice) {
+		super(underlying, optionType);
+		setStrikePrice(strikePrice);
+		setExpirationDate(expirationDate);
+		setOptionType(optionType);
+	}
+	
+	public String toString() {
+		String string = super.toString() + ".  Type " + getOptionType() + ".  Strike $" + getStrikePrice() 
+						+ ".  Expires " + getExpirationDate();
+		System.out.println("Investment Option: " + string);
+		return string;
+	}
+	
+	public Double getStrikePrice() {
 		return strikePrice;
 	}
 
-	public void setStrikePrice(Float strikePrice) {
+	public void setStrikePrice(Double strikePrice) {
 		this.strikePrice = strikePrice;
 	}
 
@@ -41,5 +54,4 @@ public class InvestmentOption extends Investment {
 	public void setSharesPerContract(int sharesPerContract) {
 		this.sharesPerContract = sharesPerContract;
 	}
-
 }

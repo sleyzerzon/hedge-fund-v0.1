@@ -9,7 +9,7 @@ import com.enremmeta.onenow.summit.Constants;
 
 public class AccountListerImpl implements AccountLister {
 
-	List<CustomerAccount> customers;
+	private List<CustomerAccount> customers;
 	
 	public AccountListerImpl() {
 		customers = new ArrayList<CustomerAccount>();
