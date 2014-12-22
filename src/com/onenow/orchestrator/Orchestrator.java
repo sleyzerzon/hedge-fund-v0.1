@@ -17,8 +17,10 @@ public class Orchestrator {
 		loadMarket(marketPortfolio, apl, marketPrices);		
 		
 		// Trade trade = new Trade(
-		List<Investment> calltsToTrade = marketPortfolio.searchCalls(apl, new Date(), 405.00);
-		List<Investment> putsToTrade = marketPortfolio.searchPuts(apl, new Date(), 405.00);
+		Date expDate = new Date();
+		expDate.setTime(1000000);
+		List<Investment> calltsToTrade = marketPortfolio.searchCalls(apl, expDate, 405.00);
+		List<Investment> putsToTrade = marketPortfolio.searchPuts(apl, expDate, 405.00);
 		List<Investment> stockToTrade = marketPortfolio.searchStock(apl);
 		calltsToTrade.toString();
 		putsToTrade.toString();
@@ -30,12 +32,15 @@ public class Orchestrator {
 	
 	
 	private static void loadMarket(Portfolio port, Underlying under, MarketPrice prices) {
-		
+
+		Date expDate = new Date();
+		expDate.setTime(1000000);
+
 		Investment stock = new InvestmentStock(under);
-		Investment call1 = new InvestmentOption(under, InvestmentTypeEnum.CALL, new Date(), 405.00);
-		Investment call2 = new InvestmentOption(under, InvestmentTypeEnum.CALL, new Date(), 400.00);
-		Investment put1 = new InvestmentOption(under, InvestmentTypeEnum.PUT, new Date(), 390.00);
-		Investment put2 = new InvestmentOption(under, InvestmentTypeEnum.PUT, new Date(), 385.00);
+		Investment call1 = new InvestmentOption(under, InvestmentTypeEnum.CALL, expDate, 405.00);
+		Investment call2 = new InvestmentOption(under, InvestmentTypeEnum.CALL, expDate, 400.00);
+		Investment put1 = new InvestmentOption(under, InvestmentTypeEnum.PUT, expDate, 390.00);
+		Investment put2 = new InvestmentOption(under, InvestmentTypeEnum.PUT, expDate, 385.00);
 
 		port.addInvestment(stock);
 		port.addInvestment(call1);

@@ -22,7 +22,7 @@ public class Portfolio {
 			if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
 				investment.getInvestmentType()==InvestmentTypeEnum.STOCK) {
 				foundInvestments.add(investment);
-			}
+			} else { System.out.println("skip.."); }
 		}
 		return foundInvestments;						
 	}
@@ -32,10 +32,10 @@ public class Portfolio {
 		for(Investment investment : getCalls()) {
 			InvestmentOption option = (InvestmentOption) investment;
 			if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
-				option.getExpirationDate() == expiration && 
-				option.getStrikePrice() == strike) {
+				option.getExpirationDate().equals(expiration) && 
+				option.getStrikePrice().equals(strike)) {
 					foundInvestments.add(investment);
-			}
+			} else { System.out.println("skip.."); }
 		}
 		return foundInvestments;				
 	}
@@ -45,10 +45,10 @@ public class Portfolio {
 		for(Investment investment : getPuts()) {
 			InvestmentOption option = (InvestmentOption) investment;
 			if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
-				option.getExpirationDate() == expiration && 
-				option.getStrikePrice() == strike) {
+				option.getExpirationDate().equals(expiration) && 
+				option.getStrikePrice().equals(strike)) {
 					foundInvestments.add(investment);
-			}
+			} else { System.out.println("skip.."); }
 		}
 		return foundInvestments;				
 	}
