@@ -431,6 +431,26 @@ public class Reduction__c extends com.sforce.soap.enterprise.sobject.SObject {
     }
 
     /**
+     * element : Nickname__c of type {http://www.w3.org/2001/XMLSchema}string
+     * java type: java.lang.String
+     */
+    private static final com.sforce.ws.bind.TypeInfo Nickname__c__typeInfo =
+      new com.sforce.ws.bind.TypeInfo("urn:sobject.enterprise.soap.sforce.com","Nickname__c","http://www.w3.org/2001/XMLSchema","string",0,1,true);
+
+    private boolean Nickname__c__is_set = false;
+
+    private java.lang.String Nickname__c;
+
+    public java.lang.String getNickname__c() {
+      return Nickname__c;
+    }
+
+    public void setNickname__c(java.lang.String Nickname__c) {
+      this.Nickname__c = Nickname__c;
+      Nickname__c__is_set = true;
+    }
+
+    /**
      * element : Notes of type {urn:enterprise.soap.sforce.com}QueryResult
      * java type: com.sforce.soap.enterprise.QueryResult
      */
@@ -747,6 +767,7 @@ public class Reduction__c extends com.sforce.soap.enterprise.sobject.SObject {
        __typeMapper.writeObject(__out, LookedUpFromActivities__typeInfo, LookedUpFromActivities, LookedUpFromActivities__is_set);
        __typeMapper.writeObject(__out, Markets__r__typeInfo, Markets__r, Markets__r__is_set);
        __typeMapper.writeString(__out, Name__typeInfo, Name, Name__is_set);
+       __typeMapper.writeString(__out, Nickname__c__typeInfo, Nickname__c, Nickname__c__is_set);
        __typeMapper.writeObject(__out, Notes__typeInfo, Notes, Notes__is_set);
        __typeMapper.writeObject(__out, NotesAndAttachments__typeInfo, NotesAndAttachments, NotesAndAttachments__is_set);
        __typeMapper.writeObject(__out, OpenActivities__typeInfo, OpenActivities, OpenActivities__is_set);
@@ -859,6 +880,10 @@ public class Reduction__c extends com.sforce.soap.enterprise.sobject.SObject {
             setName(__typeMapper.readString(__in, Name__typeInfo, java.lang.String.class));
         }
         __in.peekTag();
+        if (__typeMapper.isElement(__in, Nickname__c__typeInfo)) {
+            setNickname__c(__typeMapper.readString(__in, Nickname__c__typeInfo, java.lang.String.class));
+        }
+        __in.peekTag();
         if (__typeMapper.isElement(__in, Notes__typeInfo)) {
             setNotes((com.sforce.soap.enterprise.QueryResult)__typeMapper.readObject(__in, Notes__typeInfo, com.sforce.soap.enterprise.QueryResult.class));
         }
@@ -941,6 +966,7 @@ public class Reduction__c extends com.sforce.soap.enterprise.sobject.SObject {
       sb.append(" LookedUpFromActivities='").append(com.sforce.ws.util.Verbose.toString(LookedUpFromActivities)).append("'\n");
       sb.append(" Markets__r='").append(com.sforce.ws.util.Verbose.toString(Markets__r)).append("'\n");
       sb.append(" Name='").append(com.sforce.ws.util.Verbose.toString(Name)).append("'\n");
+      sb.append(" Nickname__c='").append(com.sforce.ws.util.Verbose.toString(Nickname__c)).append("'\n");
       sb.append(" Notes='").append(com.sforce.ws.util.Verbose.toString(Notes)).append("'\n");
       sb.append(" NotesAndAttachments='").append(com.sforce.ws.util.Verbose.toString(NotesAndAttachments)).append("'\n");
       sb.append(" OpenActivities='").append(com.sforce.ws.util.Verbose.toString(OpenActivities)).append("'\n");

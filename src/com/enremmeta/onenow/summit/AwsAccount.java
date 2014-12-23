@@ -2,9 +2,9 @@ package com.enremmeta.onenow.summit;
 
 import java.util.List;
 
-public class AWSAccount {
+public class AwsAccount {
 
-	public AWSAccount() {
+	public AwsAccount() {
 		// TODO Auto-generated constructor stub
 	}
 

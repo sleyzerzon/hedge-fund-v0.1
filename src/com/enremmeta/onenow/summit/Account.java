@@ -8,7 +8,7 @@ public class Account {
 
 	private String name;
 	
-	private AWSAccount aws;
+	private AwsAccount aws;
 
 	public String getName() {
 		return name;
@@ -18,11 +18,11 @@ public class Account {
 		this.name = name;
 	}
 
-	public AWSAccount getAws() {
+	public AwsAccount getAws() {
 		return aws;
 	}
 
-	public void setAws(AWSAccount aws) {
+	public void setAws(AwsAccount aws) {
 		this.aws = aws;
 	}
 }

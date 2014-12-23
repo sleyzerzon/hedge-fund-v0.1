@@ -25,11 +25,18 @@ public class YakActivitiesWorker {
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 
-		ActivityWorker aw = new ActivityWorker(service,
+		ActivityWorker aw1 = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		aw.addActivitiesImplementation(new CloudListerImpl());
-		aw.start();
-		System.out.println(aw.getIdentity());
+		aw1.addActivitiesImplementation(new CloudListerImpl());
+		aw1.start();
+		System.out.println(aw1.getIdentity());
+		
+
+		ActivityWorker aw2 = new ActivityWorker(service,
+				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+		aw2.addActivitiesImplementation(new CloudPriceListerImpl());
+		aw2.start();
+		System.out.println(aw2.getIdentity());
 	}
 
 }
