@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onenow.salesforce.CustomerAccount;
 
 public class Yak {
 
@@ -66,8 +67,7 @@ public class Yak {
 
 		CustomerAccount acc = config.getAccounts().get(0);
 
-		emr = new EmrFacade(acc.getCloud().getAccess(), acc.getCloud()
-				.getSecret());
+		emr = new EmrFacade(acc.getCloud().getAccess(), acc.getCloud().getSecret());
 		String keyFile = acc.getCloud().getKeyPath();
 
 		// emr.resize("m3.2xlarge", 3);

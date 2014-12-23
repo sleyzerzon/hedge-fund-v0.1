@@ -3,6 +3,7 @@ package com.enremmeta.onenow.summit;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.onenow.salesforce.CustomerAccount;
 
 public class YakConfig {
 

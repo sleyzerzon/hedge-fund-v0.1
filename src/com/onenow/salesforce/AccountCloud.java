@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.salesforce;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ public class AccountCloud {
 	public AccountCloud() {
 		this.provider = AccountCloudEnum.AWS;
 	}
-	
-	private String secret;
+
 	private String access;
+	private String secret;
 	private String keyPath;
 	
 	private List<String> emrHosts;

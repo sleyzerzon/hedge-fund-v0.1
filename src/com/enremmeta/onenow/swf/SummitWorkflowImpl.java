@@ -5,7 +5,7 @@ import java.util.List;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.enremmeta.onenow.summit.AwsPricing;
-import com.enremmeta.onenow.summit.AccountCloud;
+import com.onenow.salesforce.AccountCloud;
 
 public class SummitWorkflowImpl implements SummitWorkflow {
 
