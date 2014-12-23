@@ -23,7 +23,7 @@ public class CloudPriceListerImpl implements CloudPriceLister {
 	}
 
 	@Override
-	public List<String> getRegions() {
+	public List<String> getRegions(String provider) {
 		try {
 			AwsPricing pricing = Yak.readPricing();
 			List<RegionPricing> regPricing = pricing.getConfig().getRegions();
@@ -38,7 +38,7 @@ public class CloudPriceListerImpl implements CloudPriceLister {
 	}
 
 	@Override
-	public List<String> getProducts() {
+	public List<String> getProducts(String provider) {
 		try {
 			AwsPricing pricing = Yak.readPricing();
 			List<RegionPricing> regPricing = pricing.getConfig().getRegions();
@@ -65,7 +65,7 @@ public class CloudPriceListerImpl implements CloudPriceLister {
 	}
 
 	@Override
-	public List<String> getInstanceTypes() {
+	public List<String> getInstanceTypes(String provider) {
 		try {
 			AwsPricing pricing = Yak.readPricing();
 			List<RegionPricing> regPricing = pricing.getConfig().getRegions();

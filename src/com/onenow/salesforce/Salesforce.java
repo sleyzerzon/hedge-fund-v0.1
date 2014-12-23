@@ -6,11 +6,11 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.Activities;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activity;
 import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrationOptions;
 import com.enremmeta.onenow.summit.Constants;
-import com.onenow.salesforce.AccountCloud;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 import com.sforce.soap.enterprise.sobject.Reduction__c;
 import com.sforce.soap.enterprise.sobject.SObject;
+import com.sforce.soap.enterprise.sobject.System__c;
 import com.sforce.ws.ConnectionException;
 
 @ActivityRegistrationOptions(defaultTaskScheduleToStartTimeoutSeconds = 3600, defaultTaskStartToCloseTimeoutSeconds = 3600, defaultTaskList = Constants.AWS_SWF_TASK_LIST_NAME)

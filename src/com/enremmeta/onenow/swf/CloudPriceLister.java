@@ -11,11 +11,11 @@ import com.enremmeta.onenow.summit.Constants;
 @Activities(version = Constants.AWS_SWF_VERSION)
 public interface CloudPriceLister {
 
-	public abstract List<String> getInstanceTypes();
+	public abstract List<String> getInstanceTypes(String provider);
 
-	public abstract List<String> getProducts();
+	public abstract List<String> getProducts(String provider);
 
-	public abstract List<String> getRegions();
+	public abstract List<String> getRegions(String provider);
 
 	public abstract AwsPricing onDemandPricing();
 }

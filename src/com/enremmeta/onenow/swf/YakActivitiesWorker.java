@@ -8,6 +8,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.enremmeta.onenow.summit.Constants;
 import com.onenow.salesforce.CloudListerImpl;
+import com.onenow.salesforce.SalesforceImpl;
 
 public class YakActivitiesWorker {
 
@@ -28,7 +29,7 @@ public class YakActivitiesWorker {
 
 		ActivityWorker aw1 = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		aw1.addActivitiesImplementation(new CloudListerImpl());
+		aw1.addActivitiesImplementation(new SalesforceImpl());
 		aw1.start();
 		System.out.println(aw1.getIdentity());
 		
