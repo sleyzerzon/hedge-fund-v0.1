@@ -2,6 +2,7 @@ package com.enremmeta.onenow.swf;
 
 import com.enremmeta.onenow.summit.AwsPricing;
 import com.enremmeta.onenow.summit.Yak;
+import com.onenow.broker.CloudPriceLister;
 
 public class OpenTsdbActivityImpl implements CloudPriceLister {
 

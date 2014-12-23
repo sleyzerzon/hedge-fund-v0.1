@@ -1,16 +1,16 @@
-package com.onenow.brokerage;
+package com.onenow.broker;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.onenow.orchestrator.InvType;
-import com.onenow.orchestrator.Investment;
-import com.onenow.orchestrator.InvestmentOption;
-import com.onenow.orchestrator.InvestmentStock;
-import com.onenow.orchestrator.MarketPrice;
-import com.onenow.orchestrator.Portfolio;
-import com.onenow.orchestrator.Underlying;
+import com.onenow.finance.InvType;
+import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentOption;
+import com.onenow.finance.InvestmentStock;
+import com.onenow.finance.MarketPrice;
+import com.onenow.finance.Portfolio;
+import com.onenow.finance.Underlying;
 
 public class InteractiveBrokersImpl implements InteractiveBrokers{
 

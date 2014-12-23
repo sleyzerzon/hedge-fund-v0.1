@@ -1,18 +1,18 @@
-package com.enremmeta.onenow.swf;
+package com.onenow.workflow;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
+import com.amazonaws.services.simpleworkflow.flow.WorkflowWorker;
 import com.amazonaws.services.simpleworkflow.model.Run;
 import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
-import com.amazonaws.services.simpleworkflow.model.WorkflowType;
 import com.enremmeta.onenow.summit.Constants;
 
-public class YakSwfStarter {
+public class DaemonWorkflow {
 
-	public YakSwfStarter() {
+	public DaemonWorkflow() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -26,10 +26,13 @@ public class YakSwfStarter {
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
-		SummitWorkflowClientExternalFactory factory = new SummitWorkflowClientExternalFactoryImpl(
-				service, Constants.AWS_SWF_DOMAIN);
-		SummitWorkflowClientExternal client = factory.getClient();
-		client.mainFlow();
+
+		WorkflowWorker wfw = new WorkflowWorker(service,
+				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+		wfw.addWorkflowImplementationType(SummitWorkflowImpl.class);
+		wfw.start();
+		System.out.println(wfw.getIdentity());
+
 
 	}
 }

@@ -1,5 +1,8 @@
 package com.enremmeta.onenow.swf;
 
+import com.onenow.broker.CloudPriceLister;
+import com.onenow.broker.CloudPriceListerImpl;
+
 public class CloudPriceListerTest {
 
 	public CloudPriceListerTest() {

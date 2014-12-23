@@ -1,18 +1,19 @@
-package com.enremmeta.onenow.swf;
+package com.onenow.workflow;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
-import com.amazonaws.services.simpleworkflow.flow.WorkflowWorker;
-import com.amazonaws.services.simpleworkflow.model.Run;
-import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
+import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.enremmeta.onenow.summit.Constants;
+import com.onenow.broker.CloudPriceListerImpl;
+import com.onenow.salesforce.CloudListerImpl;
+import com.onenow.salesforce.SalesforceImpl;
 
-public class YakWorkflowWorker {
+public class DaemonActivity {
 
-	public YakWorkflowWorker() {
+	public DaemonActivity() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -27,12 +28,18 @@ public class YakWorkflowWorker {
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 
-		WorkflowWorker wfw = new WorkflowWorker(service,
+		ActivityWorker aw1 = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		wfw.addWorkflowImplementationType(SummitWorkflowImpl.class);
-		wfw.start();
-		System.out.println(wfw.getIdentity());
+		aw1.addActivitiesImplementation(new SalesforceImpl());
+		aw1.start();
+		System.out.println(aw1.getIdentity());
+		
 
-
+		ActivityWorker aw2 = new ActivityWorker(service,
+				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+		aw2.addActivitiesImplementation(new CloudPriceListerImpl());
+		aw2.start();
+		System.out.println(aw2.getIdentity());
 	}
+
 }

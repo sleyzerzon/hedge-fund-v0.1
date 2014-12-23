@@ -1,8 +1,14 @@
-package com.onenow.orchestrator;
+package com.onenow.workflow;
 
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.onenow.finance.InvType;
+import com.onenow.finance.Investment;
+import com.onenow.finance.Trade;
+import com.onenow.finance.TradeTransaction;
+import com.onenow.finance.TradeType;
 
 public class Orchestrator {
 

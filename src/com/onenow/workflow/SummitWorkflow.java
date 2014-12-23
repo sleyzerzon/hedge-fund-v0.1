@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.swf;
+package com.onenow.workflow;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Execute;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Workflow;
