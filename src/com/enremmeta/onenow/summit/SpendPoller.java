@@ -51,6 +51,7 @@ public class SpendPoller {
 		YakConfig config = Utils.readConfig();
 		OpenTsdbConnection.getInstance().connect(config.getOpenTSDBHost(),
 				config.getOpenTSDBPort());
+
 		AwsAccount acct = config.getAccounts().get(0).getAws();
 		AwsPricing awsPricing = Yak.readPricing();
 		String access = acct.getAccess();

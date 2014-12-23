@@ -1,28 +1,32 @@
 package com.enremmeta.onenow.swf;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import com.enremmeta.onenow.summit.AccountCloud;
 
 public class CloudListerImpl implements CloudLister {
 
+	private List<AccountCloud> clouds;
+		
 	public CloudListerImpl() {
-		// TODO Auto-generated constructor stub
+		clouds = new ArrayList<AccountCloud>();
 	}
-
+	
 	@Override
-	public List<String> getCloudList() {
-		System.out.println("Entering getCLoudList()");
-		List<String> clouds = new ArrayList<String>();
-		clouds.add("aws");
-		System.out.println("Returning from getCloudList(): " + clouds);
+	public List<AccountCloud> getCloudList() {  // Connect to Salesforce: read list of clouds
 		return clouds;
 	}
-
+	
 	@Override
-	public List<Integer> getPriceData(String cloud) {
-		return Arrays.asList(new Integer[] {1,2,3,4});
+	public void setCloudList() { // Connect to Salesforce here: write list of clouds
+		
 	}
-
+	
+	public String toString() {
+		String cloudList = clouds.toString();
+		System.out.println("Clouds:" + cloudList);
+		return cloudList;
+	}
 	
 }

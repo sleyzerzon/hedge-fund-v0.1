@@ -32,13 +32,13 @@ public class YakConfig {
 		this.openTSDBPort = openTSDBPort;
 	}
 
-	public List<Account> getAccounts() {
+	public List<CustomerAccount> getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(List<Account> accounts) {
+	public void setAccounts(List<CustomerAccount> accounts) {
 		this.accounts = accounts;
 	}
 
-	private List<Account> accounts;
+	private List<CustomerAccount> accounts;
 }
