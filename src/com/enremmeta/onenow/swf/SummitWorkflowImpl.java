@@ -9,8 +9,8 @@ import com.onenow.salesforce.AccountCloud;
 
 public class SummitWorkflowImpl implements SummitWorkflow {
 
-	private CloudListerClient cloudLister = new CloudListerClientImpl();
-	private CloudPriceListerClient cloudPriceLister = new CloudPriceListerClientImpl();
+//	private CloudListerClient cloudLister = new CloudListerClientImpl();
+//	private CloudPriceListerClient cloudPriceLister = new CloudPriceListerClientImpl();
 
 	private SummitWorkflowSelfClient selfClient = new SummitWorkflowSelfClientImpl();
 
@@ -23,7 +23,7 @@ public class SummitWorkflowImpl implements SummitWorkflow {
 
 	@Override
 	public void mainFlow() {
-		Promise<AwsPricing> awsPricing = cloudPriceLister.onDemandPricing();
+//		Promise<AwsPricing> awsPricing = cloudPriceLister.onDemandPricing();
 	}
 
 }

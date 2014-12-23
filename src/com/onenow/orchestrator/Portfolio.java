@@ -9,7 +9,6 @@ public class Portfolio {
 	
 	public Portfolio() {
 		investments = new ArrayList<Investment>();
-
 	}
 	
 	public void addInvestment(Investment inv) {
