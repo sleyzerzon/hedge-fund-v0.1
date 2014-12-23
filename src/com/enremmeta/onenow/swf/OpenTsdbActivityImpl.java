@@ -14,4 +14,16 @@ public class OpenTsdbActivityImpl implements CloudPriceLister {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public List<String> getInstanceTypes() {
+		return null;
+	}
+
+	public List<String> getProducts() {
+		return null;
+	}
+
+	public List<String> getRegions() {
+		return null;
+	}
 }
