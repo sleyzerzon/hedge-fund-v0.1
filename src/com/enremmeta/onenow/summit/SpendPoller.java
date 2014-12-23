@@ -24,6 +24,7 @@ import com.amazonaws.services.elasticmapreduce.model.InstanceStatus;
 import com.amazonaws.services.elasticmapreduce.model.InstanceTimeline;
 import com.enremmeta.onenow.summit.AwsPricing.RegionPricing;
 import com.enremmeta.onenow.summit.AwsPricing.Size;
+import com.onenow.salesforce.AccountCloud;
 
 public class SpendPoller {
 

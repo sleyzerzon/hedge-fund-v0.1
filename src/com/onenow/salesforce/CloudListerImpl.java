@@ -1,9 +1,7 @@
-package com.enremmeta.onenow.swf;
+package com.onenow.salesforce;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.enremmeta.onenow.summit.AccountCloud;
 
 public class CloudListerImpl implements CloudLister {
 

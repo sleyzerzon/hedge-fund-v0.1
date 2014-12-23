@@ -7,6 +7,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.enremmeta.onenow.summit.Constants;
+import com.onenow.salesforce.CloudListerImpl;
 
 public class YakActivitiesWorker {
 

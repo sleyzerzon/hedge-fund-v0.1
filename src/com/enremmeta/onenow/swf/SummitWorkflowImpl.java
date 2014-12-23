@@ -5,12 +5,12 @@ import java.util.List;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.enremmeta.onenow.summit.AwsPricing;
-import com.enremmeta.onenow.summit.AccountCloud;
+import com.onenow.salesforce.AccountCloud;
 
 public class SummitWorkflowImpl implements SummitWorkflow {
 
-	private CloudListerClient cloudLister = new CloudListerClientImpl();
-	private CloudPriceListerClient cloudPriceLister = new CloudPriceListerClientImpl();
+//	private CloudListerClient cloudLister = new CloudListerClientImpl();
+//	private CloudPriceListerClient cloudPriceLister = new CloudPriceListerClientImpl();
 
 	private SummitWorkflowSelfClient selfClient = new SummitWorkflowSelfClientImpl();
 
@@ -23,7 +23,7 @@ public class SummitWorkflowImpl implements SummitWorkflow {
 
 	@Override
 	public void mainFlow() {
-		Promise<AwsPricing> awsPricing = cloudPriceLister.onDemandPricing();
+//		Promise<AwsPricing> awsPricing = cloudPriceLister.onDemandPricing();
 	}
 
 }
