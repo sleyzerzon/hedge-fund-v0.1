@@ -53,7 +53,7 @@ public class SalesforceImpl implements Salesforce {
 		init();
 		
 		List<System__c> sysConfigs = new ArrayList<System__c>();
-		QueryResult qResult = query("SELECT Name, Nickname__c, Host__c, Port__c FROM System__c");
+		QueryResult qResult = query("SELECT Name, Nickname__c, Host__c, Port__c, User__c, Password__c, Token__c FROM System__c");
 		boolean done = false;
 
 		while (!done) {
@@ -147,25 +147,6 @@ public class SalesforceImpl implements Salesforce {
 		return reductions;
 	}
 
-	// Use: query("SELECT FirstName, LastName FROM Contact");
-	private static QueryResult query(String query) throws ConnectionException {
-		QueryResult qResult = getEntConnection().query(query);
-		System.out.println("Number of objects: " + qResult.getSize());
-		return qResult;
-	}
-
-	private static void retrieve() {
-
-	}
-
-	private static void update() {
-
-	}
-
-	private static void upsert() {
-
-	}
-
 	// Use: create(red1);
 	@Override
 	public void create(SObject[] objects) throws ConnectionException {
@@ -202,6 +183,25 @@ public class SalesforceImpl implements Salesforce {
 		}
 	}
 
+	// Use: query("SELECT FirstName, LastName FROM Contact");
+	private static QueryResult query(String query) throws ConnectionException {
+		QueryResult qResult = getEntConnection().query(query);
+		System.out.println("Number of objects: " + qResult.getSize());
+		return qResult;
+	}
+	private static void retrieve() {
+
+	}
+
+	private static void update() {
+
+	}
+
+	private static void upsert() {
+
+	}
+
+	
 	private static EnterpriseConnection getLoginConnection() {
 		return loginConnection;
 	}

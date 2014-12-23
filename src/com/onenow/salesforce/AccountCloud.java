@@ -2,14 +2,14 @@ package com.onenow.salesforce;
 
 import java.util.List;
 
-import com.enremmeta.onenow.swf.AccountCloudEnum;
+import com.enremmeta.onenow.swf.CloudEnum;
 
 public class AccountCloud {
 
 	Enum provider;
 	
 	public AccountCloud() {
-		this.provider = AccountCloudEnum.AWS;
+		this.provider = CloudEnum.AWS;
 	}
 
 	private String access;
