@@ -52,7 +52,7 @@ public class SpendPoller {
 		OpenTsdbConnection.getInstance().connect(config.getOpenTSDBHost(),
 				config.getOpenTSDBPort());
 
-		AwsAccount acct = config.getAccounts().get(0).getAws();
+		AccountCloud acct = config.getAccounts().get(0).getCloud();
 		AwsPricing awsPricing = Yak.readPricing();
 		String access = acct.getAccess();
 		String secret = acct.getSecret();
