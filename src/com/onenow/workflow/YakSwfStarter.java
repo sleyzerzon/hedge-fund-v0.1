@@ -8,7 +8,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.model.Run;
 import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
 import com.amazonaws.services.simpleworkflow.model.WorkflowType;
-import com.enremmeta.onenow.summit.Constants;
+import com.onenow.summit.Constants;
 
 public class YakSwfStarter {
 

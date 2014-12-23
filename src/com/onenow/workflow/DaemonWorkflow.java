@@ -8,7 +8,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.WorkflowWorker;
 import com.amazonaws.services.simpleworkflow.model.Run;
 import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
-import com.enremmeta.onenow.summit.Constants;
+import com.onenow.summit.Constants;
 
 public class DaemonWorkflow {
 

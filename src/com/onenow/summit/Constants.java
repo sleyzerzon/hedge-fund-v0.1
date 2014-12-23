@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.summit;
 
 public class Constants {
 	
@@ -10,7 +10,7 @@ public class Constants {
 	
 	public static final String AWS_SWF_DOMAIN = "summityak";
 	public static final String AWS_SWF_TASK_LIST_NAME = "SummitYakTaskList";
-	public static final String AWS_SWF_VERSION = "8.0";
+	public static final String AWS_SWF_VERSION = "9.0";
 		
 	// Query Salesforce for these 3
 	public static final String AWS_ON_DEMAND_PRICING_URL = "https://a0.awsstatic.com/pricing/1.0.19/ec2/linux-od.min.js";

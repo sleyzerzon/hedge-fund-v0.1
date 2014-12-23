@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.summit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ import com.amazonaws.services.elasticmapreduce.model.ListInstancesRequest;
 import com.amazonaws.services.elasticmapreduce.model.ListInstancesResult;
 import com.amazonaws.services.elasticmapreduce.model.MarketType;
 import com.amazonaws.services.elasticmapreduce.model.ModifyInstanceGroupsRequest;
-import com.enremmeta.onenow.summit.AwsPricing.RegionPricing;
-import com.enremmeta.onenow.summit.AwsPricing.Size;
+import com.onenow.summit.AwsPricing.RegionPricing;
+import com.onenow.summit.AwsPricing.Size;
 
 public class EmrFacade extends AwsFacade {
 

@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.summit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import com.amazonaws.services.elasticmapreduce.model.Instance;
 import com.amazonaws.services.elasticmapreduce.model.InstanceGroup;
 import com.amazonaws.services.elasticmapreduce.model.InstanceStatus;
 import com.amazonaws.services.elasticmapreduce.model.InstanceTimeline;
-import com.enremmeta.onenow.summit.AwsPricing.RegionPricing;
-import com.enremmeta.onenow.summit.AwsPricing.Size;
 import com.onenow.salesforce.AccountCloud;
+import com.onenow.summit.AwsPricing.RegionPricing;
+import com.onenow.summit.AwsPricing.Size;
 
 public class SpendPoller {
 

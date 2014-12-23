@@ -6,10 +6,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
-import com.enremmeta.onenow.summit.Constants;
 import com.onenow.broker.CloudPriceListerImpl;
 import com.onenow.salesforce.CloudListerImpl;
 import com.onenow.salesforce.SalesforceImpl;
+import com.onenow.summit.Constants;
 
 public class DaemonActivity {
 

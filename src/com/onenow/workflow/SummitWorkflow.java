@@ -3,7 +3,7 @@ package com.onenow.workflow;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Execute;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Workflow;
 import com.amazonaws.services.simpleworkflow.flow.annotations.WorkflowRegistrationOptions;
-import com.enremmeta.onenow.summit.Constants;
+import com.onenow.summit.Constants;
 
 @Workflow
 @WorkflowRegistrationOptions(defaultTaskStartToCloseTimeoutSeconds = 3600, defaultExecutionStartToCloseTimeoutSeconds = 3600, defaultTaskList = Constants.AWS_SWF_TASK_LIST_NAME)

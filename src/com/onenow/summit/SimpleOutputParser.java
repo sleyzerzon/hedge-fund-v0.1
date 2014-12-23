@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.summit;
 
 public class SimpleOutputParser implements OutputParser {
 

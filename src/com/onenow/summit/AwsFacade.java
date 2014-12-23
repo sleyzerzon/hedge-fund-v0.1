@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.summit;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;

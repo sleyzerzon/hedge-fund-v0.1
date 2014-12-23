@@ -3,7 +3,7 @@ package com.onenow.salesforce;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.enremmeta.onenow.summit.Constants;
+import com.onenow.summit.Constants;
 
 public class AccountListerImpl implements AccountLister {
 

@@ -2,7 +2,7 @@ package com.onenow.salesforce;
 
 import java.util.List;
 
-import com.enremmeta.onenow.swf.CloudEnum;
+import com.onenow.swf.CloudEnum;
 
 public class AccountCloud {
 

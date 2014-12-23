@@ -6,10 +6,8 @@ import java.util.Set;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
-import com.enremmeta.onenow.swf.CloudPriceListerClient;
-import com.enremmeta.onenow.swf.CloudPriceListerClientImpl;
-import com.enremmeta.onenow.swf.SummitWorkflowSelfClient;
-import com.enremmeta.onenow.swf.SummitWorkflowSelfClientImpl;
+import com.onenow.broker.CloudPriceListerClient;
+import com.onenow.broker.CloudPriceListerClientImpl;
 import com.onenow.salesforce.SalesforceClient;
 import com.onenow.salesforce.SalesforceClientImpl;
 import com.sforce.soap.enterprise.sobject.Cloud__c;

@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.swf;
+package com.onenow.swf;
 
 public enum CloudEnum {
 	AWS, Google, Rackspace

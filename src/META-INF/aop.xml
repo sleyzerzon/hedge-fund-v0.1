@@ -1,10 +1,17 @@
 <aspectj>
-   <aspects>
-      <!-- declare two existing aspects to the weaver -->
-      <aspect name="com.amazonaws.services.simpleworkflow.flow.aspectj.AsynchronousAspect"/>
-      <aspect name="com.amazonaws.services.simpleworkflow.flow.aspectj.ExponentialRetryAspect"/>
-   </aspects>
-   <weaver options="-verbose">
-     <include within="com.enremmeta.onenow.swf.*"/>
-   </weaver>
+	<aspects>
+		<!-- declare two existing aspects to the weaver -->
+		<aspect
+			name="com.amazonaws.services.simpleworkflow.flow.aspectj.AsynchronousAspect" />
+		<aspect
+			name="com.amazonaws.services.simpleworkflow.flow.aspectj.ExponentialRetryAspect" />
+	</aspects>
+	<weaver options="-verbose">
+		<include within="com.onenow.broker.*" />
+		<include within="com.onenow.finance.*" />
+		<include within="com.onenow.salesforce.*" />	
+		<include within="com.onenow.summit.*" />
+		<include within="com.onenow.swf.*" />
+		<include within="com.onenow.workflow.*" />
+	</weaver>
 </aspectj>     

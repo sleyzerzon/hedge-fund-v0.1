@@ -5,7 +5,7 @@ import java.util.List;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activities;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activity;
 import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrationOptions;
-import com.enremmeta.onenow.summit.Constants;
+import com.onenow.summit.Constants;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 import com.sforce.soap.enterprise.sobject.Reduction__c;

@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.swf;
+package com.onenow.swf;
 
 import com.onenow.broker.CloudPriceLister;
 import com.onenow.broker.CloudPriceListerImpl;

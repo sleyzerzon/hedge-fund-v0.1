@@ -1,4 +1,4 @@
-package com.enremmeta.onenow.summit;
+package com.onenow.summit;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
