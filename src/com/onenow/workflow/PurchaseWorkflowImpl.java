@@ -51,8 +51,9 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	}
 	
 	@Asynchronous
-	private void printUnderList(Promise<List<Underlying>> underList) {
-		for(Underlying under:underList.get()) {
+	private void printUnderList(Promise<List<Underlying>> underListPromise) {
+		List<Underlying> underList = underListPromise.get();
+		for(Underlying under:underList) {
 			String ticker = under.getTicker();
 			System.out.println("Ticker listed: " + ticker);
 		}
