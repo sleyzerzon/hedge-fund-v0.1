@@ -18,6 +18,13 @@ public class IBrokersActivityImpl implements IBrokersActivity{
 	static Portfolio marketPortfolio = new Portfolio();
 	static MarketPrice marketPrices = new MarketPrice();
 	
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		for(Underlying under:getUnderlying()){
+//			
+//		}
+//	}
+	
 	@Override
 	public List<Underlying> getUnderlying() {
 		
