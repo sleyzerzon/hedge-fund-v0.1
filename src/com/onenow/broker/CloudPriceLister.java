@@ -16,6 +16,10 @@ public interface CloudPriceLister {
 	public abstract List<String> getProducts(String provider);
 
 	public abstract List<String> getRegions(String provider);
+	
+	List<String> getAvailableTransactionTypes(String provider);
+	
+	float getPrice(String provider, String xactnType, )
 
 	public abstract AwsPricing onDemandPricing();
 }

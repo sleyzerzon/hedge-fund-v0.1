@@ -25,33 +25,43 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 
 	@Override
 	public void mainFlow() {
-	
-				
+
 		Promise<List<Underlying>> underList = getiBrokers().getUnderlying();
 		printUnderList(underList);
-		
-//		// Trade trade = new Trade(
-//		Date expDate = new Date();
-//		expDate.setTime(1000000);
-//		Investment stock = marketPortfolio.getBest(apl, InvType.STOCK);
-//		Investment call = marketPortfolio.getBest(apl, InvType.CALL, expDate, 405.00);
-//		Investment put = marketPortfolio.getBest(apl, InvType.PUT, expDate, 390.00);
-//		
-//		System.out.println(call.toString() + " @$ " + marketPrices.getPriceBid(call));
-//		put.toString();
-//		stock.toString();
-//
-//		TradeTransaction transaction = new TradeTransaction();
-//		Trade trade = new Trade(call, TradeType.BUY, 100, marketPrices);
-//		transaction.addTrade(trade);
-//		System.out.println("1 call contract " + trade.getNetCost() + " " + transaction.getNetCost());
-//		
-//		// get buy/sell price and act
-		
+
+		// // Trade trade = new Trade(
+		// Date expDate = new Date();
+		// expDate.setTime(1000000);
+		// Investment stock = marketPortfolio.getBest(apl, InvType.STOCK);
+		// Investment call = marketPortfolio.getBest(apl, InvType.CALL, expDate,
+		// 405.00);
+		// Investment put = marketPortfolio.getBest(apl, InvType.PUT, expDate,
+		// 390.00);
+		//
+		// System.out.println(call.toString() + " @$ " +
+		// marketPrices.getPriceBid(call));
+		// put.toString();
+		// stock.toString();
+		//
+		// TradeTransaction transaction = new TradeTransaction();
+		// Trade trade = new Trade(call, TradeType.BUY, 100, marketPrices);
+		// transaction.addTrade(trade);
+		// System.out.println("1 call contract " + trade.getNetCost() + " " +
+		// transaction.getNetCost());
+		//
+		// // get buy/sell price and act
+
 	}
-	
-	private void printUnderList(Promise<List<Underlying>> underList) {
-		for(Underlying under:underList) {
+
+	@Asynchronous
+	// GG change
+	private void printUnderList(Promise<List<Underlying>> underListPromise) {
+		// The idea that, because this method was annotated as Asynchronous
+		// at this point SWF says that the get() on a Promise will complete:
+		// http://docs.aws.amazon.com/amazonswf/latest/awsflowguide/getting-started-example-helloworldworkflowasync.html
+		// The very first paragraph.
+		List<Underlying> underList = underListPromise.get();
+		for (Underlying under : underList) {
 			under.getTicker();
 		}
 	}
@@ -71,7 +81,7 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 	private void setSelfClient(PurchaseWorkflowSelfClient selfClient) {
 		this.selfClient = selfClient;
 	}
-	
+
 }
 
 // @Asynchronous
