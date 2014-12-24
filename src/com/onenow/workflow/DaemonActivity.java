@@ -47,7 +47,7 @@ public class DaemonActivity {
 		
 		// IBrokers Activity
 		ActivityWorker IBrokers = new ActivityWorker(service,
-				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
+				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST2_NAME);
 		IBrokers.addActivitiesImplementation(new IBrokersActivityImpl());
 		IBrokers.start();
 		System.out.println("*** ACTIVITY: " + "IBROKERS " + IBrokers.getIdentity());
