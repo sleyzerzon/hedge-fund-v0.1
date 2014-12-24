@@ -1,4 +1,4 @@
-package com.onenow.salesforce;
+package com.onenow.database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +31,12 @@ public class SForceActivityImpl implements SForceActivity {
 		doConnect();
 	}
 	private static void doLogin() throws ConnectionException {
-		getConfigAuth().setAuthEndpoint(Constants.URL);
-		getConfigAuth().setServiceEndpoint(Constants.URL);
+		getConfigAuth().setAuthEndpoint(ConstantsDatabase.URL);
+		getConfigAuth().setServiceEndpoint(ConstantsDatabase.URL);
 		getConfigAuth().setManualLogin(true);
 		setLoginConnection(new EnterpriseConnection(getConfigAuth()));
-		setLoginResult(getLoginConnection().login(Constants.USERNAME,
-				Constants.PASSWORD + Constants.TOKEN));
+		setLoginResult(getLoginConnection().login(ConstantsDatabase.USERNAME,
+				ConstantsDatabase.PASSWORD + ConstantsDatabase.TOKEN));
 	}
 
 	private static void doConnect() throws ConnectionException {

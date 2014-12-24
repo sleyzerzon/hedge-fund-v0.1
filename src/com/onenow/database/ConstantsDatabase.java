@@ -1,6 +1,6 @@
-package com.onenow.salesforce;
+package com.onenow.database;
 
-public class Constants {
+public class ConstantsDatabase {
 
 	final static String USERNAME = "pablo.personal@icloud.com";
 	final static String PASSWORD = "p*blo433"; 

@@ -7,9 +7,10 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.onenow.broker.CloudPriceListerImpl;
-import com.onenow.salesforce.CloudListerImpl;
-import com.onenow.salesforce.SForceActivityImpl;
-import com.onenow.summit.Constants;
+import com.onenow.broker.IBrokersActivityImpl;
+import com.onenow.database.SForceActivityImpl;
+import com.onenow.summit.ConstantsSummit;
+import com.onenow.workflow.ConstantsWorkflow;
 
 public class DaemonActivity {
 
@@ -23,7 +24,7 @@ public class DaemonActivity {
 				.withSocketTimeout(70 * 1000);
 
 		AWSCredentials awsCredentials = new BasicAWSCredentials(
-				Constants.AWS_ACCESS_KEY, Constants.AWS_SECRET_KEY);
+				ConstantsSummit.AWS_ACCESS_KEY, ConstantsSummit.AWS_SECRET_KEY);
 
 		// SWF Client
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
@@ -32,24 +33,24 @@ public class DaemonActivity {
 
 		// Salesforce Activity 
 		ActivityWorker SForce = new ActivityWorker(service,
-				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
 		SForce.addActivitiesImplementation(new SForceActivityImpl());
 		SForce.start();
-		System.out.println(SForce.getIdentity());
+		System.out.println("*** ACTIVITY: " + "SALESFORCE " + SForce.getIdentity());
 		
 		// CloudPriceLister Activity
 		ActivityWorker cloudPriceLister = new ActivityWorker(service,
-				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
 		cloudPriceLister.addActivitiesImplementation(new CloudPriceListerImpl());
 		cloudPriceLister.start();
-		System.out.println(cloudPriceLister.getIdentity());
+		System.out.println("*** ACTIVITY: " + "CLOUDPRICELISTER " + cloudPriceLister.getIdentity());
 		
 		// IBrokers Activity
 		ActivityWorker IBrokers = new ActivityWorker(service,
-				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		IBrokers.addActivitiesImplementation(new CloudPriceListerImpl());
+				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST2_NAME);
+		IBrokers.addActivitiesImplementation(new IBrokersActivityImpl());
 		IBrokers.start();
-		System.out.println(IBrokers.getIdentity());
+		System.out.println("*** ACTIVITY: " + "IBROKERS " + IBrokers.getIdentity());
 	}
 
 }

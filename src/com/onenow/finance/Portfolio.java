@@ -52,6 +52,7 @@ public class Portfolio {
 		String string = "";
 		for(Investment investment : investments) {
 			investment.toString();
+			string.concat(investment.toString());
 		}
 		return string;
 	}

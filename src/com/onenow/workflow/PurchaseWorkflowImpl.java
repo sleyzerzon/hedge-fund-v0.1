@@ -14,11 +14,9 @@ import com.onenow.finance.Trade;
 import com.onenow.finance.TradeTransaction;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
-import com.onenow.salesforce.SForceActivityClient;
-import com.onenow.salesforce.SForceActivityClientImpl;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 
-public class PurchaseWorkfowImpl implements PurchaseWorkflow {
+public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 
 	private IBrokersActivityClient iBrokers = new IBrokersActivityClientImpl();
 	private PurchaseWorkflowSelfClient selfClient = new PurchaseWorkflowSelfClientImpl();
@@ -64,6 +62,37 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 		for (Underlying under : underList) {
 			under.getTicker();
 		}
+		// Date expDate = new Date();
+		// expDate.setTime(1000000);
+		// Underlying apl = new Underlying("APL");
+		// Investment stock = getiBrokers().getBest(apl, InvType.STOCK).get();
+		// Investment call = getiBrokers().getBest(apl, InvType.CALL, expDate,
+		// 405.00).get();
+		// Investment put = getiBrokers().getBest(apl, InvType.PUT, expDate,
+		// 390.00).get();
+		//
+		// System.out.println(call.toString() + " @$ " +
+		// marketPrices.getPriceBid(call));
+		// put.toString();
+		// stock.toString();
+		//
+		// TradeTransaction transaction = new TradeTransaction();
+		// Trade trade = new Trade(call, TradeType.BUY, 100, marketPrices);
+		// transaction.addTrade(trade);
+		// System.out.println("1 call contract " + trade.getNetCost() + " " +
+		// transaction.getNetCost());
+		//
+		// // get buy/sell price and act
+
+	}
+
+	@Asynchronous
+	private void printUnderList2(Promise<List<Underlying>> underListPromise) {
+		List<Underlying> underList = underListPromise.get();
+		for (Underlying under : underList) {
+			String ticker = under.getTicker();
+			System.out.println("Ticker listed: " + ticker);
+		}
 	}
 
 	private IBrokersActivityClient getiBrokers() {
@@ -83,6 +112,3 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 	}
 
 }
-
-// @Asynchronous
-//

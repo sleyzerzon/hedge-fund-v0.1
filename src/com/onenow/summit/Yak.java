@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onenow.salesforce.CustomerAccount;
+import com.onenow.database.CustomerAccount;
 
 public class Yak {
 
@@ -54,7 +54,7 @@ public class Yak {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 		String jsonp = IOUtils.toString(new URL(
-				Constants.AWS_ON_DEMAND_PRICING_URL).openStream());
+				ConstantsSummit.AWS_ON_DEMAND_PRICING_URL).openStream());
 		jsonp = jsonp.substring(jsonp.indexOf("callback(")
 				+ "callback(".length());
 		jsonp = jsonp.substring(0, jsonp.length() - 1);
