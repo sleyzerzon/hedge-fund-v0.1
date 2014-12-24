@@ -1,4 +1,4 @@
-package com.onenow.salesforce;
+package com.onenow.database;
 
 import java.util.List;
 

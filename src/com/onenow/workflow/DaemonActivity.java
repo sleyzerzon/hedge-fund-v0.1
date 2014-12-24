@@ -8,7 +8,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.onenow.broker.CloudPriceListerImpl;
 import com.onenow.broker.IBrokersActivityImpl;
-import com.onenow.salesforce.SForceActivityImpl;
+import com.onenow.database.SForceActivityImpl;
 import com.onenow.summit.ConstantsSummit;
 import com.onenow.workflow.ConstantsWorkflow;
 

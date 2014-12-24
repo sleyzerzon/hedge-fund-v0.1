@@ -9,7 +9,7 @@
 	<weaver options="-verbose">
 		<include within="com.onenow.broker.*" />
 		<include within="com.onenow.finance.*" />
-		<include within="com.onenow.salesforce.*" />	
+		<include within="com.onenow.database.*" />	
 		<include within="com.onenow.summit.*" />
 		<include within="com.onenow.swf.*" />
 		<include within="com.onenow.workflow.*" />

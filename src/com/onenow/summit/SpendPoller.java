@@ -22,7 +22,7 @@ import com.amazonaws.services.elasticmapreduce.model.Instance;
 import com.amazonaws.services.elasticmapreduce.model.InstanceGroup;
 import com.amazonaws.services.elasticmapreduce.model.InstanceStatus;
 import com.amazonaws.services.elasticmapreduce.model.InstanceTimeline;
-import com.onenow.salesforce.AccountCloud;
+import com.onenow.database.AccountCloud;
 import com.onenow.summit.AwsPricing.RegionPricing;
 import com.onenow.summit.AwsPricing.Size;
 

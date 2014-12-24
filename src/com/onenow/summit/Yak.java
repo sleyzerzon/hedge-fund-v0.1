@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onenow.salesforce.CustomerAccount;
+import com.onenow.database.CustomerAccount;
 
 public class Yak {
 

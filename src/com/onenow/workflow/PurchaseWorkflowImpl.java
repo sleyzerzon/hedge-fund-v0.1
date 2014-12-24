@@ -14,8 +14,6 @@ import com.onenow.finance.Trade;
 import com.onenow.finance.TradeTransaction;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
-import com.onenow.salesforce.SForceActivityClient;
-import com.onenow.salesforce.SForceActivityClientImpl;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 
 public class PurchaseWorkflowImpl implements PurchaseWorkflow {

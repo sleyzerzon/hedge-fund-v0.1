@@ -8,8 +8,8 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.onenow.broker.CloudPriceListerClient;
 import com.onenow.broker.CloudPriceListerClientImpl;
-import com.onenow.salesforce.SForceActivityClient;
-import com.onenow.salesforce.SForceActivityClientImpl;
+import com.onenow.database.SForceActivityClient;
+import com.onenow.database.SForceActivityClientImpl;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 
 public class SummitWorkflowImpl implements SummitWorkflow {

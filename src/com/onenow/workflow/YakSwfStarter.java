@@ -20,14 +20,13 @@ public class YakSwfStarter {
 		ClientConfiguration config = new ClientConfiguration()
 				.withSocketTimeout(70 * 1000);
 
-		AWSCredentials awsCredentials = new BasicAWSCredentials(
-				ConstantsSummit.AWS_ACCESS_KEY, ConstantsSummit.AWS_SECRET_KEY);
+		AWSCredentials awsCredentials = new BasicAWSCredentials(ConstantsSummit.AWS_ACCESS_KEY, 
+																ConstantsSummit.AWS_SECRET_KEY);
 
-		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
-				awsCredentials, config);
+		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 		SummitWorkflowClientExternalFactory factory = new SummitWorkflowClientExternalFactoryImpl(
-				service, ConstantsWorkflow.AWS_SWF_DOMAIN);
+														service, ConstantsWorkflow.AWS_SWF_DOMAIN);
 		SummitWorkflowClientExternal client = factory.getClient();
 		client.mainFlow();
 
