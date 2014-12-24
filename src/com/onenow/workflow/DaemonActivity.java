@@ -8,7 +8,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.onenow.broker.CloudPriceListerImpl;
 import com.onenow.salesforce.CloudListerImpl;
-import com.onenow.salesforce.SalesforceImpl;
+import com.onenow.salesforce.SForceActivityImpl;
 import com.onenow.summit.Constants;
 
 public class DaemonActivity {
@@ -18,28 +18,38 @@ public class DaemonActivity {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
 		ClientConfiguration config = new ClientConfiguration()
 				.withSocketTimeout(70 * 1000);
 
 		AWSCredentials awsCredentials = new BasicAWSCredentials(
 				Constants.AWS_ACCESS_KEY, Constants.AWS_SECRET_KEY);
 
+		// SWF Client
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 
-		ActivityWorker aw1 = new ActivityWorker(service,
+		// Salesforce Activity 
+		ActivityWorker SForce = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		aw1.addActivitiesImplementation(new SalesforceImpl());
-		aw1.start();
-		System.out.println(aw1.getIdentity());
+		SForce.addActivitiesImplementation(new SForceActivityImpl());
+		SForce.start();
+		System.out.println(SForce.getIdentity());
 		
-
-		ActivityWorker aw2 = new ActivityWorker(service,
+		// CloudPriceLister Activity
+		ActivityWorker cloudPriceLister = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		aw2.addActivitiesImplementation(new CloudPriceListerImpl());
-		aw2.start();
-		System.out.println(aw2.getIdentity());
+		cloudPriceLister.addActivitiesImplementation(new CloudPriceListerImpl());
+		cloudPriceLister.start();
+		System.out.println(cloudPriceLister.getIdentity());
+		
+		// IBrokers Activity
+		ActivityWorker IBrokers = new ActivityWorker(service,
+				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+		IBrokers.addActivitiesImplementation(new CloudPriceListerImpl());
+		IBrokers.start();
+		System.out.println(IBrokers.getIdentity());
 	}
 
 }

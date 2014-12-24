@@ -15,15 +15,11 @@ import com.sforce.ws.ConnectionException;
 
 @ActivityRegistrationOptions(defaultTaskScheduleToStartTimeoutSeconds = 3600, defaultTaskStartToCloseTimeoutSeconds = 3600, defaultTaskList = Constants.AWS_SWF_TASK_LIST_NAME)
 @Activities(version = Constants.AWS_SWF_VERSION)
-public interface Salesforce {
+public interface SForceActivity {
 	@Activity
 	public List<System__c> getSystem() throws ConnectionException;
 	public List<Account> getAccounts() throws ConnectionException;
 	public List<Cloud__c> getClouds() throws ConnectionException;
 	public List<Reduction__c> getReductions() throws ConnectionException;
 	public void create(SObject[] objects) throws ConnectionException;
-//	public List<AccountCloud> getCloudList();
-//	public void setCloudList();
-//	public List<CustomerAccount> getAccountList();
-//	public void setAccountList();
 }

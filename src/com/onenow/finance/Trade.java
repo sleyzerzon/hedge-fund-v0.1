@@ -18,7 +18,7 @@ public class Trade {
 	}
 	
 	public void setNetCost() {	
-		Double cost = getQuantity() * getMarketPrice().getBuyPrice(getInvestment());
+		Double cost = getQuantity() * getMarketPrice().getPriceBid(getInvestment());
 		
 		if (getTradeType().equals(TradeType.BUY)) {
 			this.netCost = -cost;

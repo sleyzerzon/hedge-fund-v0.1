@@ -17,22 +17,24 @@ public class DaemonWorkflow {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
 		ClientConfiguration config = new ClientConfiguration()
 				.withSocketTimeout(70 * 1000);
 
 		AWSCredentials awsCredentials = new BasicAWSCredentials(
 				Constants.AWS_ACCESS_KEY, Constants.AWS_SECRET_KEY);
 
+		// SWF Client
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 
+		// SWF Worker
 		WorkflowWorker wfw = new WorkflowWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
 		wfw.addWorkflowImplementationType(SummitWorkflowImpl.class);
 		wfw.start();
 		System.out.println(wfw.getIdentity());
-
 
 	}
 }

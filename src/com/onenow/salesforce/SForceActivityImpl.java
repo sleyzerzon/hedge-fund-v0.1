@@ -18,9 +18,7 @@ import com.sforce.soap.enterprise.sobject.System__c;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
-//import com.sforce.ws.tools.wsdlc;
-
-public class SalesforceImpl implements Salesforce {
+public class SForceActivityImpl implements SForceActivity {
 
 	private final static ConnectorConfig configAuth = new ConnectorConfig();
 	private final static ConnectorConfig configEnt = new ConnectorConfig();

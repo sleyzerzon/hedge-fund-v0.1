@@ -9,16 +9,16 @@ public class MarketPrice {
 	public MarketPrice() {
 	}
 	
-	public void setInvestmentPrice(Investment investment, Double buyPrice, Double sellPrice) {
-		getPrices().put(getLookupKey(investment, TradeType.BUY), buyPrice);
-		getPrices().put(getLookupKey(investment, TradeType.SELL), sellPrice);
+	public void setPrice(Investment investment, Double bidPrice, Double askPrice) {
+		getPrices().put(getLookupKey(investment, TradeType.BUY), bidPrice);
+		getPrices().put(getLookupKey(investment, TradeType.SELL), askPrice);
 	}
 	
-	public Double getBuyPrice(Investment investment) {
+	public Double getPriceBid(Investment investment) {
 		return (Double) (getPrices().get(getLookupKey(investment, TradeType.BUY)));
 	}
 
-	public Double getSellPrice(Investment investment, Enum InvestmentTradeType) {
+	public Double getPriceAsk(Investment investment) {
 		return (Double) (getPrices().get(getLookupKey(investment, TradeType.SELL)));
 	}
 

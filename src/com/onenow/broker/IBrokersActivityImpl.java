@@ -10,9 +10,10 @@ import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
+import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
 
-public class InteractiveBrokersImpl implements InteractiveBrokers{
+public class IBrokersActivityImpl implements IBrokersActivity{
 
 	static Portfolio marketPortfolio = new Portfolio();
 	static MarketPrice marketPrices = new MarketPrice();
@@ -37,19 +38,24 @@ public class InteractiveBrokersImpl implements InteractiveBrokers{
 	}
 	
 	@Override
-	public Double getPrice() {
-		Double price = 0.0;
-		
-		return price;	
+	public Double getAskPrice(Investment inv) {
+		setPriceAll();
+		return(getMarketPrices().getPriceAsk(inv, TradeType.SELL));			
 	}
-	
+
+	@Override
+	public Double getBidPrice(Investment inv) {
+		setPriceAll();
+		return(getMarketPrices().getPriceAsk(inv, TradeType.BUY));			
+	}
+
 	private void setPriceAll() {
 		for(Underlying under : getUnderlying()) {
-			setPrice(under);
+			setUnderlyingPrice(under);
 		}
 	}
 	
-	private static void setPrice(Underlying under) {
+	private static void setUnderlyingPrice(Underlying under) {
 
 		Date expDate = new Date();
 		expDate.setTime(1000000);
@@ -66,11 +72,11 @@ public class InteractiveBrokersImpl implements InteractiveBrokers{
 		getMarketPortfolio().addInvestment(put1);
 		getMarketPortfolio().addInvestment(put2);
 		
-		getMarketPrices().setInvestmentPrice(stock, 396.00, 395.00);
-		getMarketPrices().setInvestmentPrice(call1, 7.41, 7.40);
-		getMarketPrices().setInvestmentPrice(call2, 8.85, 8.84);
-		getMarketPrices().setInvestmentPrice(put1, 9.50, 9.49);
-		getMarketPrices().setInvestmentPrice(put2, 8.33, 8.32);
+		getMarketPrices().setPrice(stock, 396.00, 395.00);
+		getMarketPrices().setPrice(call1, 7.41, 7.40);
+		getMarketPrices().setPrice(call2, 8.85, 8.84);
+		getMarketPrices().setPrice(put1, 9.50, 9.49);
+		getMarketPrices().setPrice(put2, 8.33, 8.32);
 		
 		getMarketPortfolio().toString();
 		
