@@ -6,8 +6,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.WorkflowWorker;
-import com.amazonaws.services.simpleworkflow.model.Run;
-import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
 import com.onenow.summit.Constants;
 
 public class DaemonWorkflow {
@@ -29,12 +27,20 @@ public class DaemonWorkflow {
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
 
-		// SWF Worker
-		WorkflowWorker wfw = new WorkflowWorker(service,
+		// SummitWorkflowImpl
+		WorkflowWorker summit = new WorkflowWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		wfw.addWorkflowImplementationType(SummitWorkflowImpl.class);
-		wfw.start();
-		System.out.println(wfw.getIdentity());
+		summit.addWorkflowImplementationType(SummitWorkflowImpl.class);
+		summit.start();
+		System.out.println("*** WORKFLOW IDENTITY: " + "SUMMIT " + summit.getIdentity());
 
+		// PurchaseWorkflowImpl
+		WorkflowWorker purchase = new WorkflowWorker(service,
+				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
+		purchase.addWorkflowImplementationType(PurchaseWorkflowImpl.class);
+		purchase.start();
+		System.out.println("*** WORKFLOW IDENTITY: " + "PURCHASE " + purchase.getIdentity());
+
+		
 	}
 }

@@ -17,7 +17,6 @@ public class IBrokersActivityImpl implements IBrokersActivity{
 
 	static Portfolio marketPortfolio = new Portfolio();
 	static MarketPrice marketPrices = new MarketPrice();
-
 	
 	@Override
 	public List<Underlying> getUnderlying() {
@@ -38,16 +37,28 @@ public class IBrokersActivityImpl implements IBrokersActivity{
 	}
 	
 	@Override
-	public Double getAskPrice(Investment inv) {
+	public Double getPriceAsk(Investment inv) {
 		setPriceAll();
-		return(getMarketPrices().getPriceAsk(inv, TradeType.SELL));			
+		return(getMarketPrices().getPriceAsk(inv));			
 	}
 
 	@Override
-	public Double getBidPrice(Investment inv) {
+	public Double getPriceBid(Investment inv) {
 		setPriceAll();
-		return(getMarketPrices().getPriceAsk(inv, TradeType.BUY));			
+		return(getMarketPrices().getPriceAsk(inv));			
 	}
+	
+	@Override
+	public Investment getBest(Underlying under, Enum invType) { // generic
+		return(getMarketPortfolio().getBest(under, invType));
+	}
+	
+	@Override
+	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // generic
+		return(getMarketPortfolio().getBest(under, invType, expiration, strike));
+	}
+	
+	
 
 	private void setPriceAll() {
 		for(Underlying under : getUnderlying()) {

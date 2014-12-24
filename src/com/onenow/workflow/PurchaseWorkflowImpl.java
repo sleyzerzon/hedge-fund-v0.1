@@ -18,7 +18,7 @@ import com.onenow.salesforce.SForceActivityClient;
 import com.onenow.salesforce.SForceActivityClientImpl;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 
-public class PurchaseWorkfowImpl implements PurchaseWorkflow {
+public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 
 	private IBrokersActivityClient iBrokers = new IBrokersActivityClientImpl();
 	private PurchaseWorkflowSelfClient selfClient = new PurchaseWorkflowSelfClientImpl();
@@ -28,14 +28,14 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 	
 				
 		Promise<List<Underlying>> underList = getiBrokers().getUnderlying();
-		printUnderList(underList);
+		printUnderList(underList);	
 		
-//		// Trade trade = new Trade(
 //		Date expDate = new Date();
 //		expDate.setTime(1000000);
-//		Investment stock = marketPortfolio.getBest(apl, InvType.STOCK);
-//		Investment call = marketPortfolio.getBest(apl, InvType.CALL, expDate, 405.00);
-//		Investment put = marketPortfolio.getBest(apl, InvType.PUT, expDate, 390.00);
+//		Underlying apl = new Underlying("APL");
+//		Investment stock = getiBrokers().getBest(apl, InvType.STOCK).get();
+//		Investment call = getiBrokers().getBest(apl, InvType.CALL, expDate, 405.00).get();
+//		Investment put = getiBrokers().getBest(apl, InvType.PUT, expDate, 390.00).get();
 //		
 //		System.out.println(call.toString() + " @$ " + marketPrices.getPriceBid(call));
 //		put.toString();
@@ -50,9 +50,11 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 		
 	}
 	
+	@Asynchronous
 	private void printUnderList(Promise<List<Underlying>> underList) {
-		for(Underlying under:underList) {
-			under.getTicker();
+		for(Underlying under:underList.get()) {
+			String ticker = under.getTicker();
+			System.out.println("Ticker listed: " + ticker);
 		}
 	}
 
@@ -73,6 +75,3 @@ public class PurchaseWorkfowImpl implements PurchaseWorkflow {
 	}
 	
 }
-
-// @Asynchronous
-//

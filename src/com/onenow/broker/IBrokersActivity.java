@@ -1,5 +1,6 @@
 package com.onenow.broker;
 
+import java.util.Date;
 import java.util.List;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activities;
@@ -14,6 +15,8 @@ import com.onenow.summit.Constants;
 public interface IBrokersActivity {
 	@Activity
 	public List<Underlying> getUnderlying();
-	public Double getAskPrice(Investment inv);
-	public Double getBidPrice(Investment inv);
+	public Double getPriceAsk(Investment inv);
+	public Double getPriceBid(Investment inv);
+	public Investment getBest(Underlying under, Enum invType);
+	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike);
 }

@@ -7,7 +7,7 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.onenow.broker.CloudPriceListerImpl;
-import com.onenow.salesforce.CloudListerImpl;
+import com.onenow.broker.IBrokersActivityImpl;
 import com.onenow.salesforce.SForceActivityImpl;
 import com.onenow.summit.Constants;
 
@@ -35,21 +35,21 @@ public class DaemonActivity {
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
 		SForce.addActivitiesImplementation(new SForceActivityImpl());
 		SForce.start();
-		System.out.println(SForce.getIdentity());
+		System.out.println("*** ACTIVITY: " + "SALESFORCE " + SForce.getIdentity());
 		
 		// CloudPriceLister Activity
 		ActivityWorker cloudPriceLister = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
 		cloudPriceLister.addActivitiesImplementation(new CloudPriceListerImpl());
 		cloudPriceLister.start();
-		System.out.println(cloudPriceLister.getIdentity());
+		System.out.println("*** ACTIVITY: " + "CLOUDPRICELISTER " + cloudPriceLister.getIdentity());
 		
 		// IBrokers Activity
 		ActivityWorker IBrokers = new ActivityWorker(service,
 				Constants.AWS_SWF_DOMAIN, Constants.AWS_SWF_TASK_LIST_NAME);
-		IBrokers.addActivitiesImplementation(new CloudPriceListerImpl());
+		IBrokers.addActivitiesImplementation(new IBrokersActivityImpl());
 		IBrokers.start();
-		System.out.println(IBrokers.getIdentity());
+		System.out.println("*** ACTIVITY: " + "IBROKERS " + IBrokers.getIdentity());
 	}
 
 }
