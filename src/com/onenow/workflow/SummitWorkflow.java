@@ -11,6 +11,6 @@ import com.onenow.workflow.ConstantsWorkflow;
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 public interface SummitWorkflow {
 
-	@Execute(version = ConstantsWorkflow.AWS_SWF_VERSION)
+	@Execute(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
 	public void mainFlow();
 }

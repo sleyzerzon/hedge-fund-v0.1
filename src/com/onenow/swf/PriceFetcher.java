@@ -5,7 +5,7 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrati
 import com.onenow.workflow.ConstantsWorkflow;
 
 @ActivityRegistrationOptions(defaultTaskScheduleToStartTimeoutSeconds = 300, defaultTaskStartToCloseTimeoutSeconds = 10)
-@Activities(version = ConstantsWorkflow.AWS_SWF_VERSION)
+@Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
 public interface PriceFetcher {
 
 }

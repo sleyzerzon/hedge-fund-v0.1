@@ -10,7 +10,7 @@ import com.onenow.workflow.ConstantsWorkflow;
 @ActivityRegistrationOptions(	defaultTaskScheduleToStartTimeoutSeconds = 3600, 
 								defaultTaskStartToCloseTimeoutSeconds = 3600, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
-@Activities(version = ConstantsWorkflow.AWS_SWF_VERSION)
+@Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
 public interface CloudPriceLister {
 
 	public abstract List<String> getInstanceTypes(String provider);
@@ -21,7 +21,7 @@ public interface CloudPriceLister {
 	
 	List<String> getAvailableTransactionTypes(String provider);
 	
-	float getPrice(String provider, String xactnType, )
+//	float getPrice(String provider, String xactnType, )
 
 	public abstract AwsPricing onDemandPricing();
 }

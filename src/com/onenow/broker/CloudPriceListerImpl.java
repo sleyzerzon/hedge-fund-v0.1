@@ -85,4 +85,10 @@ public class CloudPriceListerImpl implements CloudPriceLister {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public List<String> getAvailableTransactionTypes(String provider) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

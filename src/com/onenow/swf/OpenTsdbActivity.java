@@ -10,7 +10,7 @@ import com.onenow.workflow.ConstantsWorkflow;
 @ActivityRegistrationOptions(	defaultTaskScheduleToStartTimeoutSeconds = 3600, 
 								defaultTaskStartToCloseTimeoutSeconds = 3600, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
-@Activities(version = ConstantsWorkflow.AWS_SWF_VERSION)
+@Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
 public interface OpenTsdbActivity {
 	@Activity
 	
