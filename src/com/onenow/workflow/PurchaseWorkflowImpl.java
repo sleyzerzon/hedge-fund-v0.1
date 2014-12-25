@@ -1,20 +1,12 @@
 package com.onenow.workflow;
 
-import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.onenow.broker.IBrokersActivityClient;
 import com.onenow.broker.IBrokersActivityClientImpl;
-import com.onenow.finance.InvType;
-import com.onenow.finance.Investment;
-import com.onenow.finance.Trade;
-import com.onenow.finance.TradeTransaction;
-import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
-import com.sforce.soap.enterprise.sobject.Cloud__c;
 
 public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 
@@ -52,15 +44,15 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	}
 
 	@Asynchronous
-	// GG change
-	private void printUnderList(Promise<List<Underlying>> underListPromise) {
+	void printUnderList(Promise<List<Underlying>> underListPromise) {
 		// The idea that, because this method was annotated as Asynchronous
 		// at this point SWF says that the get() on a Promise will complete:
 		// http://docs.aws.amazon.com/amazonswf/latest/awsflowguide/getting-started-example-helloworldworkflowasync.html
 		// The very first paragraph.
 		List<Underlying> underList = underListPromise.get();
+		System.out.println("HELLO HELLO!");
 		for (Underlying under : underList) {
-			under.getTicker();
+			System.out.println(under.getTicker());
 		}
 		// Date expDate = new Date();
 		// expDate.setTime(1000000);

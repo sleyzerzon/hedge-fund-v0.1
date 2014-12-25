@@ -8,6 +8,10 @@ public class Underlying {
 		setTicker(ticker);
 	}
 	
+	public Underlying() {
+		
+	}
+	
 	public String toString() {
 		String string = getTicker();
 		// System.out.println("Underlying: " + string);

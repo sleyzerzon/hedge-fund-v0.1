@@ -5,9 +5,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
-import com.amazonaws.services.simpleworkflow.model.Run;
-import com.amazonaws.services.simpleworkflow.model.StartWorkflowExecutionRequest;
-import com.amazonaws.services.simpleworkflow.model.WorkflowType;
 import com.onenow.summit.ConstantsSummit;
 
 public class YakSwfStarter {
@@ -20,15 +17,22 @@ public class YakSwfStarter {
 		ClientConfiguration config = new ClientConfiguration()
 				.withSocketTimeout(70 * 1000);
 
-		AWSCredentials awsCredentials = new BasicAWSCredentials(ConstantsSummit.AWS_ACCESS_KEY, 
-																ConstantsSummit.AWS_SECRET_KEY);
+		AWSCredentials awsCredentials = new BasicAWSCredentials(
+				ConstantsSummit.AWS_ACCESS_KEY, ConstantsSummit.AWS_SECRET_KEY);
 
-		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(awsCredentials, config);
+		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
+				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
-		SummitWorkflowClientExternalFactory factory = new SummitWorkflowClientExternalFactoryImpl(
-														service, ConstantsWorkflow.AWS_SWF_DOMAIN);
-		SummitWorkflowClientExternal client = factory.getClient();
+		// SummitWorkflowClientExternalFactory factory = new
+		// SummitWorkflowClientExternalFactoryImpl(
+		// service, ConstantsWorkflow.AWS_SWF_DOMAIN);
+		// SummitWorkflowClientExternal client = factory.getClient();
+		// client.mainFlow();
+		PurchaseWorkflowClientExternalFactory factory = new PurchaseWorkflowClientExternalFactoryImpl(
+				service, ConstantsWorkflow.AWS_SWF_DOMAIN);
+		PurchaseWorkflowClientExternal client = factory.getClient();
 		client.mainFlow();
+		System.out.println("Execution ID: " + client.getWorkflowExecution().getRunId() + "; " + client.getWorkflowExecution().getWorkflowId());
 
 	}
 }

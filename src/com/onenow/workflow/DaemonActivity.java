@@ -19,7 +19,7 @@ public class DaemonActivity {
 	}
 
 	public static void main(String[] args) throws Exception {
-		
+
 		ClientConfiguration config = new ClientConfiguration()
 				.withSocketTimeout(70 * 1000);
 
@@ -30,27 +30,16 @@ public class DaemonActivity {
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(
 				awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
-
-		// Salesforce Activity 
-		ActivityWorker SForce = new ActivityWorker(service,
-				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
-		SForce.addActivitiesImplementation(new SForceActivityImpl());
-		SForce.start();
-		System.out.println("*** ACTIVITY: " + "SALESFORCE " + SForce.getIdentity());
-		
 		// CloudPriceLister Activity
-		ActivityWorker cloudPriceLister = new ActivityWorker(service,
-				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
-		cloudPriceLister.addActivitiesImplementation(new CloudPriceListerImpl());
-		cloudPriceLister.start();
-		System.out.println("*** ACTIVITY: " + "CLOUDPRICELISTER " + cloudPriceLister.getIdentity());
-		
-		// IBrokers Activity
-		ActivityWorker IBrokers = new ActivityWorker(service,
-				ConstantsWorkflow.AWS_SWF_DOMAIN, ConstantsWorkflow.AWS_SWF_TASK_LIST2_NAME);
-		IBrokers.addActivitiesImplementation(new IBrokersActivityImpl());
-		IBrokers.start();
-		System.out.println("*** ACTIVITY: " + "IBROKERS " + IBrokers.getIdentity());
+		ActivityWorker aw = new ActivityWorker(service,
+				ConstantsWorkflow.AWS_SWF_DOMAIN,
+				ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
+		aw.addActivitiesImplementation(new CloudPriceListerImpl());
+		aw.addActivitiesImplementation(new IBrokersActivityImpl());
+		aw.start();
+		aw.addActivitiesImplementation(new SForceActivityImpl());
+		System.out.println("*** ACTIVITY WORKER ID: " + aw.getIdentity());
+
 	}
 
 }
