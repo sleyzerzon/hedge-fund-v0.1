@@ -1,5 +1,6 @@
 package com.onenow.broker;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,33 +11,38 @@ public class BrokerWallStIntBroActivityImpl implements BrokerWallSt, BrokerWallS
 
 	@Override
 	public List<Underlying> getUnderlying() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Underlying> list = new ArrayList<Underlying>();
+		// TODO 
+		return list;
 	}
 
 	@Override
 	public Double getPriceAsk(Investment inv) {
+		Double number = 0.0;
 		// TODO Auto-generated method stub
-		return null;
+		return number;
 	}
 
 	@Override
 	public Double getPriceBid(Investment inv) {
+		Double number = 0.0;
 		// TODO Auto-generated method stub
-		return null;
+		return number;
 	}
 
 	@Override
 	public Investment getBest(Underlying under, Enum invType) {
+		Investment inv = new Investment();
 		// TODO Auto-generated method stub
-		return null;
+		return inv;
 	}
 
 	@Override
 	public Investment getBest(Underlying under, Enum invType, Date expiration,
 			Double strike) {
+		Investment inv = new Investment();
 		// TODO Auto-generated method stub
-		return null;
+		return inv;
 	}
 
 	
