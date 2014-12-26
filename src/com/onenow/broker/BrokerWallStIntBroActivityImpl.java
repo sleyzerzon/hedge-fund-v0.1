@@ -6,7 +6,7 @@ import java.util.List;
 import com.onenow.finance.Investment;
 import com.onenow.finance.Underlying;
 
-public class IBrokersActivityImpl implements BrokerWallSt, IBrokersActivity {
+public class BrokerWallStIntBroActivityImpl implements BrokerWallSt, BrokerWallStIntBroActivity {
 
 	@Override
 	public List<Underlying> getUnderlying() {

@@ -12,8 +12,7 @@ import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.Underlying;
 
-//Emulator of BrokerWallSt
-public class BrokerWallStActivityImpl implements BrokerWallSt, BrokerWallStActivity {
+public class BrokerWallStEmulatorActivityImpl implements BrokerWallSt, BrokerWallStEmulatorActivity {
 
 	static Portfolio marketPortfolio = new Portfolio();
 	static MarketPrice marketPrices = new MarketPrice();
@@ -59,7 +58,7 @@ public class BrokerWallStActivityImpl implements BrokerWallSt, BrokerWallStActiv
 	}
 	
 	
-
+	// PRIVATE
 	private void setPriceAll() {
 		for(Underlying under : getUnderlying()) {
 			setUnderlyingPrice(under);
@@ -93,6 +92,7 @@ public class BrokerWallStActivityImpl implements BrokerWallSt, BrokerWallStActiv
 		
 	}
 
+	// SET GET
 	private static Portfolio getMarketPortfolio() {
 		return marketPortfolio;
 	}
@@ -108,5 +108,4 @@ public class BrokerWallStActivityImpl implements BrokerWallSt, BrokerWallStActiv
 	private void setMarketPrices(MarketPrice marketPrices) {
 		this.marketPrices = marketPrices;
 	}
-	
 }
