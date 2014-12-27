@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.onenow.finance.Investment;
+import com.onenow.finance.Trade;
 import com.onenow.finance.Underlying;
 
 public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActivity {
@@ -71,6 +72,18 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public List<Trade> getTrades() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTrade(Trade trade) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	// SET GET
 	private static BrokerWallStEmulator getBrokerEmulator() {
@@ -91,7 +104,6 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 	private static void setBrokerIntBro(BrokerWallStIntBro brokerIntBro) {
 		BrokerActivityImpl.brokerIntBro = brokerIntBro;
 	}
-
 	
 	
 }

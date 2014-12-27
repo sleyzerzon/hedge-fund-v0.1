@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.onenow.finance.Investment;
+import com.onenow.finance.Trade;
 import com.onenow.finance.Underlying;
 
 public class BrokerWallStIntBro implements BrokerWallSt {
@@ -47,6 +48,18 @@ public class BrokerWallStIntBro implements BrokerWallSt {
 			Double strike) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Trade> getTrades() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTrade(Trade trade) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

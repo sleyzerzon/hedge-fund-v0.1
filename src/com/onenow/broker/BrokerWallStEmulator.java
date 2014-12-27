@@ -10,6 +10,7 @@ import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
+import com.onenow.finance.Trade;
 import com.onenow.finance.Underlying;
 
 public class BrokerWallStEmulator implements BrokerWallSt {
@@ -41,18 +42,7 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 		}
 		return getMarketPortfolio().getInvestments();
 	}
-
-	private void setInvestments() {
-		Date expDate = new Date();
-		expDate.setTime(1000000);
-		for(Underlying under:getUnderlying()){
-			setMarketInvestmentPrice(under);
-		}		
-		System.out.println(getMarketPortfolio().toString());
-		
-		System.out.println(getMyPortfolio().toString());
-	}
-		
+	
 	@Override
 	public Double getPriceAsk(Investment inv) {
 		return getMarketPrices().getPriceAsk(inv);			
@@ -72,7 +62,18 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // generic
 		return getMarketPortfolio().getBest(under, invType, expiration, strike);
 	}
-	
+
+	@Override
+	public List<Trade> getTrades() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTrade(Trade trade) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	// PRIVATE
 	private void setUnderlying() {
@@ -88,6 +89,15 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 		getUnderList().add(amzn);
 		
 		System.out.println("Underlying: " + getUnderList().toString());		
+	}
+	
+	private void setInvestments() {
+		Date expDate = new Date();
+		expDate.setTime(1000000);
+		for(Underlying under:getUnderlying()){
+			setMarketInvestmentPrice(under);
+		}		
+		System.out.println(getMarketPortfolio().toString());		
 	}
 	
 	private static void setMarketInvestmentPrice(Underlying under) {
@@ -149,8 +159,6 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 	private static void setMarketPrices(MarketPrice marketPrices) {
 		BrokerWallStEmulator.marketPrices = marketPrices;
 	}
-
-
 
 
 }
