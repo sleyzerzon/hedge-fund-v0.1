@@ -6,7 +6,7 @@ import java.util.Date;
 public class Portfolio {
 
 	private List<Investment> investments;
-	
+		
 	public Portfolio() {
 		setInvestments(new ArrayList<Investment>());
 	}
@@ -25,7 +25,7 @@ public class Portfolio {
 	public List<Investment> search(Underlying under, Enum invType) { // generic
 		List<Investment> foundInvestments = new ArrayList<Investment>();
 		for(Investment investment : getInvestments()) {
-			if(under.getTicker().equals(investment.getunderlying().getTicker()) &&
+			if(under.getTicker().equals(investment.getUnderlying().getTicker()) &&
 				investment.getInvestmentType().equals(invType)) {
 				foundInvestments.add(investment);
 			}
@@ -38,7 +38,7 @@ public class Portfolio {
 		for(Investment investment : getInvestments()) {
 			if(investment.getInvestmentType().equals(InvType.CALL) || investment.getInvestmentType().equals(InvType.PUT)) {					
 				InvestmentOption option = (InvestmentOption) investment;
-				if (under.getTicker().equals(investment.getunderlying().getTicker()) &&
+				if (under.getTicker().equals(investment.getUnderlying().getTicker()) &&
 					option.getExpirationDate().equals(expiration) && 
 					option.getStrikePrice().equals(strike)) {
 						foundInvestments.add(investment);

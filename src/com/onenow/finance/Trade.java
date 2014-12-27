@@ -8,6 +8,9 @@ public class Trade {
 	private Double netCost; // +$10 net, -$23 net
 	private MarketPrice marketPrice;  // $7.50 per share
 	
+	public Trade() {
+		// TODO
+	}
 
 	public Trade(Investment inv, Enum tradeType, int quantity, MarketPrice market) {
 		setInvestment(inv);

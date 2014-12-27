@@ -9,7 +9,7 @@ public class Investment {
 		// does not set underlying
 	}
 	public Investment(Underlying underlying, Enum invType) {
-		setunderlying(underlying);
+		setUnderlying(underlying);
 		setInvestmentType(invType);
 	}	
 	public String toString() {
@@ -17,24 +17,20 @@ public class Investment {
 		// System.out.println("Investment: " + string);
 		return string;
 	}
+	
+	// SET GET
 
 	public Underlying getUnderlying() {
 		return underlying;
 	}
-	public void setUnderlying(Underlying underlying) {
+	private void setUnderlying(Underlying underlying) {
 		this.underlying = underlying;
 	}
 	public Enum getInvestmentType() {
 		return investmentType;
 	}
-	public void setInvestmentType(Enum investmentType) {
+	private void setInvestmentType(Enum investmentType) {
 		this.investmentType = investmentType;
 	}
-	public Underlying getunderlying() {
-		return underlying;
-	}
-
-	public void setunderlying(Underlying underlying) {
-		this.underlying = underlying;
-	}
+		
 }
