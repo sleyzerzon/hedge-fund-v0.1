@@ -2,6 +2,10 @@ package com.onenow.finance;
 
 public class InvestmentStock extends Investment {
 
+	public InvestmentStock() {
+		
+	}
+	
 	public InvestmentStock (Underlying underlying) {
 		super(underlying, InvType.STOCK);
 	}

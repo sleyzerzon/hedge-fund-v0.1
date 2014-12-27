@@ -9,6 +9,10 @@ public class InvestmentOption extends Investment {
 	private Date expirationDate;
 	private int sharesPerContract=100;
 
+	public InvestmentOption() {
+		
+	}
+	
 	public InvestmentOption(Underlying underlying, Enum optionType, Date expirationDate, Double strikePrice) {
 		super(underlying, optionType);
 		setStrikePrice(strikePrice);

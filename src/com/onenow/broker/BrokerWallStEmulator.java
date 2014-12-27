@@ -14,58 +14,83 @@ import com.onenow.finance.Underlying;
 
 public class BrokerWallStEmulator implements BrokerWallSt {
 
-	static Portfolio marketPortfolio = new Portfolio();
-	static MarketPrice marketPrices = new MarketPrice();
+	private static List<Underlying> underList;
+	private static Portfolio marketPortfolio;
+	private static Portfolio myPortfolio;
+	private static MarketPrice marketPrices;
+	
+	public BrokerWallStEmulator() {
+		setUnderList(new ArrayList<Underlying>());
+		setMarketPortfolio(new Portfolio());
+		setMyPortfolio(new Portfolio());
+		setMarketPrices(new MarketPrice());
+		
+		setUnderlying();
+		setInvestments();
+	}
 	
 	@Override
 	public List<Underlying> getUnderlying() {
+		return getUnderList();
+	}
+	
+	@Override
+	public List<Investment> getInvestments(boolean myPortfolio) {
+		if(myPortfolio) {
+			return getMyPortfolio().getInvestments();
+		}
+		return getMarketPortfolio().getInvestments();
+	}
+
+	private void setInvestments() {
+		Date expDate = new Date();
+		expDate.setTime(1000000);
+		for(Underlying under:getUnderlying()){
+			setMarketInvestmentPrice(under);
+		}		
+		System.out.println(getMarketPortfolio().toString());
 		
-		List<Underlying> underList = new ArrayList<Underlying>();
+		System.out.println(getMyPortfolio().toString());
+	}
+		
+	@Override
+	public Double getPriceAsk(Investment inv) {
+		return getMarketPrices().getPriceAsk(inv);			
+	}
+
+	@Override
+	public Double getPriceBid(Investment inv) {
+		return getMarketPrices().getPriceAsk(inv);			
+	}
+	
+	@Override
+	public Investment getBest(Underlying under, Enum invType) { // generic
+		return getMarketPortfolio().getBest(under, invType);
+	}
+	
+	@Override
+	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // generic
+		return getMarketPortfolio().getBest(under, invType, expiration, strike);
+	}
+	
+	
+	// PRIVATE
+	private void setUnderlying() {
 		
 		Underlying apl = new Underlying("APL");
 		Underlying intc = new Underlying("INTC");
 		Underlying rus = new Underlying("RUS");
 		Underlying amzn = new Underlying("AMZN");
 
-		underList.add(apl);
-		underList.add(intc);
-		underList.add(rus);
-		underList.add(amzn);
+		getUnderList().add(apl);
+		getUnderList().add(intc);
+		getUnderList().add(rus);
+		getUnderList().add(amzn);
 		
-		return underList;
+		System.out.println("Underlying: " + getUnderList().toString());		
 	}
 	
-	@Override
-	public Double getPriceAsk(Investment inv) {
-		setPriceAll();
-		return(getMarketPrices().getPriceAsk(inv));			
-	}
-
-	@Override
-	public Double getPriceBid(Investment inv) {
-		setPriceAll();
-		return(getMarketPrices().getPriceAsk(inv));			
-	}
-	
-	@Override
-	public Investment getBest(Underlying under, Enum invType) { // generic
-		return(getMarketPortfolio().getBest(under, invType));
-	}
-	
-	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // generic
-		return(getMarketPortfolio().getBest(under, invType, expiration, strike));
-	}
-	
-	
-	// PRIVATE
-	private void setPriceAll() {
-		for(Underlying under : getUnderlying()) {
-			setUnderlyingPrice(under);
-		}
-	}
-	
-	private static void setUnderlyingPrice(Underlying under) {
+	private static void setMarketInvestmentPrice(Underlying under) {
 
 		Date expDate = new Date();
 		expDate.setTime(1000000);
@@ -87,25 +112,45 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 		getMarketPrices().setPrice(call2, 8.85, 8.84);
 		getMarketPrices().setPrice(put1, 9.50, 9.49);
 		getMarketPrices().setPrice(put2, 8.33, 8.32);
-		
-		getMarketPortfolio().toString();
-		
+			
 	}
 
+
 	// SET GET
+
+	private static List<Underlying> getUnderList() {
+		return underList;
+	}
+
+	private static void setUnderList(List<Underlying> underList) {
+		BrokerWallStEmulator.underList = underList;
+	}
+
 	private static Portfolio getMarketPortfolio() {
 		return marketPortfolio;
 	}
 
-	private void setMarketPortfolio(Portfolio marketPortfolio) {
-		this.marketPortfolio = marketPortfolio;
+	private static void setMarketPortfolio(Portfolio marketPortfolio) {
+		BrokerWallStEmulator.marketPortfolio = marketPortfolio;
+	}
+
+	private static Portfolio getMyPortfolio() {
+		return myPortfolio;
+	}
+
+	private static void setMyPortfolio(Portfolio myPortfolio) {
+		BrokerWallStEmulator.myPortfolio = myPortfolio;
 	}
 
 	private static MarketPrice getMarketPrices() {
 		return marketPrices;
 	}
 
-	private void setMarketPrices(MarketPrice marketPrices) {
-		this.marketPrices = marketPrices;
+	private static void setMarketPrices(MarketPrice marketPrices) {
+		BrokerWallStEmulator.marketPrices = marketPrices;
 	}
+
+
+
+
 }

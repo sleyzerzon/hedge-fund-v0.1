@@ -11,6 +11,8 @@ import com.onenow.workflow.ConstantsWorkflow;
 
 public abstract interface Broker {
 	public abstract List<Underlying> getUnderlying();
+	public abstract List<Investment> getInvestments(boolean myPortfolio);
 	public abstract Double getPriceAsk(Investment inv);
 	public abstract Double getPriceBid(Investment inv);
+
 }

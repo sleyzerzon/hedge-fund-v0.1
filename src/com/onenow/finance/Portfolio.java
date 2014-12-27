@@ -8,11 +8,11 @@ public class Portfolio {
 	private List<Investment> investments;
 	
 	public Portfolio() {
-		investments = new ArrayList<Investment>();
+		setInvestments(new ArrayList<Investment>());
 	}
 	
 	public void addInvestment(Investment inv) {
-		investments.add(inv);
+		getInvestments().add(inv);
 	}
 	
 	public Investment getBest(Underlying under, Enum invType) { // generic
@@ -50,8 +50,7 @@ public class Portfolio {
 	
 	public String toString() {
 		String string = "";
-		for(Investment investment : investments) {
-			investment.toString();
+		for(Investment investment : getInvestments()) {
 			string.concat(investment.toString());
 		}
 		return string;

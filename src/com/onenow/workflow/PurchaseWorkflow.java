@@ -6,8 +6,8 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.WorkflowRegistrati
 import com.onenow.workflow.ConstantsWorkflow;
 
 @Workflow
-@WorkflowRegistrationOptions(	defaultTaskStartToCloseTimeoutSeconds = 3600, 
-								defaultExecutionStartToCloseTimeoutSeconds = 3600, 
+@WorkflowRegistrationOptions(	defaultTaskStartToCloseTimeoutSeconds = 300, 
+								defaultExecutionStartToCloseTimeoutSeconds = 300, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 public interface PurchaseWorkflow {
 

@@ -1,11 +1,8 @@
 package com.onenow.broker;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.amazonaws.services.simpleworkflow.flow.core.Promise;
-import com.onenow.database.DatabaseSystemSForce;
 import com.onenow.finance.Investment;
 import com.onenow.finance.Underlying;
 
@@ -19,19 +16,24 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 		setBrokerIntBro(new BrokerWallStIntBro());
 	}
 
-	
 	@Override
 	public List<Underlying> getUnderlying() {
-		List<Underlying> list = new ArrayList<Underlying>();
+		// List<Underlying> list = new ArrayList<Underlying>();
 		
 		List<Underlying> emulatorList = getBrokerEmulator().getUnderlying();
 		// List<Underlying> intBroList = getBrokerIntBro().getUnderlying();
-		List<Underlying> intBroList = new ArrayList<Underlying>();
+		// List<Underlying> intBroList = new ArrayList<Underlying>();
 		
-		list.addAll(emulatorList);
-		list.addAll(intBroList);
+		// list.addAll(emulatorList);
+		// list.addAll(intBroList);
 		 
-		return list;
+		// return list;
+		return emulatorList;
+	}
+
+	@Override
+	public List<Investment> getInvestments(boolean myPortfolio) {
+		return getBrokerEmulator().getInvestments(myPortfolio);
 	}
 
 
@@ -70,7 +72,7 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 		return null;
 	}
 
-
+	// SET GET
 	private static BrokerWallStEmulator getBrokerEmulator() {
 		return brokerEmulator;
 	}
