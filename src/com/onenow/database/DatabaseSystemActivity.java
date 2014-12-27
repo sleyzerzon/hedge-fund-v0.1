@@ -17,11 +17,13 @@ import com.sforce.ws.ConnectionException;
 								defaultTaskStartToCloseTimeoutSeconds = 3600, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 @Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
-public interface SForceActivity {
+public interface DatabaseSystemActivity {
 	@Activity
 	public List<System__c> getSystem() throws ConnectionException;
 	public List<Account> getAccounts() throws ConnectionException;
 	public List<Cloud__c> getClouds() throws ConnectionException;
 	public List<Reduction__c> getReductions() throws ConnectionException;
 	public void create(SObject[] objects) throws ConnectionException;
+	public SObject[] newRedution(String name, String mode, Double target) throws ConnectionException;
+	public void describeClass(String table) throws ConnectionException;
 }

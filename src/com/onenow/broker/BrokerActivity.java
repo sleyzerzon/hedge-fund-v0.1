@@ -14,7 +14,7 @@ import com.onenow.workflow.ConstantsWorkflow;
 								defaultTaskStartToCloseTimeoutSeconds = 3600, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 @Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
-public interface BrokerWallStIntBroActivity {
+public interface BrokerActivity {
 	@Activity
 	public List<Underlying> getUnderlying();
 	public Double getPriceAsk(Investment inv);

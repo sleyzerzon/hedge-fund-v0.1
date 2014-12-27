@@ -12,7 +12,7 @@ import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.Underlying;
 
-public class BrokerWallStEmulatorActivityImpl implements BrokerWallSt, BrokerWallStEmulatorActivity {
+public class BrokerWallStEmulator implements BrokerWallSt {
 
 	static Portfolio marketPortfolio = new Portfolio();
 	static MarketPrice marketPrices = new MarketPrice();
