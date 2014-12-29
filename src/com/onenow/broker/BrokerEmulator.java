@@ -11,20 +11,24 @@ import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.Trade;
+import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
-public class BrokerWallStEmulator implements BrokerWallSt {
+public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 
 	private static List<Underlying> underList;
 	private static Portfolio marketPortfolio;
-	private static Portfolio myPortfolio;
+	private static Portfolio myPortfolio; // todo
 	private static MarketPrice marketPrices;
+	private static List<Trade> trades;
 	
-	public BrokerWallStEmulator() {
+	public BrokerEmulator() {
+		System.out.println("Created BrokerEmulator.");
 		setUnderList(new ArrayList<Underlying>());
 		setMarketPortfolio(new Portfolio());
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
+		setTrades(new ArrayList<Trade>());
 		
 		setUnderlying();
 		setInvestments();
@@ -50,29 +54,33 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 
 	@Override
 	public Double getPriceBid(Investment inv) {
-		return getMarketPrices().getPriceAsk(inv);			
+		return getMarketPrices().getPriceBid(inv);			
 	}
 	
 	@Override
-	public Investment getBest(Underlying under, Enum invType) { // generic
+	public Investment getBest(Underlying under, Enum invType) { 
 		return getMarketPortfolio().getBest(under, invType);
 	}
 	
 	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // generic
+	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { 
 		return getMarketPortfolio().getBest(under, invType, expiration, strike);
 	}
 
 	@Override
-	public List<Trade> getTrades() {
-		// TODO Auto-generated method stub
-		return null;
+	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
+		return getMarketPortfolio().getBest(under, invType, InvTerm);		
 	}
 
 	@Override
-	public void setTrade(Trade trade) {
-		// TODO Auto-generated method stub
-		
+	public List<Trade> getTrades() {
+		return trades;	
+	}
+
+	@Override
+	public void addTrade(Transaction trans) {
+		getTrades().addAll(trans.getTrades());
+		getMyPortfolio().addTrade(trans);
 	}
 	
 	// PRIVATE
@@ -133,7 +141,7 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 	}
 
 	private static void setUnderList(List<Underlying> underList) {
-		BrokerWallStEmulator.underList = underList;
+		BrokerEmulator.underList = underList;
 	}
 
 	private static Portfolio getMarketPortfolio() {
@@ -141,7 +149,7 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 	}
 
 	private static void setMarketPortfolio(Portfolio marketPortfolio) {
-		BrokerWallStEmulator.marketPortfolio = marketPortfolio;
+		BrokerEmulator.marketPortfolio = marketPortfolio;
 	}
 
 	private static Portfolio getMyPortfolio() {
@@ -149,7 +157,7 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 	}
 
 	private static void setMyPortfolio(Portfolio myPortfolio) {
-		BrokerWallStEmulator.myPortfolio = myPortfolio;
+		BrokerEmulator.myPortfolio = myPortfolio;
 	}
 
 	private static MarketPrice getMarketPrices() {
@@ -157,7 +165,11 @@ public class BrokerWallStEmulator implements BrokerWallSt {
 	}
 
 	private static void setMarketPrices(MarketPrice marketPrices) {
-		BrokerWallStEmulator.marketPrices = marketPrices;
+		BrokerEmulator.marketPrices = marketPrices;
+	}
+
+	private static void setTrades(List<Trade> trades) {
+		BrokerEmulator.trades = trades;
 	}
 
 

@@ -1,35 +1,34 @@
 package com.onenow.broker;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.onenow.finance.Investment;
 import com.onenow.finance.Trade;
+import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
 public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActivity {
 
-	private static BrokerWallStEmulator brokerEmulator;
+	private static BrokerEmulator brokerEmulator;
 	private static BrokerWallStIntBro brokerIntBro;
 	
 	public BrokerActivityImpl() {
-		setBrokerEmulator(new BrokerWallStEmulator());
+		System.out.println("Created BrokerActivityImpl.");
+		setBrokerEmulator(new BrokerEmulator());
 		setBrokerIntBro(new BrokerWallStIntBro());
 	}
 
 	@Override
 	public List<Underlying> getUnderlying() {
-		// List<Underlying> list = new ArrayList<Underlying>();
+		List<Underlying> list = new ArrayList<Underlying>();
+		list.add(new Underlying("abc"));
 		
-		List<Underlying> emulatorList = getBrokerEmulator().getUnderlying();
-		// List<Underlying> intBroList = getBrokerIntBro().getUnderlying();
-		// List<Underlying> intBroList = new ArrayList<Underlying>();
-		
-		// list.addAll(emulatorList);
-		// list.addAll(intBroList);
+		// List<Underlying> list = getBrokerEmulator().getUnderlying();
 		 
-		// return list;
-		return emulatorList;
+		System.out.println("Returning emulatorList");
+		return list;
 	}
 
 	@Override
@@ -40,66 +39,51 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 
 	@Override
 	public Double getPriceAsk(Investment inv) {
-		Double number = 0.0;
-		// TODO Auto-generated method stub
-		return number;
+		return getBrokerEmulator().getPriceAsk(inv);
 	}
 
 	@Override
 	public Double getPriceBid(Investment inv) {
-		Double number = 0.0;
-		// TODO Auto-generated method stub
-		return number;
+		return getBrokerEmulator().getPriceBid(inv);
 	}
 
 	@Override
-	public Investment getBest(Underlying under, Enum invType) {
-		Investment inv = new Investment();
-		// TODO Auto-generated method stub
-		return inv;
+	public Investment getBest(Underlying under, Enum invType) { // stock & on-demmand & spot
+		return getBrokerEmulator().getBest(under, invType);
 	}
 
 	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration,
-			Double strike) {
-		Investment inv = new Investment();
-		// TODO Auto-generated method stub
-		return inv;
+	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // options
+		return getBrokerEmulator().getBest(under, invType, expiration, strike);
 	}
-
+		
 	@Override
-	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
+		return getBrokerEmulator().getBest(under, invType, InvTerm);
+	} 
+
 	@Override
 	public List<Trade> getTrades() {
-		// TODO Auto-generated method stub
-		return null;
+		return getBrokerEmulator().getTrades();
 	}
 
 	@Override
-	public void setTrade(Trade trade) {
-		// TODO Auto-generated method stub
-		
+	public void addTrade(Transaction transaction) {
+		getBrokerEmulator().addTrade(transaction);
 	}
 
 	// SET GET
-	private static BrokerWallStEmulator getBrokerEmulator() {
+	private static BrokerEmulator getBrokerEmulator() {
 		return brokerEmulator;
 	}
 
-
-	private static void setBrokerEmulator(BrokerWallStEmulator brokerEmulator) {
+	private static void setBrokerEmulator(BrokerEmulator brokerEmulator) {
 		BrokerActivityImpl.brokerEmulator = brokerEmulator;
 	}
-
 
 	private static BrokerWallStIntBro getBrokerIntBro() {
 		return brokerIntBro;
 	}
-
 
 	private static void setBrokerIntBro(BrokerWallStIntBro brokerIntBro) {
 		BrokerActivityImpl.brokerIntBro = brokerIntBro;

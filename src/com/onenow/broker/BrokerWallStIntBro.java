@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.onenow.finance.Investment;
 import com.onenow.finance.Trade;
+import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
 public class BrokerWallStIntBro implements BrokerWallSt {
@@ -57,7 +58,7 @@ public class BrokerWallStIntBro implements BrokerWallSt {
 	}
 
 	@Override
-	public void setTrade(Trade trade) {
+	public void addTrade(Transaction transaction) {
 		// TODO Auto-generated method stub
 		
 	}

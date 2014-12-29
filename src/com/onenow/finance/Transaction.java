@@ -2,19 +2,28 @@ package com.onenow.finance;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TradeTransaction {
+public class Transaction {
 		
 	private Counterparty counterParty; // Cloud?
 	
 	private List<Trade> trades;
 	
-	public TradeTransaction() {
+	public Transaction() {
 		this.trades = new ArrayList<Trade>();
 	}
 	
-	public void addTrade(Trade trade) {
-		getTrades().add(trade);
+	public Transaction(Trade... trades) {
+		for(int i=0; i<trades.length; i++) {
+			addTrade(trades[i]);
+		}
 	}
+	
+	public void addTrade(Trade... trades) {
+		for(int i=0; i<trades.length; i++) {
+			getTrades().add(trades[i]);
+		}
+	}
+	
 	public void delTrade(Trade trade) {
 		// implement 
 	}

@@ -6,22 +6,22 @@ public class Trade {
 	private Enum tradeType; // ie. buy
 	private int quantity; // 50 shares
 	private Double netCost; // +$10 net, -$23 net
-	private MarketPrice marketPrice;  // $7.50 per share
+	private Double unitPrice;  // $7.50 per share
 	
 	public Trade() {
 		// TODO
 	}
 
-	public Trade(Investment inv, Enum tradeType, int quantity, MarketPrice market) {
+	public Trade(Investment inv, Enum tradeType, int quantity, Double unitPrice) {
 		setInvestment(inv);
 		setTradeType(tradeType);
 		setQuantity(quantity);
-		setMarketPrice(market);
+		setUnitPrice(unitPrice);
 		setNetCost();
 	}
 	
-	public void setNetCost() {	
-		Double cost = getQuantity() * getMarketPrice().getPriceBid(getInvestment());
+	private void setNetCost() {	
+		Double cost = getQuantity() * getUnitPrice();
 		
 		if (getTradeType().equals(TradeType.BUY)) {
 			this.netCost = -cost;
@@ -48,12 +48,12 @@ public class Trade {
 	}
 
 	
-	
+	// SET GET
 	public Investment getInvestment() {
 		return investment;
 	}
 
-	public void setInvestment(Investment inv) {
+	private void setInvestment(Investment inv) {
 		this.investment = inv;
 	}
 
@@ -61,7 +61,7 @@ public class Trade {
 		return tradeType;
 	}
 
-	public void setTradeType(Enum tradeType) {
+	private void setTradeType(Enum tradeType) {
 		this.tradeType = tradeType;
 	}
 
@@ -69,15 +69,15 @@ public class Trade {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	private void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public MarketPrice getMarketPrice() {
-		return this.marketPrice;
+	private Double getUnitPrice() {
+		return this.unitPrice;
 	}
 
-	public void setMarketPrice(MarketPrice marketPrice) {
-		this.marketPrice = marketPrice;
+	private void setUnitPrice(Double price) {
+		this.unitPrice = price;
 	}
 
 }

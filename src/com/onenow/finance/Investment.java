@@ -18,6 +18,15 @@ public class Investment {
 		return string;
 	}
 	
+	public boolean equals(Investment inv) {
+		boolean equal = false;
+		if(inv.getUnderlying().getTicker().equals(getUnderlying().getTicker())) {
+			// TODO add cases for options etc
+			equal = true;
+		}
+		return equal;
+	}
+	
 	// SET GET
 
 	public Underlying getUnderlying() {
