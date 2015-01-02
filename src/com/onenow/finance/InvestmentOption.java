@@ -39,7 +39,7 @@ public class InvestmentOption extends Investment { // call, put
 	
 	// PRINT
 	public String toString() { // TODO add shares
-		String s="Strike: $" + getStrike().toString() + " Exp: " + getExpiration().toString();
+		String s = super.toString() + " Strike: $" + getStrike().toString() + " Exp: " + getExpiration().toString();
 		// TODO print
 		return s;
 	}

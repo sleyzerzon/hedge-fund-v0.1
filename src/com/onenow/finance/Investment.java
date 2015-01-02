@@ -24,10 +24,9 @@ public class Investment {
 		return equal;
 	}
 		
-	// PRINT
+	// PRINT: 
 	public String toString() {
-		String string = getUnder().toString();
-		// System.out.println("Investment: " + string);
+		String string = getUnder().toString() + " " + getInvType();
 		return string;
 	}
 	
