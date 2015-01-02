@@ -6,7 +6,6 @@ public class InvestmentOption extends Investment { // call, put
 
 	private Double strike;
 	private Date expiration;
-	private Double price;
 	private int shares=100;
 
 	// CONSTRUCTORS
@@ -31,7 +30,6 @@ public class InvestmentOption extends Investment { // call, put
 				value = getStrike()-marketPrice; 
 			}
 		}
-		// System.out.println("Strike: " + getStrike() + " Market price: " + marketPrice);
 		return value;
 	}
 	
@@ -40,7 +38,11 @@ public class InvestmentOption extends Investment { // call, put
 	
 	
 	// PRINT
-
+	public String toString() { // TODO add shares
+		String s="Strike: $" + getStrike().toString() + " Exp: " + getExpiration().toString();
+		// TODO print
+		return s;
+	}
 
 	// SET GET
 	
@@ -59,14 +61,6 @@ public class InvestmentOption extends Investment { // call, put
 
 	private void setExpiration(Date expiration) {
 		this.expiration = expiration;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	private void setPrice(Double price) {
-		this.price = price;
 	}
 
 	private int getShares() {

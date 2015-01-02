@@ -3,12 +3,13 @@ package com.onenow.finance;
 import java.util.Date;
 
 public class StrategyIronCondor extends StrategyOptions {
+		
+	private Trade callBuy;
+	private Trade callSell;
+	private Trade putSell;
+	private Trade putBuy;
 	
-	Trade callBuy;
-	Trade callSell;
-	Trade putSell;
-	Trade putBuy;
-	
+	// CONSTRUCTOR
 	public StrategyIronCondor() {
 		
 	}
@@ -20,84 +21,83 @@ public class StrategyIronCondor extends StrategyOptions {
 							  Double putBuyStrike, Double putBuyPrice) {
 		super();
 		
-		InvestmentOption callBuy = new InvestmentOption(under, InvType.CALL, exp, callBuyStrike);
-		InvestmentOption callSell = new InvestmentOption(under, InvType.CALL, exp, callSellStrike);
-		InvestmentOption putSell = new InvestmentOption(under, InvType.PUT, exp, putSellStrike);
-		InvestmentOption putBuy = new InvestmentOption(under, InvType.PUT, exp, putBuyStrike);
-		
-		setTrades(	new Trade(callBuy, TradeType.BUY, quantity, callBuyPrice), 
-					new Trade(callSell, TradeType.SELL, quantity, callSellPrice),
-					new Trade(putSell, TradeType.SELL, quantity, putSellPrice),
-					new Trade(putBuy, TradeType.BUY, quantity, putBuyPrice));
-		
-		testConstructor();
-	}
-
-	// PRIVATE
-	private void setTrades(	Trade callBuy, Trade callSell,
-			  				Trade putSell, Trade putBuy) {   
-		setCallBuy(callBuy);
-		setCallSell(callSell);
-		setPutSell(putSell);
-		setPutBuy(putBuy);	
+		setCallBuy(	new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
+					TradeType.BUY, quantity, callBuyPrice));
+		setCallSell(new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
+					TradeType.SELL, quantity, callSellPrice));
 		getTransaction().add(getCallBuy());
 		getTransaction().add(getCallSell());
+
+		setPutSell(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
+								TradeType.SELL, quantity, putSellPrice));
+		setPutBuy(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
+								TradeType.BUY, quantity, putBuyPrice));	
 		getTransaction().add(getPutSell());
 		getTransaction().add(getPutBuy());
-	}
-	
-	private void testConstructor() {
-		
-		if( getCallBuy().getStrike() < getCallSell().getStrike() ||
-			getPutBuy().getStrike() > getPutSell().getStrike() ){
-				System.out.println("ERROR: pricing");
-			}
 		
 	}
 	
+	// PUBLIC
+//	public Double getMaxProfit() {
+//		Double maxProfit = getCallNetPrice() + getPutNetPrice();
+//		return maxProfit;
+//	}
+//	
+//	public Double getMaxLoss() {
+//		Double callLoss = getNetValue(getCallBuy().getStrike());
+//		Double putLoss = getNetValue(getPutBuy().getStrike());
+//		Double maxLoss;
+//		if(Math.abs(callLoss) > Math.abs(putLoss)) {
+//			maxLoss=callLoss;
+//		} else {
+//			maxLoss=putLoss;
+//		}
+//		return maxLoss;
+//	}
+
+	// PRIVATE
 
 	
+	// PRINT
+	public String toString() {
+		String s =	getCallBuy().toString() + " " + getCallSell().toString() + " " + 
+					getPutSell().toString() + " " + getPutBuy().toString();
+		return s;
+	}
+
 	// SET GET
-
 	private Trade getCallBuy() {
 		return callBuy;
 	}
-
 
 	private void setCallBuy(Trade callBuy) {
 		this.callBuy = callBuy;
 	}
 
-
 	private Trade getCallSell() {
 		return callSell;
 	}
-
 
 	private void setCallSell(Trade callSell) {
 		this.callSell = callSell;
 	}
 
-
 	private Trade getPutSell() {
 		return putSell;
 	}
-
 
 	private void setPutSell(Trade putSell) {
 		this.putSell = putSell;
 	}
 
-
 	private Trade getPutBuy() {
 		return putBuy;
 	}
 
-
 	private void setPutBuy(Trade putBuy) {
 		this.putBuy = putBuy;
 	}
-
+	
 
 
 }

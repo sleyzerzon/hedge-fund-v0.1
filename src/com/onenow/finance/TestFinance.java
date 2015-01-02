@@ -4,21 +4,29 @@ import java.util.Date;
 
 public class TestFinance {
 
-	// TEST
+	// MAIN
 	public static void main(String[] args) {
 		StrategyOptions so = new StrategyOptions();
 		
 		testIronCondor();
 	}
 	
-	// TEST
+	// PRIVATE
 	private static void testIronCondor() {
 		StrategyIronCondor ic = new StrategyIronCondor(new Underlying("AAPL"), 100, new Date(),
 				405.00, 7.41,
 				400.00, 8.85,
 				390.00, 9.5,
 				385.00, 8.33);
+
+		ic.toString();
 		
+//		if(!ic.getTransaction().getMaxProfit().equals(261.0)) {
+//			System.out.println("ERROR: (t0) max profit.");
+//		}
+//		if(!ic.getMaxLoss().equals(-239.0)) {
+//			System.out.println("ERROR: (te) max loss.");
+//		}
 		if(!ic.getCallNetPrice().equals(144.0)) {
 			System.out.println("ERROR: call net.");			
 		}
@@ -41,6 +49,7 @@ public class TestFinance {
 		if(!ic.getNetValue(415.0).equals(-239.0)) {
 			System.out.println("ERROR: call net.");		
 		}
+		
 	}
 
 }
