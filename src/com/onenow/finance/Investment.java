@@ -2,44 +2,47 @@ package com.onenow.finance;
 
 public class Investment {
 
-	private Underlying underlying;
-	Enum investmentType;
+	private Underlying under;
+	private Enum invType;
 	
+	// CONSTRUCTOR
 	public Investment() {
 		// does not set underlying
 	}
 	public Investment(Underlying underlying, Enum invType) {
-		setUnderlying(underlying);
-		setInvestmentType(invType);
+		setUnder(underlying);
+		setInvType(invType);
 	}	
-	public String toString() {
-		String string = this.underlying.toString();
-		// System.out.println("Investment: " + string);
-		return string;
-	}
 	
+	// PUBLIC
 	public boolean equals(Investment inv) {
 		boolean equal = false;
-		if(inv.getUnderlying().getTicker().equals(getUnderlying().getTicker())) {
+		if(inv.getUnder().getTicker().equals(getUnder().getTicker())) {
 			// TODO add cases for options etc
 			equal = true;
 		}
 		return equal;
 	}
+		
+	// PRINT
+	public String toString() {
+		String string = getUnder().toString();
+		// System.out.println("Investment: " + string);
+		return string;
+	}
 	
 	// SET GET
-
-	public Underlying getUnderlying() {
-		return underlying;
+	private Underlying getUnder() {
+		return under;
 	}
-	private void setUnderlying(Underlying underlying) {
-		this.underlying = underlying;
+	private void setUnder(Underlying under) {
+		this.under = under;
 	}
-	public Enum getInvestmentType() {
-		return investmentType;
+	public Enum getInvType() {
+		return invType;
 	}
-	private void setInvestmentType(Enum investmentType) {
-		this.investmentType = investmentType;
+	private void setInvType(Enum invTuype) {
+		this.invType = invTuype;
 	}
 		
 }
