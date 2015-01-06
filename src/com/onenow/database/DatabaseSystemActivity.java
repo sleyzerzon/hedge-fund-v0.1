@@ -10,9 +10,9 @@ import com.onenow.workflow.ConstantsWorkflow;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 import com.sforce.soap.enterprise.sobject.Day__c;
+import com.sforce.soap.enterprise.sobject.Log__c;
 import com.sforce.soap.enterprise.sobject.Market__c;
 import com.sforce.soap.enterprise.sobject.Reduction__c;
-import com.sforce.soap.enterprise.sobject.SObject;
 import com.sforce.soap.enterprise.sobject.System__c;
 import com.sforce.ws.ConnectionException;
 

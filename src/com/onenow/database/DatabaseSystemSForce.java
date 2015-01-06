@@ -239,7 +239,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		log.setSource__c(source);
 		log.setKind__c(kind);
 		log.setDescription__c(desc);
-		return new Log__c[]{log};
+		return new Log__c[] { log };
 	}
 
 	// PRIVATE

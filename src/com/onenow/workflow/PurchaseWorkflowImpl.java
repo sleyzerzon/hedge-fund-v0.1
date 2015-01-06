@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
-import com.onenow.broker.IBrokersActivityClient;
-import com.onenow.broker.IBrokersActivityClientImpl;
 import com.onenow.finance.Underlying;
 
 public class PurchaseWorkflowImpl implements PurchaseWorkflow {
