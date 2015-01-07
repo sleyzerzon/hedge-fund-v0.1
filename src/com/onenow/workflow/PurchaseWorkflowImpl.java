@@ -75,6 +75,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 		System.out.println("Transaction Put Net:" + tx.getNetCost(InvType.PUT));
 
 		System.out.println("Ended workflow.");
+
 	}
 
 	@Asynchronous
