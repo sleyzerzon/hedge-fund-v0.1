@@ -17,7 +17,7 @@ import com.onenow.workflow.ConstantsWorkflow;
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 @Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
 public interface BrokerActivity {
-	@Activity
+	@Activity 
 	public List<Underlying> getUnderlying();
 	public List<Investment> getInvestments(boolean myPortfolio);
 	public Double getPriceAsk(Investment inv);

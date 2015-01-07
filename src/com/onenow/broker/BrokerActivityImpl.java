@@ -36,7 +36,6 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 		return getBrokerEmulator().getInvestments(myPortfolio);
 	}
 
-
 	@Override
 	public Double getPriceAsk(Investment inv) {
 		return getBrokerEmulator().getPriceAsk(inv);
@@ -87,8 +86,7 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 
 	private static void setBrokerIntBro(BrokerWallStIntBro brokerIntBro) {
 		BrokerActivityImpl.brokerIntBro = brokerIntBro;
-	}
-	
+	}	
 	
 }
 

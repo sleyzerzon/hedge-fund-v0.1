@@ -8,6 +8,7 @@ public class Transaction {
 	
 	private List<Trade> trades;
 	
+	// CONSTRUCTOR
 	public Transaction() {
 		this.trades = new ArrayList<Trade>();
 	}
@@ -18,6 +19,7 @@ public class Transaction {
 		}
 	}
 	
+	// PUBLIC
 	public void addTrade(Trade... trades) {
 		for(int i=0; i<trades.length; i++) {
 			getTrades().add(trades[i]);
@@ -47,14 +49,34 @@ public class Transaction {
 	public Double getNetCost(InvType invType) {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
-			if(trade.getInvestment().getInvestmentType().equals(invType)){
+			if(trade.getInvestment().getInvType().equals(invType)){
 				sum+=trade.getNetCost();
 			}
 		}
 		return sum;		
 	}
 	
+//	public Double getMaxProfit() { // TODO: other investment types
+//		Double sum=0.0;
+//		for(Trade trade:getTrades()){
+//			sum += trade.getMaxProfit();
+//		}
+//		return sum;		
+//	}
+//
+//	public Double getMaxLoss() { // TODO: other investment types
+//		Double sum=0.0;
+//		for (Trade trade:getTrades()) {
+//			sum += trade.getMaxLoss();
+//		}
+//		return sum;		
+//	}
+
+	// PRIVATE
 	
+	// PRINT
+	
+	// SET GET
 	public List<Trade> getTrades() {
 		return this.trades;
 	}

@@ -1,32 +1,56 @@
 package com.onenow.finance;
+
 import java.util.Date;
 
+public class InvestmentOption extends Investment { // call, put
 
-public class InvestmentOption extends Investment {
-
-	private	Enum optionType; // call, put	
 	private Double strikePrice;
 	private Date expirationDate;
-	private int sharesPerContract=100;
+	private int shares = 100;
 
+	// CONSTRUCTORS
 	public InvestmentOption() {
-		
 	}
-	
-	public InvestmentOption(Underlying underlying, Enum optionType, Date expirationDate, Double strikePrice) {
-		super(underlying, optionType);
-		setStrikePrice(strikePrice);
-		setExpirationDate(expirationDate);
-		setOptionType(optionType);
+
+	public InvestmentOption(Underlying under, InvType type, Date exp,
+			Double strike) {
+		super(under, type);
+		setExpirationDate(exp);
+		setStrikePrice(strike);
 	}
-	
-	public String toString() {
-		String string = super.toString() + ".  Type " + getOptionType() + ".  Strike $" + getStrikePrice() 
-						+ ".  Expires " + getExpirationDate();
-		System.out.println("Investment Option: " + string);
-		return string;
+
+	// PUBLIC
+	public Double getValue(Double marketPrice) {
+		Double value = 0.0;
+		if (getInvType().equals(InvType.CALL)) { // call
+			if (marketPrice > getStrikePrice()) {
+				value = marketPrice - getStrikePrice();
+			}
+		} else { // put
+			if (marketPrice < getStrikePrice()) {
+				value = getStrikePrice() - marketPrice;
+			}
+		}
+		return value;
 	}
-	
+
+	// PRIVATE
+
+	// PRINT
+	public String toString() { // TODO add shares
+		String s = super.toString() + " Strike: $"
+				+ getStrikePrice().toString() + " Exp: "
+				+ getExpirationDate().toString();
+		// TODO print
+		return s;
+	}
+
+	// SET GET
+
+	private int getShares() {
+		return shares;
+	}
+
 	public Double getStrikePrice() {
 		return strikePrice;
 	}
@@ -43,19 +67,8 @@ public class InvestmentOption extends Investment {
 		this.expirationDate = expirationDate;
 	}
 
-	public Enum getOptionType() {
-		return optionType;
+	private void setShares(int shares) {
+		this.shares = shares;
 	}
 
-	public void setOptionType(Enum optionType) {
-		this.optionType = optionType;
-	}
-
-	public int getSharesPerContract() {
-		return sharesPerContract;
-	}
-
-	public void setSharesPerContract(int sharesPerContract) {
-		this.sharesPerContract = sharesPerContract;
-	}
 }

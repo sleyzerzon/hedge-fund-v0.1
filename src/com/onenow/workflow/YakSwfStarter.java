@@ -22,6 +22,8 @@ public class YakSwfStarter {
 
 		AmazonSimpleWorkflow service = new AmazonSimpleWorkflowClient(awsCredentials, config);
 		service.setEndpoint("https://swf.us-east-1.amazonaws.com");
+		// TODO start all workflows...
+		
 		// SummitWorkflowClientExternalFactory factory = new
 		// SummitWorkflowClientExternalFactoryImpl(
 		// service, ConstantsWorkflow.AWS_SWF_DOMAIN);

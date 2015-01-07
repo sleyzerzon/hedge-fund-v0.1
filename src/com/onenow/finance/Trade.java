@@ -19,7 +19,46 @@ public class Trade {
 		setUnitPrice(unitPrice);
 		setNetCost();
 	}
+
+	// PUBLIC
+	public Double getStrike() {
+		Double strike = 0.0;
+		Enum invType = getInvestment().getInvType();
+		if( invType.equals(InvType.CALL) ||
+			invType.equals(InvType.PUT)) {
+			InvestmentOption option = (InvestmentOption) getInvestment();
+			strike = option.getStrikePrice();
+		}
+		return strike;
+	}
 	
+	public Double getValue(Double marketPrice) { // TODO: stock handling
+		Double value = 0.0;
+		Enum invType = getInvestment().getInvType();
+		if( invType.equals(InvType.CALL) ||
+			invType.equals(InvType.PUT)) {
+			InvestmentOption option = (InvestmentOption) getInvestment();
+			value = option.getValue(marketPrice) * getQuantity();
+		}
+		if(getTradeType().equals(TradeType.SELL)) {
+			value = -value;
+		}
+		return value;
+	}
+	
+//	public Double getMaxProfit() { 
+//		Double value=0.0;
+//		// TODO
+//		return value;		
+//	}
+//
+//	public Double getMaxLoss() { // TODO: other investment types
+//		Double sum=0.0;
+//		// TODO
+//		return sum;		
+//	}
+
+	// PRIVATE
 	private void setNetCost() {	
 		Double cost = getQuantity() * getUnitPrice();
 		
@@ -32,18 +71,12 @@ public class Trade {
 
 	public Double getNetCost() {
 		return(this.netCost);
-	}
+	}		
 	
-	public Double getNet(InvType invType) {
-		if(getInvestment().getInvestmentType().equals(invType)) {
-			return(getNetCost());
-		} else return (0.0);		
-	}
-	
-	
+	// PRINT
 	public String toString() {
-		String string = investment.toString() + " " + getTradeType() + " " + getQuantity() + " " + getNetCost();
-		System.out.println("Trade: " + string);
+		String string = ((InvestmentOption)getInvestment()).toString() + " " + getTradeType() + " Quantity: " + getQuantity() + " Net Cost: $" + getNetCost();
+		System.out.println("TRADE " + string);
 		return (string);
 	}
 

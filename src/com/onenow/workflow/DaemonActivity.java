@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
+import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.CloudPriceListerImpl;
 import com.onenow.summit.ConstantsSummit;
 
@@ -31,10 +32,10 @@ public class DaemonActivity {
 		ActivityWorker aw = new ActivityWorker(service,
 				ConstantsWorkflow.AWS_SWF_DOMAIN,
 				ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME);
-		aw.addActivitiesImplementation(new CloudPriceListerImpl());
-		aw.addActivitiesImplementation(new IBrokersActivityImpl());
+		aw.addActivitiesImplementation(new BrokerActivityImpl());
+//		aw.addActivitiesImplementation(new IBrokersActivityImpl());
 		aw.start();
-		aw.addActivitiesImplementation(new SForceActivityImpl());
+//		aw.addActivitiesImplementation(new SForceActivityImpl());
 		System.out.println("*** ACTIVITY WORKER ID: " + aw.getIdentity());
 
 	}
