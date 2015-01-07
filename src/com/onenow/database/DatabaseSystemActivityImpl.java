@@ -3,13 +3,12 @@ package com.onenow.database;
 import java.util.Date;
 import java.util.List;
 
-import com.sforce.soap.enterprise.QueryResult;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 import com.sforce.soap.enterprise.sobject.Day__c;
+import com.sforce.soap.enterprise.sobject.Log__c;
 import com.sforce.soap.enterprise.sobject.Market__c;
 import com.sforce.soap.enterprise.sobject.Reduction__c;
-import com.sforce.soap.enterprise.sobject.SObject;
 import com.sforce.soap.enterprise.sobject.System__c;
 import com.sforce.ws.ConnectionException;
 
@@ -49,7 +48,7 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	
 	@Override
 	public Market__c[] newMarket(cloud, instanceType, operatingSystem, pricingModel, reduction, region, zone) {
-		return(getSForce().newMarket)
+		return getSForce().newMarket(cloud, instanceType, operatingSystem, pricingModel, reduction, region, zone);
 	}
 
 	@Override
@@ -89,6 +88,14 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 
 	private void setSForce(DatabaseSystemSForce sforce) {
 		this.SForce = SForce;
+	}
+
+	@Override
+	public Market__c[] newMarket(String cloud, String instanceType,
+			String operatingSystem, String pricingModel, String reduction,
+			String region, String zone) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

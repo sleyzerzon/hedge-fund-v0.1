@@ -131,6 +131,26 @@ public class System__c extends com.sforce.soap.enterprise.sobject.SObject {
     }
 
     /**
+     * element : Enabled__c of type {http://www.w3.org/2001/XMLSchema}boolean
+     * java type: java.lang.Boolean
+     */
+    private static final com.sforce.ws.bind.TypeInfo Enabled__c__typeInfo =
+      new com.sforce.ws.bind.TypeInfo("urn:sobject.enterprise.soap.sforce.com","Enabled__c","http://www.w3.org/2001/XMLSchema","boolean",0,1,true);
+
+    private boolean Enabled__c__is_set = false;
+
+    private java.lang.Boolean Enabled__c;
+
+    public java.lang.Boolean getEnabled__c() {
+      return Enabled__c;
+    }
+
+    public void setEnabled__c(java.lang.Boolean Enabled__c) {
+      this.Enabled__c = Enabled__c;
+      Enabled__c__is_set = true;
+    }
+
+    /**
      * element : FeedSubscriptionsForEntity of type {urn:enterprise.soap.sforce.com}QueryResult
      * java type: com.sforce.soap.enterprise.QueryResult
      */
@@ -188,6 +208,26 @@ public class System__c extends com.sforce.soap.enterprise.sobject.SObject {
     public void setIsDeleted(java.lang.Boolean IsDeleted) {
       this.IsDeleted = IsDeleted;
       IsDeleted__is_set = true;
+    }
+
+    /**
+     * element : Kind__c of type {http://www.w3.org/2001/XMLSchema}string
+     * java type: java.lang.String
+     */
+    private static final com.sforce.ws.bind.TypeInfo Kind__c__typeInfo =
+      new com.sforce.ws.bind.TypeInfo("urn:sobject.enterprise.soap.sforce.com","Kind__c","http://www.w3.org/2001/XMLSchema","string",0,1,true);
+
+    private boolean Kind__c__is_set = false;
+
+    private java.lang.String Kind__c;
+
+    public java.lang.String getKind__c() {
+      return Kind__c;
+    }
+
+    public void setKind__c(java.lang.String Kind__c) {
+      this.Kind__c = Kind__c;
+      Kind__c__is_set = true;
     }
 
     /**
@@ -632,9 +672,11 @@ public class System__c extends com.sforce.soap.enterprise.sobject.SObject {
        __typeMapper.writeObject(__out, CreatedBy__typeInfo, CreatedBy, CreatedBy__is_set);
        __typeMapper.writeString(__out, CreatedById__typeInfo, CreatedById, CreatedById__is_set);
        __typeMapper.writeObject(__out, CreatedDate__typeInfo, CreatedDate, CreatedDate__is_set);
+       __typeMapper.writeObject(__out, Enabled__c__typeInfo, Enabled__c, Enabled__c__is_set);
        __typeMapper.writeObject(__out, FeedSubscriptionsForEntity__typeInfo, FeedSubscriptionsForEntity, FeedSubscriptionsForEntity__is_set);
        __typeMapper.writeString(__out, Host__c__typeInfo, Host__c, Host__c__is_set);
        __typeMapper.writeObject(__out, IsDeleted__typeInfo, IsDeleted, IsDeleted__is_set);
+       __typeMapper.writeString(__out, Kind__c__typeInfo, Kind__c, Kind__c__is_set);
        __typeMapper.writeObject(__out, LastModifiedBy__typeInfo, LastModifiedBy, LastModifiedBy__is_set);
        __typeMapper.writeString(__out, LastModifiedById__typeInfo, LastModifiedById, LastModifiedById__is_set);
        __typeMapper.writeObject(__out, LastModifiedDate__typeInfo, LastModifiedDate, LastModifiedDate__is_set);
@@ -694,6 +736,10 @@ public class System__c extends com.sforce.soap.enterprise.sobject.SObject {
             setCreatedDate((java.util.Calendar)__typeMapper.readObject(__in, CreatedDate__typeInfo, java.util.Calendar.class));
         }
         __in.peekTag();
+        if (__typeMapper.isElement(__in, Enabled__c__typeInfo)) {
+            setEnabled__c((java.lang.Boolean)__typeMapper.readObject(__in, Enabled__c__typeInfo, java.lang.Boolean.class));
+        }
+        __in.peekTag();
         if (__typeMapper.isElement(__in, FeedSubscriptionsForEntity__typeInfo)) {
             setFeedSubscriptionsForEntity((com.sforce.soap.enterprise.QueryResult)__typeMapper.readObject(__in, FeedSubscriptionsForEntity__typeInfo, com.sforce.soap.enterprise.QueryResult.class));
         }
@@ -704,6 +750,10 @@ public class System__c extends com.sforce.soap.enterprise.sobject.SObject {
         __in.peekTag();
         if (__typeMapper.isElement(__in, IsDeleted__typeInfo)) {
             setIsDeleted((java.lang.Boolean)__typeMapper.readObject(__in, IsDeleted__typeInfo, java.lang.Boolean.class));
+        }
+        __in.peekTag();
+        if (__typeMapper.isElement(__in, Kind__c__typeInfo)) {
+            setKind__c(__typeMapper.readString(__in, Kind__c__typeInfo, java.lang.String.class));
         }
         __in.peekTag();
         if (__typeMapper.isElement(__in, LastModifiedBy__typeInfo)) {
@@ -801,9 +851,11 @@ public class System__c extends com.sforce.soap.enterprise.sobject.SObject {
       sb.append(" CreatedBy='").append(com.sforce.ws.util.Verbose.toString(CreatedBy)).append("'\n");
       sb.append(" CreatedById='").append(com.sforce.ws.util.Verbose.toString(CreatedById)).append("'\n");
       sb.append(" CreatedDate='").append(com.sforce.ws.util.Verbose.toString(CreatedDate)).append("'\n");
+      sb.append(" Enabled__c='").append(com.sforce.ws.util.Verbose.toString(Enabled__c)).append("'\n");
       sb.append(" FeedSubscriptionsForEntity='").append(com.sforce.ws.util.Verbose.toString(FeedSubscriptionsForEntity)).append("'\n");
       sb.append(" Host__c='").append(com.sforce.ws.util.Verbose.toString(Host__c)).append("'\n");
       sb.append(" IsDeleted='").append(com.sforce.ws.util.Verbose.toString(IsDeleted)).append("'\n");
+      sb.append(" Kind__c='").append(com.sforce.ws.util.Verbose.toString(Kind__c)).append("'\n");
       sb.append(" LastModifiedBy='").append(com.sforce.ws.util.Verbose.toString(LastModifiedBy)).append("'\n");
       sb.append(" LastModifiedById='").append(com.sforce.ws.util.Verbose.toString(LastModifiedById)).append("'\n");
       sb.append(" LastModifiedDate='").append(com.sforce.ws.util.Verbose.toString(LastModifiedDate)).append("'\n");

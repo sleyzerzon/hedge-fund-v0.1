@@ -2,6 +2,7 @@ package com.onenow.database;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.sforce.soap.enterprise.DescribeSObjectResult;
@@ -14,6 +15,7 @@ import com.sforce.soap.enterprise.SaveResult;
 import com.sforce.soap.enterprise.sobject.Account;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 import com.sforce.soap.enterprise.sobject.Day__c;
+import com.sforce.soap.enterprise.sobject.Log__c;
 import com.sforce.soap.enterprise.sobject.Market__c;
 import com.sforce.soap.enterprise.sobject.Reduction__c;
 import com.sforce.soap.enterprise.sobject.SObject;
@@ -22,13 +24,13 @@ import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
 public class DatabaseSystemSForce implements DatabaseSystem {
-	
+
 	private final static ConnectorConfig configAuth = new ConnectorConfig();
 	private final static ConnectorConfig configEnt = new ConnectorConfig();
 	private static EnterpriseConnection loginConnection;
 	private static EnterpriseConnection entConnection;
 	private static LoginResult loginResult;
-	
+
 	public DatabaseSystemSForce() {
 		try {
 			doLogin();
@@ -37,7 +39,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// REDUCTIONS
 	public List<Reduction__c> getReductions() throws ConnectionException {
 		List<Reduction__c> reductions = new ArrayList<Reduction__c>();
@@ -50,8 +52,12 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 				reductions.add(theRecord);
 				System.out.println("Found Reduction: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done = true; } 
-			else { qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
 		return reductions;
 	}
@@ -78,23 +84,30 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 				days.add(theRecord);
 				System.out.println("Found Day: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done = true; } 
-			else { qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
-		return days;		
-	}
-	
-	public Day__c[] newDay(Date date, Double duration, int count, Double ondemandRate, Double spotRate, Double spent) {
-		Day__c day = new Day__c();
-		day.Date__c(date);
-		day.Duration_hs__c(duration);
-		day.Finished_Count_d_Count__c(count);
-		day.Rate_On_Demand_Market__c(ondemandRate);
-		day.Rate_Spot__c(spotRate);
-		day.Spent__c(spent);
-		return day;
+		return days;
 	}
 
+	public Day__c[] newDay(Date date, Double duration, int count,
+			Double ondemandRate, Double spotRate, Double spent) {
+		Day__c day = new Day__c();
+		day.setDate__c(new GregorianCalendar(date.getYear(), date.getMonth(),
+				date.getDay()));
+		day.setDuration_hs__c(duration);
+
+		day.setFinished_Count_d_Count__c(new Double(count));
+		day.setRate_On_Demand_Market__c(ondemandRate);
+		day.setRate_Spot__c(spotRate);
+		day.setSpent__c(spent);
+		// ?
+		return new Day__c[] { day };
+	}
 
 	// MARKETS
 	public List<Market__c> getMarkets() throws ConnectionException {
@@ -108,22 +121,28 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 				markets.add(theRecord);
 				System.out.println("Market Day: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done = true; } 
-			else { qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
-		return markets;				
+		return markets;
 	}
-	
-	public Market__c[] newMarket(String cloud, String instanceType, String operatingSystem, String pricingModel, String reduction, String region, String zone) {
+
+	public Market__c[] newMarket(String cloud, String instanceType,
+			String operatingSystem, String pricingModel, String reduction,
+			String region, String zone) {
 		Market__c market = new Market__c();
-		market.Cloud__c(cloud);
-		market.Instance_Type__c(instanceType);
-		market.Operating_System__c(operatingSytem);
-		market.Pricing_Model__c(pricingModel);
-		market.Reduction__c(reduction);
-		market.Region__c(region);
-		market.Zone__c(zone);
-		return market;
+		market.setCloud__c(cloud);
+		market.setInstance_Type__c(instanceType);
+		market.setOperating_System__c(operatingSystem);
+		market.setPricing_Model__c(pricingModel);
+		market.setReduction__c(reduction);
+		market.setRegion__c(region);
+		market.setZone__c(zone);
+		return new Market__c[] { market };
 	}
 
 	// CLOUDS
@@ -138,12 +157,16 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 				clouds.add(theRecord);
 				System.out.println("Found: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done = true; } 
-			else { qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
 		return clouds;
 	}
-	
+
 	// ACCOUNTS
 	public List<Account> getAccounts() throws ConnectionException {
 		List<Account> accounts = new ArrayList<Account>();
@@ -156,8 +179,12 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 				accounts.add(theRecord);
 				System.out.println("Found Account: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done = true; } 
-			else { qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
 		return accounts;
 	}
@@ -174,39 +201,48 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 				sysConfigs.add(theRecord);
 				System.out.println("Found System: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done = true; } 
-			else { qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
-		return sysConfigs.get(0); // TODO: instead, get one of the Set for Kind, that is Enabled		
+		return sysConfigs.get(0); // TODO: instead, get one of the Set for Kind,
+									// that is Enabled
 	}
-	
+
 	// LOG
 	public List<Log__c> getLogs() throws ConnectionException {
 		List<Log__c> logEntries = new ArrayList<Log__c>();
 		QueryResult qResult = query("SELECT Name, Date__c, Source__c, Kind__c, Description__c FROM Log__c");
 		boolean done = false;
-		while(!done) {
+		while (!done) {
 			SObject[] records = qResult.getRecords();
-			for(int i=0; i<records.length; ++i){
+			for (int i = 0; i < records.length; ++i) {
 				Log__c theRecord = (Log__c) records[i];
 				logEntries.add(theRecord);
 				System.out.println("Found Log: " + theRecord.getName());
 			}
-			if (qResult.isDone()) { done=true; }
-			else{ qResult = getEntConnection().queryMore(qResult.getQueryLocator()); }
+			if (qResult.isDone()) {
+				done = true;
+			} else {
+				qResult = getEntConnection().queryMore(
+						qResult.getQueryLocator());
+			}
 		}
 		return logEntries;
 	}
-	
+
 	public Log__c[] newLog(String source, String kind, String desc) {
 		Log__c log = new Log__c();
-		log.Source__c(source);
-		log.Kind__c(kind);
-		log.Description__c(desc);
-		return log;
+		log.setSource__c(source);
+		log.setKind__c(kind);
+		log.setDescription__c(desc);
+		return new Log__c[]{log};
 	}
-	
-	// PRIVATE 
+
+	// PRIVATE
 	private static void doLogin() throws ConnectionException {
 		getConfigAuth().setAuthEndpoint(ConstantsDatabase.URL);
 		getConfigAuth().setServiceEndpoint(ConstantsDatabase.URL);
@@ -229,12 +265,14 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		System.out.println("Number of objects: " + qResult.getSize());
 		return qResult;
 	}
-	private void create(SObject[] objects) throws ConnectionException {		
+
+	private void create(SObject[] objects) throws ConnectionException {
 		SaveResult[] results = getEntConnection().create(objects);
 		for (SaveResult result : results) {
 			// System.out.println("Create: " + result.getSuccess());
 		}
 	}
+
 	private void describeClass(String table) throws ConnectionException {
 		DescribeSObjectResult description = getEntConnection().describeSObject(
 				table);
@@ -247,42 +285,42 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		}
 	}
 
-//	// Use: create(red1);
-//	@Override
-//	private void create(SObject[] objects) throws ConnectionException {
-//		getSForce().createSForce(objects);
-//	}
-//
-//
-//	@Override
-//	// Use: describeClass("Reduction__c");
-//	private void describeClass(String table) throws ConnectionException {
-//		getSForce().describeClassSForce(table);
-//	}
-//	
-//	// PRIVATE
-//	private void init() throws ConnectionException {
-//		setSForce(new DatabaseSystemSForce());
-//	}
-//	
-//	// Use: query("SELECT FirstName, LastName FROM Contact");
-//	private static QueryResult query(String query) throws ConnectionException {
-//		return getSForce().query(query);
-//	}	
-//	
-//	private static void retrieve() {
-//		// TODO
-//	}
-//
-//	private static void update() {
-//		// TODO
-//	}
-//
-//	private static void upsert() {
-//		// TODO
-//	}
+	// // Use: create(red1);
+	// @Override
+	// private void create(SObject[] objects) throws ConnectionException {
+	// getSForce().createSForce(objects);
+	// }
+	//
+	//
+	// @Override
+	// // Use: describeClass("Reduction__c");
+	// private void describeClass(String table) throws ConnectionException {
+	// getSForce().describeClassSForce(table);
+	// }
+	//
+	// // PRIVATE
+	// private void init() throws ConnectionException {
+	// setSForce(new DatabaseSystemSForce());
+	// }
+	//
+	// // Use: query("SELECT FirstName, LastName FROM Contact");
+	// private static QueryResult query(String query) throws ConnectionException
+	// {
+	// return getSForce().query(query);
+	// }
+	//
+	// private static void retrieve() {
+	// // TODO
+	// }
+	//
+	// private static void update() {
+	// // TODO
+	// }
+	//
+	// private static void upsert() {
+	// // TODO
+	// }
 
-	
 	// SET GET
 	private static EnterpriseConnection getLoginConnection() {
 		return loginConnection;
@@ -315,5 +353,5 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	private static ConnectorConfig getConfigEnt() {
 		return configEnt;
 	}
-	
+
 }
