@@ -52,6 +52,9 @@ public class TestFinance {
 			System.out.println("ERROR: net $" + strat.getNetValue(415.0));		
 		}
 		
+		Compliance comp = new Compliance(strat.getTransaction());
+		comp.toString(strat);
+		
 	}
 
 	private static void testCallSpread() {
@@ -90,6 +93,8 @@ public class TestFinance {
 			System.out.println("ERROR: net $" + strat.getNetValue(415.0));		
 		}
 
+		Compliance comp = new Compliance(strat.getTransaction());
+		comp.toString(strat);
 		
 	}
 	
@@ -129,5 +134,8 @@ public class TestFinance {
 			System.out.println("ERROR: net $" + strat.getNetValue(415.0));		
 		}
 		
+		Compliance comp = new Compliance(strat.getTransaction());
+		comp.toString(strat);
+
 	}
 }

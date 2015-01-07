@@ -25,15 +25,15 @@ public class StrategyIronCondor extends StrategyOptions {
 					TradeType.BUY, quantity, callBuyPrice));
 		setCallSell(new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
 					TradeType.SELL, quantity, callSellPrice));
-		getTransaction().add(getCallBuy());
-		getTransaction().add(getCallSell());
+		getTransaction().addTrade(getCallBuy());
+		getTransaction().addTrade(getCallSell());
 
 		setPutSell(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
 								TradeType.SELL, quantity, putSellPrice));
 		setPutBuy(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
 								TradeType.BUY, quantity, putBuyPrice));	
-		getTransaction().add(getPutSell());
-		getTransaction().add(getPutBuy());
+		getTransaction().addTrade(getPutSell());
+		getTransaction().addTrade(getPutBuy());
 		
 	}
 	

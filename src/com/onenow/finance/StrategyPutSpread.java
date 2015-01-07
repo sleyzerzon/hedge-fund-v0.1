@@ -21,8 +21,8 @@ public class StrategyPutSpread extends StrategyOptions {
 								TradeType.SELL, quantity, putSellPrice));
 		setPutBuy(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
 								TradeType.BUY, quantity, putBuyPrice));	
-		getTransaction().add(getPutSell());
-		getTransaction().add(getPutBuy());
+		getTransaction().addTrade(getPutSell());
+		getTransaction().addTrade(getPutBuy());
 	}
 	
 	// PUBLIC

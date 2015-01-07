@@ -13,7 +13,7 @@ public class StrategyOptions extends Strategy {
 	// PUBLIC
 	public Double getCallNetPrice() {
 		double net = 0.0;
-		for(Trade trade:getTransaction()) {
+		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getInvestment().getInvType().equals(InvType.CALL))
 			net += trade.getNetCost();
 		}
@@ -22,7 +22,7 @@ public class StrategyOptions extends Strategy {
 	
 	public Double getPutNetPrice() {
 		double net = 0.0;
-		for(Trade trade:getTransaction()) {
+		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getInvestment().getInvType().equals(InvType.PUT))
 			net += trade.getNetCost();
 		}
@@ -31,7 +31,7 @@ public class StrategyOptions extends Strategy {
 	
 	public Double getBoughtNetPrice() {
 		double net = 0.0;
-		for(Trade trade:getTransaction()) {
+		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getTradeType().equals(TradeType.BUY)) {
 			net += trade.getNetCost();
 			}
@@ -41,7 +41,7 @@ public class StrategyOptions extends Strategy {
 	
 	public Double getSoldNetPrice() {
 		double net = 0.0;
-		for(Trade trade:getTransaction()) {
+		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getTradeType().equals(TradeType.SELL)) {
 			net += trade.getNetCost();
 			}

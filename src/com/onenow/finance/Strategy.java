@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Strategy {
 	
-	private List<Trade> transaction;
+	private Transaction transaction;
 
 	// APPROACH: Iron Condor
 	// 1) LOOK FOR THE STRIKE SPREAD TO BE SMALLER THAN THE PRICING GAP
@@ -40,13 +40,13 @@ public class Strategy {
 	
 	// CONSTRUCTOR
 	public Strategy() {
-		setTransaction(new ArrayList<Trade>());
+		setTransaction(new Transaction());
 	}
 	
 	// PUBLIC	
 	public Double getNetValue(Double marketPrice) {
 		Double net = 0.0;
-		for(Trade trade:getTransaction()) {
+		for(Trade trade:getTransaction().getTrades()) {
 			Double price = trade.getNetCost();
 			Double value = trade.getValue(marketPrice);
 			net += price+value;
@@ -67,17 +67,19 @@ public class Strategy {
 		return isDebit;
 	}
 
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+	private void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
+	}
+
 	// PRIVATE
 
 
 	// SET GET
-	public List<Trade> getTransaction() {
-		return transaction;
-	}
 
-	private void setTransaction(List<Trade> transaction) {
-		this.transaction = transaction;
-	}
 
 
 }
