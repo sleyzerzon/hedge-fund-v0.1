@@ -1,12 +1,9 @@
 package com.onenow.finance;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Strategy {
 	
 	private Transaction transaction;
-
+	
 	// APPROACH: Iron Condor
 	// 1) LOOK FOR THE STRIKE SPREAD TO BE SMALLER THAN THE PRICING GAP
 	// 2) FOR MAX NETom: Pcs+Pcb >> Pcs+Ppb
@@ -51,7 +48,7 @@ public class Strategy {
 			Double value = trade.getValue(marketPrice);
 			net += price+value;
 		}
-		System.out.println("NET VALUE ($" + marketPrice + "): $"+ net);
+		// System.out.println("NET VALUE ($" + marketPrice + "): $"+ net);
 		return net;
 	}
 	
@@ -66,7 +63,17 @@ public class Strategy {
 		// TODO
 		return isDebit;
 	}
+	
+	public String toString(){
+		String s = "end strategy...";
+		return(s);
+	}
 
+
+	// PRIVATE
+
+
+	// SET GET
 	public Transaction getTransaction() {
 		return transaction;
 	}
@@ -74,12 +81,6 @@ public class Strategy {
 	private void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
 	}
-
-	// PRIVATE
-
-
-	// SET GET
-
 
 
 }
