@@ -41,31 +41,43 @@ public class Strategy {
 	}
 	
 	// PUBLIC	
+	public Double getMargin() {
+		return(getTransaction().getMargin());
+	}
+	
+	public Double getNetMargin() {
+		return(getMargin() - getNetPremium());
+	}
+	
 	public Double getNetValue(Double marketPrice) {
-		Double net = 0.0;
+		Double net = getNetPremium();
 		for(Trade trade:getTransaction().getTrades()) {
-			Double price = trade.getNetCost();
-			Double value = trade.getValue(marketPrice);
-			net += price+value;
+			net += trade.getValue(marketPrice); 
 		}
-		// System.out.println("NET VALUE ($" + marketPrice + "): $"+ net);
 		return net;
 	}
 	
+	public Double getNetPremium() {
+		Double netPremium = 0.0;
+		for (Trade trade:getTransaction().getTrades()) {
+			netPremium += trade.getNetPremium();
+		}
+		return  netPremium;
+	}
+	
 	public boolean isCreditStrategy() {
-		boolean isCredit=false;
-		// TODO
-		return isCredit;
+		if(getNetPremium()>0.0) { 
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isDebitStrategy() {
-		boolean isDebit=false;
-		// TODO
-		return isDebit;
+		return (!isCreditStrategy());
 	}
 	
 	public String toString(){
-		String s = "end strategy...";
+		String s = getTransaction().getTrades().get(0).getInvestment().getUnder().getTicker();  // assumes same underlying acrosss transaction
 		return(s);
 	}
 

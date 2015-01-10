@@ -13,7 +13,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getInvestment().getInvType().equals(InvType.CALL))
-			net += trade.getNetCost();
+			net += trade.getNetPremium();
 		}
 		return net;
 	}
@@ -22,7 +22,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getInvestment().getInvType().equals(InvType.PUT))
-			net += trade.getNetCost();
+			net += trade.getNetPremium();
 		}
 		return net;
 	}
@@ -31,7 +31,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getTradeType().equals(TradeType.BUY)) {
-			net += trade.getNetCost();
+			net += trade.getNetPremium();
 			}
 		}
 		return net;		
@@ -41,7 +41,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getTradeType().equals(TradeType.SELL)) {
-			net += trade.getNetCost();
+			net += trade.getNetPremium();
 			}
 		}
 		return net;		
@@ -51,10 +51,10 @@ public class StrategyOptions extends Strategy {
 	// PRIVATE 
 	
 	public String toString() {
-		String sc = "NET CALL (t0): $" + getCallNetPrice().toString();
-		String sp = "NET PUT (t0): $" + getPutNetPrice().toString();
-		String sb = "NET BOUGHT (t0): $" + getBoughtNetPrice().toString();
-		String ss = "NET SOLD (t0): $" + getSoldNetPrice().toString();
+		String sc = "Net Call (t0): $" + getCallNetPrice().toString();
+		String sp = "Net Put (t0): $" + getPutNetPrice().toString();
+		String sb = "Net Bought (t0): $" + getBoughtNetPrice().toString();
+		String ss = "Net Sold (t0): $" + getSoldNetPrice().toString();
 		String sx = super.toString();
 		System.out.println(sc);
 		System.out.println(sp);

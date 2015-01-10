@@ -5,7 +5,7 @@ public class Trade {
 	private Investment investment; // INTC, option, call
 	private Enum tradeType; // ie. buy
 	private int quantity; // 50 shares
-	private Double netCost; // +$10 net, -$23 net
+	private Double netPremium; // +$10 net, -$23 net
 	private Double unitPrice;  // $7.50 per share
 	
 	public Trade() {
@@ -17,7 +17,7 @@ public class Trade {
 		setTradeType(tradeType);
 		setQuantity(quantity);
 		setUnitPrice(unitPrice);
-		setNetCost();
+		setNetPremium();
 	}
 
 	// PUBLIC
@@ -46,36 +46,25 @@ public class Trade {
 		return value;
 	}
 	
-//	public Double getMaxProfit() { 
-//		Double value=0.0;
-//		// TODO
-//		return value;		
-//	}
-//
-//	public Double getMaxLoss() { // TODO: other investment types
-//		Double sum=0.0;
-//		// TODO
-//		return sum;		
-//	}
 
 	// PRIVATE
-	private void setNetCost() {	
+	private void setNetPremium() {	
 		Double cost = getQuantity() * getUnitPrice();
 		
 		if (getTradeType().equals(TradeType.BUY)) {
-			this.netCost = -cost;
+			setNetPremium(-cost);
 		} else { 
-			this.netCost = cost;		
+			setNetPremium(cost);		
 		}
 	}
 
-	public Double getNetCost() {
-		return(this.netCost);
-	}		
+//	public Double getNetPremium() {
+//		return(this.netPremium);
+//	}		
 	
 	// PRINT
 	public String toString() {
-		String string = ((InvestmentOption)getInvestment()).toString() + " " + getTradeType() + " Quantity: " + getQuantity() + " Net Cost: $" + getNetCost();
+		String string = ((InvestmentOption)getInvestment()).toString() + " " + getTradeType() + " Quantity: " + getQuantity() + " Net Cost: $" + getNetPremium();
 		System.out.println("TRADE " + string);
 		return (string);
 	}
@@ -111,6 +100,14 @@ public class Trade {
 
 	private void setUnitPrice(Double price) {
 		this.unitPrice = price;
+	}
+
+	public Double getNetPremium() {
+		return netPremium;
+	}
+
+	private void setNetPremium(Double netPremium) {
+		this.netPremium = netPremium;
 	}
 
 }

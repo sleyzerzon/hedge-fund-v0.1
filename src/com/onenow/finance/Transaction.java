@@ -39,24 +39,96 @@ public class Transaction {
 		return string;
 	}
 	
-	public Double getNetCost() {
+	public Double getNetPremium() {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
-			sum+=trade.getNetCost();
+			sum+=trade.getNetPremium();
 		}
 		return sum;		
 	}
-	public Double getNetCost(InvType invType) {
+	public Double getNetPremium(InvType invType) {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
 			if(trade.getInvestment().getInvType().equals(invType)){
-				sum+=trade.getNetCost();
+				sum+=trade.getNetPremium();
 			}
 		}
 		return sum;		
 	}
 	
+	public Double getMargin() { // assumes spreads are transacted
+		Double margin=0.0;
+		Double callSpread = getCallSpread();
+		Double putSpread = getPutSpread();
+		
+		if(callSpread>putSpread) {
+			margin=callSpread*getCallContracts();  
+		} else {
+			margin=putSpread*getPutContracts();
+		}
+		return margin;
+	}
+
+	
 	// PRIVATE
+	private Double getCallSpread() { // assumes up to two call
+		Double callSpread=0.0;
+		Double sellCallStrike=0.0;
+		Double buyCallStrike=0.0;
+		for(Trade trade:getTrades()) { // put
+			if(trade.getInvestment().getInvType().equals(InvType.CALL)) {  
+				if(trade.getTradeType().equals(TradeType.SELL)) {
+					sellCallStrike = trade.getStrike();
+				} else {
+					buyCallStrike = trade.getStrike();
+				}
+			}
+		}
+		if(sellCallStrike<buyCallStrike) {
+			callSpread = buyCallStrike - sellCallStrike;
+		}
+		return callSpread;
+	}
+
+	private Double getPutSpread() { // assumes up to two puts
+		Double putSpread=0.0;
+		Double sellPutStrike=0.0;
+		Double buyPutStrike=0.0;
+		for(Trade trade:getTrades()) { // call
+			if(trade.getInvestment().getInvType().equals(InvType.PUT)) {  
+				if(trade.getTradeType().equals(TradeType.SELL)) {
+					sellPutStrike = trade.getStrike();
+				} else {
+					buyPutStrike = trade.getStrike();
+				}
+			}
+		}
+		if(sellPutStrike>buyPutStrike) {
+			putSpread = sellPutStrike - buyPutStrike;
+		}
+		return putSpread;
+
+	}
+	
+	private Integer getCallContracts() { 
+		Integer contracts=0;
+		for(Trade trade:getTrades()) {
+			if(trade.getInvestment().getInvType().equals(InvType.CALL)) {
+				contracts=trade.getQuantity();
+			}
+		}
+		return contracts;
+	}
+	
+	private Integer getPutContracts() {
+		Integer contracts=0;
+		for(Trade trade:getTrades()) {
+			if(trade.getInvestment().getInvType().equals(InvType.PUT)) {
+				contracts=trade.getQuantity();
+			}			
+		}		
+		return contracts;		
+	}
 	
 	// PRINT
 	

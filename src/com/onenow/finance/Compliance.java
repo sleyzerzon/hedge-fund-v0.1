@@ -11,10 +11,6 @@ public class Compliance {
 	private List<Double> checkpoints;
 	Double maxProfit;
 	Double maxLoss;
-	Double callSpread;
-	Double putSpread;
-	Double margin;
-	Double maxROI;
 
 	// CONSTRUCTOR
 	public Compliance(Strategy strat) {
@@ -24,10 +20,6 @@ public class Compliance {
 		setMaxProfit(-largeNum);
 		setMaxLoss(largeNum);
 		getStrikes();
-		setCallSpread(0.0);
-		setPutSpread(0.0);
-		setMargin(0.0);
-		setMaxROI(0.0);
 	}
 	
 	// PUBLIC
@@ -41,8 +33,8 @@ public class Compliance {
 		}
 	}
 
-	private void setVariants(Double strike) {
-		Double buffer=0.2;
+	private void setVariants(Double strike) { // explore Net around strikes
+		Double buffer=0.025;
 		getCheckpoints().add(strike);
 		setMaxProfitLoss(strike);
 		Double sPlus = strike*(1+buffer);
@@ -63,6 +55,13 @@ public class Compliance {
 		}
 	}
 
+	private Double getMaxROI() {
+		return (Math.abs(getMaxProfit()/getMaxLoss())*100);
+	}
+	
+	private Double getRiskReward() {
+		return((1/(getMaxROI()/100))*100);
+	}
 
 	// PRINT
 	public String toString() {
@@ -70,10 +69,15 @@ public class Compliance {
 		String s="COMPLIANCE\n";
 		for(int i=0; i<getCheckpoints().size(); i++) {
 			Double checkpoint = getCheckpoints().get(i);
-			s = s + "Price ($" + checkpoint + "): $" + getStrategy().getNetValue(checkpoint) + "\n";
+			s = s + "Profit($" + checkpoint.intValue() + "): $" + getStrategy().getNetValue(checkpoint).intValue() + "\n";
 		}
-		s = s + "MAX PROFIT: $" + getMaxProfit() + " " + "MAX LOSS: $" + getMaxLoss() + "\n";
-		System.out.println(s);
+		s = s + "Max Profit: $" + getMaxProfit() + " " + 
+				"Max Loss: $" + getMaxLoss() + "\n";
+		s = s + "Margin Required: $" + getStrategy().getMargin().intValue() + " " + 
+				"Buying Power (net margin after credit): $" + getStrategy().getNetMargin().intValue() + "\n";
+		s = s + "Maximum Profit: " + getMaxROI().intValue() + "% " + 
+				"Risk/Reward: " + getRiskReward().intValue() + "%" + "\n";
+		System.out.println(s+"\n\n");
 		return s;
 	}
 
@@ -109,38 +113,6 @@ public class Compliance {
 
 	private void setMaxLoss(Double maxLoss) {
 		this.maxLoss = maxLoss;
-	}
-
-	private Double getCallSpread() {
-		return callSpread;
-	}
-
-	private void setCallSpread(Double callSpread) {
-		this.callSpread = callSpread;
-	}
-
-	private Double getPutSpread() {
-		return putSpread;
-	}
-
-	private void setPutSpread(Double putSpread) {
-		this.putSpread = putSpread;
-	}
-
-	private Double getMargin() {
-		return margin;
-	}
-
-	private void setMargin(Double margin) {
-		this.margin = margin;
-	}
-
-	private Double getMaxROI() {
-		return maxROI;
-	}
-
-	private void setMaxROI(Double maxROI) {
-		this.maxROI = maxROI;
 	}
 	
 }
