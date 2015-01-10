@@ -54,36 +54,36 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 		expDate.setTime(1000000);
 		Promise<Investment> stockPromise = getBroker().getBest(under1,
 				InvType.STOCK);
-		Promise<Investment> call1Promise = getBroker().getBest(under1,
-				InvType.CALL, expDate, 405.00);
-		Promise<Investment> call2Promise = getBroker().getBest(under1,
-				InvType.CALL, expDate, 400.00);
-		Promise<Investment> put1Promise = getBroker().getBest(under1,
-				InvType.PUT, expDate, 390.00);
-		Promise<Investment> put2Promise = getBroker().getBest(under1,
-				InvType.PUT, expDate, 385.00);
+//		Promise<Investment> call1Promise = getBroker().getBest(under1,
+//				InvType.CALL, expDate, 405.00);
+//		Promise<Investment> call2Promise = getBroker().getBest(under1,
+//				InvType.CALL, expDate, 400.00);
+//		Promise<Investment> put1Promise = getBroker().getBest(under1,
+//				InvType.PUT, expDate, 390.00);
+//		Promise<Investment> put2Promise = getBroker().getBest(under1,
+//				InvType.PUT, expDate, 385.00);
 
 		// find suitable investment
 		Promise<Double> stockPricePromise = getBroker().getPriceAsk(
 				stockPromise);
-		Promise<Double> call1PricePromise = getBroker().getPriceAsk(
-				call1Promise);
-		Promise<Double> call2PricePromise = getBroker().getPriceAsk(
-				call2Promise);
-		Promise<Double> put1PricePromise = getBroker().getPriceAsk(put1Promise);
-		Promise<Double> put2PricePromise = getBroker().getPriceAsk(put2Promise);
+//		Promise<Double> call1PricePromise = getBroker().getPriceAsk(
+//				call1Promise);
+//		Promise<Double> call2PricePromise = getBroker().getPriceAsk(
+//				call2Promise);
+//		Promise<Double> put1PricePromise = getBroker().getPriceAsk(put1Promise);
+//		Promise<Double> put2PricePromise = getBroker().getPriceAsk(put2Promise);
 
 		Promise<Trade> tradeStock = doBuy(stockPromise, 50, stockPricePromise);
 
-		Promise<Trade> tradeCall1 = doBuy(call1Promise, 50, call1PricePromise);
+//		Promise<Trade> tradeCall1 = doBuy(call1Promise, 50, call1PricePromise);
+//
+//		Promise<Trade> tradeCall2 = doBuy(call2Promise, 50, call2PricePromise);
+//
+//		Promise<Trade> tradePut1 = doBuy(put1Promise, 50, put1PricePromise);
+//		Promise<Trade> tradePut2 = doBuy(put2Promise, 50, put2PricePromise);
 
-		Promise<Trade> tradeCall2 = doBuy(call2Promise, 50, call2PricePromise);
-
-		Promise<Trade> tradePut1 = doBuy(put1Promise, 50, put1PricePromise);
-		Promise<Trade> tradePut2 = doBuy(put2Promise, 50, put2PricePromise);
-
-		doTransaction(tradeStock, tradeCall1, tradeCall2, tradePut1, tradePut2);
-
+//		doTransaction(tradeStock, tradeCall1, tradeCall2, tradePut1, tradePut2);
+		doTransaction(tradeStock);
 		Promise<List<Trade>> tradesPromise = getBroker().getTrades();
 		processTrades(tradesPromise);
 
@@ -172,7 +172,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	@Asynchronous
 	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
 		Investment inv = new Investment();
-		inv = getBroker().getBest(under, invType, InvTerm).get();
+//		inv = getBroker().getBest(under, invType, InvTerm).get();
 		return inv;
 	}
 
@@ -181,7 +181,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 			Double strike) { // options
 		Investment inv = new Investment();
 		try {
-			inv = getBroker().getBest(under, invType, expDate, strike).get();
+//			inv = getBroker().getBest(under, invType, expDate, strike).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -44,12 +44,12 @@ public class BrokerWallStIntBro implements BrokerWallSt {
 		return null;
 	}
 
-	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration,
-			Double strike) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Date expiration,
+//			Double strike) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public List<Trade> getTrades() {

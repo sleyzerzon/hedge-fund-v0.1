@@ -75,7 +75,7 @@ public class Trade {
 	
 	// PRINT
 	public String toString() {
-		String string = ((InvestmentOption)getInvestment()).toString() + " " + getTradeType() + " Quantity: " + getQuantity() + " Net Cost: $" + getNetCost();
+		String string = getInvestment() + " " + getTradeType() + " Quantity: " + getQuantity() + " Net Cost: $" + getNetCost();
 		System.out.println("TRADE " + string);
 		return (string);
 	}

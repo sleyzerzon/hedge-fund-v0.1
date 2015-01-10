@@ -7,12 +7,11 @@ import java.util.List;
 
 public class Portfolio {
 
-	private List<Investment> investments;
-	private Hashtable<String, Integer> quantity;
+	private List<Investment> investments = new ArrayList<Investment>();
+	private Hashtable<String, Integer> quantity = new Hashtable<String, Integer>();
 
 	public Portfolio() {
-		setInvestments(new ArrayList<Investment>());
-		setQuantity(new Hashtable<String, Integer>());
+	
 	}
 
 	public void addTrade(Transaction trans) {
@@ -47,7 +46,10 @@ public class Portfolio {
 
 	private void addQuantity(Underlying under, int quantity) {
 		// TODO the sale case where I do'nt have enough to sell
-		int init = getQuantity().get(under.getTicker());
+		Integer init = getQuantity().get(under.getTicker());
+		if (init == null) {
+			init = 0;
+		}
 		getQuantity().put(under.getTicker(), init + quantity);
 	}
 

@@ -24,7 +24,7 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
 	@Override
 	public List<Underlying> getUnderlying() {
 		List<Underlying> list = new ArrayList<Underlying>();
-		list.add(new Underlying("abc"));
+		list.add(new Underlying("APL"));
 
 		// List<Underlying> list = getBrokerEmulator().getUnderlying();
 
@@ -53,21 +53,24 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
 																// spot
 		return getBrokerEmulator().getBest(under, invType);
 	}
-
-	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration,
-			Double strike) { // options
-		return getBrokerEmulator().getBest(under, invType, expiration, strike);
-	}
-
-	@Override
-	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
-		return getBrokerEmulator().getBest(under, invType, InvTerm);
-	}
+//
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Date expiration,
+//			Double strike) { // options
+//		return getBrokerEmulator().getBest(under, invType, expiration, strike);
+//	}
+//
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
+//		return getBrokerEmulator().getBest(under, invType, InvTerm);
+//	}
 
 	@Override
 	public List<Trade> getTrades() {
-		return getBrokerEmulator().getTrades();
+		List<Trade > trades= getBrokerEmulator().getTrades();
+
+		System.out.println("In getTrades(): " + trades);
+		return trades;
 	}
 
 	@Override
@@ -91,5 +94,18 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
 	private static void setBrokerIntBro(BrokerWallStIntBro brokerIntBro) {
 		BrokerActivityImpl.brokerIntBro = brokerIntBro;
 	}
+
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Date expiration,
+//			Double strike) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }
