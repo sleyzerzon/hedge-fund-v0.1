@@ -60,8 +60,9 @@ public class StrategyIronCondor extends StrategyOptions {
 	
 	// PRINT
 	public String toString() {
-		String s =	getCallBuy().toString() + " " + getCallSell().toString() + " " + 
-					getPutSell().toString() + " " + getPutBuy().toString();
+		String s =	getCallBuy().toString() + getCallSell().toString() + 
+					getPutSell().toString() + getPutBuy().toString() +
+					super.toString();
 		return s;
 	}
 

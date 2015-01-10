@@ -40,7 +40,8 @@ public class StrategyCallSpread extends StrategyOptions {
 	
 	// PRINT
 	public String toString() {
-		String s = getCallBuy().toString() + " " + getCallSell().toString();
+		String s = 	getCallBuy().toString() + " " + getCallSell().toString() + " " +
+					super.toString();
 		return(s);
 	}	
 	

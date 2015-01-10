@@ -40,7 +40,8 @@ public class StrategyPutSpread extends StrategyOptions {
 
 	// PRINT
 	public String toString() {
-		String s= getPutBuy().toString() + " " + getPutSell().toString();
+		String s = 	getPutBuy().toString() + " " + getPutSell().toString() + " " +
+					super.toString();
 		return(s);
 	}
 

@@ -1,7 +1,5 @@
 package com.onenow.finance;
 
-import java.util.Date;
-
 public class StrategyOptions extends Strategy {
 
 	
@@ -53,20 +51,18 @@ public class StrategyOptions extends Strategy {
 	// PRIVATE 
 	
 	public String toString() {
-//		String s0="Max Profit (t0): $".concat(getTransaction().getMaxProfit().toString());
-//		String se="Max Loss (te): $".concat(getMaxLoss().toString());
-		String sc="NET CALL (t0): $".concat(getCallNetPrice().toString());
-		String sp="NET PUT (t0): $".concat(getPutNetPrice().toString());
-		String sb="NET BOUGHT (t0): $".concat(getBoughtNetPrice().toString());
-		String ss="NET SOLD (t0): $".concat(getSoldNetPrice().toString());
-//		System.out.println(s0);
-//		System.out.println(se);
+		String sc = "NET CALL (t0): $" + getCallNetPrice().toString();
+		String sp = "NET PUT (t0): $" + getPutNetPrice().toString();
+		String sb = "NET BOUGHT (t0): $" + getBoughtNetPrice().toString();
+		String ss = "NET SOLD (t0): $" + getSoldNetPrice().toString();
+		String sx = super.toString();
 		System.out.println(sc);
 		System.out.println(sp);
 		System.out.println(sb);
 		System.out.println(ss);
-//		String s=s0.concat(se).concat(sc).concat(sp).concat(sb).concat(ss);
-		String s=sc.concat(sp).concat(sb).concat(ss);
+		System.out.println(sx);
+
+		String s = sc + " " + sp + " " + sb + " " + ss + " " + sx;
 
 		return s;
 	}

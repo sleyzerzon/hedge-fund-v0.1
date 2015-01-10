@@ -22,6 +22,8 @@ public class TestFinance {
 				385.00, 8.33);
 
 		strat.toString();
+		Compliance comp = new Compliance(strat);
+		comp.toString();
 		
 //		if(!strat.getTransaction().getMaxProfit().equals(261.0)) {
 //			System.out.println("ERROR: (t0) max profit.");
@@ -51,10 +53,7 @@ public class TestFinance {
 		if(!strat.getNetValue(415.0).equals(-239.0)) {
 			System.out.println("ERROR: net $" + strat.getNetValue(415.0));		
 		}
-		
-		Compliance comp = new Compliance(strat.getTransaction());
-		comp.toString(strat);
-		
+				
 	}
 
 	private static void testCallSpread() {
@@ -63,6 +62,8 @@ public class TestFinance {
 				400.00, 8.85);
 
 		strat.toString();
+		Compliance comp = new Compliance(strat);
+		comp.toString();
 		
 //		if(!strat.getTransaction().getMaxProfit().equals(261.0)) {
 //			System.out.println("ERROR: (t0) max profit.");
@@ -93,9 +94,6 @@ public class TestFinance {
 			System.out.println("ERROR: net $" + strat.getNetValue(415.0));		
 		}
 
-		Compliance comp = new Compliance(strat.getTransaction());
-		comp.toString(strat);
-		
 	}
 	
 	private static void testPutSpread() {
@@ -104,6 +102,8 @@ public class TestFinance {
 				385.00, 8.33);
 
 		strat.toString();
+		Compliance comp = new Compliance(strat);
+		comp.toString();
 		
 //		if(!strat.getTransaction().getMaxProfit().equals(261.0)) {
 //			System.out.println("ERROR: (t0) max profit.");
@@ -134,8 +134,5 @@ public class TestFinance {
 			System.out.println("ERROR: net $" + strat.getNetValue(415.0));		
 		}
 		
-		Compliance comp = new Compliance(strat.getTransaction());
-		comp.toString(strat);
-
 	}
 }

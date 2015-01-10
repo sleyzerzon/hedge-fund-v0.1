@@ -38,6 +38,7 @@ public class DaemonActivity {
 //		aw.addActivitiesImplementation(new SForceActivityImpl());
 		System.out.println("*** ACTIVITY WORKER ID: " + aw.getIdentity());
 
+
 	}
 
 }

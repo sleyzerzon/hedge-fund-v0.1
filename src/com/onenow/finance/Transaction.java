@@ -56,22 +56,6 @@ public class Transaction {
 		return sum;		
 	}
 	
-//	public Double getMaxProfit() { // TODO: other investment types
-//		Double sum=0.0;
-//		for(Trade trade:getTrades()){
-//			sum += trade.getMaxProfit();
-//		}
-//		return sum;		
-//	}
-//
-//	public Double getMaxLoss() { // TODO: other investment types
-//		Double sum=0.0;
-//		for (Trade trade:getTrades()) {
-//			sum += trade.getMaxLoss();
-//		}
-//		return sum;		
-//	}
-
 	// PRIVATE
 	
 	// PRINT
