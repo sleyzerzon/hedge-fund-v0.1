@@ -9,11 +9,12 @@ import com.onenow.finance.Trade;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
-public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActivity {
+public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
+		BrokerActivity {
 
 	private static BrokerEmulator brokerEmulator;
 	private static BrokerWallStIntBro brokerIntBro;
-	
+
 	public BrokerActivityImpl() {
 		System.out.println("Created BrokerActivityImpl.");
 		setBrokerEmulator(new BrokerEmulator());
@@ -24,9 +25,9 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 	public List<Underlying> getUnderlying() {
 		List<Underlying> list = new ArrayList<Underlying>();
 		list.add(new Underlying("abc"));
-		
+
 		// List<Underlying> list = getBrokerEmulator().getUnderlying();
-		 
+
 		System.out.println("Returning emulatorList");
 		return list;
 	}
@@ -47,19 +48,22 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 	}
 
 	@Override
-	public Investment getBest(Underlying under, Enum invType) { // stock & on-demmand & spot
+	public Investment getBest(Underlying under, Enum invType) { // stock &
+																// on-demmand &
+																// spot
 		return getBrokerEmulator().getBest(under, invType);
 	}
 
 	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { // options
+	public Investment getBest(Underlying under, Enum invType, Date expiration,
+			Double strike) { // options
 		return getBrokerEmulator().getBest(under, invType, expiration, strike);
 	}
-		
+
 	@Override
 	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
 		return getBrokerEmulator().getBest(under, invType, InvTerm);
-	} 
+	}
 
 	@Override
 	public List<Trade> getTrades() {
@@ -86,8 +90,6 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud, BrokerActi
 
 	private static void setBrokerIntBro(BrokerWallStIntBro brokerIntBro) {
 		BrokerActivityImpl.brokerIntBro = brokerIntBro;
-	}	
-	
+	}
+
 }
-
-

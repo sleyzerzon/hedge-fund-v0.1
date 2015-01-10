@@ -52,12 +52,20 @@ public class Portfolio {
 	}
 
 	public Investment getBest(Underlying under, Enum invType) { // generic
-		return (search(under, invType).get(0));
+		List<Investment> found = search(under, invType);
+		if (found.size() == 0) {
+			return null;
+		}
+		return found.get(0);
 	}
 
 	public Investment getBest(Underlying under, Enum invType, Date expiration,
 			Double strike) { // generic
-		return (search(under, invType, expiration, strike).get(0));
+		List<Investment> found = search(under, invType, expiration, strike);
+		if (found.size() == 0) {
+			return null;
+		}
+		return found.get(0);
 	}
 
 	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
