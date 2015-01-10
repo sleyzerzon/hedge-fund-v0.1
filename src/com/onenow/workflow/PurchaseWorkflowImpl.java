@@ -69,10 +69,10 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 				true);
 		List<Investment> myInv = getInvestments(myInvPromise);
 
-		System.out.println("Transaction Net:" + tx.getNetCost());
+		System.out.println("Transaction Net:" + tx.getNetPremium());
 		System.out.println("Transaction Call Net:"
-				+ tx.getNetCost(InvType.CALL));
-		System.out.println("Transaction Put Net:" + tx.getNetCost(InvType.PUT));
+				+ tx.getNetPremium(InvType.CALL));
+		System.out.println("Transaction Put Net:" + tx.getNetPremium(InvType.PUT));
 
 		System.out.println("Ended workflow.");
 

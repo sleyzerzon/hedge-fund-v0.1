@@ -11,6 +11,11 @@ public class TestFinance {
 		testIronCondor();
 		testCallSpread();
 		testPutSpread();
+		
+		// decide which of the 4 spreads to use
+		// start with credit ones for leverage
+		// We will look for a call spread that has a good ratio of cost to potential profit, usually 1:3 or greater.
+		// resistance points? expecting news?
 	}
 	
 	// PRIVATE
