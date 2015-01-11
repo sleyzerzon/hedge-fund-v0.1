@@ -58,15 +58,13 @@ public class Trade {
 		}
 	}
 
-//	public Double getNetPremium() {
-//		return(this.netPremium);
-//	}		
-	
 	// PRINT
 	public String toString() {
-		String string = ((InvestmentOption)getInvestment()).toString() + " " + getTradeType() + " Quantity: " + getQuantity() + " Net Cost: $" + getNetPremium();
-		System.out.println("TRADE " + string);
-		return (string);
+		String s = "";
+		s = s + getInvestment().toString() + " " + getTradeType() + 
+				" Quantity: " + getQuantity() + " " + 
+				"Net Cost: $" + getNetPremium();
+		return (s);
 	}
 
 	

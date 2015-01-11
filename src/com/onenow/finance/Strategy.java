@@ -1,9 +1,14 @@
 package com.onenow.finance;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Strategy {
 	
 	private Transaction transaction;
-	
+	private List<Double> checkpoints;
+
 	// APPROACH: Iron Condor
 	// 1) LOOK FOR THE STRIKE SPREAD TO BE SMALLER THAN THE PRICING GAP
 	// 2) FOR MAX NETom: Pcs+Pcb >> Pcs+Ppb
@@ -38,6 +43,11 @@ public class Strategy {
 	// CONSTRUCTOR
 	public Strategy() {
 		setTransaction(new Transaction());
+		
+		setCheckpoints(new ArrayList<Double>());
+//		Double largeNum = 99999999.99;
+//		setMaxProfit(-largeNum);
+//		setMaxLoss(largeNum);
 	}
 	
 	// PUBLIC	
@@ -75,15 +85,96 @@ public class Strategy {
 	public boolean isDebitStrategy() {
 		return (!isCreditStrategy());
 	}
+
 	
+	public Double getMaxProfit() { // profit
+		Double max=0.0;
+		setStrikes();
+		for(Double price:getCheckpoints()) {
+			Double net=getNetValue(price);
+			if(net>max) {
+				max=net;
+			}
+		}
+		return max;
+	}
+
+	public Double getMaxLoss() { // loss
+		Double max=0.0;
+		setStrikes();
+		for(Double price:getCheckpoints()) {
+			Double net=getNetValue(price);
+			if(net<max) {
+				max=net;
+			}
+		}		
+		return max;
+	}
+	
+	private Double getMaxROI() {
+		return (Math.abs(getMaxProfit()/getMaxLoss())*100);
+	}
+	
+	private Double getRiskReward() {
+		return((1/(getMaxROI()/100))*100);
+	}
+
+	// Use bidding algorithm to determine order of execution of this strategy
+	public Double biddingOrder(){
+		Reward rew = new Reward();
+		Double order = rew.successBias(getTransaction().probabilityOfProfit(), getMaxROI());
+		return order;
+	}
+
+	// PRIVATE
+	private void setStrikes() {
+		Double strike=0.0;
+		for (Trade trade:getTransaction().getTrades()) {
+			strike = trade.getStrike();
+			setStrikeVariants(strike);
+		}
+	}
+
+	private void setStrikeVariants(Double strike) { // explore Net around strikes
+		Double buffer=0.025;
+		addNewCheckpoint(strike);
+		addNewCheckpoint(strike*(1+buffer));
+		addNewCheckpoint(strike*(1-buffer));
+	}
+	
+	private void addNewCheckpoint(Double num) {
+		if(!getCheckpoints().contains(num)){
+			getCheckpoints().add(num);
+		}
+	}
+
+	
+	// PRINT
 	public String toString(){
-		String s = getTransaction().getTrades().get(0).getInvestment().getUnder().getTicker();  // assumes same underlying acrosss transaction
+		String s = "";
+		s = s + getTransaction().toString();
+		s = s + "Max Profit: $" + getMaxProfit() + ". " + 
+				"Max Loss: $" + getMaxLoss() + "\n";
+		s = s + "Margin Required: $" + getMargin().intValue() + ". " + 
+				"Buying Power (net margin after credit): $" + getNetMargin().intValue() + "\n";
+		s = s + "Maximum Profit: " + getMaxROI().intValue() + "%" + ". " + 
+				"Risk/Reward: " + getRiskReward().intValue() + "%" + "\n";
+		s = s + "Bidding Order: " + biddingOrder().intValue() + "\n";
+		s = s + getCheckpointValue();
 		return(s);
 	}
 
-
-	// PRIVATE
-
+	private String getCheckpointValue() {
+		String s = "";
+		setStrikes();
+		Collections.sort(getCheckpoints());
+		for(int i=0; i<getCheckpoints().size(); i++) {
+			Double checkpoint = getCheckpoints().get(i);
+			s = s + "Profit($" + checkpoint.intValue() + "): $" + getNetValue(checkpoint).intValue() + "\n";
+		}
+		return s;
+	}
+	
 
 	// SET GET
 	public Transaction getTransaction() {
@@ -92,7 +183,14 @@ public class Strategy {
 
 	private void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
+		}
+
+	private List<Double> getCheckpoints() {
+		return checkpoints;
 	}
 
+	private void setCheckpoints(List<Double> checkpoints) {
+		this.checkpoints = checkpoints;
+	}
 
 }

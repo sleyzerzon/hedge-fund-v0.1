@@ -27,22 +27,12 @@ public class StrategyCallSpread extends StrategyOptions {
 	}
 	
 	// PUBLIC
-//	public Double getMaxProfit() {
-//		Double maxProfit = getCallNetPrice();
-//		return maxProfit;
-//	}
-//	
-//	public Double getMaxLoss() {
-//		Double callLoss = getNetValue(getCallBuy().getStrike());
-//		return callLoss;
-//	}
-
 	
 	// PRINT
 	public String toString() {
-		String s = 	getCallBuy().toString() + " " + getCallSell().toString() + " " +
-					super.toString();
-		return(s);
+		String s = "";
+		s = s + super.toString();
+		return s;
 	}	
 	
 	// PRIVATE

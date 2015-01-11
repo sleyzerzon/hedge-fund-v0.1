@@ -30,15 +30,6 @@ public class Transaction {
 		// implement 
 	}
 
-	public String toString() {
-		String string = "";
-		for (Trade trade : getTrades()) {
-			trade.toString();
-			string.concat(trade.toString());
-		}
-		return string;
-	}
-	
 	public Double getNetPremium() {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
@@ -69,6 +60,10 @@ public class Transaction {
 		return margin;
 	}
 
+	public Double probabilityOfProfit() {
+		Double prob=0.8;
+		return prob;
+	}
 	
 	// PRIVATE
 	private Double getCallSpread() { // assumes up to two call
@@ -131,7 +126,14 @@ public class Transaction {
 	}
 	
 	// PRINT
-	
+	public String toString() {
+		String s = "";
+		for (Trade trade : getTrades()) {
+			s = s + trade.toString() + "\n";
+		}
+		return s;
+	}
+
 	// SET GET
 	public List<Trade> getTrades() {
 		return this.trades;

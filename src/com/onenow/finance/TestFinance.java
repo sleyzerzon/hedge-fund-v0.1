@@ -6,16 +6,9 @@ public class TestFinance {
 
 	// MAIN
 	public static void main(String[] args) {
-		StrategyOptions so = new StrategyOptions();
-		
 		testIronCondor();
 		testCallSpread();
 		testPutSpread();
-		
-		// decide which of the 4 spreads to use
-		// start with credit ones for leverage
-		// We will look for a call spread that has a good ratio of cost to potential profit, usually 1:3 or greater.
-		// resistance points? expecting news?
 	}
 	
 	// PRIVATE
@@ -26,27 +19,25 @@ public class TestFinance {
 				390.00, 9.5,
 				385.00, 8.33);
 
-		strat.toString();
-		Compliance comp = new Compliance(strat);
-		comp.toString();
+		System.out.println("\n\n" + strat.toString());
 		
-//		if(!strat.getTransaction().getMaxProfit().equals(261.0)) {
-//			System.out.println("ERROR: (t0) max profit.");
-//		}
-//		if(!strat.getMaxLoss().equals(-239.0)) {
-//			System.out.println("ERROR: (te) max loss.");
-//		}
-		if(!strat.getCallNetPrice().equals(144.0)) {
-			System.out.println("ERROR call net $" + strat.getCallNetPrice());			
+		if(!strat.getMaxProfit().equals(261.0)) {
+			System.out.println("ERROR: (t0) max profit $" + strat.getMaxProfit());
 		}
-		if(!strat.getPutNetPrice().equals(117.0)){
-			System.out.println("ERROR put net $" + strat.getPutNetPrice());						
+		if(!strat.getMaxLoss().equals(-239.0)) {
+			System.out.println("ERROR: (te) max loss $" + strat.getMaxLoss());
 		}
-		if(!strat.getBoughtNetPrice().equals(-1574.0)) {
-			System.out.println("ERROR buy net $" + strat.getBoughtNetPrice());			
+		if(!strat.getCallNetPremium().equals(144.0)) {
+			System.out.println("ERROR call net $" + strat.getCallNetPremium());			
 		}
-		if(!strat.getSoldNetPrice().equals(1835.0)){
-			System.out.println("ERROR sell net $" + strat.getSoldNetPrice());		
+		if(!strat.getPutNetPremium().equals(117.0)){
+			System.out.println("ERROR put net $" + strat.getPutNetPremium());						
+		}
+		if(!strat.getBoughtNetPremium().equals(-1574.0)) {
+			System.out.println("ERROR buy net $" + strat.getBoughtNetPremium());			
+		}
+		if(!strat.getSoldNetPremium().equals(1835.0)){
+			System.out.println("ERROR sell net $" + strat.getSoldNetPremium());		
 		}
 		
 		if(!strat.getNetValue(375.0).equals(-239.0)) {
@@ -66,27 +57,25 @@ public class TestFinance {
 				405.00, 7.41,
 				400.00, 8.85);
 
-		strat.toString();
-		Compliance comp = new Compliance(strat);
-		comp.toString();
+		System.out.println("\n\n" + strat.toString());
 		
-//		if(!strat.getTransaction().getMaxProfit().equals(261.0)) {
-//			System.out.println("ERROR: (t0) max profit.");
-//		}
-//		if(!strat.getMaxLoss().equals(-239.0)) {
-//			System.out.println("ERROR: (te) max loss.");
-//		}
-		if(!strat.getCallNetPrice().equals(144.0)) {
-			System.out.println("ERROR call net $" + strat.getCallNetPrice());			
+		if(!strat.getMaxProfit().equals(144.0)) {
+			System.out.println("ERROR: (t0) max profit $" + strat.getMaxProfit());
 		}
-		if(!strat.getPutNetPrice().equals(0.0)){
-			System.out.println("ERROR put net $" + strat.getPutNetPrice());						
+		if(!strat.getMaxLoss().equals(-356.0)) {
+			System.out.println("ERROR: (te) max loss $" + strat.getMaxLoss());
 		}
-		if(!strat.getBoughtNetPrice().equals(-741.0)) {
-			System.out.println("ERROR buy net $" + strat.getBoughtNetPrice());			
+		if(!strat.getCallNetPremium().equals(144.0)) {
+			System.out.println("ERROR call net $" + strat.getCallNetPremium());			
 		}
-		if(!strat.getSoldNetPrice().equals(885.0)){
-			System.out.println("ERROR sell net $" + strat.getSoldNetPrice());		
+		if(!strat.getPutNetPremium().equals(0.0)){
+			System.out.println("ERROR put net $" + strat.getPutNetPremium());						
+		}
+		if(!strat.getBoughtNetPremium().equals(-741.0)) {
+			System.out.println("ERROR buy net $" + strat.getBoughtNetPremium());			
+		}
+		if(!strat.getSoldNetPremium().equals(885.0)){
+			System.out.println("ERROR sell net $" + strat.getSoldNetPremium());		
 		}
 		
 		if(!strat.getNetValue(375.0).equals(144.0)) {
@@ -106,27 +95,25 @@ public class TestFinance {
 				390.00, 9.5,
 				385.00, 8.33);
 
-		strat.toString();
-		Compliance comp = new Compliance(strat);
-		comp.toString();
+		System.out.println("\n\n" + strat.toString());
 		
-//		if(!strat.getTransaction().getMaxProfit().equals(261.0)) {
-//			System.out.println("ERROR: (t0) max profit.");
-//		}
-//		if(!strat.getMaxLoss().equals(-239.0)) {
-//			System.out.println("ERROR: (te) max loss.");
-//		}
-		if(!strat.getCallNetPrice().equals(0.0)) {
-			System.out.println("ERROR call net $" + strat.getCallNetPrice());			
+		if(!strat.getMaxProfit().equals(117.0)) {
+			System.out.println("ERROR: (t0) max profit $" + strat.getMaxProfit());
 		}
-		if(!strat.getPutNetPrice().equals(117.0)){
-			System.out.println("ERROR put net $" + strat.getPutNetPrice());						
+		if(!strat.getMaxLoss().equals(-383.0)) {
+			System.out.println("ERROR: (te) max loss $" + strat.getMaxLoss());
 		}
-		if(!strat.getBoughtNetPrice().equals(-833.0)) {
-			System.out.println("ERROR buy net $" + strat.getBoughtNetPrice());			
+		if(!strat.getCallNetPremium().equals(0.0)) {
+			System.out.println("ERROR call net $" + strat.getCallNetPremium());			
 		}
-		if(!strat.getSoldNetPrice().equals(950.0)){
-			System.out.println("ERROR sell net $" + strat.getSoldNetPrice());		
+		if(!strat.getPutNetPremium().equals(117.0)){
+			System.out.println("ERROR put net $" + strat.getPutNetPremium());						
+		}
+		if(!strat.getBoughtNetPremium().equals(-833.0)) {
+			System.out.println("ERROR buy net $" + strat.getBoughtNetPremium());			
+		}
+		if(!strat.getSoldNetPremium().equals(950.0)){
+			System.out.println("ERROR sell net $" + strat.getSoldNetPremium());		
 		}
 		
 		if(!strat.getNetValue(375.0).equals(-383.0)) {

@@ -9,7 +9,7 @@ public class StrategyOptions extends Strategy {
 	
 	
 	// PUBLIC
-	public Double getCallNetPrice() {
+	public Double getCallNetPremium() {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getInvestment().getInvType().equals(InvType.CALL))
@@ -18,7 +18,7 @@ public class StrategyOptions extends Strategy {
 		return net;
 	}
 	
-	public Double getPutNetPrice() {
+	public Double getPutNetPremium() {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getInvestment().getInvType().equals(InvType.PUT))
@@ -27,7 +27,7 @@ public class StrategyOptions extends Strategy {
 		return net;
 	}
 	
-	public Double getBoughtNetPrice() {
+	public Double getBoughtNetPremium() {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getTradeType().equals(TradeType.BUY)) {
@@ -37,7 +37,7 @@ public class StrategyOptions extends Strategy {
 		return net;		
 	}
 	
-	public Double getSoldNetPrice() {
+	public Double getSoldNetPremium() {
 		double net = 0.0;
 		for(Trade trade:getTransaction().getTrades()) {
 			if(trade.getTradeType().equals(TradeType.SELL)) {
@@ -51,19 +51,12 @@ public class StrategyOptions extends Strategy {
 	// PRIVATE 
 	
 	public String toString() {
-		String sc = "Net Call (t0): $" + getCallNetPrice().toString();
-		String sp = "Net Put (t0): $" + getPutNetPrice().toString();
-		String sb = "Net Bought (t0): $" + getBoughtNetPrice().toString();
-		String ss = "Net Sold (t0): $" + getSoldNetPrice().toString();
-		String sx = super.toString();
-		System.out.println(sc);
-		System.out.println(sp);
-		System.out.println(sb);
-		System.out.println(ss);
-		System.out.println(sx);
-
-		String s = sc + " " + sp + " " + sb + " " + ss + " " + sx;
-
+		String s = "";
+		s = s + super.toString();
+		s = s + "Net Call (t0): $" + getCallNetPremium().intValue() + ". " +
+				"Net Put (t0): $" + getPutNetPremium().intValue() + "\n";
+		s = s +	"Net Bought (t0): $" + getBoughtNetPremium().intValue() + ". " +
+				"Net Sold (t0): $" + getSoldNetPremium().intValue();
 		return s;
 	}
 	

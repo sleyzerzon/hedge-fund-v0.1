@@ -38,31 +38,14 @@ public class StrategyIronCondor extends StrategyOptions {
 	}
 	
 	// PUBLIC
-//	public Double getMaxProfit() {
-//		Double maxProfit = getCallNetPrice() + getPutNetPrice();
-//		return maxProfit;
-//	}
-//	
-//	public Double getMaxLoss() {
-//		Double callLoss = getNetValue(getCallBuy().getStrike());
-//		Double putLoss = getNetValue(getPutBuy().getStrike());
-//		Double maxLoss;
-//		if(Math.abs(callLoss) > Math.abs(putLoss)) {
-//			maxLoss=callLoss;
-//		} else {
-//			maxLoss=putLoss;
-//		}
-//		return maxLoss;
-//	}
 
 	// PRIVATE
 
 	
 	// PRINT
 	public String toString() {
-		String s =	getCallBuy().toString() + getCallSell().toString() + 
-					getPutSell().toString() + getPutBuy().toString() +
-					super.toString();
+		String s = "";
+		s = s + super.toString();
 		return s;
 	}
 
