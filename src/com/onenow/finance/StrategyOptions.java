@@ -50,6 +50,7 @@ public class StrategyOptions extends Strategy {
 
 	// PRIVATE 
 	
+	// PRINT
 	public String toString() {
 		String s = "";
 		s = s + super.toString();
@@ -58,6 +59,31 @@ public class StrategyOptions extends Strategy {
 		s = s +	"Net Bought (t0): $" + getBoughtNetPremium().intValue() + ". " +
 				"Net Sold (t0): $" + getSoldNetPremium().intValue();
 		return s;
+	}
+	
+	// TEST
+	public void testCallNetPremium(Double num){
+		if(!getCallNetPremium().equals(num)) {
+			System.out.println("ERROR call net $" + getCallNetPremium());			
+		}
+	
+	}
+	public void testPutNetPremium(Double num) {
+		if(!getPutNetPremium().equals(num)){
+			System.out.println("ERROR put net $" + getPutNetPremium());						
+		}
+	
+	}
+	public void testBoughtNetPremium(Double num) {
+		if(!getBoughtNetPremium().equals(num)) {
+			System.out.println("ERROR buy net $" + getBoughtNetPremium());			
+		}
+		
+	}
+	public void testSoldNetPremium(Double num) {
+		if(!getSoldNetPremium().equals(num)){
+			System.out.println("ERROR sell net $" + getSoldNetPremium());		
+		}
 	}
 	
 	// SET GET

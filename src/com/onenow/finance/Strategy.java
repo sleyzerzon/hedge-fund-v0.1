@@ -175,6 +175,48 @@ public class Strategy {
 		return s;
 	}
 	
+	// TEST 
+	public void testMaxProfit(Double num) {
+		if(!getMaxProfit().equals(num)) {
+			System.out.println("ERROR: (t0) max profit $" + getMaxProfit());
+		}
+	}
+	public void testMaxLoss(Double num) {
+		if(!getMaxLoss().equals(num)) {
+			System.out.println("ERROR: (te) max loss $" + getMaxLoss());
+		}
+	}	
+	public void testNetValue(Double price, Double value) {
+		if(!getNetValue(price).equals(value)) {
+			System.out.println("ERROR net $" + getNetValue(375.0));					
+		}		
+	}
+	public void testMargin(Double num) {
+		if(!getMargin().equals(num)) {
+			System.out.println("ERROR: margin $" + getMargin());
+		}
+	}
+	public void testNetMargin(Double num) {
+		if(!getNetMargin().equals(num)) {
+			System.out.println("ERROR: net margin $" + getNetMargin());
+		}
+	}
+	public void testMaxROI(Double num) {
+		if(!getMaxROI().equals(num)) {
+			System.out.println("ERROR: max ROI %" + getMaxROI());
+		}
+	}
+	public void testRiskReward(Double num) {
+		if(!getRiskReward().equals(num)) {
+			System.out.println("ERROR: (te) max loss $" + getRiskReward());
+		}	
+	}
+	public void testBiddingOrder(Double num) {
+		if(!biddingOrder().equals(num)) {
+			System.out.println("ERROR: (te) max loss $" + biddingOrder());
+		}		
+	}
+
 
 	// SET GET
 	public Transaction getTransaction() {
