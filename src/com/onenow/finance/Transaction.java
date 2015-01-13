@@ -6,11 +6,11 @@ public class Transaction {
 		
 	private Counterparty counterParty; // Cloud?
 	
-	private List<Trade> trades;
+	private List<Trade> trades = new ArrayList<Trade>();
 	
 	// CONSTRUCTOR
 	public Transaction() {
-		this.trades = new ArrayList<Trade>();
+		
 	}
 	
 	public Transaction(Trade... trades) {

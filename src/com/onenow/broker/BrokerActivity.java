@@ -23,8 +23,8 @@ public interface BrokerActivity {
 	public Double getPriceAsk(Investment inv);
 	public Double getPriceBid(Investment inv);
 	public Investment getBest(Underlying under, Enum invType);
-	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike);
-	public Investment getBest(Underlying under, Enum invType, Enum InvTerm);
+//	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike);
+//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm);
 	public List<Trade> getTrades();
 	public void addTrade(Transaction transaction);
 }

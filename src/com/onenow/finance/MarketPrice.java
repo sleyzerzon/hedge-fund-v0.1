@@ -25,7 +25,11 @@ public class MarketPrice {
 	}
 
 	private String getLookupKey(Investment investment, Enum InvestmentTradeType) {
-		String lookup = investment.getUnder().getTicker()
+		if (investment == null) {
+			return null;
+		}
+		Underlying under = investment.getUnder();
+		String lookup = under.getTicker()
 				+ investment.getInvType() + InvestmentTradeType;
 		return (lookup);
 	}

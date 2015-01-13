@@ -62,15 +62,15 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 		return getMarketPortfolio().getBest(under, invType);
 	}
 	
-	@Override
-	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { 
-		return getMarketPortfolio().getBest(under, invType, expiration, strike);
-	}
-
-	@Override
-	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
-		return getMarketPortfolio().getBest(under, invType, InvTerm);		
-	}
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { 
+//		return getMarketPortfolio().getBest(under, invType, expiration, strike);
+//	}
+//
+//	@Override
+//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
+//		return getMarketPortfolio().getBest(under, invType, InvTerm);		
+//	}
 
 	@Override
 	public List<Trade> getTrades() {
@@ -79,8 +79,12 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 
 	@Override
 	public void addTrade(Transaction trans) {
-		getTrades().addAll(trans.getTrades());
-		getMyPortfolio().addTrade(trans);
+		List<Trade> trades =getTrades();
+		List<Trade> trades2 = trans.getTrades();
+		trades.addAll(trades2);
+		Portfolio p =getMyPortfolio();
+		p.addTrade(trans);
+		System.out.println("In addTrade(): " + this.trades);
 	}
 	
 	// PRIVATE
