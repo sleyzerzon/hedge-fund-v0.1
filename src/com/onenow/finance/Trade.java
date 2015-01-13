@@ -1,13 +1,13 @@
 package com.onenow.finance;
 
 public class Trade {
-	
+
 	private Investment investment; // INTC, option, call
 	private Enum tradeType; // ie. buy
 	private int quantity; // 50 shares
 	private Double netPremium; // +$10 net, -$23 net
-	private Double unitPrice;  // $7.50 per share
-	
+	private Double unitPrice; // $7.50 per share
+
 	public Trade() {
 		// TODO
 	}
@@ -24,50 +24,46 @@ public class Trade {
 	public Double getStrike() {
 		Double strike = 0.0;
 		Enum invType = getInvestment().getInvType();
-		if( invType.equals(InvType.CALL) ||
-			invType.equals(InvType.PUT)) {
+		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
 			InvestmentOption option = (InvestmentOption) getInvestment();
 			strike = option.getStrikePrice();
 		}
 		return strike;
 	}
-	
+
 	public Double getValue(Double marketPrice) { // TODO: stock handling
 		Double value = 0.0;
 		Enum invType = getInvestment().getInvType();
-		if( invType.equals(InvType.CALL) ||
-			invType.equals(InvType.PUT)) {
+		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
 			InvestmentOption option = (InvestmentOption) getInvestment();
 			value = option.getValue(marketPrice) * getQuantity();
 		}
-		if(getTradeType().equals(TradeType.SELL)) {
+		if (getTradeType().equals(TradeType.SELL)) {
 			value = -value;
 		}
 		return value;
 	}
-	
 
 	// PRIVATE
-	private void setNetPremium() {	
+	private void setNetPremium() {
 		Double cost = getQuantity() * getUnitPrice();
-		
+
 		if (getTradeType().equals(TradeType.BUY)) {
 			setNetPremium(-cost);
-		} else { 
-			setNetPremium(cost);		
+		} else {
+			setNetPremium(cost);
 		}
 	}
 
 	// PRINT
 	public String toString() {
-		String s = "";
-		s = s + getInvestment().toString() + " " + getTradeType() + 
-				" Quantity: " + getQuantity() + " " + 
-				"Net Cost: $" + getNetPremium();
-		return (s);
+
+		String string = getInvestment() + " " + getTradeType() + " Quantity: "
+				+ getQuantity() + " Net Cost: $" + getNetCost();
+		System.out.println("TRADE " + string);
+		return (string);
 	}
 
-	
 	// SET GET
 	public Investment getInvestment() {
 		return investment;
@@ -92,6 +88,7 @@ public class Trade {
 	private void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
 	private Double getUnitPrice() {
 		return this.unitPrice;
 	}
@@ -109,8 +106,3 @@ public class Trade {
 	}
 
 }
-
-
-
-
-

@@ -24,84 +24,122 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	public void mainFlow() {
 
 		System.out.println("Started workflow.");
-		System.out.println("Started workflow 2.");
 
 		// get underlying
 		BrokerActivityClient broker = getBroker();
 		Promise<List<Underlying>> underlyingPromise = broker.getUnderlying();
-		Promise<List<Underlying>> underlying = getUnderList(underlyingPromise);
 
-		Promise<List<Investment>> mktInvPromise = getBroker().getInvestments(
-				false); // overall market
-		List<Investment> market = getInvestments(mktInvPromise);
+		Promise<List<Investment>> investmentPromise = getBroker()
+				.getInvestments(false); // overall market
 
-		// find suitable investment
+		doTrades(underlyingPromise);
+	}
+
+	@Asynchronous
+	private Promise<Trade> doBuy(Promise<Investment> invPromise, int quantity,
+			Promise<Double> pricePromise) {
+		System.out.println("In doBuy()");
+		Trade trade = new Trade(invPromise.get(), TradeType.BUY, 50,
+				pricePromise.get());
+		return Promise.asPromise(trade);
+	}
+
+	@Asynchronous
+	private void doTrades(Promise<List<Underlying>> listPromise) {
+		System.out.println("In doTrades()");
+		List<Underlying> unders = listPromise.get();
+		Underlying under1 = unders.get(0);
+
 		Date expDate = new Date();
 		expDate.setTime(1000000);
-		Investment stock = getBest(underlying.get(0), InvType.STOCK);
-		Investment call1 = getBest(underlying.get(0), InvType.CALL, expDate,
-				405.00);
-		Investment call2 = getBest(underlying.get(0), InvType.CALL, expDate,
-				400.00);
-		Investment put1 = getBest(underlying.get(0), InvType.PUT, expDate,
-				390.00);
-		Investment put2 = getBest(underlying.get(0), InvType.PUT, expDate,
-				385.00);
+		Promise<Investment> stockPromise = getBroker().getBest(under1,
+				InvType.STOCK);
+//		Promise<Investment> call1Promise = getBroker().getBest(under1,
+//				InvType.CALL, expDate, 405.00);
+//		Promise<Investment> call2Promise = getBroker().getBest(under1,
+//				InvType.CALL, expDate, 400.00);
+//		Promise<Investment> put1Promise = getBroker().getBest(under1,
+//				InvType.PUT, expDate, 390.00);
+//		Promise<Investment> put2Promise = getBroker().getBest(under1,
+//				InvType.PUT, expDate, 385.00);
 
-		// buy something
-		Trade tradeStock = new Trade(stock, TradeType.BUY, 50,
-				getPriceAsk(stock));
-		Trade tradeCall1 = new Trade(call1, TradeType.BUY, 50,
-				getPriceAsk(call1));
-		Trade tradeCall2 = new Trade(call2, TradeType.BUY, 50,
-				getPriceAsk(call2));
-		Trade tradePut1 = new Trade(put1, TradeType.BUY, 50, getPriceAsk(put1));
-		Trade tradePut2 = new Trade(put2, TradeType.BUY, 50, getPriceAsk(put2));
+		// find suitable investment
+		Promise<Double> stockPricePromise = getBroker().getPriceAsk(
+				stockPromise);
+//		Promise<Double> call1PricePromise = getBroker().getPriceAsk(
+//				call1Promise);
+//		Promise<Double> call2PricePromise = getBroker().getPriceAsk(
+//				call2Promise);
+//		Promise<Double> put1PricePromise = getBroker().getPriceAsk(put1Promise);
+//		Promise<Double> put2PricePromise = getBroker().getPriceAsk(put2Promise);
 
-		Transaction tx = new Transaction(tradeCall1, tradeCall2, tradePut1,
-				tradePut2);
-		getBroker().addTrade(tx);
+		Promise<Trade> tradeStock = doBuy(stockPromise, 50, stockPricePromise);
 
+//		Promise<Trade> tradeCall1 = doBuy(call1Promise, 50, call1PricePromise);
+//
+//		Promise<Trade> tradeCall2 = doBuy(call2Promise, 50, call2PricePromise);
+//
+//		Promise<Trade> tradePut1 = doBuy(put1Promise, 50, put1PricePromise);
+//		Promise<Trade> tradePut2 = doBuy(put2Promise, 50, put2PricePromise);
+
+//		doTransaction(tradeStock, tradeCall1, tradeCall2, tradePut1, tradePut2);
+		doTransaction(tradeStock);
 		Promise<List<Trade>> tradesPromise = getBroker().getTrades();
-		List<Trade> trades = getTrades(tradesPromise);
+		processTrades(tradesPromise);
 
 		Promise<List<Investment>> myInvPromise = getBroker().getInvestments(
 				true);
-		List<Investment> myInv = getInvestments(myInvPromise);
+//		List<Investment> myInv = getInvestments(myInvPromise);
+		//
+		// System.out.println("Transaction Net:" + tx.getNetCost());
+		// System.out.println("Transaction Call Net:"
+		// + tx.getNetCost(InvType.CALL));
+		// System.out.println("Transaction Put Net:" +
+		// tx.getNetCost(InvType.PUT));
+		//
+		// System.out.println("Ended workflow.");
 
-		System.out.println("Transaction Net:" + tx.getNetPremium());
-		System.out.println("Transaction Call Net:"
-				+ tx.getNetPremium(InvType.CALL));
-		System.out.println("Transaction Put Net:" + tx.getNetPremium(InvType.PUT));
 
-		System.out.println("Ended workflow.");
+//		System.out.println("Transaction Net:" + tx.getNetCost());
+//		System.out.println("Transaction Call Net:"
+//				+ tx.getNetCost(InvType.CALL));
+//		System.out.println("Transaction Put Net:" + tx.getNetCost(InvType.PUT));
+//
+//		System.out.println("Ended workflow.");
+	}
+
+	@Asynchronous
+	private void processTrades(Promise<List<Trade>> tradesPromise) {
+
+		System.out.println("In processTrades()");
+		List<Trade> trades = tradesPromise.get();
+		for (Trade trade : trades) {
+			System.out.println(trade);
+		}
 
 	}
 
 	@Asynchronous
-	private Promise<List<Underlying>> getUnderList(Promise<List<Underlying>> listPromise) {
-		List<Underlying> theList = new ArrayList<Underlying>();
-		System.out.println("Called getUnderList.");
-		theList = listPromise.get();
-		theList.toString();
-		for (Underlying under : theList) {
-			System.out.println("Ticker listed: " + under.getTicker());
+	private void doTransaction(Promise<Trade>... tradePromises) {
+		System.out.println("In doTransaction()");
+		Trade[] trades = new Trade[tradePromises.length];
+		for (int i = 0; i < tradePromises.length; i++) {
+			trades[i] = tradePromises[i].get();
 		}
-
-		return Promise.asPromise(theList);
+		Transaction tx = new Transaction(trades);
+		getBroker().addTrade(tx);
+		Promise<List<Trade>> tradesPromise = getBroker().getTrades();
+		processTrades(tradesPromise);
 	}
 
 	@Asynchronous
 	List<Investment> getInvestments(Promise<List<Investment>> listPromise) {
 		List<Investment> theList = new ArrayList<Investment>();
-		try {
-			theList = listPromise.get();
-			for (Investment inv : theList) {
-				System.out.println("Investment listed: " + inv.toString());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		theList = listPromise.get();
+		for (Investment inv : theList) {
+			System.out.println("Investment listed: " + inv.toString());
 		}
+
 		return theList;
 	}
 
@@ -121,17 +159,6 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	}
 
 	@Asynchronous
-	public Double getPriceAsk(Investment inv) {
-		Double number = 0.0;
-		try {
-			number = getBroker().getPriceAsk(inv).get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return number;
-	}
-
-	@Asynchronous
 	public Double getPriceBid(Investment inv) {
 		Double number = 0.0;
 		try {
@@ -143,21 +170,9 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	}
 
 	@Asynchronous
-	private Investment getBest(Underlying under, InvType invType) { // stock &
-																	// spot/on-demand
-		Investment inv = new Investment();
-		try {
-			inv = getBroker().getBest(under, invType).get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return inv;
-	}
-
-	@Asynchronous
 	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
 		Investment inv = new Investment();
-		inv = getBroker().getBest(under, invType, InvTerm).get();
+//		inv = getBroker().getBest(under, invType, InvTerm).get();
 		return inv;
 	}
 
@@ -166,7 +181,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 			Double strike) { // options
 		Investment inv = new Investment();
 		try {
-			inv = getBroker().getBest(under, invType, expDate, strike).get();
+//			inv = getBroker().getBest(under, invType, expDate, strike).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
