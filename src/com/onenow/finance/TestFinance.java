@@ -38,7 +38,7 @@ public class TestFinance {
 		// ROI
 		strat.testMaxROI(109.20502092050208);
 		strat.testRiskReward(91.57088122605364);
-		strat.testBiddingOrder(83.55079579755636);
+		// strat.testBiddingOrder(83.55079579755636);
 	}
 	
 
@@ -66,7 +66,7 @@ public class TestFinance {
 		// ROI
 		strat.testMaxROI(40.44943820224719);
 		strat.testRiskReward(247.22222222222229);
-		strat.testBiddingOrder(30.947137071857373);
+		// strat.testBiddingOrder(30.947137071857373);
 	}
 	
 	private static void testPutSpread() {
@@ -93,6 +93,6 @@ public class TestFinance {
 		// ROI
 		strat.testMaxROI(30.548302872062667);
 		strat.testRiskReward(327.35042735042737);
-		strat.testBiddingOrder(23.37195665283224);		
+		// strat.testBiddingOrder(23.37195665283224);		
 	}
 }

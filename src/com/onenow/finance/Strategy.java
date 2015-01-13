@@ -7,47 +7,13 @@ import java.util.List;
 public class Strategy {
 	
 	private Transaction transaction;
-	private List<Double> checkpoints;
-
-	// APPROACH: Iron Condor
-	// 1) LOOK FOR THE STRIKE SPREAD TO BE SMALLER THAN THE PRICING GAP
-	// 2) FOR MAX NETom: Pcs+Pcb >> Pcs+Ppb
-	// P: price
-	// S: strike
-	// c: call
-	// p: put
-	// b: bought
-	// s: sold
-	// om: out of money
-	// im: in the money
-	//
-	// NETom = 100x(Pcs+Pps-Pcb-Ppb)  ... @start, out of money
-	//
-	// out of money--
-	// NETcom = 100x(Pcs-Pcb) ... P<Scs
-	// NETpom = 100x(Pps-Ppb) ... P>Sps
-	//
-	// in the money, calls--
-	// NETcb = -100xPcb + 100x(P-Scb)
-	// NETcs = 100xPcs + 100x(Scs-P)
-	//
-	// to avoid loss--
-	// NETcb+NETcs > 0
-	// thus,
-	// 100x(Pcs-Pcb+Scs-Scb) > 0
-	// in other words,
-	// Pcs-Pcb > Scb-Scs	****** SEARCH FOR THIS: calls ******
-	// Pps-Ppb > Sps-Spb   ****** SEARCH FOR THIS: puts ******
-	
+	private List<Double> checkpoints;	
+	private Reward reward;
 	
 	// CONSTRUCTOR
 	public Strategy() {
 		setTransaction(new Transaction());
-		
 		setCheckpoints(new ArrayList<Double>());
-//		Double largeNum = 99999999.99;
-//		setMaxProfit(-largeNum);
-//		setMaxLoss(largeNum);
 	}
 	
 	// PUBLIC	
@@ -120,13 +86,19 @@ public class Strategy {
 	}
 
 	// Use bidding algorithm to determine order of execution of this strategy
-	public Double biddingOrder(){
-		Reward rew = new Reward();
-		Double order = rew.successBias(getTransaction().probabilityOfProfit(), getMaxROI());
+	public Double getBiddingOrder(Enum rewardAlgo) {
+		Double order=0.0;
+		setBiddingOrder();
+		order = getReward().getAlgoOrder(rewardAlgo);
 		return order;
 	}
+	
 
 	// PRIVATE
+	private void setBiddingOrder(){
+		setReward(new Reward(getTransaction().probabilityOfProfit(), getMaxROI()));
+	}
+
 	private void setStrikes() {
 		Double strike=0.0;
 		for (Trade trade:getTransaction().getTrades()) {
@@ -159,12 +131,12 @@ public class Strategy {
 				"Buying Power (net margin after credit): $" + getNetMargin().intValue() + "\n";
 		s = s + "Maximum Profit: " + getMaxROI().intValue() + "%" + ". " + 
 				"Risk/Reward: " + getRiskReward().intValue() + "%" + "\n";
-		s = s + "Bidding Order: " + biddingOrder().intValue() + "\n";
-		s = s + getCheckpointValue();
+		s = s + checkpointValueToString();
+		s = s + bidOrderToString();
 		return(s);
 	}
 
-	private String getCheckpointValue() {
+	private String checkpointValueToString() {
 		String s = "";
 		setStrikes();
 		Collections.sort(getCheckpoints());
@@ -172,6 +144,15 @@ public class Strategy {
 			Double checkpoint = getCheckpoints().get(i);
 			s = s + "Profit($" + checkpoint.intValue() + "): $" + getNetValue(checkpoint).intValue() + "\n";
 		}
+		return s;
+	}
+	
+	private String bidOrderToString() {
+		String s = ""; // intValue
+		s = s + "BIDDING SCORE ";
+		s = s + RewardAlgo.Linear + ": " + getBiddingOrder(RewardAlgo.Linear).intValue() + ". " +
+				RewardAlgo.Success + ": " + getBiddingOrder(RewardAlgo.Success).intValue() + ". " +
+				RewardAlgo.ROI + ": " + getBiddingOrder(RewardAlgo.ROI).intValue() + "\n";
 		return s;
 	}
 	
@@ -211,10 +192,10 @@ public class Strategy {
 			System.out.println("ERROR: (te) max loss $" + getRiskReward());
 		}	
 	}
-	public void testBiddingOrder(Double num) {
-		if(!biddingOrder().equals(num)) {
-			System.out.println("ERROR: (te) max loss $" + biddingOrder());
-		}		
+	public void testBiddingOrder(Double num, Enum rewardAlgo) {
+//		if(!getBiddingOrder(Enum rewardAlgo).equals(num)) {
+//			System.out.println("ERROR: (te) max loss $" + getBiddingOrder(rewardAlgo));
+//		}		
 	}
 
 
@@ -233,6 +214,14 @@ public class Strategy {
 
 	private void setCheckpoints(List<Double> checkpoints) {
 		this.checkpoints = checkpoints;
+	}
+
+	private Reward getReward() {
+		return reward;
+	}
+
+	private void setReward(Reward reward) {
+		this.reward = reward;
 	}
 
 }
