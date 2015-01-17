@@ -31,10 +31,14 @@ public class TestFinance {
 		Trade putBuy = new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
 							TradeType.BUY, quantity, putBuyPrice);	
 
-		testIronCondor(callBuy, callSell, putBuy, putSell);
-		testCallSpread(callBuy, callSell);
-		testPutSpread(putBuy, putSell);
+		boolean success = 	testIronCondor(callBuy, callSell, putBuy, putSell) &&
+							testCallSpread(callBuy, callSell) &&
+							testPutSpread(putBuy, putSell);
 		
+		if(success==true) {
+			System.out.println("NO ERRORS FOUND AT ALL: " + "TestFinance");
+		}
+
 		Sequence seq = new Sequence();
 //		StrategyIronCondor condor = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
 //		seq.getStrategies().add(condor);
@@ -45,6 +49,9 @@ public class TestFinance {
 	private static boolean testIronCondor(Trade callBuy, Trade callSell, Trade putBuy, Trade putSell) {
 		StrategyIronCondor strat = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
 		boolean success = strat.test();
+		if(success==true) {
+			System.out.println("NO ERRORS FOUND: " + "testIronCondor");
+		}
 		return success;
 	}
 	
@@ -52,12 +59,18 @@ public class TestFinance {
 	private static boolean testCallSpread(Trade callBuy, Trade callSell) {
 		StrategyCallSpread strat = new StrategyCallSpread(callBuy, callSell);
 		boolean success = strat.test();
-		return success;	
+		if(success==true) {
+			System.out.println("NO ERRORS FOUND: " + "testCallSpread");
 		}
+		return success;	
+	}
 	
 	private static boolean testPutSpread(Trade putBuy, Trade putSell) {	
 		StrategyPutSpread strat = new StrategyPutSpread(putBuy, putSell);
 		boolean success = strat.test();
+		if(success==true) {
+			System.out.println("NO ERRORS FOUND: " + "testCallSpread");
+		}
 		return success;
 	}
 }

@@ -170,28 +170,36 @@ public class StrategyOptions extends Strategy {
 	}
 	
 	// TEST
-	public void testCallNetPremium(Double num){
+	public boolean testCallNetPremium(Double num){
 		if(!getCallNetPremium().equals(num)) {
-			System.out.println("ERROR call net $" + getCallNetPremium());			
+			System.out.println("ERROR call net $" + getCallNetPremium());
+			return false;
 		}
+		return true;
 	
 	}
-	public void testPutNetPremium(Double num) {
+	public boolean testPutNetPremium(Double num) {
 		if(!getPutNetPremium().equals(num)){
-			System.out.println("ERROR put net $" + getPutNetPremium());						
+			System.out.println("ERROR put net $" + getPutNetPremium());
+			return false;
 		}
+		return true;
 	
 	}
-	public void testBoughtNetPremium(Double num) {
+	public boolean testBoughtNetPremium(Double num) {
 		if(!getBoughtNetPremium().equals(num)) {
-			System.out.println("ERROR buy net $" + getBoughtNetPremium());			
+			System.out.println("ERROR buy net $" + getBoughtNetPremium());
+			return false;
 		}
+		return true;
 		
 	}
-	public void testSoldNetPremium(Double num) {
+	public boolean testSoldNetPremium(Double num) {
 		if(!getSoldNetPremium().equals(num)){
-			System.out.println("ERROR sell net $" + getSoldNetPremium());		
+			System.out.println("ERROR sell net $" + getSoldNetPremium());
+			return false;
 		}
+		return true;
 	}
 	
 	// SET GET

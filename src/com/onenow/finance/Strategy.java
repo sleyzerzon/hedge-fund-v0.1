@@ -181,45 +181,61 @@ public class Strategy {
 	}
 	
 	// TEST 
-	public void testMaxProfit(Double num) {
+	public boolean testMaxProfit(Double num) {
 		if(!getMaxProfit().equals(num)) {
 			System.out.println("ERROR: (t0) max profit $" + getMaxProfit());
+			return false;
 		}
+		return true;
 	}
-	public void testMaxLoss(Double num) {
+	public boolean testMaxLoss(Double num) {
 		if(!getMaxLoss().equals(num)) {
 			System.out.println("ERROR: (te) max loss $" + getMaxLoss());
+			return false;
 		}
+		return true;
 	}	
-	public void testNetValue(Double price, Double value) {
+	public boolean testNetValue(Double price, Double value) {
 		if(!getNetValue(price).equals(value)) {
-			System.out.println("ERROR net $" + getNetValue(375.0));					
+			System.out.println("ERROR net $" + getNetValue(375.0));
+			return false;
 		}		
+		return true;
 	}
-	public void testMargin(Double num) {
+	public boolean testMargin(Double num) {
 		if(!getMargin().equals(num)) {
 			System.out.println("ERROR: margin $" + getMargin());
+			return false;
 		}
+		return true;
 	}
-	public void testNetMargin(Double num) {
+	public boolean testNetMargin(Double num) {
 		if(!getNetMargin().equals(num)) {
 			System.out.println("ERROR: net margin $" + getNetMargin());
+			return false;
 		}
+		return true;
 	}
-	public void testMaxROI(Double num) {
+	public boolean testMaxROI(Double num) {
 		if(!getMaxROI().equals(num)) {
-			System.out.println("ERROR: max ROI %" + getMaxROI());
+			System.out.println("ERROR: max ROI %" + getMaxROI()); 
+			return false;
 		}
+		return true;
 	}
-	public void testRiskReward(Double num) {
+	public boolean testRiskReward(Double num) {
 		if(!getRiskReward().equals(num)) {
 			System.out.println("ERROR: (te) max loss $" + getRiskReward());
+			return false;
 		}	
+		return true;
 	}
-	public void testBiddingOrder(Double num, Enum rewardAlgo) {
+	public boolean testBiddingOrder(Double num, Enum rewardAlgo) {
 //		if(!getBiddingOrder(Enum rewardAlgo).equals(num)) {
 //			System.out.println("ERROR: (te) max loss $" + getBiddingOrder(rewardAlgo));
+//			return false;
 //		}		
+		return true;
 	}
 
 

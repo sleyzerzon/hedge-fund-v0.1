@@ -75,7 +75,6 @@ public class Transaction {
 				margin = putMargin;
 			}			
 		} else {
-			System.out.println("SUM " + callMargin + " " + putMargin);
 			margin = callMargin + putMargin;
 		}
 		return margin;
@@ -86,7 +85,6 @@ public class Transaction {
 		Double sellCallStrike=getStrike(InvType.CALL, TradeType.SELL);
 		Double buyCallStrike=getStrike(InvType.CALL, TradeType.BUY);
 		Double spread = buyCallStrike - sellCallStrike;
-		System.out.println("CALL Spread " + spread);
 		return spread;
 	}
 
@@ -94,7 +92,6 @@ public class Transaction {
 		Double sellPutStrike=getStrike(InvType.PUT, TradeType.SELL);
 		Double buyPutStrike=getStrike(InvType.PUT, TradeType.BUY);
 		Double spread = sellPutStrike - buyPutStrike;
-		System.out.println("PUT Spread " + spread);
 		return spread;
 	}
 	
