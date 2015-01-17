@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Transaction {
 		
-	private Counterparty counterParty; // Cloud?
-	
+	private Counterparty counterParty; // Cloud or Brokerage
 	private List<Trade> trades = new ArrayList<Trade>();
+
 	
 	// CONSTRUCTOR
 	public Transaction() {
@@ -47,62 +47,67 @@ public class Transaction {
 		return sum;		
 	}
 	
-	public Double getMargin() { // assumes spreads are transacted
-		Double margin=0.0;
-		Double callSpread = getCallSpread();
-		Double putSpread = getPutSpread();
+	public Double probabilityOfProfit() {
+		Double prob=0.0;
 		
-		if(callSpread>putSpread) {
-			margin=callSpread*getCallContracts();  
+		for(Trade trade:getTrades()) {
+			if(	trade.getInvestment().getInvType().equals(InvType.CALL) || 
+				trade.getInvestment().getInvType().equals(InvType.PUT)) {  
+					if(trade.getTradeType().equals(TradeType.SELL)) {
+					
+						Investment inv = trade.getInvestment();
+						prob += ((InvestmentOption) inv).getProbabilityOfProfit();
+					}	
+			}
+		}	
+		return prob;
+	}
+	
+	public Double getMargin() { // assumes spreads are transacted
+		Double callMargin = getCallSpread()*getCallContracts() ;
+		Double putMargin = getPutSpread()*getPutContracts();
+		Double margin=0.0;
+		if(callMargin>0.0 && putMargin>0.0) { // condor or other balanced wings
+			// TODO: cases where call/put don't balance margin
+			if(callMargin>putMargin) {
+				margin = callMargin;
+			} else {
+				margin = putMargin;
+			}			
 		} else {
-			margin=putSpread*getPutContracts();
+			System.out.println("SUM " + callMargin + " " + putMargin);
+			margin = callMargin + putMargin;
 		}
 		return margin;
-	}
-
-	public Double probabilityOfProfit() {
-		Double prob=0.8;
-		return prob;
 	}
 	
 	// PRIVATE
 	private Double getCallSpread() { // assumes up to two call
-		Double callSpread=0.0;
-		Double sellCallStrike=0.0;
-		Double buyCallStrike=0.0;
-		for(Trade trade:getTrades()) { // put
-			if(trade.getInvestment().getInvType().equals(InvType.CALL)) {  
-				if(trade.getTradeType().equals(TradeType.SELL)) {
-					sellCallStrike = trade.getStrike();
-				} else {
-					buyCallStrike = trade.getStrike();
-				}
-			}
-		}
-		if(sellCallStrike<buyCallStrike) {
-			callSpread = buyCallStrike - sellCallStrike;
-		}
-		return callSpread;
+		Double sellCallStrike=getStrike(InvType.CALL, TradeType.SELL);
+		Double buyCallStrike=getStrike(InvType.CALL, TradeType.BUY);
+		Double spread = buyCallStrike - sellCallStrike;
+		System.out.println("CALL Spread " + spread);
+		return spread;
 	}
 
 	private Double getPutSpread() { // assumes up to two puts
-		Double putSpread=0.0;
-		Double sellPutStrike=0.0;
-		Double buyPutStrike=0.0;
-		for(Trade trade:getTrades()) { // call
-			if(trade.getInvestment().getInvType().equals(InvType.PUT)) {  
-				if(trade.getTradeType().equals(TradeType.SELL)) {
-					sellPutStrike = trade.getStrike();
-				} else {
-					buyPutStrike = trade.getStrike();
+		Double sellPutStrike=getStrike(InvType.PUT, TradeType.SELL);
+		Double buyPutStrike=getStrike(InvType.PUT, TradeType.BUY);
+		Double spread = sellPutStrike - buyPutStrike;
+		System.out.println("PUT Spread " + spread);
+		return spread;
+	}
+	
+	private Double getStrike(Enum invType, Enum tradeType) {
+		Double strike=0.0;
+		for(Trade trade:getTrades()) {
+			if(trade.getInvestment().getInvType().equals(invType) &&
+			   trade.getTradeType().equals(tradeType)) {
+					strike = trade.getStrike();
+					return strike;
 				}
 			}
-		}
-		if(sellPutStrike>buyPutStrike) {
-			putSpread = sellPutStrike - buyPutStrike;
-		}
-		return putSpread;
-
+		return strike;
 	}
 	
 	private Integer getCallContracts() { 
@@ -150,6 +155,5 @@ public class Transaction {
 	public void setCounterParty(Counterparty counterParty) {
 		this.counterParty = counterParty;
 	}
-
 
 }

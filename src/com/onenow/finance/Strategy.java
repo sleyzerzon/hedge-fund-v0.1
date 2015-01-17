@@ -6,19 +6,31 @@ import java.util.List;
 
 public class Strategy {
 	
-	private Transaction transaction;
+	private List<Transaction> transactions;
 	private List<Double> checkpoints;	
-	private Reward reward;
-	
+		
 	// CONSTRUCTOR
 	public Strategy() {
-		setTransaction(new Transaction());
-		setCheckpoints(new ArrayList<Double>());
+		setTransactions(new ArrayList<Transaction>());
+		setCheckpoints(new ArrayList<Double>());		
 	}
 	
 	// PUBLIC	
+	public Transaction addTransaction() {
+		Transaction trans = new Transaction();
+		getTransactions().add(trans);
+		return trans;
+	}
+		
 	public Double getMargin() {
-		return(getTransaction().getMargin());
+		Double margin=0.0;
+		for(Transaction trans:getTransactions()) {
+			margin+=trans.getMargin();
+		}
+		if(margin<0.0) {
+			margin=0.0;  
+		} 
+		return(margin);
 	}
 	
 	public Double getNetMargin() {
@@ -26,17 +38,22 @@ public class Strategy {
 	}
 	
 	public Double getNetValue(Double marketPrice) {
-		Double net = getNetPremium();
-		for(Trade trade:getTransaction().getTrades()) {
-			net += trade.getValue(marketPrice); 
+		Double net = getNetPremium();  
+		for(Transaction trans:getTransactions()) {
+			for(Trade trade:trans.getTrades()) {
+				net += trade.getValue(marketPrice); 
+			}
 		}
 		return net;
 	}
 	
 	public Double getNetPremium() {
 		Double netPremium = 0.0;
-		for (Trade trade:getTransaction().getTrades()) {
-			netPremium += trade.getNetPremium();
+		
+		for(Transaction trans:getTransactions()) {		
+			for (Trade trade:trans.getTrades()) {
+				netPremium += trade.getNetPremium();
+			}
 		}
 		return  netPremium;
 	}
@@ -88,22 +105,29 @@ public class Strategy {
 	// Use bidding algorithm to determine order of execution of this strategy
 	public Double getBiddingOrder(Enum rewardAlgo) {
 		Double order=0.0;
-		setBiddingOrder();
-		order = getReward().getAlgoOrder(rewardAlgo);
+		// TODO setBiddingOrder();
+//		order = getReward().getAlgoOrder(rewardAlgo);
 		return order;
 	}
 	
+//	private Reward getReward() {
+//
+//	}
+	
+
 
 	// PRIVATE
-	private void setBiddingOrder(){
-		setReward(new Reward(getTransaction().probabilityOfProfit(), getMaxROI()));
+	private void getBiddingOrder(){
+		// TODO
 	}
 
 	private void setStrikes() {
 		Double strike=0.0;
-		for (Trade trade:getTransaction().getTrades()) {
-			strike = trade.getStrike();
-			setStrikeVariants(strike);
+		for(Transaction trans:getTransactions()) {
+			for (Trade trade:trans.getTrades()) {
+				strike = trade.getStrike();
+				setStrikeVariants(strike);
+			}
 		}
 	}
 
@@ -124,7 +148,7 @@ public class Strategy {
 	// PRINT
 	public String toString(){
 		String s = "";
-		s = s + getTransaction().toString();
+		s = s + getTransactions().toString() + "\n";
 		s = s + "Max Profit: $" + getMaxProfit() + ". " + 
 				"Max Loss: $" + getMaxLoss() + "\n";
 		s = s + "Margin Required: $" + getMargin().intValue() + ". " + 
@@ -200,12 +224,12 @@ public class Strategy {
 
 
 	// SET GET
-	public Transaction getTransaction() {
-		return transaction;
+	public List<Transaction> getTransactions() {
+		return transactions;
 	}
 
-	private void setTransaction(Transaction transaction) {
-		this.transaction = transaction;
+	private void setTransactions(ArrayList<Transaction> transactions) {
+		this.transactions = transactions;
 		}
 
 	private List<Double> getCheckpoints() {
@@ -214,14 +238,6 @@ public class Strategy {
 
 	private void setCheckpoints(List<Double> checkpoints) {
 		this.checkpoints = checkpoints;
-	}
-
-	private Reward getReward() {
-		return reward;
-	}
-
-	private void setReward(Reward reward) {
-		this.reward = reward;
 	}
 
 }

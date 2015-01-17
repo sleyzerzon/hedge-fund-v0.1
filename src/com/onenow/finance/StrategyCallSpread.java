@@ -1,31 +1,37 @@
 package com.onenow.finance;
 
 import java.util.Date;
+import java.util.List;
 
 public class StrategyCallSpread extends StrategyOptions {
 
 	private Trade callBuy;
 	private Trade callSell;
-		
+
+	private Strategy strat;
+
 	// CONSTRUCTOR
 	public StrategyCallSpread() {
 		
 	}
-		
-	public StrategyCallSpread(Underlying under, int quantity, Date exp,
-							  Double callBuyStrike, Double callBuyPrice, 
-							  Double callSellStrike, Double callSellPrice) {
+	public StrategyCallSpread(Trade callBuy, Trade callSell) {
 		super();
-		
-		setCallBuy(new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
-							TradeType.BUY, quantity, callBuyPrice));
-		setCallSell(new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
-							TradeType.SELL, quantity, callSellPrice));
-		getTransaction().addTrade(getCallBuy());
-		getTransaction().addTrade(getCallSell());
-
+		setCallBuy(callBuy);
+		setCallSell(callSell);
+		Transaction trans = addTransaction();
+		trans.addTrade(getCallBuy()); // add to existing on transaction list
+		trans.addTrade(getCallSell());
 	}
 	
+	public StrategyCallSpread(Transaction trans, Trade callBuy, Trade callSell) {
+		setCallBuy(callBuy);
+		setCallSell(callSell);
+		trans.addTrade(getCallBuy()); // add to other transaction list
+		trans.addTrade(getCallSell());
+	}
+	
+	
+				
 	// PUBLIC
 	
 	// PRINT
@@ -34,6 +40,32 @@ public class StrategyCallSpread extends StrategyOptions {
 		s = s + super.toString();
 		return s;
 	}	
+	
+	// TEST
+	public boolean test() {
+		boolean success = true;
+		System.out.println("\n\n" + toString());
+		// profit
+		testMaxProfit(144.0);
+		testMaxLoss(-356.0);
+		// premium
+		testCallNetPremium(144.0);
+		testPutNetPremium(0.0);
+		testBoughtNetPremium(-741.0);
+		testSoldNetPremium(885.0);
+		// value
+		testNetValue(375.0, 144.0);
+		testNetValue(395.0, 144.0);
+		testNetValue(415.0, -356.0);
+		// margin
+		testMargin(500.0);
+		testNetMargin(356.0);
+		// ROI
+		testMaxROI(40.44943820224719);
+		testRiskReward(247.22222222222229);
+//		// strat.testBiddingOrder(30.947137071857373);
+		return success;
+	}
 	
 	// PRIVATE
 	private Trade getCallBuy() {

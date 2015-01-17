@@ -4,6 +4,9 @@ public class Investment {
 
 	private Underlying under;
 	private InvType invType;
+	
+	private Reward reward;
+	private Risk risk;
 
 	// CONSTRUCTOR
 	public Investment() {
@@ -13,6 +16,9 @@ public class Investment {
 	public Investment(Underlying underlying, InvType invType) {
 		setUnder(underlying);
 		setInvType(invType);
+		
+		setReward(new Reward());
+		setRisk(new Risk());
 	}
 
 	// PUBLIC
@@ -46,6 +52,22 @@ public class Investment {
 
 	public void setInvType(InvType invTuype) {
 		this.invType = invTuype;
+	}
+
+	public Reward getReward() {
+		return reward;
+	}
+
+	private void setReward(Reward reward) {
+		this.reward = reward;
+	}
+
+	public Risk getRisk() {
+		return risk;
+	}
+
+	private void setRisk(Risk risk) {
+		this.risk = risk;
 	}
 
 }

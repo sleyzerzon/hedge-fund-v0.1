@@ -3,39 +3,24 @@ package com.onenow.finance;
 import java.util.Date;
 
 public class StrategyIronCondor extends StrategyOptions {
-		
-	private Trade callBuy;
-	private Trade callSell;
-	private Trade putSell;
-	private Trade putBuy;
+
+	private StrategyCallSpread callSpread;
+	private StrategyPutSpread putSpread;
 	
 	// CONSTRUCTOR
 	public StrategyIronCondor() {
 		
 	}
-		
-	public StrategyIronCondor(Underlying under, int quantity, Date exp,
-							  Double callBuyStrike, Double callBuyPrice, 
-							  Double callSellStrike, Double callSellPrice,
-							  Double putSellStrike, Double putSellPrice, 
-							  Double putBuyStrike, Double putBuyPrice) {
+	
+	public StrategyIronCondor(	Trade callBuy, Trade callSell,
+								Trade putBuy, Trade putSell) {
 		super();
-		
-		setCallBuy(	new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
-					TradeType.BUY, quantity, callBuyPrice));
-		setCallSell(new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
-					TradeType.SELL, quantity, callSellPrice));
-		getTransaction().addTrade(getCallBuy());
-		getTransaction().addTrade(getCallSell());
-
-		setPutSell(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
-								TradeType.SELL, quantity, putSellPrice));
-		setPutBuy(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
-								TradeType.BUY, quantity, putBuyPrice));	
-		getTransaction().addTrade(getPutSell());
-		getTransaction().addTrade(getPutBuy());
-		
+		Transaction trans = new Transaction();
+		getTransactions().add(trans);
+		setCallSpread(new StrategyCallSpread(trans, callBuy, callSell));
+		setPutSpread(new StrategyPutSpread(trans, putBuy, putSell));
 	}
+		
 	
 	// PUBLIC
 
@@ -49,39 +34,49 @@ public class StrategyIronCondor extends StrategyOptions {
 		return s;
 	}
 
-	// SET GET
-	private Trade getCallBuy() {
-		return callBuy;
-	}
-
-	private void setCallBuy(Trade callBuy) {
-		this.callBuy = callBuy;
-	}
-
-	private Trade getCallSell() {
-		return callSell;
-	}
-
-	private void setCallSell(Trade callSell) {
-		this.callSell = callSell;
-	}
-
-	private Trade getPutSell() {
-		return putSell;
-	}
-
-	private void setPutSell(Trade putSell) {
-		this.putSell = putSell;
-	}
-
-	private Trade getPutBuy() {
-		return putBuy;
-	}
-
-	private void setPutBuy(Trade putBuy) {
-		this.putBuy = putBuy;
+	// TEST
+	public boolean test() {
+		boolean success = true;
+		System.out.println("\n\n" + toString());
+		// profit
+		testMaxProfit(261.0);
+		testMaxLoss(-239.0);
+		// premium
+		testCallNetPremium(144.0);
+		testPutNetPremium(117.0);
+		testBoughtNetPremium(-1574.0);
+		testSoldNetPremium(1835.0);
+		// value
+		testNetValue(375.0, -239.0);
+		testNetValue(395.0, 261.0);
+		testNetValue(415.0, -239.0);	
+		// margin
+		testMargin(500.0);
+		testNetMargin(239.0);
+		// ROI
+		testMaxROI(109.20502092050208);
+		testRiskReward(91.57088122605364);
+		// strat.testBiddingOrder(83.55079579755636);
+		
+		return success;
 	}
 	
+	
+	// SET GET
+	private StrategyCallSpread getCallSpread() {
+		return callSpread;
+	}
 
+	private void setCallSpread(StrategyCallSpread callSpread) {
+		this.callSpread = callSpread;
+	}
+
+	private StrategyPutSpread getPutSpread() {
+		return putSpread;
+	}
+
+	private void setPutSpread(StrategyPutSpread putSpread) {
+		this.putSpread = putSpread;
+	}
 
 }

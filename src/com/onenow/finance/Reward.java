@@ -16,6 +16,11 @@ public class Reward {
 	}
 	
 	// PUBLIC
+//	public setBiddingOrder() {
+//
+//	}
+	
+	
 	public Double getAlgoOrder(Enum rewardAlgo) {
 		Double order = 0.0;
 		order = getReward().get(rewardAlgo);

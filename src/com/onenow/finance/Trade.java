@@ -43,6 +43,18 @@ public class Trade {
 		}
 		return value;
 	}
+	
+	public Risk getRisk() {
+		Risk risk;
+		risk = getInvestment().getRisk();
+		return risk;
+	}
+	
+	public Reward getReward() {
+		Reward reward;
+		reward = getInvestment().getReward();
+		return reward;
+	}
 
 	// PRIVATE
 	private void setNetPremium() {
@@ -57,11 +69,10 @@ public class Trade {
 
 	// PRINT
 	public String toString() {
-
-		String string = getInvestment() + " " + getTradeType() + " Quantity: "
-				+ getQuantity() + " Net Cost: $" + getNetCost();
-		System.out.println("TRADE " + string);
-		return (string);
+		String s = "TRADE";
+		s = s + getInvestment() + " " + getTradeType() + " Quantity: "
+			  + getQuantity() + " Net Cost: $" + getNetPremium();
+		return (s);
 	}
 
 	// SET GET

@@ -1,5 +1,5 @@
 package com.onenow.finance;
 
 public enum TradeType {
-	BUY, SELL
+	BUY, SELL, MARKET
 }

@@ -1,41 +1,41 @@
 package com.onenow.finance;
 
 import java.util.Date;
+import java.util.List;
 
-public class StrategyPutSpread extends StrategyOptions {
+public class StrategyPutSpread  extends StrategyOptions {
 
 	private Trade putSell;
 	private Trade putBuy;
-		
+
+	private Strategy strat; 
+
+	
 	// CONSTRUCTOR
 	public StrategyPutSpread() {
 		
 	}
 		
-	public StrategyPutSpread(Underlying under, int quantity, Date exp,
-							  Double putSellStrike, Double putSellPrice, 
-							  Double putBuyStrike, Double putBuyPrice) {
+	public StrategyPutSpread(Trade putBuy, Trade putSell) {
 		super();
-		
-		setPutSell(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
-								TradeType.SELL, quantity, putSellPrice));
-		setPutBuy(new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
-								TradeType.BUY, quantity, putBuyPrice));	
-		getTransaction().addTrade(getPutSell());
-		getTransaction().addTrade(getPutBuy());
+		setPutSell(putSell);
+		setPutBuy(putBuy);
+		Transaction trans = addTransaction();
+		trans.addTrade(getPutSell()); // add to existing on transaction list
+		trans.addTrade(getPutBuy());
 	}
+
+	public StrategyPutSpread(Transaction trans, Trade putBuy, Trade putSell) {
+		setPutSell(putSell);
+		setPutBuy(putBuy);
+		trans.addTrade(getPutSell()); // add to other transaction list
+		trans.addTrade(getPutBuy());
+	}
+
 	
 	// PUBLIC
-//	public Double getMaxProfit() {
-//		Double maxProfit = getPutNetPrice();
-//		return maxProfit;
-//	}
-//	
-//	public Double getMaxLoss() {
-//		Double putLoss = getNetValue(getPutBuy().getStrike());
-//		return putLoss;
-//	}
-
+	
+	
 	// PRIVATE
 
 	// PRINT
@@ -43,6 +43,32 @@ public class StrategyPutSpread extends StrategyOptions {
 		String s = "";
 		s = s + super.toString();
 		return s;
+	}
+	
+	// TEST
+	public boolean test() {
+		boolean success = true;
+		System.out.println("\n\n" + toString());
+		// profit
+		testMaxProfit(117.0);
+		testMaxLoss(-383.0);
+		// premium
+		testCallNetPremium(0.0);
+		testPutNetPremium(117.0);
+		testBoughtNetPremium(-833.0);
+		testSoldNetPremium(950.0);
+		// value
+		testNetValue(375.0, -383.0);
+		testNetValue(395.0, 117.0);
+		testNetValue(415.0, 117.0);
+		// margin
+		testMargin(500.0);
+		testNetMargin(383.0);
+		// ROI
+		testMaxROI(30.548302872062667);
+		testRiskReward(327.35042735042737);
+		// strat.testBiddingOrder(23.37195665283224);
+		return success;
 	}
 
 	
@@ -62,7 +88,6 @@ public class StrategyPutSpread extends StrategyOptions {
 	private void setPutBuy(Trade putBuy) {
 		this.putBuy = putBuy;
 	}
-		
 
 	
 }

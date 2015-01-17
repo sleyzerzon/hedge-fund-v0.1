@@ -6,93 +6,58 @@ public class TestFinance {
 
 	// MAIN
 	public static void main(String[] args) {
-		testIronCondor();
-		testCallSpread();
-		testPutSpread();
+		
+		Underlying under = new Underlying("AAPL");
+		Integer quantity = 100;
+		Date exp = new Date();
+		
+		Double callBuyStrike = 405.00;
+		Double callBuyPrice = 7.41;
+		Double callSellStrike = 400.00;
+		Double callSellPrice = 8.85;
+		
+		Double putSellStrike = 390.00;
+		Double putSellPrice = 9.5;
+		Double putBuyStrike = 385.00;
+		Double putBuyPrice = 8.33;
+				
+		Trade callBuy = new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
+				TradeType.BUY, quantity, callBuyPrice);
+		Trade callSell = new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
+				TradeType.SELL, quantity, callSellPrice);
+
+		Trade putSell = new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
+							TradeType.SELL, quantity, putSellPrice);
+		Trade putBuy = new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
+							TradeType.BUY, quantity, putBuyPrice);	
+
+		testIronCondor(callBuy, callSell, putBuy, putSell);
+		testCallSpread(callBuy, callSell);
+		testPutSpread(putBuy, putSell);
+		
+		Sequence seq = new Sequence();
+//		StrategyIronCondor condor = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
+//		seq.getStrategies().add(condor);
+
 	}
 	
 	// PRIVATE
-	private static void testIronCondor() {
-		StrategyIronCondor strat = new StrategyIronCondor(new Underlying("AAPL"), 100, new Date(),
-				405.00, 7.41,
-				400.00, 8.85,
-				390.00, 9.5,
-				385.00, 8.33);
-
-		System.out.println("\n\n" + strat.toString());
-		// profit
-		strat.testMaxProfit(261.0);
-		strat.testMaxLoss(-239.0);
-		// premium
-		strat.testCallNetPremium(144.0);
-		strat.testPutNetPremium(117.0);
-		strat.testBoughtNetPremium(-1574.0);
-		strat.testSoldNetPremium(1835.0);
-		// value
-		strat.testNetValue(375.0, -239.0);
-		strat.testNetValue(395.0, 261.0);
-		strat.testNetValue(415.0, -239.0);	
-		// margin
-		strat.testMargin(500.0);
-		strat.testNetMargin(239.0);
-		// ROI
-		strat.testMaxROI(109.20502092050208);
-		strat.testRiskReward(91.57088122605364);
-		// strat.testBiddingOrder(83.55079579755636);
+	private static boolean testIronCondor(Trade callBuy, Trade callSell, Trade putBuy, Trade putSell) {
+		StrategyIronCondor strat = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
+		boolean success = strat.test();
+		return success;
 	}
 	
 
-	private static void testCallSpread() {
-		StrategyCallSpread strat = new StrategyCallSpread(new Underlying("AAPL"), 100, new Date(),
-				405.00, 7.41,
-				400.00, 8.85);
-
-		System.out.println("\n\n" + strat.toString());
-		// profit
-		strat.testMaxProfit(144.0);
-		strat.testMaxLoss(-356.0);
-		// premium
-		strat.testCallNetPremium(144.0);
-		strat.testPutNetPremium(0.0);
-		strat.testBoughtNetPremium(-741.0);
-		strat.testSoldNetPremium(885.0);
-		// value
-		strat.testNetValue(375.0, 144.0);
-		strat.testNetValue(395.0, 144.0);
-		strat.testNetValue(415.0, -356.0);
-		// margin
-		strat.testMargin(500.0);
-		strat.testNetMargin(356.0);
-		// ROI
-		strat.testMaxROI(40.44943820224719);
-		strat.testRiskReward(247.22222222222229);
-		// strat.testBiddingOrder(30.947137071857373);
-	}
+	private static boolean testCallSpread(Trade callBuy, Trade callSell) {
+		StrategyCallSpread strat = new StrategyCallSpread(callBuy, callSell);
+		boolean success = strat.test();
+		return success;	
+		}
 	
-	private static void testPutSpread() {
-		StrategyPutSpread strat = new StrategyPutSpread(new Underlying("AAPL"), 100, new Date(),
-				390.00, 9.5,
-				385.00, 8.33);
-
-		System.out.println("\n\n" + strat.toString());
-		// profit
-		strat.testMaxProfit(117.0);
-		strat.testMaxLoss(-383.0);
-		// premium
-		strat.testCallNetPremium(0.0);
-		strat.testPutNetPremium(117.0);
-		strat.testBoughtNetPremium(-833.0);
-		strat.testSoldNetPremium(950.0);
-		// value
-		strat.testNetValue(375.0, -383.0);
-		strat.testNetValue(395.0, 117.0);
-		strat.testNetValue(415.0, 117.0);
-		// margin
-		strat.testMargin(500.0);
-		strat.testNetMargin(383.0);
-		// ROI
-		strat.testMaxROI(30.548302872062667);
-		strat.testRiskReward(327.35042735042737);
-		// strat.testBiddingOrder(23.37195665283224);		
+	private static boolean testPutSpread(Trade putBuy, Trade putSell) {	
+		StrategyPutSpread strat = new StrategyPutSpread(putBuy, putSell);
+		boolean success = strat.test();
+		return success;
 	}
 }
