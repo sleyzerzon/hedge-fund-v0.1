@@ -34,7 +34,7 @@ public class StrategyIronCondor extends StrategyOptions {
 
 	// TEST
 	public boolean test() {
-		System.out.println("\n\n" + toString());
+		System.out.println("\n\n" + "TESTING IRON CONDOR" + toString());
 		
 		return (
 			// profit
@@ -56,6 +56,7 @@ public class StrategyIronCondor extends StrategyOptions {
 			testMaxROI(109.20502092050208) &&
 			testRiskReward(91.57088122605364)
 			// strat.testBiddingOrder(83.55079579755636);
+			
 		);		
 	}
 	

@@ -7,7 +7,6 @@ public class InvestmentOption extends Investment { // call, put
 	private Double strikePrice;
 	private Date expirationDate;
 	private int shares = 100;
-	private Greeks greeks;   // TODO
 
 	// CONSTRUCTORS
 	public InvestmentOption() {
@@ -18,7 +17,6 @@ public class InvestmentOption extends Investment { // call, put
 		super(under, type);
 		setExpirationDate(exp);
 		setStrikePrice(strike);
-		setGreeks(new Greeks(under));
 	}
 
 	// PUBLIC
@@ -51,12 +49,20 @@ public class InvestmentOption extends Investment { // call, put
 		String s = super.toString() + " Strike: $"
 				+ getStrikePrice().toString() + " Exp: "
 				+ getExpirationDate().toString();
-		// TODO print
 		return s;
 	}
 
+	// TEST
+	public boolean test() {
+		System.out.println("\n\n" + "TESTING INVESTMENT OPTION" + toString());
+		
+		return (
+				true
+				);
+	}
+	
+	
 	// SET GET
-
 	private int getShares() {
 		return shares;
 	}
@@ -79,14 +85,6 @@ public class InvestmentOption extends Investment { // call, put
 
 	private void setShares(int shares) {
 		this.shares = shares;
-	}
-
-	public Greeks getGreeks() {
-		return greeks;
-	}
-
-	private void setGreeks(Greeks greeks) {
-		this.greeks = greeks;
 	}
 
 }

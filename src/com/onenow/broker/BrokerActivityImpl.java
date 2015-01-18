@@ -26,9 +26,9 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
 		List<Underlying> list = new ArrayList<Underlying>();
 		list.add(new Underlying("APL"));
 
-		// List<Underlying> list = getBrokerEmulator().getUnderlying();
+//		List<Underlying> list = getBrokerEmulator().getUnderlying();
 
-		System.out.println("Returning emulatorList");
+//		System.out.println("RETURNING UNDERLYING: " + list.toString());
 		return list;
 	}
 
@@ -39,7 +39,9 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
 
 	@Override
 	public Double getPriceAsk(Investment inv) {
-		return getBrokerEmulator().getPriceAsk(inv);
+		Double price = getBrokerEmulator().getPriceAsk(inv);
+		System.out.println("RETURNING PRICE: " + inv.toString() + " $"+ price);
+		return price;
 	}
 
 	@Override

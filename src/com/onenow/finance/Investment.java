@@ -36,6 +36,12 @@ public class Investment {
 		String string = getUnder().toString() + " " + getInvType();
 		return string;
 	}
+	
+	// TEST
+	public boolean test() {
+		// TODO
+		return true;
+	}
 
 	// SET GET
 	public Underlying getUnder() {

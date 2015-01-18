@@ -56,11 +56,11 @@ public class StrategyOptions extends Strategy {
 	}
 	
 	//////////////////////////////
-	// INCOME STRATEGY RULES pg 43
-	// RULES
-	//////////////////////////////
+	// RULE: INCOME STRATEGY
 	public boolean rulesPass() { // if Fail, then adjust or liquidate the position
-		return isIncomeStrategy();
+		return isIncomeStrategy() && isDeltaNeutral() && 
+			   isNotExpirationLoss() && isPassDeltaThetaRule() &&
+			   isPassVegaThetaRule();
 	}
 	
 	// INCOME STRATEGY 
@@ -92,7 +92,7 @@ public class StrategyOptions extends Strategy {
 		return isPositive;
 	}
 	
-	// DELTA NEUTRALITY
+	// RULE: DELTA NEUTRALITY
 	public boolean isDeltaNeutral() { // across BUY TYPE
 		boolean buyDeltaNeutral=isDeltaNeutral(TradeType.BUY);
 		boolean sellDeltaNeutral=isDeltaNeutral(TradeType.SELL);
@@ -115,7 +115,9 @@ public class StrategyOptions extends Strategy {
 			if(trade.getTradeType().equals(tradeType)) {
 				Investment inv = trade.getInvestment();		
 				InvestmentOption opt = (InvestmentOption) inv;
-				Double delta = opt.getGreeks().getDelta();
+				// TODO: go get from broker
+				// Double delta = opt.getGreeks().getDelta(); 
+				Double delta = 0.0;
 				netDelta += delta;
 			}
 		}		
@@ -130,7 +132,9 @@ public class StrategyOptions extends Strategy {
 			if(trade.getTradeType().equals(tradeType)) {
 				Investment inv = trade.getInvestment();
 				InvestmentOption opt = (InvestmentOption) inv;
-				Double delta = opt.getGreeks().getDelta();
+				// TODO: go get from broker
+				// Double delta = opt.getGreeks().getDelta();
+				Double delta = 0.0;
 				avgAbsDelta += Math.abs(delta);
 				counter++;
 			}
@@ -138,18 +142,22 @@ public class StrategyOptions extends Strategy {
 		return avgAbsDelta/counter;
 	}
 
-	// LOSS TRIGGER
-	// trigger to adjust the strategy upon Underlying change
-	public boolean isExpirationLoss (Double underPrice) { 
+	// RULE: GET OUT OF LOSS
+	public boolean isNotExpirationLoss () { 
 		Double buffer=0.0;  // could be buffer in time or price
+		Double underPrice = 0.0; // TODO: go get the price now
 		Double triggerPrice = underPrice*(1+buffer);
 		return triggerPrice<0;
 	}
+	
+	// RULE:
 	public boolean isPassDeltaThetaRule() {
 		boolean pass = true;
 		// TODO
 		return pass;
 	}
+	
+	// RULE
 	public boolean isPassVegaThetaRule() {
 		boolean pass = true;
 		// TODO

@@ -1,12 +1,15 @@
 package com.onenow.finance;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class MarketPrice {
 
-	HashMap prices = new HashMap();
+	HashMap prices;
+
 
 	public MarketPrice() {
+		setPrices(new HashMap());
 	}
 
 	public void setPrice(Investment investment, Double bidPrice, Double askPrice) {

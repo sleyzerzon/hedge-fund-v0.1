@@ -104,6 +104,7 @@ public class Portfolio {
 		return foundInvestments;
 	}
 
+	// PRINT
 	public String toString() {
 		String string = "";
 		for (Investment investment : getInvestments()) {
@@ -111,6 +112,8 @@ public class Portfolio {
 		}
 		return string;
 	}
+	
+	// TEST
 
 	// GET SET
 	public List<Investment> getInvestments() {

@@ -8,6 +8,7 @@ import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
 import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.InvestmentStock;
+import com.onenow.finance.MarketAnalytics;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.Trade;
@@ -20,6 +21,7 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 	private static Portfolio marketPortfolio;
 	private static Portfolio myPortfolio; // todo
 	private static MarketPrice marketPrices;
+	private static MarketAnalytics marketAnalytics;
 	private static List<Trade> trades;
 	
 	public BrokerEmulator() {
@@ -174,6 +176,14 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 
 	private static void setTrades(List<Trade> trades) {
 		BrokerEmulator.trades = trades;
+	}
+
+	private static MarketAnalytics getMarketAnalytics() {
+		return marketAnalytics;
+	}
+
+	private static void setMarketAnalytics(MarketAnalytics marketAnalytics) {
+		BrokerEmulator.marketAnalytics = marketAnalytics;
 	}
 
 
