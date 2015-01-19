@@ -8,7 +8,7 @@ public class InvestmentStock extends Investment {
 	}
 	
 	public InvestmentStock (Underlying underlying) {
-		super(underlying, InvType.STOCK);
+		super(underlying, InvType.stock);
 	}
 	
 	// PUBLIC
@@ -19,9 +19,10 @@ public class InvestmentStock extends Investment {
 	
 	// PRINT
 	public String toString() {
-		String string = super.toString();
-		System.out.println("Investment Stock: " + string);
-		return string;
+		String s = "";
+		s = super.toString();
+//		System.out.println("Investment Stock: " + s);
+		return s;
 	}
 	
 }

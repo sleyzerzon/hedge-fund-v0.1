@@ -135,7 +135,7 @@ public class Greeks {
 	// PRINT
 	public String toString() {
 		String s = "\n\n";
-
+		
 		s = s + "GREEKS:" + "\n";
 		s = s + "theta " + getTheta() + "\n";
  		s = s + "delta " + getDelta() + "\n";
@@ -149,24 +149,23 @@ public class Greeks {
  		s = s + "rtrrr " + getRhoThetaRiskReturnRatio() + "\n";
  		
  		s = s + "GREEK EFFECT:" + "\n";
-		s = s + "theta effect " + getThetaEffect() + "\n";
- 		s = s + "delta effect " + getDeltaEffect() + "\n";
-		s = s + "gamma effect " + getGammaEffect() + "\n";
- 		s = s + "vega effect " + getVegaEffect() + "\n";
- 		s = s + "rho effect " + getRhoEffect() + "\n";
+		s = s + "theta effect $" + getThetaEffect() + "\n";
+ 		s = s + "delta effect $" + getDeltaEffect() + "\n";
+		s = s + "gamma effect $" + getGammaEffect() + "\n";
+ 		s = s + "vega effect $" + getVegaEffect() + "\n";
+ 		s = s + "rho effect $" + getRhoEffect() + "\n";
  		
- 		s = s + "CALCULATED" + "\n";
+ 		s = s + "CALCULATED:" + "\n";
  		s = s + "expected price change $" + getExpectedPriceChange() + "\n";
- 		s = s + "daily volatility of implied volatility " + getDailyVolatilityOfImpliedVolatility() + "\n";
- 		s = s + "daily volatility of single day implied volatility " + getDailyVolatilityOfSingleDayImpliedVolatility() + "\n";
  		s = s + "expected change in implied volatility over holding period " + getExpectedChangeInImpliedVolatilityOverTheHoldingPeriod() + "\n";
  		s = s + "expected change in implied volatility " + getExpectedChangeInImpliedVolatility() + "\n";
  		
- 		s = s + "BASED ON" + "\n";
+ 		s = s + "BASED ON:" + "\n";
  		s = s + "underlyign price $" + getUnderlyingPrice() + "\n";
  		s = s + "holding period days " + getHoldingPeriodCalendarDays() + "\n";
  		s = s + "implied volatility annualized " + getImpliedVolatilityAnnualized() + "\n";
- 		
+		s = s + "daily volatility of implied volatility " + getDailyVolatilityOfImpliedVolatility() + "\n";
+ 		s = s + "daily volatility of single day implied volatility " + getDailyVolatilityOfSingleDayImpliedVolatility() + "\n";
 		return s;
 	}
 
@@ -184,7 +183,6 @@ public class Greeks {
 		setDailyVolatilityOfSingleDayImpliedVolatility(0.0095);
 		
 		System.out.println(toString());
-		
 		return (
 				testDTRRR(-1.134412846893558) &&
 				testVTRRR(-3.5100884322355794) && 

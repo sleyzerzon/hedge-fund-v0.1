@@ -8,49 +8,42 @@ import java.util.List;
 public class Portfolio {
 
 	private List<Investment> investments = new ArrayList<Investment>();
-	private Hashtable<String, Integer> quantity = new Hashtable<String, Integer>();
+	private Hashtable<Investment, Integer> quantity = new Hashtable<Investment, Integer>();
 
 	public Portfolio() {
 	
 	}
 
-	public void addTrade(Transaction trans) {
-		List<Trade> trades = trans.getTrades();
-		for (Trade trade : trades) {
-			Investment inv = trade.getInvestment();
-			if (trade.getTradeType().equals(TradeType.BUY)) {
-				addQuantity(inv.getUnder(), trade.getQuantity());
-			} else {
-				// addQuantity(inv.getUnderlying(), -trade.getQuantity());
-			}
+	public void enterTransaction(Transaction trans) {
+		for (Trade trade : trans.getTrades()) {
+			enterInvestment(trade);
 		}
 	}
 
-	public boolean addInvestment(Investment inv) {
-		boolean inList = false;
+	private void enterInvestment(Trade trade) {
+		Investment invToEnter = trade.getInvestment();
+		Underlying under = invToEnter.getUnder();
+		Integer quantity = trade.getQuantity();
 
-		for (Investment invIt : getInvestments()) { // go through existing
-													// investments
-			if (invIt.equals(inv)) {
-				inList = true;
-			}
+		if(getQuantity().get(invToEnter) == null) { // not there
+			getInvestments().add(invToEnter);
+			getQuantity().put(invToEnter, quantity);
+		} else { // increment
+				Integer init = getQuantity().get(invToEnter);
+				if (trade.getTradeType().equals(TradeType.BUY)) {
+					getQuantity().put(invToEnter,  init + trade.getQuantity());								
+				} else {
+					getQuantity().put(invToEnter, init - trade.getQuantity());								
+				}				
 		}
-
-		if (!inList) { // first inclusion of investment
-			getInvestments().add(inv);
-			// getQuantity().put(inv.getUnderlying().getTicker(), 0);
-		}
-
-		return inList;
 	}
-
-	private void addQuantity(Underlying under, int quantity) {
-		// TODO the sale case where I do'nt have enough to sell
-		Integer init = getQuantity().get(under.getTicker());
-		if (init == null) {
-			init = 0;
-		}
-		getQuantity().put(under.getTicker(), init + quantity);
+	
+	public Integer getTotalQuantity() {
+		Integer sum = 0;
+			for(Investment inv:getInvestments()) {
+				sum += Math.abs(getQuantity().get(inv));
+			}
+		return sum;
 	}
 
 	public Investment getBest(Underlying under, Enum invType) { // generic
@@ -91,8 +84,8 @@ public class Portfolio {
 			Date expiration, Double strike) {
 		List<Investment> foundInvestments = new ArrayList<Investment>();
 		for (Investment investment : getInvestments()) {
-			if (investment.getInvType().equals(InvType.CALL)
-					|| investment.getInvType().equals(InvType.PUT)) {
+			if (investment.getInvType().equals(InvType.call)
+					|| investment.getInvType().equals(InvType.put)) {
 				InvestmentOption option = (InvestmentOption) investment;
 				if (under.getTicker().equals(investment.getUnder().getTicker())
 						&& option.getExpirationDate().equals(expiration)
@@ -106,11 +99,13 @@ public class Portfolio {
 
 	// PRINT
 	public String toString() {
-		String string = "";
-		for (Investment investment : getInvestments()) {
-			string.concat(investment.toString());
+		String s = "";
+		Integer i = 0;
+		for(Investment inv:getInvestments()) {
+			s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+			i++;
 		}
-		return string;
+		return s;
 	}
 	
 	// TEST
@@ -124,11 +119,11 @@ public class Portfolio {
 		this.investments = investments;
 	}
 
-	public Hashtable<String, Integer> getQuantity() {
+	public Hashtable<Investment, Integer> getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Hashtable<String, Integer> quantity) {
+	public void setQuantity(Hashtable<Investment, Integer> quantity) {
 		this.quantity = quantity;
 	}
 

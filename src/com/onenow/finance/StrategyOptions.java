@@ -13,7 +13,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getInvestment().getInvType().equals(InvType.CALL))
+				if(trade.getInvestment().getInvType().equals(InvType.call))
 				net += trade.getNetPremium();
 			}
 		}
@@ -24,7 +24,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getInvestment().getInvType().equals(InvType.PUT))
+				if(trade.getInvestment().getInvType().equals(InvType.put))
 				net += trade.getNetPremium();
 			}
 		}
@@ -59,18 +59,18 @@ public class StrategyOptions extends Strategy {
 	// RULE: INCOME STRATEGY
 	public boolean rulesPass() { // if Fail, then adjust or liquidate the position
 		return isIncomeStrategy() && isDeltaNeutral() && 
-			   isNotExpirationLoss() && isPassDeltaThetaRule() &&
-			   isPassVegaThetaRule();
+			   isNotExpirationLoss() && isPricingRiskManaged() &&
+			   isMarketRiskManaged();
 	}
 	
-	// INCOME STRATEGY 
+	// RULE 1: INCOME STRATEGY 
 	public boolean isIncomeStrategy() {
 		return isThetaPositive() && isGammaPositive();
 	}
 	
 	public boolean isThetaPositive() { 
-		boolean callsThetaPostive = isSpreadThetaPositive(InvType.CALL);
-		boolean putsThetaPositive = isSpreadThetaPositive(InvType.PUT);
+		boolean callsThetaPostive = isSpreadThetaPositive(InvType.call);
+		boolean putsThetaPositive = isSpreadThetaPositive(InvType.put);
 		return callsThetaPostive && putsThetaPositive;
 	}
 	
@@ -81,8 +81,8 @@ public class StrategyOptions extends Strategy {
 	}
 	
 	public boolean isGammaPositive() {  // across each SPREAD
-		boolean callsGammaPositive = isSpreadGammaPositive(InvType.CALL);
-		boolean putsGammaPositive = isSpreadGammaPositive(InvType.PUT);
+		boolean callsGammaPositive = isSpreadGammaPositive(InvType.call);
+		boolean putsGammaPositive = isSpreadGammaPositive(InvType.put);
 		return callsGammaPositive && putsGammaPositive; // both
 	}
 	
@@ -92,7 +92,7 @@ public class StrategyOptions extends Strategy {
 		return isPositive;
 	}
 	
-	// RULE: DELTA NEUTRALITY
+	// RULE 2: DELTA NEUTRALITY
 	public boolean isDeltaNeutral() { // across BUY TYPE
 		boolean buyDeltaNeutral=isDeltaNeutral(TradeType.BUY);
 		boolean sellDeltaNeutral=isDeltaNeutral(TradeType.SELL);
@@ -142,7 +142,7 @@ public class StrategyOptions extends Strategy {
 		return avgAbsDelta/counter;
 	}
 
-	// RULE: GET OUT OF LOSS
+	// RULE 3: GET OUT OF LOSS
 	public boolean isNotExpirationLoss () { 
 		Double buffer=0.0;  // could be buffer in time or price
 		Double underPrice = 0.0; // TODO: go get the price now
@@ -150,18 +150,22 @@ public class StrategyOptions extends Strategy {
 		return triggerPrice<0;
 	}
 	
-	// RULE:
-	public boolean isPassDeltaThetaRule() {
-		boolean pass = true;
-		// TODO
-		return pass;
+	// RULE 4: ELIMINATION OF RISK IN TIME
+	public boolean isPricingRiskManaged() {
+		boolean pass = true;  // TODO: sum of delta/theta ratios across the strategy
+		Double delta = 0.0; // opt.getGreeks().getDelta()
+		Double theta = 0.0; // opt.getGreeks().getTheta();
+		Double ratio = delta / theta;
+		return ratio < 0.5; // what's the right number?
 	}
 	
-	// RULE
-	public boolean isPassVegaThetaRule() {
+	// RULE 5: 
+	public boolean isMarketRiskManaged() {
 		boolean pass = true;
-		// TODO
-		return pass;
+		Double vega = 0.0; // TODO: get
+		Double theta = 0.0; // get
+		Double ratio = vega / theta;
+		return ratio < 0.5; // what's the right number?
 	}
 
 	// PRIVATE 
@@ -174,6 +178,14 @@ public class StrategyOptions extends Strategy {
 				"Net Put (t0): $" + getPutNetPremium().intValue() + "\n";
 		s = s +	"Net Bought (t0): $" + getBoughtNetPremium().intValue() + ". " +
 				"Net Sold (t0): $" + getSoldNetPremium().intValue();
+		
+		s = s + "BASIC RULES" + "\n";
+		s = s + "1. income strategy <" + isIncomeStrategy() + ">\n";
+		s = s + "2. delta neutral <" + isDeltaNeutral()  + ">\n";
+		s = s + "3. is not expiration loss <" + isNotExpirationLoss () + ">";
+		s = s + "4. delta option price risk vs. theta time decay <" + isPricingRiskManaged() + ">\n"; 
+		s = s + "5. vega market risk vs. theta time decal <" + isMarketRiskManaged() + ">\n";
+
 		return s;
 	}
 	
@@ -209,6 +221,8 @@ public class StrategyOptions extends Strategy {
 		}
 		return true;
 	}
+	
+	
 	
 	// SET GET
 	

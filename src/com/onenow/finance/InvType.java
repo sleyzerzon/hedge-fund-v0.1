@@ -1,5 +1,5 @@
 package com.onenow.finance;
 
 public enum InvType {
-	STOCK, CALL, PUT, SPOT, ONDEMAND, RESERVED
+	stock, call, put, spot, ondemand, reserved
 }

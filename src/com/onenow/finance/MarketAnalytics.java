@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public class MarketAnalytics {
 	
-	private Hashtable<String, Greeks> greeks;
+	private Hashtable<String, Greeks> greeks; // TODO: one for each price for ever expiration at every time
 
 	public MarketAnalytics() {
 		// TODO: get values from broker

@@ -22,7 +22,7 @@ public class InvestmentOption extends Investment { // call, put
 	// PUBLIC
 	public Double getValue(Double marketPrice) {
 		Double value = 0.0;
-		if (getInvType().equals(InvType.CALL)) { // call
+		if (getInvType().equals(InvType.call)) { // call
 			if (marketPrice > getStrikePrice()) {
 				value = marketPrice - getStrikePrice();
 			}

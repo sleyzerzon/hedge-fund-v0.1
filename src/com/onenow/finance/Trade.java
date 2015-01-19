@@ -24,7 +24,7 @@ public class Trade {
 	public Double getStrike() {
 		Double strike = 0.0;
 		Enum invType = getInvestment().getInvType();
-		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
+		if (invType.equals(InvType.call) || invType.equals(InvType.put)) {
 			InvestmentOption option = (InvestmentOption) getInvestment();
 			strike = option.getStrikePrice();
 		}
@@ -34,7 +34,7 @@ public class Trade {
 	public Double getValue(Double marketPrice) { // TODO: stock handling
 		Double value = 0.0;
 		Enum invType = getInvestment().getInvType();
-		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
+		if (invType.equals(InvType.call) || invType.equals(InvType.put)) {
 			InvestmentOption option = (InvestmentOption) getInvestment();
 			value = option.getValue(marketPrice) * getQuantity();
 		}
@@ -69,9 +69,9 @@ public class Trade {
 
 	// PRINT
 	public String toString() {
-		String s = "TRADE";
-		s = s + getInvestment() + " " + getTradeType() + " Quantity: "
-			  + getQuantity() + " Net Cost: $" + getNetPremium();
+		String s = "";
+		s = s + getTradeType() + " " + getQuantity() + " " + getInvestment() + ". " + 
+			  "Net Cost: $" + getNetPremium();
 		return (s);
 	}
 

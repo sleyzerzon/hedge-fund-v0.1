@@ -1,4 +1,4 @@
-package com.onenow.workflow;
+package com.onenow.investor;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,7 +54,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 
 		Date expDate = new Date();
 		expDate.setTime(1000000);
-		Promise<Investment> stockPromise = getBroker().getBest(under1, InvType.STOCK);
+		Promise<Investment> stockPromise = getBroker().getBest(under1, InvType.stock);
 //		Promise<Investment> call1Promise = getBroker().getBest(under1,
 //				InvType.CALL, expDate, 405.00);
 //		Promise<Investment> call2Promise = getBroker().getBest(under1,
@@ -128,7 +128,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 			trades[i] = tradePromises[i].get();
 		}
 		Transaction tx = new Transaction(trades);
-		getBroker().addTrade(tx);
+		getBroker().enterTransaction(tx);
 		Promise<List<Trade>> tradesPromise = getBroker().getTrades();
 		processTrades(tradesPromise);
 	}
