@@ -6,6 +6,8 @@ public class Transaction {
 		
 	private Counterparty counterParty; // Cloud or Brokerage
 	private List<Trade> trades = new ArrayList<Trade>();
+	
+	private Greeks greeks;
 
 	
 	// CONSTRUCTOR

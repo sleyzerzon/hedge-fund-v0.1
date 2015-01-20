@@ -8,18 +8,16 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrati
 import com.onenow.finance.Investment;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.Trade;
+import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.workflow.ConstantsWorkflow;
 
 public abstract interface Broker {
 	public abstract List<Underlying> getUnderlying();
-	public abstract List<Investment> getInvestments();
+	public abstract Portfolio getMarketPortfolio();
 	public abstract Portfolio getMyPortfolio();
-	public abstract Double getPriceAsk(Investment inv);
-	public abstract Double getPriceBid(Investment inv);
-	public abstract Investment getBest(Underlying under, Enum invType);
+	public abstract Double getPrice(Investment inv, TradeType type);
 	public abstract List<Trade> getTrades();
-	public abstract void enterTransaction(Transaction trans);
- 
+	public abstract void enterTransaction(Transaction trans); 
 }

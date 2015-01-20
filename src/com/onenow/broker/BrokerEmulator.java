@@ -16,7 +16,7 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
-public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
+public class BrokerEmulator implements Broker {
 
 	private static List<Underlying> underList;
 	private static Portfolio marketPortfolio;
@@ -35,7 +35,7 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 		setTrades(new ArrayList<Trade>());
 		
 		setUnderlying();
-		setInvestments();
+		setInvestments(); 
 	}
 	
 	@Override
@@ -50,46 +50,20 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 	}
 
 	@Override
-	public List<Investment> getInvestments() {
-		return getMarketPortfolio().getInvestments();
-	}
-
-	@Override
 	public Portfolio getMyPortfolio() {
 		return myPortfolio;
 	}
-
-	@Override
-	public Double getPriceAsk(Investment inv) {
-		return getMarketPrices().getPriceAsk(inv);			
-	}
-
-	@Override
-	public Double getPriceBid(Investment inv) {
-		return getMarketPrices().getPriceBid(inv);			
-	}
 	
-	@Override
-	public Investment getBest(Underlying under, Enum invType) { 
-		return getMarketPortfolio().getBest(under, invType);
-	}
-	
-//	@Override
-//	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike) { 
-//		return getMarketPortfolio().getBest(under, invType, expiration, strike);
-//	}
-//
-//	@Override
-//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
-//		return getMarketPortfolio().getBest(under, invType, InvTerm);		
-//	}
-
 	@Override
 	public List<Trade> getTrades() {
 		return trades;	
 	}
 
-	
+	@Override
+	public Double getPrice(Investment inv, TradeType type) {
+		return getMarketPrices().getPrice(inv, type);
+	}
+
 	// PRIVATE
 	private void setUnderlying() {
 		getUnderList().add(new Underlying("aapl"));
@@ -102,11 +76,11 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 		Date expDate = new Date();
 		expDate.setTime(1000000);
 		for(Underlying under:getUnderlying()){
-			setMarketInvestmentPrice(under);
+			initMarket(under);
 		}		
 	}
 	
-	private static void setMarketInvestmentPrice(Underlying under) {
+	private static void initMarket(Underlying under) {
 
 		// create the investments
 		Date expDate = new Date();
@@ -124,15 +98,21 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 		getMarketPrices().setPrice(put1, 9.50, 9.49);
 		getMarketPrices().setPrice(put2, 8.33, 8.32);
 		
+		System.out.println("PRICE1" + getMarketPrices().getPrice(call1, TradeType.BUY));
+		System.out.println("PRICE1" + getMarketPrices().getPrice(call2, TradeType.BUY));
+		System.out.println("PRICE1" + getMarketPrices().getPrice(put1, TradeType.BUY));
+		System.out.println("PRICE1" + getMarketPrices().getPrice(put2, TradeType.BUY));
+
+		
 		// create trades based on market price
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPriceAsk(stock));
-		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPriceAsk(call1));
-		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPriceAsk(call2));
-		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPriceAsk(put1));
-		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPriceAsk(put2));
+		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPrice(stock, TradeType.BUY));
+		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY));
+		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY));
+		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY));
+		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY));
 		
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
-		getMarketPortfolio().enterTransaction(trans);
+		marketPortfolio.enterTransaction(trans);
 		
 			
 	}
@@ -165,18 +145,6 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 		BrokerEmulator.underList = underList;
 	}
 
-	private static Portfolio getMarketPortfolio() {
-		return marketPortfolio;
-	}
-
-	private static void setMarketPortfolio(Portfolio marketPortfolio) {
-		BrokerEmulator.marketPortfolio = marketPortfolio;
-	}
-
-//	private static Portfolio getMyPortfolio() {
-//		return myPortfolio;
-//	}
-
 	private static void setMyPortfolio(Portfolio myPortfolio) {
 		BrokerEmulator.myPortfolio = myPortfolio;
 	}
@@ -201,5 +169,12 @@ public class BrokerEmulator implements BrokerCloud, BrokerWallSt {
 		BrokerEmulator.marketAnalytics = marketAnalytics;
 	}
 
+	public Portfolio getMarketPortfolio() {
+		return BrokerEmulator.marketPortfolio;
+	}
+
+	private static void setMarketPortfolio(Portfolio marketPortfolio) {
+		BrokerEmulator.marketPortfolio = marketPortfolio;
+	}
 
 }

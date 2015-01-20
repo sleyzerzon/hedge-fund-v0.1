@@ -10,19 +10,29 @@ public class Portfolio {
 	private List<Investment> investments = new ArrayList<Investment>();
 	private Hashtable<Investment, Integer> quantity = new Hashtable<Investment, Integer>();
 
+	// CONSTRUCT
 	public Portfolio() {
-	
+		
 	}
 
+	public Portfolio(List<Investment> invs) { // investments with no quantity
+		setInvestments(invs); 
+	}
+
+	public Portfolio(List<Investment> invs, Hashtable<Investment, Integer> quantity) {
+		setInvestments(invs); 
+		setQuantity(quantity);
+	}
+
+	// INIT
 	public void enterTransaction(Transaction trans) {
 		for (Trade trade : trans.getTrades()) {
 			enterInvestment(trade);
 		}
 	}
-
+	
 	private void enterInvestment(Trade trade) {
 		Investment invToEnter = trade.getInvestment();
-		Underlying under = invToEnter.getUnder();
 		Integer quantity = trade.getQuantity();
 
 		if(getQuantity().get(invToEnter) == null) { // not there
@@ -38,63 +48,88 @@ public class Portfolio {
 		}
 	}
 	
-	public Integer getTotalQuantity() {
+	public Integer getAbsQuantity() {
 		Integer sum = 0;
 			for(Investment inv:getInvestments()) {
 				sum += Math.abs(getQuantity().get(inv));
 			}
 		return sum;
 	}
-
-	public Investment getBest(Underlying under, Enum invType) { // generic
-		List<Investment> found = search(under, invType);
-		if (found.size() == 0) {
-			return null;
-		}
-		return found.get(0);
-	}
-
-	public Investment getBest(Underlying under, Enum invType, Date expiration,
-			Double strike) { // generic
-		List<Investment> found = search(under, invType, expiration, strike);
-		if (found.size() == 0) {
-			return null;
-		}
-		return found.get(0);
-	}
-
-	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
-		Investment inv = new Investment();
-		// TODO
-		return inv;
-	}
-
-	public List<Investment> search(Underlying under, Enum invType) { // generic
-		List<Investment> foundInvestments = new ArrayList<Investment>();
+	
+	// SEARCH
+	public List<Investment> getInvestments(InvType type) {
+		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments()) {
-			if (under.getTicker().equals(investment.getUnder().getTicker())
-					&& investment.getInvType().equals(invType)) {
-				foundInvestments.add(investment);
+			if (investment.getInvType().equals(type)) {
+				foundInvs.add(investment);
 			}
 		}
-		return foundInvestments;
+		return foundInvs;
 	}
-
-	public List<Investment> search(Underlying under, Enum invType,
-			Date expiration, Double strike) {
-		List<Investment> foundInvestments = new ArrayList<Investment>();
-		for (Investment investment : getInvestments()) {
-			if (investment.getInvType().equals(InvType.call)
-					|| investment.getInvType().equals(InvType.put)) {
-				InvestmentOption option = (InvestmentOption) investment;
-				if (under.getTicker().equals(investment.getUnder().getTicker())
-						&& option.getExpirationDate().equals(expiration)
-						&& option.getStrikePrice().equals(strike)) {
-					foundInvestments.add(investment);
+	
+	public List<Investment> getInvestments(Underlying under, InvType type) {
+		List<Investment> foundInvs = new ArrayList<Investment>();
+		for (Investment investment : getInvestments(type)) {
+			if (under.getTicker().equals(investment.getUnder().getTicker())) {
+				foundInvs.add(investment);
+			}
+		}	
+		return foundInvs;
+	}
+	
+	public List<Investment> getInvestments(Underlying under, InvType type, Date exp) {
+		List<Investment> foundInvs = new ArrayList<Investment>();
+		for (Investment investment : getInvestments(under, type)) {
+			if (type.equals(InvType.call) || type.equals(InvType.put)) {
+				InvestmentOption opt = (InvestmentOption) investment;
+				if(opt.getExpirationDate().equals(exp)) {
+					foundInvs.add(investment);
 				}
 			}
-		}
-		return foundInvestments;
+		}	
+		return foundInvs;		
+	}
+	
+	public List<Investment> getInvestments(Underlying under, InvType type, Date exp, Double strike) {
+		List<Investment> foundInvs = new ArrayList<Investment>();
+		for (Investment investment : getInvestments(under, type, exp)) {
+			if (type.equals(InvType.call) || type.equals(InvType.put)) {
+				InvestmentOption opt = (InvestmentOption) investment;
+				if(opt.getStrikePrice().equals(strike)) {
+					foundInvs.add(investment);
+				}
+			}
+		}	
+		System.out.println("FOUND: " + foundInvs.toString());
+		return foundInvs;			
+	}
+	
+	// CLOUD GET BEST
+	public Investment getBestSpot(Underlying under) {
+		List<Investment> invs = getInvestments(under, InvType.spot);
+		return invs.get(0); // TODO: which one? 
+	}
+	
+	public Investment getBestOnDemand(Underlying under) {
+		List<Investment> invs = getInvestments(under, InvType.ondemand);
+		return invs.get(0); // TODO: which one?
+	}
+	
+	public Investment getBestReserved(Underlying under, InvTerm term) {	
+		List<Investment> invs = getInvestments(under, InvType.reserved); 
+		return invs.get(0); // TODO: handle invTerm
+	}
+	
+	// WALL ST GET BEST
+	public Investment getBestStock(Underlying under) {
+		List<Investment> invs = getInvestments(under, InvType.stock);
+		return invs.get(0);
+	}
+	
+	public Investment getBestOption(Underlying under, InvType type, Date exp, Double strike) {
+		List<Investment> invs = getInvestments(under, type, exp, strike); 
+		System.out.println("FOUND: " + invs.toString());
+		return invs.get(0);
 	}
 
 	// PRINT

@@ -14,9 +14,6 @@ import com.onenow.finance.Underlying;
 
 public class TestBroker {
 	
-	private Date expDate = new Date();
-//	private expDate.setTime(1000000);
-
 	public TestBroker() {
 		
 	}
@@ -35,40 +32,59 @@ public class TestBroker {
 	
 	private boolean testBuy() {
 		
+		Date expDate = new Date();
+		expDate.setTime(1000000); // if date not set, getBest returns null
+
+		
 		BrokerActivityImpl broker = new BrokerActivityImpl();
 				
 		List<Underlying> unders = broker.getUnderlying();
 		
-		List<Investment> mktInv = broker.getInvestments();
+		Portfolio market = broker.getMarketPortfolio();
 		
-		// find suitable investment
-		Investment stock = broker.getBest(unders.get(0), InvType.stock);
-//		Investment call1 = broker.getBest(unders.get(0), InvType.CALL, expDate, 405.00);
-//		Investment call2 = broker.getBest(unders.get(0), InvType.CALL, expDate, 400.00);
-//		Investment put1 = broker.getBest(unders.get(0), InvType.PUT, expDate, 390.00);
-//		Investment put2 = broker.getBest(unders.get(0), InvType.PUT, expDate, 385.00);
+		
+		// find investment: that should be present
+		Underlying theUnder = unders.get(0);
+		
+		// TODO: handle null returns
+//		Investment stock = market.getBestStock(theUnder);
+//		Investment call1 = market.getBestOption(theUnder, InvType.call, expDate, 405.00);
+//		Investment call2 = market.getBestOption(theUnder, InvType.call, expDate, 400.00);
+//		Investment put1 = market.getBestOption(theUnder, InvType.put, expDate, 390.00);
+//		Investment put2 = market.getBestOption(theUnder, InvType.put, expDate, 385.00);
 
+		Investment stock = market.getInvestments(InvType.stock).get(0);
+		Investment call1 = market.getInvestments(theUnder, InvType.call, expDate, 405.00).get(0);
+		Investment call2 = market.getInvestments(theUnder, InvType.call, expDate, 400.00).get(0);
+		Investment put1 = market.getInvestments(theUnder, InvType.put, expDate, 390.00).get(0);
+		Investment put2 = market.getInvestments(theUnder, InvType.put, expDate, 385.00).get(0);
+		
+		
 		// get ready to buy something
-		Trade tradeStock1 = new Trade(stock, TradeType.BUY, 50, broker.getPriceAsk(stock));
-		Trade tradeStock2 = new Trade(stock, TradeType.SELL, 150, broker.getPriceAsk(stock));
+		Trade tradeStock1 = new Trade(stock, TradeType.BUY, 50, broker.getPrice(stock, TradeType.BUY));
+		Trade tradeStock2 = new Trade(stock, TradeType.SELL, 150, broker.getPrice(stock, TradeType.SELL));
+		Trade tradeCall1 = new Trade(call1, TradeType.BUY, 100, broker.getPrice(call1, TradeType.BUY));
+		Trade tradeCall2 = new Trade(call2, TradeType.SELL, 100, broker.getPrice(call2, TradeType.SELL));
+		Trade tradePut1 = new Trade(put1, TradeType.SELL, 100, broker.getPrice(put1, TradeType.SELL));
+		Trade tradePut2 = new Trade(put2, TradeType.BUY, 100, broker.getPrice(put2, TradeType.BUY));
 
-//		Trade tradeCall1 = new Trade(call1, TradeType.BUY, 50, getPriceAsk(call1));
-//		Trade tradeCall2 = new Trade(call2, TradeType.BUY, 50, getPriceAsk(call2));
-//		Trade tradePut1 = new Trade(put1, TradeType.BUY, 50, getPriceAsk(put1));
-//		Trade tradePut2 = new Trade(put2, TradeType.BUY, 50, getPriceAsk(put2));
+		
+		System.out.println("PRICE" + broker.getPrice(call1, TradeType.BUY));
+		System.out.println("PRICE" + broker.getPrice(call2, TradeType.BUY));
+		System.out.println("PRICE" + broker.getPrice(put1, TradeType.BUY));
+		System.out.println("PRICE" + broker.getPrice(put2, TradeType.BUY));
 
-
-		Transaction tx = new Transaction(tradeStock1, tradeStock2);
+		Transaction tx = new Transaction(tradeStock1, tradeStock2, tradeCall1, tradeCall2, tradePut1, tradePut2);
 		broker.enterTransaction(tx);
 				
-		List<Trade> trades = broker.getTrades();  // verify it's what I entered
+		List<Trade> trades = broker.getTrades();  
 
-		Portfolio myInv = broker.getMyPortfolio();		
+		Portfolio myPortfolio = broker.getMyPortfolio();		
 
 		broker.toString();
 		
-		if(!myInv.getTotalQuantity().equals(100)) {
-			System.out.println("ERROR total shares " + myInv.getTotalQuantity());
+		if(!myPortfolio.getAbsQuantity().equals(500)) {
+			System.out.println("ERROR total shares " + myPortfolio.getAbsQuantity());
 			return false;
 		}
 
@@ -76,6 +92,7 @@ public class TestBroker {
 		
 	}
 	
+
 
 //	System.out.println("Transaction Net:" + tx.getNetCost());
 //	System.out.println("Transaction Call Net:" + tx.getNetCost(InvType.CALL));
