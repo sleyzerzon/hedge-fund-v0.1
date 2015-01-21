@@ -11,13 +11,8 @@ import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.workflow.ConstantsWorkflow;
 
-public  interface Broker {
+public  interface Analyst {
 	public abstract List<Underlying> getUnderlying();
-	public abstract List<Investment> getInvestments(boolean myPortfolio);
-	public abstract Double getPriceAsk(Investment inv);
-	public abstract Double getPriceBid(Investment inv);
-	public abstract Investment getBest(Underlying under, Enum invType);
-	public abstract List<Trade> getTrades();
-	public abstract void addTrade(Transaction transaction);
- 
+
+	
 }
