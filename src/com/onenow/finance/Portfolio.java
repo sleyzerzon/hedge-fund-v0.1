@@ -66,7 +66,17 @@ public class Portfolio {
 		}
 		return foundInvs;
 	}
-	
+
+	public List<Investment> getInvestments(Underlying under) {
+		List<Investment> foundInvs = new ArrayList<Investment>();
+		for (Investment investment : getInvestments()) {
+			if (investment.getUnder().equals(under)) {
+				foundInvs.add(investment);
+			}
+		}
+		return foundInvs;
+	}
+
 	public List<Investment> getInvestments(Underlying under, InvType type) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(type)) {
@@ -76,7 +86,23 @@ public class Portfolio {
 		}	
 		return foundInvs;
 	}
-	
+
+	public List<Investment> getInvestments(Underlying under, InvType type, InvTerm term) {
+		List<Investment> foundInvs = new ArrayList<Investment>();
+		for (Investment investment : getInvestments(under, type)) {
+			// TODO: get only those with term
+//			if (investment instanceof InvestmentReserved) { }
+//				InvestmentReserved invRes= (InvestmentReserved) investment;
+//				if(invRes.get)
+//			}
+//					
+//					getTicker().equals(investment.getUnder().getTicker())) {
+//				foundInvs.add(investment);
+//			}
+		}	
+		return foundInvs;
+	}
+
 	public List<Investment> getInvestments(Underlying under, InvType type, Date exp) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type)) {
@@ -100,35 +126,34 @@ public class Portfolio {
 				}
 			}
 		}	
-		System.out.println("FOUND: " + foundInvs.toString());
 		return foundInvs;			
 	}
 	
 	// CLOUD GET BEST
-	public Investment getBestSpot(Underlying under) {
+	public Investment getBestSpot(Underlying under) throws IndexOutOfBoundsException {
 		List<Investment> invs = getInvestments(under, InvType.spot);
-		return invs.get(0); // TODO: which one? 
+		return invs.get(0);  
 	}
 	
-	public Investment getBestOnDemand(Underlying under) {
+	public Investment getBestOnDemand(Underlying under) throws IndexOutOfBoundsException {
 		List<Investment> invs = getInvestments(under, InvType.ondemand);
-		return invs.get(0); // TODO: which one?
+		return invs.get(0);
 	}
 	
-	public Investment getBestReserved(Underlying under, InvTerm term) {	
-		List<Investment> invs = getInvestments(under, InvType.reserved); 
-		return invs.get(0); // TODO: handle invTerm
+	public Investment getBestReserved(Underlying under, InvTerm term) throws IndexOutOfBoundsException {	
+		List<Investment> invs = getInvestments(under, InvType.reserved, term); 
+		return invs.get(0);
 	}
 	
 	// WALL ST GET BEST
-	public Investment getBestStock(Underlying under) {
+	public Investment getBestStock(Underlying under) throws IndexOutOfBoundsException {
 		List<Investment> invs = getInvestments(under, InvType.stock);
 		return invs.get(0);
 	}
 	
-	public Investment getBestOption(Underlying under, InvType type, Date exp, Double strike) {
+	public Investment getBestOption(Underlying under, InvType type, Date exp, Double strike) 
+		throws IndexOutOfBoundsException {
 		List<Investment> invs = getInvestments(under, type, exp, strike); 
-		System.out.println("FOUND: " + invs.toString());
 		return invs.get(0);
 	}
 

@@ -13,13 +13,11 @@ public class Trade {
 	}
 
 	public Trade(Investment inv, Enum tradeType, int quantity, Double unitPrice) {
-		if(inv!=null) {
 			setInvestment(inv);
 			setTradeType(tradeType);
 			setQuantity(quantity);
 			setUnitPrice(unitPrice);
 			setNetPremium();
-		}
 	}
 
 	// PUBLIC

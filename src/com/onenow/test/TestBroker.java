@@ -46,20 +46,24 @@ public class TestBroker {
 		// find investment: that should be present
 		Underlying theUnder = unders.get(0);
 		
-		// TODO: handle null returns
-//		Investment stock = market.getBestStock(theUnder);
-//		Investment call1 = market.getBestOption(theUnder, InvType.call, expDate, 405.00);
-//		Investment call2 = market.getBestOption(theUnder, InvType.call, expDate, 400.00);
-//		Investment put1 = market.getBestOption(theUnder, InvType.put, expDate, 390.00);
-//		Investment put2 = market.getBestOption(theUnder, InvType.put, expDate, 385.00);
+		Investment stock = new Investment();
+		Investment call1 = new Investment();
+		Investment call2 = new Investment();
+		Investment put1 = new Investment();
+		Investment put2 = new Investment();
+		try {
+			// find investment
+			stock = market.getBestStock(theUnder);
+			call1 = market.getInvestments(theUnder, InvType.call, expDate, 405.00).get(0);
+			// to test exception:
+			// call1 = market.getInvestments(theUnder, InvType.call, expDate, 407.00).get(0); 
+			call2 = market.getInvestments(theUnder, InvType.call, expDate, 400.00).get(0);
+			put1 = market.getInvestments(theUnder, InvType.put, expDate, 390.00).get(0);
+			put2 = market.getInvestments(theUnder, InvType.put, expDate, 385.00).get(0);
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
 
-		Investment stock = market.getInvestments(InvType.stock).get(0);
-		Investment call1 = market.getInvestments(theUnder, InvType.call, expDate, 405.00).get(0);
-		Investment call2 = market.getInvestments(theUnder, InvType.call, expDate, 400.00).get(0);
-		Investment put1 = market.getInvestments(theUnder, InvType.put, expDate, 390.00).get(0);
-		Investment put2 = market.getInvestments(theUnder, InvType.put, expDate, 385.00).get(0);
-		
-		
 		// get ready to buy something
 		Trade tradeStock1 = new Trade(stock, TradeType.BUY, 50, broker.getPrice(stock, TradeType.BUY));
 		Trade tradeStock2 = new Trade(stock, TradeType.SELL, 150, broker.getPrice(stock, TradeType.SELL));
@@ -67,35 +71,24 @@ public class TestBroker {
 		Trade tradeCall2 = new Trade(call2, TradeType.SELL, 100, broker.getPrice(call2, TradeType.SELL));
 		Trade tradePut1 = new Trade(put1, TradeType.SELL, 100, broker.getPrice(put1, TradeType.SELL));
 		Trade tradePut2 = new Trade(put2, TradeType.BUY, 100, broker.getPrice(put2, TradeType.BUY));
-
 		
-		System.out.println("PRICE" + broker.getPrice(call1, TradeType.BUY));
-		System.out.println("PRICE" + broker.getPrice(call2, TradeType.BUY));
-		System.out.println("PRICE" + broker.getPrice(put1, TradeType.BUY));
-		System.out.println("PRICE" + broker.getPrice(put2, TradeType.BUY));
-
 		Transaction tx = new Transaction(tradeStock1, tradeStock2, tradeCall1, tradeCall2, tradePut1, tradePut2);
 		broker.enterTransaction(tx);
-				
-		List<Trade> trades = broker.getTrades();  
-
+						
 		Portfolio myPortfolio = broker.getMyPortfolio();		
-
 		broker.toString();
+
 		
 		if(!myPortfolio.getAbsQuantity().equals(500)) {
 			System.out.println("ERROR total shares " + myPortfolio.getAbsQuantity());
 			return false;
 		}
-
-		return true;
 		
+		if(!tx.getNetPremium().equals(39761.0)) {
+			System.out.println("ERROR premium " + tx.getNetPremium());
+			return false;
+		}
+		
+		return true;	
 	}
-	
-
-
-//	System.out.println("Transaction Net:" + tx.getNetCost());
-//	System.out.println("Transaction Call Net:" + tx.getNetCost(InvType.CALL));
-//	System.out.println("Transaction Put Net:" + tx.getNetCost(InvType.PUT));
-
 }
