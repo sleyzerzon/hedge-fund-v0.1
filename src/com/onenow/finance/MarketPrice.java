@@ -1,12 +1,15 @@
 package com.onenow.finance;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class MarketPrice {
 
-	HashMap prices = new HashMap();
+	HashMap prices;
 
 	public MarketPrice() {
+		setPrices(new HashMap());
 	}
 
 	public void setPrice(Investment investment, Double bidPrice, Double askPrice) {
@@ -14,23 +17,20 @@ public class MarketPrice {
 		getPrices().put(getLookupKey(investment, TradeType.SELL), askPrice);
 	}
 
-	public Double getPriceBid(Investment investment) {
-		return (Double) (getPrices()
-				.get(getLookupKey(investment, TradeType.BUY)));
+	public Double getPrice(Investment investment, TradeType type) {
+		String key = getLookupKey(investment, type);
+		Double price = (Double) (getPrices().get(key)); 
+		return price;
 	}
 
-	public Double getPriceAsk(Investment investment) {
-		return (Double) (getPrices().get(getLookupKey(investment,
-				TradeType.SELL)));
-	}
-
-	private String getLookupKey(Investment investment, Enum InvestmentTradeType) {
-		if (investment == null) {
-			return null;
-		}
+	private String getLookupKey(Investment investment, TradeType type) {
 		Underlying under = investment.getUnder();
-		String lookup = under.getTicker()
-				+ investment.getInvType() + InvestmentTradeType;
+		String lookup = under.getTicker() + investment.getInvType();		
+		if (investment instanceof InvestmentOption) {
+			Date exp = (Date) ((InvestmentOption) investment).getExpirationDate();
+			Double strike = ((InvestmentOption) investment).getStrikePrice();
+			lookup = lookup + exp + strike; 
+		}
 		return (lookup);
 	}
 

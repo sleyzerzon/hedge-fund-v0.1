@@ -8,6 +8,8 @@ public class Strategy {
 	
 	private List<Transaction> transactions;
 	private List<Double> checkpoints;	
+	
+	private Greeks greeks; // TODO: aggregate only ?
 		
 	// CONSTRUCTOR
 	public Strategy() {

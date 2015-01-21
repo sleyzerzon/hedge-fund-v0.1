@@ -7,7 +7,9 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.Activities;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activity;
 import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrationOptions;
 import com.onenow.finance.Investment;
+import com.onenow.finance.Portfolio;
 import com.onenow.finance.Trade;
+import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.workflow.ConstantsWorkflow;
@@ -19,12 +21,9 @@ import com.onenow.workflow.ConstantsWorkflow;
 public interface BrokerActivity extends Broker {
 	
 	public List<Underlying> getUnderlying();
-	public List<Investment> getInvestments(boolean myPortfolio);
-	public Double getPriceAsk(Investment inv);
-	public Double getPriceBid(Investment inv);
-	public Investment getBest(Underlying under, Enum invType);
-//	public Investment getBest(Underlying under, Enum invType, Date expiration, Double strike);
-//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm);
+	public Portfolio getMarketPortfolio();
+	public Portfolio getMyPortfolio();
+	public Double getPrice(Investment inv, TradeType type);
 	public List<Trade> getTrades();
-	public void addTrade(Transaction transaction);
+	public void enterTransaction(Transaction trans);
 }

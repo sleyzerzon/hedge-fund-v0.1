@@ -9,7 +9,7 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
-public class BrokerAWS implements Broker {
+public class BrokerGoogle implements Broker {
 
 	@Override
 	public List<Underlying> getUnderlying() {

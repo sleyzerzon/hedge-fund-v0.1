@@ -1,82 +1,64 @@
-ppackage com.onenow.broker;
+package com.onenow.broker;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.onenow.finance.Investment;
+import com.onenow.finance.Portfolio;
 import com.onenow.finance.Trade;
+import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
-public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
-		BrokerActivity {
+public class BrokerActivityImpl implements Broker, BrokerActivity { 
 
 	private static BrokerEmulator brokerEmulator;
-	private static BrokerWallStIntBro brokerIntBro;
+	private static BrokerInteractive brokerInteractive;
+	private static BrokerAWS brokerAWS;
+	private static BrokerGoogle brokerGoogle;
 
 	public BrokerActivityImpl() {
-		System.out.println("Created BrokerActivityImpl.");
+//		System.out.println("Created BrokerActivityImpl");
 		setBrokerEmulator(new BrokerEmulator());
-		setBrokerIntBro(new BrokerWallStIntBro());
+		setBrokerInteractive(new BrokerInteractive());
+		setBrokerAWS(new BrokerAWS());
+		setBrokerGoogle(new BrokerGoogle());
 	}
 
 	@Override
 	public List<Underlying> getUnderlying() {
 		List<Underlying> list = new ArrayList<Underlying>();
-		list.add(new Underlying("APL"));
-
-		// List<Underlying> list = getBrokerEmulator().getUnderlying();
-
-		System.out.println("Returning emulatorList");
+		list.add(new Underlying("aapl"));
 		return list;
 	}
 
 	@Override
-	public List<Investment> getInvestments(boolean myPortfolio) {
-		return getBrokerEmulator().getInvestments(myPortfolio);
+	public Portfolio getMyPortfolio() {
+		return getBrokerEmulator().getMyPortfolio();
 	}
-
-	@Override
-	public Double getPriceAsk(Investment inv) {
-		return getBrokerEmulator().getPriceAsk(inv);
-	}
-
-	@Override
-	public Double getPriceBid(Investment inv) {
-		return getBrokerEmulator().getPriceBid(inv);
-	}
-
-	@Override
-	public Investment getBest(Underlying under, Enum invType) { // stock &
-																// on-demmand &
-																// spot
-		return getBrokerEmulator().getBest(under, invType);
-	}
-//
-//	@Override
-//	public Investment getBest(Underlying under, Enum invType, Date expiration,
-//			Double strike) { // options
-//		return getBrokerEmulator().getBest(under, invType, expiration, strike);
-//	}
-//
-//	@Override
-//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) { // Reserved
-//		return getBrokerEmulator().getBest(under, invType, InvTerm);
-//	}
 
 	@Override
 	public List<Trade> getTrades() {
 		List<Trade > trades= getBrokerEmulator().getTrades();
-
-		System.out.println("In getTrades(): " + trades);
 		return trades;
 	}
 
 	@Override
-	public void addTrade(Transaction transaction) {
-		getBrokerEmulator().addTrade(transaction);
+	public void enterTransaction(Transaction trans) {
+		getBrokerEmulator().enterTransaction(trans);
 	}
+	
+	// PRINT
+	public String toString() {
+		String s = "\n";
+		s = s + getBrokerEmulator().toString();
+		System.out.println(s);
+		return s;
+	}
+	
+	// TEST
+	
+	
 
 	// SET GET
 	private static BrokerEmulator getBrokerEmulator() {
@@ -87,25 +69,48 @@ public class BrokerActivityImpl implements BrokerWallSt, BrokerCloud,
 		BrokerActivityImpl.brokerEmulator = brokerEmulator;
 	}
 
-	private static BrokerWallStIntBro getBrokerIntBro() {
-		return brokerIntBro;
+	public int hashCode() {
+		return brokerEmulator.hashCode();
 	}
 
-	private static void setBrokerIntBro(BrokerWallStIntBro brokerIntBro) {
-		BrokerActivityImpl.brokerIntBro = brokerIntBro;
+	public boolean equals(Object obj) {
+		return brokerEmulator.equals(obj);
 	}
 
-//	@Override
-//	public Investment getBest(Underlying under, Enum invType, Enum InvTerm) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public Investment getBest(Underlying under, Enum invType, Date expiration,
-//			Double strike) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	private static BrokerInteractive getBrokerInteractive() {
+		return brokerInteractive;
+	}
+
+	private static void setBrokerInteractive(BrokerInteractive brokerInteractive) {
+		BrokerActivityImpl.brokerInteractive = brokerInteractive;
+	}
+
+	private static BrokerAWS getBrokerAWS() {
+		return brokerAWS;
+	}
+
+	private static void setBrokerAWS(BrokerAWS brokerAWS) {
+		BrokerActivityImpl.brokerAWS = brokerAWS;
+	}
+
+	private static BrokerGoogle getBrokerGoogle() {
+		return brokerGoogle;
+	}
+
+	private static void setBrokerGoogle(BrokerGoogle brokerGoogle) {
+		BrokerActivityImpl.brokerGoogle = brokerGoogle;
+	}
+
+	@Override
+	public Portfolio getMarketPortfolio() {
+		return getBrokerEmulator().getMarketPortfolio();
+	}
+
+	@Override
+	public Double getPrice(Investment inv, TradeType type) {
+		return getBrokerEmulator().getPrice(inv, type);
+	}
+
+	
 
 }

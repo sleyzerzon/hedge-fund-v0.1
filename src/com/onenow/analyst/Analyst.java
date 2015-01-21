@@ -1,4 +1,4 @@
-package com.onenow.broker;
+package com.onenow.analyst;
 
 import java.util.List;
 

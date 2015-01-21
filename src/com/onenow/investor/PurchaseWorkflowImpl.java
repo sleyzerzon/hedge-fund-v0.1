@@ -1,4 +1,4 @@
-package com.onenow.workflow;
+package com.onenow.investor;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,12 +25,10 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 
 		System.out.println("Started workflow.");
 
-		// get underlying
 		BrokerActivityClient broker = getBroker();
 		Promise<List<Underlying>> underlyingPromise = broker.getUnderlying();
 
-		Promise<List<Investment>> investmentPromise = getBroker()
-				.getInvestments(false); // overall market
+		Promise<List<Investment>> investmentPromise = getBroker().getInvestments(false); // overall market
 
 		doTrades(underlyingPromise);
 	}
@@ -48,12 +46,15 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 	private void doTrades(Promise<List<Underlying>> listPromise) {
 		System.out.println("In doTrades()");
 		List<Underlying> unders = listPromise.get();
+//		System.out.println("RECEIVED UNDELYING LIST: " + unders.toString());
+		
+		
 		Underlying under1 = unders.get(0);
+//		System.out.println("RECEIVED UNDELYING: " + under1.toString());
 
 		Date expDate = new Date();
 		expDate.setTime(1000000);
-		Promise<Investment> stockPromise = getBroker().getBest(under1,
-				InvType.STOCK);
+		Promise<Investment> stockPromise = getBroker().getBest(under1, InvType.stock);
 //		Promise<Investment> call1Promise = getBroker().getBest(under1,
 //				InvType.CALL, expDate, 405.00);
 //		Promise<Investment> call2Promise = getBroker().getBest(under1,
@@ -64,8 +65,8 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 //				InvType.PUT, expDate, 385.00);
 
 		// find suitable investment
-		Promise<Double> stockPricePromise = getBroker().getPriceAsk(
-				stockPromise);
+		Promise<Double> stockPricePromise = getBroker().getPriceAsk(stockPromise);
+		
 //		Promise<Double> call1PricePromise = getBroker().getPriceAsk(
 //				call1Promise);
 //		Promise<Double> call2PricePromise = getBroker().getPriceAsk(
@@ -127,7 +128,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 			trades[i] = tradePromises[i].get();
 		}
 		Transaction tx = new Transaction(trades);
-		getBroker().addTrade(tx);
+		getBroker().enterTransaction(tx);
 		Promise<List<Trade>> tradesPromise = getBroker().getTrades();
 		processTrades(tradesPromise);
 	}

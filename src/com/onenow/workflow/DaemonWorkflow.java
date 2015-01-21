@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.WorkflowWorker;
+import com.onenow.investor.PurchaseWorkflowImpl;
 import com.onenow.summit.ConstantsSummit;
 import com.onenow.workflow.ConstantsWorkflow;
 

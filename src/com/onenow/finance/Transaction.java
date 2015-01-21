@@ -6,6 +6,8 @@ public class Transaction {
 		
 	private Counterparty counterParty; // Cloud or Brokerage
 	private List<Trade> trades = new ArrayList<Trade>();
+	
+	private Greeks greeks;
 
 	
 	// CONSTRUCTOR
@@ -51,8 +53,8 @@ public class Transaction {
 		Double prob=0.0;
 		
 		for(Trade trade:getTrades()) {
-			if(	trade.getInvestment().getInvType().equals(InvType.CALL) || 
-				trade.getInvestment().getInvType().equals(InvType.PUT)) {  
+			if(	trade.getInvestment().getInvType().equals(InvType.call) || 
+				trade.getInvestment().getInvType().equals(InvType.put)) {  
 					if(trade.getTradeType().equals(TradeType.SELL)) {
 					
 						Investment inv = trade.getInvestment();
@@ -82,15 +84,15 @@ public class Transaction {
 	
 	// PRIVATE
 	private Double getCallSpread() { // assumes up to two call
-		Double sellCallStrike=getStrike(InvType.CALL, TradeType.SELL);
-		Double buyCallStrike=getStrike(InvType.CALL, TradeType.BUY);
+		Double sellCallStrike=getStrike(InvType.call, TradeType.SELL);
+		Double buyCallStrike=getStrike(InvType.call, TradeType.BUY);
 		Double spread = buyCallStrike - sellCallStrike;
 		return spread;
 	}
 
 	private Double getPutSpread() { // assumes up to two puts
-		Double sellPutStrike=getStrike(InvType.PUT, TradeType.SELL);
-		Double buyPutStrike=getStrike(InvType.PUT, TradeType.BUY);
+		Double sellPutStrike=getStrike(InvType.put, TradeType.SELL);
+		Double buyPutStrike=getStrike(InvType.put, TradeType.BUY);
 		Double spread = sellPutStrike - buyPutStrike;
 		return spread;
 	}
@@ -110,7 +112,7 @@ public class Transaction {
 	private Integer getCallContracts() { 
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(InvType.CALL)) {
+			if(trade.getInvestment().getInvType().equals(InvType.call)) {
 				contracts=trade.getQuantity();
 			}
 		}
@@ -120,7 +122,7 @@ public class Transaction {
 	private Integer getPutContracts() {
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(InvType.PUT)) {
+			if(trade.getInvestment().getInvType().equals(InvType.put)) {
 				contracts=trade.getQuantity();
 			}			
 		}		

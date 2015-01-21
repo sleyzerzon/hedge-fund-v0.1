@@ -1,4 +1,4 @@
-package com.onenow.workflow;
+package com.onenow.investor;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Execute;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Workflow;
