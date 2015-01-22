@@ -1,5 +1,6 @@
 package com.onenow.database;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,15 +16,17 @@ import com.sforce.ws.ConnectionException;
 
 public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 
-	private static DatabaseSystemSForce SForce;
+	private static DatabaseSystemSForce SForce = new DatabaseSystemSForce();
 
+	// CONSTRUCTOR
 	public DatabaseSystemActivityImpl() {
-		setSForce(new DatabaseSystemSForce());
+		
 	}
 	
+	// PUBLIC
 	@Override
 	public List<Reduction__c> getReductions() throws ConnectionException {
-		return(getSForce().getReductions());		
+		return getSForce().getReductions();		
 	}
 
 	@Override
@@ -47,7 +50,9 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	}
 	
 	@Override
-	public Market__c[] newMarket(cloud, instanceType, operatingSystem, pricingModel, reduction, region, zone) {
+	public Market__c[] newMarket(	String cloud, String instanceType, String operatingSystem, 
+									String pricingModel, String reduction, String region, String zone) {
+		
 		return getSForce().newMarket(cloud, instanceType, operatingSystem, pricingModel, reduction, region, zone);
 	}
 
@@ -78,9 +83,53 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 		
 	@Override
 	public Log__c[] newLog(String source, String kind, String desc) {
-		return(getSForce().newLog());
+		return(getSForce().newLog(source, kind, desc));
 	}
 
+	// PRIVATE
+	
+	
+	// PRINT
+	public String toString() {
+		List<Reduction__c> reds =  new ArrayList<Reduction__c>();
+		List<Market__c> markets = new ArrayList<Market__c>();
+		List<Day__c> days = new ArrayList<Day__c>(); 
+		List<Cloud__c> clouds = new ArrayList<Cloud__c>();
+		List<Account> accounts = new ArrayList<Account>();
+		System__c tsdb = new System__c();
+		System__c pricing = new System__c();				
+		try {
+			reds =  getReductions();
+			markets = getMarkets();
+			days = getDays(); 
+			clouds = getClouds();
+			accounts = getAccounts();
+			tsdb = getSystemTSDB();
+			pricing = getSystemPricing();			
+		} catch (ConnectionException e) {
+			e.printStackTrace();
+		}
+		String s = "";
+//		try {
+//			s = s + "REDUCTIONS: " + "\n" + reds.get(0).getName() + "\n";
+//			s = s + "Markets: " + "\n" + markets.get(0).getName() + "\n";
+//			s = s + "Days: " + "\n" + days.get(0).getName() + "\n";
+//			s = s + "Clouds: " + "\n" + clouds.get(0).getName() + "\n";
+//			s = s + "Accounts: " + "\n" + accounts.get(0).getName() + "\n";
+//			s = s + "TSDB: " + "\n" + tsdb.getName() + "\n";
+//			s = s + "Pricing: " + "\n" + pricing.getName() + "\n";
+//		} catch (IndexOutOfBoundsException e) {
+////			e.printStackTrace();			
+//		}
+//
+//		System.out.println(s);
+		return s;
+	}
+
+	
+	// TEST
+	
+	
 	// SET GET
 	private static DatabaseSystemSForce getSForce() {
 		return SForce;
@@ -89,15 +138,6 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	private void setSForce(DatabaseSystemSForce sforce) {
 		this.SForce = SForce;
 	}
-
-	@Override
-	public Market__c[] newMarket(String cloud, String instanceType,
-			String operatingSystem, String pricingModel, String reduction,
-			String region, String zone) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
 	
 

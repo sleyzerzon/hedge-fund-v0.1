@@ -25,8 +25,8 @@ import com.sforce.ws.ConnectorConfig;
 
 public class DatabaseSystemSForce implements DatabaseSystem {
 
-	private final static ConnectorConfig configAuth = new ConnectorConfig();
-	private final static ConnectorConfig configEnt = new ConnectorConfig();
+	private static final ConnectorConfig configAuth = new ConnectorConfig();
+	private static final ConnectorConfig configEnt = new ConnectorConfig();
 	private static EnterpriseConnection loginConnection;
 	private static EnterpriseConnection entConnection;
 	private static LoginResult loginResult;
@@ -37,13 +37,15 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			doConnect();
 		} catch (ConnectionException e) {
 			e.printStackTrace();
-		}
+			System.out.println("Connected to Salesforce! OOPS");
+		}		
 	}
 
 	// REDUCTIONS
 	public List<Reduction__c> getReductions() throws ConnectionException {
 		List<Reduction__c> reductions = new ArrayList<Reduction__c>();
-		QueryResult qResult = query("SELECT Name, Nickname__c, SLA_Mode__c, SLA_Target__c FROM Reduction__c");
+		QueryResult qResult = query("SELECT Name, Nickname__c, SLA_Mode__c, " + 
+									"SLA_Target__c FROM Reduction__c");
 		boolean done = false;
 		while (!done) {
 			SObject[] records = qResult.getRecords();
@@ -321,6 +323,18 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	// // TODO
 	// }
 
+	
+	// PRIVATE
+	
+	// PRINT
+	public String toString() {
+		String s = "";
+		return s;
+	}
+	
+	// TEST
+	
+	
 	// SET GET
 	private static EnterpriseConnection getLoginConnection() {
 		return loginConnection;

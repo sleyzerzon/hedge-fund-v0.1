@@ -27,12 +27,12 @@ public interface DatabaseSystemActivity {
 	public List<Day__c> getDays() throws ConnectionException;
 	public Day__c[] newDay(Date date, Double duration, int count, Double ondemandRate, Double spotRate, Double spent);
 	public List<Market__c> getMarkets() throws ConnectionException;
-	public Market__c[] newMarket(String cloud, String instanceType, String operatingSystem, String pricingModel, String reduction, String region, String zone);
 	public List<Cloud__c> getClouds() throws ConnectionException;
 	public System__c getSystemTSDB() throws ConnectionException;
 	public System__c getSystemSWF() throws ConnectionException;
 	public System__c getSystemPricing() throws ConnectionException;
 	public Log__c[] newLog(String source, String kind, String desc);	
 	public List<Account> getAccounts() throws ConnectionException;
-	
+	public Market__c[] newMarket(String cloud, String instanceType, String operatingSystem, 
+		   String pricingModel, String reduction, String region, String zone) throws ConnectionException;	
 }
