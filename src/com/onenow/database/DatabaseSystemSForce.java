@@ -52,7 +52,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				Reduction__c theRecord = (Reduction__c) records[i];
 				reductions.add(theRecord);
-				System.out.println("Found Reduction: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -84,7 +83,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				Day__c theRecord = (Day__c) records[i];
 				days.add(theRecord);
-				System.out.println("Found Day: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -121,7 +119,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				Market__c theRecord = (Market__c) records[i];
 				markets.add(theRecord);
-				System.out.println("Market Day: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -157,7 +154,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				Cloud__c theRecord = (Cloud__c) records[i];
 				clouds.add(theRecord);
-				System.out.println("Found: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -179,7 +175,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				Account theRecord = (Account) records[i];
 				accounts.add(theRecord);
-				System.out.println("Found Account: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -201,7 +196,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				System__c theRecord = (System__c) records[i];
 				sysConfigs.add(theRecord);
-				System.out.println("Found System: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -224,7 +218,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			for (int i = 0; i < records.length; ++i) {
 				Log__c theRecord = (Log__c) records[i];
 				logEntries.add(theRecord);
-				System.out.println("Found Log: " + theRecord.getName());
 			}
 			if (qResult.isDone()) {
 				done = true;
@@ -264,7 +257,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 
 	private QueryResult query(String query) throws ConnectionException {
 		QueryResult qResult = getEntConnection().query(query);
-		System.out.println("Number of objects: " + qResult.getSize());
 		return qResult;
 	}
 

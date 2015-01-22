@@ -87,6 +87,52 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	}
 
 	// PRIVATE
+	private String toStringReductions(List<Reduction__c> reds) {
+		String s="";
+		for(Reduction__c red:reds){
+			s = s + "Nickname " + red.getNickname__c() + ". " + 
+					"Mode " + red.getSLA_Mode__c() + ". " + 
+					"Target " + red.getSLA_Target__c() + "\n";
+		}
+		return s;
+	}
+	private String toStringMarkets(List<Market__c> markets) {
+		String s="";
+		for(Market__c market:markets) {
+			s = s + "Name " + market.getName() + ". " + 
+					"Region " + market.getRegion__c() + ". " + 
+					"Zone " + market.getZone__c() + "\n";
+		}
+		return s;
+	}
+	private String toStringDays(List<Day__c> days) {
+		String s="";
+		for(Day__c day:days) {
+			s = s + "Spent $" + day.getSpent__c() + ". " + 
+					"Finished #" + day.getFinished_Count_d_Count__c() + "\n";
+		}
+		return s;		
+	}
+	private String toStringClouds(List<Cloud__c> clouds) {
+		String s="";
+		for(Cloud__c cloud:clouds) {
+			s = s + "Nickname " + cloud.getNickname__c() + ". " +
+					"Cloud " + cloud.getAccess_Key__c() + "\n";
+		}
+		return s;				
+	}
+	private String toStringAccounts(List<Account> accounts) {
+		String s="";
+		for(Account account:accounts) {
+			s = s + "Name "+ account.getName() + "\n";
+		}
+		return s;						
+	}
+	private String toStringSystem(System__c sys) {
+		String s="";
+		s = s + "Host " + sys.getHost__c();
+		return s;								
+	}
 	
 	
 	// PRINT
@@ -110,19 +156,14 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 			e.printStackTrace();
 		}
 		String s = "";
-//		try {
-//			s = s + "REDUCTIONS: " + "\n" + reds.get(0).getName() + "\n";
-//			s = s + "Markets: " + "\n" + markets.get(0).getName() + "\n";
-//			s = s + "Days: " + "\n" + days.get(0).getName() + "\n";
-//			s = s + "Clouds: " + "\n" + clouds.get(0).getName() + "\n";
-//			s = s + "Accounts: " + "\n" + accounts.get(0).getName() + "\n";
-//			s = s + "TSDB: " + "\n" + tsdb.getName() + "\n";
-//			s = s + "Pricing: " + "\n" + pricing.getName() + "\n";
-//		} catch (IndexOutOfBoundsException e) {
-////			e.printStackTrace();			
-//		}
-//
-//		System.out.println(s);
+		s = s + "Reductions: " + "\n" + toStringReductions(reds);
+		s = s + "Markets: " + "\n" + toStringMarkets(markets);
+		s = s + "Days: " + "\n" + toStringDays(days);
+		s = s + "Clouds: " + "\n" + toStringClouds(clouds);
+		s = s + "Accounts: " + "\n" + toStringAccounts(accounts);
+		s = s + "TSDB: " + "\n" + toStringSystem(tsdb);
+		s = s + "Pricing: " + "\n" + toStringSystem(pricing);
+		System.out.println(s);
 		return s;
 	}
 

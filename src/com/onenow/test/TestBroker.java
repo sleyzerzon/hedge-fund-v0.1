@@ -23,7 +23,7 @@ public class TestBroker {
 		boolean success = testBuy();
 		
 		if(success==true) {
-			System.out.println("\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestBroker");
+			System.out.println("NO ERRORS FOUND==AT-ALL==: " + "TestBroker");
 		}
 
 		return success;
