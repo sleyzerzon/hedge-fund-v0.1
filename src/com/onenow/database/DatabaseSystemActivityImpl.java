@@ -40,7 +40,7 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	}
 	
 	@Override
-	public Day__c[] newDay(Date date, Double duration, int count, Double ondemandRate, Double spotRate, Double spent) {
+	public Day__c[] newDay(Date date, Double duration, int count, Double ondemandRate, Double spotRate, Double spent) throws ConnectionException {
 		return(getSForce().newDay(date, duration, count, ondemandRate, spotRate, spent));
 	}
 	
@@ -51,7 +51,7 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	
 	@Override
 	public Market__c[] newMarket(	String cloud, String instanceType, String operatingSystem, 
-									String pricingModel, String reduction, String region, String zone) {
+									String pricingModel, String reduction, String region, String zone) throws ConnectionException {
 		
 		return getSForce().newMarket(cloud, instanceType, operatingSystem, pricingModel, reduction, region, zone);
 	}
@@ -66,31 +66,36 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 		return(getSForce().getAccounts());		
 	}
 
-	@Override
-	public System__c getSystemTSDB() throws ConnectionException {
-		return(getSForce().getSystem("TSDB"));  // TODO: select the right one
-	}
-
-	@Override
-	public System__c getSystemSWF() throws ConnectionException {
-		return(getSForce().getSystem("SWF"));	// TODO: select the right one
-	}
+	@Override 
+	public List<System__c> getSystem() throws ConnectionException {
+	return(getSForce().getSystem());  // TODO: select the right one
+}
 	
-	@Override
-	public System__c getSystemPricing() throws ConnectionException {
-		return(getSForce().getSystem("Pricing"));	// TODO: select the right one
-	}
+//	@Override
+//	public List<System__c> getSystemTSDB() throws ConnectionException {
+//		return(getSForce().getSystem("TSDB"));  // TODO: select the right one
+//	}
+//
+//	@Override
+//	public System__c getSystemSWF() throws ConnectionException {
+//		return(getSForce().getSystem("SWF"));	// TODO: select the right one
+//	}
+//	
+//	@Override
+//	public System__c getSystemPricing() throws ConnectionException {
+//		return(getSForce().getSystem("Pricing"));	// TODO: select the right one
+//	}
 		
 	@Override
-	public Log__c[] newLog(String source, String kind, String desc) {
-		return(getSForce().newLog(source, kind, desc));
+	public Log__c[] newLog(String source, String desc) throws ConnectionException {
+		return(getSForce().newLog(source, desc));
 	}
 
 	// PRIVATE
 	private String toStringReductions(List<Reduction__c> reds) {
 		String s="";
 		for(Reduction__c red:reds){
-			s = s + "Nickname " + red.getNickname__c() + ". " + 
+			s = s + "Nick " + red.getNickname__c() + ". " + 
 					"Mode " + red.getSLA_Mode__c() + ". " + 
 					"Target " + red.getSLA_Target__c() + "\n";
 		}
@@ -101,14 +106,18 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 		for(Market__c market:markets) {
 			s = s + "Name " + market.getName() + ". " + 
 					"Region " + market.getRegion__c() + ". " + 
-					"Zone " + market.getZone__c() + "\n";
+					"Zone " + market.getZone__c() + ". " +
+					"Instance " + market.getInstance_Type__c() + ". " +
+					"OS " + market.getOperating_System__c() + ". " + 
+					"Pricing " + market.getPricing_Model__c() + "\n";
 		}
 		return s;
 	}
 	private String toStringDays(List<Day__c> days) {
 		String s="";
 		for(Day__c day:days) {
-			s = s + "Spent $" + day.getSpent__c() + ". " + 
+			s = s + "Name " + day.getName() + ". " +
+					"Spent $" + day.getSpent__c() + ". " + 
 					"Finished #" + day.getFinished_Count_d_Count__c() + "\n";
 		}
 		return s;		
@@ -116,8 +125,9 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 	private String toStringClouds(List<Cloud__c> clouds) {
 		String s="";
 		for(Cloud__c cloud:clouds) {
-			s = s + "Nickname " + cloud.getNickname__c() + ". " +
-					"Cloud " + cloud.getAccess_Key__c() + "\n";
+			s = s + "Nick " + cloud.getNickname__c() + ". " +
+					"Access Key " + cloud.getAccess_Key__c() + ". " +
+					"Secret Key " + cloud.getSecret_Key__c() + "\n" ;
 		}
 		return s;				
 	}
@@ -128,9 +138,14 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 		}
 		return s;						
 	}
-	private String toStringSystem(System__c sys) {
+	private String toStringSystem(List<System__c> systems) {
 		String s="";
-		s = s + "Host " + sys.getHost__c();
+		for(System__c sys:systems) {
+			s = s + "Host " + sys.getHost__c() + ". " +
+					"Port " + sys.getPort__c() + ". " +
+					"User " + sys.getUser__c() + ". " +
+					"Pass " + sys.getPassword__c() + "\n";
+		}
 		return s;								
 	}
 	
@@ -142,16 +157,18 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 		List<Day__c> days = new ArrayList<Day__c>(); 
 		List<Cloud__c> clouds = new ArrayList<Cloud__c>();
 		List<Account> accounts = new ArrayList<Account>();
-		System__c tsdb = new System__c();
-		System__c pricing = new System__c();				
+		List<System__c> systems = new ArrayList<System__c>();
+//		System__c tsdb = new System__c();
+//		System__c pricing = new System__c();				
 		try {
 			reds =  getReductions();
 			markets = getMarkets();
 			days = getDays(); 
 			clouds = getClouds();
 			accounts = getAccounts();
-			tsdb = getSystemTSDB();
-			pricing = getSystemPricing();			
+			systems = getSystem();
+//			tsdb = getSystemTSDB();
+//			pricing = getSystemPricing();			
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}
@@ -161,8 +178,9 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 		s = s + "Days: " + "\n" + toStringDays(days);
 		s = s + "Clouds: " + "\n" + toStringClouds(clouds);
 		s = s + "Accounts: " + "\n" + toStringAccounts(accounts);
-		s = s + "TSDB: " + "\n" + toStringSystem(tsdb);
-		s = s + "Pricing: " + "\n" + toStringSystem(pricing);
+		s = s + "Systems: " + "\n" + toStringSystem(systems);
+//		s = s + "TSDB: " + "\n" + toStringSystem(tsdb);
+//		s = s + "Pricing: " + "\n" + toStringSystem(pricing);
 		System.out.println(s);
 		return s;
 	}
@@ -178,8 +196,6 @@ public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 
 	private void setSForce(DatabaseSystemSForce sforce) {
 		this.SForce = SForce;
-	}
-	
-	
+	}	
 
 }

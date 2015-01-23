@@ -25,14 +25,15 @@ public interface DatabaseSystemActivity {
 	public List<Reduction__c> getReductions() throws ConnectionException;
 	public Reduction__c newRedution(String name, String mode, Double target) throws ConnectionException;
 	public List<Day__c> getDays() throws ConnectionException;
-	public Day__c[] newDay(Date date, Double duration, int count, Double ondemandRate, Double spotRate, Double spent);
+	public Day__c[] newDay(Date date, Double duration, int count, Double ondemandRate, Double spotRate, Double spent) throws ConnectionException;
 	public List<Market__c> getMarkets() throws ConnectionException;
 	public List<Cloud__c> getClouds() throws ConnectionException;
-	public System__c getSystemTSDB() throws ConnectionException;
-	public System__c getSystemSWF() throws ConnectionException;
-	public System__c getSystemPricing() throws ConnectionException;
-	public Log__c[] newLog(String source, String kind, String desc);	
+	public Log__c[] newLog(String source, String desc) throws ConnectionException;	
 	public List<Account> getAccounts() throws ConnectionException;
 	public Market__c[] newMarket(String cloud, String instanceType, String operatingSystem, 
-		   String pricingModel, String reduction, String region, String zone) throws ConnectionException;	
+		   String pricingModel, String reduction, String region, String zone) throws ConnectionException;
+	public List<System__c> getSystem() throws ConnectionException;
+//	public System__c getSystemTSDB() throws ConnectionException;
+//	public System__c getSystemSWF() throws ConnectionException;
+//	public System__c getSystemPricing() throws ConnectionException;
 }

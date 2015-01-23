@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.onenow.broker.BrokerActivityImpl;
+import com.onenow.database.DatabaseSystemActivityImpl;
 import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
 import com.onenow.finance.Portfolio;
@@ -11,19 +12,37 @@ import com.onenow.finance.Trade;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
+import com.sforce.ws.ConnectionException;
 
 public class TestBroker {
+
+	private DatabaseSystemActivityImpl logDB;
 	
+	// CONSTRUCTOR
 	public TestBroker() {
 		
 	}
+	
+	public TestBroker (DatabaseSystemActivityImpl logDB) {
+		setLogDB(logDB);
+	}
 
+	// PUBLIC
 	public boolean test() {
 		
 		boolean success = testBuy();
 		
+		String s="";
 		if(success==true) {
-			System.out.println("NO ERRORS FOUND==AT-ALL==: " + "TestBroker");
+			s = s + "NO ERRORS FOUND==AT-ALL==: " + "TestBroker";
+		} else {
+			s = s + "ERROR " + "TestBroker";
+		}
+		System.out.println(s);
+		try {
+			getLogDB().newLog("TestBroker", s);
+		} catch (ConnectionException e) {
+			e.printStackTrace();
 		}
 
 		return success;
@@ -90,5 +109,13 @@ public class TestBroker {
 		}
 		
 		return true;	
+	}
+
+	private DatabaseSystemActivityImpl getLogDB() {
+		return logDB;
+	}
+
+	private void setLogDB(DatabaseSystemActivityImpl logDB) {
+		this.logDB = logDB;
 	}
 }

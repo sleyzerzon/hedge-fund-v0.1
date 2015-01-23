@@ -2,6 +2,7 @@ package com.onenow.test;
 
 import java.util.Date;
 
+import com.onenow.database.DatabaseSystemActivityImpl;
 import com.onenow.finance.InvType;
 import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.MarketAnalytics;
@@ -12,6 +13,7 @@ import com.onenow.finance.StrategyPutSpread;
 import com.onenow.finance.Trade;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
+import com.sforce.ws.ConnectionException;
 
 public class TestFinance {
 
@@ -24,22 +26,37 @@ public class TestFinance {
 	private Trade putSell = getPutSell(under, quantity, exp);
 	private Trade putBuy = getPutBuy(under, quantity, exp);	
 
+	private DatabaseSystemActivityImpl logDB;
 
 	public TestFinance() {
 
 	}
 	
+	public TestFinance(DatabaseSystemActivityImpl logDB) {
+		setLogDB(logDB);
+	}
+
 	public boolean test() {
 
 		boolean success = 	testIronCondor(callBuy, callSell, putBuy, putSell) &&
 							testCallSpread(callBuy, callSell) &&
 							testPutSpread(putBuy, putSell) && 
 							testMarketAnalytics();
-		
+		String s = "";
 		if(success==true) {
+			s = s + "\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestFinance";
 			System.out.println("\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestFinance");
+		} else {
+			s = s + "\n" + "ERROR " + "TestFinance";
 		}
-
+		System.out.println(s);
+		try {
+			getLogDB().newLog("TestFinance", s);
+		} catch (ConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Sequence seq = new Sequence();
 //		StrategyIronCondor condor = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
 //		seq.getStrategies().add(condor);
@@ -117,6 +134,14 @@ public class TestFinance {
 		Trade callBuy = new Trade(new InvestmentOption(under, InvType.call, exp, callBuyStrike), 
 				TradeType.BUY, quantity, callBuyPrice);
 		return callBuy;
+	}
+
+	private DatabaseSystemActivityImpl getLogDB() {
+		return logDB;
+	}
+
+	private void setLogDB(DatabaseSystemActivityImpl logDB) {
+		this.logDB = logDB;
 	}
 
 	

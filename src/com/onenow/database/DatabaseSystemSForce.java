@@ -63,20 +63,27 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		return reductions;
 	}
 
-	public Reduction__c newRedution(String name, String mode, Double target) {
+	public Reduction__c newRedution(String name, String mode, Double target) throws ConnectionException {
 		Reduction__c red = new Reduction__c();
 		red.setName(name);
 		red.setSLA_Mode__c(mode);
 		red.setSLA_Target__c(target);
-		// SObject[] object = new SObject[] { red };
-		// return object;
+		
+		// write it
+		SObject[] obj = new SObject[1];
+		obj[0] = red;
+		create(obj);
+		
 		return red;
 	}
 
 	// DAYS
 	public List<Day__c> getDays() throws ConnectionException {
 		List<Day__c> days = new ArrayList<Day__c>();
-		QueryResult qResult = query("SELECT Name FROM Day__c");
+		QueryResult qResult = query("SELECT Name, Date__c, Duration_hs__c, "
+				+ "Finished_Count_d_Count__c, Rate_On_Demand_Market__c, "
+				+ "Rate_Spot__c, Spent__c FROM Day__c");
+		
 		boolean done = false;
 		while (!done) {
 			SObject[] records = qResult.getRecords();
@@ -95,7 +102,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	}
 
 	public Day__c[] newDay(Date date, Double duration, int count,
-			Double ondemandRate, Double spotRate, Double spent) {
+			Double ondemandRate, Double spotRate, Double spent) throws ConnectionException {
 		Day__c day = new Day__c();
 		day.setDate__c(new GregorianCalendar(date.getYear(), date.getMonth(),
 				date.getDay()));
@@ -105,7 +112,12 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		day.setRate_On_Demand_Market__c(ondemandRate);
 		day.setRate_Spot__c(spotRate);
 		day.setSpent__c(spent);
-		// ?
+		
+		// write it
+		SObject[] obj = new SObject[1];
+		obj[0] = day;
+		create(obj);
+
 		return new Day__c[] { day };
 	}
 
@@ -132,7 +144,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 
 	public Market__c[] newMarket(String cloud, String instanceType,
 			String operatingSystem, String pricingModel, String reduction,
-			String region, String zone) {
+			String region, String zone) throws ConnectionException {
 		Market__c market = new Market__c();
 		market.setCloud__c(cloud);
 		market.setInstance_Type__c(instanceType);
@@ -141,6 +153,12 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		market.setReduction__c(reduction);
 		market.setRegion__c(region);
 		market.setZone__c(zone);
+		
+		// write it
+		SObject[] obj = new SObject[1];
+		obj[0] = market;
+		create(obj);
+
 		return new Market__c[] { market };
 	}
 
@@ -187,7 +205,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	}
 
 	// SYSTEM
-	public System__c getSystem(String kind) throws ConnectionException {
+	public List<System__c> getSystem() throws ConnectionException {
 		List<System__c> sysConfigs = new ArrayList<System__c>();
 		QueryResult qResult = query("SELECT Name, Nickname__c, Kind__c, Enabled__c, Host__c, Port__c, User__c, Password__c, Token__c FROM System__c");
 		boolean done = false;
@@ -204,8 +222,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 						qResult.getQueryLocator());
 			}
 		}
-		return sysConfigs.get(0); // TODO: instead, get one of the Set for Kind,
-									// that is Enabled
+		return sysConfigs;
 	}
 
 	// LOG
@@ -229,13 +246,20 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 		return logEntries;
 	}
 
-	public Log__c[] newLog(String source, String kind, String desc) {
+	public Log__c[] newLog(String source, String desc) throws ConnectionException {
+		// create it 
 		Log__c log = new Log__c();
 		log.setSource__c(source);
-		log.setKind__c(kind);
 		log.setDescription__c(desc);
+		
+		// write it
+		SObject[] obj = new SObject[1];
+		obj[0] = log;
+		create(obj);
+		
 		return new Log__c[] { log };
 	}
+	
 
 	// PRIVATE
 	private static void doLogin() throws ConnectionException {
@@ -263,7 +287,7 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	private void create(SObject[] objects) throws ConnectionException {
 		SaveResult[] results = getEntConnection().create(objects);
 		for (SaveResult result : results) {
-			// System.out.println("Create: " + result.getSuccess());
+			System.out.println("Created: " + result.getSuccess());
 		}
 	}
 
@@ -278,42 +302,6 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 			}
 		}
 	}
-
-	// // Use: create(red1);
-	// @Override
-	// private void create(SObject[] objects) throws ConnectionException {
-	// getSForce().createSForce(objects);
-	// }
-	//
-	//
-	// @Override
-	// // Use: describeClass("Reduction__c");
-	// private void describeClass(String table) throws ConnectionException {
-	// getSForce().describeClassSForce(table);
-	// }
-	//
-	// // PRIVATE
-	// private void init() throws ConnectionException {
-	// setSForce(new DatabaseSystemSForce());
-	// }
-	//
-	// // Use: query("SELECT FirstName, LastName FROM Contact");
-	// private static QueryResult query(String query) throws ConnectionException
-	// {
-	// return getSForce().query(query);
-	// }
-	//
-	// private static void retrieve() {
-	// // TODO
-	// }
-	//
-	// private static void update() {
-	// // TODO
-	// }
-	//
-	// private static void upsert() {
-	// // TODO
-	// }
 
 	
 	// PRIVATE
