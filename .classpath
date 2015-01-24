@@ -6,6 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="ibtsrc"/>
 	<classpathentry kind="src" path="swfgen">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -32,6 +33,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/twsapi_macunix.971.01.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
