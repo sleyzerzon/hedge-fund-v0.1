@@ -1,6 +1,6 @@
 package com.onenow.finance;
 
-public class InvestmentReserved {
+public class InvestmentReserved extends Investment {
 
 	private InvTerm term;
 	
@@ -8,7 +8,7 @@ public class InvestmentReserved {
 		
 	}
 
-	private InvTerm getTerm() {
+	public InvTerm getTerm() {
 		return term;
 	}
 

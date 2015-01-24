@@ -90,15 +90,11 @@ public class Portfolio {
 	public List<Investment> getInvestments(Underlying under, InvType type, InvTerm term) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type)) {
-			// TODO: get only those with term
-//			if (investment instanceof InvestmentReserved) { }
-//				InvestmentReserved invRes= (InvestmentReserved) investment;
-//				if(invRes.get)
-//			}
-//					
-//					getTicker().equals(investment.getUnder().getTicker())) {
-//				foundInvs.add(investment);
-//			}
+			if (investment instanceof InvestmentReserved) { }
+				InvestmentReserved invRes= (InvestmentReserved) investment;
+				if(invRes.getTerm().equals(term)) {
+					foundInvs.add(investment);					
+			}
 		}	
 		return foundInvs;
 	}
