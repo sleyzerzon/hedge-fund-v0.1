@@ -160,9 +160,37 @@ public class Strategy {
 				"Buying Power (net margin after credit): $" + getNetMargin().intValue() + "\n";
 		s = s + "Maximum Profit: " + getMaxROI().intValue() + "%" + ". " + 
 				"Risk/Reward: " + getRiskReward().intValue() + "%" + "\n";
+		s = s + "Break even price: " + getBreakEven() + "\n";
 		s = s + checkpointValueToString();
 		s = s + bidOrderToString();
 		return(s);
+	}
+
+	private String getBreakEven() {
+		List<Double> breakEven = new ArrayList<Double>();
+		Collections.sort(getCheckpoints());
+		String s="";
+		for(Double price=getCheckpoints().get(0); 
+			price<getCheckpoints().get(getCheckpoints().size()-1); 
+			price=price+0.1) {
+			Double val = getNetValue(price);
+			if(Math.abs(val)<10) { 
+				breakEven.add(price); // multiple for same b/e
+			}
+		}	
+		System.out.println("ALL " + breakEven.toString());
+		for(int i=0; i<breakEven.size(); i++) { // reduce multiple to 1
+			Double be = breakEven.get(i);
+			if(i==0) {
+				s = s + "$" + be.intValue();
+			}
+			if(i>0) {
+				if(!((be-2.0)<breakEven.get(i-1))) {
+					s = s + ", $" + be.intValue();				
+				}
+			}
+		}
+		return s;
 	}
 
 	private String checkpointValueToString() {
