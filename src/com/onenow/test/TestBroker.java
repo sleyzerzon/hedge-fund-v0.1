@@ -96,6 +96,14 @@ public class TestBroker {
 			System.out.println("ERROR max loss " + ic.getMaxLoss());
 			return false;
 		} 
+		if(!ic.getBoughtNetPremium().equals(-37.5)) {
+			System.out.println("ERROR bought net " + ic.getBoughtNetPremium());
+			return false;
+		} 
+		if(!ic.getSoldNetPremium().equals(247.5)) {
+			System.out.println("ERROR sold net " + ic.getSoldNetPremium());
+			return false;
+		} 
 
 		return true;
 	}

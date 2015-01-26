@@ -177,7 +177,7 @@ public class StrategyOptions extends Strategy {
 		s = s + "Net Call (t0): $" + getCallNetPremium().intValue() + ". " +
 				"Net Put (t0): $" + getPutNetPremium().intValue() + "\n";
 		s = s +	"Net Bought (t0): $" + getBoughtNetPremium().intValue() + ". " +
-				"Net Sold (t0): $" + getSoldNetPremium().intValue();
+				"Net Sold (t0): $" + getSoldNetPremium().intValue() + "\n";
 		
 		s = s + "BASIC RULES" + "\n";
 		s = s + "1. income strategy <" + isIncomeStrategy() + ">\n";

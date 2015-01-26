@@ -178,7 +178,6 @@ public class Strategy {
 				breakEven.add(price); // multiple for same b/e
 			}
 		}	
-		System.out.println("ALL " + breakEven.toString());
 		for(int i=0; i<breakEven.size(); i++) { // reduce multiple to 1
 			Double be = breakEven.get(i);
 			if(i==0) {
