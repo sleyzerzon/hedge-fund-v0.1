@@ -134,10 +134,13 @@ public class Strategy {
 	}
 
 	private void setStrikeVariants(Double strike) { // explore Net around strikes
-		Double buffer=0.025;
+		Double bufferPercent=0.025;
+		Double bufferAmount=2.0;
 		addNewCheckpoint(strike);
-		addNewCheckpoint(strike*(1+buffer));
-		addNewCheckpoint(strike*(1-buffer));
+		addNewCheckpoint(strike+bufferAmount);
+		addNewCheckpoint(strike-bufferAmount);
+		addNewCheckpoint(strike*(1+bufferPercent));
+		addNewCheckpoint(strike*(1-bufferPercent));
 	}
 	
 	private void addNewCheckpoint(Double num) {

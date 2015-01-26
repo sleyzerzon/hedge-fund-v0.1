@@ -23,6 +23,7 @@ public interface BrokerActivity extends Broker {
 	public List<Underlying> getUnderlying();
 	public Portfolio getMarketPortfolio();
 	public Portfolio getMyPortfolio();
+	public Double getBestBid(Investment inv, Double agression);
 	public Double getPrice(Investment inv, TradeType type);
 	public List<Trade> getTrades();
 	public void enterTransaction(Transaction trans);

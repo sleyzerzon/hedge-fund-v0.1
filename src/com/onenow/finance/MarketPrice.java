@@ -17,23 +17,45 @@ public class MarketPrice {
 		getPrices().put(getLookupKey(investment, TradeType.SELL), askPrice);
 	}
 
-	public Double getPrice(Investment investment, TradeType type) {
-		String key = getLookupKey(investment, type);
-		Double price = (Double) (getPrices().get(key)); 
+	public void setPrice(Investment investment, Double lastPrice) {
+		String key = getLookupKey(investment, TradeType.LAST);
+		getPrices().put(key, lastPrice);
+	}
+
+	public Double getPrice(Investment investment, TradeType tradeType) {
+		String key = getLookupKey(investment, tradeType);
+		Double price=0.0;
+		try {
+			price = (Double) (getPrices().get(key));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 		return price;
 	}
 
-	private String getLookupKey(Investment investment, TradeType type) {
+	private String getLookupKey(Investment investment, TradeType tradeType) {
 		Underlying under = investment.getUnder();
-		String lookup = under.getTicker() + investment.getInvType();		
+		String lookup = under.getTicker() + "-" + 
+		                investment.getInvType() + "-" +
+		                tradeType;		
 		if (investment instanceof InvestmentOption) {
-			Date exp = (Date) ((InvestmentOption) investment).getExpirationDate();
 			Double strike = ((InvestmentOption) investment).getStrikePrice();
-			lookup = lookup + exp + strike; 
+			Date exp = (Date) ((InvestmentOption) investment).getExpirationDate();
+			lookup = lookup + "-" + strike + "-" + exp; 
 		}
 		return (lookup);
 	}
 
+	// PRINT
+	public String toString() {
+		String s="";
+		s = prices.toString();
+		return s;
+	}
+	
+	// TEST
+	
+	// SET GET
 	public HashMap getPrices() {
 		return prices;
 	}

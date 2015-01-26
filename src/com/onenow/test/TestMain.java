@@ -2,7 +2,7 @@ package com.onenow.test;
 
 import com.onenow.database.DatabaseSystemActivityImpl;
 
-public class Test {
+public class TestMain {
 
 	public static void main(String[] args) {
 

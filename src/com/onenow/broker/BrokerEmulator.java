@@ -7,6 +7,7 @@ import java.util.List;
 import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
 import com.onenow.finance.InvestmentOption;
+import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketAnalytics;
 import com.onenow.finance.MarketPrice;
@@ -34,8 +35,8 @@ public class BrokerEmulator implements Broker {
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());
 		
-		setUnderlying();
-		setInvestments(); 
+		initMarket("aapl");
+		initExocet("spx");
 	}
 	
 	@Override
@@ -61,54 +62,59 @@ public class BrokerEmulator implements Broker {
 
 	@Override
 	public Double getPrice(Investment inv, TradeType type) {
-		return getMarketPrices().getPrice(inv, type);
+		Double price=getMarketPrices().getPrice(inv, type);
+		return price;
 	}
 
-	// PRIVATE
-	private void setUnderlying() {
-		getUnderList().add(new Underlying("aapl"));
-//		getUnderList().add(new Underlying("intc"));
-//		getUnderList().add(new Underlying("rus"));
-//		getUnderList().add(new Underlying("amzn"));		
-	}
-	
-	private void setInvestments() {
-		Date expDate = new Date();
-		expDate.setTime(1000000);
-		for(Underlying under:getUnderlying()){
-			initMarket(under);
-		}		
-	}
-	
-	private static void initMarket(Underlying under) {
-
+	private static void initMarket(String name) {
+		Underlying under = new Underlying(name);
 		// create the investments
-		Date expDate = new Date();
-		expDate.setTime(1000000);
+		Date expDate = new Date(1000000);
 		Investment stock = new InvestmentStock(under);
 		Investment call1 = new InvestmentOption(under, InvType.call, expDate, 405.00);
 		Investment call2 = new InvestmentOption(under, InvType.call, expDate, 400.00);
 		Investment put1 = new InvestmentOption(under, InvType.put, expDate, 390.00);
 		Investment put2 = new InvestmentOption(under, InvType.put, expDate, 385.00);		
-
 		// set their prices
 		getMarketPrices().setPrice(stock, 396.00, 395.00);
 		getMarketPrices().setPrice(call1, 7.41, 7.40);
 		getMarketPrices().setPrice(call2, 8.85, 8.84);
 		getMarketPrices().setPrice(put1, 9.50, 9.49);
 		getMarketPrices().setPrice(put2, 8.33, 8.32);
-		
 		// create trades based on market price
 		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPrice(stock, TradeType.BUY));
 		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY));
 		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY));
 		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY));
 		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY));
-		
+		// transact it
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
 		marketPortfolio.enterTransaction(trans);
-		
-			
+	}
+	private static void initExocet(String name) {
+		Underlying under = new Underlying(name);
+		// create the investments
+		Date expDate = new Date(1000000);
+		Investment index = new InvestmentIndex(under);
+		Investment call1 = new InvestmentOption(under, InvType.call, expDate, 2060.00);
+		Investment call2 = new InvestmentOption(under, InvType.call, expDate, 2055.00);
+		Investment put1 = new InvestmentOption(under, InvType.put, expDate, 2050.00);
+		Investment put2 = new InvestmentOption(under, InvType.put, expDate, 2045.00);		
+		// set their prices
+		getMarketPrices().setPrice(index, 2051.82);
+		getMarketPrices().setPrice(call1, 0.05, 0.35);
+		getMarketPrices().setPrice(call2, 0.50, 1.65);
+		getMarketPrices().setPrice(put1, 1.10, 1.70);
+		getMarketPrices().setPrice(put2, 0.15, 0.20);
+		// create trades based on market price
+		Trade stockTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPrice(index, TradeType.LAST));
+		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY));
+		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY));
+		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY));
+		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY));
+		// transact it
+		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
+		marketPortfolio.enterTransaction(trans);		
 	}
 	
 	
@@ -117,6 +123,7 @@ public class BrokerEmulator implements Broker {
 		String s = "";
 		s = s + "UNDERLYING: " + "\n" + getUnderList().toString() + "\n";		
 		s = s + "MARKET PORTFOLIO: " + "\n" + getMarketPortfolio().toString() + "\n";
+		s = s + "PRICES" + "\n" + marketPrices.toString() + "\n";
 		s = s + "TRADES: " + "\n";
 		for(Trade trade:getTrades()) {
 			s = s + trade.toString() + "\n";

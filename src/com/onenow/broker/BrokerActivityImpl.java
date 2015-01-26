@@ -10,7 +10,7 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 
-public class BrokerActivityImpl implements Broker, BrokerActivity { 
+public class BrokerActivityImpl implements BrokerActivity { 
 
 	private static BrokerEmulator brokerEmulator;
 	private static BrokerInteractive brokerInteractive;
@@ -107,10 +107,19 @@ public class BrokerActivityImpl implements Broker, BrokerActivity {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
-		return getBrokerEmulator().getPrice(inv, type);
+	public Double getBestBid (Investment inv, Double agression) {
+		// market: bid<ask
+		Double bidPrice = getBrokerEmulator().getPrice(inv, TradeType.SELL);
+		Double askPrice = getBrokerEmulator().getPrice(inv, TradeType.BUY);
+		Double spread = askPrice-bidPrice;
+		Double delta = spread * agression;
+		Double price = bidPrice + delta;
+		return price;
 	}
 
-	
-
+	@Override
+	public Double getPrice(Investment inv, TradeType type) {
+		Double price = getBrokerEmulator().getPrice(inv, type); 
+		return price;
+	}
 }
