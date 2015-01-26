@@ -67,7 +67,7 @@ public class Exocet {
 	
 	private Trade getInv(InvType invType, TradeType tradeType) {
 		InvestmentOption inv = new InvestmentOption(getUnder(), invType, getExp(), getStrike(invType, tradeType));
-		Trade trade = new Trade(inv, tradeType, getQuant(), getBroker().getBestBid(inv, getAgression()));
+		Trade trade = new Trade(inv, tradeType, getQuant(), getBroker().getBestBid(tradeType, inv, getAgression()));
 		return trade;
 	}
 	

@@ -31,6 +31,8 @@ public class TestBroker {
 
 	private Date expDate = new Date(1000000);
 	
+	private Trade tradeStock1;
+	private Trade tradeStock2;
 	private Trade tradeCall1; 
 	private Trade tradeCall2; 
 	private Trade tradePut1; 
@@ -51,8 +53,8 @@ public class TestBroker {
 
 	// PUBLIC
 	public boolean test() {
-		boolean result = 	testBuy();  // TODO: && with other tests
-		testExocet();	
+		boolean result = 	testBuy() &&
+							testExocet();  // TODO: && with other tests
 		handleResult(result);	
 		return result;
 	}
@@ -117,8 +119,7 @@ public class TestBroker {
 		// then get ready to trade them
 		setAllTrade();
 		
-//		Transaction tx = new Transaction(tradeStock1, tradeStock2, tradeCall1, tradeCall2, tradePut1, tradePut2);
-		Transaction tx = new Transaction(getTradeCall1(), getTradeCall2(), getTradePut1(), getTradePut2());
+		Transaction tx = new Transaction(tradeStock1, tradeStock2, tradeCall1, tradeCall2, tradePut1, tradePut2);
 		getBroker().enterTransaction(tx);
 						
 		Portfolio myPortfolio = getBroker().getMyPortfolio();		
@@ -130,8 +131,8 @@ public class TestBroker {
 			return false;
 		}
 		
-		if(!tx.getNetPremium().equals(39761.0)) {
-			System.out.println("ERROR premium " + tx.getNetPremium());
+		if(!tx.getNetPremium().equals(39709.0)) {
+			System.out.println("ERROR net premium " + tx.getNetPremium());
 			return false;
 		}
 		
@@ -140,8 +141,8 @@ public class TestBroker {
 
 	private void setAllTrade() {
 		// get ready to buy something
-//		Trade tradeStock1 = new Trade(stock, TradeType.BUY, 50, broker.getPrice(stock, TradeType.BUY));
-//		Trade tradeStock2 = new Trade(stock, TradeType.SELL, 150, broker.getPrice(stock, TradeType.SELL));
+		setTradeStock1(new Trade(getStock(), TradeType.BUY, 50, getBroker().getPrice(stock, TradeType.BUY)));
+		setTradeStock2(new Trade(getStock(), TradeType.SELL, 150, getBroker().getPrice(stock, TradeType.SELL)));
 		setTradeCall1(new Trade(getCall1(), TradeType.BUY, 100, getBroker().getPrice(getCall1(), TradeType.BUY)));
 		setTradeCall2(new Trade(getCall2(), TradeType.SELL, 100, getBroker().getPrice(getCall2(), TradeType.SELL)));
 		setTradePut1(new Trade(getPut1(), TradeType.SELL, 100, getBroker().getPrice(getPut1(), TradeType.SELL)));
@@ -150,12 +151,10 @@ public class TestBroker {
 
 	private void setAllInv(Underlying theUnder) {
 		try {
-			// find investment
-//			stock = market.getBestStock(theUnder);
+			setStock(getMarket().getBestStock(theUnder));
 			// TODO: get best
-			setCall1(getMarket().getInvestments(theUnder, InvType.call, expDate, 405.00).get(0));
-			// to test exception:
 			// call1 = market.getInvestments(theUnder, InvType.call, expDate, 407.00).get(0); 
+			setCall1(getMarket().getInvestments(theUnder, InvType.call, expDate, 405.00).get(0));
 			setCall2(getMarket().getInvestments(theUnder, InvType.call, expDate, 400.00).get(0));
 			setPut1(getMarket().getInvestments(theUnder, InvType.put, expDate, 390.00).get(0));
 			setPut2(getMarket().getInvestments(theUnder, InvType.put, expDate, 385.00).get(0));
@@ -274,5 +273,21 @@ public class TestBroker {
 
 	private void setTradePut2(Trade tradePut2) {
 		this.tradePut2 = tradePut2;
+	}
+
+	public Trade getTradeStock1() {
+		return tradeStock1;
+	}
+
+	public void setTradeStock1(Trade tradeStock1) {
+		this.tradeStock1 = tradeStock1;
+	}
+
+	public Trade getTradeStock2() {
+		return tradeStock2;
+	}
+
+	public void setTradeStock2(Trade tradeStock2) {
+		this.tradeStock2 = tradeStock2;
 	}
 }
