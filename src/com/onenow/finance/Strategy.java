@@ -74,25 +74,35 @@ public class Strategy {
 	
 	public Double getMaxProfit() { // profit
 		Double max=0.0;
-		setStrikes();
-		for(Double price:getCheckpoints()) {
-			Double net=getNetValue(price);
-			if(net>max) {
-				max=net;
-			}
+		
+		for(Transaction trans:getTransactions()) {		
+			max+=trans.getMaxProfit();
 		}
+		
+//		setStrikes();
+//		for(Double price:getCheckpoints()) {
+//			Double net=getNetValue(price);
+//			if(net>max) {
+//				max=net;
+//			}
+//		}
 		return max;
 	}
 
 	public Double getMaxLoss() { // loss
 		Double max=0.0;
 		setStrikes();
-		for(Double price:getCheckpoints()) {
-			Double net=getNetValue(price);
-			if(net<max) {
-				max=net;
-			}
-		}		
+
+		for(Transaction trans:getTransactions()) {		
+			max+=trans.getMaxLoss();
+		}
+
+//		for(Double price:getCheckpoints()) {
+//			Double net=getNetValue(price);
+//			if(net<max) {
+//				max=net;
+//			}
+//		}		
 		return max;
 	}
 	
@@ -134,13 +144,17 @@ public class Strategy {
 	}
 
 	private void setStrikeVariants(Double strike) { // explore Net around strikes
-		Double bufferPercent=0.025;
-		Double bufferAmount=2.0;
+		Double bufferPercent=0.005;
+		Double bufferAmount=2.5;
 		addNewCheckpoint(strike);
 		addNewCheckpoint(strike+bufferAmount);
+		addNewCheckpoint(strike+2*bufferAmount);
 		addNewCheckpoint(strike-bufferAmount);
+		addNewCheckpoint(strike-2*bufferAmount);
 		addNewCheckpoint(strike*(1+bufferPercent));
+		addNewCheckpoint(strike*(1+2*bufferPercent));
 		addNewCheckpoint(strike*(1-bufferPercent));
+		addNewCheckpoint(strike*(1-2*bufferPercent));
 	}
 	
 	private void addNewCheckpoint(Double num) {
@@ -154,12 +168,12 @@ public class Strategy {
 	public String toString(){
 		String s = "";
 		s = s + getTransactions().toString() + "\n";
-		s = s + "Max Profit: $" + getMaxProfit() + ". " + 
-				"Max Loss: $" + getMaxLoss() + "\n";
-		s = s + "Margin Required: $" + getMargin().intValue() + ". " + 
-				"Buying Power (net margin after credit): $" + getNetMargin().intValue() + "\n";
-		s = s + "Maximum Profit: " + getMaxROI().intValue() + "%" + ". " + 
-				"Risk/Reward: " + getRiskReward().intValue() + "%" + "\n";
+		s = s + "Max Profit: $" + Math.round(getMaxProfit()) + ". " + 
+				"Max Loss: $" + Math.round(getMaxLoss()) + "\n";
+		s = s + "Margin Required: $" + Math.round(getMargin()) + ". " + 
+				"Buying Power (net margin after credit): $" + Math.round(getNetMargin()) + "\n";
+		s = s + "Maximum Profit: " + Math.round(getMaxROI()) + "%" + ". " + 
+				"Risk/Reward: " + Math.round(getRiskReward()) + "%" + "\n";
 		s = s + "Break even price: " + getBreakEven() + "\n";
 		s = s + checkpointValueToString();
 		s = s + bidOrderToString();
@@ -181,11 +195,11 @@ public class Strategy {
 		for(int i=0; i<breakEven.size(); i++) { // reduce multiple to 1
 			Double be = breakEven.get(i);
 			if(i==0) {
-				s = s + "$" + be.intValue();
+				s = s + "$" + Math.round(be);
 			}
 			if(i>0) {
 				if(!((be-2.0)<breakEven.get(i-1))) {
-					s = s + ", $" + be.intValue();				
+					s = s + ", $" + Math.round(be);				
 				}
 			}
 		}
@@ -198,7 +212,7 @@ public class Strategy {
 		Collections.sort(getCheckpoints());
 		for(int i=0; i<getCheckpoints().size(); i++) {
 			Double checkpoint = getCheckpoints().get(i);
-			s = s + "Profit($" + checkpoint.intValue() + "): $" + getNetValue(checkpoint).intValue() + "\n";
+			s = s + "Profit($" + Math.round(checkpoint.intValue()) + "): $" + Math.round(getNetValue(checkpoint)) + "\n";
 		}
 		return s;
 	}

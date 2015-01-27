@@ -18,7 +18,6 @@ public class BrokerActivityImpl implements BrokerActivity {
 	private static BrokerGoogle brokerGoogle;
 
 	public BrokerActivityImpl() {
-//		System.out.println("Created BrokerActivityImpl");
 		setBrokerEmulator(new BrokerEmulator());
 		setBrokerInteractive(new BrokerInteractive());
 		setBrokerAWS(new BrokerAWS());
@@ -107,13 +106,13 @@ public class BrokerActivityImpl implements BrokerActivity {
 	}
 
 	@Override
-	public Double getBestBid (TradeType type, Investment inv, Double agression) {
+	public Double getBestBid (TradeType type, Investment inv, Double aggression) {
 		// market: bid<ask
 		Double askPrice = getBrokerEmulator().getPrice(inv, TradeType.SELL);
 		Double bidPrice = getBrokerEmulator().getPrice(inv, TradeType.BUY);
 		Double spread = askPrice-bidPrice;
-		Double deltaSell = spread * (1-agression);
-		Double deltaBuy = spread * agression;
+		Double deltaSell = spread * (1-aggression);
+		Double deltaBuy = spread * aggression;
 		Double price = 0.0;
 		if(type.equals(TradeType.BUY)) {
 			price = bidPrice + deltaBuy;

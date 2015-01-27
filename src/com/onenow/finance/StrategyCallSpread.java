@@ -25,9 +25,10 @@ public class StrategyCallSpread extends StrategyOptions {
 		trans.addTrade(getCallSell());
 	}
 	
-				
 	// PUBLIC
 	
+	// PRIVATE
+
 	// PRINT
 	public String toString() {
 		String s = "";

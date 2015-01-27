@@ -7,7 +7,6 @@ public class Transaction {
 	private Counterparty counterParty; // Cloud or Brokerage
 	private List<Trade> trades = new ArrayList<Trade>();
 	
-	
 	// CONSTRUCTOR
 	public Transaction() {
 		
@@ -64,8 +63,8 @@ public class Transaction {
 	}
 	
 	public Double getMargin() { // assumes spreads are transacted
-		Double callMargin = getCallSpread()*getCallContracts() ;
-		Double putMargin = getPutSpread()*getPutContracts();
+		Double callMargin = getCallSpread()*getCallSoldContracts() ;
+		Double putMargin = getPutSpread()*getPutSoldContracts();
 		Double margin=0.0;
 		if(callMargin>0.0 && putMargin>0.0) { // condor or other balanced wings
 			// TODO: cases where call/put don't balance margin
@@ -80,6 +79,18 @@ public class Transaction {
 		return margin;
 	}
 	
+	public Double getMaxProfit() {
+		Double num = 0.0;
+		num = getNetPremium();
+		return num;
+	}
+
+	public Double getMaxLoss() {
+		Double num=0.0;
+		num = getMaxProfit()-getMargin();
+		return num;
+	}
+
 	// PRIVATE
 	private Double getCallSpread() { // assumes up to two call
 		Double sellCallStrike=getStrike(InvType.call, TradeType.SELL);
@@ -107,20 +118,23 @@ public class Transaction {
 		return strike;
 	}
 	
-	private Integer getCallContracts() { 
+	private Integer getCallSoldContracts() { 
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(InvType.call)) {
+			Investment inv = trade.getInvestment();
+			if(trade.getInvestment().getInvType().equals(InvType.call) &&
+			   trade.getTradeType().equals(TradeType.SELL)) {
 				contracts=trade.getQuantity();
 			}
 		}
 		return contracts;
 	}
 	
-	private Integer getPutContracts() {
+	private Integer getPutSoldContracts() {
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(InvType.put)) {
+			if(trade.getInvestment().getInvType().equals(InvType.put) &&
+			   trade.getTradeType().equals(TradeType.SELL)) {
 				contracts=trade.getQuantity();
 			}			
 		}		
