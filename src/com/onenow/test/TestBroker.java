@@ -84,17 +84,28 @@ public class TestBroker {
 		s = s + "EXOCET" + "\n";
 		System.out.println(s);
 
-		testIronCondor(ex); 
-				
-		testCallSpread(ex); 
+		StrategyIronCondor ic = ex.getIronCondor(getBroker(), 0.50);
+		testIronCondor(ex, ic); 
 		
-		testPutSpread(ex); 
+		StrategyCallSpread cs = ex.getCallSpread(getBroker(), 0.7);
+		testCallSpread(ex, cs); 
 
+		StrategyPutSpread ps = ex.getPutSpread(getBroker(), 0.6);
+		testPutSpread(ex, ps); 
+
+		if(cs.getMaxProfit()<(0.2*ic.getMaxProfit())) {
+			System.out.println("RUN only put spread with " + 
+								Math.round(ps.getMaxROI()) + "% ROI");
+		}
+		if(ps.getMaxProfit()<(0.2*ic.getMaxProfit())) {
+			System.out.println("RUN only call spread "  + 
+								Math.round(cs.getMaxROI()) + "% ROI");			
+		}
+		
 		return true;
 	}
 
-	private boolean testPutSpread(Exocet ex) {
-		StrategyPutSpread ps = ex.getPutSpread(getBroker(), 0.6);
+	private boolean testPutSpread(Exocet ex, StrategyPutSpread ps) {
 		String s="";
 		s = s + ps.toString();
 		System.out.println(s);
@@ -110,8 +121,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testCallSpread(Exocet ex) {
-		StrategyCallSpread cs = ex.getCallSpread(getBroker(), 0.7);
+	private boolean testCallSpread(Exocet ex, StrategyCallSpread cs) {
 		String s="";
 		s = s + cs.toString();
 		System.out.println(s);
@@ -127,8 +137,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testIronCondor(Exocet ex) {
-		StrategyIronCondor ic = ex.getIronCondor(getBroker(), 0.50);
+	private boolean testIronCondor(Exocet ex, StrategyIronCondor ic) {
 		String s="";
 		s = s + ic.toString();
 		System.out.println(s);

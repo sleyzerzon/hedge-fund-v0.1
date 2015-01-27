@@ -74,39 +74,22 @@ public class Strategy {
 	
 	public Double getMaxProfit() { // profit
 		Double max=0.0;
-		
 		for(Transaction trans:getTransactions()) {		
 			max+=trans.getMaxProfit();
-		}
-		
-//		setStrikes();
-//		for(Double price:getCheckpoints()) {
-//			Double net=getNetValue(price);
-//			if(net>max) {
-//				max=net;
-//			}
-//		}
+		}		
 		return max;
 	}
 
 	public Double getMaxLoss() { // loss
 		Double max=0.0;
 		setStrikes();
-
 		for(Transaction trans:getTransactions()) {		
 			max+=trans.getMaxLoss();
 		}
-
-//		for(Double price:getCheckpoints()) {
-//			Double net=getNetValue(price);
-//			if(net<max) {
-//				max=net;
-//			}
-//		}		
 		return max;
 	}
 	
-	private Double getMaxROI() {
+	public Double getMaxROI() {
 		return (Math.abs(getMaxProfit()/getMaxLoss())*100);
 	}
 	
@@ -145,7 +128,7 @@ public class Strategy {
 
 	private void setStrikeVariants(Double strike) { // explore Net around strikes
 		Double bufferPercent=0.005;
-		Double bufferAmount=2.5;
+		Double bufferAmount=1.0;
 		addNewCheckpoint(strike);
 		addNewCheckpoint(strike+bufferAmount);
 		addNewCheckpoint(strike+2*bufferAmount);

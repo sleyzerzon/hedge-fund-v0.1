@@ -92,7 +92,7 @@ public class Exocet {
 		InvestmentOption inv = new InvestmentOption(getUnder(), invType, getExp(), getStrike(invType, tradeType));
 		Integer quant = getQuant();
 		if(tradeType.equals(TradeType.BUY)) { // ratio protection
-			quant = (int) Math.round(quant*2);
+//			quant = (int) Math.round(quant*2);
 		}
 		Trade trade = new Trade(inv, tradeType, quant, getBroker().getBestBid(tradeType, inv, getAgression()));
 		return trade;
@@ -122,9 +122,9 @@ public class Exocet {
 	// do separately
 	private Double getCallSellStrike() {
 		Double strike=0.0;
-		Double margin=getSpread()/2; // with down-side buffer: profit 25%
+		Double margin=getSpread()/2; // down-side buffer
 		Double mult = (double) Math.round((estClosing()+margin)/getSpread());
-		strike = mult*spread; 
+		strike = mult*spread; // OTM 
 		return strike;
 	}
 
@@ -135,14 +135,18 @@ public class Exocet {
 		Double margin=getSpread()/2; // with down-side buffer: profit 25%
 		Double mult = (double) Math.round((estClosing()-margin)/getSpread());
 		strike = mult*spread; 
+		strike = strike; // OTM
 		return strike;
 	}
 
 	private Double estClosing() {
-		Double price1hr=2057.0;
+		Double priceOpen=2063.15;
 		Double priceNow=getUnderPrice(); // 2054.74
-		Double delta=priceNow-price1hr; // change in last hour
-		Double estClosing=priceNow+delta; 
+		Double delta=priceNow-priceOpen;
+		Double hsOpen=6.5;
+		Double velocity=delta/hsOpen;
+		Double hsLeft=0.50;
+		Double estClosing=priceNow+velocity*hsLeft; 
 		System.out.println(	"***EST CLOSING " + Math.round(estClosing) + 
 							"***BAKED CLOSING " + Math.round(bakedClosing()));		
 		return estClosing;
