@@ -86,6 +86,8 @@ public class Exocet {
 		
 	// PRIVATE
 	private void setCheckpoints() {
+		Double price15Min=2053.96; // TODO: get it from broker
+		getExocet().setPastCheckpoint((price15Min).intValue()); 
 		getExocet().setFutureCheckpoint(estClosing().intValue());
 		Integer num = (int) Math.round(getUnderPrice());
 		getExocet().setPresentCheckpoint(num);
@@ -273,13 +275,13 @@ public class Exocet {
 	// TODO: STUDY how long ago priceBefore is the best predictor of closing?
 	public Double estClosing() {
 		// TODO: use actuals
-		Double priceBefore=2057.69;
+		Double priceBefore=2058.36; // TODO: get from broker & correlate interval in history
 		Double hsSince=1.0; 
 
-		Double priceNow=getUnderPrice(); // 2054.74
+		Double priceNow=getUnderPrice(); // 2054.74 in emulator
 		Double delta=priceNow-priceBefore;
 		Double velocity=delta/hsSince;
-		Double hsLeft=0.50;
+		Double hsLeft=20.0/60;
 		Double estClosing=priceNow+velocity*hsLeft; 
 		return estClosing;
 	}

@@ -7,11 +7,12 @@ import java.util.List;
 public class Strategy {
 	
 	private List<Transaction> transactions;
-	private Greeks greeks; // TODO: aggregate only ?
+	// TODO: aggregate private Greeks greeks
 	
 	private List<Integer> checkpoints;	
 	private Integer presentCheckpoint=0;
 	private Integer futureCheckpoint=0;
+	private Integer pastCheckpoint=0;
 		
 	// CONSTRUCTOR
 	public Strategy() {
@@ -201,19 +202,30 @@ public class Strategy {
 			Double netVal = getNetValue(checkpoint*1.0);
 			s = s + "Profit($" + checkpoint + "): $" + Math.round(netVal);
 			Integer range=3;
-			Integer max=getPresentCheckpoint()+range;
-			Integer min=getPresentCheckpoint()-range;
-			if((checkpoint <= max) &&
-			   (checkpoint >= min)) {
-				if(checkpoint.equals(getFutureCheckpoint())) {
-					s = s + "  *";
+			// Price at placement
+			Integer maxPlace=getPresentCheckpoint()+range;
+			Integer minPlace=getPresentCheckpoint()-range;
+			if((checkpoint <= maxPlace) &&
+			   (checkpoint >= minPlace)) {
+
+				// Estimated closing price
+				Integer maxClose=getFutureCheckpoint()+range;
+				Integer minClose=getFutureCheckpoint()-range;
+				if(checkpoint <= maxClose &&
+				   checkpoint >= minClose) {
+					s = s + "\t" + "|";
+					if(checkpoint.equals(getFutureCheckpoint())) { // future
+						s = s + "t+";
+					}				
+					if(checkpoint.equals(getPastCheckpoint())) {
+						s = s + "t-";
+					}
+					if(checkpoint.equals(getPresentCheckpoint())){ // present
+						s = s + "t";
+					}
+					Double roi=netVal/getMaxLoss()*100;
+					s = s + "\t" + Math.round(-roi) + "% ROI";
 				}
-				s = s + "\t" + "|";
-				if(checkpoint.equals(getPresentCheckpoint())){
-					s = s + ">";
-				}
-				Double roi=netVal/getMaxLoss()*100;
-				s = s + "\t" + Math.round(-roi) + "% ROI";
 			}
 			s = s + "\n";
 		}
@@ -319,6 +331,14 @@ public class Strategy {
 
 	public void setFutureCheckpoint(Integer futureCheckpoint) {
 		this.futureCheckpoint = futureCheckpoint;
+	}
+
+	public Integer getPastCheckpoint() {
+		return pastCheckpoint;
+	}
+
+	public void setPastCheckpoint(Integer pastCheckpoint) {
+		this.pastCheckpoint = pastCheckpoint;
 	}
 
 }
