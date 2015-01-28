@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.database.DatabaseSystemActivityImpl;
+import com.onenow.finance.InvProb;
 import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
 import com.onenow.finance.Portfolio;
@@ -17,6 +18,7 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.Exocet;
+import com.onenow.investor.TradeRatio;
 import com.sforce.ws.ConnectionException;
 
 public class TestBroker {
@@ -80,17 +82,13 @@ public class TestBroker {
 	private boolean testExocet() {
 		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate());
 		
-		String s= ""  + "\n\n";
-		s = s + "EXOCET" + "\n";
-		System.out.println(s);
-
-		StrategyIronCondor ic = ex.getIronCondor(getBroker(), 0.50);
+		StrategyIronCondor ic = ex.getIronCondor(InvProb.low, TradeRatio.low, getBroker(), 0.50);
 		testIronCondor(ex, ic); 
 		
-		StrategyCallSpread cs = ex.getCallSpread(getBroker(), 0.7);
+		StrategyCallSpread cs = ex.getCallSpread(InvProb.low, TradeRatio.low, getBroker(), 0.7);
 		testCallSpread(ex, cs); 
 
-		StrategyPutSpread ps = ex.getPutSpread(getBroker(), 0.6);
+		StrategyPutSpread ps = ex.getPutSpread(InvProb.low, TradeRatio.low, getBroker(), 0.6);
 		testPutSpread(ex, ps); 
 
 		if(cs.getMaxProfit()<(0.2*ic.getMaxProfit())) {
@@ -98,7 +96,7 @@ public class TestBroker {
 								Math.round(ps.getMaxROI()) + "% ROI");
 		}
 		if(ps.getMaxProfit()<(0.2*ic.getMaxProfit())) {
-			System.out.println("RUN only call spread "  + 
+			System.out.println("RUN only call spread with "  + 
 								Math.round(cs.getMaxROI()) + "% ROI");			
 		}
 		
@@ -107,7 +105,7 @@ public class TestBroker {
 
 	private boolean testPutSpread(Exocet ex, StrategyPutSpread ps) {
 		String s="";
-		s = s + ps.toString();
+		s = s + ex.toString();
 		System.out.println(s);
 
 		if(!ps.getMaxProfit().equals(245.0)) {
@@ -123,7 +121,7 @@ public class TestBroker {
 
 	private boolean testCallSpread(Exocet ex, StrategyCallSpread cs) {
 		String s="";
-		s = s + cs.toString();
+		s = s + ex.toString();
 		System.out.println(s);
 
 		if(!cs.getMaxProfit().equals(245.0)) {
@@ -139,7 +137,7 @@ public class TestBroker {
 
 	private boolean testIronCondor(Exocet ex, StrategyIronCondor ic) {
 		String s="";
-		s = s + ic.toString();
+		s = s + ex.toString();
 		System.out.println(s);
 
 		if(!ic.getPutNetPremium().equals(122.5)) {
@@ -167,7 +165,7 @@ public class TestBroker {
 			return false;
 		}
 		// now more aggressive
-		ic = ex.getIronCondor(getBroker(), 0.75); 
+		ic = ex.getIronCondor(InvProb.low, TradeRatio.low, getBroker(), 0.75); 
 		if(!ic.getMaxProfit().equals(245.0)) {
 			System.out.println("ERROR ic+ max profit " + ic.getMaxProfit());
 			return false;
