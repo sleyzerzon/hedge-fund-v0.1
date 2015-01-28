@@ -10,7 +10,8 @@ public class Strategy {
 	private Greeks greeks; // TODO: aggregate only ?
 	
 	private List<Integer> checkpoints;	
-	private Integer keyCheckpoint=0;
+	private Integer presentCheckpoint=0;
+	private Integer futureCheckpoint=0;
 		
 	// CONSTRUCTOR
 	public Strategy() {
@@ -197,16 +198,22 @@ public class Strategy {
 		Collections.sort(getCheckpoints());
 		for(int i=0; i<getCheckpoints().size(); i++) {
 			Integer checkpoint = getCheckpoints().get(i);
-			s = s + "Profit($" + checkpoint + "): $" + Math.round(getNetValue(checkpoint*1.0));
+			Double netVal = getNetValue(checkpoint*1.0);
+			s = s + "Profit($" + checkpoint + "): $" + Math.round(netVal);
 			Integer range=3;
-			Integer max=getKeyCheckpoint()+range;
-			Integer min=getKeyCheckpoint()-range;
+			Integer max=getPresentCheckpoint()+range;
+			Integer min=getPresentCheckpoint()-range;
 			if((checkpoint <= max) &&
 			   (checkpoint >= min)) {
-				s = s + " " + "|";
-				if(checkpoint.equals(getKeyCheckpoint())){
+				if(checkpoint.equals(getFutureCheckpoint())) {
+					s = s + "  *";
+				}
+				s = s + "\t" + "|";
+				if(checkpoint.equals(getPresentCheckpoint())){
 					s = s + ">";
 				}
+				Double roi=netVal/getMaxLoss()*100;
+				s = s + "\t" + Math.round(-roi) + "% ROI";
 			}
 			s = s + "\n";
 		}
@@ -298,12 +305,20 @@ public class Strategy {
 		this.checkpoints = checkpoints;
 	}
 
-	public Integer getKeyCheckpoint() {
-		return keyCheckpoint;
+	public Integer getPresentCheckpoint() {
+		return presentCheckpoint;
 	}
 
-	public void setKeyCheckpoint(Integer keyCheckpoint) {
-		this.keyCheckpoint = keyCheckpoint;
+	public void setPresentCheckpoint(Integer keyCheckpoint) {
+		this.presentCheckpoint = keyCheckpoint;
+	}
+
+	public Integer getFutureCheckpoint() {
+		return futureCheckpoint;
+	}
+
+	public void setFutureCheckpoint(Integer futureCheckpoint) {
+		this.futureCheckpoint = futureCheckpoint;
 	}
 
 }

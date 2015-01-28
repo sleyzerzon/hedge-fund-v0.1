@@ -51,7 +51,7 @@ public class Exocet {
 		Double price = getBroker().getPrice(index, TradeType.LAST); 
 		setUnderPrice(price);
 		setExocet(new StrategyCallSpread(getCallBuy(), getCallSell()));
-		setCheckpoints(price);
+		setCheckpoints();
 		return (StrategyCallSpread) getExocet();
 	}
 	
@@ -65,7 +65,7 @@ public class Exocet {
 		Double price = getBroker().getPrice(index, TradeType.LAST); 
 		setUnderPrice(price);
 		setExocet(new StrategyPutSpread(getPutBuy(), getPutSell()));
-		setCheckpoints(price);
+		setCheckpoints();
 		return (StrategyPutSpread) getExocet();	
 	}
 	
@@ -80,14 +80,15 @@ public class Exocet {
 		setUnderPrice(price);
 		setExocet(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
 											getPutBuy(), getPutSell()));
-		setCheckpoints(price);
+		setCheckpoints();
 		return (StrategyIronCondor) getExocet();
 	}
 		
 	// PRIVATE
-	private void setCheckpoints(Double price) {
-		Integer num = (int) Math.round(price);
-		getExocet().setKeyCheckpoint(num);
+	private void setCheckpoints() {
+		getExocet().setFutureCheckpoint(estClosing().intValue());
+		Integer num = (int) Math.round(getUnderPrice());
+		getExocet().setPresentCheckpoint(num);
 		getExocet().addNewCheckpoint(num+1.0);
 		getExocet().addNewCheckpoint(num+2.0);
 		getExocet().addNewCheckpoint(num+3.0);
@@ -101,21 +102,21 @@ public class Exocet {
 	}
 	
 	private Trade getCallBuy() {
-		Trade trade = getInv(InvType.call, TradeType.BUY); 	
+		Trade trade = getInv(InvType.CALL, TradeType.BUY); 	
 		return trade;
 	}
 	private Trade getCallSell() {
-		Trade trade = getInv(InvType.call, TradeType.SELL); 			
+		Trade trade = getInv(InvType.CALL, TradeType.SELL); 			
 		return trade;
 	}
 
 	private Trade getPutBuy() {
-		Trade trade = getInv(InvType.put, TradeType.BUY); 	
+		Trade trade = getInv(InvType.PUT, TradeType.BUY); 	
 		return trade;
 	}
 
 	private Trade getPutSell() {
-		Trade trade = getInv(InvType.put, TradeType.SELL); 	
+		Trade trade = getInv(InvType.PUT, TradeType.SELL); 	
 		return trade;
 	}
 	
@@ -123,37 +124,57 @@ public class Exocet {
 		
 		InvestmentOption inv = 	new InvestmentOption(getUnder(), invType, getExp(), 
 								getStrike(invType, tradeType));
-		Integer quant = getQuant();
+		
+		Integer mQuant=getQuant();
+				
 		if(tradeType.equals(TradeType.BUY)) { // ratio protection
-			if(getRatio().equals(TradeRatio.low)){
-				quant = (int) Math.round(quant*1.25);				
-			}
-			if(getRatio().equals(TradeRatio.mid)){
-				quant = (int) Math.round(quant*1.5);				
-			}
-			if(getRatio().equals(TradeRatio.high)){
-				quant = (int) Math.round(quant*2);				
-			}
-			if(getRatio().equals(TradeRatio.vhigh)){
-				quant = (int) Math.round(quant*3);				
-			}
-		}
-		Trade trade = new Trade(inv, tradeType, quant, getBroker().getBestBid(tradeType, inv, getAgression()));
+			mQuant=getMQuant();			
+			if(invType.equals(InvType.PUT) && 
+			   (getProb().equals(InvProb.LSANGLE))) { 
+			   mQuant=getQuant(); // protect only upside on strangles
+			} 
+		} 
+		
+		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType, inv, getAgression()));
 		return trade;
+	}
+	
+	private Integer getMQuant() {
+		Integer mQuant=getQuant()*1; // default "none" ratio
+		
+		Double lowR=1.16;
+		Double midR=1.33;
+		Double highR=1.66;
+		Double vhighR=2.0;
+
+		if(getRatio().equals(TradeRatio.LOW)){
+			mQuant = (int) Math.round(getQuant()*lowR);				
+		}
+		if(getRatio().equals(TradeRatio.MID)){
+			mQuant = (int) Math.round(getQuant()*midR);				
+		}
+		if(getRatio().equals(TradeRatio.HIGH)){
+			mQuant = (int) Math.round(getQuant()*highR);				
+		}
+		if(getRatio().equals(TradeRatio.VHIGH)){
+			mQuant = (int) Math.round(getQuant()*vhighR);				
+		}
+
+		return mQuant;
 	}
 
 	private Double getStrike(InvType invType, TradeType tradeType) {
 		Double strike=0.0;
-		if(invType.equals(InvType.call) && tradeType.equals(TradeType.BUY)) { 
+		if(invType.equals(InvType.CALL) && tradeType.equals(TradeType.BUY)) { 
 			strike = getCallBuyStrike(); 
 		}
-		if(invType.equals(InvType.call) && tradeType.equals(TradeType.SELL)) { 
+		if(invType.equals(InvType.CALL) && tradeType.equals(TradeType.SELL)) { 
 			strike = getCallSellStrike(); 
 		}
-		if(invType.equals(InvType.put) && tradeType.equals(TradeType.BUY)) { 
+		if(invType.equals(InvType.PUT) && tradeType.equals(TradeType.BUY)) { 
 			strike = getPutBuyStrike(); 
 		}
-		if(invType.equals(InvType.put) && tradeType.equals(TradeType.SELL)) { 
+		if(invType.equals(InvType.PUT) && tradeType.equals(TradeType.SELL)) { 
 			strike = getPutSellStrike(); 
 		}
 		return strike;
@@ -166,15 +187,16 @@ public class Exocet {
 	// CALL SELL
 	private Double getCallSellStrike() {
 		Double strike=0.0;
-		if(getProb().equals(InvProb.high)) { strike=getHPCallSellStrike(); }
-		if(getProb().equals(InvProb.mid)) { strike=getMPCallSellStrike(); }
-		if(getProb().equals(InvProb.low)) { strike=getLPCallSellStrike(); }
-		if(getProb().equals(InvProb.strangle)) { strike=getSTCallSellStrike(); }
+		if(getProb().equals(InvProb.HIGH)) { strike=getHPCallSellStrike(); }
+		if(getProb().equals(InvProb.MID)) { strike=getMPCallSellStrike(); }
+		if(getProb().equals(InvProb.LOW)) { strike=getLPCallSellStrike(); }
+		if(getProb().equals(InvProb.LSANGLE)) { strike=getLSCallSellStrike(); }
+		if(getProb().equals(InvProb.USANGLE)) { strike=getUSCallSellStrike(); }
 		return strike;
 	}
 	private Double getHPCallSellStrike() {
 		Double strike = 0.0;
-		strike = getStrikeAboveClosing() + 2*getSpread(); // TODO: do based on delta
+		strike = getStrikeAboveClosing() + getSpread(); // TODO: do based on delta
 		return strike;
 	}
 	private Double getMPCallSellStrike() {
@@ -186,24 +208,31 @@ public class Exocet {
 		strike = getStrikeAboveClosing();
 		return strike;
 	}
-	private Double getSTCallSellStrike() { // call or put?
+	// *** STRANGLE
+	private Double getLSCallSellStrike() { // call or put?
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing()-getSpread();
+		return strike;
+	}
+	private Double getUSCallSellStrike() { // call or put?
+		Double strike = 0.0;
+		strike = getStrikeAboveClosing();
 		return strike;
 	}
 
 	// PUT SELL
 	private Double getPutSellStrike() {
 		Double strike=0.0;
-		if(getProb().equals(InvProb.high)) { strike=getHPPutSellStrike(); }
-		if(getProb().equals(InvProb.mid)) { strike=getMPPutSellStrike(); }
-		if(getProb().equals(InvProb.low)) { strike=getLPPutSellStrike(); }
-		if(getProb().equals(InvProb.strangle)) { strike=getSTPutSellStrike(); }
+		if(getProb().equals(InvProb.HIGH)) { strike=getHPPutSellStrike(); }
+		if(getProb().equals(InvProb.MID)) { strike=getMPPutSellStrike(); }
+		if(getProb().equals(InvProb.LOW)) { strike=getLPPutSellStrike(); }
+		if(getProb().equals(InvProb.LSANGLE)) { strike=getLSPutSellStrike(); }
+		if(getProb().equals(InvProb.USANGLE)) { strike=getUSPutSellStrike(); }
 		return strike;
 	}
 	private Double getHPPutSellStrike() {
 		Double strike = 0.0;
-		strike = getMPPutSellStrike()-getSpread(); // TODO: do based on delta
+		strike = getLPPutSellStrike()-getSpread(); // TODO: do based on delta
 		return strike;
 	}
 	private Double getMPPutSellStrike() {
@@ -215,12 +244,17 @@ public class Exocet {
 		strike = getStrikeBelowClosing();
 		return strike;
 	}
-	private Double getSTPutSellStrike() { // call or put?
+	// *** STRANGLE
+	private Double getLSPutSellStrike() { // lower than estClosing
 		Double strike = 0.0;
 		strike = getStrikeBelowClosing(); // always call
 		return strike;
 	}
-
+	private Double getUSPutSellStrike() { // lower than estClosing
+		Double strike = 0.0;
+		strike = getStrikeAboveClosing(); 
+		return strike;
+	}
 	private Double getPutBuyStrike(){
 		return getPutSellStrike()-getSpread();
 	}
@@ -254,10 +288,10 @@ public class Exocet {
 		Double callStrike = Math.round(getUnderPrice()/getSpread())*getSpread()-separation; 
 		Double putStrike =  callStrike + 2*separation;
 		// look at extremes
-		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.put, getExp(), putStrike);
+		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
 		Double putMid = getBroker().getBestBid(TradeType.BUY, putExt, 0.50);
 		Double estClosingPut = putStrike-putMid;
-		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.call, getExp(), callStrike);
+		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
 		Double callMid = getBroker().getBestBid(TradeType.BUY, callExt, 0.50);	
 		Double estClosingCall = callStrike+callMid;
 		

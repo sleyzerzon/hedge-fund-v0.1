@@ -3,7 +3,7 @@ package com.onenow.finance;
 public class Trade {
 
 	private Investment investment; // INTC, option, call
-	private Enum tradeType; // ie. buy
+	private TradeType tradeType; // ie. buy
 	private int quantity; // 50 shares
 	private Double netPremium; // +$10 net, -$23 net
 	private Double unitPrice; // $7.50 per share
@@ -12,7 +12,7 @@ public class Trade {
 		// TODO
 	}
 
-	public Trade(Investment inv, Enum tradeType, int quantity, Double unitPrice) {
+	public Trade(Investment inv, TradeType tradeType, int quantity, Double unitPrice) {
 			setInvestment(inv);
 			setTradeType(tradeType);
 			setQuantity(quantity);
@@ -23,8 +23,8 @@ public class Trade {
 	// PUBLIC
 	public Double getStrike() {
 		Double strike = 0.0;
-		Enum invType = getInvestment().getInvType();
-		if (invType.equals(InvType.call) || invType.equals(InvType.put)) {
+		InvType invType = getInvestment().getInvType();
+		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
 			InvestmentOption option = (InvestmentOption) getInvestment();
 			strike = option.getStrikePrice();
 		}
@@ -33,8 +33,8 @@ public class Trade {
 
 	public Double getValue(Double marketPrice) { // TODO: stock handling
 		Double value = 0.0;
-		Enum invType = getInvestment().getInvType();
-		if (invType.equals(InvType.call) || invType.equals(InvType.put)) {
+		InvType invType = getInvestment().getInvType();
+		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
 			InvestmentOption option = (InvestmentOption) getInvestment();
 			value = option.getValue(marketPrice) * getQuantity();
 		}
@@ -84,11 +84,11 @@ public class Trade {
 		this.investment = inv;
 	}
 
-	public Enum getTradeType() {
+	public TradeType getTradeType() {
 		return tradeType;
 	}
 
-	private void setTradeType(Enum tradeType) {
+	private void setTradeType(TradeType tradeType) {
 		this.tradeType = tradeType;
 	}
 

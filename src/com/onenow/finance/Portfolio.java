@@ -102,7 +102,7 @@ public class Portfolio {
 	public List<Investment> getInvestments(Underlying under, InvType type, Date exp) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type)) {
-			if (type.equals(InvType.call) || type.equals(InvType.put)) {
+			if (type.equals(InvType.CALL) || type.equals(InvType.PUT)) {
 				InvestmentOption opt = (InvestmentOption) investment;
 				if(opt.getExpirationDate().equals(exp)) {
 					foundInvs.add(investment);
@@ -115,7 +115,7 @@ public class Portfolio {
 	public List<Investment> getInvestments(Underlying under, InvType type, Date exp, Double strike) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type, exp)) {
-			if (type.equals(InvType.call) || type.equals(InvType.put)) {
+			if (type.equals(InvType.CALL) || type.equals(InvType.PUT)) {
 				InvestmentOption opt = (InvestmentOption) investment;
 				if(opt.getStrikePrice().equals(strike)) {
 					foundInvs.add(investment);
@@ -127,23 +127,23 @@ public class Portfolio {
 	
 	// CLOUD GET BEST
 	public Investment getBestSpot(Underlying under) throws IndexOutOfBoundsException {
-		List<Investment> invs = getInvestments(under, InvType.spot);
+		List<Investment> invs = getInvestments(under, InvType.SPOT);
 		return invs.get(0);  
 	}
 	
 	public Investment getBestOnDemand(Underlying under) throws IndexOutOfBoundsException {
-		List<Investment> invs = getInvestments(under, InvType.ondemand);
+		List<Investment> invs = getInvestments(under, InvType.ONDEMAND);
 		return invs.get(0);
 	}
 	
 	public Investment getBestReserved(Underlying under, InvTerm term) throws IndexOutOfBoundsException {	
-		List<Investment> invs = getInvestments(under, InvType.reserved, term); 
+		List<Investment> invs = getInvestments(under, InvType.RESERVED, term); 
 		return invs.get(0);
 	}
 	
 	// WALL ST GET BEST
 	public Investment getBestStock(Underlying under) throws IndexOutOfBoundsException {
-		List<Investment> invs = getInvestments(under, InvType.stock);
+		List<Investment> invs = getInvestments(under, InvType.STOCK);
 		return invs.get(0);
 	}
 	

@@ -71,10 +71,10 @@ public class BrokerEmulator implements Broker {
 		// create the investments
 		Date expDate = new Date(1000000);
 		Investment stock = new InvestmentStock(under);
-		Investment call1 = new InvestmentOption(under, InvType.call, expDate, 405.00);
-		Investment call2 = new InvestmentOption(under, InvType.call, expDate, 400.00);
-		Investment put1 = new InvestmentOption(under, InvType.put, expDate, 390.00);
-		Investment put2 = new InvestmentOption(under, InvType.put, expDate, 385.00);		
+		Investment call1 = new InvestmentOption(under, InvType.CALL, expDate, 405.00);
+		Investment call2 = new InvestmentOption(under, InvType.CALL, expDate, 400.00);
+		Investment put1 = new InvestmentOption(under, InvType.PUT, expDate, 390.00);
+		Investment put2 = new InvestmentOption(under, InvType.PUT, expDate, 385.00);		
 		// set their prices
 		getMarketPrices().setPrice(stock, 396.00, 395.00);
 		getMarketPrices().setPrice(call1, 7.41, 7.40);
@@ -96,20 +96,20 @@ public class BrokerEmulator implements Broker {
 		// create the investments
 		Date expDate = new Date(1000000);
 		Investment index = new InvestmentIndex(under);
-		Investment put0 = new InvestmentOption(under, InvType.put, expDate, 2040.00);		
-		Investment put1 = new InvestmentOption(under, InvType.put, expDate, 2045.00);		
-		Investment put2 = new InvestmentOption(under, InvType.put, expDate, 2050.00);
-		Investment put3 = new InvestmentOption(under, InvType.put, expDate, 2055.00);
-		Investment put4 = new InvestmentOption(under, InvType.put, expDate, 2060.00);
-		Investment put5 = new InvestmentOption(under, InvType.put, expDate, 2065.00);
-		Investment put6 = new InvestmentOption(under, InvType.put, expDate, 2070.00);
+		Investment put0 = new InvestmentOption(under, InvType.PUT, expDate, 2040.00);		
+		Investment put1 = new InvestmentOption(under, InvType.PUT, expDate, 2045.00);		
+		Investment put2 = new InvestmentOption(under, InvType.PUT, expDate, 2050.00);
+		Investment put3 = new InvestmentOption(under, InvType.PUT, expDate, 2055.00);
+		Investment put4 = new InvestmentOption(under, InvType.PUT, expDate, 2060.00);
+		Investment put5 = new InvestmentOption(under, InvType.PUT, expDate, 2065.00);
+		Investment put6 = new InvestmentOption(under, InvType.PUT, expDate, 2070.00);
 		
-		Investment call5 = new InvestmentOption(under, InvType.call, expDate, 2040.00);
-		Investment call4 = new InvestmentOption(under, InvType.call, expDate, 2045.00);
-		Investment call3 = new InvestmentOption(under, InvType.call, expDate, 2050.00);
-		Investment call2 = new InvestmentOption(under, InvType.call, expDate, 2055.00);
-		Investment call1 = new InvestmentOption(under, InvType.call, expDate, 2060.00);
-		Investment call0 = new InvestmentOption(under, InvType.call, expDate, 2065.00);
+		Investment call5 = new InvestmentOption(under, InvType.CALL, expDate, 2040.00);
+		Investment call4 = new InvestmentOption(under, InvType.CALL, expDate, 2045.00);
+		Investment call3 = new InvestmentOption(under, InvType.CALL, expDate, 2050.00);
+		Investment call2 = new InvestmentOption(under, InvType.CALL, expDate, 2055.00);
+		Investment call1 = new InvestmentOption(under, InvType.CALL, expDate, 2060.00);
+		Investment call0 = new InvestmentOption(under, InvType.CALL, expDate, 2065.00);
 		// set their prices
 		getMarketPrices().setPrice(index, 2054.74);
 		getMarketPrices().setPrice(put0, 0.05, 0.05);

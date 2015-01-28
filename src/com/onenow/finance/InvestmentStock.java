@@ -8,7 +8,7 @@ public class InvestmentStock extends Investment {
 	}
 	
 	public InvestmentStock (Underlying underlying) {
-		super(underlying, InvType.stock);
+		super(underlying, InvType.STOCK);
 	}
 	
 	// PUBLIC

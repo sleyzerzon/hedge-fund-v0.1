@@ -13,7 +13,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getInvestment().getInvType().equals(InvType.call))
+				if(trade.getInvestment().getInvType().equals(InvType.CALL))
 				net += trade.getNetPremium();
 			}
 		}
@@ -24,7 +24,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getInvestment().getInvType().equals(InvType.put))
+				if(trade.getInvestment().getInvType().equals(InvType.PUT))
 				net += trade.getNetPremium();
 			}
 		}
@@ -69,8 +69,8 @@ public class StrategyOptions extends Strategy {
 	}
 	
 	public boolean isThetaPositive() { 
-		boolean callsThetaPostive = isSpreadThetaPositive(InvType.call);
-		boolean putsThetaPositive = isSpreadThetaPositive(InvType.put);
+		boolean callsThetaPostive = isSpreadThetaPositive(InvType.CALL);
+		boolean putsThetaPositive = isSpreadThetaPositive(InvType.PUT);
 		return callsThetaPostive && putsThetaPositive;
 	}
 	
@@ -81,8 +81,8 @@ public class StrategyOptions extends Strategy {
 	}
 	
 	public boolean isGammaPositive() {  // across each SPREAD
-		boolean callsGammaPositive = isSpreadGammaPositive(InvType.call);
-		boolean putsGammaPositive = isSpreadGammaPositive(InvType.put);
+		boolean callsGammaPositive = isSpreadGammaPositive(InvType.CALL);
+		boolean putsGammaPositive = isSpreadGammaPositive(InvType.PUT);
 		return callsGammaPositive && putsGammaPositive; // both
 	}
 	

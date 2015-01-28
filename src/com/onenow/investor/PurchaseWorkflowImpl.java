@@ -54,7 +54,7 @@ public class PurchaseWorkflowImpl implements PurchaseWorkflow {
 
 		Date expDate = new Date();
 		expDate.setTime(1000000);
-		Promise<Investment> stockPromise = getBroker().getBest(under1, InvType.stock);
+		Promise<Investment> stockPromise = getBroker().getBest(under1, InvType.STOCK);
 //		Promise<Investment> call1Promise = getBroker().getBest(under1,
 //				InvType.CALL, expDate, 405.00);
 //		Promise<Investment> call2Promise = getBroker().getBest(under1,

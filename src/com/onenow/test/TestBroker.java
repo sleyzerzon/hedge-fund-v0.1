@@ -82,18 +82,27 @@ public class TestBroker {
 	private boolean testExocet() {
 		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate());
 		
-		StrategyIronCondor ic = ex.getIronCondor(InvProb.low, TradeRatio.none, getBroker(), 0.50);
+		StrategyIronCondor hp = ex.getIronCondor(InvProb.HIGH, TradeRatio.NONE, getBroker(), 0.60);
+		System.out.println(ex.toString());
+
+		StrategyIronCondor ic = ex.getIronCondor(InvProb.LOW, TradeRatio.NONE, getBroker(), 0.50);
 		testIronCondor(ex, ic); 
 		
-		StrategyCallSpread cs = ex.getCallSpread(InvProb.low, TradeRatio.none, getBroker(), 0.7);
+		StrategyCallSpread cs = ex.getCallSpread(InvProb.LOW, TradeRatio.NONE, getBroker(), 0.45);
 		testCallSpread(ex, cs); 
 
-		StrategyPutSpread ps = ex.getPutSpread(InvProb.low, TradeRatio.none, getBroker(), 0.6);
+		StrategyPutSpread ps = ex.getPutSpread(InvProb.LOW, TradeRatio.NONE, getBroker(), 0.55);
 		testPutSpread(ex, ps); 
 		
-		StrategyIronCondor st = ex.getIronCondor(InvProb.strangle, TradeRatio.none, getBroker(), 0.50);
+		StrategyIronCondor stL = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.NONE, getBroker(), 0.50);
 		System.out.println(ex.toString());
-		
+
+		StrategyIronCondor ratioed = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.LOW, getBroker(), 0.50);
+		System.out.println(ex.toString());
+
+		StrategyIronCondor stH = ex.getIronCondor(InvProb.USANGLE, TradeRatio.NONE, getBroker(), 0.50);
+		System.out.println(ex.toString());
+
 
 		if(cs.getMaxProfit()<(0.2*ic.getMaxProfit())) {
 			System.out.println("RUN only put spread with " + 
@@ -169,7 +178,7 @@ public class TestBroker {
 			return false;
 		}
 		// now more aggressive
-		strat = ex.getIronCondor(InvProb.low, TradeRatio.low, getBroker(), 0.75); 
+		strat = ex.getIronCondor(InvProb.LOW, TradeRatio.LOW, getBroker(), 0.75); 
 		if(!strat.getMaxProfit().equals(245.0)) {
 			System.out.println("ERROR ic+ max profit " + strat.getMaxProfit());
 			return false;
@@ -225,10 +234,10 @@ public class TestBroker {
 			setStock(getMarket().getBestStock(theUnder));
 			// TODO: get best
 			// call1 = market.getInvestments(theUnder, InvType.call, expDate, 407.00).get(0); 
-			setCall1(getMarket().getInvestments(theUnder, InvType.call, expDate, 405.00).get(0));
-			setCall2(getMarket().getInvestments(theUnder, InvType.call, expDate, 400.00).get(0));
-			setPut1(getMarket().getInvestments(theUnder, InvType.put, expDate, 390.00).get(0));
-			setPut2(getMarket().getInvestments(theUnder, InvType.put, expDate, 385.00).get(0));
+			setCall1(getMarket().getInvestments(theUnder, InvType.CALL, expDate, 405.00).get(0));
+			setCall2(getMarket().getInvestments(theUnder, InvType.CALL, expDate, 400.00).get(0));
+			setPut1(getMarket().getInvestments(theUnder, InvType.PUT, expDate, 390.00).get(0));
+			setPut2(getMarket().getInvestments(theUnder, InvType.PUT, expDate, 385.00).get(0));
 		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}

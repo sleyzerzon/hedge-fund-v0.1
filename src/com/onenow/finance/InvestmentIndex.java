@@ -8,7 +8,7 @@ public class InvestmentIndex extends Investment {
 	}
 	
 	public InvestmentIndex (Underlying underlying) {
-		super(underlying, InvType.index);
+		super(underlying, InvType.INDEX);
 	}
 	
 	// PUBLIC

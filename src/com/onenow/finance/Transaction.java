@@ -50,8 +50,8 @@ public class Transaction {
 		Double prob=0.0;
 		
 		for(Trade trade:getTrades()) {
-			if(	trade.getInvestment().getInvType().equals(InvType.call) || 
-				trade.getInvestment().getInvType().equals(InvType.put)) {  
+			if(	trade.getInvestment().getInvType().equals(InvType.CALL) || 
+				trade.getInvestment().getInvType().equals(InvType.PUT)) {  
 					if(trade.getTradeType().equals(TradeType.SELL)) {
 					
 						Investment inv = trade.getInvestment();
@@ -93,15 +93,15 @@ public class Transaction {
 
 	// PRIVATE
 	private Double getCallSpread() { // assumes up to two call
-		Double sellCallStrike=getStrike(InvType.call, TradeType.SELL);
-		Double buyCallStrike=getStrike(InvType.call, TradeType.BUY);
+		Double sellCallStrike=getStrike(InvType.CALL, TradeType.SELL);
+		Double buyCallStrike=getStrike(InvType.CALL, TradeType.BUY);
 		Double spread = buyCallStrike - sellCallStrike;
 		return spread;
 	}
 
 	private Double getPutSpread() { // assumes up to two puts
-		Double sellPutStrike=getStrike(InvType.put, TradeType.SELL);
-		Double buyPutStrike=getStrike(InvType.put, TradeType.BUY);
+		Double sellPutStrike=getStrike(InvType.PUT, TradeType.SELL);
+		Double buyPutStrike=getStrike(InvType.PUT, TradeType.BUY);
 		Double spread = sellPutStrike - buyPutStrike;
 		return spread;
 	}
@@ -122,7 +122,7 @@ public class Transaction {
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
 			Investment inv = trade.getInvestment();
-			if(trade.getInvestment().getInvType().equals(InvType.call) &&
+			if(trade.getInvestment().getInvType().equals(InvType.CALL) &&
 			   trade.getTradeType().equals(TradeType.SELL)) {
 				contracts=trade.getQuantity();
 			}
@@ -133,7 +133,7 @@ public class Transaction {
 	private Integer getPutSoldContracts() {
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(InvType.put) &&
+			if(trade.getInvestment().getInvType().equals(InvType.PUT) &&
 			   trade.getTradeType().equals(TradeType.SELL)) {
 				contracts=trade.getQuantity();
 			}			
