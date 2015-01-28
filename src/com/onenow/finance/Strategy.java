@@ -7,14 +7,15 @@ import java.util.List;
 public class Strategy {
 	
 	private List<Transaction> transactions;
-	private List<Double> checkpoints;	
-	
 	private Greeks greeks; // TODO: aggregate only ?
+	
+	private List<Integer> checkpoints;	
+	private Integer keyCheckpoint=0;
 		
 	// CONSTRUCTOR
 	public Strategy() {
 		setTransactions(new ArrayList<Transaction>());
-		setCheckpoints(new ArrayList<Double>());		
+		setCheckpoints(new ArrayList<Integer>());		
 	}
 	
 	// PUBLIC	
@@ -140,9 +141,10 @@ public class Strategy {
 		addNewCheckpoint(strike*(1-2*bufferPercent));
 	}
 	
-	private void addNewCheckpoint(Double num) {
-		if(!getCheckpoints().contains(num)){
-			getCheckpoints().add(num);
+	public void addNewCheckpoint(Double num) {
+		Integer point = num.intValue();
+		if(!getCheckpoints().contains(point)){
+			getCheckpoints().add(point);
 		}
 	}
 
@@ -164,19 +166,19 @@ public class Strategy {
 	}
 
 	private String getBreakEven() {
-		List<Double> breakEven = new ArrayList<Double>();
+		List<Integer> breakEven = new ArrayList<Integer>();
 		Collections.sort(getCheckpoints());
 		String s="";
-		for(Double price=getCheckpoints().get(0); 
+		for(Integer price=getCheckpoints().get(0); 
 			price<getCheckpoints().get(getCheckpoints().size()-1); 
-			price=price+0.1) {
-			Double val = getNetValue(price);
+			price=price+1) {
+			Double val = getNetValue(price*1.0); // convert to double
 			if(Math.abs(val)<10) { 
 				breakEven.add(price); // multiple for same b/e
 			}
 		}	
 		for(int i=0; i<breakEven.size(); i++) { // reduce multiple to 1
-			Double be = breakEven.get(i);
+			Integer be = breakEven.get(i);
 			if(i==0) {
 				s = s + "$" + Math.round(be);
 			}
@@ -194,14 +196,25 @@ public class Strategy {
 		setStrikes();
 		Collections.sort(getCheckpoints());
 		for(int i=0; i<getCheckpoints().size(); i++) {
-			Double checkpoint = getCheckpoints().get(i);
-			s = s + "Profit($" + Math.round(checkpoint.intValue()) + "): $" + Math.round(getNetValue(checkpoint)) + "\n";
+			Integer checkpoint = getCheckpoints().get(i);
+			s = s + "Profit($" + checkpoint + "): $" + Math.round(getNetValue(checkpoint*1.0));
+			Integer range=3;
+			Integer max=getKeyCheckpoint()+range;
+			Integer min=getKeyCheckpoint()-range;
+			if((checkpoint <= max) &&
+			   (checkpoint >= min)) {
+				s = s + " " + "|";
+				if(checkpoint.equals(getKeyCheckpoint())){
+					s = s + ">";
+				}
+			}
+			s = s + "\n";
 		}
 		return s;
 	}
 	
 	private String bidOrderToString() {
-		String s = ""; // intValue
+		String s = ""; 
 		s = s + "BIDDING SCORE ";
 		s = s + RewardAlgo.Linear + ": " + getBiddingOrder(RewardAlgo.Linear).intValue() + ". " +
 				RewardAlgo.Success + ": " + getBiddingOrder(RewardAlgo.Success).intValue() + ". " +
@@ -277,12 +290,20 @@ public class Strategy {
 		this.transactions = transactions;
 		}
 
-	private List<Double> getCheckpoints() {
+	private List<Integer> getCheckpoints() {
 		return checkpoints;
 	}
 
-	private void setCheckpoints(List<Double> checkpoints) {
+	private void setCheckpoints(List<Integer> checkpoints) {
 		this.checkpoints = checkpoints;
+	}
+
+	public Integer getKeyCheckpoint() {
+		return keyCheckpoint;
+	}
+
+	public void setKeyCheckpoint(Integer keyCheckpoint) {
+		this.keyCheckpoint = keyCheckpoint;
 	}
 
 }

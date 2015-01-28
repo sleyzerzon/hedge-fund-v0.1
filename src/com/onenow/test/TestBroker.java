@@ -82,14 +82,18 @@ public class TestBroker {
 	private boolean testExocet() {
 		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate());
 		
-		StrategyIronCondor ic = ex.getIronCondor(InvProb.low, TradeRatio.low, getBroker(), 0.50);
+		StrategyIronCondor ic = ex.getIronCondor(InvProb.low, TradeRatio.none, getBroker(), 0.50);
 		testIronCondor(ex, ic); 
 		
-		StrategyCallSpread cs = ex.getCallSpread(InvProb.low, TradeRatio.low, getBroker(), 0.7);
+		StrategyCallSpread cs = ex.getCallSpread(InvProb.low, TradeRatio.none, getBroker(), 0.7);
 		testCallSpread(ex, cs); 
 
-		StrategyPutSpread ps = ex.getPutSpread(InvProb.low, TradeRatio.low, getBroker(), 0.6);
+		StrategyPutSpread ps = ex.getPutSpread(InvProb.low, TradeRatio.none, getBroker(), 0.6);
 		testPutSpread(ex, ps); 
+		
+		StrategyIronCondor st = ex.getIronCondor(InvProb.strangle, TradeRatio.none, getBroker(), 0.50);
+		System.out.println(ex.toString());
+		
 
 		if(cs.getMaxProfit()<(0.2*ic.getMaxProfit())) {
 			System.out.println("RUN only put spread with " + 
@@ -103,75 +107,75 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testPutSpread(Exocet ex, StrategyPutSpread ps) {
+	private boolean testPutSpread(Exocet ex, StrategyPutSpread strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
 
-		if(!ps.getMaxProfit().equals(245.0)) {
-			System.out.println("ERROR ps max profit " + ps.getMaxProfit());
+		if(!strat.getMaxProfit().equals(245.0)) {
+			System.out.println("ERROR ps max profit " + strat.getMaxProfit());
 			return false;
 		} 
-		if(!ps.getMaxLoss().equals(-255.0)) {
-			System.out.println("ERROR ps max loss " + ps.getMaxLoss());
+		if(!strat.getMaxLoss().equals(-255.0)) {
+			System.out.println("ERROR ps max loss " + strat.getMaxLoss());
 			return false;
 		}
 		return true;
 	}
 
-	private boolean testCallSpread(Exocet ex, StrategyCallSpread cs) {
+	private boolean testCallSpread(Exocet ex, StrategyCallSpread strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
 
-		if(!cs.getMaxProfit().equals(245.0)) {
-			System.out.println("ERROR cs max profit " + cs.getMaxProfit());
+		if(!strat.getMaxProfit().equals(245.0)) {
+			System.out.println("ERROR cs max profit " + strat.getMaxProfit());
 			return false;
 		} 
-		if(!cs.getMaxLoss().equals(-255.0)) {
-			System.out.println("ERROR cs max loss " + cs.getMaxLoss());
+		if(!strat.getMaxLoss().equals(-255.0)) {
+			System.out.println("ERROR cs max loss " + strat.getMaxLoss());
 			return false;
 		}
 		return true;
 	}
 
-	private boolean testIronCondor(Exocet ex, StrategyIronCondor ic) {
+	private boolean testIronCondor(Exocet ex, StrategyIronCondor strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
 
-		if(!ic.getPutNetPremium().equals(122.5)) {
-			System.out.println("ERROR ic put net premium " + ic.getPutNetPremium());
+		if(!strat.getPutNetPremium().equals(122.5)) {
+			System.out.println("ERROR ic put net premium " + strat.getPutNetPremium());
 			return false;
 		} 
-		if(!ic.getCallNetPremium().equals(87.5)) {
-			System.out.println("ERROR ic call net premium " + ic.getCallNetPremium());
+		if(!strat.getCallNetPremium().equals(87.5)) {
+			System.out.println("ERROR ic call net premium " + strat.getCallNetPremium());
 			return false;
 		} 
-		if(!ic.getMaxProfit().equals(210.0)) {
-			System.out.println("ERROR ic max profit " + ic.getMaxProfit());
+		if(!strat.getMaxProfit().equals(210.0)) {
+			System.out.println("ERROR ic max profit " + strat.getMaxProfit());
 			return false;
 		} 
-		if(!ic.getMaxLoss().equals(-290.0)) {
-			System.out.println("ERROR ic max loss " + ic.getMaxLoss());
+		if(!strat.getMaxLoss().equals(-290.0)) {
+			System.out.println("ERROR ic max loss " + strat.getMaxLoss());
 			return false;
 		} 
-		if(!ic.getBoughtNetPremium().equals(-37.5)) {
-			System.out.println("ERROR ic bought net " + ic.getBoughtNetPremium());
+		if(!strat.getBoughtNetPremium().equals(-37.5)) {
+			System.out.println("ERROR ic bought net " + strat.getBoughtNetPremium());
 			return false;
 		} 
-		if(!ic.getSoldNetPremium().equals(247.5)) {
-			System.out.println("ERROR ic sold net " + ic.getSoldNetPremium());
+		if(!strat.getSoldNetPremium().equals(247.5)) {
+			System.out.println("ERROR ic sold net " + strat.getSoldNetPremium());
 			return false;
 		}
 		// now more aggressive
-		ic = ex.getIronCondor(InvProb.low, TradeRatio.low, getBroker(), 0.75); 
-		if(!ic.getMaxProfit().equals(245.0)) {
-			System.out.println("ERROR ic+ max profit " + ic.getMaxProfit());
+		strat = ex.getIronCondor(InvProb.low, TradeRatio.low, getBroker(), 0.75); 
+		if(!strat.getMaxProfit().equals(245.0)) {
+			System.out.println("ERROR ic+ max profit " + strat.getMaxProfit());
 			return false;
 		} 
-		if(!ic.getMaxLoss().equals(-255.0)) {
-			System.out.println("ERROR ic+ max loss " + ic.getMaxLoss());
+		if(!strat.getMaxLoss().equals(-255.0)) {
+			System.out.println("ERROR ic+ max loss " + strat.getMaxLoss());
 			return false;
 		} 
 		return true;

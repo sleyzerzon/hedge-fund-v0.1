@@ -51,6 +51,7 @@ public class Exocet {
 		Double price = getBroker().getPrice(index, TradeType.LAST); 
 		setUnderPrice(price);
 		setExocet(new StrategyCallSpread(getCallBuy(), getCallSell()));
+		setCheckpoints(price);
 		return (StrategyCallSpread) getExocet();
 	}
 	
@@ -64,6 +65,7 @@ public class Exocet {
 		Double price = getBroker().getPrice(index, TradeType.LAST); 
 		setUnderPrice(price);
 		setExocet(new StrategyPutSpread(getPutBuy(), getPutSell()));
+		setCheckpoints(price);
 		return (StrategyPutSpread) getExocet();	
 	}
 	
@@ -78,10 +80,26 @@ public class Exocet {
 		setUnderPrice(price);
 		setExocet(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
 											getPutBuy(), getPutSell()));
+		setCheckpoints(price);
 		return (StrategyIronCondor) getExocet();
 	}
-	
+		
 	// PRIVATE
+	private void setCheckpoints(Double price) {
+		Integer num = (int) Math.round(price);
+		getExocet().setKeyCheckpoint(num);
+		getExocet().addNewCheckpoint(num+1.0);
+		getExocet().addNewCheckpoint(num+2.0);
+		getExocet().addNewCheckpoint(num+3.0);
+		getExocet().addNewCheckpoint(num+4.0);
+		getExocet().addNewCheckpoint(num+5.0);
+		getExocet().addNewCheckpoint(num-1.0);
+		getExocet().addNewCheckpoint(num-2.0);
+		getExocet().addNewCheckpoint(num-3.0);
+		getExocet().addNewCheckpoint(num-4.0);
+		getExocet().addNewCheckpoint(num-5.0);
+	}
+	
 	private Trade getCallBuy() {
 		Trade trade = getInv(InvType.call, TradeType.BUY); 	
 		return trade;
@@ -168,7 +186,7 @@ public class Exocet {
 		strike = getStrikeAboveClosing();
 		return strike;
 	}
-	private Double getSTCallSellStrike() {
+	private Double getSTCallSellStrike() { // call or put?
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing()-getSpread();
 		return strike;
@@ -197,9 +215,9 @@ public class Exocet {
 		strike = getStrikeBelowClosing();
 		return strike;
 	}
-	private Double getSTPutSellStrike() {
+	private Double getSTPutSellStrike() { // call or put?
 		Double strike = 0.0;
-		strike = getStrikeBelowClosing()+getSpread();
+		strike = getStrikeBelowClosing(); // always call
 		return strike;
 	}
 
@@ -218,17 +236,17 @@ public class Exocet {
 		return strike;
 	}
 
-	private Double estClosing() {
+	// TODO: STUDY how long ago priceBefore is the best predictor of closing?
+	public Double estClosing() {
 		// TODO: use actuals
-		Double priceOpen=2063.15;
+		Double priceBefore=2057.69;
+		Double hsSince=1.0; 
+
 		Double priceNow=getUnderPrice(); // 2054.74
-		Double delta=priceNow-priceOpen;
-		Double hsOpen=6.5;
-		Double velocity=delta/hsOpen;
+		Double delta=priceNow-priceBefore;
+		Double velocity=delta/hsSince;
 		Double hsLeft=0.50;
 		Double estClosing=priceNow+velocity*hsLeft; 
-//		System.out.println(	"***EST CLOSING " + Math.round(estClosing) + 
-//							"***BAKED CLOSING " + Math.round(bakedClosing()));		
 		return estClosing;
 	}
 	private Double bakedClosing() { // based on ITM option mid value
@@ -254,7 +272,8 @@ public class Exocet {
 		s = s + "***EXOCET" + "\n";
 		s = s + "PROBABILITY " + getProb() + ", " +
 				"RATIO " + getRatio() + ", " +
-				"AGGRESSION " + getAgression() + "\n";
+				"AGGRESSION " + getAgression() + ", " + 
+				"EST CLOSING " + Math.round(estClosing()) + "\n";
 		s = s + getExocet().toString();
 		return s;
 	}
