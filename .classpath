@@ -6,7 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="ibtsrc"/>
+	<classpathentry kind="src" path="InteractiveBrokers"/>
 	<classpathentry kind="src" path="swfgen">
 		<attributes>
 			<attribute name="optional" value="true"/>
