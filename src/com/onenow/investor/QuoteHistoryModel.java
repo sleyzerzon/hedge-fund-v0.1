@@ -18,14 +18,15 @@ public class QuoteHistoryModel {
 		setController(cont);
 	}
 
-	void addContract(Contract cont) {
-		int duration = 1;
-		boolean rthOnly=false;
+	void addContract(Contract cont, 
+					 String end, int durations, DurationUnit durUnit,
+					 BarSize size, WhatToShow show,
+					 boolean rth) {
 		
 		panel = new QuoteBar();
-		getController().reqHistoricalData(cont, "20120101 12:00:00", duration, 
-				DurationUnit.WEEK, BarSize._1_hour, WhatToShow.MIDPOINT, 
-				rthOnly, panel);
+		getController().reqHistoricalData(cont, end, durations, durUnit,
+											size, show, rth,
+											panel);
 	}
 	
 	// PRINT

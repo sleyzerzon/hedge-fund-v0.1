@@ -40,14 +40,15 @@ public class InteractiveBrokers implements ConnectionHandler {
 
 		setController(new InvestorController((com.onenow.investor.InvestorController.ConnectionHandler) this, getInLogger(), getOutLogger()));
 		
-		// gateway port 4001, app port 7496
-		getController().connect("127.0.0.1", 4001, 0, null); 	
+		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
 		
 		QuoteModel qModel = new QuoteModel(getController());
 		qModel.addContract(contractToQuote());
-		
+				
 		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController());
-		qHistory.addContract(contractToQuote());
+		qHistory.addContract(	contractToQuote(), "20111231 16:30:00", 1, DurationUnit.DAY, 
+								BarSize._30_secs, WhatToShow.MIDPOINT,
+								false);
 		
 		// IRealTimeBarHandler
 	}
