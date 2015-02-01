@@ -6,15 +6,9 @@ import com.ib.client.Types.WhatToShow;
 import com.onenow.investor.InvestorController.IHistoricalDataHandler;
 
 public class QuoteHistoryModel {
-//	final ContractPanel m_contractPanel = new ContractPanel(m_contract);
-//	final UpperField m_end = new UpperField();
-//	final UpperField m_duration = new UpperField();
-//	final TCombo<DurationUnit> m_durationUnit = new TCombo<DurationUnit>( DurationUnit.values() );
-//	final TCombo<BarSize> m_barSize = new TCombo<BarSize>( BarSize.values() );
-//	final TCombo<WhatToShow> m_whatToShow = new TCombo<WhatToShow>( WhatToShow.values() );
-//	final JCheckBox m_rthOnly = new JCheckBox();
 	
 	private InvestorController controller;
+	private QuoteBar panel;
 	
 	public QuoteHistoryModel() {
 	
@@ -28,12 +22,21 @@ public class QuoteHistoryModel {
 		int duration = 1;
 		boolean rthOnly=false;
 		
-		QuoteBar panel = new QuoteBar();
+		panel = new QuoteBar();
 		getController().reqHistoricalData(cont, "20120101 12:00:00", duration, 
 				DurationUnit.WEEK, BarSize._1_hour, WhatToShow.MIDPOINT, 
 				rthOnly, panel);
 	}
+	
+	// PRINT
+	public String toString() {
+		String s="";
+		return s;
+	}
 
+	// TEST
+	
+	// SET GET
 	private InvestorController getController() {
 		return controller;
 	}
@@ -42,13 +45,6 @@ public class QuoteHistoryModel {
 		this.controller = controller;
 	}
 	
-//	void addContract( Contract contract) {
-//		Quote row = new Quote( this, contract.description() );
-//		m_rows.add( row);
-//		getController().reqMktData(contract, "", false, row);
-//		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
-//	}
-
 }
 	
 	

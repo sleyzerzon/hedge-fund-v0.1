@@ -46,13 +46,8 @@ public class InteractiveBrokers implements ConnectionHandler {
 		QuoteModel qModel = new QuoteModel(getController());
 		qModel.addContract(contractToQuote());
 		
-		System.out.println(qModel.rowToString(0));
-		
 		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController());
 		qHistory.addContract(contractToQuote());
-		
-//		System.out.println("COUNT " + qHistory.getRowCount());
-
 		
 		// IRealTimeBarHandler
 	}

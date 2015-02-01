@@ -20,7 +20,8 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 
 
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
-		m_rows.add( bar);
+		m_rows.add(bar);
+		System.out.println("History " + bar.toString());
 	}
 	
 	@Override public void historicalDataEnd() {
@@ -41,7 +42,7 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 //		});
 //	}
 
-	class BarModel extends AbstractTableModel {
+	public class BarModel extends AbstractTableModel {
 		@Override public int getRowCount() {
 			return m_rows.size();
 		}

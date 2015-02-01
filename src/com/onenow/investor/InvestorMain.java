@@ -12,6 +12,8 @@ public class InvestorMain {
 		
 		ib.run();
 		
+		
+		
 //	      try {
 //	          int rfqId = (int) (System.currentTimeMillis() / 1000);
 //	          int mode = (args.length > 0) ? Integer.parseInt(args[0]) : 0;

@@ -33,17 +33,18 @@ public class QuoteModel extends AbstractTableModel {
 
 	void addContract( Contract contract) {
 		Quote row = new Quote( this, contract.description() );
-		m_rows.add( row);
+		m_rows.add(row);
 		getController().reqMktData(contract, "", false, (ITopMktDataHandler) row);
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 	
-	void addRow( Quote row) {
+	void addRow( Quote row) { // callback
 		m_rows.add( row);
+//		System.out.println("Quote " + toString(0));
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 
-	public String rowToString(int which) {
+	public String toString(int which) {
 		Quote row = m_rows.get(which);
 		String s="\n";
 		s = s + "-\n";
@@ -137,6 +138,21 @@ public class QuoteModel extends AbstractTableModel {
 			m_description = description;
 		}
 
+		public String toString() {
+			String s="\n\n";
+			s = s + "QUOTE" + "\n";
+			s = s + "Description " + m_description + "\n";
+			s = s + "Bid " + m_bid + "\n";
+			s = s + "Ask " + m_ask + "\n";
+			s = s + "Last " + m_last + "\n";
+			s = s + "Last time " + m_lastTime + "\n";
+			s = s + "Bid size " + m_bidSize + "\n";
+			s = s + "Ask size " + m_askSize + "\n";
+			s = s + "Close " + m_close + "\n";
+			s = s + "Frozen " + m_frozen + "\n";
+			return s;
+		}
+		
 		public String change() {
 			return m_close == 0	? null : fmtPct( (m_last - m_close) / m_close);
 		}
@@ -158,6 +174,10 @@ public class QuoteModel extends AbstractTableModel {
 				default: break;	
 			}
 			m_model.fireTableDataChanged(); // should use a timer to be more efficient
+			
+			if(m_close!=0.0){
+				System.out.println(toString());
+			}
 		}
 
 		@Override public void tickSize( TickType tickType, int size) {
@@ -174,6 +194,8 @@ public class QuoteModel extends AbstractTableModel {
                 default: break; 
 			}
 			m_model.fireTableDataChanged();
+			
+//			System.out.println("B " + toString());
 		}
 		
 		@Override public void tickString(TickType tickType, String value) {
@@ -188,6 +210,8 @@ public class QuoteModel extends AbstractTableModel {
 		@Override public void marketDataType(MktDataType marketDataType) {
 			m_frozen = marketDataType == MktDataType.Frozen;
 			m_model.fireTableDataChanged();
+			
+//			System.out.println("A " + toString());
 		}
 	}
 

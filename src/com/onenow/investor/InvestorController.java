@@ -408,14 +408,17 @@ public class InvestorController implements EWrapper {
 		}
 	}
 
-    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, ITopMktDataHandler row) {
+    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, 
+    		ITopMktDataHandler row) {
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, row);
-    	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
+    	m_client.reqMktData( reqId, contract, genericTickList, snapshot, 
+    			Collections.<TagValue>emptyList() );
 		sendEOM();
     }
 
-    public void reqOptionMktData(Contract contract, String genericTickList, boolean snapshot, IOptHandler handler) {
+    public void reqOptionMktData(Contract contract, String genericTickList, boolean snapshot, 
+    		IOptHandler handler) {
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, handler);
     	m_optionCompMap.put( reqId, handler);
@@ -875,7 +878,7 @@ public class InvestorController implements EWrapper {
 					longDate = Long.parseLong( date);
 				}
 				Bar bar = new Bar( longDate, high, low, open, close, wap, volume, count);
-				handler.historicalData(bar, hasGaps);
+				handler.historicalData(bar, hasGaps); // *********** HERE 
 			}
 		}
 		recEOM();
