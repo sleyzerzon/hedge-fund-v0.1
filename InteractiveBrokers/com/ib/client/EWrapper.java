@@ -3,6 +3,8 @@
 
 package com.ib.client;
 
+import com.onenow.investor.Contract;
+
 
 public interface EWrapper {
     ///////////////////////////////////////////////////////////////////////

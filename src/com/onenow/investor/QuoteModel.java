@@ -9,43 +9,42 @@ import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import com.ib.client.Contract;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
+import com.onenow.investor.InvestorController.ITopMktDataHandler;
 import com.onenow.investor.InvestorController.TopMktDataAdapter;
-import com.onenow.investor.InvestorTopModel;
+import com.onenow.investor.QuoteModel;
 
 
-public class InvestorTopModel extends AbstractTableModel {
+public class QuoteModel extends AbstractTableModel {
 
 	private InvestorController controller;
 
-	public InvestorTopModel() {
+	public QuoteModel() {
 		
 	}
 
-	public InvestorTopModel(InvestorController cont) {
+	public QuoteModel(InvestorController cont) {
 		setController(cont);
 	}
 	
-	private ArrayList<TopRow> m_rows = new ArrayList<TopRow>();
+	private ArrayList<Quote> m_rows = new ArrayList<Quote>();
 
-	void addRow( Contract contract) {
-		TopRow row = new TopRow( this, contract.description() );
+	void addContract( Contract contract) {
+		Quote row = new Quote( this, contract.description() );
 		m_rows.add( row);
-		getController().reqMktData(contract, "", false, row);
+		getController().reqMktData(contract, "", false, (ITopMktDataHandler) row);
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 	
-	void addRow( TopRow row) {
+	void addRow( Quote row) {
 		m_rows.add( row);
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 
-	// Pablo added method
 	public String rowToString(int which) {
-		TopRow row = m_rows.get(which);
+		Quote row = m_rows.get(which);
 		String s="\n";
 		s = s + "-\n";
 		s = s + "Description " + row.m_description + "\n";
@@ -62,7 +61,7 @@ public class InvestorTopModel extends AbstractTableModel {
 	}				
 	
 	public void desubscribe() {
-		for (TopRow row : m_rows) {
+		for (Quote row : m_rows) {
 			getController().cancelMktData( row);
 		}
 	}		
@@ -91,7 +90,7 @@ public class InvestorTopModel extends AbstractTableModel {
 	}
 
 	@Override public Object getValueAt(int rowIn, int col) {
-		TopRow row = m_rows.get( rowIn);
+		Quote row = m_rows.get( rowIn);
 		switch( col) {
 			case 0: return row.m_description;
 			case 1: return row.m_bidSize;
@@ -107,7 +106,7 @@ public class InvestorTopModel extends AbstractTableModel {
 	}
 	
 	public void color(TableCellRenderer rend, int rowIn, Color def) {
-		TopRow row = m_rows.get( rowIn);
+		Quote row = m_rows.get( rowIn);
 		Color c = row.m_frozen ? Color.gray : def;
 		((JLabel)rend).setForeground( c);
 	}
@@ -116,8 +115,7 @@ public class InvestorTopModel extends AbstractTableModel {
 		getController().cancelMktData( m_rows.get( i) );
 	}
 	
-	// Pablo made public
-	public static class TopRow extends TopMktDataAdapter {
+	public class Quote extends TopMktDataAdapter {
 		AbstractTableModel m_model;
 		String m_description;
 		double m_bid;
@@ -130,12 +128,11 @@ public class InvestorTopModel extends AbstractTableModel {
 		int m_volume;
 		boolean m_frozen;
 		
-		//Pablo added default constructor
-		public TopRow () {
+		public Quote () {
 			
 		}
 		
-		TopRow( AbstractTableModel model, String description) {
+		Quote( AbstractTableModel model, String description) {
 			m_model = model;
 			m_description = description;
 		}

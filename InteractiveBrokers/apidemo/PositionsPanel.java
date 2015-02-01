@@ -17,9 +17,9 @@ import apidemo.util.HtmlButton;
 import apidemo.util.VerticalPanel;
 import apidemo.util.NewTabbedPanel.NewTabPanel;
 
-import com.ib.client.Contract;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiController.IPositionHandler;
+import com.onenow.investor.Contract;
 
 
 public class PositionsPanel extends NewTabPanel {

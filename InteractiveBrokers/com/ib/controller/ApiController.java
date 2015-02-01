@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import com.ib.client.CommissionReport;
-import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.DeltaNeutralContract;
 import com.ib.client.EWrapper;
@@ -34,6 +33,7 @@ import com.ib.client.Types.MktDataType;
 import com.ib.client.Types.NewsType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
+import com.onenow.investor.Contract;
 
 public class ApiController implements EWrapper {
 	private ApiConnection m_client;

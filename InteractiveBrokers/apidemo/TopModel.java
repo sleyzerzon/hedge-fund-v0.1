@@ -12,11 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import com.ib.client.Contract;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.ib.controller.ApiController.TopMktDataAdapter;
 import com.ib.controller.Formats;
+import com.onenow.investor.Contract;
 
 public class TopModel extends AbstractTableModel {
 	private ArrayList<TopRow> m_rows = new ArrayList<TopRow>();

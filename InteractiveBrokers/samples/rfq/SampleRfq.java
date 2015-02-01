@@ -4,7 +4,6 @@
 package samples.rfq;
 
 import com.ib.client.ComboLeg;
-import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.DeltaNeutralContract;
 import com.ib.client.TickType;
@@ -12,6 +11,7 @@ import com.ib.contracts.ComboContract;
 import com.ib.contracts.FutContract;
 import com.ib.contracts.OptContract;
 import com.ib.contracts.StkContract;
+import com.onenow.investor.Contract;
 
 import java.util.ArrayList;
 

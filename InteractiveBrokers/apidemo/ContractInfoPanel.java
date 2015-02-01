@@ -22,11 +22,11 @@ import apidemo.util.NewTabbedPanel.INewTab;
 import apidemo.util.TCombo;
 import apidemo.util.VerticalPanel;
 
-import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.Types.FundamentalType;
 import com.ib.controller.ApiController.IContractDetailsHandler;
 import com.ib.controller.ApiController.IFundamentalsHandler;
+import com.onenow.investor.Contract;
 
 public class ContractInfoPanel extends JPanel {
 	private final Contract m_contract = new Contract();

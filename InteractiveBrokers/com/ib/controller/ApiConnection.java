@@ -14,7 +14,6 @@ import java.lang.reflect.Field;
 import java.net.Socket;
 
 import com.ib.client.ComboLeg;
-import com.ib.client.Contract;
 import com.ib.client.EWrapper;
 import com.ib.client.Builder;
 import com.ib.client.EClientErrors;
@@ -27,6 +26,7 @@ import com.ib.client.TagValue;
 import com.ib.client.Types.AlgoStrategy;
 import com.ib.client.Types.HedgeType;
 import com.ib.client.Types.SecType;
+import com.onenow.investor.Contract;
 
 // NOTE: TWS 936 SERVER_VERSION is 67.
 

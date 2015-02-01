@@ -3,8 +3,8 @@
 
 package com.ib.contracts;
 
-import com.ib.client.Contract;
 import com.ib.client.Types.SecType;
+import com.onenow.investor.Contract;
 
 public class FutContract extends Contract {
     public FutContract(String symbol, String expiry) {

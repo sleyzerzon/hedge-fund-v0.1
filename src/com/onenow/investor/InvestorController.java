@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
+import apidemo.MarketDataPanel.BarResultsPanel;
+
 import com.ib.client.CommissionReport;
-import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.DeltaNeutralContract;
 import com.ib.client.EWrapper;
@@ -41,8 +42,7 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.ib.controller.ApiConnection.ILogger;
-//import com.ib.controller.ApiController.ITopMktDataHandler;
-import com.onenow.investor.InvestorTopModel.TopRow;
+import com.onenow.investor.QuoteModel.Quote;
 
 public class InvestorController implements EWrapper {
 	private ApiConnection m_client;
@@ -408,9 +408,9 @@ public class InvestorController implements EWrapper {
 		}
 	}
 
-    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, TopRow handler) {
+    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, ITopMktDataHandler row) {
     	int reqId = m_reqId++;
-    	m_topMktDataMap.put( reqId, (ITopMktDataHandler) handler);
+    	m_topMktDataMap.put( reqId, row);
     	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
     }
@@ -840,7 +840,8 @@ public class InvestorController implements EWrapper {
 
 	/** @param endDateTime format is YYYYMMDD HH:MM:SS [TMZ]
 	 *  @param duration is number of durationUnits */
-    public void reqHistoricalData( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, BarSize barSize, WhatToShow whatToShow, boolean rthOnly, IHistoricalDataHandler handler) {
+    public void reqHistoricalData( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, 
+    		BarSize barSize, WhatToShow whatToShow, boolean rthOnly, IHistoricalDataHandler handler) {
     	int reqId = m_reqId++;
     	m_historicalDataMap.put( reqId, handler);
     	String durationStr = duration + " " + durationUnit.toString().charAt( 0);

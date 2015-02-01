@@ -2,24 +2,22 @@ package com.onenow.investor;
 
 import java.util.ArrayList;
 
+import apidemo.MarketDataPanel.BarResultsPanel;
 import apidemo.util.TCombo;
 
 import com.ib.client.ComboLeg;
-import com.ib.client.Contract;
-import com.ib.client.TickType;
+import com.ib.client.Types.BarSize;
+import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.MktDataType;
 import com.ib.client.Types.NewsType;
 import com.ib.client.Types.SecType;
+import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
 import com.ib.controller.Formats;
 import com.onenow.investor.InvestorController.ConnectionHandler;
 import com.onenow.investor.InvestorController.IBulletinHandler;
+import com.onenow.investor.InvestorController.IHistoricalDataHandler;
 import com.onenow.investor.InvestorController.ITimeHandler;
-import com.onenow.investor.InvestorController.ITopMktDataHandler;
-import com.onenow.investor.InvestorController.TopMktDataAdapter;
-import com.onenow.investor.InvestorTopModel;
-import com.onenow.investor.InvestorTopModel.TopRow;
-
 
 public class InteractiveBrokers implements ConnectionHandler {
 
@@ -32,9 +30,7 @@ public class InteractiveBrokers implements ConnectionHandler {
 	private ILogger inLogger = new SummitLogger();
 	private ILogger outLogger = new SummitLogger();
 	private InvestorController controller = new InvestorController(this, getInLogger(), getOutLogger());
-	
-	private InvestorTopModel m_model = new InvestorTopModel();
-	
+		
 	private final ArrayList<String> accountList = new ArrayList<String>();
 		
 	final TCombo<MktDataType> marketCombo = new TCombo<MktDataType>( MktDataType.values() );
@@ -47,18 +43,23 @@ public class InteractiveBrokers implements ConnectionHandler {
 		// gateway port 4001, app port 7496
 		getController().connect("127.0.0.1", 4001, 0, null); 	
 		
-		InvestorTopModel m_model = new InvestorTopModel(getController());
+		QuoteModel qModel = new QuoteModel(getController());
+		qModel.addContract(contractToQuote());
 		
-		m_model.addRow(contractToQuote());
+		System.out.println(qModel.rowToString(0));
 		
-		System.out.println(m_model.rowToString(0));
+		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController());
+		qHistory.addContract(contractToQuote());
+		
+//		System.out.println("COUNT " + qHistory.getRowCount());
+
+		
+		// IRealTimeBarHandler
 	}
 	
 
 	
-	private Contract contractToQuote() {
-		
-		//First leg
+	private Contract contractToQuote() {	
 		int p_conId=0;
 		String p_symbol="IBM";
 		String p_secType=SecType.STK.toString();	// "OPT"
@@ -85,23 +86,9 @@ public class InteractiveBrokers implements ConnectionHandler {
                     p_comboLegs, p_primaryExch, p_includeExpired,
                     p_secIdType, p_secId);
 		return cont;
-		
-		//Second leg
-		 
-//		Contract con2 = new Contract();
-		 
-//		con2.m_symbol = "GOOG";
-//		con2.m_secType = "OPT";
-//		con2.m_expiry = “201101”;
-//		con2.m_strike = 150.0
-//		con2.m_right = “C”
-//		con2.m_multiplier = “100”
-//		con2.m_exchange = "SMART”;
-//		con2.m_currency = "USD";     
-		 
-//		.reqContractDetails(2, con2);
-		
 	}
+	
+	
 
 //	private void submitRfq() {
 //		consoleMsg("REQ: rfq " + m_rfqId);

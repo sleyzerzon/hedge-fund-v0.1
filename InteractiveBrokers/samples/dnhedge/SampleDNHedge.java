@@ -6,10 +6,10 @@ package samples.dnhedge;
 
 import samples.rfq.SimpleWrapper;
 
-import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.contracts.OptContract;
 import com.ib.contracts.StkContract;
+import com.onenow.investor.Contract;
 
 
 public class SampleDNHedge extends SimpleWrapper {

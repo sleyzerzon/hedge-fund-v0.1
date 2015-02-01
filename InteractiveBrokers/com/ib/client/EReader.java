@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import com.onenow.investor.Contract;
+
 
 /**
  * This class reads commands from TWS and passes them to the user defined

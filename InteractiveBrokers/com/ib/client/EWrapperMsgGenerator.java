@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.onenow.investor.Contract;
+
 public class EWrapperMsgGenerator {
     public static final String SCANNER_PARAMETERS = "SCANNER PARAMETERS:";
     public static final String FINANCIAL_ADVISOR = "FA:";

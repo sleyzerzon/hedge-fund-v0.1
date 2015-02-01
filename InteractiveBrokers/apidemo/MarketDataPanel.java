@@ -30,7 +30,6 @@ import apidemo.util.VerticalPanel;
 import apidemo.util.NewTabbedPanel.NewTabPanel;
 import apidemo.util.VerticalPanel.StackPanel;
 
-import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.Types.BarSize;
@@ -46,6 +45,7 @@ import com.ib.controller.ApiController.IDeepMktDataHandler;
 import com.ib.controller.ApiController.IHistoricalDataHandler;
 import com.ib.controller.ApiController.IRealTimeBarHandler;
 import com.ib.controller.ApiController.IScannerHandler;
+import com.onenow.investor.Contract;
 
 public class MarketDataPanel extends JPanel {
 	private final Contract m_contract = new Contract();
@@ -341,7 +341,9 @@ public class MarketDataPanel extends JPanel {
 		protected void onHistorical() {
 			m_contractPanel.onOK();
 			BarResultsPanel panel = new BarResultsPanel( true);
-			ApiDemo.INSTANCE.controller().reqHistoricalData(m_contract, m_end.getText(), m_duration.getInt(), m_durationUnit.getSelectedItem(), m_barSize.getSelectedItem(), m_whatToShow.getSelectedItem(), m_rthOnly.isSelected(), panel);
+			ApiDemo.INSTANCE.controller().reqHistoricalData(m_contract, m_end.getText(), m_duration.getInt(), 
+					m_durationUnit.getSelectedItem(), m_barSize.getSelectedItem(), m_whatToShow.getSelectedItem(), 
+					m_rthOnly.isSelected(), panel);
 			m_resultsPanel.addTab( "Historical " + m_contract.symbol(), panel, true, true);
 		}
 	}
@@ -384,13 +386,14 @@ public class MarketDataPanel extends JPanel {
 		}
 	}
 	
-	static class BarResultsPanel extends NewTabPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
+	// Pablo made public
+	public static class BarResultsPanel extends NewTabPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
 		final BarModel m_model = new BarModel();
 		final ArrayList<Bar> m_rows = new ArrayList<Bar>();
 		final boolean m_historical;
 		final Chart m_chart = new Chart( m_rows);
-		
-		BarResultsPanel( boolean historical) {
+				
+		public BarResultsPanel( boolean historical) {
 			m_historical = historical;
 			
 			JTable tab = new JTable( m_model);

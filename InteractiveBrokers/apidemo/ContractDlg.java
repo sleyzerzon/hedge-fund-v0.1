@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
-import com.ib.client.Contract;
+import com.onenow.investor.Contract;
 
 import apidemo.util.HtmlButton;
 
