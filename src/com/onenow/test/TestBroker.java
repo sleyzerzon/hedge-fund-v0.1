@@ -14,11 +14,11 @@ import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.StrategyPutSpread;
 import com.onenow.finance.Trade;
+import com.onenow.finance.TradeRatio;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.Exocet;
-import com.onenow.investor.TradeRatio;
 import com.sforce.ws.ConnectionException;
 
 public class TestBroker {
@@ -97,10 +97,13 @@ public class TestBroker {
 		StrategyIronCondor stL = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.NONE, getBroker(), 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ratioed = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.LOW, getBroker(), 0.50);
+		StrategyIronCondor ratioed = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.HIGH, getBroker(), 0.50);
 		System.out.println(ex.toString());
 
 		StrategyIronCondor stH = ex.getIronCondor(InvProb.USANGLE, TradeRatio.NONE, getBroker(), 0.50);
+		System.out.println(ex.toString());
+
+		StrategyIronCondor ratioleft = ex.getIronCondor(InvProb.LEFT, TradeRatio.VHIGH, getBroker(), 0.50);
 		System.out.println(ex.toString());
 
 

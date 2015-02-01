@@ -12,6 +12,7 @@ import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.StrategyPutSpread;
 import com.onenow.finance.Trade;
+import com.onenow.finance.TradeRatio;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
 
@@ -31,6 +32,9 @@ public class Exocet {
 	private InvProb prob;
 	private TradeRatio ratio;
 		
+	// what is the 5-point velocity through the day
+	// what is the spike frequency
+	
 	public Exocet() {
 		
 	}
@@ -130,9 +134,9 @@ public class Exocet {
 		Integer mQuant=getQuant();
 				
 		if(tradeType.equals(TradeType.BUY)) { // ratio protection
-			mQuant=getMQuant();			
-			if(invType.equals(InvType.PUT) && 
-			   (getProb().equals(InvProb.LSANGLE))) { 
+			mQuant=getMQuant();		
+			boolean onlyUpper = getProb().equals(InvProb.LSANGLE) || getProb().equals(InvProb.LEFT);
+			if(invType.equals(InvType.PUT) && onlyUpper) { 
 			   mQuant=getQuant(); // protect only upside on strangles
 			} 
 		} 
@@ -192,8 +196,10 @@ public class Exocet {
 		if(getProb().equals(InvProb.HIGH)) { strike=getHPCallSellStrike(); }
 		if(getProb().equals(InvProb.MID)) { strike=getMPCallSellStrike(); }
 		if(getProb().equals(InvProb.LOW)) { strike=getLPCallSellStrike(); }
-		if(getProb().equals(InvProb.LSANGLE)) { strike=getLSCallSellStrike(); }
-		if(getProb().equals(InvProb.USANGLE)) { strike=getUSCallSellStrike(); }
+		if(getProb().equals(InvProb.LSANGLE)) { strike=getLowerStrangleCallSellStrike(); }
+		if(getProb().equals(InvProb.USANGLE)) { strike=getUpperStrangleCallSellStrike(); }
+		if(getProb().equals(InvProb.LEFT)) { strike=getLeftCallSellStrike(); }
+//		if(getProb().equals(InvProb.RIGHT)) { strike=getRightCallSellStrike(); }
 		return strike;
 	}
 	private Double getHPCallSellStrike() {
@@ -210,13 +216,18 @@ public class Exocet {
 		strike = getStrikeAboveClosing();
 		return strike;
 	}
+	private Double getLeftCallSellStrike() {
+		Double strike = 0.0;
+		strike = getLowerStrangleCallSellStrike()-getSpread();
+		return strike;		
+	}
 	// *** STRANGLE
-	private Double getLSCallSellStrike() { // call or put?
+	private Double getLowerStrangleCallSellStrike() { // call or put?
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing()-getSpread();
 		return strike;
 	}
-	private Double getUSCallSellStrike() { // call or put?
+	private Double getUpperStrangleCallSellStrike() { // call or put?
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing();
 		return strike;
@@ -228,8 +239,10 @@ public class Exocet {
 		if(getProb().equals(InvProb.HIGH)) { strike=getHPPutSellStrike(); }
 		if(getProb().equals(InvProb.MID)) { strike=getMPPutSellStrike(); }
 		if(getProb().equals(InvProb.LOW)) { strike=getLPPutSellStrike(); }
-		if(getProb().equals(InvProb.LSANGLE)) { strike=getLSPutSellStrike(); }
-		if(getProb().equals(InvProb.USANGLE)) { strike=getUSPutSellStrike(); }
+		if(getProb().equals(InvProb.LSANGLE)) { strike=getUnderStranglePutSellStrike(); }
+		if(getProb().equals(InvProb.USANGLE)) { strike=getUpperStranglePutSellStrike(); }
+		if(getProb().equals(InvProb.LEFT)) { strike=getLeftPutSellStrike(); }
+//		if(getProb().equals(InvProb.RIGHT)) { strike=getRightPutSellStrike(); }
 		return strike;
 	}
 	private Double getHPPutSellStrike() {
@@ -246,13 +259,18 @@ public class Exocet {
 		strike = getStrikeBelowClosing();
 		return strike;
 	}
+	private Double getLeftPutSellStrike() {
+		Double strike=0.0;
+		strike = getUnderStranglePutSellStrike()-getSpread();
+		return strike;		
+	}
 	// *** STRANGLE
-	private Double getLSPutSellStrike() { // lower than estClosing
+	private Double getUnderStranglePutSellStrike() { // lower than estClosing
 		Double strike = 0.0;
 		strike = getStrikeBelowClosing(); // always call
 		return strike;
 	}
-	private Double getUSPutSellStrike() { // lower than estClosing
+	private Double getUpperStranglePutSellStrike() { // lower than estClosing
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing(); 
 		return strike;
