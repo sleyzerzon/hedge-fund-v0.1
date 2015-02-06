@@ -29,6 +29,7 @@ public class QuoteHistoryModel {
 											panel);
 	}
 	
+
 	// PRINT
 	public String toString() {
 		String s="";
@@ -45,6 +46,7 @@ public class QuoteHistoryModel {
 	private void setController(InvestorController controller) {
 		this.controller = controller;
 	}
+	
 	
 }
 	
