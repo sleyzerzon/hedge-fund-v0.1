@@ -1,6 +1,7 @@
 package com.onenow.investor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import apidemo.MarketDataPanel.BarResultsPanel;
 import apidemo.util.TCombo;
@@ -13,7 +14,9 @@ import com.ib.client.Types.NewsType;
 import com.ib.client.Types.SecType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
+import com.ib.controller.Bar;
 import com.ib.controller.Formats;
+import com.onenow.finance.Underlying;
 import com.onenow.investor.InvestorController.ConnectionHandler;
 import com.onenow.investor.InvestorController.IBulletinHandler;
 import com.onenow.investor.InvestorController.IHistoricalDataHandler;
@@ -35,6 +38,13 @@ public class InteractiveBrokers implements ConnectionHandler {
 		
 	final TCombo<MktDataType> marketCombo = new TCombo<MktDataType>( MktDataType.values() );
 	
+	final ArrayList<Bar> m_rows = new ArrayList<Bar>();
+
+	// LOOK FOR FREEK-OUT IN LAST 30 DAYS, SET CHANNEL
+	// HAVE 14 DAYS IN CASE OVER-BUYING/SELLING CONTINUES
+	// measured at time that run-up + sell-off end (Warn level); before OVER-REACTION begins
+	// buy AFTER over-sold ends, sell after over-buying ends (Act level)
+	private static List<Channel> channels = new ArrayList<Channel>();
 	
 	public void run() {
 
@@ -45,7 +55,9 @@ public class InteractiveBrokers implements ConnectionHandler {
 		QuoteModel qModel = new QuoteModel(getController());
 		qModel.addContract(contractToQuote());
 				
-		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController());
+		setChannels();
+
+		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
 		qHistory.addContract(	contractToQuote(), "20111231 16:30:00", 1, DurationUnit.DAY, 
 								BarSize._30_secs, WhatToShow.MIDPOINT,
 								false);
@@ -82,6 +94,60 @@ public class InteractiveBrokers implements ConnectionHandler {
                     p_comboLegs, p_primaryExch, p_includeExpired,
                     p_secIdType, p_secId);
 		return cont;
+	}
+	
+	
+	private static void setChannels() {
+		Channel spx = new Channel(new Underlying("SPX"));
+//		Channel rut = new Channel(new Underlying("RUT"));
+//		Channel ndx = new Channel(new Underlying("NDX"));
+
+		getChannels().add(spx);
+//		getChannels().add(spx);
+//		getChannels().add(spx);
+		
+		// SPX
+		spx.addResistance("20150205"); 
+		spx.addSupport("20150202");
+		spx.addSupport("20150129");
+		spx.addResistance("20150122");
+		spx.addSupport("20150114");
+		spx.addResistance("20150108");
+		// *** 30-day trend change
+		spx.addResistance("20141229");  
+		spx.addSupport("20141216"); // fundamentals t2 low 
+		spx.addResistance("20141205"); 
+		// November: mild market 
+		spx.addResistance("20141015"); // CRASH
+		spx.addResistance("20140905"); 
+		spx.addSupport("20140807"); // fundamentals t1 low
+
+		
+//		spx.addResistance(sdf.parse("20150205 14:30:00"), 2063.0); // ET
+//		spx.addSupport(sdf.parse("20150202 09:05:00"), 1983.0);
+//		spx.addSupport(sdf.parse("20150129 12:00:00"), 1990.0);
+//		spx.addResistance(sdf.parse("20150122 14:00:00"), 2063.0);
+//		spx.addSupport(sdf.parse("20150114 12:00:00"), 1992.0);
+//		// spx.addResistance(sdf.parse("20150113 09:00:00"), 2055.0); // faux
+//		spx.addResistance(sdf.parse("20150108 14:00:00"), 2064.0);
+////		spx.addSupport(sdf.parse("20150106 16:30:00"), 2002.0); 
+//		spx.addResistance(sdf.parse("20141229 16:00:00"), 2093.0); // old high
+//		spx.addSupport(sdf.parse("20141216 09:05:00"), 1970.0); // old low
+//		spx.addResistance(sdf.parse("20141205 16:30:00"), 2076.0); // ET
+//		// November: fundamentals slow
+//		// October: market goes down
+//		// September births the top, sets the fundamental
+//		spx.addResistance(sdf.parse("20140905 16:30:00"), 2008.0); // old high
+//		// August births the bottom, sets the fundamental
+//		spx.addSupport(sdf.parse("20140807 09:05:00"), 1906.0); // old low
+	}
+
+	private static List<Channel> getChannels() {
+		return channels;
+	}
+
+	private void setChannels(List<Channel> channels) {
+		this.channels = channels;
 	}
 	
 	
