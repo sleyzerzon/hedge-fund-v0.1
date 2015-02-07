@@ -16,7 +16,7 @@ public class InvestorMain {
 
 //	static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd hh:mm:ss"); // "20111231 16:30:00"
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException, InterruptedException {
 
 
 		InteractiveBrokers ib = new InteractiveBrokers();		

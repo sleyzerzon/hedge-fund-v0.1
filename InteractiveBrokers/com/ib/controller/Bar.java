@@ -50,4 +50,24 @@ public class Bar {
 	@Override public String toString() {
 		return String.format( "%s %s %s %s %s", formattedTime(), m_open, m_high, m_low, m_close);
 	}
+	
+	
+	// SET GET
+	public long getM_time() {
+		return m_time;
+	}
+	public double getM_high() {
+		return m_high;
+	}
+	public double getM_low() {
+		return m_low;
+	}
+	public double getM_open() {
+		return m_open;
+	}
+	public double getM_close() {
+		return m_close;
+	}
+	
+	
 }

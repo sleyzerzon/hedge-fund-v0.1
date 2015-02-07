@@ -41,33 +41,93 @@ public class InteractiveBrokers implements ConnectionHandler {
 	final ArrayList<Bar> m_rows = new ArrayList<Bar>();
 
 	// LOOK FOR FREEK-OUT IN LAST 30 DAYS, SET CHANNEL
-	// HAVE 14 DAYS IN CASE OVER-BUYING/SELLING CONTINUES
+	// HAVE 7+ (14) DAYS IN CASE OVER-BUYING/SELLING CONTINUES
 	// measured at time that run-up + sell-off end (Warn level); before OVER-REACTION begins
-	// buy AFTER over-sold ends, sell after over-buying ends (Act level)
+	// ACT: buy AFTER over-sold ends, 
+	// ACT: calls after over-buying ends: sell ITM, buy OTM 
+	// ==> 30+ minute Full Stochastic: 
+	// TODO: generate that stochastic 
+	
 	private static List<Channel> channels = new ArrayList<Channel>();
 	
-	public void run() {
+	public void run() throws InterruptedException {
 
 		setController(new InvestorController((com.onenow.investor.InvestorController.ConnectionHandler) this, getInLogger(), getOutLogger()));
 		
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
 		
 		QuoteModel qModel = new QuoteModel(getController());
-		qModel.addContract(contractToQuote());
+		qModel.addContract(stockToQuote());
 				
 		setChannels();
+		
+		for(Integer day=1; day<7; day++) {
+		String today="2015020".concat(day.toString()); // for last 30 days
 
-		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
-		qHistory.addContract(	contractToQuote(), "20111231 16:30:00", 1, DurationUnit.DAY, 
-								BarSize._30_secs, WhatToShow.MIDPOINT,
-								false);
+			QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
+			qHistory.addContract(	indexToQuote("SPX"), 
+									today.concat(" 16:30:00"), 1, DurationUnit.DAY, BarSize._1_hour, 
+									WhatToShow.TRADES, false
+									);
+			Thread.sleep(10000);
+
+		}
+		
+		Thread.sleep(5000);
+		
+		System.out.println("C " + channels.get(0).toString());
+		
 		
 		// IRealTimeBarHandler
 	}
 	
-
 	
-	private Contract contractToQuote() {	
+	private Contract indexToQuote(String name) {
+		String p_secType=SecType.IND.toString();	// "OPT"
+
+		String p_symbol="";
+		String p_exchange="";
+		
+		if(name.equals("SPX")) {
+			p_symbol="SPX";
+			p_exchange="CBOE";		// or "BEST"; "Comp Exchange"???
+		}
+		if(name.equals("RUT")) {
+			p_symbol="RUT";
+			p_exchange="RUSSELL";		// or "BEST"; "Comp Exchange"???
+		}
+		if(name.equals("NDX")) {
+			p_symbol="NDX";
+			p_exchange="NASDAQ";		// or "BEST"; "Comp Exchange"???
+		}
+		
+		
+		int p_conId=0;
+		
+		String p_expiry="";		// "20120316"
+		double p_strike=0.0;	// 20.0
+		String p_right=""; 	// "P" ... "Put/call"
+		
+		String p_multiplier="100";
+		String p_currency="USD";
+		String p_localSymbol="";
+		String p_tradingClass="";
+		ArrayList<ComboLeg> p_comboLegs=new ArrayList<ComboLeg>();
+		String p_primaryExch="";
+		boolean p_includeExpired=false;
+		String p_secIdType="";
+		String p_secId="";
+		
+		Contract cont = new Contract();
+		cont = new Contract(p_conId, p_symbol, p_secType, p_expiry,
+                    p_strike, p_right, p_multiplier,
+                    p_exchange, p_currency, p_localSymbol, p_tradingClass,
+                    p_comboLegs, p_primaryExch, p_includeExpired,
+                    p_secIdType, p_secId);
+		return cont;	
+	}
+	
+	private Contract stockToQuote() {	
 		int p_conId=0;
 		String p_symbol="IBM";
 		String p_secType=SecType.STK.toString();	// "OPT"
@@ -98,29 +158,30 @@ public class InteractiveBrokers implements ConnectionHandler {
 	
 	
 	private static void setChannels() {
-		Channel spx = new Channel(new Underlying("SPX"));
-//		Channel rut = new Channel(new Underlying("RUT"));
-//		Channel ndx = new Channel(new Underlying("NDX"));
+		Channel spx = new Channel(new Underlying("SPX")); // CBOE
+//		Channel rut = new Channel(new Underlying("RUT")); // RUSSELL
+//		Channel ndx = new Channel(new Underlying("NDX")); // NASDAQ
 
 		getChannels().add(spx);
 //		getChannels().add(spx);
 //		getChannels().add(spx);
 		
 		// SPX
-		spx.addResistance("20150205"); 
-		spx.addSupport("20150202");
-		spx.addSupport("20150129");
-		spx.addResistance("20150122");
-		spx.addSupport("20150114");
-		spx.addResistance("20150108");
+		spx.addResistance("2015-02-06"); 
+		spx.addResistance("2015-02-05"); // NOT high since did not finish lower next day 
+		spx.addSupport("2015-02-02");
+		spx.addSupport("2015-01-29");
+		spx.addResistance("2015-01-22");
+		spx.addSupport("2015-01-14");
+		spx.addResistance("2015-01-08");
 		// *** 30-day trend change
-		spx.addResistance("20141229");  
-		spx.addSupport("20141216"); // fundamentals t2 low 
-		spx.addResistance("20141205"); 
+		spx.addResistance("2014-12-29");  
+		spx.addSupport("2014-12-16"); // fundamentals t2 low 
+		spx.addResistance("2014-12-05"); 
 		// November: mild market 
-		spx.addResistance("20141015"); // CRASH
-		spx.addResistance("20140905"); 
-		spx.addSupport("20140807"); // fundamentals t1 low
+		spx.addResistance("2014-10-15"); // CRASH
+		spx.addResistance("2014-09-05"); 
+		spx.addSupport("2014-08-07"); // fundamentals t1 low
 
 		
 //		spx.addResistance(sdf.parse("20150205 14:30:00"), 2063.0); // ET
