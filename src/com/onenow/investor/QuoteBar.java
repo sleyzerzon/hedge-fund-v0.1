@@ -29,9 +29,10 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 	// *** HANDLE HISTORY HERE
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
 		m_rows.add(bar);
-		System.out.println("History " + bar.toString());
+//		System.out.println("History " + bar.toString());
 		
-		String day="2015-02-06"; // parse out
+		String day=bar.formattedTime().substring(0, 10);
+//		System.out.println("Day " + day);
 		Double highPrice=bar.getM_high();
 		Double lowPrice= bar.getM_low();		
 		
@@ -41,13 +42,13 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 			if(todo.getResistance().containsKey(day)) {
 				if( highPrice > (Double)todo.getResistance().get(day)) {
 					todo.addResistance(day, highPrice);
-					System.out.println("high " + highPrice);
+//					System.out.println("high " + highPrice);
 				}
 			}
 			if(todo.getSupport().containsKey(day)) {
 				if( lowPrice < (Double)todo.getSupport().get(day)) {
-					todo.addResistance(day, lowPrice);
-					System.out.println("low " + lowPrice);
+					todo.addSupport(day, lowPrice);
+//					System.out.println("low " + lowPrice);
 				}
 			}
 		}

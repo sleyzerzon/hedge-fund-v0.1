@@ -61,26 +61,54 @@ public class InteractiveBrokers implements ConnectionHandler {
 				
 		setChannels();
 		
-		for(Integer day=1; day<7; day++) {
-		String today="2015020".concat(day.toString()); // for last 30 days
-
-			QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
-			qHistory.addContract(	indexToQuote("SPX"), 
-									today.concat(" 16:30:00"), 1, DurationUnit.DAY, BarSize._1_hour, 
-									WhatToShow.TRADES, false
-									);
-			Thread.sleep(10000);
-
+		for(int i=0; i<getChannels().size(); i++) {			
+			Channel channel = getChannels().get(i);
+			List<String> endList = getEndList(channel);
+//			System.out.println("Endlist " + endList.toString());
+			
+			for(int j=0; j<endList.size(); j++) {
+				String end = endList.get(j);
+											
+				QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
+				qHistory.addContract(	indexToQuote(channel.getUnder().getTicker()), 
+										end, 1, DurationUnit.DAY, BarSize._1_hour, 
+										WhatToShow.TRADES, false
+										);
+				System.out.println("...");
+				Thread.sleep(10000);
+			}
 		}
 		
 		Thread.sleep(5000);
 		
-		System.out.println("C " + channels.get(0).toString());
+		System.out.println(channels.toString());
 		
 		
 		// IRealTimeBarHandler
 	}
 	
+	private List<String> getEndList(Channel channel) {
+		List<String> list = new ArrayList<String>();
+		for(int j=0; j<channel.getResDate().size(); j++) {
+			String date = channel.getResDate().get(j); // Resistance
+			list.add(removeDash(date));
+		}
+		for(int j=0; j<channel.getSupDate().size(); j++) {
+			String date = channel.getSupDate().get(j); // Resistance
+			list.add(removeDash(date));
+		}
+		return list;
+	}
+	
+	private String removeDash(String dashed) {
+		String date="";
+		String year=dashed.substring(0, 4);
+		String month=dashed.substring(5, 7);
+		String day=dashed.substring(8, 10);
+		String end = year + month + day + " 16:30:00";
+//		System.out.println("End " + date + " "+ end);
+		return end;
+	}
 	
 	private Contract indexToQuote(String name) {
 		String p_secType=SecType.IND.toString();	// "OPT"

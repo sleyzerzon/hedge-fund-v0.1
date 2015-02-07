@@ -67,9 +67,15 @@ public class Channel {
 		for(int i=0; i<resDate.size(); i++) {
 			String date = resDate.get(i);
 			Double price = (Double) getResistance().get(date);
-			System.out.println("*" + date + " " + price);
+			s = s + "Resistance " + date + " " + price + "\n";
 		}
-		
+
+		for(int i=0; i<supDate.size(); i++) {
+			String date = supDate.get(i);
+			Double price = (Double) getSupport().get(date);
+			s = s + "Support " + date + " " + price + "\n";
+		}
+
 		return s;
 	}
 	
@@ -80,7 +86,7 @@ public class Channel {
 
 	
 	// SET GET
-	private Underlying getUnder() {
+	public Underlying getUnder() {
 		return under;
 	}
 
@@ -111,6 +117,30 @@ public class Channel {
 
 	private void setFundamental(HashMap fundamental) {
 		this.fundamental = fundamental;
+	}
+
+	public List<String> getResDate() {
+		return resDate;
+	}
+
+	private void setResDate(List<String> resDate) {
+		this.resDate = resDate;
+	}
+
+	public List<String> getSupDate() {
+		return supDate;
+	}
+
+	private void setSupDate(List<String> supDate) {
+		this.supDate = supDate;
+	}
+
+	public List<String> getFundDate() {
+		return fundDate;
+	}
+
+	private void setFundDate(List<String> fundDate) {
+		this.fundDate = fundDate;
 	}
 
 	
