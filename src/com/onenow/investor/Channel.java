@@ -1,6 +1,7 @@
 package com.onenow.investor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,44 @@ public class Channel {
 		
 	}
 	
+	public Double getForecastResistance() {
+		int range=4;
+		Double price=0.0;
+		Double min=999999.0;
+
+		Collections.sort(resDate);
+		int size = resDate.size()-1;
+		for(int i=size; i>size-range; i--){
+//			System.out.println(size + " " + i);
+			String date = resDate.get(i);
+			Double level = (Double) getResistance().get(date);
+//			System.out.println(date + " " + level);
+			if(Math.round(level) < Math.round(min)) {
+				price=(double) Math.round(level);
+			}
+		}
+		
+		return price;
+	}
+	
+	public Double getForecastSupport() {
+		int range=3;
+		Double price=0.0;
+		Double max=-999999.0;
+
+		Collections.sort(supDate);
+		int size = supDate.size()-1;
+		for(int i=size; i>size-range; i--){
+//			System.out.println(size + " " + i);
+			String date = supDate.get(i);
+			Double level = (Double) getSupport().get(date);
+//			System.out.println(date + " " + level);
+			if(Math.round(level) > Math.round(max)) {
+				price=(double) Math.round(level);
+			}
+		}
+		return price;
+	}
 	
 	// PRINT
 	public String toString() {
@@ -69,12 +108,14 @@ public class Channel {
 			Double price = (Double) getResistance().get(date);
 			s = s + "Resistance " + date + " " + price + "\n";
 		}
+		s = s + "Forecast Resistance " + getForecastResistance() + "\n";
 
 		for(int i=0; i<supDate.size(); i++) {
 			String date = supDate.get(i);
 			Double price = (Double) getSupport().get(date);
 			s = s + "Support " + date + " " + price + "\n";
 		}
+		s = s + "Forecast Support " + getForecastSupport() + "\n";
 
 		return s;
 	}
