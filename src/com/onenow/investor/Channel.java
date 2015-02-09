@@ -81,7 +81,7 @@ public class Channel {
 	}
 	
 	public Double getForecastSupport() {
-		int range=3;
+		int range=4;
 		Double price=0.0;
 		Double max=-999999.0;
 
@@ -101,21 +101,51 @@ public class Channel {
 	
 	// PRINT
 	public String toString() {
-		String s="";
+		String s="\n";
 
-		for(int i=0; i<resDate.size(); i++) {
-			String date = resDate.get(i);
-			Double price = (Double) getResistance().get(date);
-			s = s + "Resistance " + date + " " + price + "\n";
+		List<String> both = new ArrayList<String>();
+		both.addAll(resDate);
+		both.addAll(supDate);
+		Collections.sort(both);
+//		s = s + both.toString() + "\n";
+		
+		int size = both.size()-1;
+		for(int i=size; i>=0; i--) {
+			String date=both.get(i);
+			Double supPrice=0.0;
+			Double resPrice=0.0;
+			try {
+				supPrice = (Double) getSupport().get(date);
+				if(supPrice>0.0) {
+					s = s + date + "\t" + supPrice + "\n";
+				}
+			} catch (Exception e) {
+//				e.printStackTrace();
+			}
+			
+			try {
+				resPrice = (Double) getResistance().get(date);
+				if(resPrice>0.0) {
+					s = s + date + "\t\t" + resPrice + "\n";
+				}
+			} catch (Exception e) {
+//				e.printStackTrace();
+			}
 		}
-		s = s + "Forecast Resistance " + getForecastResistance() + "\n";
-
-		for(int i=0; i<supDate.size(); i++) {
-			String date = supDate.get(i);
-			Double price = (Double) getSupport().get(date);
-			s = s + "Support " + date + " " + price + "\n";
-		}
-		s = s + "Forecast Support " + getForecastSupport() + "\n";
+		
+//		for(int i=0; i<resDate.size(); i++) {
+//			String date = resDate.get(i);
+//			Double price = (Double) getResistance().get(date);
+//			s = s + "Resistance " + date + " " + price + "\n";
+//		}
+//		s = s + "Forecast Resistance " + getForecastResistance() + "\n";
+//
+//		for(int i=0; i<supDate.size(); i++) {
+//			String date = supDate.get(i);
+//			Double price = (Double) getSupport().get(date);
+//			s = s + "Support " + date + " " + price + "\n";
+//		}
+//		s = s + "Forecast Support " + getForecastSupport() + "\n";
 
 		return s;
 	}
