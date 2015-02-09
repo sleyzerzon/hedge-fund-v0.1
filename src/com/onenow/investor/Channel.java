@@ -18,6 +18,8 @@ public class Channel {
 	private List<String> resDate = new ArrayList<String>();
 	private List<String> supDate = new ArrayList<String>();
 	private List<String> fundDate = new ArrayList<String>();
+	
+	ParseDate parser = new ParseDate();
 		
 	public Channel() {
 		
@@ -61,7 +63,7 @@ public class Channel {
 	}
 	
 	public Double getForecastResistance() {
-		int range=4;
+		int range=3;
 		Double price=0.0;
 		Double min=999999.0;
 
@@ -81,7 +83,7 @@ public class Channel {
 	}
 	
 	public Double getForecastSupport() {
-		int range=4;
+		int range=3;
 		Double price=0.0;
 		Double max=-999999.0;
 
@@ -103,53 +105,60 @@ public class Channel {
 	public String toString() {
 		String s="\n";
 
+		s = s + "DATE" + "\t\t" + "LOW" + "\t" + "HIGH" + "\t" + "WIDTH" + "\t" + "DAYS" + "\n";
+//		s = s + "Bias ";
+		s = s + "tbd est " + "\t" + Math.round(getForecastSupport()) + "\t" + 
+							     Math.round(getForecastResistance()) + "\n\n";
+		s = outlineChannel(s);
+				
+		return s;
+	}
+
+	private String outlineChannel(String s) {
 		List<String> both = new ArrayList<String>();
 		both.addAll(resDate);
 		both.addAll(supDate);
 		Collections.sort(both);
-//		s = s + both.toString() + "\n";
 		
+		Double supPrice=0.0;
+		Double resPrice=0.0;
 		int size = both.size()-1;
 		for(int i=size; i>=0; i--) {
 			String date=both.get(i);
-			Double supPrice=0.0;
-			Double resPrice=0.0;
 			try {
 				supPrice = (Double) getSupport().get(date);
+				String prevDate = both.get(i-1);
 				if(supPrice>0.0) {
-					s = s + date + "\t" + supPrice + "\n";
+					Double prevResprice = (Double) getResistance().get(prevDate);
+					Double width = prevResprice-supPrice;
+					s = s + date + "\t" + Math.round(supPrice) + "\t\t" + 
+										  Math.round(width) + "\t" + 
+										  parser.getElapsedDays(prevDate, date) + 
+										  "\n";
 				}
 			} catch (Exception e) {
-//				e.printStackTrace();
+//				e.printStackTrace(); it's normal b/c adAll
 			}
 			
 			try {
 				resPrice = (Double) getResistance().get(date);
+				String prevDate = both.get(i-1);
 				if(resPrice>0.0) {
-					s = s + date + "\t\t" + resPrice + "\n";
+					Double prevSubprice = (Double) getSupport().get(prevDate);
+					Double width = resPrice-prevSubprice;
+					s = s + date + "\t\t" + Math.round(resPrice) + "\t" + 
+											Math.round(width) + "\t" + 
+											parser.getElapsedDays(prevDate, date) + 
+											"\n";
 				}
 			} catch (Exception e) {
-//				e.printStackTrace();
+//				e.printStackTrace(); it's normal b/c adAll
 			}
 		}
-		
-//		for(int i=0; i<resDate.size(); i++) {
-//			String date = resDate.get(i);
-//			Double price = (Double) getResistance().get(date);
-//			s = s + "Resistance " + date + " " + price + "\n";
-//		}
-//		s = s + "Forecast Resistance " + getForecastResistance() + "\n";
-//
-//		for(int i=0; i<supDate.size(); i++) {
-//			String date = supDate.get(i);
-//			Double price = (Double) getSupport().get(date);
-//			s = s + "Support " + date + " " + price + "\n";
-//		}
-//		s = s + "Forecast Support " + getForecastSupport() + "\n";
-
 		return s;
 	}
 	
+
 	// TEST
 	public void test() {
 		

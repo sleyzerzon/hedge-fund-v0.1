@@ -39,6 +39,9 @@ public class InteractiveBrokers implements ConnectionHandler {
 	final TCombo<MktDataType> marketCombo = new TCombo<MktDataType>( MktDataType.values() );
 	
 	final ArrayList<Bar> m_rows = new ArrayList<Bar>();
+	
+	ParseDate parser = new ParseDate();
+
 
 	// LOOK FOR FREEK-OUT IN LAST 30 DAYS, SET CHANNEL
 	// HAVE 7+ (14) DAYS IN CASE OVER-BUYING/SELLING CONTINUES
@@ -75,7 +78,7 @@ public class InteractiveBrokers implements ConnectionHandler {
 										WhatToShow.TRADES, false
 										);
 				System.out.println("...");
-				Thread.sleep(10000);
+				Thread.sleep(12000);
 			}
 		}
 		
@@ -91,23 +94,13 @@ public class InteractiveBrokers implements ConnectionHandler {
 		List<String> list = new ArrayList<String>();
 		for(int j=0; j<channel.getResDate().size(); j++) {
 			String date = channel.getResDate().get(j); // Resistance
-			list.add(removeDash(date));
+			list.add(parser.removeDash(date));
 		}
 		for(int j=0; j<channel.getSupDate().size(); j++) {
 			String date = channel.getSupDate().get(j); // Resistance
-			list.add(removeDash(date));
+			list.add(parser.removeDash(date));
 		}
 		return list;
-	}
-	
-	private String removeDash(String dashed) {
-		String date="";
-		String year=dashed.substring(0, 4);
-		String month=dashed.substring(5, 7);
-		String day=dashed.substring(8, 10);
-		String end = year + month + day + " 16:30:00";
-//		System.out.println("End " + date + " "+ end);
-		return end;
 	}
 	
 	private Contract indexToQuote(String name) {
@@ -194,22 +187,27 @@ public class InteractiveBrokers implements ConnectionHandler {
 //		getChannels().add(spx);
 //		getChannels().add(spx);
 		
+		// LOOKING FOR OVER-REACTION of 30% of range within 3 days
+		// AFTER HI/LO that subsides next day
+		
 		// SPX
 		spx.addResistance("2015-02-06"); 
-		spx.addResistance("2015-02-05"); // NOT high since did not finish lower next day 
+//		spx.addResistance("2015-02-05"); // NOT high since did not finish lower next day 
 		spx.addSupport("2015-02-02");
-		spx.addSupport("2015-01-29");
+//		spx.addSupport("2015-01-29");
 		spx.addResistance("2015-01-22");
-		spx.addSupport("2015-01-14");
+		spx.addSupport("2015-01-15");
 		spx.addResistance("2015-01-08");
+		spx.addSupport("2015-01-06");
 		// *** 30-day trend change
 		spx.addResistance("2014-12-29");  
 		spx.addSupport("2014-12-16"); // fundamentals t2 low 
 		spx.addResistance("2014-12-05"); 
 		// November: mild market 
-		spx.addResistance("2014-10-15"); // CRASH
-		spx.addResistance("2014-09-05"); 
+		spx.addSupport("2014-10-15"); // CRASH
+		spx.addResistance("2014-09-18"); 
 		spx.addSupport("2014-08-07"); // fundamentals t1 low
+		spx.addResistance("2014-07-24");
 		
 	}
 
