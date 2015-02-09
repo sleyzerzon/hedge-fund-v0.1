@@ -62,18 +62,15 @@ public class Channel {
 		
 	}
 	
-	public Double getForecastResistance() {
-		int range=3;
+	public Double getForecastResistance(int range) {
 		Double price=0.0;
 		Double min=999999.0;
 
 		Collections.sort(resDate);
 		int size = resDate.size()-1;
 		for(int i=size; i>size-range; i--){
-//			System.out.println(size + " " + i);
 			String date = resDate.get(i);
 			Double level = (Double) getResistance().get(date);
-//			System.out.println(date + " " + level);
 			if(Math.round(level) < Math.round(min)) {
 				price=(double) Math.round(level);
 			}
@@ -82,18 +79,15 @@ public class Channel {
 		return price;
 	}
 	
-	public Double getForecastSupport() {
-		int range=3;
+	public Double getForecastSupport(int range) {
 		Double price=0.0;
 		Double max=-999999.0;
 
 		Collections.sort(supDate);
 		int size = supDate.size()-1;
 		for(int i=size; i>size-range; i--){
-//			System.out.println(size + " " + i);
 			String date = supDate.get(i);
 			Double level = (Double) getSupport().get(date);
-//			System.out.println(date + " " + level);
 			if(Math.round(level) > Math.round(max)) {
 				price=(double) Math.round(level);
 			}
@@ -104,19 +98,45 @@ public class Channel {
 	// PRINT
 	public String toString() {
 		String s="\n";
+		s = s + getUnder().getTicker() + "\n";
+		
 		List<Double> width = new ArrayList<Double>();
 		List<Double> halfCycle = new ArrayList<Double>();		
 
 		s = s + "DATE" + "\t\t" + "LOW" + "\t" + "HIGH" + "\t" + "WIDTH" + "\t" + "DAYS" + "\n";
-//		s = s + "Bias ";
+
 		s = outlineChannel(s, width, halfCycle) + "\n";
-		s = s + "tbd est " + "\t" + Math.round(getForecastSupport()) + "\t" + 
-			     					Math.round(getForecastResistance()) + "\t" +
-			     					Math.round(getMean(width)) + "\t" +
-			     					Math.round(getMean(halfCycle)) + "\t" +
-			     					"\n";
+		
+		s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
+					Math.round(getMean(width)) + "\t" +
+					Math.round(getMean(halfCycle)) + "\n";
+		
+		s = s + "alert " + "\t\t" + Math.round(getForecastSupport(3)) + "\t" + 
+			     				    Math.round(getForecastResistance(3)) + "\t" +
+			     				    "\n";
+		
+		s = s + "forecast" + "\t" + Math.round(getForecastSupport(3)-getSupportSlope(6)) + "\t" +
+									  Math.round(getForecastResistance(3)+getResistanceSlope(6)) + 
+									  "\n";
+		
+		
+		
 				
 		return s;
+	}
+
+	private Integer getResistanceSlope(Integer range) {
+		Double recentRes=getForecastResistance(1);
+		Double oldRes=getForecastResistance(range);		
+		Double resSlope = (recentRes-oldRes)/range;
+		return (int) Math.round(resSlope);
+	}
+
+	private Integer getSupportSlope(Integer range) {
+		Double recentSup=getForecastSupport(1);
+		Double oldSup=getForecastSupport(range);
+		Double supSlope = (recentSup-oldSup)/range;
+		return (int) Math.round(supSlope);
 	}
 
 	private String outlineChannel(String s, List<Double> width, List<Double> halfCycle) {
