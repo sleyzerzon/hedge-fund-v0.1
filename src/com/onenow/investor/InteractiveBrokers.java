@@ -209,6 +209,22 @@ public class InteractiveBrokers implements ConnectionHandler {
 		spx.addSupport("2014-08-07"); // fundamentals t1 low
 		spx.addResistance("2014-07-24");
 		
+//		DATE		LOW		HIGH	WIDTH	DAYS
+//		tbd est 	1992	2064
+//
+//		2015-02-06			2072	92		4
+//		2015-02-02	1981			84		11
+//		2015-01-22			2065	73		7
+//		2015-01-15	1992			72		7
+//		2015-01-08			2064	72		2
+//		2015-01-06	1992			101		8
+//		2014-12-29			2094	121		13
+//		2014-12-16	1973			107		11
+//		2014-12-05			2079	259		21
+//		2014-10-15	1820			192		28
+//		2014-09-18			2012	108		11
+//		2014-08-07	1905			87		14
+		
 	}
 
 	private static List<Channel> getChannels() {

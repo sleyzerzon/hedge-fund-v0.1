@@ -104,22 +104,27 @@ public class Channel {
 	// PRINT
 	public String toString() {
 		String s="\n";
+		List<Double> width = new ArrayList<Double>();
+		List<Double> halfCycle = new ArrayList<Double>();		
 
 		s = s + "DATE" + "\t\t" + "LOW" + "\t" + "HIGH" + "\t" + "WIDTH" + "\t" + "DAYS" + "\n";
 //		s = s + "Bias ";
+		s = outlineChannel(s, width, halfCycle) + "\n";
 		s = s + "tbd est " + "\t" + Math.round(getForecastSupport()) + "\t" + 
-							     Math.round(getForecastResistance()) + "\n\n";
-		s = outlineChannel(s);
+			     					Math.round(getForecastResistance()) + "\t" +
+			     					Math.round(getMean(width)) + "\t" +
+			     					Math.round(getMean(halfCycle)) + "\t" +
+			     					"\n";
 				
 		return s;
 	}
 
-	private String outlineChannel(String s) {
+	private String outlineChannel(String s, List<Double> width, List<Double> halfCycle) {
 		List<String> both = new ArrayList<String>();
 		both.addAll(resDate);
 		both.addAll(supDate);
 		Collections.sort(both);
-		
+				
 		Double supPrice=0.0;
 		Double resPrice=0.0;
 		int size = both.size()-1;
@@ -130,14 +135,17 @@ public class Channel {
 				String prevDate = both.get(i-1);
 				if(supPrice>0.0) {
 					Double prevResprice = (Double) getResistance().get(prevDate);
-					Double width = prevResprice-supPrice;
+					Double range = prevResprice-supPrice;
+					width.add(range);
+					Integer elapsed = parser.getElapsedDays(prevDate, date);
+					halfCycle.add(elapsed*1.0);
 					s = s + date + "\t" + Math.round(supPrice) + "\t\t" + 
-										  Math.round(width) + "\t" + 
-										  parser.getElapsedDays(prevDate, date) + 
+										  Math.round(range) + "\t" + 
+										  elapsed + 
 										  "\n";
 				}
 			} catch (Exception e) {
-//				e.printStackTrace(); it's normal b/c adAll
+				// it's normal b/c adAll
 			}
 			
 			try {
@@ -145,19 +153,29 @@ public class Channel {
 				String prevDate = both.get(i-1);
 				if(resPrice>0.0) {
 					Double prevSubprice = (Double) getSupport().get(prevDate);
-					Double width = resPrice-prevSubprice;
+					Double range = resPrice-prevSubprice;
+					width.add(range);
+					Integer elapsed = parser.getElapsedDays(prevDate, date);
+					halfCycle.add(elapsed*1.0);
 					s = s + date + "\t\t" + Math.round(resPrice) + "\t" + 
-											Math.round(width) + "\t" + 
-											parser.getElapsedDays(prevDate, date) + 
+											Math.round(range) + "\t" + 
+											elapsed + 
 											"\n";
 				}
 			} catch (Exception e) {
-//				e.printStackTrace(); it's normal b/c adAll
+				//	it's normal b/c adAll
 			}
 		}
 		return s;
 	}
 	
+	public double getMean(List<Double> nums) {
+        double sum = 0.0;
+        for(double a : nums)
+            sum += a;
+        return sum/nums.size();
+    }
+
 
 	// TEST
 	public void test() {
