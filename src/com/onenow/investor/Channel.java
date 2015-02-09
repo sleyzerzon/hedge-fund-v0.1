@@ -110,18 +110,14 @@ public class Channel {
 		s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
 					Math.round(getMean(width)) + "\t" +
 					Math.round(getMean(halfCycle)) + "\n";
-		
-		s = s + "alert " + "\t\t" + Math.round(getForecastSupport(3)) + "\t" + 
-			     				    Math.round(getForecastResistance(3)) + "\t" +
-			     				    "\n";
-		
-		s = s + "forecast" + "\t" + Math.round(getForecastSupport(3)-getSupportSlope(6)) + "\t" +
-									  Math.round(getForecastResistance(3)+getResistanceSlope(6)) + 
-									  "\n";
-		
-		
-		
-				
+
+		s = s + "forecast" + "\t" + Math.round(getForecastSupport(1)+getSupportSlope(6)) + "\t" +
+				  Math.round(getForecastResistance(1)+getResistanceSlope(6)) + 
+				  "\n\n";
+
+		s = s + "alert=> " + "\t*" + Math.round(getForecastSupport(3)+10) + "*\t*" + 
+			     				    Math.round(getForecastResistance(3)-10) + "*\t" +
+			     				    "\n";				
 		return s;
 	}
 
