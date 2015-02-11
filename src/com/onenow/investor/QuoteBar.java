@@ -29,14 +29,18 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 	// *** HANDLE HISTORY HERE
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
 		m_rows.add(bar);
-//		System.out.println("History " + bar.toString());
-		
+		System.out.println("History " + bar.toString());
+		if(hasGaps) {
+			System.out.println("Historic data has gaps!");
+		}		
+		setChannelPrices(bar);
+	}
+
+	private void setChannelPrices(Bar bar) {
 		String day=bar.formattedTime().substring(0, 10);
-//		System.out.println("Day " + day);
 		Double highPrice=bar.getM_high();
 		Double lowPrice= bar.getM_low();		
-		
-		// FOR CHANNELS
+//		System.out.println("Day " + day + " " + highPrice + " " + lowPrice);
 		for(int i=0; i<channels.size(); i++) {
 			Channel todo = channels.get(i);
 			if(todo.getResistance().containsKey(day)) {

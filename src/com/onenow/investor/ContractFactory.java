@@ -47,28 +47,14 @@ public class ContractFactory {
 	public Contract optionToQuote(String name) {
 		String p_secType=SecType.OPT.toString();	
 
-		String p_symbol="";
-		String p_exchange="";
-		
-		if(name.equals("SPX")) {
-			p_symbol="SPX";
-			p_exchange="CBOE";		// or "BEST"; "Comp Exchange"???
-		}
-		if(name.equals("RUT")) {
-			p_symbol="RUT";
-			p_exchange="RUSSELL";		// or "BEST"; "Comp Exchange"???
-		}
-		if(name.equals("NDX")) {
-			p_symbol="NDX";
-			p_exchange="NASDAQ";		// or "BEST"; "Comp Exchange"???
-		}
-		
+		String p_symbol=name;
+		String p_exchange="SMART";		// or "BEST"; "Comp Exchange"???
 		
 		int p_conId=0;
 		
-		String p_expiry="20150315";		// "20120316"
+		String p_expiry="20150319";		// "20120316"
 		double p_strike=2065.0;	// 20.0
-		String p_right="Put"; 	// "P" ... "Put/call"
+		String p_right="Call"; 	// "P" ... "Put/call"
 		
 		String p_multiplier="100";
 		String p_currency="USD";

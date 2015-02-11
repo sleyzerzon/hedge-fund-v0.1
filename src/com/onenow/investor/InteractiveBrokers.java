@@ -83,12 +83,13 @@ public class InteractiveBrokers implements ConnectionHandler {
 
 	private void getOptionPrice(ContractFactory cf) throws InterruptedException {
 		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
-		qHistory.addContract(	cf.indexToQuote("SPX"), 
+		qHistory.addContract(	cf.optionToQuote("SPX"), 
 								"20150206 16:30:00", 1, DurationUnit.DAY, BarSize._1_hour, 
 								WhatToShow.TRADES, false
 								);
 		System.out.println("...");
 		Thread.sleep(12000);
+		System.out.println(qHistory.toString());
 	}
 	
 	private void getChannelPrice(ContractFactory cf) throws InterruptedException {
