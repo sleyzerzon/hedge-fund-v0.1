@@ -66,11 +66,31 @@ public class InteractiveBrokers implements ConnectionHandler {
 		getContractFactory().setChannels(channels);
 		getChannelPrice(getContractFactory());
 		System.out.println(channels.toString());
-		
+
+		// underPrice
+		// optionPrice()
+		//
+		// calculateImpliedVolatility()
+		// calculateOptionPrice() gets greeks too
+		//
+		// ratios
+		// risk level
+
+		getOptionPrice(getContractFactory());
 		
 		// IRealTimeBarHandler
 	}
 
+	private void getOptionPrice(ContractFactory cf) throws InterruptedException {
+		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
+		qHistory.addContract(	cf.indexToQuote("SPX"), 
+								"20150206 16:30:00", 1, DurationUnit.DAY, BarSize._1_hour, 
+								WhatToShow.TRADES, false
+								);
+		System.out.println("...");
+		Thread.sleep(12000);
+	}
+	
 	private void getChannelPrice(ContractFactory cf) throws InterruptedException {
 		for(int i=0; i<getChannels().size(); i++) {			
 			Channel channel = getChannels().get(i);

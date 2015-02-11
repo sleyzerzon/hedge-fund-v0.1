@@ -44,8 +44,54 @@ public class ContractFactory {
 		spx.addResistance("2014-07-24");				
 	}
 	
+	public Contract optionToQuote(String name) {
+		String p_secType=SecType.OPT.toString();	
+
+		String p_symbol="";
+		String p_exchange="";
+		
+		if(name.equals("SPX")) {
+			p_symbol="SPX";
+			p_exchange="CBOE";		// or "BEST"; "Comp Exchange"???
+		}
+		if(name.equals("RUT")) {
+			p_symbol="RUT";
+			p_exchange="RUSSELL";		// or "BEST"; "Comp Exchange"???
+		}
+		if(name.equals("NDX")) {
+			p_symbol="NDX";
+			p_exchange="NASDAQ";		// or "BEST"; "Comp Exchange"???
+		}
+		
+		
+		int p_conId=0;
+		
+		String p_expiry="20150315";		// "20120316"
+		double p_strike=2065.0;	// 20.0
+		String p_right="Put"; 	// "P" ... "Put/call"
+		
+		String p_multiplier="100";
+		String p_currency="USD";
+		String p_localSymbol="";
+		String p_tradingClass="";
+		ArrayList<ComboLeg> p_comboLegs=new ArrayList<ComboLeg>();
+		String p_primaryExch="";
+		boolean p_includeExpired=false;
+		String p_secIdType="";
+		String p_secId="";
+		
+		Contract cont = new Contract();
+		cont = new Contract(p_conId, p_symbol, p_secType, p_expiry,
+                    p_strike, p_right, p_multiplier,
+                    p_exchange, p_currency, p_localSymbol, p_tradingClass,
+                    p_comboLegs, p_primaryExch, p_includeExpired,
+                    p_secIdType, p_secId);
+		return cont;	
+	}
+	
+	
 	public Contract indexToQuote(String name) {
-		String p_secType=SecType.IND.toString();	// "OPT"
+		String p_secType=SecType.IND.toString();	
 
 		String p_symbol="";
 		String p_exchange="";
