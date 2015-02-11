@@ -16,20 +16,20 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 	final BarModel m_model = new BarModel();
 	final ArrayList<Bar> m_rows = new ArrayList<Bar>();
 	
-	private List<Channel> channels;
+	private Channel channel;
 
 	public QuoteBar (){
 
 	}
 	
-	public QuoteBar (List<Channel> channels) {
-		this.channels = channels;
+	public QuoteBar (Channel channel) {
+		this.channel = channel;
 	}
 
 	// *** HANDLE HISTORY HERE
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
 		m_rows.add(bar);
-		System.out.println("History " + bar.toString());
+//		System.out.println("History " + bar.toString());
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
 		}		
@@ -38,24 +38,29 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 
 	private void setChannelPrices(Bar bar) {
 		String day=bar.formattedTime().substring(0, 10);
-		Double highPrice=bar.getM_high();
-		Double lowPrice= bar.getM_low();		
+		Double highPrice=bar.high(); // bar.getM_high();
+		Double lowPrice= bar.low(); // getM_low();
+		Double recentPrice=bar.close();
 //		System.out.println("Day " + day + " " + highPrice + " " + lowPrice);
-		for(int i=0; i<channels.size(); i++) {
-			Channel todo = channels.get(i);
-			if(todo.getResistance().containsKey(day)) {
-				if( highPrice > (Double)todo.getResistance().get(day)) {
-					todo.addResistance(day, highPrice);
+		
+//		for(int i=0; i<channels.size(); i++) { // channel
+//			Channel channel = channels.get(i);
+			if(channel.getResistance().containsKey(day)) { // day resistance
+				if( highPrice > (Double)channel.getResistance().get(day)) { // price
+					channel.addResistance(day, highPrice);
 //					System.out.println("high " + highPrice);
 				}
 			}
-			if(todo.getSupport().containsKey(day)) {
-				if( lowPrice < (Double)todo.getSupport().get(day)) {
-					todo.addSupport(day, lowPrice);
+			if(channel.getSupport().containsKey(day)) { // day support
+				if( lowPrice < (Double)channel.getSupport().get(day)) { // price
+					channel.addSupport(day, lowPrice);
 //					System.out.println("low " + lowPrice);
 				}
 			}
-		}
+			if(channel.getRecent().containsKey(day)) { // day support
+				channel.addRecent(day, recentPrice); // last
+			}
+//		}
 	}
 	
 	

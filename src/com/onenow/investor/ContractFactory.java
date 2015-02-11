@@ -14,34 +14,35 @@ public class ContractFactory {
 	}
 	
 	
-	public static void setChannels(List<Channel> channels) {
-		Channel spx = new Channel(new Underlying("SPX")); // CBOE
-//		Channel rut = new Channel(new Underlying("RUT")); // RUSSELL
-//		Channel ndx = new Channel(new Underlying("NDX")); // NASDAQ
-
-		channels.add(spx);
-//		getChannels().add(spx);
-//		getChannels().add(spx);
+	public static void addChannel(List<Channel> channels, Contract contract) {
 		
-		// LOOKING FOR OVER-REACTION of 30% of range within 3 days
-		// AFTER HI/LO that subsides next day, with lower closing
-		
-		// SPX
-		spx.addResistance("2015-02-06"); 
-		spx.addSupport("2015-02-02");
-		spx.addResistance("2015-01-22");
-		spx.addSupport("2015-01-15");
-		spx.addResistance("2015-01-08");
-		spx.addSupport("2015-01-06");
-		// *** 30-day trend change
-		spx.addResistance("2014-12-29");  
-		spx.addSupport("2014-12-16"); // fundamentals t2 low 
-		spx.addResistance("2014-12-05"); 
-		// November: mild market 
-		spx.addSupport("2014-10-15"); // CRASH
-		spx.addResistance("2014-09-18"); 
-		spx.addSupport("2014-08-07"); // fundamentals t1 low
-		spx.addResistance("2014-07-24");				
+		if(contract.symbol().equals("SPX")) { 	// for SecType.IND and SecType.OPT
+			
+			Channel spx = new Channel(contract);
+			channels.add(spx);
+			
+			// TODAY
+			spx.addRecent("2015-02-11");  
+			
+			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
+			// AFTER HI/LO that subsides next day, with lower closing		
+			// SPX
+			spx.addResistance("2015-02-06"); 
+			spx.addSupport("2015-02-02");
+			spx.addResistance("2015-01-22");
+			spx.addSupport("2015-01-15");
+			spx.addResistance("2015-01-08");
+			spx.addSupport("2015-01-06");
+			// *** 30-day trend change
+			spx.addResistance("2014-12-29");  
+			spx.addSupport("2014-12-16"); // fundamentals t2 low 
+			spx.addResistance("2014-12-05"); 
+			// November: mild market 
+			spx.addSupport("2014-10-15"); // CRASH
+			spx.addResistance("2014-09-18"); 
+			spx.addSupport("2014-08-07"); // fundamentals t1 low
+			spx.addResistance("2014-07-24");				
+		}
 	}
 	
 	public Contract optionToQuote(String name) {

@@ -10,14 +10,15 @@ import com.onenow.finance.Underlying;
 
 public class Channel {
 
-	private Underlying under;
+	private Contract contract;
 	private HashMap resistance = new HashMap();
 	private HashMap support = new HashMap();
-	private HashMap fundamental = new HashMap();
+	private HashMap recent = new HashMap();
+	// open, close...
 	
-	private List<String> resDate = new ArrayList<String>();
-	private List<String> supDate = new ArrayList<String>();
-	private List<String> fundDate = new ArrayList<String>();
+	private List<String> resistanceDate = new ArrayList<String>();
+	private List<String> supportDate = new ArrayList<String>();
+	private List<String> recentDate = new ArrayList<String>();
 	
 	ParseDate parser = new ParseDate();
 		
@@ -25,51 +26,60 @@ public class Channel {
 		
 	}
 	
-	public Channel(Underlying under) {
-		setUnder(under);
+	public Channel(Contract contract) {
+		setContract(contract);
 		
 	}
 
 	public void addResistance(String date) {
 		if(!getResistance().containsKey(date)) {
-			resDate.add(date);
+			getResistanceDate().add(date);
 		}
 		getResistance().put(date, -999999.0);
 	}
 
 	public void addResistance(String date, Double price) {
 		if(!getResistance().containsKey(date)) {
-			resDate.add(date);		
+			getResistanceDate().add(date);		
 		}
 		getResistance().put(date, price);
 	}
 
 	public void addSupport(String date) {
 		if(!getSupport().containsKey(date)) {
-			supDate.add(date);
+			getSupportDate().add(date);
 		}
 		getSupport().put(date, 999999.0);
 	}
 
 	public void addSupport(String date, Double price) {
 		if(!getSupport().containsKey(date)) {
-			supDate.add(date);
+			getSupportDate().add(date);
 		}
 		getSupport().put(date, price);		
 	}
 
-	public void addFundamental() {
-		
+	public void addRecent(String date) {
+		if(!getRecent().containsKey(date)) {
+			getRecent().put(date, 999999.0);
+		}
+		getSupport().put(date, 999999.0);
+	}
+	
+	public void addRecent(String date, Double price) {
+		getRecentDate().add(date);
+		getRecent().put(date, price);
+//		System.out.println("RECENT was " + price);
 	}
 	
 	public Double getForecastResistance(int range) {
 		Double price=0.0;
 		Double min=999999.0;
 
-		Collections.sort(resDate);
-		int size = resDate.size()-1;
+		Collections.sort(resistanceDate);
+		int size = resistanceDate.size()-1;
 		for(int i=size; i>size-range; i--){
-			String date = resDate.get(i);
+			String date = resistanceDate.get(i);
 			Double level = (Double) getResistance().get(date);
 			if(Math.round(level) < Math.round(min)) {
 				price=(double) Math.round(level);
@@ -83,10 +93,10 @@ public class Channel {
 		Double price=0.0;
 		Double max=-999999.0;
 
-		Collections.sort(supDate);
-		int size = supDate.size()-1;
+		Collections.sort(supportDate);
+		int size = supportDate.size()-1;
 		for(int i=size; i>size-range; i--){
-			String date = supDate.get(i);
+			String date = supportDate.get(i);
 			Double level = (Double) getSupport().get(date);
 			if(Math.round(level) > Math.round(max)) {
 				price=(double) Math.round(level);
@@ -98,7 +108,7 @@ public class Channel {
 	// PRINT
 	public String toString() {
 		String s="\n";
-		s = s + getUnder().getTicker() + "\n";
+		s = s + getContract().toString() + "\n";
 		
 		List<Double> rangeToResistance = new ArrayList<Double>();
 		List<Double> rangeToSupport = new ArrayList<Double>();
@@ -163,52 +173,67 @@ public class Channel {
 	private String outlineChannel(	String s, 
 									List<Double> widthToResistance, List<Double> halfCycleToResistance,
 									List<Double> widthToSupport, List<Double> halfCycleToSupport) {
-		List<String> both = new ArrayList<String>();
-		both.addAll(resDate);
-		both.addAll(supDate);
-		Collections.sort(both);
+		List<String> allDates = new ArrayList<String>();
+		allDates.addAll(resistanceDate);
+		allDates.addAll(supportDate);
+		allDates.addAll(recentDate);
+		Collections.sort(allDates);
 				
-		Double supPrice=0.0;
-		Double resPrice=0.0;
-		int size = both.size()-1;
+		int size = allDates.size()-1;
 		for(int i=size; i>=0; i--) {
-			String date=both.get(i);
+			String date=allDates.get(i);
 			try { // SUPPORT
-				supPrice = (Double) getSupport().get(date);
-				String prevDate = both.get(i-1);
+				Double supPrice = (Double) getSupport().get(date);
+				String prevDate = allDates.get(i-1);
 				if(supPrice>0.0) {
-					Double prevResprice = (Double) getResistance().get(prevDate);
-					Double range = prevResprice-supPrice;
-					widthToSupport.add(range);
-					Integer elapsed = parser.getElapsedDays(prevDate, date);
-					halfCycleToSupport.add(elapsed*1.0);
-					s = s + date + "\t" + Math.round(supPrice) + "\t\t" + 
-										  Math.round(range) + "\t\t" + 
-										  elapsed + 
-										  "\n";
+					s = getSupportString(	date, supPrice, prevDate,
+											widthToSupport, halfCycleToSupport, s);
 				}
-			} catch (Exception e) {
-				// it's normal b/c adAll
-			}
+			} catch (Exception e) {  } // it's normal b/c adAll
 			
 			try { // RESISTANCE
-				resPrice = (Double) getResistance().get(date);
-				String prevDate = both.get(i-1);
+				Double resPrice = (Double) getResistance().get(date);
+				String prevDate = allDates.get(i-1);
 				if(resPrice>0.0) {
-					Double prevSubprice = (Double) getSupport().get(prevDate);
-					Double range = resPrice-prevSubprice;
-					widthToResistance.add(range);
-					Integer elapsed = parser.getElapsedDays(prevDate, date);
-					halfCycleToResistance.add(elapsed*1.0);
-					s = s + date + "\t    " + Math.round(resPrice) + "\t   " + 
-											Math.round(range) + "\t\t  " + 
-											elapsed + 
-											"\n";
+					s = getResistanceString(date, resPrice, prevDate,
+							widthToResistance, halfCycleToResistance, s);
 				}
-			} catch (Exception e) {
-				//	it's normal b/c adAll
-			}
+			} catch (Exception e) {  } //	it's normal b/c adAll
 		}
+		return s;
+	}
+
+	private String getResistanceString(String date, Double resPrice,
+			String prevDate, List<Double> widthToResistance,
+			List<Double> halfCycleToResistance, String s) {
+		
+		Double prevSubprice = (Double) getSupport().get(prevDate);
+		Double range = resPrice-prevSubprice;
+		widthToResistance.add(range);
+		Integer elapsed = parser.getElapsedDays(prevDate, date);
+		halfCycleToResistance.add(elapsed*1.0);
+		
+		s = s + date + "\t    " + Math.round(resPrice) + "\t   " + 
+								Math.round(range) + "\t\t  " + 
+								elapsed + 
+								"\n";
+		return s;
+	}
+
+	private String getSupportString(String date, Double supPrice,
+			String prevDate, List<Double> widthToSupport,
+			List<Double> halfCycleToSupport, String s) {
+		
+		Double prevResprice = (Double) getResistance().get(prevDate);
+		Double range = prevResprice-supPrice;
+		widthToSupport.add(range);
+		Integer elapsed = parser.getElapsedDays(prevDate, date);
+		halfCycleToSupport.add(elapsed*1.0);
+		
+		s = s + date + "\t" + Math.round(supPrice) + "\t\t" + 
+							  Math.round(range) + "\t\t" + 
+							  elapsed + 
+							  "\n";
 		return s;
 	}
 	
@@ -227,15 +252,6 @@ public class Channel {
 
 	
 	// SET GET
-	public Underlying getUnder() {
-		return under;
-	}
-
-
-	private void setUnder(Underlying under) {
-		this.under = under;
-	}
-
 	public HashMap getResistance() {
 		return resistance;
 	}
@@ -253,35 +269,67 @@ public class Channel {
 	}
 
 	public HashMap getFundamental() {
-		return fundamental;
+		return recent;
 	}
 
 	private void setFundamental(HashMap fundamental) {
-		this.fundamental = fundamental;
+		this.recent = fundamental;
 	}
 
 	public List<String> getResDate() {
-		return resDate;
+		return resistanceDate;
 	}
 
 	private void setResDate(List<String> resDate) {
-		this.resDate = resDate;
+		this.resistanceDate = resDate;
 	}
 
 	public List<String> getSupDate() {
-		return supDate;
+		return supportDate;
 	}
 
 	private void setSupDate(List<String> supDate) {
-		this.supDate = supDate;
+		this.supportDate = supDate;
 	}
 
-	public List<String> getFundDate() {
-		return fundDate;
+	public HashMap getRecent() {
+		return recent;
 	}
 
-	private void setFundDate(List<String> fundDate) {
-		this.fundDate = fundDate;
+	private void setRecent(HashMap last) {
+		this.recent = last;
+	}
+
+	private List<String> getResistanceDate() {
+		return resistanceDate;
+	}
+
+	private void setResistanceDate(List<String> date) {
+		this.resistanceDate = date;
+	}
+
+	private List<String> getSupportDate() {
+		return supportDate;
+	}
+
+	private void setSupportDate(List<String> date) {
+		this.supportDate = date;
+	}
+
+	public List<String> getRecentDate() {
+		return recentDate;
+	}
+
+	private void setRecentDate(List<String> date) {
+		this.recentDate = date;
+	}
+
+	public Contract getContract() {
+		return contract;
+	}
+
+	private void setContract(Contract contract) {
+		this.contract = contract;
 	}
 
 	

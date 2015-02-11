@@ -16,6 +16,7 @@ import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
 import com.ib.controller.Bar;
 import com.ib.controller.Formats;
+import com.onenow.finance.RiskReturn;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.InvestorController.ConnectionHandler;
 import com.onenow.investor.InvestorController.IBulletinHandler;
@@ -53,6 +54,8 @@ public class InteractiveBrokers implements ConnectionHandler {
 	
 	private static List<Channel> channels = new ArrayList<Channel>();
 	private ContractFactory contractFactory = new ContractFactory();
+	private List<RiskReturn> optionRiskReturn = new ArrayList<RiskReturn>();
+	
 	
 	public void run() throws InterruptedException {
 
@@ -60,12 +63,11 @@ public class InteractiveBrokers implements ConnectionHandler {
 		
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
 		
+		
 //		QuoteModel qModel = new QuoteModel(getController());
 //		qModel.addContract(cf.stockToQuote());
-				
-		getContractFactory().setChannels(channels);
-		getChannelPrice(getContractFactory());
-		System.out.println(channels.toString());
+						
+		getIndexPrice(getContractFactory());
 
 		// underPrice
 		// optionPrice()
@@ -76,23 +78,46 @@ public class InteractiveBrokers implements ConnectionHandler {
 		// ratios
 		// risk level
 
-		getOptionPrice(getContractFactory());
+//		getOptionPrice(getContractFactory());
 		
 		// IRealTimeBarHandler
 	}
 
-	private void getOptionPrice(ContractFactory cf) throws InterruptedException {
-		QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
-		qHistory.addContract(	cf.optionToQuote("SPX"), 
-								"20150206 16:30:00", 1, DurationUnit.DAY, BarSize._1_hour, 
-								WhatToShow.TRADES, false
-								);
-		System.out.println("...");
-		Thread.sleep(12000);
-		System.out.println(qHistory.toString());
-	}
+//	private void getOptionPrice(ContractFactory contractFactory) throws InterruptedException {
+//		
+//		Contract option = contractFactory.optionToQuote("SPX");
+//		getContractFactory().addChannel(getChannels(), option);
+//
+//		
+//		for(int i=0; i<getChannels().size(); i++) {
+//			Channel channel = getChannels().get(i);
+//			List<String> endList = getEndList(channel);
+//			
+////			for(int j=0; j<endList.size(); j++) {
+////				String end = endList.get(j);
+//			
+//				String end = endList.get(0);
+//				QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
+//				qHistory.addContract(	option, 
+//										end, 1, DurationUnit.DAY, BarSize._1_hour, 
+//										WhatToShow.TRADES, false
+//										);
+//				System.out.println("...");
+//				Thread.sleep(12000);
+//				System.out.println(qHistory.toString());
+////			}
+//			
+//			System.out.println(channel.toString());
+//		}
+//	}
 	
-	private void getChannelPrice(ContractFactory cf) throws InterruptedException {
+	private void getIndexPrice(ContractFactory contractFactory) throws InterruptedException {
+		
+		Contract index = contractFactory.indexToQuote("SPX");
+		getContractFactory().addChannel(getChannels(), index);
+		Contract option = contractFactory.optionToQuote("SPX");
+		getContractFactory().addChannel(getChannels(), option);
+
 		for(int i=0; i<getChannels().size(); i++) {			
 			Channel channel = getChannels().get(i);
 			List<String> endList = getEndList(channel);
@@ -100,26 +125,39 @@ public class InteractiveBrokers implements ConnectionHandler {
 			for(int j=0; j<endList.size(); j++) {
 				String end = endList.get(j);
 											
-				QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
-				qHistory.addContract(	cf.indexToQuote(channel.getUnder().getTicker()), 
-										end, 1, DurationUnit.DAY, BarSize._1_hour, 
-										WhatToShow.TRADES, false
-										);
+				QuoteBar panel = new QuoteBar(channel);
+				getController().reqHistoricalData(	channel.getContract(), 
+													end, 1, DurationUnit.DAY, BarSize._1_hour, 
+													WhatToShow.TRADES, false,
+													panel);
+				
 				System.out.println("...");
 				Thread.sleep(12000);
 			}
+			System.out.println(channel.toString());
 		}
 	}
 	
 	private List<String> getEndList(Channel channel) {
 		List<String> list = new ArrayList<String>();
-		for(int j=0; j<channel.getResDate().size(); j++) {
-			String date = channel.getResDate().get(j); // Resistance
-			list.add(parser.removeDash(date));
+		String date="";
+		for(int i=channel.getResDate().size()-1; i>=0; i--) { // Resistance
+			try {
+				date = channel.getResDate().get(i); 
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
 		}
-		for(int j=0; j<channel.getSupDate().size(); j++) {
-			String date = channel.getSupDate().get(j); // Resistance
-			list.add(parser.removeDash(date));
+		for(int j=channel.getSupDate().size()-1; j>=0; j--) { // Support
+			try {
+				date = channel.getSupDate().get(j); 
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		for(int k=channel.getRecent().size()-1; k>=0; k--) { // Recent			
+			try {
+				date = channel.getRecentDate().get(k); // Recent
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
 		}
 		return list;
 	}
@@ -129,7 +167,7 @@ public class InteractiveBrokers implements ConnectionHandler {
 		return channels;
 	}
 
-	private void setChannels(List<Channel> channels) {
+	private void setUnderlyingChannels(List<Channel> channels) {
 		this.channels = channels;
 	}
 	
