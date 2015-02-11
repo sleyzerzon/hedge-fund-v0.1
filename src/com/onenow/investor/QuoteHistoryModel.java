@@ -29,7 +29,7 @@ public class QuoteHistoryModel {
 					 boolean rth) {
 	
 		panel = new QuoteBar(channels);
-		getController().reqHistoricalData(cont, end, durations, durUnit,
+		getController().reqHistoricalData(	cont, end, durations, durUnit,
 											size, show, rth,
 											panel);
 	}

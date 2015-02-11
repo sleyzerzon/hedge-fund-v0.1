@@ -553,8 +553,13 @@ public class InvestorController implements EWrapper {
 		}
 		recEOM();
 	}
-
+	
+	// ****************************************
+	// ****************************************
 	// ---------------------------------------- Option computations ----------------------------------------
+	// ****************************************
+	// ****************************************
+
 	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, IOptHandler handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);

@@ -100,16 +100,20 @@ public class Channel {
 		String s="\n";
 		s = s + getUnder().getTicker() + "\n";
 		
-		List<Double> width = new ArrayList<Double>();
-		List<Double> halfCycle = new ArrayList<Double>();		
+		List<Double> rangeToResistance = new ArrayList<Double>();
+		List<Double> rangeToSupport = new ArrayList<Double>();
+		List<Double> halfCycleToResistance = new ArrayList<Double>();		
+		List<Double> halfCycleToSupport = new ArrayList<Double>();		
 
-		s = s + "DATE" + "\t\t" + "LOW" + "\t" + "HIGH" + "\t" + "WIDTH" + "\t" + "DAYS" + "\n";
+		s = s + "DATE" + "\t\t" + "SPIKE" + "\t\t" + "RANGE" + "\t\t" + "DAYS" + "\n";
 
-		s = outlineChannel(s, width, halfCycle) + "\n";
+		s = outlineChannel(	s, 
+							rangeToResistance, halfCycleToResistance,
+							rangeToSupport, halfCycleToSupport) + "\n";
 		
 		s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
-					Math.round(getMean(width)) + "\t" +
-					Math.round(getMean(halfCycle)) + "\n";
+					Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
+					Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
 
 		s = s + "forecast" + "\t" + Math.round(getForecastSupport(1)+getSupportSlope(6)) + "\t" +
 				  Math.round(getForecastResistance(1)+getResistanceSlope(6)) + 
@@ -120,6 +124,27 @@ public class Channel {
 			     				    "\n";				
 		return s;
 	}
+	/*
+	SPX
+	DATE		LOW		HIGH	WIDTH	DAYS
+	2015-02-06			2072	92		4
+	2015-02-02	1981			84		11
+	2015-01-22			2065	73		7
+	2015-01-15	1992			72		7
+	2015-01-08			2064	72		2
+	2015-01-06	1992			101		8
+	2014-12-29			2094	121		13
+	2014-12-16	1973			107		11
+	2014-12-05			2079	259		21
+	2014-10-15	1820			192		28
+	2014-09-18			2012	108		11
+	2014-08-07	1905			87		14
+
+	kpi 		13		10		114		11
+	forecast	1994	2082
+
+	alert=> 	*2002*	*2054*	
+*/
 
 	private Integer getResistanceSlope(Integer range) {
 		Double recentRes=getForecastResistance(1);
@@ -135,7 +160,9 @@ public class Channel {
 		return (int) Math.round(supSlope);
 	}
 
-	private String outlineChannel(String s, List<Double> width, List<Double> halfCycle) {
+	private String outlineChannel(	String s, 
+									List<Double> widthToResistance, List<Double> halfCycleToResistance,
+									List<Double> widthToSupport, List<Double> halfCycleToSupport) {
 		List<String> both = new ArrayList<String>();
 		both.addAll(resDate);
 		both.addAll(supDate);
@@ -146,17 +173,17 @@ public class Channel {
 		int size = both.size()-1;
 		for(int i=size; i>=0; i--) {
 			String date=both.get(i);
-			try {
+			try { // SUPPORT
 				supPrice = (Double) getSupport().get(date);
 				String prevDate = both.get(i-1);
 				if(supPrice>0.0) {
 					Double prevResprice = (Double) getResistance().get(prevDate);
 					Double range = prevResprice-supPrice;
-					width.add(range);
+					widthToSupport.add(range);
 					Integer elapsed = parser.getElapsedDays(prevDate, date);
-					halfCycle.add(elapsed*1.0);
+					halfCycleToSupport.add(elapsed*1.0);
 					s = s + date + "\t" + Math.round(supPrice) + "\t\t" + 
-										  Math.round(range) + "\t" + 
+										  Math.round(range) + "\t\t" + 
 										  elapsed + 
 										  "\n";
 				}
@@ -164,17 +191,17 @@ public class Channel {
 				// it's normal b/c adAll
 			}
 			
-			try {
+			try { // RESISTANCE
 				resPrice = (Double) getResistance().get(date);
 				String prevDate = both.get(i-1);
 				if(resPrice>0.0) {
 					Double prevSubprice = (Double) getSupport().get(prevDate);
 					Double range = resPrice-prevSubprice;
-					width.add(range);
+					widthToResistance.add(range);
 					Integer elapsed = parser.getElapsedDays(prevDate, date);
-					halfCycle.add(elapsed*1.0);
-					s = s + date + "\t\t" + Math.round(resPrice) + "\t" + 
-											Math.round(range) + "\t" + 
+					halfCycleToResistance.add(elapsed*1.0);
+					s = s + date + "\t    " + Math.round(resPrice) + "\t   " + 
+											Math.round(range) + "\t\t  " + 
 											elapsed + 
 											"\n";
 				}
