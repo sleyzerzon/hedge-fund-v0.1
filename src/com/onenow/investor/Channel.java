@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ib.client.Types.SecType;
 import com.onenow.finance.Underlying;
 
 public class Channel {
@@ -121,17 +122,19 @@ public class Channel {
 							rangeToResistance, halfCycleToResistance,
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
-		s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
-					Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
-					Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
-
-		s = s + "forecast" + "\t" + Math.round(getForecastSupport(1)+getSupportSlope(6)) + "\t" +
-				  Math.round(getForecastResistance(1)+getResistanceSlope(6)) + 
-				  "\n\n";
-
-		s = s + "alert=> " + "\t*" + Math.round(getForecastSupport(3)+10) + "*\t*" + 
-			     				    Math.round(getForecastResistance(3)-10) + "*\t" +
-			     				    "\n";				
+		if(contract.secIdType().equals(SecType.IND)) {
+			s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
+						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
+						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
+	
+			s = s + "forecast" + "\t" + Math.round(getForecastSupport(1)+getSupportSlope(6)) + "\t" +
+					  Math.round(getForecastResistance(1)+getResistanceSlope(6)) + 
+					  "\n\n";
+	
+			s = s + "alert=> " + "\t*" + Math.round(getForecastSupport(3)+10) + "*\t*" + 
+				     				    Math.round(getForecastResistance(3)-10) + "*\t" +
+				     				    "\n";				
+		}
 		return s;
 	}
 	/*
@@ -182,30 +185,44 @@ public class Channel {
 		int size = allDates.size()-1;
 		for(int i=size; i>=0; i--) {
 			String date=allDates.get(i);
+			s = s + date;
 			try { // SUPPORT
 				Double supPrice = (Double) getSupport().get(date);
 				String prevDate = allDates.get(i-1);
-				if(supPrice>0.0) {
-					s = getSupportString(	date, supPrice, prevDate,
-											widthToSupport, halfCycleToSupport, s);
-				}
+				s = getSupportString(	date, supPrice, prevDate,
+										widthToSupport, halfCycleToSupport, s);
 			} catch (Exception e) {  } // it's normal b/c adAll
 			
 			try { // RESISTANCE
 				Double resPrice = (Double) getResistance().get(date);
 				String prevDate = allDates.get(i-1);
-				if(resPrice>0.0) {
-					s = getResistanceString(date, resPrice, prevDate,
-							widthToResistance, halfCycleToResistance, s);
-				}
+				s = getResistanceString(	date, resPrice, prevDate,
+											widthToResistance, halfCycleToResistance, s);
 			} catch (Exception e) {  } //	it's normal b/c adAll
+			
+			try { // RECENT
+				Double recentPrice = (Double) getRecent().get(date);
+				String prevDate = allDates.get(i-1);
+				s = getRecentString(	date, recentPrice, prevDate,
+										widthToResistance, halfCycleToResistance, s);
+			} catch (Exception e) {  } //	it's normal b/c adAll
+			s = s + "\n";
+			
+//			System.out.println(s);
 		}
 		return s;
 	}
 
-	private String getResistanceString(String date, Double resPrice,
-			String prevDate, List<Double> widthToResistance,
-			List<Double> halfCycleToResistance, String s) {
+	private String getRecentString(	String date, Double recentPrice, 
+									String prevDate, List<Double> widthToRecent,
+									List<Double> halfCycleToRecent, String s) {
+		
+		return s;
+	}
+	
+	private String getResistanceString(	String date, Double resPrice,
+										String prevDate, List<Double> widthToResistance,
+										List<Double> halfCycleToResistance, String s) {
 		
 		Double prevSubprice = (Double) getSupport().get(prevDate);
 		Double range = resPrice-prevSubprice;
@@ -213,27 +230,37 @@ public class Channel {
 		Integer elapsed = parser.getElapsedDays(prevDate, date);
 		halfCycleToResistance.add(elapsed*1.0);
 		
-		s = s + date + "\t    " + Math.round(resPrice) + "\t   " + 
-								Math.round(range) + "\t\t  " + 
-								elapsed + 
-								"\n";
+		if(resPrice>0 && resPrice<9999) {
+			s = s + "\t    " + 	Math.round(resPrice) + "\t   ";
+			
+			if(contract.secIdType().equals(SecType.IND)) {
+				s = s + 			Math.round(range) + "\t\t  " + 
+									elapsed;
+			}
+		}
+		
 		return s;
 	}
 
 	private String getSupportString(String date, Double supPrice,
-			String prevDate, List<Double> widthToSupport,
-			List<Double> halfCycleToSupport, String s) {
+									String prevDate, List<Double> widthToSupport,
+									List<Double> halfCycleToSupport, String s) {
 		
 		Double prevResprice = (Double) getResistance().get(prevDate);
 		Double range = prevResprice-supPrice;
 		widthToSupport.add(range);
 		Integer elapsed = parser.getElapsedDays(prevDate, date);
 		halfCycleToSupport.add(elapsed*1.0);
-		
-		s = s + date + "\t" + Math.round(supPrice) + "\t\t" + 
-							  Math.round(range) + "\t\t" + 
-							  elapsed + 
-							  "\n";
+
+		if(supPrice>0 && supPrice<9999) {
+			s = s + "\t" + 	Math.round(supPrice) + "\t\t";
+			
+			if(contract.secIdType().equals(SecType.IND)) {
+				s = s +			Math.round(range) + "\t\t" + 
+								elapsed;
+			}
+		}
+
 		return s;
 	}
 	
