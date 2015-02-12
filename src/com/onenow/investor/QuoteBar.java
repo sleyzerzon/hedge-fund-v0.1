@@ -43,19 +43,19 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 		Double recentPrice=bar.close();
 //		System.out.println("Day " + day + " " + highPrice + " " + lowPrice);
 		
-		if(channel.getResistance().containsKey(day)) { // day resistance
-			if( highPrice > (Double)channel.getResistance().get(day)) { // price
+		if(channel.getResistanceDayMap().containsKey(day)) { // day resistance
+			if( highPrice > (Double)channel.getResistanceDayMap().get(day)) { // price
 				channel.addResistance(day, highPrice);
 //					System.out.println("high " + highPrice);
 			}
 		}
-		if(channel.getSupport().containsKey(day)) { // day support
-			if( lowPrice < (Double)channel.getSupport().get(day)) { // price
+		if(channel.getSupportDayMap().containsKey(day)) { // day support
+			if( lowPrice < (Double)channel.getSupportDayMap().get(day)) { // price
 				channel.addSupport(day, lowPrice);
 //					System.out.println("low " + lowPrice);
 			}
 		}
-		if(channel.getRecent().containsKey(day)) { // day support
+		if(channel.getRecentDayMap().containsKey(day)) { // day support
 			channel.addRecent(day, recentPrice); // last
 		}
 	}

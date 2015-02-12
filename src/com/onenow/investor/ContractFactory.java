@@ -23,6 +23,7 @@ public class ContractFactory {
 			
 			// TODAY
 			spx.addRecent("2015-02-11");  
+			spx.addResistance("2015-02-11"); 
 			
 			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
 			// AFTER HI/LO that subsides next day, with lower closing		
@@ -43,6 +44,37 @@ public class ContractFactory {
 			spx.addSupport("2014-08-07"); // fundamentals t1 low
 			spx.addResistance("2014-07-24");				
 		}
+		
+		if(contract.symbol().equals("RUT")) { 	// for SecType.IND and SecType.OPT
+			
+			Channel rut = new Channel(contract);
+			channels.add(rut);
+			
+			// TODAY
+			rut.addRecent("2015-02-11");  
+			rut.addResistance("2015-02-11"); 
+			
+			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
+			// AFTER HI/LO that subsides next day, with lower closing		
+			// SPX
+			rut.addResistance("2015-02-06"); 
+			rut.addSupport("2015-02-02");
+			rut.addResistance("2015-01-22");
+			rut.addSupport("2015-01-15");
+			rut.addResistance("2015-01-08");
+			rut.addSupport("2015-01-06");
+			// *** 30-day trend change
+			rut.addResistance("2014-12-29");  
+			rut.addSupport("2014-12-16"); // fundamentals t2 low 
+			rut.addResistance("2014-12-05"); 
+			// November: mild market 
+			rut.addSupport("2014-10-15"); // CRASH
+			rut.addResistance("2014-09-18"); 
+			rut.addSupport("2014-08-07"); // fundamentals t1 low
+			rut.addResistance("2014-07-24");				
+		}
+		
+		
 	}
 	
 	public Contract optionToQuote(String name) {
@@ -54,7 +86,7 @@ public class ContractFactory {
 		int p_conId=0;
 		
 		String p_expiry="20150319";		// "20120316"
-		double p_strike=2065.0;	// 20.0
+		double p_strike=2090.0;	// 20.0
 		String p_right="Call"; 	// "P" ... "Put/call"
 		
 		String p_multiplier="100";

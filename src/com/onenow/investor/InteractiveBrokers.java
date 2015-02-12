@@ -111,21 +111,21 @@ public class InteractiveBrokers implements ConnectionHandler {
 	private List<String> getEndList(Channel channel) {
 		List<String> list = new ArrayList<String>();
 		String date="";
-		for(int i=channel.getResDate().size()-1; i>=0; i--) { // Resistance
+		for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
 			try {
-				date = channel.getResDate().get(i); 
+				date = channel.getResDayList().get(i); 
 				list.add(parser.removeDash(date));
 			} catch (Exception e) { } // nothing to do
 		}
-		for(int j=channel.getSupDate().size()-1; j>=0; j--) { // Support
+		for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
 			try {
-				date = channel.getSupDate().get(j); 
+				date = channel.getSupDayList().get(j); 
 				list.add(parser.removeDash(date));
 			} catch (Exception e) { } // nothing to do
 		}
-		for(int k=channel.getRecent().size()-1; k>=0; k--) { // Recent			
+		for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent			
 			try {
-				date = channel.getRecentDate().get(k); // Recent
+				date = channel.getRecentDayList().get(k); // Recent
 				list.add(parser.removeDash(date));
 			} catch (Exception e) { } // nothing to do
 		}
