@@ -64,7 +64,7 @@ public class Channel {
 		if(!getRecent().containsKey(date)) {
 			getRecent().put(date, 999999.0);
 		}
-		getSupport().put(date, 999999.0);
+		getRecent().put(date, 999999.0);
 	}
 	
 	public void addRecent(String date, Double price) {
@@ -122,7 +122,7 @@ public class Channel {
 							rangeToResistance, halfCycleToResistance,
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
-		if(contract.secIdType().equals(SecType.IND)) {
+		if(contract.secType().equals(SecType.IND)) {
 			s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
 						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
@@ -217,6 +217,8 @@ public class Channel {
 									String prevDate, List<Double> widthToRecent,
 									List<Double> halfCycleToRecent, String s) {
 		
+		s = s + "\t" + Math.round(recentPrice);
+		
 		return s;
 	}
 	
@@ -233,7 +235,7 @@ public class Channel {
 		if(resPrice>0 && resPrice<9999) {
 			s = s + "\t    " + 	Math.round(resPrice) + "\t   ";
 			
-			if(contract.secIdType().equals(SecType.IND)) {
+			if(contract.secType().equals(SecType.IND)) {
 				s = s + 			Math.round(range) + "\t\t  " + 
 									elapsed;
 			}
@@ -255,7 +257,7 @@ public class Channel {
 		if(supPrice>0 && supPrice<9999) {
 			s = s + "\t" + 	Math.round(supPrice) + "\t\t";
 			
-			if(contract.secIdType().equals(SecType.IND)) {
+			if(contract.secType().equals(SecType.IND)) {
 				s = s +			Math.round(range) + "\t\t" + 
 								elapsed;
 			}

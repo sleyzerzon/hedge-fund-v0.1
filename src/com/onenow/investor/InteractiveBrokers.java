@@ -77,39 +77,9 @@ public class InteractiveBrokers implements ConnectionHandler {
 		//
 		// ratios
 		// risk level
-
-//		getOptionPrice(getContractFactory());
 		
 		// IRealTimeBarHandler
 	}
-
-//	private void getOptionPrice(ContractFactory contractFactory) throws InterruptedException {
-//		
-//		Contract option = contractFactory.optionToQuote("SPX");
-//		getContractFactory().addChannel(getChannels(), option);
-//
-//		
-//		for(int i=0; i<getChannels().size(); i++) {
-//			Channel channel = getChannels().get(i);
-//			List<String> endList = getEndList(channel);
-//			
-////			for(int j=0; j<endList.size(); j++) {
-////				String end = endList.get(j);
-//			
-//				String end = endList.get(0);
-//				QuoteHistoryModel qHistory = new QuoteHistoryModel(getController(), getChannels());
-//				qHistory.addContract(	option, 
-//										end, 1, DurationUnit.DAY, BarSize._1_hour, 
-//										WhatToShow.TRADES, false
-//										);
-//				System.out.println("...");
-//				Thread.sleep(12000);
-//				System.out.println(qHistory.toString());
-////			}
-//			
-//			System.out.println(channel.toString());
-//		}
-//	}
 	
 	private void getIndexPrice(ContractFactory contractFactory) throws InterruptedException {
 		
