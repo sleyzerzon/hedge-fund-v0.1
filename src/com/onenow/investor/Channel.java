@@ -67,7 +67,7 @@ public class Channel {
 	public void addRecent(String date, Double price) {
 		addRecent(date);
 		getRecentDayMap().put(date, price);
-		System.out.println("ADDED RECENT " + date + " " + price);
+//		System.out.println("ADDED RECENT " + date + " " + price);
 
 	}
 	
@@ -75,8 +75,8 @@ public class Channel {
 		Double newPrice=0.0;
 		
 		Collections.sort(getResistanceDayList());
-		Integer max = getResistanceDayList().size()-1;
-		String oldDay = getResistanceDayList().get(max);
+//		Integer max = getResistanceDayList().size()-1;
+		String oldDay = getResistanceDayList().get(0);
 		Double oldPrice = (Double) getResistanceDayMap().get(oldDay);
 		
 		ParseDate parser = new ParseDate();
@@ -89,8 +89,8 @@ public class Channel {
 		Double newPrice=0.0;
 		
 		Collections.sort(getSupportDayList());
-		Integer max = getSupportDayList().size()-1;
-		String oldDay = getSupportDayList().get(max);
+//		Integer max = getSupportDayList().size()-1;
+		String oldDay = getSupportDayList().get(0);
 		Double oldPrice = (Double) getSupportDayMap().get(oldDay);
 
 		ParseDate parser = new ParseDate();
@@ -98,6 +98,38 @@ public class Channel {
 		
 		return newPrice;
 	}
+	
+	private Double getResistanceSlope() {
+		Collections.sort(getResistanceDayList());
+		int max = getResistanceDayList().size()-1;
+		String newDate = getResistanceDayList().get(max);
+		Double newPrice = (Double) getResistanceDayMap().get(newDate);
+		String oldDate = getResistanceDayList().get(0);
+		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
+		
+		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;	
+		Double slope = (newPrice-oldPrice)/range; 		
+//		System.out.println("RES SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
+
+		return slope;
+
+	}
+
+	private Double getSupportSlope() {
+		Collections.sort(getSupportDayList());
+		int max = getSupportDayList().size()-1;
+		String newDate = getSupportDayList().get(max);
+		Double newPrice = (Double) getSupportDayMap().get(newDate);
+		String oldDate = getSupportDayList().get(0);
+		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
+		
+		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;	
+		Double slope = (newPrice-oldPrice)/range;	
+//		System.out.println("SUP SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
+		
+		return slope;
+	}
+
 	
 	// PRINT
 	public String toString() {
@@ -116,7 +148,7 @@ public class Channel {
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
 		if(contract.secType().equals(SecType.IND)) {
-			s = s + "kpi " + "\t\t" + Math.round(getSupportSlope()) + "\t" + Math.round(getResistanceSlope()) + "\t" + 
+			s = s + "kpi " + "\t\t" + Math.round(getSupportSlope()*30) + "\t" + Math.round(getResistanceSlope()*30) + "\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
 						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
 	
@@ -154,35 +186,6 @@ public class Channel {
 	alert=> 	*2002*	*2054*	
 */
 
-	private Double getResistanceSlope() {
-		Collections.sort(getResistanceDayList());
-		int max = getResistanceDayList().size()-1;
-		String newDate = getResistanceDayList().get(max);
-		Double newPrice = (Double) getResistanceDayMap().get(newDate);
-		String oldDate = getResistanceDayList().get(0);
-		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
-		
-		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;
-		
-		Double slope = (newPrice-oldPrice)/range; 
-		return slope;
-
-	}
-
-	private Double getSupportSlope() {
-		Collections.sort(getSupportDayList());
-		int max = getSupportDayList().size()-1;
-		String newDate = getSupportDayList().get(max);
-		Double newPrice = (Double) getSupportDayMap().get(newDate);
-		String oldDate = getSupportDayList().get(0);
-		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
-		
-		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;
-		
-		Double slope = (newPrice-oldPrice)/range;
-		return slope;
-	}
-
 	
 	private String outlineChannel(	String s, 
 									List<Double> widthToResistance, List<Double> halfCycleToResistance,
@@ -196,6 +199,7 @@ public class Channel {
 			s = s + date;
 			try { // SUPPORT
 				Double supPrice = (Double) getSupportDayMap().get(date);
+				s = s + " -" + "\t" + 	Math.round(supPrice) + "\t\t";
 				String prevDate = allDates.get(i-1);
 				s = getSupportString(	date, supPrice, prevDate,
 										widthToSupport, halfCycleToSupport, s);
@@ -203,6 +207,7 @@ public class Channel {
 			
 			try { // RESISTANCE
 				Double resPrice = (Double) getResistanceDayMap().get(date);
+				s = s + " +" + "\t    " + 	Math.round(resPrice) + "\t   ";
 				String prevDate = allDates.get(i-1);
 				s = getResistanceString(	date, resPrice, prevDate,
 											widthToResistance, halfCycleToResistance, s);
@@ -210,7 +215,8 @@ public class Channel {
 			
 			try { // RECENT
 				Double recentPrice = (Double) getRecentDayMap().get(date);
-				String prevDate = allDates.get(i-1);
+//				String prevDate = allDates.get(i-1);
+				String prevDate = date;		// TODO
 				s = getRecentString(	date, recentPrice, prevDate,
 										widthToResistance, halfCycleToResistance, s);
 			} catch (Exception e) {  } //	it's normal b/c adAll
@@ -258,7 +264,7 @@ public class Channel {
 		halfCycleToResistance.add(elapsed*1.0);
 		
 		if(resPrice>0 && resPrice<9999) {
-			s = s + " +" + "\t    " + 	Math.round(resPrice) + "\t   ";
+//			s = s + " +" + "\t    " + 	Math.round(resPrice) + "\t   ";
 			
 			if(contract.secType().equals(SecType.IND)) {
 				s = s + 			Math.round(range) + "\t\t  " + 
@@ -280,7 +286,7 @@ public class Channel {
 		halfCycleToSupport.add(elapsed*1.0);
 
 		if(supPrice>0 && supPrice<9999) {
-			s = s + " -" + "\t" + 	Math.round(supPrice) + "\t\t";
+//			s = s + " -" + "\t" + 	Math.round(supPrice) + "\t\t";
 			
 			if(contract.secType().equals(SecType.IND)) {
 				s = s +			Math.round(range) + "\t\t" + 

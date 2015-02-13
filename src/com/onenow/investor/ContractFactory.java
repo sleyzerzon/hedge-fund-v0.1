@@ -29,9 +29,12 @@ public class ContractFactory {
 			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
 			// AFTER HI/LO that subsides next day, with lower closing		
 			// SPX
+
+			// RECENT
+			spx.addRecent(today);  
+			spx.addRecent("2015-02-12");  
 			
 			// SLOW CHANNEL
-			spx.addRecent(today);  
 			spx.addResistance("2015-02-06"); 
 			spx.addSupport("2015-02-02");
 			spx.addResistance("2015-01-22");
@@ -53,14 +56,22 @@ public class ContractFactory {
 			
 			Channel rut = new Channel(contract);
 			channels.add(rut);
-			
+
+			// RECENT
+			rut.addRecent(today);  
+			rut.addRecent("2015-02-12");  
+
 			// MIDDLEPATH CHANNEL
 			// repeated confrontation resistance/support over 3 months
-			rut.addRecent(today);  
+			rut.addResistance("2015-02-06"); 			
 			rut.addSupport("2015-02-02"); 
+			rut.addResistance("2015-01-28"); 			
+			rut.addSupport("2015-01-15"); 			
+			rut.addSupport("2015-01-06"); 
 			rut.addResistance("2014-12-31"); 			
 			rut.addSupport("2014-12-15"); 			
-			rut.addResistance("2014-09-03"); 			
+			rut.addResistance("2014-11-28"); 			
+			rut.addResistance("2014-09-02"); 			
 
 		}
 		

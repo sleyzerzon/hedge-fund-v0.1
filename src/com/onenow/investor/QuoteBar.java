@@ -32,7 +32,7 @@ public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, IT
 	// *** IHistoricalDataHandler
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
 		m_rows.add(bar);
-		System.out.println("History " + bar.toString());
+//		System.out.println("History " + bar.toString());
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
 		}		
@@ -59,7 +59,7 @@ public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, IT
 			}
 		}
 		if(channel.getRecentDayMap().containsKey(day)) { // day support
-			System.out.println("RECENT " + channel.getContract().secType() + " " + day + " " + recentPrice);
+//			System.out.println("RECENT " + channel.getContract().secType() + " " + day + " " + recentPrice);
 			channel.addRecent(day, recentPrice); // last
 		} 
 	}

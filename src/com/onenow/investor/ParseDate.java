@@ -46,28 +46,40 @@ public class ParseDate {
 		Integer elapsedMonths = 0;
 		Integer elapsedYears = 0; // TODO
 		
+		Integer month1=0;
+		Integer month2=0;
+		Integer day1=0;
+		Integer day2=0;
+		
 		try {
-			Integer month1 = Integer.parseInt(getDashedMonth(d1));
-			Integer month2 = Integer.parseInt(getDashedMonth(d2));
-			if(month2>=month1) {
-				elapsedMonths = month2-month1;				
-			} else {
-				elapsedMonths = month1+month2-12;
+			month1 = Integer.parseInt(getDashedMonth(d1));
+			month2 = Integer.parseInt(getDashedMonth(d2));
+			elapsedMonths = 11-month1+month2;
+			if(month2>month1) {
+				elapsedMonths = month2-month1-1;				
+			} 
+			if(month1.equals(month2)) {
+				elapsedMonths = 0;
 			}
 		} catch (NumberFormatException e) { } // some intentionally come null
 		
 		
 		try {
-			Integer day1 = Integer.parseInt(getDahsedDay(d1));
-			Integer day2 = Integer.parseInt(getDahsedDay(d2));
+			day1 = Integer.parseInt(getDahsedDay(d1));
+			day2 = Integer.parseInt(getDahsedDay(d2));
+			elapsedDays = 31-day1+day2; // assumes 31d month
+
 			if(day2>day1) { // same month
-				elapsedDays = day2 - day1; 
+				elapsedDays = day2-day1-1; 
 			}
-			else {
-				elapsedDays = 31 - day1 + day2; // assumes 31d month
+			if(day1.equals(day2)) {
+				elapsedDays = 0;
 			}
 		} catch (NumberFormatException e) { } // some intentionally come null
 
+//		System.out.println("DAY " + day1 + " " + day2);
+//		System.out.println("MONTH " + month1 + " " + month2);
+//		System.out.println("ELAPSED " + elapsedMonths + " " + elapsedDays);
 		Integer elapsedTotal = elapsedMonths*31+elapsedDays;
 		return elapsedTotal;
 	}

@@ -64,8 +64,8 @@ public class InteractiveBrokers implements ConnectionHandler {
 
 		setController(new InvestorController((com.onenow.investor.InvestorController.ConnectionHandler) this, getInLogger(), getOutLogger()));
 		
-//		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
-		getController().connect("tsdb.enremmeta.com", 4001, 0, null);  // app port 7496	
+		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
+//		getController().connect("tsdb.enremmeta.com", 4001, 0, null);  // app port 7496	
 		
 //		QuoteModel qModel = new QuoteModel(getController());
 //		qModel.addContract(getContractFactory().stockToQuote());
