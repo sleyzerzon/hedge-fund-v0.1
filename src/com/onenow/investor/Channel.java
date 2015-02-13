@@ -71,7 +71,7 @@ public class Channel {
 
 	}
 	
-	public Double getForecastResistance(String newDay) {
+	public Double getForecastResistancePrice(String newDay) {
 		Double newPrice=0.0;
 		
 		Collections.sort(getResistanceDayList());
@@ -85,7 +85,7 @@ public class Channel {
 		return newPrice;
 	}
 	
-	public Double getForecastSupport(String newDay) {
+	public Double getForecastSupportPrice(String newDay) {
 		Double newPrice=0.0;
 		
 		Collections.sort(getSupportDayList());
@@ -129,7 +129,20 @@ public class Channel {
 		
 		return slope;
 	}
+	
+	public String getForecastSupportDate(Double halfCycle) {
+		String date="";
+		String lastDate = getSupportDayList().get(getSupportDayList().size()-1);
+		date = new ParseDate().getDatePlus(lastDate, (int) Math.round(halfCycle));
+		return date;
+	}
 
+	public String getForecastResistanceSpike(Double halfCycle) {
+		String date="";
+		String lastDate = getResistanceDayList().get(getResistanceDayList().size()-1);	
+		date = new ParseDate().getDatePlus(lastDate, (int) Math.round(halfCycle));
+		return date;		
+	}
 	
 	// PRINT
 	public String toString() {
@@ -147,44 +160,28 @@ public class Channel {
 							rangeToResistance, halfCycleToResistance,
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
+		Double halfCycleSupport = getMean(halfCycleToSupport);
+		Double halfCycleResistance = getMean(halfCycleToResistance);
+		
 		if(contract.secType().equals(SecType.IND)) {
 			s = s + "kpi " + "\t\t" + Math.round(getSupportSlope()*30) + "\t" + Math.round(getResistanceSlope()*30) + "\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
-						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
+						Math.round(halfCycleSupport) + "/" + Math.round(halfCycleResistance) + "\n";
 	
 			String today = new ParseDate().getToday();
+			String nextSupportSpike = getForecastSupportDate(halfCycleSupport);
+			String nextResistanceSpike = getForecastResistanceSpike(halfCycleResistance);
 			
-			s = s + "forecast" + "\t" + Math.round(getForecastSupport(today)+getSupportSlope()) + "\t" +
-					  Math.round(getForecastResistance(today)+getResistanceSlope()) + 
+			s = s + "forecast" + "\t" + Math.round(getForecastSupportPrice(nextSupportSpike)+getSupportSlope()) + "\t" +
+					  Math.round(getForecastResistancePrice(nextResistanceSpike)+getResistanceSlope()) + 
 					  "\n\n";
 	
-			s = s + "alert=> " + "\t*" + Math.round(getForecastSupport(today)+10) + "*\t*" + 
-				     				    Math.round(getForecastResistance(today)-10) + "*\t" +
+			s = s + "alert=> " + "\t*" + Math.round(getForecastSupportPrice(today)+10) + "*\t*" + 
+				     				    Math.round(getForecastResistancePrice(today)-10) + "*\t" +
 				     				    "\n";				
 		}
 		return s;
 	}
-	/*
-	SPX
-	DATE		LOW		HIGH	WIDTH	DAYS
-	2015-02-06			2072	92		4
-	2015-02-02	1981			84		11
-	2015-01-22			2065	73		7
-	2015-01-15	1992			72		7
-	2015-01-08			2064	72		2
-	2015-01-06	1992			101		8
-	2014-12-29			2094	121		13
-	2014-12-16	1973			107		11
-	2014-12-05			2079	259		21
-	2014-10-15	1820			192		28
-	2014-09-18			2012	108		11
-	2014-08-07	1905			87		14
-
-	kpi 		13		10		114		11
-	forecast	1994	2082
-
-	alert=> 	*2002*	*2054*	
-*/
 
 	
 	private String outlineChannel(	String s, 

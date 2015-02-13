@@ -20,7 +20,7 @@ public class ParseDate {
 		String end="";
 		String year=getDashedYear(dashed);
 		String month=getDashedMonth(dashed);
-		String day=getDahsedDay(dashed);
+		String day=getDashedDay(dashed);
 		end = year + month + day + " 16:30:00";
 //		System.out.println("End " + date + " "+ end);
 		return end;
@@ -36,9 +36,54 @@ public class ParseDate {
 		s= dashed.substring(5, 7);
 		return s;
 	}
-	public String getDahsedDay(String dashed) {
+	public String getDashedDay(String dashed) {
 		String s = "";
 		s = dashed.substring(8, 10);
+		return s;
+	}
+	public String getDatePlus(String date, Integer num){
+		String s= "";
+		Integer day=0;
+		Integer month=0;
+		Integer year=0;
+		Integer newDay=0;
+		Integer newMonth=0;
+		Integer newYear=0;
+		String sDay="";
+		String sMonth="";
+		String sYear="";
+		try {
+			day = Integer.parseInt(getDashedDay(date));
+		} catch (NumberFormatException e) { } // nothing to do		
+		try {
+			month = Integer.parseInt(getDashedMonth(date));
+		} catch (NumberFormatException e) { } // nothing to do 
+		try {
+			year = Integer.parseInt(getDashedYear(date));
+		} catch (NumberFormatException e) { } // nothing to do
+
+		newDay=day+num;
+		if(newDay>31) {
+			newDay=newDay-31;
+			month=month+1;
+		}
+		newMonth=month;
+		if(month>12) {
+			newMonth=newMonth-12;
+			year=year+1;
+		}
+		newYear=year;
+
+		sDay=newDay.toString();
+		if(newDay<10){
+			sDay="0"+sDay;
+		}
+		sMonth=newMonth.toString();
+		if(newMonth<10){
+			sMonth="0"+sMonth;
+		}
+		sYear=newYear.toString();
+		s=sYear+"-"+sMonth+"-"+sDay;
 		return s;
 	}
 	public Integer getElapsedDays(String d1, String d2) {
@@ -65,8 +110,8 @@ public class ParseDate {
 		
 		
 		try {
-			day1 = Integer.parseInt(getDahsedDay(d1));
-			day2 = Integer.parseInt(getDahsedDay(d2));
+			day1 = Integer.parseInt(getDashedDay(d1));
+			day2 = Integer.parseInt(getDashedDay(d2));
 			elapsedDays = 31-day1+day2; // assumes 31d month
 
 			if(day2>day1) { // same month

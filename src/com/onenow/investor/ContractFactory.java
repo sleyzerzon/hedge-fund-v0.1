@@ -63,15 +63,15 @@ public class ContractFactory {
 
 			// MIDDLEPATH CHANNEL
 			// repeated confrontation resistance/support over 3 months
-			rut.addResistance("2015-02-06"); 			
-			rut.addSupport("2015-02-02"); 
+			rut.addResistance("2015-02-06"); 			// determines channel  			
+			rut.addSupport("2015-02-02"); 				// determines channel 
 			rut.addResistance("2015-01-28"); 			
 			rut.addSupport("2015-01-15"); 			
 			rut.addSupport("2015-01-06"); 
 			rut.addResistance("2014-12-31"); 			
 			rut.addSupport("2014-12-15"); 			
-			rut.addResistance("2014-11-28"); 			
-			rut.addResistance("2014-09-02"); 			
+			rut.addResistance("2014-11-28"); 			// determines channel 
+			rut.addResistance("2014-09-02"); 			// determines channel 
 
 		}
 		
