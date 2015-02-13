@@ -924,7 +924,9 @@ public class EClientSocket {
         }
     }
 
-    public synchronized void reqRealTimeBars(int tickerId, Contract contract, int barSize, String whatToShow, boolean useRTH, ArrayList<TagValue> realTimeBarsOptions) {
+    public synchronized void reqRealTimeBars(	int tickerId, Contract contract, 
+    											int barSize, String whatToShow, boolean useRTH, 
+    											ArrayList<TagValue> realTimeBarsOptions) {
         // not connected?
         if( !m_connected) {
             notConnected();

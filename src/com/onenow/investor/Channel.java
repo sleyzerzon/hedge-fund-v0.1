@@ -58,6 +58,7 @@ public class Channel {
 
 	public void addRecent(String date) {
 		if(!getRecentDayMap().containsKey(date)) {
+//			System.out.println("ADDED RECENT " + date);
 			getRecentDayList().add(date);
 			getRecentDayMap().put(date, 999999.0);
 		}
@@ -66,39 +67,34 @@ public class Channel {
 	public void addRecent(String date, Double price) {
 		addRecent(date);
 		getRecentDayMap().put(date, price);
+		System.out.println("ADDED RECENT " + date + " " + price);
+
 	}
 	
-	public Double getForecastResistance(int range) {
-		Double price=0.0;
-		Double min=999999.0;
-
-		Collections.sort(resistanceDayList);
-		int size = resistanceDayList.size()-1;
-		for(int i=size; i>size-range; i--){
-			String date = resistanceDayList.get(i);
-			Double level = (Double) getResistanceDayMap().get(date);
-			if(Math.round(level) < Math.round(min)) {
-				price=(double) Math.round(level);
-			}
-		}
+	public Double getForecastResistance(String newDay) {
+		Double newPrice=0.0;
 		
-		return price;
+		Collections.sort(getResistanceDayList());
+		Integer max = getResistanceDayList().size()-1;
+		String oldDay = getResistanceDayList().get(max);
+		Double oldPrice = (Double) getResistanceDayMap().get(oldDay);
+		
+		newPrice = oldPrice + getResistanceSlope()*10; // TODO num days 
+		
+		return newPrice;
 	}
 	
-	public Double getForecastSupport(int range) {
-		Double price=0.0;
-		Double max=-999999.0;
-
-		Collections.sort(supportDayList);
-		int size = supportDayList.size()-1;
-		for(int i=size; i>size-range; i--){
-			String date = supportDayList.get(i);
-			Double level = (Double) getSupportDayMap().get(date);
-			if(Math.round(level) > Math.round(max)) {
-				price=(double) Math.round(level);
-			}
-		}
-		return price;
+	public Double getForecastSupport(String newDay) {
+		Double newPrice=0.0;
+		
+		Collections.sort(getSupportDayList());
+		Integer max = getSupportDayList().size()-1;
+		String oldDay = getSupportDayList().get(max);
+		Double oldPrice = (Double) getSupportDayMap().get(oldDay);
+		
+		newPrice = oldPrice + getResistanceSlope()*10; // TODO num days 
+		
+		return newPrice;
 	}
 	
 	// PRINT
@@ -118,16 +114,18 @@ public class Channel {
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
 		if(contract.secType().equals(SecType.IND)) {
-			s = s + "kpi " + "\t\t" + getSupportSlope(6) + "\t" + getResistanceSlope(6) + "\t" + 
+			s = s + "kpi " + "\t\t" + getSupportSlope() + "\t" + getResistanceSlope() + "\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
 						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
 	
-			s = s + "forecast" + "\t" + Math.round(getForecastSupport(1)+getSupportSlope(6)) + "\t" +
-					  Math.round(getForecastResistance(1)+getResistanceSlope(6)) + 
+			String today = new DateTime().getToday();
+			
+			s = s + "forecast" + "\t" + Math.round(getForecastSupport(today)+getSupportSlope()) + "\t" +
+					  Math.round(getForecastResistance(today)+getResistanceSlope()) + 
 					  "\n\n";
 	
-			s = s + "alert=> " + "\t*" + Math.round(getForecastSupport(3)+10) + "*\t*" + 
-				     				    Math.round(getForecastResistance(3)-10) + "*\t" +
+			s = s + "alert=> " + "\t*" + Math.round(getForecastSupport(today)+10) + "*\t*" + 
+				     				    Math.round(getForecastResistance(today)-10) + "*\t" +
 				     				    "\n";				
 		}
 		return s;
@@ -154,20 +152,41 @@ public class Channel {
 	alert=> 	*2002*	*2054*	
 */
 
-	private Integer getResistanceSlope(Integer range) {
-		Double recentRes=getForecastResistance(1);
-		Double oldRes=getForecastResistance(range);		
-		Double resSlope = (recentRes-oldRes)/range;
-		return (int) Math.round(resSlope);
+	private Double getResistanceSlope() {
+		Collections.sort(getResistanceDayList());
+		int max = getResistanceDayList().size()-1;
+		String newDate = getResistanceDayList().get(max);
+		Double newPrice = (Double) getResistanceDayMap().get(newDate);
+		String oldDate = getResistanceDayList().get(0);
+		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
+		
+		Double range = getDateRange(newDate, oldDate);
+		
+		Double slope = (newPrice-oldPrice)/range;
+		return slope;
+
 	}
 
-	private Integer getSupportSlope(Integer range) {
-		Double recentSup=getForecastSupport(1);
-		Double oldSup=getForecastSupport(range);
-		Double supSlope = (recentSup-oldSup)/range;
-		return (int) Math.round(supSlope);
+	private Double getSupportSlope() {
+		Collections.sort(getSupportDayList());
+		int max = getSupportDayList().size()-1;
+		String newDate = getSupportDayList().get(max);
+		Double newPrice = (Double) getSupportDayMap().get(newDate);
+		String oldDate = getSupportDayList().get(0);
+		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
+		
+		Double range = getDateRange(newDate, oldDate);
+		
+		Double slope = (newPrice-oldPrice)/range;
+		return slope;
 	}
 
+	private Double getDateRange(String day2, String day1) {
+		Double range = 1.0;
+		range = 47.0;
+		return range;
+	}
+	
 	private String outlineChannel(	String s, 
 									List<Double> widthToResistance, List<Double> halfCycleToResistance,
 									List<Double> widthToSupport, List<Double> halfCycleToSupport) {
@@ -224,7 +243,9 @@ public class Channel {
 									String prevDate, List<Double> widthToRecent,
 									List<Double> halfCycleToRecent, String s) {
 		
-		s = s + " ?" + "\t" + Math.round(recentPrice);
+		if(recentPrice>0 && recentPrice<9999) {
+			s = s + " ?" + "\t  " + Math.round(recentPrice);
+		}
 		
 		return s;
 	}

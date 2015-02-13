@@ -5,13 +5,16 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.ib.client.TickType;
+import com.ib.client.Types.MktDataType;
 import com.ib.controller.Bar;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.InvestorController.IHistoricalDataHandler;
 import com.onenow.investor.InvestorController.IRealTimeBarHandler;
+import com.onenow.investor.InvestorController.ITopMktDataHandler;
 
 
-public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHandler { //  
+public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler { //  
 
 	final BarModel m_model = new BarModel();
 	final ArrayList<Bar> m_rows = new ArrayList<Bar>();
@@ -26,10 +29,10 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 		this.channel = channel;
 	}
 
-	// *** HANDLE HISTORY HERE
+	// *** IHistoricalDataHandler
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
 		m_rows.add(bar);
-//		System.out.println("History " + bar.toString());
+		System.out.println("History " + bar.toString());
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
 		}		
@@ -56,30 +59,56 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 			}
 		}
 		if(channel.getRecentDayMap().containsKey(day)) { // day support
+			System.out.println("RECENT " + channel.getContract().secType() + " " + day + " " + recentPrice);
 			channel.addRecent(day, recentPrice); // last
-		}
+		} 
 	}
 	
 	
+	// *** IRealTimeBarHandler
+	@Override public void realtimeBar(Bar bar) {
+		m_rows.add( bar); 
+		setChannelPrices(bar);		
+	}
+
 	
 	@Override public void historicalDataEnd() {
 //		fire();
 	}
 
-//	@Override public void realtimeBar(Bar bar) {
-//		m_rows.add( bar); 
-//		fire();
-//	}
-	
-//	private void fire() {
-//		SwingUtilities.invokeLater( new Runnable() {
-//			@Override public void run() {
-//				m_model.fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
-//				m_chart.repaint();
-//			}
-//		});
-//	}
 
+	// **** ITopMktDataHandler
+	@Override
+	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tickSize(TickType tickType, int size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tickString(TickType tickType, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void tickSnapshotEnd() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marketDataType(MktDataType marketDataType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	// *** BAR MODEL
 	public class BarModel extends AbstractTableModel {
 		@Override public int getRowCount() {
 			return m_rows.size();
@@ -116,5 +145,6 @@ public class QuoteBar implements IHistoricalDataHandler  { // , IRealTimeBarHand
 			}
 		}
 	}
+
 
 }

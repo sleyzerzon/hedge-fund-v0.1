@@ -895,10 +895,12 @@ public class InvestorController implements EWrapper {
 		void realtimeBar(Bar bar); // time is in seconds since epoch
 	}
 
-    public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, IRealTimeBarHandler handler) {
+    public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, 
+    							IRealTimeBarHandler handler) {
     	int reqId = m_reqId++;
     	m_realTimeBarMap.put( reqId, handler);
     	ArrayList<TagValue> realTimeBarsOptions = new ArrayList<TagValue>();
+    	
     	m_client.reqRealTimeBars(reqId, contract, 0, whatToShow.toString(), rthOnly, realTimeBarsOptions);
 		sendEOM();
     }

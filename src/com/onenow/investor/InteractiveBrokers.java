@@ -21,11 +21,14 @@ import com.onenow.finance.Underlying;
 import com.onenow.investor.InvestorController.ConnectionHandler;
 import com.onenow.investor.InvestorController.IBulletinHandler;
 import com.onenow.investor.InvestorController.IHistoricalDataHandler;
+import com.onenow.investor.InvestorController.IRealTimeBarHandler;
 import com.onenow.investor.InvestorController.ITimeHandler;
+import com.onenow.investor.InvestorController.ITopMktDataHandler;
 
 public class InteractiveBrokers implements ConnectionHandler {
 
 	private int port = 7496; 
+	
 	private String hostDefault = "127.0.0.1";
 	private String host =  "localhost";
 	private int clientDefault = Integer.parseInt("0");
@@ -61,13 +64,13 @@ public class InteractiveBrokers implements ConnectionHandler {
 
 		setController(new InvestorController((com.onenow.investor.InvestorController.ConnectionHandler) this, getInLogger(), getOutLogger()));
 		
-		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
-		
+//		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
+		getController().connect("tsdb.enremmeta.com", 4001, 0, null);  // app port 7496	
 		
 //		QuoteModel qModel = new QuoteModel(getController());
-//		qModel.addContract(cf.stockToQuote());
+//		qModel.addContract(getContractFactory().stockToQuote());
 						
-		getIndexPrice(getContractFactory());
+		getChannelPrices(getContractFactory());
 
 		// underPrice
 		// optionPrice()
@@ -81,9 +84,11 @@ public class InteractiveBrokers implements ConnectionHandler {
 		// IRealTimeBarHandler
 	}
 	
-	private void getIndexPrice(ContractFactory contractFactory) throws InterruptedException {
+	private void getChannelPrices(ContractFactory contractFactory) throws InterruptedException {
 		
-		Contract index = contractFactory.indexToQuote("SPX");
+//		Contract index = contractFactory.indexToQuote("SPX");
+//		getContractFactory().addChannel(getChannels(), index);
+		Contract index = contractFactory.indexToQuote("RUT");
 		getContractFactory().addChannel(getChannels(), index);
 		Contract option = contractFactory.optionToQuote("SPX");
 		getContractFactory().addChannel(getChannels(), option);
@@ -100,9 +105,15 @@ public class InteractiveBrokers implements ConnectionHandler {
 													end, 1, DurationUnit.DAY, BarSize._1_hour, 
 													WhatToShow.TRADES, false,
 													panel);
-				
+
+//			    getController().reqRealTimeBars(channel.getContract(), WhatToShow.TRADES, false, panel);
+//			    getController().cancelRealtimeBars(panel);
+//				getController().reqMktData(channel.getContract(), "", true, (ITopMktDataHandler) panel);
+
+			    Thread.sleep(12000);
+
+			    	
 				System.out.println("...");
-				Thread.sleep(12000);
 			}
 			System.out.println(channel.toString());
 		}

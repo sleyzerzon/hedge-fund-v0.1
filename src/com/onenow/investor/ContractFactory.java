@@ -1,6 +1,8 @@
 package com.onenow.investor;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.ib.client.ComboLeg;
@@ -15,19 +17,21 @@ public class ContractFactory {
 	
 	
 	public static void addChannel(List<Channel> channels, Contract contract) {
-		
+
+		String today = new DateTime().getToday();
+
 		if(contract.symbol().equals("SPX")) { 	// for SecType.IND and SecType.OPT
 			
 			Channel spx = new Channel(contract);
 			channels.add(spx);
 			
-			// TODAY
-			spx.addRecent("2015-02-11");  
-			spx.addResistance("2015-02-11"); 
 			
 			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
 			// AFTER HI/LO that subsides next day, with lower closing		
 			// SPX
+			
+			// SLOW CHANNEL
+			spx.addRecent(today);  
 			spx.addResistance("2015-02-06"); 
 			spx.addSupport("2015-02-02");
 			spx.addResistance("2015-01-22");
@@ -50,28 +54,14 @@ public class ContractFactory {
 			Channel rut = new Channel(contract);
 			channels.add(rut);
 			
-			// TODAY
-			rut.addRecent("2015-02-11");  
-			rut.addResistance("2015-02-11"); 
-			
-			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
-			// AFTER HI/LO that subsides next day, with lower closing		
-			// SPX
-			rut.addResistance("2015-02-06"); 
-			rut.addSupport("2015-02-02");
-			rut.addResistance("2015-01-22");
-			rut.addSupport("2015-01-15");
-			rut.addResistance("2015-01-08");
-			rut.addSupport("2015-01-06");
-			// *** 30-day trend change
-			rut.addResistance("2014-12-29");  
-			rut.addSupport("2014-12-16"); // fundamentals t2 low 
-			rut.addResistance("2014-12-05"); 
-			// November: mild market 
-			rut.addSupport("2014-10-15"); // CRASH
-			rut.addResistance("2014-09-18"); 
-			rut.addSupport("2014-08-07"); // fundamentals t1 low
-			rut.addResistance("2014-07-24");				
+			// MIDDLEPATH CHANNEL
+			// repeated confrontation resistance/support over 3 months
+			rut.addRecent(today);  
+			rut.addSupport("2015-02-02"); 
+			rut.addResistance("2013-12-31"); 			
+			rut.addSupport("2013-12-16"); 			
+			rut.addResistance("2013-09-03"); 			
+
 		}
 		
 		
