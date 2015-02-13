@@ -79,8 +79,9 @@ public class Channel {
 		String oldDay = getResistanceDayList().get(max);
 		Double oldPrice = (Double) getResistanceDayMap().get(oldDay);
 		
-		newPrice = oldPrice + getResistanceSlope()*10; // TODO num days 
-		
+		ParseDate parser = new ParseDate();
+		newPrice = oldPrice + getResistanceSlope()*parser.getElapsedDays(oldDay, newDay);  
+				
 		return newPrice;
 	}
 	
@@ -91,8 +92,9 @@ public class Channel {
 		Integer max = getSupportDayList().size()-1;
 		String oldDay = getSupportDayList().get(max);
 		Double oldPrice = (Double) getSupportDayMap().get(oldDay);
-		
-		newPrice = oldPrice + getResistanceSlope()*10; // TODO num days 
+
+		ParseDate parser = new ParseDate();
+		newPrice = oldPrice + getResistanceSlope()*parser.getElapsedDays(oldDay, newDay); 
 		
 		return newPrice;
 	}
@@ -114,11 +116,11 @@ public class Channel {
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
 		if(contract.secType().equals(SecType.IND)) {
-			s = s + "kpi " + "\t\t" + getSupportSlope() + "\t" + getResistanceSlope() + "\t" + 
+			s = s + "kpi " + "\t\t" + Math.round(getSupportSlope()) + "\t" + Math.round(getResistanceSlope()) + "\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
 						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
 	
-			String today = new DateTime().getToday();
+			String today = new ParseDate().getToday();
 			
 			s = s + "forecast" + "\t" + Math.round(getForecastSupport(today)+getSupportSlope()) + "\t" +
 					  Math.round(getForecastResistance(today)+getResistanceSlope()) + 
@@ -160,9 +162,9 @@ public class Channel {
 		String oldDate = getResistanceDayList().get(0);
 		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
 		
-		Double range = getDateRange(newDate, oldDate);
+		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;
 		
-		Double slope = (newPrice-oldPrice)/range;
+		Double slope = (newPrice-oldPrice)/range; 
 		return slope;
 
 	}
@@ -175,17 +177,12 @@ public class Channel {
 		String oldDate = getSupportDayList().get(0);
 		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
 		
-		Double range = getDateRange(newDate, oldDate);
+		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;
 		
 		Double slope = (newPrice-oldPrice)/range;
 		return slope;
 	}
 
-	private Double getDateRange(String day2, String day1) {
-		Double range = 1.0;
-		range = 47.0;
-		return range;
-	}
 	
 	private String outlineChannel(	String s, 
 									List<Double> widthToResistance, List<Double> halfCycleToResistance,

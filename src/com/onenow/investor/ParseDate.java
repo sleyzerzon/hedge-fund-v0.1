@@ -1,5 +1,8 @@
 package com.onenow.investor;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ParseDate {
 
 	public ParseDate() {
@@ -7,6 +10,12 @@ public class ParseDate {
 	}
 	
 	
+	public String getToday() {
+		Date today = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // "yyyy-MM-dd HH:mm"
+		return sdf.format(today);
+	}
+
 	public String removeDash(String dashed) {
 		String end="";
 		String year=getDashedYear(dashed);
@@ -33,19 +42,40 @@ public class ParseDate {
 		return s;
 	}
 	public Integer getElapsedDays(String d1, String d2) {
-		Integer elapsed = 0;
-			try {
-				Integer id1 = Integer.parseInt(getDahsedDay(d1));
-				Integer id2 = Integer.parseInt(getDahsedDay(d2));
-				if(id2>id1) { // same month
-					elapsed = id2 - id1; 
-				}
-				else {
-					elapsed = 31 - id1 + id2; // assumes 31d month
-				}
-			} catch (NumberFormatException e) {
-//				e.printStackTrace(); some intentionally come null 
+		Integer elapsedDays = 0;
+		Integer elapsedMonths = 0;
+		Integer elapsedYears = 0; // TODO
+		
+		try {
+			Integer month1 = Integer.parseInt(getDashedMonth(d1));
+			Integer month2 = Integer.parseInt(getDashedMonth(d2));
+			if(month2>=month1) {
+				elapsedMonths = month2-month1;				
+			} else {
+				elapsedMonths = month1+month2-12;
 			}
-		return elapsed;
+		} catch (NumberFormatException e) { } // some intentionally come null
+		
+		
+		try {
+			Integer day1 = Integer.parseInt(getDahsedDay(d1));
+			Integer day2 = Integer.parseInt(getDahsedDay(d2));
+			if(day2>day1) { // same month
+				elapsedDays = day2 - day1; 
+			}
+			else {
+				elapsedDays = 31 - day1 + day2; // assumes 31d month
+			}
+		} catch (NumberFormatException e) { } // some intentionally come null
+
+		Integer elapsedTotal = elapsedMonths*31+elapsedDays;
+		return elapsedTotal;
 	}
 }
+
+
+
+
+
+
+

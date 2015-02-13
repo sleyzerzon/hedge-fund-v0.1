@@ -18,7 +18,7 @@ public class ContractFactory {
 	
 	public static void addChannel(List<Channel> channels, Contract contract) {
 
-		String today = new DateTime().getToday();
+		String today = new ParseDate().getToday();
 
 		if(contract.symbol().equals("SPX")) { 	// for SecType.IND and SecType.OPT
 			
@@ -58,9 +58,9 @@ public class ContractFactory {
 			// repeated confrontation resistance/support over 3 months
 			rut.addRecent(today);  
 			rut.addSupport("2015-02-02"); 
-			rut.addResistance("2013-12-31"); 			
-			rut.addSupport("2013-12-16"); 			
-			rut.addResistance("2013-09-03"); 			
+			rut.addResistance("2014-12-31"); 			
+			rut.addSupport("2014-12-15"); 			
+			rut.addResistance("2014-09-03"); 			
 
 		}
 		

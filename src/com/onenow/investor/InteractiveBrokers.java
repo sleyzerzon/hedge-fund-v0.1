@@ -90,8 +90,8 @@ public class InteractiveBrokers implements ConnectionHandler {
 //		getContractFactory().addChannel(getChannels(), index);
 		Contract index = contractFactory.indexToQuote("RUT");
 		getContractFactory().addChannel(getChannels(), index);
-		Contract option = contractFactory.optionToQuote("SPX");
-		getContractFactory().addChannel(getChannels(), option);
+//		Contract option = contractFactory.optionToQuote("SPX");
+//		getContractFactory().addChannel(getChannels(), option);
 
 		for(int i=0; i<getChannels().size(); i++) {			
 			Channel channel = getChannels().get(i);
