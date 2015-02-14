@@ -41,6 +41,19 @@ public class ParseDate {
 		s = dashed.substring(8, 10);
 		return s;
 	}
+	public boolean isLaterDate(String date1, String date2) {
+		boolean later = true;
+		Integer year1 = Integer.parseInt(getDashedYear(date1));
+		Integer year2 = Integer.parseInt(getDashedYear(date2));
+		if(year1>year2) { return false; }
+		Integer month1 = Integer.parseInt(getDashedMonth(date1));
+		Integer month2 = Integer.parseInt(getDashedMonth(date2));
+		if(month1>month2) { return false; }
+		Integer day1 = Integer.parseInt(getDashedDay(date1));
+		Integer day2 = Integer.parseInt(getDashedDay(date2));
+		if(day1>day2) { return false; }
+		return later;
+	}
 	public String getDatePlus(String date, Integer num){
 		String s= "";
 		Integer day=0;

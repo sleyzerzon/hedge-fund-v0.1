@@ -22,6 +22,12 @@ public class Channel {
 	private List<String> recentDayList = new ArrayList<String>();
 	
 	ParseDate parser = new ParseDate();
+	
+	List<Double> rangeToResistance = new ArrayList<Double>();
+	List<Double> rangeToSupport = new ArrayList<Double>();
+	List<Double> halfCycleToResistance = new ArrayList<Double>();		
+	List<Double> halfCycleToSupport = new ArrayList<Double>();		
+
 		
 	public Channel() {
 		
@@ -71,33 +77,87 @@ public class Channel {
 
 	}
 	
-	public Double getForecastResistancePrice(String newDay) {
+	public Double getForecastResistancePrice(String newDay) { 
 		Double newPrice=0.0;
 		
-		Collections.sort(getResistanceDayList());
-//		Integer max = getResistanceDayList().size()-1;
-		String oldDay = getResistanceDayList().get(0);
-		Double oldPrice = (Double) getResistanceDayMap().get(oldDay);
-		
-		ParseDate parser = new ParseDate();
-		newPrice = oldPrice + getResistanceSlope()*parser.getElapsedDays(oldDay, newDay);  
+//		Collections.sort(getResistanceDayList());
+//		String oldDay = getResistanceDayList().get(0);
+//		Double oldPrice = (Double) getResistanceDayMap().get(oldDay);
+//		
+//		newPrice = oldPrice + getResistanceSlope()*parser.getElapsedDays(oldDay, newDay);  
 				
 		return newPrice;
 	}
 	
-	public Double getForecastSupportPrice(String newDay) {
+	public Double getForecastSupportPrice(String newDay) { 
+		Double p=0.0;
+//		String oldDay = getSupportDayList().get(0);
+//		Double oldPrice = (Double) getSupportDayMap().get(oldDay);
+//		newPrice = oldPrice + getResistanceSlope()*parser.getElapsedDays(oldDay, newDay);  FUNDAMENTAL
+		// +getSupportSlope()
+		return p;
+	}	
+
+	public Double getForecastResistancePrice() { 
 		Double newPrice=0.0;
 		
 		Collections.sort(getSupportDayList());
-//		Integer max = getSupportDayList().size()-1;
-		String oldDay = getSupportDayList().get(0);
-		Double oldPrice = (Double) getSupportDayMap().get(oldDay);
+		Collections.sort(getResistanceDayList());
 
-		ParseDate parser = new ParseDate();
-		newPrice = oldPrice + getResistanceSlope()*parser.getElapsedDays(oldDay, newDay); 
-		
+		if(parser.isLaterDate(getLastSupportDate(), getLastResistanceDate())) {
+			newPrice = getLastResitancePrice() - getMean(rangeToSupport) + getMean(rangeToResistance);
+		} else {
+			newPrice = getLastSupportPrice() + getMean(rangeToResistance);			
+		}
+
 		return newPrice;
 	}
+
+	
+	public Double getForecastSupportPrice() { 
+		Double newPrice=0.0;
+		
+		Collections.sort(getSupportDayList());
+		Collections.sort(getResistanceDayList());
+
+		if(parser.isLaterDate(getLastSupportDate(), getLastResistanceDate())) {
+			newPrice = getLastResitancePrice() - getMean(rangeToSupport);
+		} else {
+			newPrice = getLastSupportPrice() + getMean(rangeToResistance) - getMean(rangeToSupport);			
+		}
+
+		return newPrice;
+	}
+
+	private Double getLastResitancePrice() {
+		Double oldResistancePrice = (Double) getResistanceDayMap().get(getLastResistanceDate());
+		return oldResistancePrice;
+	}
+
+	private Double getLastSupportPrice() {
+		Double oldSupportPrice = (Double) getSupportDayMap().get(getLastSupportDate());
+		return oldSupportPrice;
+	}
+
+	private String getLastDate() {
+		String lastDate="";
+		if(parser.isLaterDate(getLastSupportDate(), getLastResistanceDate())) {
+			lastDate = getLastResistanceDate(); 
+		} else {
+			lastDate = getLastSupportDate();
+		}
+		return lastDate;
+	}
+	private String getLastResistanceDate() {
+		String lastResistanceDate = getResistanceDayList().get(getResistanceDayList().size()-1);
+		return lastResistanceDate;
+	}
+
+	private String getLastSupportDate() {
+		String lastSupportDate = getSupportDayList().get(getSupportDayList().size()-1);
+		return lastSupportDate;
+	}
+	
 	
 	private Double getResistanceSlope() {
 		Collections.sort(getResistanceDayList());
@@ -107,7 +167,7 @@ public class Channel {
 		String oldDate = getResistanceDayList().get(0);
 		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
 		
-		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;	
+		Double range = parser.getElapsedDays(oldDate, newDate)*1.0;	
 		Double slope = (newPrice-oldPrice)/range; 		
 //		System.out.println("RES SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
 
@@ -123,24 +183,44 @@ public class Channel {
 		String oldDate = getSupportDayList().get(0);
 		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
 		
-		Double range = new ParseDate().getElapsedDays(oldDate, newDate)*1.0;	
+		Double range = parser.getElapsedDays(oldDate, newDate)*1.0;	
 		Double slope = (newPrice-oldPrice)/range;	
 //		System.out.println("SUP SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
 		
 		return slope;
 	}
 	
-	public String getForecastSupportDate(Double halfCycle) {
+	public String getForecastSupportDate() { // based on opposite
 		String date="";
-		String lastDate = getSupportDayList().get(getSupportDayList().size()-1);
-		date = new ParseDate().getDatePlus(lastDate, (int) Math.round(halfCycle));
+		String lastDate="";
+		
+		String lastResistanceDate = getLastResistanceDate();
+		String lastSupportDate = getLastSupportDate();
+		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
+			lastDate = lastResistanceDate; 
+		} else {
+			lastDate = lastSupportDate;
+		}
+		Double halfCycle = getMean(halfCycleToSupport);
+		date = parser.getDatePlus(lastDate, (int) Math.round(halfCycle));
+		System.out.println("f- " + lastDate + " " + halfCycle + " " + date);
 		return date;
 	}
 
-	public String getForecastResistanceSpike(Double halfCycle) {
+	public String getForecastResistanceDate() { // based on opposite
 		String date="";
-		String lastDate = getResistanceDayList().get(getResistanceDayList().size()-1);	
-		date = new ParseDate().getDatePlus(lastDate, (int) Math.round(halfCycle));
+		String lastDate="";
+		
+		String lastResistanceDate = getLastResistanceDate();
+		String lastSupportDate = getLastSupportDate();
+		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
+			lastDate = lastResistanceDate; 
+		} else {
+			lastDate = lastSupportDate;
+		}
+		Double halfCycle = getMean(halfCycleToResistance);
+		date = parser.getDatePlus(lastDate, (int) Math.round(halfCycle));
+		System.out.println("f+ " + lastDate + " " + halfCycle + " " + date);
 		return date;		
 	}
 	
@@ -149,10 +229,6 @@ public class Channel {
 		String s="\n";
 		s = s + getContract().toString() + "\n";
 		
-		List<Double> rangeToResistance = new ArrayList<Double>();
-		List<Double> rangeToSupport = new ArrayList<Double>();
-		List<Double> halfCycleToResistance = new ArrayList<Double>();		
-		List<Double> halfCycleToSupport = new ArrayList<Double>();		
 
 		s = s + "DATE" + "\t\t" + "SPIKE" + "\t\t" + "RANGE" + "\t\t" + "DAYS" + "\n";
 
@@ -164,20 +240,21 @@ public class Channel {
 		Double halfCycleResistance = getMean(halfCycleToResistance);
 		
 		if(contract.secType().equals(SecType.IND)) {
-			s = s + "kpi " + "\t\t" + Math.round(getSupportSlope()*30) + "\t" + Math.round(getResistanceSlope()*30) + "\t" + 
+			s = s + "kpi " + "\t\t  " + Math.round(getSupportSlope()*30) + "/" + Math.round(getResistanceSlope()*30) + "\t\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
 						Math.round(halfCycleSupport) + "/" + Math.round(halfCycleResistance) + "\n";
 	
-			String today = new ParseDate().getToday();
-			String nextSupportSpike = getForecastSupportDate(halfCycleSupport);
-			String nextResistanceSpike = getForecastResistanceSpike(halfCycleResistance);
+			String today = parser.getToday();
+			String nextResistanceDate = getForecastResistanceDate();
 			
-			s = s + "forecast" + "\t" + Math.round(getForecastSupportPrice(nextSupportSpike)+getSupportSlope()) + "\t" +
-					  Math.round(getForecastResistancePrice(nextResistanceSpike)+getResistanceSlope()) + 
-					  "\n\n";
-	
-			s = s + "alert=> " + "\t*" + Math.round(getForecastSupportPrice(today)+10) + "*\t*" + 
-				     				    Math.round(getForecastResistancePrice(today)-10) + "*\t" +
+			s = s + getForecastSupportDate() + " f-" + "\t" + Math.round(getForecastSupportPrice()) + "\n";
+					
+			s = s + nextResistanceDate + " f+" + "\t    " + Math.round(getForecastResistancePrice()+getResistanceSlope()) + "\n";
+								
+			s = s + "\n\n";
+					
+			s = s + "alert=> " + "\t*" + Math.round(getForecastSupportPrice()+10) + "*\t*" + 
+				     				    Math.round(getForecastResistancePrice()-10) + "*\t" +
 				     				    "\n";				
 		}
 		return s;
