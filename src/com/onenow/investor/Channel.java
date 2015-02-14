@@ -77,6 +77,41 @@ public class Channel {
 
 	}
 	
+	public String getForecastSupportDate() { // based on opposite
+		String date="";
+
+		Integer halfSupportCycle = (int) Math.round(getMean(halfCycleToSupport));
+		Integer halfResistanceCycle = (int) Math.round(getMean(halfCycleToResistance));
+
+		String lastResistanceDate = getLastResistanceDate();
+		String lastSupportDate = getLastSupportDate();
+		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
+			date = parser.getDatePlus(lastResistanceDate, halfSupportCycle); 
+		} else {
+			date = parser.getDatePlus(lastSupportDate, halfSupportCycle+halfResistanceCycle);
+		}
+
+//		System.out.println("f- " + lastDate + " " + halfCycle + " " + date);
+		return date;
+	}
+
+	public String getForecastResistanceDate() { // based on opposite
+		String date="";
+
+		Integer halfSupportCycle = (int) Math.round(getMean(halfCycleToSupport));
+		Integer halfResistanceCycle = (int) Math.round(getMean(halfCycleToResistance));
+
+		String lastResistanceDate = getLastResistanceDate();
+		String lastSupportDate = getLastSupportDate();
+		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
+			date = parser.getDatePlus(lastResistanceDate, halfSupportCycle+halfResistanceCycle); 
+		} else {
+			date = parser.getDatePlus(lastSupportDate, halfResistanceCycle);
+		}
+
+		return date;		
+	}
+
 	public Double getForecastResistancePrice(String newDay) { 
 		Double newPrice=0.0;
 		
@@ -190,39 +225,6 @@ public class Channel {
 		return slope;
 	}
 	
-	public String getForecastSupportDate() { // based on opposite
-		String date="";
-		String lastDate="";
-		
-		String lastResistanceDate = getLastResistanceDate();
-		String lastSupportDate = getLastSupportDate();
-		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
-			lastDate = lastResistanceDate; 
-		} else {
-			lastDate = lastSupportDate;
-		}
-		Double halfCycle = getMean(halfCycleToSupport);
-		date = parser.getDatePlus(lastDate, (int) Math.round(halfCycle));
-		System.out.println("f- " + lastDate + " " + halfCycle + " " + date);
-		return date;
-	}
-
-	public String getForecastResistanceDate() { // based on opposite
-		String date="";
-		String lastDate="";
-		
-		String lastResistanceDate = getLastResistanceDate();
-		String lastSupportDate = getLastSupportDate();
-		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
-			lastDate = lastResistanceDate; 
-		} else {
-			lastDate = lastSupportDate;
-		}
-		Double halfCycle = getMean(halfCycleToResistance);
-		date = parser.getDatePlus(lastDate, (int) Math.round(halfCycle));
-		System.out.println("f+ " + lastDate + " " + halfCycle + " " + date);
-		return date;		
-	}
 	
 	// PRINT
 	public String toString() {
@@ -236,20 +238,15 @@ public class Channel {
 							rangeToResistance, halfCycleToResistance,
 							rangeToSupport, halfCycleToSupport) + "\n";
 		
-		Double halfCycleSupport = getMean(halfCycleToSupport);
-		Double halfCycleResistance = getMean(halfCycleToResistance);
-		
 		if(contract.secType().equals(SecType.IND)) {
 			s = s + "kpi " + "\t\t  " + Math.round(getSupportSlope()*30) + "/" + Math.round(getResistanceSlope()*30) + "\t\t" + 
 						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
-						Math.round(halfCycleSupport) + "/" + Math.round(halfCycleResistance) + "\n";
+						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
 	
-			String today = parser.getToday();
-			String nextResistanceDate = getForecastResistanceDate();
 			
 			s = s + getForecastSupportDate() + " f-" + "\t" + Math.round(getForecastSupportPrice()) + "\n";
 					
-			s = s + nextResistanceDate + " f+" + "\t    " + Math.round(getForecastResistancePrice()+getResistanceSlope()) + "\n";
+			s = s + getForecastResistanceDate() + " f+" + "\t    " + Math.round(getForecastResistancePrice()) + "\n";
 								
 			s = s + "\n\n";
 					
