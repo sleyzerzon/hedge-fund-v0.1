@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.ib.client.Types.SecType;
 import com.onenow.finance.Underlying;
+import com.onenow.investor.Stats;
 
 public class Channel {
 
@@ -22,12 +23,17 @@ public class Channel {
 	private List<String> recentDayList = new ArrayList<String>();
 	
 	ParseDate parser = new ParseDate();
+//	Stats stats = new Stats();
 	
 	List<Double> rangeToResistance = new ArrayList<Double>();
 	List<Double> rangeToSupport = new ArrayList<Double>();
 	List<Double> halfCycleToResistance = new ArrayList<Double>();		
 	List<Double> halfCycleToSupport = new ArrayList<Double>();		
 
+	Stats statsHalfCycleToSupport = new Stats(halfCycleToSupport);
+	Stats statsHalfCycleToResistance = new Stats(halfCycleToResistance);
+	Stats statsRangeToSupport = new Stats(rangeToSupport);
+	Stats statsRangeToResistance = new Stats(rangeToResistance);
 		
 	public Channel() {
 		
@@ -80,8 +86,9 @@ public class Channel {
 	public String getForecastSupportDate() { // based on opposite
 		String date="";
 
-		Integer halfSupportCycle = (int) Math.round(getMean(halfCycleToSupport));
-		Integer halfResistanceCycle = (int) Math.round(getMean(halfCycleToResistance));
+
+		Integer halfSupportCycle = (int) Math.round(statsHalfCycleToSupport.getMean());
+		Integer halfResistanceCycle = (int) Math.round(statsHalfCycleToResistance.getMean());
 
 		String lastResistanceDate = getLastResistanceDate();
 		String lastSupportDate = getLastSupportDate();
@@ -98,8 +105,8 @@ public class Channel {
 	public String getForecastResistanceDate() { // based on opposite
 		String date="";
 
-		Integer halfSupportCycle = (int) Math.round(getMean(halfCycleToSupport));
-		Integer halfResistanceCycle = (int) Math.round(getMean(halfCycleToResistance));
+		Integer halfSupportCycle = (int) Math.round(statsHalfCycleToSupport.getMean());
+		Integer halfResistanceCycle = (int) Math.round(statsHalfCycleToResistance.getMean());
 
 		String lastResistanceDate = getLastResistanceDate();
 		String lastSupportDate = getLastSupportDate();
@@ -140,9 +147,9 @@ public class Channel {
 		Collections.sort(getResistanceDayList());
 
 		if(parser.isLaterDate(getLastSupportDate(), getLastResistanceDate())) {
-			newPrice = getLastResitancePrice() - getMean(rangeToSupport) + getMean(rangeToResistance);
+			newPrice = getLastResitancePrice() - statsRangeToSupport.getMean() + statsRangeToResistance.getMean();
 		} else {
-			newPrice = getLastSupportPrice() + getMean(rangeToResistance);			
+			newPrice = getLastSupportPrice() + statsRangeToResistance.getMean();			
 		}
 
 		return newPrice;
@@ -156,9 +163,9 @@ public class Channel {
 		Collections.sort(getResistanceDayList());
 
 		if(parser.isLaterDate(getLastSupportDate(), getLastResistanceDate())) {
-			newPrice = getLastResitancePrice() - getMean(rangeToSupport);
+			newPrice = getLastResitancePrice() - statsRangeToSupport.getMean();
 		} else {
-			newPrice = getLastSupportPrice() + getMean(rangeToResistance) - getMean(rangeToSupport);			
+			newPrice = getLastSupportPrice() + statsRangeToResistance.getMean() - statsRangeToSupport.getMean();			
 		}
 
 		return newPrice;
@@ -230,37 +237,42 @@ public class Channel {
 	public String toString() {
 		String s="\n";
 		s = s + getContract().toString() + "\n";
-		
-
 		s = s + "DATE" + "\t\t" + "SPIKE" + "\t\t" + "RANGE" + "\t\t" + "DAYS" + "\n";
-
-		s = outlineChannel(	s, 
-							rangeToResistance, halfCycleToResistance,
-							rangeToSupport, halfCycleToSupport) + "\n";
+		s = outlineChannel(s); 
 		
 		if(contract.secType().equals(SecType.IND)) {
-			s = s + "kpi " + "\t\t  " + Math.round(getSupportSlope()*30) + "/" + Math.round(getResistanceSlope()*30) + "\t\t" + 
-						Math.round(getMean(rangeToSupport)) + "/" + Math.round(getMean(rangeToResistance)) + "\t\t" +
-						Math.round(getMean(halfCycleToSupport)) + "/" + Math.round(getMean(halfCycleToResistance)) + "\n";
-	
-			
-			s = s + getForecastSupportDate() + " f-" + "\t" + Math.round(getForecastSupportPrice()) + "\n";
-					
-			s = s + getForecastResistanceDate() + " f+" + "\t    " + Math.round(getForecastResistancePrice()) + "\n";
-								
-			s = s + "\n\n";
-					
-			s = s + "alert=> " + "\t*" + Math.round(getForecastSupportPrice()+10) + "*\t*" + 
-				     				    Math.round(getForecastResistancePrice()-10) + "*\t" +
-				     				    "\n";				
+			s = getKPI(s);	
+			s = getForecast(s);	
+			s = s + "\n\n";		
+			s = getAlert(s);				
 		}
 		return s;
 	}
 
+	private String getAlert(String s) {
+		s = s + "alert=> " + "\t*" + Math.round(getForecastSupportPrice()+10) + "*\t*" + 
+			     				    Math.round(getForecastResistancePrice()-10) + "*\t" +
+			     				    "\n";
+		return s;
+	}
+
+	private String getForecast(String s) {
+		s = s + getForecastSupportDate() + " f-" + "\t" + Math.round(getForecastSupportPrice()) + "\n";				
+		s = s + getForecastResistanceDate() + " f+" + "\t    " + Math.round(getForecastResistancePrice()) + "\n";
+		return s;
+	}
+
+	private String getKPI(String s) {
+		s = s + "kpi " + "\t\t  " + Math.round(getSupportSlope()*30) + "/" + Math.round(getResistanceSlope()*30) + "\t\t" + 
+					Math.round(statsRangeToSupport.getMean()) + "/" + Math.round(statsRangeToResistance.getMean()) + "\t\t" +
+					Math.round(statsHalfCycleToSupport.getMean()) + "/" + Math.round(statsHalfCycleToResistance.getMean()) + "\n";
+		return s;
+	}
+
 	
-	private String outlineChannel(	String s, 
-									List<Double> widthToResistance, List<Double> halfCycleToResistance,
-									List<Double> widthToSupport, List<Double> halfCycleToSupport) {
+	private String outlineChannel(	String s )  { // , 
+//									List<Double> rangeToResistance, List<Double> halfCycleToResistance,
+//									List<Double> rangeToSupport, List<Double> halfCycleToSupport) {
 		
 		List<String> allDates = getDayList();
 						
@@ -273,7 +285,7 @@ public class Channel {
 				s = s + " -" + "\t" + 	Math.round(supPrice) + "\t\t";
 				String prevDate = allDates.get(i-1);
 				s = getSupportString(	date, supPrice, prevDate,
-										widthToSupport, halfCycleToSupport, s);
+										rangeToSupport, halfCycleToSupport, s);
 			} catch (Exception e) {  } // it's normal b/c adAll
 			
 			try { // RESISTANCE
@@ -281,7 +293,7 @@ public class Channel {
 				s = s + " +" + "\t    " + 	Math.round(resPrice) + "\t   ";
 				String prevDate = allDates.get(i-1);
 				s = getResistanceString(	date, resPrice, prevDate,
-											widthToResistance, halfCycleToResistance, s);
+											rangeToResistance, halfCycleToResistance, s);
 			} catch (Exception e) {  } //	it's normal b/c adAll
 			
 			try { // RECENT
@@ -289,7 +301,7 @@ public class Channel {
 //				String prevDate = allDates.get(i-1);
 				String prevDate = date;		// TODO
 				s = getRecentString(	date, recentPrice, prevDate,
-										widthToResistance, halfCycleToResistance, s);
+										rangeToResistance, halfCycleToResistance, s);
 			} catch (Exception e) {  } //	it's normal b/c adAll
 			s = s + "\n";
 			
@@ -368,13 +380,6 @@ public class Channel {
 		return s;
 	}
 	
-	public double getMean(List<Double> nums) {
-        double sum = 0.0;
-        for(double a : nums)
-            sum += a;
-        return sum/nums.size();
-    }
-
 
 	// TEST
 	public void test() {
