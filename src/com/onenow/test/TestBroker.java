@@ -34,7 +34,8 @@ public class TestBroker {
 	Investment put1 = new Investment();
 	Investment put2 = new Investment();
 
-	private Date expDate = new Date(1000000);
+//	private Date expDate = new Date(1000000);
+	private String expDate = "20150201";
 	
 	private Trade tradeStock1;
 	private Trade tradeStock2;
@@ -80,30 +81,30 @@ public class TestBroker {
 	}
 	
 	private boolean testExocet() {
-		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate());
+		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate(), getBroker());
 		
-		StrategyIronCondor hp = ex.getIronCondor(InvProb.HIGH, TradeRatio.NONE, getBroker(), 0.60);
+		StrategyIronCondor hp = ex.getIronCondor(InvProb.HIGH, TradeRatio.NONE, 0.60);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ic = ex.getIronCondor(InvProb.LOW, TradeRatio.NONE, getBroker(), 0.50);
+		StrategyIronCondor ic = ex.getIronCondor(InvProb.LOW, TradeRatio.NONE, 0.50);
 		testIronCondor(ex, ic); 
 		
-		StrategyCallSpread cs = ex.getCallSpread(InvProb.LOW, TradeRatio.NONE, getBroker(), 0.45);
+		StrategyCallSpread cs = ex.getCallSpread(InvProb.LOW, TradeRatio.NONE, 0.45);
 		testCallSpread(ex, cs); 
 
-		StrategyPutSpread ps = ex.getPutSpread(InvProb.LOW, TradeRatio.NONE, getBroker(), 0.55);
+		StrategyPutSpread ps = ex.getPutSpread(InvProb.LOW, TradeRatio.NONE, 0.55);
 		testPutSpread(ex, ps); 
 		
-		StrategyIronCondor stL = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.NONE, getBroker(), 0.50);
+		StrategyIronCondor stL = ex.getIronCondor(InvProb.LOWER_STRANGLE, TradeRatio.NONE, 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ratioed = ex.getIronCondor(InvProb.LSANGLE, TradeRatio.HIGH, getBroker(), 0.50);
+		StrategyIronCondor ratioed = ex.getIronCondor(InvProb.LOWER_STRANGLE, TradeRatio.HIGH, 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor stH = ex.getIronCondor(InvProb.USANGLE, TradeRatio.NONE, getBroker(), 0.50);
+		StrategyIronCondor stH = ex.getIronCondor(InvProb.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ratioleft = ex.getIronCondor(InvProb.LEFT, TradeRatio.VHIGH, getBroker(), 0.50);
+		StrategyIronCondor ratioleft = ex.getIronCondor(InvProb.LEFT, TradeRatio.VHIGH, 0.50);
 		System.out.println(ex.toString());
 
 
@@ -181,7 +182,7 @@ public class TestBroker {
 			return false;
 		}
 		// now more aggressive
-		strat = ex.getIronCondor(InvProb.LOW, TradeRatio.LOW, getBroker(), 0.75); 
+		strat = ex.getIronCondor(InvProb.LOW, TradeRatio.LOW, 0.75); 
 		if(!strat.getMaxProfit().equals(245.0)) {
 			System.out.println("ERROR ic+ max profit " + strat.getMaxProfit());
 			return false;
@@ -237,10 +238,10 @@ public class TestBroker {
 			setStock(getMarket().getBestStock(theUnder));
 			// TODO: get best
 			// call1 = market.getInvestments(theUnder, InvType.call, expDate, 407.00).get(0); 
-			setCall1(getMarket().getInvestments(theUnder, InvType.CALL, expDate, 405.00).get(0));
-			setCall2(getMarket().getInvestments(theUnder, InvType.CALL, expDate, 400.00).get(0));
-			setPut1(getMarket().getInvestments(theUnder, InvType.PUT, expDate, 390.00).get(0));
-			setPut2(getMarket().getInvestments(theUnder, InvType.PUT, expDate, 385.00).get(0));
+			setCall1(getMarket().getInvestments(theUnder, InvType.CALL, getExpDate(), 405.00).get(0));
+			setCall2(getMarket().getInvestments(theUnder, InvType.CALL, getExpDate(), 400.00).get(0));
+			setPut1(getMarket().getInvestments(theUnder, InvType.PUT, getExpDate(), 390.00).get(0));
+			setPut2(getMarket().getInvestments(theUnder, InvType.PUT, getExpDate(), 385.00).get(0));
 		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
@@ -318,14 +319,6 @@ public class TestBroker {
 		this.put2 = put2;
 	}
 
-	private Date getExpDate() {
-		return expDate;
-	}
-
-	private void setExpDate(Date expDate) {
-		this.expDate = expDate;
-	}
-
 	private Trade getTradeCall1() {
 		return tradeCall1;
 	}
@@ -372,5 +365,13 @@ public class TestBroker {
 
 	public void setTradeStock2(Trade tradeStock2) {
 		this.tradeStock2 = tradeStock2;
+	}
+
+	private String getExpDate() {
+		return expDate;
+	}
+
+	private void setExpDate(String expDate) {
+		this.expDate = expDate;
 	}
 }

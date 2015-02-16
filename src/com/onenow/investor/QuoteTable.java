@@ -14,38 +14,38 @@ import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
 import com.onenow.investor.InvestorController.ITopMktDataHandler;
 import com.onenow.investor.InvestorController.TopMktDataAdapter;
-import com.onenow.investor.QuoteModel;
+import com.onenow.investor.QuoteTable;
 
 
-public class QuoteModel extends AbstractTableModel {
+public class QuoteTable extends AbstractTableModel {
 
 	private InvestorController controller;
 
-	public QuoteModel() {
+	public QuoteTable() {
 		
 	}
 
-	public QuoteModel(InvestorController cont) {
+	public QuoteTable(InvestorController cont) {
 		setController(cont);
 	}
 	
-	private ArrayList<Quote> m_rows = new ArrayList<Quote>();
+	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>();
 
-	void addContract( Contract contract) {
-		Quote row = new Quote( this, contract.description() );
-		m_rows.add(row);
-		getController().reqMktData(contract, "", false, (ITopMktDataHandler) row);
-		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
+	public void addContract( Contract contract) {
+		QuoteSingle quote = new QuoteSingle( this, contract.description() );
+		m_rows.add(quote);
+		getController().reqMktData(contract, "", false, (ITopMktDataHandler) quote);
+//		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 	
-	void addRow( Quote row) { // callback
+	void addRow( QuoteSingle row) { // callback
 		m_rows.add( row);
 //		System.out.println("Quote " + toString(0));
-		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
+//		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 
 	public String toString(int which) {
-		Quote row = m_rows.get(which);
+		QuoteSingle row = m_rows.get(which);
 		String s="\n";
 		s = s + "-\n";
 		s = s + "Description " + row.m_description + "\n";
@@ -62,7 +62,7 @@ public class QuoteModel extends AbstractTableModel {
 	}				
 	
 	public void desubscribe() {
-		for (Quote row : m_rows) {
+		for (QuoteSingle row : m_rows) {
 			getController().cancelMktData( row);
 		}
 	}		
@@ -91,7 +91,7 @@ public class QuoteModel extends AbstractTableModel {
 	}
 
 	@Override public Object getValueAt(int rowIn, int col) {
-		Quote row = m_rows.get( rowIn);
+		QuoteSingle row = m_rows.get( rowIn);
 		switch( col) {
 			case 0: return row.m_description;
 			case 1: return row.m_bidSize;
@@ -107,7 +107,7 @@ public class QuoteModel extends AbstractTableModel {
 	}
 	
 	public void color(TableCellRenderer rend, int rowIn, Color def) {
-		Quote row = m_rows.get( rowIn);
+		QuoteSingle row = m_rows.get( rowIn);
 		Color c = row.m_frozen ? Color.gray : def;
 		((JLabel)rend).setForeground( c);
 	}
@@ -116,7 +116,7 @@ public class QuoteModel extends AbstractTableModel {
 		getController().cancelMktData( m_rows.get( i) );
 	}
 	
-	public class Quote extends TopMktDataAdapter {
+	public class QuoteSingle extends TopMktDataAdapter {
 		AbstractTableModel m_model;
 		String m_description;
 		double m_bid;
@@ -129,11 +129,11 @@ public class QuoteModel extends AbstractTableModel {
 		int m_volume;
 		boolean m_frozen;
 		
-		public Quote () {
+		public QuoteSingle () {
 			
 		}
 		
-		Quote( AbstractTableModel model, String description) {
+		QuoteSingle( AbstractTableModel model, String description) {
 			m_model = model;
 			m_description = description;
 		}

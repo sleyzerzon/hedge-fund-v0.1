@@ -99,7 +99,7 @@ public class Portfolio {
 		return foundInvs;
 	}
 
-	public List<Investment> getInvestments(Underlying under, InvType type, Date exp) {
+	public List<Investment> getInvestments(Underlying under, InvType type, String exp) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type)) {
 			if (type.equals(InvType.CALL) || type.equals(InvType.PUT)) {
@@ -112,7 +112,7 @@ public class Portfolio {
 		return foundInvs;		
 	}
 	
-	public List<Investment> getInvestments(Underlying under, InvType type, Date exp, Double strike) {
+	public List<Investment> getInvestments(Underlying under, InvType type, String exp, Double strike) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type, exp)) {
 			if (type.equals(InvType.CALL) || type.equals(InvType.PUT)) {
@@ -147,7 +147,7 @@ public class Portfolio {
 		return invs.get(0);
 	}
 	
-	public Investment getBestOption(Underlying under, InvType type, Date exp, Double strike) 
+	public Investment getBestOption(Underlying under, InvType type, String exp, Double strike) 
 		throws IndexOutOfBoundsException {
 		List<Investment> invs = getInvestments(under, type, exp, strike); 
 		return invs.get(0);

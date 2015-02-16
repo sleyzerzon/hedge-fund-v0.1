@@ -1,7 +1,5 @@
 package com.onenow.investor;
 
-import java.util.Date;
-
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.finance.InvProb;
 import com.onenow.finance.InvType;
@@ -23,7 +21,9 @@ public class Exocet {
 	private Integer quant;
 	private Underlying under;
 	private Double underPrice;
-	private Date exp;
+	private String exp;
+	
+	private Contract contract;
 	
 	private BrokerActivityImpl broker;
 	private Double agression;
@@ -31,39 +31,44 @@ public class Exocet {
 	
 	private InvProb prob;
 	private TradeRatio ratio;
-		
-	// what is the 5-point velocity through the day
-	// what is the spike frequency
-	
+			
 	public Exocet() {
 		
 	}
 	
-	public Exocet(Integer quant, Underlying under, Date exp) {
+	public Exocet(Integer quant, Underlying under, String exp, BrokerActivityImpl broker) {
 		setQuant(quant);
 		setUnder(under);
 		setExp(exp);	
+		setBroker(broker);
 	}
-	
+
+	public Exocet(Integer quant, Contract cont, BrokerActivityImpl broker) {
+		setQuant(quant);
+		setContract(cont);
+		setUnder(new Underlying(cont.symbol())); // TODO
+		setExp(cont.expiry());	 // TODO
+		setBroker(broker);
+	}
+
 	public StrategyCallSpread getCallSpread(	InvProb prob, TradeRatio ratio,
-												BrokerActivityImpl broker, Double agression) {
+												Double agression) {
 		setProb(prob);
 		setRatio(ratio);
-		setBroker(broker);
 		setAgression(agression);
+		
 		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.LAST); 
+		Double price = getBroker().getPrice(index, TradeType.LAST);
+		
 		setUnderPrice(price);
 		setExocet(new StrategyCallSpread(getCallBuy(), getCallSell()));
 		setCheckpoints();
 		return (StrategyCallSpread) getExocet();
 	}
 	
-	public StrategyPutSpread getPutSpread(	InvProb prob, TradeRatio ratio,
-												BrokerActivityImpl broker, Double agression) {
+	public StrategyPutSpread getPutSpread(	InvProb prob, TradeRatio ratio, Double agression) {
 		setProb(prob);
 		setRatio(ratio);
-		setBroker(broker);
 		setAgression(agression);
 		InvestmentIndex index = new InvestmentIndex(getUnder());
 		Double price = getBroker().getPrice(index, TradeType.LAST); 
@@ -73,11 +78,9 @@ public class Exocet {
 		return (StrategyPutSpread) getExocet();	
 	}
 	
-	public StrategyIronCondor getIronCondor(	InvProb prob, TradeRatio ratio, 
-												BrokerActivityImpl broker, Double agression) {
+	public StrategyIronCondor getIronCondor(	InvProb prob, TradeRatio ratio, Double agression) {
 		setProb(prob);
 		setRatio(ratio);
-		setBroker(broker);
 		setAgression(agression);
 		InvestmentIndex index = new InvestmentIndex(getUnder());
 		Double price = getBroker().getPrice(index, TradeType.LAST); 
@@ -135,7 +138,7 @@ public class Exocet {
 				
 		if(tradeType.equals(TradeType.BUY)) { // ratio protection
 			mQuant=getMQuant();		
-			boolean onlyUpper = getProb().equals(InvProb.LSANGLE) || getProb().equals(InvProb.LEFT);
+			boolean onlyUpper = getProb().equals(InvProb.LOWER_STRANGLE) || getProb().equals(InvProb.LEFT);
 			if(invType.equals(InvType.PUT) && onlyUpper) { 
 			   mQuant=getQuant(); // protect only upside on strangles
 			} 
@@ -196,12 +199,26 @@ public class Exocet {
 		if(getProb().equals(InvProb.HIGH)) { strike=getHPCallSellStrike(); }
 		if(getProb().equals(InvProb.MID)) { strike=getMPCallSellStrike(); }
 		if(getProb().equals(InvProb.LOW)) { strike=getLPCallSellStrike(); }
-		if(getProb().equals(InvProb.LSANGLE)) { strike=getLowerStrangleCallSellStrike(); }
-		if(getProb().equals(InvProb.USANGLE)) { strike=getUpperStrangleCallSellStrike(); }
+		if(getProb().equals(InvProb.LOWER_STRANGLE)) { strike=getLowerStrangleCallSellStrike(); }
+		if(getProb().equals(InvProb.UPPER_STRANGLE)) { strike=getUpperStrangleCallSellStrike(); }
 		if(getProb().equals(InvProb.LEFT)) { strike=getLeftCallSellStrike(); }
 //		if(getProb().equals(InvProb.RIGHT)) { strike=getRightCallSellStrike(); }
+		if(getProb().equals(InvProb.SWING)) { strike=getSwingCallSellStrike(); }
 		return strike;
 	}
+	
+	private Double getSwingCallSellStrike() {
+		Double strike=0.0;
+		
+		// for strikes from highest trading to: lowest, current price
+		// get price of call sell & call buy
+		// calculate spread at a strike
+		// calculate gain % if price moves 2 spreads
+		// choose that strike
+		
+		return strike;
+	}
+	
 	private Double getHPCallSellStrike() {
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing() + getSpread(); // TODO: do based on delta
@@ -239,12 +256,19 @@ public class Exocet {
 		if(getProb().equals(InvProb.HIGH)) { strike=getHPPutSellStrike(); }
 		if(getProb().equals(InvProb.MID)) { strike=getMPPutSellStrike(); }
 		if(getProb().equals(InvProb.LOW)) { strike=getLPPutSellStrike(); }
-		if(getProb().equals(InvProb.LSANGLE)) { strike=getUnderStranglePutSellStrike(); }
-		if(getProb().equals(InvProb.USANGLE)) { strike=getUpperStranglePutSellStrike(); }
+		if(getProb().equals(InvProb.LOWER_STRANGLE)) { strike=getUnderStranglePutSellStrike(); }
+		if(getProb().equals(InvProb.UPPER_STRANGLE)) { strike=getUpperStranglePutSellStrike(); }
 		if(getProb().equals(InvProb.LEFT)) { strike=getLeftPutSellStrike(); }
 //		if(getProb().equals(InvProb.RIGHT)) { strike=getRightPutSellStrike(); }
+		if(getProb().equals(InvProb.SWING)) { strike=getSwingPutSellStrike(); }
 		return strike;
 	}
+	private Double getSwingPutSellStrike() {
+		Double strike=0.0;
+		
+		return strike;
+	}
+	
 	private Double getHPPutSellStrike() {
 		Double strike = 0.0;
 		strike = getLPPutSellStrike()-getSpread(); // TODO: do based on delta
@@ -367,14 +391,6 @@ public class Exocet {
 		this.quant = quant;
 	}
 
-	public Date getExp() {
-		return exp;
-	}
-
-	public void setExp(Date exp) {
-		this.exp = exp;
-	}
-
 	private Underlying getUnder() {
 		return under;
 	}
@@ -429,6 +445,22 @@ public class Exocet {
 
 	public void setRatio(TradeRatio ratio) {
 		this.ratio = ratio;
+	}
+
+	private String getExp() {
+		return exp;
+	}
+
+	private void setExp(String exp) {
+		this.exp = exp;
+	}
+
+	private Contract getContract() {
+		return contract;
+	}
+
+	private void setContract(Contract contract) {
+		this.contract = contract;
 	}
 	
 	

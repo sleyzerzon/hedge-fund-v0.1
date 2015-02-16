@@ -9,6 +9,9 @@ import com.onenow.finance.Trade;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
+import com.onenow.investor.Contract;
+import com.onenow.investor.InvestorController;
+import com.onenow.investor.QuoteTable;
 
 public class BrokerActivityImpl implements BrokerActivity { 
 
@@ -22,6 +25,13 @@ public class BrokerActivityImpl implements BrokerActivity {
 		setBrokerInteractive(new BrokerInteractive());
 		setBrokerAWS(new BrokerAWS());
 		setBrokerGoogle(new BrokerGoogle());
+	}
+
+	public BrokerActivityImpl(BrokerInteractive ib) {
+		setBrokerEmulator(null);
+		setBrokerInteractive(ib);
+		setBrokerAWS(null);
+		setBrokerGoogle(null);
 	}
 
 	@Override
@@ -125,7 +135,20 @@ public class BrokerActivityImpl implements BrokerActivity {
 
 	@Override
 	public Double getPrice(Investment inv, TradeType type) {
-		Double price = getBrokerEmulator().getPrice(inv, type); 
+		Double price = 0.0;
+		
+		price = getBrokerEmulator().getPrice(inv, type); 
+		
 		return price;
 	}
+
+	public Double getPrice(Contract cont, TradeType type, InvestorController controller) {
+		Double price = 0.0;
+				
+		QuoteTable quoteTable = new QuoteTable(controller);
+		quoteTable.addContract(cont);		
+
+		return price;
+	}
+	
 }

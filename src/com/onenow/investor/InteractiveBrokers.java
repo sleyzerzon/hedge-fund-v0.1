@@ -3,6 +3,8 @@ package com.onenow.investor;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.table.AbstractTableModel;
+
 import apidemo.MarketDataPanel.BarResultsPanel;
 import apidemo.util.TCombo;
 
@@ -16,7 +18,11 @@ import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
 import com.ib.controller.Bar;
 import com.ib.controller.Formats;
+import com.onenow.broker.BrokerActivityImpl;
+import com.onenow.finance.InvProb;
 import com.onenow.finance.RiskReturn;
+import com.onenow.finance.StrategyIronCondor;
+import com.onenow.finance.TradeRatio;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.InvestorController.ConnectionHandler;
 import com.onenow.investor.InvestorController.IBulletinHandler;
@@ -24,8 +30,9 @@ import com.onenow.investor.InvestorController.IHistoricalDataHandler;
 import com.onenow.investor.InvestorController.IRealTimeBarHandler;
 import com.onenow.investor.InvestorController.ITimeHandler;
 import com.onenow.investor.InvestorController.ITopMktDataHandler;
+import com.onenow.investor.QuoteTable.QuoteSingle;
 
-public class InteractiveBrokers implements ConnectionHandler {
+public class InteractiveBrokers implements ConnectionHandler  { // extends AbstractTableModel 
 
 	private int port = 7496; 
 	
@@ -34,11 +41,11 @@ public class InteractiveBrokers implements ConnectionHandler {
 	private int clientDefault = Integer.parseInt("0");
 //	private int clientId = Integer.parseInt("pablo0000"); 
 	
-	private ILogger inLogger = new SummitLogger();
-	private ILogger outLogger = new SummitLogger();
-	private InvestorController controller = new InvestorController(this, getInLogger(), getOutLogger());
+//	private ILogger inLogger = new SummitLogger();
+//	private ILogger outLogger = new SummitLogger();
+//	private InvestorController controller = new InvestorController(this, getInLogger(), getOutLogger());
 		
-	private final ArrayList<String> accountList = new ArrayList<String>();
+//	private final ArrayList<String> accountList = new ArrayList<String>();
 		
 	final TCombo<MktDataType> marketCombo = new TCombo<MktDataType>( MktDataType.values() );
 	
@@ -67,10 +74,17 @@ public class InteractiveBrokers implements ConnectionHandler {
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
 //		getController().connect("tsdb.enremmeta.com", 4001, 0, null);  // app port 7496	
 		
-//		QuoteModel qModel = new QuoteModel(getController());
-//		qModel.addContract(getContractFactory().stockToQuote());
-						
-		getChannelPrices(getContractFactory());
+								
+//		getChannelPrices(getContractFactory());
+		
+		Contract spxIndex = contractFactory.indexToQuote("SPX");
+		Contract spxOption = contractFactory.optionToQuote("SPX");
+
+		BrokerActivityImpl broker = new BrokerActivityImpl();
+		Exocet spxExocet = new Exocet(100, spxOption, broker);
+		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
+		System.out.println(spxExocet.toString());
+		
 
 		// underPrice
 		// optionPrice()
@@ -100,17 +114,19 @@ public class InteractiveBrokers implements ConnectionHandler {
 			for(int j=0; j<endList.size(); j++) {
 				String end = endList.get(j);
 											
-				QuoteBar panel = new QuoteBar(channel);
+				QuoteBar quoteHistory = new QuoteBar(channel);
 				getController().reqHistoricalData(	channel.getContract(), 
 													end, 1, DurationUnit.DAY, BarSize._1_hour, 
 													WhatToShow.TRADES, false,
-													panel);
+													quoteHistory);
 
 //			    getController().reqRealTimeBars(channel.getContract(), WhatToShow.TRADES, false, panel);
 //			    getController().cancelRealtimeBars(panel);
-//				getController().reqMktData(channel.getContract(), "", true, (ITopMktDataHandler) panel);
+//			    Thread.sleep(12000);
 
-			    Thread.sleep(12000);
+				QuoteTable quoteTable = new QuoteTable(getController());
+				quoteTable.addContract(channel.getContract());
+				
 
 			    	
 				System.out.println("...");
@@ -119,6 +135,25 @@ public class InteractiveBrokers implements ConnectionHandler {
 		}
 	}
 	
+//	@Override
+//	public int getRowCount() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public int getColumnCount() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public Object getValueAt(int rowIndex, int columnIndex) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+	
+	//////
 	private List<String> getEndList(Channel channel) {
 		List<String> list = new ArrayList<String>();
 		String date="";
@@ -240,52 +275,54 @@ public class InteractiveBrokers implements ConnectionHandler {
 //	}
 
 
-	@Override
-	public void connected() {
-		show(ConnectionStatus.CONNECTED.toString());
-		
-		getController().reqCurrentTime( new ITimeHandler() {
-			@Override public void currentTime(long time) {
-				show( "Server date/time is " + Formats.fmtDate(time * 1000) );
-			}
-		});
-		
-		getController().reqBulletins( true, new IBulletinHandler() {
-			@Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
-				String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
-				show( str);
-				show( message);
-			}
-		});
-	}
-
-	@Override
-	public void disconnected() {
-		show(ConnectionStatus.DISCONNECTED.toString());
-		
-	}
-
-	@Override
-	public void accountList(ArrayList<String> list) {
-		show( "Received account list");
-		getAccountList().clear();
-		getAccountList().addAll( list);
-	}
-
-	@Override
-	public void error(Exception e) {
-		show( e.toString() );
-	}
-
-	@Override
-	public void message(int id, int errorCode, String errorMsg) {
-		show( id + " " + errorCode + " " + errorMsg);
-	}
-
-	@Override
-	public void show(String string) {
-		System.out.println(string);
-	}
+	
+	// *** HANDLER
+//	@Override
+//	public void connected() {
+//		show(ConnectionStatus.CONNECTED.toString());
+//		
+//		getController().reqCurrentTime( new ITimeHandler() {
+//			@Override public void currentTime(long time) {
+//				show( "Server date/time is " + Formats.fmtDate(time * 1000) );
+//			}
+//		});
+//		
+//		getController().reqBulletins( true, new IBulletinHandler() {
+//			@Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
+//				String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
+//				show( str);
+//				show( message);
+//			}
+//		});
+//	}
+//
+//	@Override
+//	public void disconnected() {
+//		show(ConnectionStatus.DISCONNECTED.toString());
+//		
+//	}
+//
+//	@Override
+//	public void accountList(ArrayList<String> list) {
+//		show( "Received account list");
+//		getAccountList().clear();
+//		getAccountList().addAll( list);
+//	}
+//
+//	@Override
+//	public void error(Exception e) {
+//		show( e.toString() );
+//	}
+//
+//	@Override
+//	public void message(int id, int errorCode, String errorMsg) {
+//		show( id + " " + errorCode + " " + errorMsg);
+//	}
+//
+//	@Override
+//	public void show(String string) {
+//		System.out.println(string);
+//	}
 
 	// PRIVATE
 	
@@ -348,4 +385,6 @@ public class InteractiveBrokers implements ConnectionHandler {
 	private void setContractFactory(ContractFactory contractFactory) {
 		this.contractFactory = contractFactory;
 	}
+
+
 }

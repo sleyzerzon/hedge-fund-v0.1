@@ -270,9 +270,7 @@ public class Channel {
 	}
 
 	
-	private String outlineChannel(	String s )  { // , 
-//									List<Double> rangeToResistance, List<Double> halfCycleToResistance,
-//									List<Double> rangeToSupport, List<Double> halfCycleToSupport) {
+	private String outlineChannel(String s)  { 
 		
 		List<String> allDates = getDayList();
 						

@@ -42,7 +42,7 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.ib.controller.ApiConnection.ILogger;
-import com.onenow.investor.QuoteModel.Quote;
+import com.onenow.investor.QuoteTable.QuoteSingle;
 
 public class InvestorController implements EWrapper {
 	private ApiConnection m_client;

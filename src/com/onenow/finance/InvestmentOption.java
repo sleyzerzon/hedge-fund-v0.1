@@ -5,14 +5,14 @@ import java.util.Date;
 public class InvestmentOption extends Investment { // call, put
 
 	private Double strikePrice;
-	private Date expirationDate;
+	String expirationDate;
 	private int shares = 100;
 
 	// CONSTRUCTORS
 	public InvestmentOption() {
 	}
 
-	public InvestmentOption(Underlying under, InvType type, Date exp,
+	public InvestmentOption(Underlying under, InvType type, String exp,
 			Double strike) {
 		super(under, type);
 		setExpirationDate(exp);
@@ -75,16 +75,16 @@ public class InvestmentOption extends Investment { // call, put
 		this.strikePrice = strikePrice;
 	}
 
-	public Date getExpirationDate() {
+	private void setShares(int shares) {
+		this.shares = shares;
+	}
+
+	public String getExpirationDate() {
 		return expirationDate;
 	}
 
-	public void setExpirationDate(Date expirationDate) {
+	private void setExpirationDate(String expirationDate) {
 		this.expirationDate = expirationDate;
-	}
-
-	private void setShares(int shares) {
-		this.shares = shares;
 	}
 
 }
