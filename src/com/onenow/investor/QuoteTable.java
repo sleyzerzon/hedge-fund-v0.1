@@ -12,6 +12,8 @@ import javax.swing.table.TableCellRenderer;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
+import com.onenow.broker.Broker;
+import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.Investment;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.TradeType;
@@ -23,7 +25,7 @@ import com.onenow.investor.QuoteTable;
 public class QuoteTable extends AbstractTableModel {
 
 	private InvestorController controller;
-	private MarketPrice marketPrices;
+	private BrokerInteractive broker;
 	private ContractFactory contractFactory = new ContractFactory();
 	private Investment investment;
 
@@ -31,13 +33,11 @@ public class QuoteTable extends AbstractTableModel {
 		
 	}
 
-//	public QuoteTable(InvestorController cont) {
-//		setController(cont);
-//	}
+	public QuoteTable(BrokerInteractive broker, InvestorController cont, Investment inv) {
 
-	public QuoteTable(InvestorController cont, MarketPrice market, Investment inv) {
 		setController(cont);
-		setMarketPrices(market);
+		setBroker(broker);
+		
 		setInvestment(inv);
 		Contract contract = getContractFactory().getContract(getInvestment());
 		QuoteSingle quote = new QuoteSingle( this, contract.description() );
@@ -48,12 +48,6 @@ public class QuoteTable extends AbstractTableModel {
 
 	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>();
 
-//	public void addContract( Contract contract) {
-//		QuoteSingle quote = new QuoteSingle( this, contract.description() );
-//		m_rows.add(quote);
-//		getController().reqMktData(contract, "", false, (ITopMktDataHandler) quote);
-//		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
-//	}
 
 	void addRow( QuoteSingle row) { // callback
 		m_rows.add( row);
@@ -206,26 +200,28 @@ public class QuoteTable extends AbstractTableModel {
 			switch( tickType) {
 				case BID:
 					m_bid = price;
+//					System.out.println("Bid " + m_bid);
+					getBroker().setBidPrice(getInvestment(), m_bid);
 					break;
 				case ASK:
 					m_ask = price;
+//					System.out.println("Ask " + m_ask);
+					getBroker().setAskPrice(getInvestment(), m_ask);
 					break;
 				case LAST:
 					m_last = price;
+//					System.out.println("Last " + m_last);
+					getBroker().setClosePrice(getInvestment(), m_last);
 					break;
 				case CLOSE:
 					m_close = price;
+//					System.out.println("Close " + m_close);
+					getBroker().setClosePrice(getInvestment(), m_close);
 					break;
 				default: break;	
 			}
 			m_model.fireTableDataChanged(); // should use a timer to be more efficient
 
-			if(m_ask!=0 || m_close!=0.0 || m_close!=0.0) {
-				getMarketPrices().setPrice(getInvestment(), m_close);
-				getMarketPrices().setPrice(getInvestment(), m_ask, m_bid);
-				Double cachedPrice = getMarketPrices().getPrice(getInvestment(), TradeType.BUY);
-				System.out.println("Quote $" + cachedPrice + " " + getInvestment().toString());
-			}
 		}
 
 		@Override public void tickSize( TickType tickType, int size) {
@@ -271,14 +267,6 @@ public class QuoteTable extends AbstractTableModel {
 		this.controller = controller;
 	}
 
-	private MarketPrice getMarketPrices() {
-		return marketPrices;
-	}
-
-	private void setMarketPrices(MarketPrice marketPrices) {
-		this.marketPrices = marketPrices;
-	}
-
 	private ContractFactory getContractFactory() {
 		return contractFactory;
 	}
@@ -294,4 +282,13 @@ public class QuoteTable extends AbstractTableModel {
 	private void setInvestment(Investment investment) {
 		this.investment = investment;
 	}
+
+	private BrokerInteractive getBroker() {
+		return broker;
+	}
+
+	private void setBroker(BrokerInteractive broker) {
+		this.broker = broker;
+	}
+
 }

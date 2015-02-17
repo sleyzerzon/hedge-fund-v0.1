@@ -31,6 +31,8 @@ import com.onenow.investor.InvestorController.ITimeHandler;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
+	private boolean priceUpdate;
+	
 	private List<Underlying> underList;
 	private Portfolio marketPortfolio;
 	private List<Trade> trades;
@@ -45,7 +47,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	private final ArrayList<String> accountList = new ArrayList<String>();
 	
-	public BrokerInteractive() {
+	public BrokerInteractive(boolean priceUpdate) {
+		setPriceUpdate(priceUpdate);
+		
 		connectToServer();
 		
 		setUnderList(new ArrayList<Underlying>());
@@ -57,7 +61,33 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		initMarket("spx", "20150319", 2100);
 	}
 
-
+	
+	public synchronized void notifyPriceSet() {
+		setPriceUpdate(true);
+	    notifyAll();
+	}
+	
+	public void setAskPrice(Investment inv, Double ask) {
+		getMarketPrices().setAskPrice(inv, ask);
+		System.out.println("Quote Ask $ " +  getMarketPrices().getPrice(inv, TradeType.BUY));
+		notifyPriceSet();
+	}
+	public void setBidPrice(Investment inv, Double bid) {
+		getMarketPrices().setBidPrice(inv, bid);
+		System.out.println("Quote Bid $ " +  getMarketPrices().getPrice(inv, TradeType.SELL));		
+		notifyPriceSet();
+	}
+	public void setLastPrice(Investment inv, Double last) {
+		getMarketPrices().setClosePrice(inv, last);
+		System.out.println("Quote Last $ " +  getMarketPrices().getPrice(inv, TradeType.LAST));	
+		notifyPriceSet();
+	}
+	public void setClosePrice(Investment inv, Double close) {
+		getMarketPrices().setClosePrice(inv, close);
+		System.out.println("Quote Close $ " +  getMarketPrices().getPrice(inv, TradeType.CLOSE));	
+		notifyPriceSet();
+	}
+	
 	private void connectToServer() {
 		setController(new InvestorController((com.onenow.investor.InvestorController.ConnectionHandler) this, getInLogger(), getOutLogger()));		
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
@@ -88,7 +118,8 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) {
-			QuoteTable quoteIndex = new QuoteTable(getController(), getMarketPrices(), inv);
+//			QuoteTable quoteIndex = new QuoteTable(getController(), getMarketPrices(), inv);
+			QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
 		}
 	}
 
@@ -308,6 +339,16 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 	private void setTrades(List<Trade> trades) {
 		this.trades = trades;
+	}
+
+
+	private boolean isPriceUpdate() {
+		return priceUpdate;
+	}
+
+
+	private void setPriceUpdate(boolean priceUpdate) {
+		this.priceUpdate = priceUpdate;
 	}
 
 }

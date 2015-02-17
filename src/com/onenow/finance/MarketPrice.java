@@ -12,14 +12,20 @@ public class MarketPrice {
 		setPrices(new HashMap());
 	}
 
-	public void setPrice(Investment investment, Double bidPrice, Double askPrice) {
-		getPrices().put(getLookupKey(investment, TradeType.BUY), bidPrice);
-		getPrices().put(getLookupKey(investment, TradeType.SELL), askPrice);
+	public void setAskPrice(Investment investment, Double askPrice) {
+		getPrices().put(getLookupKey(investment, TradeType.BUY), askPrice);
+	}
+	
+	public void setBidPrice(Investment investment, Double bidPrice) {
+		getPrices().put(getLookupKey(investment, TradeType.SELL), bidPrice);
 	}
 
-	public void setPrice(Investment investment, Double lastPrice) {
-		String key = getLookupKey(investment, TradeType.LAST);
-		getPrices().put(key, lastPrice);
+	public void setLastPrice(Investment investment, Double lastPrice) {
+		getPrices().put(getLookupKey(investment, TradeType.LAST), lastPrice);
+	}
+
+	public void setClosePrice(Investment investment, Double closePrice) {
+		getPrices().put(getLookupKey(investment, TradeType.CLOSE), closePrice);
 	}
 
 	public Double getPrice(Investment investment, TradeType tradeType) {
@@ -30,6 +36,9 @@ public class MarketPrice {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
+		if(price==null) {
+			return 0.0;
+		}
 		return price;
 	}
 

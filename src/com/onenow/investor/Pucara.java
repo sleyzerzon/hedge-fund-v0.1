@@ -1,0 +1,158 @@
+package com.onenow.investor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.onenow.broker.BrokerActivityImpl;
+import com.onenow.broker.BrokerInteractive;
+import com.onenow.finance.InvProb;
+import com.onenow.finance.StrategyIronCondor;
+import com.onenow.finance.TradeRatio;
+import com.onenow.finance.Underlying;
+
+public class Pucara {
+
+	private static boolean priceUpdate=false;
+	private static BrokerActivityImpl broker = new BrokerActivityImpl(new BrokerInteractive(priceUpdate));
+
+	private ContractFactory contractFactory = new ContractFactory();
+	private List<Channel> channels = new ArrayList<Channel>();
+
+	private ParseDate parser = new ParseDate();
+
+
+
+	public Pucara() {
+		
+	}
+	
+	
+//	
+//	guardedJoy(priceUpdate);
+//	
+//	getChannelPrices(getContractFactory());
+
+	
+	public synchronized void run() {
+	    // This guard only loops once for each special event, which may not
+	    // be the event we're waiting for.
+	    while(!priceUpdate) {
+	        try {
+	            wait();
+	        } catch (InterruptedException e) {}	        
+	    }
+        launchExocet();
+        priceUpdate=false;
+        notifyAll();
+        
+        System.out.println("$$$$$$$$$$$$$$$$$$$$");
+	}
+
+
+	private static void launchExocet() {
+		Exocet spxExocet = new Exocet(100, new Underlying("SPX"), "20150319", getBroker());
+		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.SWING, TradeRatio.NONE, 0.50);
+		System.out.println(spxExocet.toString());
+	}
+
+	
+	
+	private void getChannelPrices(ContractFactory contractFactory) throws InterruptedException {
+		
+//		Contract index = contractFactory.indexToQuote("SPX");
+//		getContractFactory().addChannel(getChannels(), index);
+//		Contract index = contractFactory.getIndexToQuote("RUT");
+//		getContractFactory().addChannel(getChannels(), index);
+//		Contract option = contractFactory.optionToQuote("SPX");
+//		getContractFactory().addChannel(getChannels(), option);
+
+		for(int i=0; i<getChannels().size(); i++) {			
+			Channel channel = getChannels().get(i);
+			List<String> endList = getEndList(channel);
+			
+			for(int j=0; j<endList.size(); j++) {
+				String end = endList.get(j);
+											
+//				QuoteBar quoteHistory = new QuoteBar(channel);
+////				getController().reqHistoricalData(	channel.getContract(), 
+//													end, 1, DurationUnit.DAY, BarSize._1_hour, 
+//													WhatToShow.TRADES, false,
+//													quoteHistory);
+//			    Thread.sleep(12000);
+//				System.out.println("...");
+			}
+			System.out.println(channel.toString());
+		}
+	}
+	private List<String> getEndList(Channel channel) {
+		List<String> list = new ArrayList<String>();
+		String date="";
+		for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
+			try {
+				date = channel.getResDayList().get(i); 
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
+			try {
+				date = channel.getSupDayList().get(j); 
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent			
+			try {
+				date = channel.getRecentDayList().get(k); // Recent
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		return list;
+	}
+
+	private static BrokerActivityImpl getBroker() {
+		return broker;
+	}
+
+	private void setBroker(BrokerActivityImpl broker) {
+		this.broker = broker;
+	}
+
+	private ContractFactory getContractFactory() {
+		return contractFactory;
+	}
+
+	private void setContractFactory(ContractFactory contractFactory) {
+		this.contractFactory = contractFactory;
+	}
+
+	private List<Channel> getChannels() {
+		return channels;
+	}
+
+	private void setChannels(List<Channel> channels) {
+		this.channels = channels;
+	}
+
+	private ParseDate getParser() {
+		return parser;
+	}
+
+	private void setParser(ParseDate parser) {
+		this.parser = parser;
+	}
+
+	private boolean isPriceUpdate() {
+		return priceUpdate;
+	}
+
+	private void setPriceUpdate(boolean priceUpdate) {
+		this.priceUpdate = priceUpdate;
+	}
+
+
+
+	
+	// PRINT
+	
+	
+	// SET GET
+}
