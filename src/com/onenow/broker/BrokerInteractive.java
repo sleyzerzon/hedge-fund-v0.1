@@ -72,7 +72,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		Transaction indexTrans = new Transaction(indexTrade);
 		getMarketPortfolio().enterTransaction(indexTrans);
 		
-		for (Double strike=(double) (seed-50); strike<(seed+50); strike=strike+5) {
+		for (Double strike=(double) (seed-200); strike<(seed+200); strike=strike+5) {
 			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
 			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
 			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);

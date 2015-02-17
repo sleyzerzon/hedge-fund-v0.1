@@ -87,27 +87,32 @@ public class ContractFactory {
 		Contract contract = new Contract();
 		
 		if(inv instanceof InvestmentIndex) {
-			return getIndexToQuote(inv.getUnder().getTicker());
+			return getIndexToQuote(inv);
 		}
 
 		if(inv instanceof InvestmentOption) {
-			return getOptionToQuote(inv.getUnder().getTicker(), inv.getInvType());			
+			return getOptionToQuote(inv);			
 		}
 
 		return contract;
 	}
 	
-	public Contract getOptionToQuote(String name, InvType type) {
+	public Contract getOptionToQuote(Investment inv) {
 		String p_secType=SecType.OPT.toString();	
 
-		String p_symbol=name;
+		String p_symbol=inv.getUnder().getTicker();
 		String p_exchange="SMART";		// or "BEST"; "Comp Exchange"???
 		
 		int p_conId=0;
 		
-		String p_expiry="20150319";		// "20120316"
-		double p_strike=2090.0;	// 20.0
-		String p_right="Call"; 	// "P" ... "Put/call"
+		String p_expiry="";
+		double p_strike=0.0;
+		String p_right="";
+		if(inv instanceof InvestmentOption) {
+			p_expiry=((InvestmentOption) inv).getExpirationDate();	// "20120316"
+			p_strike=((InvestmentOption) inv).getStrikePrice();		// 20.0
+			p_right=inv.getInvType().toString(); 					// "P" ... "Put/call"
+		}
 		
 		String p_multiplier="100";
 		String p_currency="USD";
@@ -129,26 +134,24 @@ public class ContractFactory {
 	}
 	
 	
-	public Contract getIndexToQuote(String name) {
+	public Contract getIndexToQuote(Investment inv) {
 		String p_secType=SecType.IND.toString();	
 
 		String p_symbol="";
 		String p_exchange="";
-		
-		if(name.equals("SPX")) {
+		if(inv.getUnder().getTicker().equals("SPX")) {
 			p_symbol="SPX";
 			p_exchange="CBOE";		// or "BEST"; "Comp Exchange"???
 		}
-		if(name.equals("RUT")) {
+		if(inv.getUnder().getTicker().equals("RUT")) {
 			p_symbol="RUT";
 			p_exchange="RUSSELL";		// or "BEST"; "Comp Exchange"???
 		}
-		if(name.equals("NDX")) {
+		if(inv.getUnder().getTicker().equals("NDX")) {
 			p_symbol="NDX";
 			p_exchange="NASDAQ";		// or "BEST"; "Comp Exchange"???
 		}
-		
-		
+			
 		int p_conId=0;
 		
 		String p_expiry="";		// "20120316"
@@ -174,10 +177,11 @@ public class ContractFactory {
 		return cont;	
 	}
 	
-	public Contract getStockToQuote() {	
-		int p_conId=0;
-		String p_symbol="IBM";
+	public Contract getStockToQuote(Investment inv) {	
 		String p_secType=SecType.STK.toString();	// "OPT"
+		String p_symbol=inv.getUnder().getTicker();
+
+		int p_conId=0;
 		
 		String p_expiry="";		// "20120316"
 		double p_strike=0.0;	// 20.0

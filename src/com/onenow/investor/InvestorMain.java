@@ -24,7 +24,7 @@ public class InvestorMain {
 		BrokerActivityImpl broker = new BrokerActivityImpl(new BrokerInteractive());
 
 //		getChannelPrices(getContractFactory());
-
+		
 		Exocet spxExocet = new Exocet(100, new Underlying("SPX"), "20150319", broker);
 		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.SWING, TradeRatio.NONE, 0.50);
 		System.out.println(spxExocet.toString());
@@ -36,8 +36,8 @@ public class InvestorMain {
 		
 //		Contract index = contractFactory.indexToQuote("SPX");
 //		getContractFactory().addChannel(getChannels(), index);
-		Contract index = contractFactory.getIndexToQuote("RUT");
-		getContractFactory().addChannel(getChannels(), index);
+//		Contract index = contractFactory.getIndexToQuote("RUT");
+//		getContractFactory().addChannel(getChannels(), index);
 //		Contract option = contractFactory.optionToQuote("SPX");
 //		getContractFactory().addChannel(getChannels(), option);
 

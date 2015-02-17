@@ -14,6 +14,7 @@ import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
 import com.onenow.finance.Investment;
 import com.onenow.finance.MarketPrice;
+import com.onenow.finance.TradeType;
 import com.onenow.investor.InvestorController.ITopMktDataHandler;
 import com.onenow.investor.InvestorController.TopMktDataAdapter;
 import com.onenow.investor.QuoteTable;
@@ -222,7 +223,8 @@ public class QuoteTable extends AbstractTableModel {
 			if(m_ask!=0 || m_close!=0.0 || m_close!=0.0) {
 				getMarketPrices().setPrice(getInvestment(), m_close);
 				getMarketPrices().setPrice(getInvestment(), m_ask, m_bid);
-//				System.out.println(toString());
+				Double cachedPrice = getMarketPrices().getPrice(getInvestment(), TradeType.BUY);
+				System.out.println("Quote $" + cachedPrice + " " + getInvestment().toString());
 			}
 		}
 
