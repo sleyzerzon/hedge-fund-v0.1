@@ -20,32 +20,24 @@ public class Pucara {
 
 	private ParseDate parser = new ParseDate();
 
-
-
 	public Pucara() {
 		
 	}
 	
-	
-//	
-//	guardedJoy(priceUpdate);
-//	
 //	getChannelPrices(getContractFactory());
 
 	
 	public synchronized void run() {
-	    // This guard only loops once for each special event, which may not
-	    // be the event we're waiting for.
 	    while(!priceUpdate) {
 	        try {
 	            wait();
-	        } catch (InterruptedException e) {}	        
+	        } catch (InterruptedException e) {}
 	    }
         launchExocet();
         priceUpdate=false;
         notifyAll();
         
-        System.out.println("$$$$$$$$$$$$$$$$$$$$");
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 	}
 
 

@@ -36,9 +36,10 @@ public class MarketPrice {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		if(price==null) {
-			return 0.0;
-		}
+// let price be null to know it's not set
+//		if(price==null) {
+//			return 0.0;
+//		}
 		return price;
 	}
 

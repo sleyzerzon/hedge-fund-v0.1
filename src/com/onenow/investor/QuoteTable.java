@@ -40,6 +40,7 @@ public class QuoteTable extends AbstractTableModel {
 		
 		setInvestment(inv);
 		Contract contract = getContractFactory().getContract(getInvestment());
+		System.out.println("Contract " + contract.toString());
 		QuoteSingle quote = new QuoteSingle( this, contract.description() );
 		m_rows.add(quote);
 		getController().reqMktData(contract, "", false, (ITopMktDataHandler) quote);

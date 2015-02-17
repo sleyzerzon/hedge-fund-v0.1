@@ -58,13 +58,16 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());
 
-		initMarket("spx", "20150319", 2100);
+		initMarket("SPX", "20150319", 2100);
 	}
 
 	
 	public synchronized void notifyPriceSet() {
-		setPriceUpdate(true);
-	    notifyAll();
+		if(allQuotesSet()) {
+			setPriceUpdate(true);
+		    notifyAll();
+//		    System.out.println("^^^ ALL SET");
+		}
 	}
 	
 	public void setAskPrice(Investment inv, Double ask) {
@@ -97,7 +100,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	private void initMarket(String name, String expDate, Integer seed) { // create the investments
 		Underlying under = new Underlying(name);
 		
-		Investment index = new InvestmentIndex(under);
+		InvestmentIndex index = new InvestmentIndex(under);
 		Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
 		Transaction indexTrans = new Transaction(indexTrade);
 		getMarketPortfolio().enterTransaction(indexTrans);
@@ -111,18 +114,55 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 			getMarketPortfolio().enterTransaction(optTrans);
 		}
 
+		System.out.println(getMarketPortfolio().toString());
+		
 		getQuotes();
 
 	}
 	
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
-		for(Investment inv:invs) {
-//			QuoteTable quoteIndex = new QuoteTable(getController(), getMarketPrices(), inv);
-			QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
+		for(Investment inv:invs) { // first options
+			if(inv instanceof InvestmentOption) {
+				QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
+			}
+		}
+		for(Investment inv:invs) { // then index
+			if(inv instanceof InvestmentIndex) {
+				QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
+			}
 		}
 	}
 
+	private boolean allQuotesSet() {
+		boolean allSet=true;
+		List<Investment> invs = getMarketPortfolio().getInvestments();
+		for(Investment inv:invs) {
+			if(inv instanceof InvestmentIndex) { // only check the index
+				Double buyPrice = getMarketPrices().getPrice(inv, TradeType.BUY);
+				if(buyPrice==null) {
+//					System.out.println("...not set " + inv.toString());
+					return false;
+				}
+				Double sellPrice = getMarketPrices().getPrice(inv, TradeType.SELL);
+				if(sellPrice==null) {
+//					System.out.println("...not set " + inv.toString());
+					return false;
+				}
+//				Double closePrice = getMarketPrices().getPrice(inv, TradeType.CLOSE);
+//				if(closePrice==null) {
+//					System.out.println("...not set " + inv.toString());
+//					return false;
+//				}
+//				Double lastPrice = getMarketPrices().getPrice(inv, TradeType.LAST);
+//				if(lastPrice==null) {
+//					System.out.println("...not set " + inv.toString());
+//					return false;
+//				}
+			}
+		}
+		return allSet;
+	}
 	
 	///// BROKER
 	@Override

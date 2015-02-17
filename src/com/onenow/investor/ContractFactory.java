@@ -141,22 +141,22 @@ public class ContractFactory {
 		String p_exchange="";
 		if(inv.getUnder().getTicker().equals("SPX")) {
 			p_symbol="SPX";
-			p_exchange="CBOE";		// or "BEST"; "Comp Exchange"???
+			p_exchange="CBOE";		
 		}
 		if(inv.getUnder().getTicker().equals("RUT")) {
 			p_symbol="RUT";
-			p_exchange="RUSSELL";		// or "BEST"; "Comp Exchange"???
+			p_exchange="RUSSELL";		
 		}
 		if(inv.getUnder().getTicker().equals("NDX")) {
 			p_symbol="NDX";
-			p_exchange="NASDAQ";		// or "BEST"; "Comp Exchange"???
+			p_exchange="NASDAQ";		
 		}
 			
 		int p_conId=0;
 		
-		String p_expiry="";		// "20120316"
-		double p_strike=0.0;	// 20.0
-		String p_right=""; 	// "P" ... "Put/call"
+		String p_expiry="";		
+		double p_strike=0.0;	
+		String p_right=""; 	
 		
 		String p_multiplier="100";
 		String p_currency="USD";
