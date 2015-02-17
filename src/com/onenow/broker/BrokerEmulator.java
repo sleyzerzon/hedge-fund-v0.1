@@ -66,10 +66,12 @@ public class BrokerEmulator implements Broker {
 		return price;
 	}
 
-	private static void initMarket(String name) {
+	private static void initMarket(String name) { // create the investments
 		Underlying under = new Underlying(name);
-		// create the investments
-		Date expDate = new Date(1000000);
+		
+//		Date expDate = new Date(1000000);
+		String expDate = "20150319";
+		
 		Investment stock = new InvestmentStock(under);
 		Investment call1 = new InvestmentOption(under, InvType.CALL, expDate, 405.00);
 		Investment call2 = new InvestmentOption(under, InvType.CALL, expDate, 400.00);
@@ -91,10 +93,10 @@ public class BrokerEmulator implements Broker {
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
 		marketPortfolio.enterTransaction(trans);
 	}
-	private static void initExocet(String name) {
+	private static void initExocet(String name) { 		// create the investments
 		Underlying under = new Underlying(name);
-		// create the investments
-		Date expDate = new Date(1000000);
+//		Date expDate = new Date(1000000);
+		String expDate = "20150319";
 		Investment index = new InvestmentIndex(under);
 		Investment put0 = new InvestmentOption(under, InvType.PUT, expDate, 2040.00);		
 		Investment put1 = new InvestmentOption(under, InvType.PUT, expDate, 2045.00);		

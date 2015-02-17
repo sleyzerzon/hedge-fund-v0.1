@@ -77,8 +77,8 @@ public class InteractiveBrokers implements ConnectionHandler  { // extends Abstr
 								
 //		getChannelPrices(getContractFactory());
 		
-		Contract spxIndex = contractFactory.indexToQuote("SPX");
-		Contract spxOption = contractFactory.optionToQuote("SPX");
+		Contract spxIndex = contractFactory.getIndexToQuote("SPX");
+		Contract spxOption = contractFactory.getOptionToQuote("SPX");
 
 		BrokerActivityImpl broker = new BrokerActivityImpl();
 		Exocet spxExocet = new Exocet(100, spxOption, broker);
@@ -102,7 +102,7 @@ public class InteractiveBrokers implements ConnectionHandler  { // extends Abstr
 		
 //		Contract index = contractFactory.indexToQuote("SPX");
 //		getContractFactory().addChannel(getChannels(), index);
-		Contract index = contractFactory.indexToQuote("RUT");
+		Contract index = contractFactory.getIndexToQuote("RUT");
 		getContractFactory().addChannel(getChannels(), index);
 //		Contract option = contractFactory.optionToQuote("SPX");
 //		getContractFactory().addChannel(getChannels(), option);

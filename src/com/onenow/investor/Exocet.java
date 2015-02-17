@@ -43,14 +43,6 @@ public class Exocet {
 		setBroker(broker);
 	}
 
-	public Exocet(Integer quant, Contract cont, BrokerActivityImpl broker) {
-		setQuant(quant);
-		setContract(cont);
-		setUnder(new Underlying(cont.symbol())); // TODO
-		setExp(cont.expiry());	 // TODO
-		setBroker(broker);
-	}
-
 	public StrategyCallSpread getCallSpread(	InvProb prob, TradeRatio ratio,
 												Double agression) {
 		setProb(prob);

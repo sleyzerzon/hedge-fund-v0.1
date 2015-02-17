@@ -10,8 +10,6 @@ public class Investment {
 	private Reward reward;
 	private Risk risk;
 	
-	private Contract contract; // TODO
-
 	// CONSTRUCTOR
 	public Investment() {
 		// does not set underlying
@@ -24,16 +22,6 @@ public class Investment {
 		setReward(new Reward());
 		setRisk(new Risk());
 	}
-	
-	public Investment(Contract contract, InvType invType) {
-		setContract(contract);
-		setUnder(new Underlying(contract.symbol()));
-		setInvType(invType);
-		
-		setReward(new Reward());
-		setRisk(new Risk());
-	}
-
 
 	// PUBLIC
 	public boolean equals(Investment inv) {
@@ -89,14 +77,6 @@ public class Investment {
 
 	private void setRisk(Risk risk) {
 		this.risk = risk;
-	}
-
-	private Contract getContract() {
-		return contract;
-	}
-
-	private void setContract(Contract contract) {
-		this.contract = contract;
 	}
 
 }

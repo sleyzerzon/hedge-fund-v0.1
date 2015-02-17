@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentIndex;
+import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.Trade;
 import com.onenow.finance.TradeType;
@@ -22,9 +24,6 @@ public class BrokerActivityImpl implements BrokerActivity {
 
 	public BrokerActivityImpl() {
 		setBrokerEmulator(new BrokerEmulator());
-		setBrokerInteractive(new BrokerInteractive());
-		setBrokerAWS(new BrokerAWS());
-		setBrokerGoogle(new BrokerGoogle());
 	}
 
 	public BrokerActivityImpl(BrokerInteractive ib) {
@@ -32,6 +31,20 @@ public class BrokerActivityImpl implements BrokerActivity {
 		setBrokerInteractive(ib);
 		setBrokerAWS(null);
 		setBrokerGoogle(null);
+	}
+	
+	private Broker getBroker() {
+		Broker broker = null;
+		if(getBrokerEmulator()!=null) {
+			broker = brokerEmulator;
+		}
+		if(getBrokerInteractive()!=null) {
+			broker = brokerInteractive;
+		}
+		if(getBrokerAWS()!=null) {
+			broker = brokerAWS;
+		}
+		return broker;
 	}
 
 	@Override
@@ -43,24 +56,24 @@ public class BrokerActivityImpl implements BrokerActivity {
 
 	@Override
 	public Portfolio getMyPortfolio() {
-		return getBrokerEmulator().getMyPortfolio();
+		return getBroker().getMyPortfolio();
 	}
 
 	@Override
 	public List<Trade> getTrades() {
-		List<Trade > trades= getBrokerEmulator().getTrades();
+		List<Trade > trades= getBroker().getTrades();
 		return trades;
 	}
 
 	@Override
 	public void enterTransaction(Transaction trans) {
-		getBrokerEmulator().enterTransaction(trans);
+		getBroker().enterTransaction(trans);
 	}
 	
 	// PRINT
 	public String toString() {
 		String s = "\n";
-		s = s + getBrokerEmulator().toString();
+		s = s + getBroker().toString();
 		System.out.println(s);
 		return s;
 	}
@@ -117,37 +130,36 @@ public class BrokerActivityImpl implements BrokerActivity {
 
 	@Override
 	public Double getBestBid (TradeType type, Investment inv, Double aggression) {
-		// market: bid<ask
-		Double askPrice = getBrokerEmulator().getPrice(inv, TradeType.SELL);
-		Double bidPrice = getBrokerEmulator().getPrice(inv, TradeType.BUY);
-		Double spread = askPrice-bidPrice;
-		Double deltaSell = spread * (1-aggression);
-		Double deltaBuy = spread * aggression;
+		
 		Double price = 0.0;
-		if(type.equals(TradeType.BUY)) {
-			price = bidPrice + deltaBuy;
-		} else {
-			price = askPrice - deltaSell; 
-		}
-			
+		
+		price = getBroker().getPrice(inv, type);
+				
 		return price;
+
+//		// market: bid<ask
+//		Double askPrice = getBroker().getPrice(inv, TradeType.SELL);
+//		Double bidPrice = getBroker().getPrice(inv, TradeType.BUY);
+//		Double spread = askPrice-bidPrice;
+//		Double deltaSell = spread * (1-aggression);
+//		Double deltaBuy = spread * aggression;
+//		Double price = 0.0;
+//		if(type.equals(TradeType.BUY)) {
+//			price = bidPrice + deltaBuy;
+//		} else {
+//			price = askPrice - deltaSell; 
+//		}
+//			
+//		System.out.println("****** IMPL " + askPrice + " " + bidPrice + " " + price);
+//		return price;
 	}
 
 	@Override
 	public Double getPrice(Investment inv, TradeType type) {
 		Double price = 0.0;
 		
-		price = getBrokerEmulator().getPrice(inv, type); 
-		
-		return price;
-	}
-
-	public Double getPrice(Contract cont, TradeType type, InvestorController controller) {
-		Double price = 0.0;
+		price = getBroker().getPrice(inv, type);
 				
-		QuoteTable quoteTable = new QuoteTable(controller);
-		quoteTable.addContract(cont);		
-
 		return price;
 	}
 	

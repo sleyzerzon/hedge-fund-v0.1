@@ -12,6 +12,8 @@ import javax.swing.table.TableCellRenderer;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
+import com.onenow.finance.Investment;
+import com.onenow.finance.MarketPrice;
 import com.onenow.investor.InvestorController.ITopMktDataHandler;
 import com.onenow.investor.InvestorController.TopMktDataAdapter;
 import com.onenow.investor.QuoteTable;
@@ -20,28 +22,42 @@ import com.onenow.investor.QuoteTable;
 public class QuoteTable extends AbstractTableModel {
 
 	private InvestorController controller;
+	private MarketPrice marketPrices;
+	private ContractFactory contractFactory = new ContractFactory();
+	private Investment investment;
 
 	public QuoteTable() {
 		
 	}
 
-	public QuoteTable(InvestorController cont) {
-		setController(cont);
-	}
-	
-	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>();
+//	public QuoteTable(InvestorController cont) {
+//		setController(cont);
+//	}
 
-	public void addContract( Contract contract) {
+	public QuoteTable(InvestorController cont, MarketPrice market, Investment inv) {
+		setController(cont);
+		setMarketPrices(market);
+		setInvestment(inv);
+		Contract contract = getContractFactory().getContract(getInvestment());
 		QuoteSingle quote = new QuoteSingle( this, contract.description() );
 		m_rows.add(quote);
 		getController().reqMktData(contract, "", false, (ITopMktDataHandler) quote);
+		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
+	} 
+
+	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>();
+
+//	public void addContract( Contract contract) {
+//		QuoteSingle quote = new QuoteSingle( this, contract.description() );
+//		m_rows.add(quote);
+//		getController().reqMktData(contract, "", false, (ITopMktDataHandler) quote);
 //		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
-	}
-	
+//	}
+
 	void addRow( QuoteSingle row) { // callback
 		m_rows.add( row);
 //		System.out.println("Quote " + toString(0));
-//		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
+		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 
 	public String toString(int which) {
@@ -90,6 +106,34 @@ public class QuoteTable extends AbstractTableModel {
 		}
 	}
 
+	public Double getLastAsk() {
+		Integer size = m_rows.size();
+		QuoteSingle quote = m_rows.get(size-1);
+		Double price = quote.m_ask;
+		if(price.equals(0.0)) {
+			return getLastClose();
+		}
+		return price;
+	}
+	public Double getLastBid() {
+		Integer size = m_rows.size();
+		QuoteSingle quote = m_rows.get(size-1);
+		Double price = quote.m_bid;
+		if(price.equals(0.0)) {
+			return getLastClose();
+		}
+		return price;
+	}
+	public Double getLastClose() {
+		Integer size = m_rows.size();
+		QuoteSingle quote = m_rows.get(size-1);
+		Double price = quote.m_close;
+		
+//		System.out.println("QUOTES " + price + " " + size);
+//		System.out.println(quote.toString());
+		return price;
+	}
+	
 	@Override public Object getValueAt(int rowIn, int col) {
 		QuoteSingle row = m_rows.get( rowIn);
 		switch( col) {
@@ -174,9 +218,11 @@ public class QuoteTable extends AbstractTableModel {
 				default: break;	
 			}
 			m_model.fireTableDataChanged(); // should use a timer to be more efficient
-			
-			if(m_close!=0.0){
-				System.out.println(toString());
+
+			if(m_ask!=0 || m_close!=0.0 || m_close!=0.0) {
+				getMarketPrices().setPrice(getInvestment(), m_close);
+				getMarketPrices().setPrice(getInvestment(), m_ask, m_bid);
+//				System.out.println(toString());
 			}
 		}
 
@@ -221,5 +267,29 @@ public class QuoteTable extends AbstractTableModel {
 
 	private void setController(InvestorController controller) {
 		this.controller = controller;
+	}
+
+	private MarketPrice getMarketPrices() {
+		return marketPrices;
+	}
+
+	private void setMarketPrices(MarketPrice marketPrices) {
+		this.marketPrices = marketPrices;
+	}
+
+	private ContractFactory getContractFactory() {
+		return contractFactory;
+	}
+
+	private void setContractFactory(ContractFactory contractFactory) {
+		this.contractFactory = contractFactory;
+	}
+
+	private Investment getInvestment() {
+		return investment;
+	}
+
+	private void setInvestment(Investment investment) {
+		this.investment = investment;
 	}
 }

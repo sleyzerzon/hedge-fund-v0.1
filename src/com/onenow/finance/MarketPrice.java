@@ -40,7 +40,7 @@ public class MarketPrice {
 		                tradeType;		
 		if (investment instanceof InvestmentOption) {
 			Double strike = ((InvestmentOption) investment).getStrikePrice();
-			Date exp = (Date) ((InvestmentOption) investment).getExpirationDate();
+			String exp = (String) ((InvestmentOption) investment).getExpirationDate();
 			lookup = lookup + "-" + strike + "-" + exp; 
 		}
 		return (lookup);

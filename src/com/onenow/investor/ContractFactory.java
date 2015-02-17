@@ -7,6 +7,10 @@ import java.util.List;
 
 import com.ib.client.ComboLeg;
 import com.ib.client.Types.SecType;
+import com.onenow.finance.InvType;
+import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentIndex;
+import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.Underlying;
 
 public class ContractFactory {
@@ -79,7 +83,21 @@ public class ContractFactory {
 		
 	}
 	
-	public Contract optionToQuote(String name) {
+	public Contract getContract(Investment inv) {
+		Contract contract = new Contract();
+		
+		if(inv instanceof InvestmentIndex) {
+			return getIndexToQuote(inv.getUnder().getTicker());
+		}
+
+		if(inv instanceof InvestmentOption) {
+			return getOptionToQuote(inv.getUnder().getTicker(), inv.getInvType());			
+		}
+
+		return contract;
+	}
+	
+	public Contract getOptionToQuote(String name, InvType type) {
 		String p_secType=SecType.OPT.toString();	
 
 		String p_symbol=name;
@@ -111,7 +129,7 @@ public class ContractFactory {
 	}
 	
 	
-	public Contract indexToQuote(String name) {
+	public Contract getIndexToQuote(String name) {
 		String p_secType=SecType.IND.toString();	
 
 		String p_symbol="";
@@ -156,7 +174,7 @@ public class ContractFactory {
 		return cont;	
 	}
 	
-	public Contract stockToQuote() {	
+	public Contract getStockToQuote() {	
 		int p_conId=0;
 		String p_symbol="IBM";
 		String p_secType=SecType.STK.toString();	// "OPT"

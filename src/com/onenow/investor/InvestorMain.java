@@ -1,26 +1,15 @@
 package com.onenow.investor;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import com.ib.client.Types.BarSize;
-import com.ib.client.Types.DurationUnit;
-import com.ib.client.Types.WhatToShow;
-import com.onenow.broker.Broker;
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvProb;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.TradeRatio;
 import com.onenow.finance.Underlying;
-
-import samples.rfq.SampleRfq;
-import apidemo.ApiDemo;
-
 
 public class InvestorMain {
 
@@ -32,22 +21,14 @@ public class InvestorMain {
 	
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
-
-//		InteractiveBrokers ib = new InteractiveBrokers();		
-//		ib.run();
-		
 		BrokerActivityImpl broker = new BrokerActivityImpl(new BrokerInteractive());
 
 //		getChannelPrices(getContractFactory());
 
-		Contract spxIndex = getContractFactory().indexToQuote("SPX");
-		Contract spxOption = getContractFactory().optionToQuote("SPX");
-
-		Exocet spxExocet = new Exocet(100, spxOption, broker);
-		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
+		Exocet spxExocet = new Exocet(100, new Underlying("SPX"), "20150319", broker);
+		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.SWING, TradeRatio.NONE, 0.50);
 		System.out.println(spxExocet.toString());
-
-
+		
 	}
 	
 	
@@ -55,7 +36,7 @@ public class InvestorMain {
 		
 //		Contract index = contractFactory.indexToQuote("SPX");
 //		getContractFactory().addChannel(getChannels(), index);
-		Contract index = contractFactory.indexToQuote("RUT");
+		Contract index = contractFactory.getIndexToQuote("RUT");
 		getContractFactory().addChannel(getChannels(), index);
 //		Contract option = contractFactory.optionToQuote("SPX");
 //		getContractFactory().addChannel(getChannels(), option);
