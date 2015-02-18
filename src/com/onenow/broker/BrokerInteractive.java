@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import apidemo.ApiDemo;
+import apidemo.MarketDataPanel.DeepResultsPanel;
+
 import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiConnection.ILogger;
@@ -24,6 +27,7 @@ import com.onenow.investor.Contract;
 import com.onenow.investor.ContractFactory;
 import com.onenow.investor.DataType;
 import com.onenow.investor.InvestorController;
+import com.onenow.investor.QuoteDepth;
 import com.onenow.investor.QuoteTable;
 import com.onenow.investor.SummitLogger;
 import com.onenow.investor.InvestorController.ConnectionHandler;
@@ -72,30 +76,28 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public void setLastTime(Investment inv, Long lastTime) {
 		getMarketPrices().setLastTime(inv, lastTime);
 		if(lastTime>0) {
-			System.out.println("Last time " +  	getMarketPrices().getLastTime(inv, DataType.LASTTIME.toString()) + " " +
-												inv.toString());
+//			System.out.println("Last time " +  	getMarketPrices().getLastTime(inv, DataType.LASTTIME.toString()) + " " + inv.toString());
 		}
 	}
 
 	public void setBidSize(Investment inv, Integer size) {
 		getMarketPrices().setSize(inv, size, DataType.BIDSIZE.toString());
 		if(size>50) {
-			System.out.println("Bid size " +  	getMarketPrices().getSize(inv, DataType.BIDSIZE.toString()) + " " +
-											inv.toString());
+//			System.out.println("Bid size " +  	getMarketPrices().getSize(inv, DataType.BIDSIZE.toString()) + " " + inv.toString());
 		}
 	}
 	public void setAskSize(Investment inv, Integer size) {
 		getMarketPrices().setSize(inv, size, DataType.ASKSIZE.toString());
 		if(size>50) {
-			System.out.println("Ask size " +  getMarketPrices().getSize(inv, DataType.ASKSIZE.toString())  + " " +
-											inv.toString());
+//			System.out.println("Ask size " +  getMarketPrices().getSize(inv, DataType.ASKSIZE.toString())  + " " + inv.toString());
 		}
 	}
 	public void setVolume(Investment inv, Integer size) {
 		getMarketPrices().setSize(inv, size, DataType.VOLUME.toString());
-		if(size>0) {
-			System.out.println("Volume " +  	getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " +
-												inv.toString());
+		String s="";
+		if(size>1000) {
+			if(size>10000) { s = "***"; }
+			System.out.println("Volume " + s +  getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " + inv.toString());
 		}
 	}
 
@@ -103,32 +105,28 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		getMarketPrices().setPrice(inv, ask, TradeType.BUY.toString());
 		notifyPriceSet();
 		if(ask>0) {
-			System.out.println("Ask $ " +  	getMarketPrices().getPrice(inv, TradeType.BUY.toString())  + " " +
-													inv.toString());
+//			System.out.println("Ask $ " +  	getMarketPrices().getPrice(inv, TradeType.BUY.toString())  + " " + inv.toString());
 		}
 	}
 	public void setBidPrice(Investment inv, Double bid) {
 		getMarketPrices().setPrice(inv, bid, TradeType.SELL.toString());
 		notifyPriceSet();
 		if(bid>0) {
-			System.out.println("Bid $ " +  	getMarketPrices().getPrice(inv, TradeType.SELL.toString())  + " " +
-													inv.toString());	
+//			System.out.println("Bid $ " +  	getMarketPrices().getPrice(inv, TradeType.SELL.toString())  + " " + inv.toString());	
 		}
 	}
 	public void setLastPrice(Investment inv, Double last) {
 		getMarketPrices().setPrice(inv, last, TradeType.LAST.toString());
 		notifyPriceSet();
 		if(last>0) {
-			System.out.println("Last $ " +  	getMarketPrices().getPrice(inv, TradeType.LAST.toString()) + " " +
-													inv.toString());
+//			System.out.println("Last $ " +  	getMarketPrices().getPrice(inv, TradeType.LAST.toString()) + " " + inv.toString());
 		}
 	}
 	public void setClosePrice(Investment inv, Double close) {
 		getMarketPrices().setPrice(inv, close, TradeType.CLOSE.toString());
 		notifyPriceSet();
 		if(close>0) {
-			System.out.println("Close $ " +  	getMarketPrices().getPrice(inv, TradeType.CLOSE.toString())  + " " +
-													inv.toString());
+//			System.out.println("Close $ " +  	getMarketPrices().getPrice(inv, TradeType.CLOSE.toString())  + " " + inv.toString());
 		}
 	}
 	
@@ -158,15 +156,23 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		System.out.println(getMarketPortfolio().toString());
 		
 		getQuotes();
-
+		getMarketDepth();
 	}
 	
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) { 
-			QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
+			QuoteTable quote = new QuoteTable(this, getController(), inv);
 		}
 	}
+	
+	private void getMarketDepth() {
+		List<Investment> invs = getMarketPortfolio().getInvestments();
+		for(Investment inv:invs) { 
+			QuoteDepth resultPanel = new QuoteDepth(this, getController(), inv);
+		}
+	}
+
 
 	private boolean allQuotesSet() {
 		boolean allSet=true;
