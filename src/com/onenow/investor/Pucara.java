@@ -12,17 +12,29 @@ import com.onenow.finance.Underlying;
 
 public class Pucara {
 
-	private static boolean priceUpdate=false;
-	private static BrokerActivityImpl broker = new BrokerActivityImpl(new BrokerInteractive(priceUpdate));
+	private static boolean priceUpdate;
+	private static BrokerInteractive ib = new BrokerInteractive(priceUpdate);
+	private static BrokerActivityImpl broker = new BrokerActivityImpl(ib);
 
 	private ContractFactory contractFactory = new ContractFactory();
 	private List<Channel> channels = new ArrayList<Channel>();
 
 	private ParseDate parser = new ParseDate();
+	
+	private static String indexName;
+	private static String expDate;
 
 	public Pucara() {
 		
 	}
+	
+	public Pucara(String index, String expDate) {
+		setPriceUpdate(false);
+		setIndexName(index);
+		setExpDate(expDate);
+		ib.initMarket(index, expDate, 2100); // TODO: seed
+	}
+
 	
 //	getChannelPrices(getContractFactory());
 
@@ -42,7 +54,7 @@ public class Pucara {
 
 
 	private static void launchExocet() {
-		Exocet spxExocet = new Exocet(100, new Underlying("SPX"), "20150319", getBroker());
+		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
 		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.SWING, TradeRatio.NONE, 0.50);
 		System.out.println(spxExocet.toString());
 	}
@@ -138,6 +150,22 @@ public class Pucara {
 
 	private void setPriceUpdate(boolean priceUpdate) {
 		this.priceUpdate = priceUpdate;
+	}
+
+	private static String getIndexName() {
+		return indexName;
+	}
+
+	private void setIndexName(String indexName) {
+		this.indexName = indexName;
+	}
+
+	private static String getExpDate() {
+		return expDate;
+	}
+
+	private void setExpDate(String expDate) {
+		this.expDate = expDate;
 	}
 
 

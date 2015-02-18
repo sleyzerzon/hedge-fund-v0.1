@@ -229,12 +229,15 @@ public class QuoteTable extends AbstractTableModel {
 			switch( tickType) {
 				case BID_SIZE:
 					m_bidSize = size;
+					System.out.println("Bid size " + m_bidSize);
 					break;
 				case ASK_SIZE:
 					m_askSize = size;
+					System.out.println("Ask size " + m_askSize);
 					break;
 				case VOLUME:
 					m_volume = size;
+					System.out.println("Volume size " + m_volume);
 					break;
                 default: break; 
 			}
@@ -247,6 +250,8 @@ public class QuoteTable extends AbstractTableModel {
 			switch( tickType) {
 				case LAST_TIMESTAMP:
 					m_lastTime = Long.parseLong( value) * 1000;
+					getBroker().setLastTime(getInvestment(), m_lastTime);
+//					System.out.println("Last time " + m_lastTime);
 					break;
                 default: break; 
 			}
@@ -256,7 +261,9 @@ public class QuoteTable extends AbstractTableModel {
 			m_frozen = marketDataType == MktDataType.Frozen;
 			m_model.fireTableDataChanged();
 			
-//			System.out.println("A " + toString());
+			if(m_frozen==true) {
+				System.out.println("...frozen data");
+			}
 		}
 	}
 

@@ -22,6 +22,7 @@ import com.onenow.finance.Underlying;
 import com.onenow.investor.ConnectionStatus;
 import com.onenow.investor.Contract;
 import com.onenow.investor.ContractFactory;
+import com.onenow.investor.DataType;
 import com.onenow.investor.InvestorController;
 import com.onenow.investor.QuoteTable;
 import com.onenow.investor.SummitLogger;
@@ -57,8 +58,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());
-
-		initMarket("SPX", "20150319", 2100);
 	}
 
 	
@@ -69,25 +68,30 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 //		    System.out.println("^^^ ALL SET");
 		}
 	}
-	
+
+	public void setLastTime(Investment inv, Long lastTime) {
+		getMarketPrices().setLastTime(inv, lastTime);
+		System.out.println("Last time " +  getMarketPrices().getLastTime(inv, DataType.LASTTIME.toString()));
+	}
+
 	public void setAskPrice(Investment inv, Double ask) {
 		getMarketPrices().setAskPrice(inv, ask);
-		System.out.println("Quote Ask $ " +  getMarketPrices().getPrice(inv, TradeType.BUY));
+		System.out.println("Quote Ask $ " +  getMarketPrices().getPrice(inv, TradeType.BUY.toString()));
 		notifyPriceSet();
 	}
 	public void setBidPrice(Investment inv, Double bid) {
 		getMarketPrices().setBidPrice(inv, bid);
-		System.out.println("Quote Bid $ " +  getMarketPrices().getPrice(inv, TradeType.SELL));		
+		System.out.println("Quote Bid $ " +  getMarketPrices().getPrice(inv, TradeType.SELL.toString()));		
 		notifyPriceSet();
 	}
 	public void setLastPrice(Investment inv, Double last) {
 		getMarketPrices().setClosePrice(inv, last);
-		System.out.println("Quote Last $ " +  getMarketPrices().getPrice(inv, TradeType.LAST));	
+		System.out.println("Quote Last $ " +  getMarketPrices().getPrice(inv, TradeType.LAST.toString()));	
 		notifyPriceSet();
 	}
 	public void setClosePrice(Investment inv, Double close) {
 		getMarketPrices().setClosePrice(inv, close);
-		System.out.println("Quote Close $ " +  getMarketPrices().getPrice(inv, TradeType.CLOSE));	
+		System.out.println("Quote Close $ " +  getMarketPrices().getPrice(inv, TradeType.CLOSE.toString()));	
 		notifyPriceSet();
 	}
 	
@@ -97,7 +101,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	}
 
-	private void initMarket(String name, String expDate, Integer seed) { // create the investments
+	public void initMarket(String name, String expDate, Integer seed) { // create the investments
 		Underlying under = new Underlying(name);
 		
 		InvestmentIndex index = new InvestmentIndex(under);
@@ -122,46 +126,45 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
-		for(Investment inv:invs) { // first options
-			if(inv instanceof InvestmentOption) {
-				QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
-			}
-		}
-		for(Investment inv:invs) { // then index
-			if(inv instanceof InvestmentIndex) {
-				QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
-			}
+		for(Investment inv:invs) { 
+			QuoteTable quoteIndex = new QuoteTable(this, getController(), inv);
 		}
 	}
 
 	private boolean allQuotesSet() {
 		boolean allSet=true;
 		List<Investment> invs = getMarketPortfolio().getInvestments();
+		Integer notDone=0;
 		for(Investment inv:invs) {
 			if(inv instanceof InvestmentIndex) { // only check the index
-				Double buyPrice = getMarketPrices().getPrice(inv, TradeType.BUY);
+				Double buyPrice = getMarketPrices().getPrice(inv, TradeType.BUY.toString());
 				if(buyPrice==null) {
-//					System.out.println("...not set " + inv.toString());
+					notDone++;
 					return false;
 				}
-				Double sellPrice = getMarketPrices().getPrice(inv, TradeType.SELL);
+				Double sellPrice = getMarketPrices().getPrice(inv, TradeType.SELL.toString());
 				if(sellPrice==null) {
-//					System.out.println("...not set " + inv.toString());
+					notDone++;
 					return false;
 				}
-//				Double closePrice = getMarketPrices().getPrice(inv, TradeType.CLOSE);
-//				if(closePrice==null) {
-//					System.out.println("...not set " + inv.toString());
-//					return false;
-//				}
-//				Double lastPrice = getMarketPrices().getPrice(inv, TradeType.LAST);
-//				if(lastPrice==null) {
-//					System.out.println("...not set " + inv.toString());
-//					return false;
-//				}
+				Double closePrice = getMarketPrices().getPrice(inv, TradeType.CLOSE.toString());
+				if(closePrice==null) {
+					notDone++;
+					return false;
+				}
+				Double lastPrice = getMarketPrices().getPrice(inv, TradeType.LAST.toString());
+				if(lastPrice==null) {
+					notDone++;
+					return false;
+				}
 			}
 		}
-		return allSet;
+		Integer all=invs.size()*4;
+		if(notDone/all>0.9) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	///// BROKER
@@ -192,10 +195,10 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
+	public Double getPrice(Investment inv, String dataType) {
 		Double price=0.0;
 		
-		price = getMarketPrices().getPrice(inv, type);
+		price = getMarketPrices().getPrice(inv, dataType);
 	
 		if(price==null) {
 			return 0.0;

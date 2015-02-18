@@ -17,7 +17,7 @@ public  interface Broker {
 	public abstract List<Underlying> getUnderlying();
 	public abstract Portfolio getMarketPortfolio();
 	public abstract Portfolio getMyPortfolio();
-	public abstract Double getPrice(Investment inv, TradeType type);
+	public abstract Double getPrice(Investment inv, String type);
 	public abstract List<Trade> getTrades();
 	public abstract void enterTransaction(Transaction trans); 
 }
