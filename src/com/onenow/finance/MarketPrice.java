@@ -24,14 +24,50 @@ public class MarketPrice {
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
 	}
 
+	public void setRealTime(String rtvolume) {
+		String lastTradedPrice="";
+		String lastTradeSize="";
+		String lastTradeTime="";
+		String totalVolue="";
+		String VWAP="";
+		String splitFlag="";
+		
+		int i=1;
+		for(String split:rtvolume.split(";")) {
+			if(i==1) { //	Last trade price
+				lastTradedPrice = split;
+			}
+			if(i==3) { //	Last trade size
+				lastTradeSize = split;
+			}
+			if(i==4) { //	Last trade time
+				lastTradeTime = split;
+			}
+			if(i==5) { //	Total volume
+				totalVolue = split;
+			}
+			if(i==6) { //	VWAP
+				VWAP = split;
+			}
+			if(i==7) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
+				splitFlag = split;
+			}
+			System.out.println(split);
+			i++;
+		}
+		fillRealTime(Double.valueOf(lastTradedPrice), Integer.valueOf(lastTradeSize), Long.valueOf(lastTradeTime), 
+					Integer.valueOf(totalVolue), Double.valueOf(VWAP), Boolean.valueOf(splitFlag));
+	}
+ 	
+	private void fillRealTime(Double lastPrice, Integer lastSize, Long lastTradeTime, Integer volume, Double VWAP, boolean splitFlag) {
+		
+	}
 	
-	//	Last trade price
-	//	Last trade size
-	//	Last trade time
-	//	Total volume
-	//	VWAP
-	//	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
-
+	
+	public void getRealTime(Investment inv) {
+		
+	}
+	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
 		getDepth().put(getLookupKey(inv, DataType.MARKETDEPTH.toString()), depth);		
 	}
