@@ -71,28 +71,65 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 	public void setLastTime(Investment inv, Long lastTime) {
 		getMarketPrices().setLastTime(inv, lastTime);
-		System.out.println("Last time " +  getMarketPrices().getLastTime(inv, DataType.LASTTIME.toString()));
+		if(lastTime>0) {
+			System.out.println("Last time " +  	getMarketPrices().getLastTime(inv, DataType.LASTTIME.toString()) + " " +
+												inv.toString());
+		}
+	}
+
+	public void setBidSize(Investment inv, Integer size) {
+		getMarketPrices().setSize(inv, size, DataType.BIDSIZE.toString());
+		if(size>50) {
+			System.out.println("Bid size " +  	getMarketPrices().getSize(inv, DataType.BIDSIZE.toString()) + " " +
+											inv.toString());
+		}
+	}
+	public void setAskSize(Investment inv, Integer size) {
+		getMarketPrices().setSize(inv, size, DataType.ASKSIZE.toString());
+		if(size>50) {
+			System.out.println("Ask size " +  getMarketPrices().getSize(inv, DataType.ASKSIZE.toString())  + " " +
+											inv.toString());
+		}
+	}
+	public void setVolume(Investment inv, Integer size) {
+		getMarketPrices().setSize(inv, size, DataType.VOLUME.toString());
+		if(size>0) {
+			System.out.println("Volume " +  	getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " +
+												inv.toString());
+		}
 	}
 
 	public void setAskPrice(Investment inv, Double ask) {
-		getMarketPrices().setAskPrice(inv, ask);
-		System.out.println("Quote Ask $ " +  getMarketPrices().getPrice(inv, TradeType.BUY.toString()));
+		getMarketPrices().setPrice(inv, ask, TradeType.BUY.toString());
 		notifyPriceSet();
+		if(ask>0) {
+			System.out.println("Ask $ " +  	getMarketPrices().getPrice(inv, TradeType.BUY.toString())  + " " +
+													inv.toString());
+		}
 	}
 	public void setBidPrice(Investment inv, Double bid) {
-		getMarketPrices().setBidPrice(inv, bid);
-		System.out.println("Quote Bid $ " +  getMarketPrices().getPrice(inv, TradeType.SELL.toString()));		
+		getMarketPrices().setPrice(inv, bid, TradeType.SELL.toString());
 		notifyPriceSet();
+		if(bid>0) {
+			System.out.println("Bid $ " +  	getMarketPrices().getPrice(inv, TradeType.SELL.toString())  + " " +
+													inv.toString());	
+		}
 	}
 	public void setLastPrice(Investment inv, Double last) {
-		getMarketPrices().setClosePrice(inv, last);
-		System.out.println("Quote Last $ " +  getMarketPrices().getPrice(inv, TradeType.LAST.toString()));	
+		getMarketPrices().setPrice(inv, last, TradeType.LAST.toString());
 		notifyPriceSet();
+		if(last>0) {
+			System.out.println("Last $ " +  	getMarketPrices().getPrice(inv, TradeType.LAST.toString()) + " " +
+													inv.toString());
+		}
 	}
 	public void setClosePrice(Investment inv, Double close) {
-		getMarketPrices().setClosePrice(inv, close);
-		System.out.println("Quote Close $ " +  getMarketPrices().getPrice(inv, TradeType.CLOSE.toString()));	
+		getMarketPrices().setPrice(inv, close, TradeType.CLOSE.toString());
 		notifyPriceSet();
+		if(close>0) {
+			System.out.println("Close $ " +  	getMarketPrices().getPrice(inv, TradeType.CLOSE.toString())  + " " +
+													inv.toString());
+		}
 	}
 	
 	private void connectToServer() {

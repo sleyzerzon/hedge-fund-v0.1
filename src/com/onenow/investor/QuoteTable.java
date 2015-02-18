@@ -222,28 +222,28 @@ public class QuoteTable extends AbstractTableModel {
 				default: break;	
 			}
 			m_model.fireTableDataChanged(); // should use a timer to be more efficient
-
 		}
 
 		@Override public void tickSize( TickType tickType, int size) {
 			switch( tickType) {
 				case BID_SIZE:
 					m_bidSize = size;
-					System.out.println("Bid size " + m_bidSize);
+					getBroker().setBidSize(getInvestment(), m_bidSize);
+//					System.out.println("Bid size " + m_bidSize);
 					break;
 				case ASK_SIZE:
 					m_askSize = size;
-					System.out.println("Ask size " + m_askSize);
+					getBroker().setAskSize(getInvestment(), m_askSize);
+//					System.out.println("Ask size " + m_askSize);
 					break;
 				case VOLUME:
 					m_volume = size;
-					System.out.println("Volume size " + m_volume);
+					getBroker().setVolume(getInvestment(), m_volume);
+//					System.out.println("Volume size " + m_volume);
 					break;
                 default: break; 
 			}
-			m_model.fireTableDataChanged();
-			
-//			System.out.println("B " + toString());
+			m_model.fireTableDataChanged();			
 		}
 		
 		@Override public void tickString(TickType tickType, String value) {

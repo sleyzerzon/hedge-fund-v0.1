@@ -10,13 +10,15 @@ import com.onenow.investor.DataType;
 
 public class MarketPrice {
 
-	HashMap<String, Double> prices;
-	HashMap<String, Long> times;
+	HashMap<String, Double> prices; 	// $
+	HashMap<String, Long> times; 		// when
+	HashMap<String, Integer> size; 		// volume
 	
 
 	public MarketPrice() {
 		setPrices(new HashMap<String, Double>());
 		setTimes(new HashMap<String, Long>());
+		setSize(new HashMap<String, Integer>());
 	}
 
 	public void setLastTime(Investment inv, Long time) {
@@ -33,22 +35,24 @@ public class MarketPrice {
 		return lastTime;
 	}
 	
-	public void setAskPrice(Investment inv, Double askPrice) {
-		getPrices().put(getLookupKey(inv, TradeType.BUY.toString()), askPrice);
+	public void setSize(Investment inv, Integer size, String dataType) {
+		getSize().put(getLookupKey(inv, dataType), size);
+	}
+	public Integer getSize(Investment inv, String dataType) {
+		String key = getLookupKey(inv, dataType);
+		Integer size=0;
+		try {
+			size = (Integer) (getSize().get(key)); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 		
+		return size;
 	}
 	
-	public void setBidPrice(Investment inv, Double bidPrice) {
-		getPrices().put(getLookupKey(inv, TradeType.SELL.toString()), bidPrice);
+	public void setPrice(Investment inv, Double price, String dataType) {
+		getPrices().put(getLookupKey(inv, dataType), price);
 	}
-
-	public void setLastPrice(Investment inv, Double lastPrice) {
-		getPrices().put(getLookupKey(inv, TradeType.LAST.toString()), lastPrice);
-	}
-
-	public void setClosePrice(Investment inv, Double closePrice) {
-		getPrices().put(getLookupKey(inv, TradeType.CLOSE.toString()), closePrice);
-	}
-
+	
 	public Double getPrice(Investment inv, String dataType) {
 		String key = getLookupKey(inv, dataType);
 		Double price=0.0;
@@ -83,11 +87,11 @@ public class MarketPrice {
 	// TEST
 	
 	// SET GET
-	public HashMap<String, Double> getPrices() {
+	private HashMap<String, Double> getPrices() {
 		return prices;
 	}
 
-	public void setPrices(HashMap prices) {
+	private void setPrices(HashMap<String, Double> prices) {
 		this.prices = prices;
 	}
 
@@ -95,9 +99,18 @@ public class MarketPrice {
 		return times;
 	}
 
-	private void setTimes(HashMap times) {
+	private void setTimes(HashMap<String, Long> times) {
 		this.times = times;
 	}
+
+	private HashMap<String, Integer> getSize() {
+		return size;
+	}
+
+	private void setSize(HashMap<String, Integer> size) {
+		this.size = size;
+	}
+	
 
 
 }
