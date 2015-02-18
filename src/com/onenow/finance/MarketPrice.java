@@ -7,20 +7,49 @@ import java.util.Hashtable;
 import java.util.List;
 
 import com.onenow.investor.DataType;
+import com.onenow.investor.QuoteDepth.DeepRow;
 
 public class MarketPrice {
 
-	HashMap<String, Double> prices; 	// $
-	HashMap<String, Long> times; 		// when
-	HashMap<String, Integer> size; 		// volume
+	HashMap<String, Double> 				prices; // $
+	HashMap<String, Long> 					times; 	// when
+	HashMap<String, Integer> 				size; 	// volume
+	HashMap<String, ArrayList<DeepRow>>		depth;	// market depth
 	
 
 	public MarketPrice() {
 		setPrices(new HashMap<String, Double>());
 		setTimes(new HashMap<String, Long>());
 		setSize(new HashMap<String, Integer>());
+		setDepth(new HashMap<String, ArrayList<DeepRow>>());
 	}
 
+	
+	//	Last trade price
+	//	Last trade size
+	//	Last trade time
+	//	Total volume
+	//	VWAP
+	//	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
+
+	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
+		getDepth().put(getLookupKey(inv, DataType.MARKETDEPTH.toString()), depth);		
+	}
+	
+	public ArrayList<DeepRow> getDepth(Investment inv) {
+		String key = getLookupKey(inv, DataType.MARKETDEPTH.toString());
+		ArrayList<DeepRow> depth = new ArrayList<DeepRow>();
+		try {
+			depth = (ArrayList<DeepRow>) (getDepth().get(key)); // let price be null to know it's not set
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 	
+		if(depth==null) {
+			depth=new ArrayList<DeepRow>(); // return empty
+		}
+		return depth;
+	}
+	
 	public void setLastTime(Investment inv, Long time) {
 		getTimes().put(getLookupKey(inv, DataType.LASTTIME.toString()), time);
 	}
@@ -109,6 +138,14 @@ public class MarketPrice {
 
 	private void setSize(HashMap<String, Integer> size) {
 		this.size = size;
+	}
+
+	private HashMap<String, ArrayList<DeepRow>> getDepth() {
+		return depth;
+	}
+
+	private void setDepth(HashMap<String, ArrayList<DeepRow>> depth) {
+		this.depth = depth;
 	}
 	
 

@@ -1,11 +1,7 @@
 package com.onenow.broker;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import apidemo.ApiDemo;
-import apidemo.MarketDataPanel.DeepResultsPanel;
 
 import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
@@ -14,7 +10,6 @@ import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
 import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.InvestmentOption;
-import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketAnalytics;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
@@ -23,8 +18,6 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.ConnectionStatus;
-import com.onenow.investor.Contract;
-import com.onenow.investor.ContractFactory;
 import com.onenow.investor.DataType;
 import com.onenow.investor.InvestorController;
 import com.onenow.investor.QuoteDepth;
@@ -33,6 +26,7 @@ import com.onenow.investor.SummitLogger;
 import com.onenow.investor.InvestorController.ConnectionHandler;
 import com.onenow.investor.InvestorController.IBulletinHandler;
 import com.onenow.investor.InvestorController.ITimeHandler;
+import com.onenow.investor.QuoteDepth.DeepRow;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
@@ -73,6 +67,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		}
 	}
 
+	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
+		getMarketPrices().setDepth(inv, depth);
+//		if(lastTime>0) {
+			System.out.println("Depth " +  	getMarketPrices().getDepth(inv).toString() + " " + inv.toString());
+//		}
+	}
+	
 	public void setLastTime(Investment inv, Long lastTime) {
 		getMarketPrices().setLastTime(inv, lastTime);
 		if(lastTime>0) {
@@ -156,7 +157,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		System.out.println(getMarketPortfolio().toString());
 		
 		getQuotes();
-		getMarketDepth();
+//		getMarketDepth(); No market depth for index/options
 	}
 	
 	private void getQuotes() {

@@ -45,7 +45,31 @@ public class QuoteTable extends AbstractTableModel {
 		QuoteSingle quote = new QuoteSingle(this, contract.description() );
 		m_rows.add(quote);
 		
-		getController().reqMktData(contract, "", false, (ITopMktDataHandler) quote);
+		String volumeTicks = 	"233, " + //  TickType.RT_VOLUME
+								// Contains the last trade price, last trade size, last trade time, 
+								// total volume, VWAP, and single trade flag.
+								"165, " + //  TickType.AVG_VOLUME
+								// Contains generic stats
+								"100, " + //  TickType.OPTION_CALL_VOLUME, TickType.OPTION_PUT_VOLUME
+								// Contains option Volume (currently for stocks)
+								"225, " +
+								// Auction values (volume, price and imbalance)
+								"101, " + 
+								// Contains option Open Interest (currently for stocks)
+								"225, " + // TickType.AUCTION_VOLUME
+								// Contains auction values (volume, price and imbalance)
+								"104, " +
+								// Historical Volatility (currently for stocks)
+								"106, " +
+								// Option Implied Volatility (currently for stocks)
+								"411";
+								// Real-time Historical Volatility
+		
+								// ? TickType.VOLUME_RATE.toString();
+								// ? TickType.OPEN_INTEREST -> 22
+								// ? TickType.VOLUME -> 8
+		
+		getController().reqMktData(contract, volumeTicks, false, (ITopMktDataHandler) quote);
 		
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	} 
@@ -249,6 +273,8 @@ public class QuoteTable extends AbstractTableModel {
 			m_model.fireTableDataChanged();			
 		}
 		
+		// reqScannerSubscription 
+		// for 500 companies: $120 / mo
 		@Override public void tickString(TickType tickType, String value) {
 			switch( tickType) {
 				case LAST_TIMESTAMP:
@@ -256,6 +282,26 @@ public class QuoteTable extends AbstractTableModel {
 					getBroker().setLastTime(getInvestment(), m_lastTime);
 //					System.out.println("Last time " + m_lastTime);
 					break;
+				case AVG_VOLUME:
+					System.out.println("AVG_VOLUME " + value); // not for indices
+					break;
+				case OPTION_CALL_VOLUME:
+					System.out.println("OPTION_CALL_VOLUME " + value); // stocks 
+					break;
+				case OPTION_PUT_VOLUME:
+					System.out.println("OPTION_PUT_VOLUME " + value); // stocks
+					break;
+				case AUCTION_VOLUME:
+					System.out.println("AUCTION_VOLUME " + value); // subscribe to
+					break;
+				case RT_VOLUME:
+					System.out.println("RT_VOLUME " + value); 
+					// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
+					break;
+				case VOLUME_RATE:
+					System.out.println("VOLUME_RATE " + value); // not for indices
+					break;
+				
                 default: break; 
 			}
 		}
