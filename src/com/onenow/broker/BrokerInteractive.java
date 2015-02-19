@@ -67,7 +67,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		}
 	}
 
-	public void setRealTime(String rtvolume) {
+	public void setRealTime(Investment inv, String rtvolume) {
 		getMarketPrices().setRealTime(rtvolume);
 		System.out.println("Real time " +  	getMarketPrices().getRealTime(inv).toString() + " " + inv.toString());		
 	}

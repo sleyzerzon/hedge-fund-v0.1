@@ -15,6 +15,7 @@ public class MarketPrice {
 	HashMap<String, Long> 					times; 	// when
 	HashMap<String, Integer> 				size; 	// volume
 	HashMap<String, ArrayList<DeepRow>>		depth;	// market depth
+	HashMap<String, Boolean>				flag;	// flag
 	
 
 	public MarketPrice() {
@@ -24,11 +25,11 @@ public class MarketPrice {
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
 	}
 
-	public void setRealTime(String rtvolume) {
+	public void setRealTime(Investment inv, String rtvolume) {
 		String lastTradedPrice="";
 		String lastTradeSize="";
 		String lastTradeTime="";
-		String totalVolue="";
+		String totalVolume="";
 		String VWAP="";
 		String splitFlag="";
 		
@@ -44,7 +45,7 @@ public class MarketPrice {
 				lastTradeTime = split;
 			}
 			if(i==5) { //	Total volume
-				totalVolue = split;
+				totalVolume = split;
 			}
 			if(i==6) { //	VWAP
 				VWAP = split;
@@ -55,17 +56,60 @@ public class MarketPrice {
 			System.out.println(split);
 			i++;
 		}
-		fillRealTime(Double.valueOf(lastTradedPrice), Integer.valueOf(lastTradeSize), Long.valueOf(lastTradeTime), 
-					Integer.valueOf(totalVolue), Double.valueOf(VWAP), Boolean.valueOf(splitFlag));
+		fillRealTime(inv, Double.valueOf(lastTradedPrice), Integer.valueOf(lastTradeSize), Long.valueOf(lastTradeTime), 
+					Integer.valueOf(totalVolume), Double.valueOf(VWAP), Boolean.valueOf(splitFlag));
 	}
  	
-	private void fillRealTime(Double lastPrice, Integer lastSize, Long lastTradeTime, Integer volume, Double VWAP, boolean splitFlag) {
-		
+	private void fillRealTime(	Investment inv, Double lastPrice, Integer lastSize, Long lastTradeTime, 
+								Integer volume, Double VWAP, boolean splitFlag) {
+		String type="";
+		type = TradeType.LAST.toString();
+		String key = getTimedLookupKey(lastTradeTime, inv, type);
+		getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), lastPrice);
+		getSize().put(getTimedLookupKey(lastTradeTime, inv, type), lastSize);
+		type = DataType.VOLUME.toString();
+		getSize().put(getTimedLookupKey(lastTradeTime, inv, type), volume);
+		type = DataType.VWAP.toString();
+		getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), VWAP);
+		type = DataType.TRADEFLAG.toString();
+		getFlag().put(getLookupKey(inv, type), splitFlag);
 	}
 	
 	
-	public void getRealTime(Investment inv) {
-		
+	public String getRealTime(Investment inv, Long tradeTime) {
+		String s = "REAL TIME: " + inv.toString() + "\n";
+		s = s +	"Price " + getTimedPrice(tradeTime, inv, TradeType.LAST.toString()) + "\n" +
+				"Size " + getTimedSize(tradeTime, inv, TradeType.LAST.toString()) + "\n" + 
+				"Volume " + getTimedSize(tradeTime, inv, DataType.VOLUME.toString()) + "\n" +
+				"VWAP " + getTimedPrice(tradeTime, inv, DataType.VWAP.toString()) + "\n" +
+				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString());
+		return s;
+	}
+	
+	public void setFlag(Investment inv, boolean flag) {
+		getFlag().put(getLookupKey(inv, DataType.TRADEFLAG.toString()), flag);	
+	}
+	
+	public boolean getTimedFlag(Long time, Investment inv, String dataType) {
+		String key = getTimedLookupKey(time, inv, dataType);
+		boolean flag=false;
+		try {
+			flag = (boolean) (getFlag().get(key)); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 		
+		return flag;			
+	}
+	
+	public boolean getFlag(Investment inv) {
+		String key = getLookupKey(inv, DataType.TRADEFLAG.toString());
+		boolean flag = false;
+		try {
+			flag = (boolean) (getFlag().get(key)); // let price be null to know it's not set
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 	
+		return flag;		
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
@@ -103,6 +147,17 @@ public class MarketPrice {
 	public void setSize(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookupKey(inv, dataType), size);
 	}
+	public Integer getTimedSize(Long time, Investment inv, String dataType) {
+		String key = getTimedLookupKey(time, inv, dataType);
+		Integer size=0;
+		try {
+			size = (Integer) (getSize().get(key)); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 		
+		return size;		
+	}
+	
 	public Integer getSize(Investment inv, String dataType) {
 		String key = getLookupKey(inv, dataType);
 		Integer size=0;
@@ -118,6 +173,16 @@ public class MarketPrice {
 		getPrices().put(getLookupKey(inv, dataType), price);
 	}
 	
+	public Double getTimedPrice(Long time, Investment inv, String dataType) {
+		String key = getTimedLookupKey(time, inv, dataType);
+		Double price=0.0;
+		try {
+			price = (Double) (getPrices().get(key)); // let price be null to know it's not set
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return price;		
+	}
 	public Double getPrice(Investment inv, String dataType) {
 		String key = getLookupKey(inv, dataType);
 		Double price=0.0;
@@ -129,6 +194,12 @@ public class MarketPrice {
 		return price;
 	}
 
+	private String getTimedLookupKey(Long time, Investment inv, String dataType) {
+		String s="";
+		s = time.toString() + "-";
+		s = s + getLookupKey(inv, dataType);
+		return s;
+	}
 	private String getLookupKey(Investment inv, String dataType) {
 		Underlying under = inv.getUnder();
 		String lookup = under.getTicker() + "-" + 
@@ -182,6 +253,14 @@ public class MarketPrice {
 
 	private void setDepth(HashMap<String, ArrayList<DeepRow>> depth) {
 		this.depth = depth;
+	}
+
+	private HashMap<String, Boolean> getFlag() {
+		return flag;
+	}
+
+	private void setFlag(HashMap<String, Boolean> flag) {
+		this.flag = flag;
 	}
 	
 
