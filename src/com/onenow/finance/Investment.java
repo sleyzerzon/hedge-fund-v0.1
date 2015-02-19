@@ -10,6 +10,9 @@ public class Investment {
 	private Reward reward;
 	private Risk risk;
 	
+	private Intraday today;
+	
+	
 	// CONSTRUCTOR
 	public Investment() {
 		// does not set underlying
@@ -21,6 +24,8 @@ public class Investment {
 		
 		setReward(new Reward());
 		setRisk(new Risk());
+		
+		setToday(new Intraday());
 	}
 
 	// PUBLIC
@@ -77,6 +82,14 @@ public class Investment {
 
 	private void setRisk(Risk risk) {
 		this.risk = risk;
+	}
+
+	public Intraday getToday() {
+		return today;
+	}
+
+	public void setToday(Intraday today) {
+		this.today = today;
 	}
 
 }

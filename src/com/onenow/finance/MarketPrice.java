@@ -59,7 +59,7 @@ public class MarketPrice {
 //			System.out.println(split);
 			i++;
 		}
-		Long time = Long.parseLong(lastTradeTime)*1000; 	// converted to seconds
+		Long time = Long.parseLong(lastTradeTime)*1000; 	// TODO: converted to milliseconds
 		fillRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
 					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
 		return time;
