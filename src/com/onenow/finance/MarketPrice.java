@@ -25,7 +25,7 @@ public class MarketPrice {
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
 	}
 
-	public void setRealTime(Investment inv, String rtvolume) {
+	public Long setRealTime(Investment inv, String rtvolume) {
 		String lastTradedPrice="";
 		String lastTradeSize="";
 		String lastTradeTime="";
@@ -56,11 +56,13 @@ public class MarketPrice {
 			System.out.println(split);
 			i++;
 		}
-		fillRealTime(inv, Double.valueOf(lastTradedPrice), Integer.valueOf(lastTradeSize), Long.valueOf(lastTradeTime), 
+		Long time = Long.valueOf(lastTradeTime);
+		fillRealTime(time, inv, Double.valueOf(lastTradedPrice), Integer.valueOf(lastTradeSize),  
 					Integer.valueOf(totalVolume), Double.valueOf(VWAP), Boolean.valueOf(splitFlag));
+		return time;
 	}
  	
-	private void fillRealTime(	Investment inv, Double lastPrice, Integer lastSize, Long lastTradeTime, 
+	private void fillRealTime(	Long lastTradeTime, Investment inv, Double lastPrice, Integer lastSize, 
 								Integer volume, Double VWAP, boolean splitFlag) {
 		String type="";
 		type = TradeType.LAST.toString();
@@ -76,8 +78,8 @@ public class MarketPrice {
 	}
 	
 	
-	public String getRealTime(Investment inv, Long tradeTime) {
-		String s = "REAL TIME: " + inv.toString() + "\n";
+	public String getRealTime(Long tradeTime, Investment inv) {
+		String s = inv.toString() + "\n";
 		s = s +	"Price " + getTimedPrice(tradeTime, inv, TradeType.LAST.toString()) + "\n" +
 				"Size " + getTimedSize(tradeTime, inv, TradeType.LAST.toString()) + "\n" + 
 				"Volume " + getTimedSize(tradeTime, inv, DataType.VOLUME.toString()) + "\n" +
