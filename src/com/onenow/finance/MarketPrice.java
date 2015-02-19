@@ -1,5 +1,6 @@
 package com.onenow.finance;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ public class MarketPrice {
 	HashMap<String, ArrayList<DeepRow>>		depth;	// market depth
 	HashMap<String, Boolean>				flag;	// flag
 
-//	HashMap<String, Long> 					times; 	// when
 	HashMap<String, List<Long>>				times;
 
 	public MarketPrice() {
@@ -36,30 +36,32 @@ public class MarketPrice {
 		
 		int i=1;
 		for(String split:rtvolume.split(";")) {
+//			System.out.println("SPLIT " + split + " " + i);
 			if(i==1) { //	Last trade price
 				lastTradedPrice = split;
 			}
-			if(i==3) { //	Last trade size
+			if(i==2) { //	Last trade size
 				lastTradeSize = split;
 			}
-			if(i==4) { //	Last trade time
+			if(i==3) { //	Last trade time
 				lastTradeTime = split;
+//				System.out.println("LAST " + split + " " + lastTradeTime);
 			}
-			if(i==5) { //	Total volume
+			if(i==4) { //	Total volume
 				totalVolume = split;
 			}
-			if(i==6) { //	VWAP
+			if(i==5) { //	VWAP
 				VWAP = split;
 			}
-			if(i==7) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
+			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
 				splitFlag = split;
 			}
-			System.out.println(split);
+//			System.out.println(split);
 			i++;
 		}
-		Long time = Long.valueOf(lastTradeTime);
-		fillRealTime(time, inv, Double.valueOf(lastTradedPrice), Integer.valueOf(lastTradeSize),  
-					Integer.valueOf(totalVolume), Double.valueOf(VWAP), Boolean.valueOf(splitFlag));
+		Long time = Long.parseLong(lastTradeTime);
+		fillRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
+					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
 		return time;
 	}
  	
@@ -75,17 +77,18 @@ public class MarketPrice {
 		type = DataType.VWAP.toString();
 		getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), VWAP);
 		type = DataType.TRADEFLAG.toString();
-		getFlag().put(getLookupKey(inv, type), splitFlag);
+//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
 	}
 	
 	
 	public String getRealTime(Long tradeTime, Investment inv) {
-		String s = inv.toString() + "\n";
-		s = s +	"Price " + getTimedPrice(tradeTime, inv, TradeType.LAST.toString()) + "\n" +
-				"Size " + getTimedSize(tradeTime, inv, TradeType.LAST.toString()) + "\n" + 
-				"Volume " + getTimedSize(tradeTime, inv, DataType.VOLUME.toString()) + "\n" +
-				"VWAP " + getTimedPrice(tradeTime, inv, DataType.VWAP.toString()) + "\n" +
-				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString());
+		String s = "\n" + inv.toString() + "\n";
+		s = s +	"REAL TIME " +
+				"Price " + getTimedPrice(tradeTime, inv, TradeType.LAST.toString()) + " " +
+				"Size " + getTimedSize(tradeTime, inv, TradeType.LAST.toString()) + " " + 
+				"Volume " + getTimedSize(tradeTime, inv, DataType.VOLUME.toString()) + " " +
+				"VWAP " + getTimedPrice(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
+//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
 		return s;
 	}
 	

@@ -70,7 +70,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public void setRealTime(Investment inv, String rtvolume) {
 		Long timeStamp;
 		timeStamp = getMarketPrices().setRealTime(inv, rtvolume);
-		System.out.println("REAL TIME " + "\n" + getMarketPrices().getRealTime(timeStamp, inv).toString() + " " + inv.toString());		
+		System.out.println(getMarketPrices().getRealTime(timeStamp, inv).toString());		
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
@@ -81,9 +81,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 	
 	public void setLastTime(Investment inv, Long lastTime) {
-		getMarketPrices().setTime(inv, lastTime);
-//		if(lastTime>0) {
-			System.out.println("Last time " +  	getMarketPrices().getTime(inv).toString() + " " + inv.toString());
+//		getMarketPrices().setTime(inv, lastTime);
+////		if(lastTime>0) {
+//			System.out.println("Last time " +  	getMarketPrices().getTime(inv).toString() + " " + inv.toString());
 //		}
 	}
 
@@ -102,9 +102,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public void setVolume(Investment inv, Integer size) {
 		getMarketPrices().setSize(inv, size, DataType.VOLUME.toString());
 		String s="";
-		if(size>1000) {
+		if(size>10000) {
 			if(size>10000) { s = "***"; }
-			System.out.println("Volume " + s +  getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " + inv.toString());
+			System.out.println("\n Volume " + s +  getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " + inv.toString());
 		}
 	}
 
