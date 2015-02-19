@@ -12,17 +12,18 @@ import com.onenow.investor.QuoteDepth.DeepRow;
 public class MarketPrice {
 
 	HashMap<String, Double> 				prices; // $
-	HashMap<String, Long> 					times; 	// when
 	HashMap<String, Integer> 				size; 	// volume
 	HashMap<String, ArrayList<DeepRow>>		depth;	// market depth
 	HashMap<String, Boolean>				flag;	// flag
-	
+
+//	HashMap<String, Long> 					times; 	// when
+	HashMap<String, List<Long>>				times;
 
 	public MarketPrice() {
 		setPrices(new HashMap<String, Double>());
-		setTimes(new HashMap<String, Long>());
 		setSize(new HashMap<String, Integer>());
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
+		setTimes(new HashMap<String, List<Long>>());
 	}
 
 	public Long setRealTime(Investment inv, String rtvolume) {
@@ -88,6 +89,22 @@ public class MarketPrice {
 		return s;
 	}
 	
+	public void setTime(Investment inv, Long time) {
+		getTime(inv).add(time);
+		
+	}
+	public List<Long> getTime(Investment inv) {
+		String dataType = DataType.LASTTIME.toString();
+		String key = getLookupKey(inv, dataType);
+		List<Long> timeList=new ArrayList<Long>();
+		try {
+			timeList = (ArrayList<Long>) (getTimes().get(key)); // let price be null to know it's not set
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return timeList;
+	}
+
 	public void setFlag(Investment inv, boolean flag) {
 		getFlag().put(getLookupKey(inv, DataType.TRADEFLAG.toString()), flag);	
 	}
@@ -131,21 +148,7 @@ public class MarketPrice {
 		}
 		return depth;
 	}
-	
-	public void setLastTime(Investment inv, Long time) {
-		getTimes().put(getLookupKey(inv, DataType.LASTTIME.toString()), time);
-	}
-	public Long getLastTime(Investment inv, String dataType) {
-		String key = getLookupKey(inv, dataType);
-		Long lastTime=(long) 0;
-		try {
-			lastTime = (Long) (getTimes().get(key)); // let price be null to know it's not set
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return lastTime;
-	}
-	
+		
 	public void setSize(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookupKey(inv, dataType), size);
 	}
@@ -233,14 +236,6 @@ public class MarketPrice {
 		this.prices = prices;
 	}
 
-	private HashMap<String, Long> getTimes() {
-		return times;
-	}
-
-	private void setTimes(HashMap<String, Long> times) {
-		this.times = times;
-	}
-
 	private HashMap<String, Integer> getSize() {
 		return size;
 	}
@@ -264,7 +259,15 @@ public class MarketPrice {
 	private void setFlag(HashMap<String, Boolean> flag) {
 		this.flag = flag;
 	}
-	
+
+	private HashMap<String, List<Long>> getTimes() {
+		return times;
+	}
+
+	private void setTimes(HashMap<String, List<Long>> times) {
+		this.times = times;
+	}
+
 
 
 }

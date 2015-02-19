@@ -81,10 +81,10 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 	
 	public void setLastTime(Investment inv, Long lastTime) {
-		getMarketPrices().setLastTime(inv, lastTime);
-		if(lastTime>0) {
-//			System.out.println("Last time " +  	getMarketPrices().getLastTime(inv, DataType.LASTTIME.toString()) + " " + inv.toString());
-		}
+		getMarketPrices().setTime(inv, lastTime);
+//		if(lastTime>0) {
+			System.out.println("Last time " +  	getMarketPrices().getTime(inv).toString() + " " + inv.toString());
+//		}
 	}
 
 	public void setBidSize(Investment inv, Integer size) {
