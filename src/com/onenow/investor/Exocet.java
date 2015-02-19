@@ -49,11 +49,9 @@ public class Exocet {
 		setRatio(ratio);
 		setAgression(agression);
 		
-		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.LAST);
-		
-		setUnderPrice(price);
+		getIndexPrice();		
 		setExocet(new StrategyCallSpread(getCallBuy(), getCallSell()));
+		
 		setCheckpoints();
 		return (StrategyCallSpread) getExocet();
 	}
@@ -62,9 +60,8 @@ public class Exocet {
 		setProb(prob);
 		setRatio(ratio);
 		setAgression(agression);
-		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.LAST); 
-		setUnderPrice(price);
+		
+		getIndexPrice();
 		setExocet(new StrategyPutSpread(getPutBuy(), getPutSell()));
 		setCheckpoints();
 		return (StrategyPutSpread) getExocet();	
@@ -74,9 +71,8 @@ public class Exocet {
 		setProb(prob);
 		setRatio(ratio);
 		setAgression(agression);
-		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.LAST); 
-		setUnderPrice(price);
+		
+		getIndexPrice();
 		setExocet(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
 											getPutBuy(), getPutSell()));
 		setCheckpoints();
@@ -84,11 +80,19 @@ public class Exocet {
 	}
 		
 	// PRIVATE
+	private void getIndexPrice() {
+		InvestmentIndex index = new InvestmentIndex(getUnder());
+		Double price = getBroker().getPrice(index, TradeType.LAST);
+		setUnderPrice(price);
+	}
+
 	private void setCheckpoints() {
 		Double price15Min=2053.96; // TODO: get it from broker
+		
 		getExocet().setPastCheckpoint((price15Min).intValue()); 
 		getExocet().setFutureCheckpoint(estClosing().intValue());
 		Integer num = (int) Math.round(getUnderPrice());
+		
 		getExocet().setPresentCheckpoint(num);
 		getExocet().addNewCheckpoint(num+1.0);
 		getExocet().addNewCheckpoint(num+2.0);

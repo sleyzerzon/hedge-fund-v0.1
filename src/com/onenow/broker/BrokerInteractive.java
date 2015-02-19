@@ -20,6 +20,7 @@ import com.onenow.finance.Underlying;
 import com.onenow.investor.ConnectionStatus;
 import com.onenow.investor.DataType;
 import com.onenow.investor.InvestorController;
+import com.onenow.investor.Pucara;
 import com.onenow.investor.QuoteDepth;
 import com.onenow.investor.QuoteTable;
 import com.onenow.investor.SummitLogger;
@@ -30,7 +31,7 @@ import com.onenow.investor.QuoteDepth.DeepRow;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
-	private boolean priceUpdate;
+	private Pucara pucara;
 	
 	private List<Underlying> underList;
 	private Portfolio marketPortfolio;
@@ -46,8 +47,11 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	private final ArrayList<String> accountList = new ArrayList<String>();
 	
-	public BrokerInteractive(boolean priceUpdate) {
-		setPriceUpdate(priceUpdate);
+	public BrokerInteractive() {
+		
+	}
+	public BrokerInteractive(Pucara pucara) {
+		setPucara(pucara);
 		
 		connectToServer();
 		
@@ -58,19 +62,23 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		setTrades(new ArrayList<Trade>());
 	}
 
-	
-	public synchronized void notifyPriceSet() {
-		if(allQuotesSet()) {
-			setPriceUpdate(true);
-		    notifyAll();
-//		    System.out.println("^^^ ALL SET");
-		}
-	}
 
 	public void setRealTime(Investment inv, String rtvolume) {
 		Long timeStamp;
 		timeStamp = getMarketPrices().setRealTime(inv, rtvolume);
-		System.out.println(getMarketPrices().getRealTime(timeStamp, inv).toString());		
+		System.out.println(getMarketPrices().getRealTime(timeStamp, inv).toString());
+		
+		if(isCounterMarket() && isUnderVWAP()) {
+			getPucara().launchExocet();
+		}
+	}
+	
+	private boolean isCounterMarket() {
+		return true;
+	}
+	
+	private boolean isUnderVWAP() {
+		return true;
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
@@ -110,28 +118,24 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 	public void setAskPrice(Investment inv, Double ask) {
 		getMarketPrices().setPrice(inv, ask, TradeType.BUY.toString());
-		notifyPriceSet();
 		if(ask>0) {
 //			System.out.println("Ask $ " +  	getMarketPrices().getPrice(inv, TradeType.BUY.toString())  + " " + inv.toString());
 		}
 	}
 	public void setBidPrice(Investment inv, Double bid) {
 		getMarketPrices().setPrice(inv, bid, TradeType.SELL.toString());
-		notifyPriceSet();
 		if(bid>0) {
 //			System.out.println("Bid $ " +  	getMarketPrices().getPrice(inv, TradeType.SELL.toString())  + " " + inv.toString());	
 		}
 	}
 	public void setLastPrice(Investment inv, Double last) {
 		getMarketPrices().setPrice(inv, last, TradeType.LAST.toString());
-		notifyPriceSet();
 		if(last>0) {
 //			System.out.println("Last $ " +  	getMarketPrices().getPrice(inv, TradeType.LAST.toString()) + " " + inv.toString());
 		}
 	}
 	public void setClosePrice(Investment inv, Double close) {
 		getMarketPrices().setPrice(inv, close, TradeType.CLOSE.toString());
-		notifyPriceSet();
 		if(close>0) {
 //			System.out.println("Close $ " +  	getMarketPrices().getPrice(inv, TradeType.CLOSE.toString())  + " " + inv.toString());
 		}
@@ -435,13 +439,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 
 
-	private boolean isPriceUpdate() {
-		return priceUpdate;
+	private Pucara getPucara() {
+		return pucara;
 	}
 
 
-	private void setPriceUpdate(boolean priceUpdate) {
-		this.priceUpdate = priceUpdate;
+	private void setPucara(Pucara pucara) {
+		this.pucara = pucara;
 	}
 
 }

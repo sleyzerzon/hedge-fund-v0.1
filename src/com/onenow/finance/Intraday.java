@@ -16,13 +16,13 @@ public class Intraday {
 	}
 
 	// PRIVATE
-	public Double getMeanVolume() {
+	public Double getMeanSize() {
 		Double mean = 0.0;
-		List<Double> volumes = new ArrayList<Double>();
-		Stats stats = new Stats(volumes);
+		List<Double> sizes = new ArrayList<Double>();
+		Stats stats = new Stats(sizes);
 		for(Candle candle:getCandles()) {
-			Integer volume = candle.getVolume();
-			volumes.add(volume*1.0);
+			Integer size = candle.getSizeTotal();	
+			sizes.add(size*1.0);
 		}
 		mean = stats.getMean();		
 		return mean;
@@ -33,14 +33,29 @@ public class Intraday {
 		List<Double> spreads = new ArrayList<Double>();
 		Stats stats = new Stats(spreads);
 		for(Candle candle:getCandles()) {
-			Double high = candle.getHigh();
-			Double low = candle.getLow();
-			Double spread = high-low;
+			Double close = candle.getClosePrice();		
+			Double open = candle.getOpenPrice();
+			Double spread = close-open;
 			spreads.add(spread);
 		}
 		mean = stats.getMean();
 		return mean;
 	}
+
+	public Double getMeanVWAPSpread() {
+		Double mean = 0.0;
+		List<Double> spreads = new ArrayList<Double>();
+		Stats stats = new Stats(spreads);
+		for(Candle candle:getCandles()) {
+			Double close = candle.getCloseVWAP();
+			Double open = candle.getOpenVWAP();		
+			Double spread = close-open;
+			spreads.add(spread);
+		}
+		mean = stats.getMean();
+		return mean;
+	}
+
 	
 	// TEST
 	

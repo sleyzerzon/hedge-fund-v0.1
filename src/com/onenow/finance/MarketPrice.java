@@ -68,16 +68,19 @@ public class MarketPrice {
 	private void fillRealTime(	Long lastTradeTime, Investment inv, Double lastPrice, Integer lastSize, 
 								Integer volume, Double VWAP, boolean splitFlag) {
 		String type="";
+		
 		type = TradeType.LAST.toString();
 		String key = getTimedLookupKey(lastTradeTime, inv, type);
-		getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), lastPrice);
-		getSize().put(getTimedLookupKey(lastTradeTime, inv, type), lastSize);
-		type = DataType.VOLUME.toString();
-		getSize().put(getTimedLookupKey(lastTradeTime, inv, type), volume);
-		type = DataType.VWAP.toString();
-		getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), VWAP);
-		type = DataType.TRADEFLAG.toString();
-//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
+		if(lastSize>0) { // TODO: ignore busts with negative size
+			getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), lastPrice);
+			getSize().put(getTimedLookupKey(lastTradeTime, inv, type), lastSize);		
+			type = DataType.VOLUME.toString();
+			getSize().put(getTimedLookupKey(lastTradeTime, inv, type), volume);		
+			type = DataType.VWAP.toString();
+			getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), VWAP);
+			type = DataType.TRADEFLAG.toString();
+	//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
+		}
 	}
 	
 	

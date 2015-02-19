@@ -12,9 +12,8 @@ import com.onenow.finance.Underlying;
 
 public class Pucara {
 
-	private static boolean priceUpdate;
-	private static BrokerInteractive ib = new BrokerInteractive(priceUpdate);
-	private static BrokerActivityImpl broker = new BrokerActivityImpl(ib);
+	private static BrokerInteractive IB;
+	private static BrokerActivityImpl broker;
 
 	private ContractFactory contractFactory = new ContractFactory();
 	private List<Channel> channels = new ArrayList<Channel>();
@@ -29,35 +28,38 @@ public class Pucara {
 	}
 	
 	public Pucara(String index, String expDate) {
-		setPriceUpdate(false);
+		setIB(new BrokerInteractive(this));
+		setBroker(new BrokerActivityImpl(IB));
 		setIndexName(index);
 		setExpDate(expDate);
-		ib.initMarket(index, expDate, 2100); // TODO: seed
+		getIB().initMarket(index, expDate, 2100); // TODO: seed
 	}
 
 	
 //	getChannelPrices(getContractFactory());
 
-	
-	public synchronized void run() {
-	    while(!priceUpdate) {
-	        try {
-	            wait();
-	        } catch (InterruptedException e) {}
-	    }
-        launchExocet();
-        priceUpdate=false;
-        notifyAll();
-        
-        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-	}
-
-
-	private static void launchExocet() {
+	public static void launchExocet() {
 		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
 		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.SWING, TradeRatio.NONE, 0.50);
-		System.out.println(spxExocet.toString());
+		if(swing!=null) {
+			System.out.println(spxExocet.toString());
+		}
 	}
+	
+	
+	
+//	public synchronized void run() {
+//	    while(!priceUpdate) {
+//	        try {
+//	            wait();
+//	        } catch (InterruptedException e) {}
+//	    }
+//        launchExocet();
+//        priceUpdate=false;
+//        notifyAll();
+//        
+//        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+//	}
 
 	
 	
@@ -144,14 +146,6 @@ public class Pucara {
 		this.parser = parser;
 	}
 
-	private boolean isPriceUpdate() {
-		return priceUpdate;
-	}
-
-	private void setPriceUpdate(boolean priceUpdate) {
-		this.priceUpdate = priceUpdate;
-	}
-
 	private static String getIndexName() {
 		return indexName;
 	}
@@ -166,6 +160,14 @@ public class Pucara {
 
 	private void setExpDate(String expDate) {
 		this.expDate = expDate;
+	}
+
+	private static BrokerInteractive getIB() {
+		return IB;
+	}
+
+	private static void setIB(BrokerInteractive iB) {
+		IB = iB;
 	}
 
 
