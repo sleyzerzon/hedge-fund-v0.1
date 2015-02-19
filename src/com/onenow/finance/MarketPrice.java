@@ -59,7 +59,7 @@ public class MarketPrice {
 //			System.out.println(split);
 			i++;
 		}
-		Long time = Long.parseLong(lastTradeTime);
+		Long time = Long.parseLong(lastTradeTime)*1000; 	// converted to seconds
 		fillRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
 					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
 		return time;
@@ -82,13 +82,37 @@ public class MarketPrice {
 	
 	
 	public String getRealTime(Long tradeTime, Investment inv) {
-		String s = "\n" + inv.toString() + "\n";
-		s = s +	"REAL TIME " +
-				"Price " + getTimedPrice(tradeTime, inv, TradeType.LAST.toString()) + " " +
-				"Size " + getTimedSize(tradeTime, inv, TradeType.LAST.toString()) + " " + 
-				"Volume " + getTimedSize(tradeTime, inv, DataType.VOLUME.toString()) + " " +
-				"VWAP " + getTimedPrice(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
-//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
+		
+		Integer size = getTimedSize(tradeTime, inv, TradeType.LAST.toString());
+		Integer volume = getTimedSize(tradeTime, inv, DataType.VOLUME.toString());
+		
+		String sizeS = size.toString();
+		String volumeS = volume.toString();
+		
+		if(size<0) {
+			sizeS = "(" + sizeS + ")";
+		}
+		
+		boolean print = true;
+		if(size>500) {
+			sizeS = "***" + sizeS;
+			print = true;
+		}
+		if(volume>5000) {
+			volumeS = "***" + volumeS;
+			print = true;
+		}
+		
+		String s = "";
+		if(print) {
+			s = "\n" + inv.toString() + "\n";
+			s = s +	"REAL TIME " +
+					"Price " + getTimedPrice(tradeTime, inv, TradeType.LAST.toString()) + " " +
+					"Size " + sizeS + " " + 
+					"Volume " + volumeS + " " +
+					"VWAP " + getTimedPrice(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
+	//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
+		}
 		return s;
 	}
 	

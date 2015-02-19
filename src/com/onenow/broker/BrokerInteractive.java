@@ -104,7 +104,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		String s="";
 		if(size>10000) {
 			if(size>10000) { s = "***"; }
-			System.out.println("\n Volume " + s +  getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " + inv.toString());
+//			System.out.println("\n Volume " + s +  getMarketPrices().getSize(inv, DataType.VOLUME.toString()) + " " + inv.toString());
 		}
 	}
 
