@@ -61,10 +61,11 @@ public class BrokerEmulator implements Broker {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
-		Double price=getMarketPrices().getPrice(inv, type);
-		return price;
+	public Double getPrice(Investment inv, String type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 
 	private static void initMarket(String name) { // create the investments
 		Underlying under = new Underlying(name);
@@ -78,17 +79,17 @@ public class BrokerEmulator implements Broker {
 		Investment put1 = new InvestmentOption(under, InvType.PUT, expDate, 390.00);
 		Investment put2 = new InvestmentOption(under, InvType.PUT, expDate, 385.00);		
 		// set their prices
-		getMarketPrices().setPrice(stock, 396.00, 395.00);
-		getMarketPrices().setPrice(call1, 7.41, 7.40);
-		getMarketPrices().setPrice(call2, 8.85, 8.84);
-		getMarketPrices().setPrice(put1, 9.50, 9.49);
-		getMarketPrices().setPrice(put2, 8.33, 8.32);
+//		getMarketPrices().setPrice(stock, 396.00, 395.00);
+//		getMarketPrices().setPrice(call1, 7.41, 7.40);
+//		getMarketPrices().setPrice(call2, 8.85, 8.84);
+//		getMarketPrices().setPrice(put1, 9.50, 9.49);
+//		getMarketPrices().setPrice(put2, 8.33, 8.32);
 		// create trades based on market price
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPrice(stock, TradeType.BUY));
-		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY));
-		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY));
-		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY));
-		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY));
+		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPrice(stock, TradeType.BUY.toString()));
+		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY.toString()));
+		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY.toString()));
+		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY.toString()));
+		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY.toString()));
 		// transact it
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
 		marketPortfolio.enterTransaction(trans);
@@ -113,38 +114,38 @@ public class BrokerEmulator implements Broker {
 		Investment call1 = new InvestmentOption(under, InvType.CALL, expDate, 2060.00);
 		Investment call0 = new InvestmentOption(under, InvType.CALL, expDate, 2065.00);
 		// set their prices
-		getMarketPrices().setPrice(index, 2054.74);
-		getMarketPrices().setPrice(put0, 0.05, 0.05);
-		getMarketPrices().setPrice(put1, 0.05, 0.05);
-		getMarketPrices().setPrice(put2, 0.15, 0.20);
-		getMarketPrices().setPrice(put3, 1.10, 1.70);
-		getMarketPrices().setPrice(put4, 4.70, 5.90);
-		getMarketPrices().setPrice(put5, 8.50, 12.00);
-		getMarketPrices().setPrice(put6, 13.50, 16.70);
-		
-		getMarketPrices().setPrice(call5, 13.30, 16.50);
-		getMarketPrices().setPrice(call4, 8.30, 11.50);
-		getMarketPrices().setPrice(call3, 4.0, 5.50);
-		getMarketPrices().setPrice(call2, 0.50, 1.65);
-		getMarketPrices().setPrice(call1, 0.05, 0.35);
-		getMarketPrices().setPrice(call0, 0.05, 0.05);
+//		getMarketPrices().setPrice(index, 2054.74);
+//		getMarketPrices().setPrice(put0, 0.05, 0.05);
+//		getMarketPrices().setPrice(put1, 0.05, 0.05);
+//		getMarketPrices().setPrice(put2, 0.15, 0.20);
+//		getMarketPrices().setPrice(put3, 1.10, 1.70);
+//		getMarketPrices().setPrice(put4, 4.70, 5.90);
+//		getMarketPrices().setPrice(put5, 8.50, 12.00);
+//		getMarketPrices().setPrice(put6, 13.50, 16.70);
+//		
+//		getMarketPrices().setPrice(call5, 13.30, 16.50);
+//		getMarketPrices().setPrice(call4, 8.30, 11.50);
+//		getMarketPrices().setPrice(call3, 4.0, 5.50);
+//		getMarketPrices().setPrice(call2, 0.50, 1.65);
+//		getMarketPrices().setPrice(call1, 0.05, 0.35);
+//		getMarketPrices().setPrice(call0, 0.05, 0.05);
 		
 		// create trades based on market price
-		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPrice(index, TradeType.LAST));
-		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().getPrice(put0, TradeType.BUY));
-		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY));
-		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY));
-		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().getPrice(put3, TradeType.BUY));
-		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().getPrice(put4, TradeType.BUY));
-		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().getPrice(put5, TradeType.BUY));
-		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().getPrice(put6, TradeType.BUY));
+		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPrice(index, TradeType.LAST.toString()));
+		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().getPrice(put0, TradeType.BUY.toString()));
+		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY.toString()));
+		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY.toString()));
+		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().getPrice(put3, TradeType.BUY.toString()));
+		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().getPrice(put4, TradeType.BUY.toString()));
+		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().getPrice(put5, TradeType.BUY.toString()));
+		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().getPrice(put6, TradeType.BUY.toString()));
 
-		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().getPrice(call0, TradeType.BUY));
-		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY));
-		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY));
-		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().getPrice(call3, TradeType.BUY));
-		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().getPrice(call4, TradeType.BUY));
-		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().getPrice(call5, TradeType.BUY));
+		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().getPrice(call0, TradeType.BUY.toString()));
+		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY.toString()));
+		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY.toString()));
+		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().getPrice(call3, TradeType.BUY.toString()));
+		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().getPrice(call4, TradeType.BUY.toString()));
+		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().getPrice(call5, TradeType.BUY.toString()));
 
 		
 		// transact it
@@ -214,5 +215,6 @@ public class BrokerEmulator implements Broker {
 	private static void setMarketPortfolio(Portfolio marketPortfolio) {
 		BrokerEmulator.marketPortfolio = marketPortfolio;
 	}
+
 
 }

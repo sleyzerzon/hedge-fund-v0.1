@@ -24,7 +24,7 @@ public class StrategyCallBuy extends StrategyOptions {
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = s + super.toString();
+//		s = s + super.toString();
 		return s;
 	}
 

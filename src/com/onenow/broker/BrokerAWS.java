@@ -42,7 +42,7 @@ public class BrokerAWS implements Broker {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
+	public Double getPrice(Investment inv, String type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
