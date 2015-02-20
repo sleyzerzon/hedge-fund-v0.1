@@ -19,7 +19,7 @@ import com.ib.controller.ApiConnection.ILogger;
 import com.ib.controller.Bar;
 import com.ib.controller.Formats;
 import com.onenow.broker.BrokerActivityImpl;
-import com.onenow.finance.InvProb;
+import com.onenow.finance.InvApproach;
 import com.onenow.finance.RiskReturn;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.TradeRatio;
@@ -82,7 +82,7 @@ public class InteractiveBrokers implements ConnectionHandler  { // extends Abstr
 
 		BrokerActivityImpl broker = new BrokerActivityImpl();
 		Exocet spxExocet = new Exocet(100, spxOption, broker);
-		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
+		StrategyIronCondor swing = spxExocet.getIronCondor(InvApproach.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
 		System.out.println(spxExocet.toString());
 		
 

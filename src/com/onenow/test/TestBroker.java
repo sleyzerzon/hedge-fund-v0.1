@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.database.DatabaseSystemActivityImpl;
-import com.onenow.finance.InvProb;
+import com.onenow.finance.InvApproach;
 import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
 import com.onenow.finance.Portfolio;
@@ -83,28 +83,28 @@ public class TestBroker {
 	private boolean testExocet() {
 		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate(), getBroker());
 		
-		StrategyIronCondor hp = ex.getIronCondor(InvProb.HIGH, TradeRatio.NONE, 0.60);
+		StrategyIronCondor hp = ex.getIronCondor(InvApproach.HIGH, TradeRatio.NONE, 0.60);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ic = ex.getIronCondor(InvProb.LOW, TradeRatio.NONE, 0.50);
+		StrategyIronCondor ic = ex.getIronCondor(InvApproach.LOW, TradeRatio.NONE, 0.50);
 		testIronCondor(ex, ic); 
 		
-		StrategyCallSpread cs = ex.getCallSpread(InvProb.LOW, TradeRatio.NONE, 0.45);
+		StrategyCallSpread cs = ex.getCallSpread(InvApproach.LOW, TradeRatio.NONE, 0.45);
 		testCallSpread(ex, cs); 
 
-		StrategyPutSpread ps = ex.getPutSpread(InvProb.LOW, TradeRatio.NONE, 0.55);
+		StrategyPutSpread ps = ex.getPutSpread(InvApproach.LOW, TradeRatio.NONE, 0.55);
 		testPutSpread(ex, ps); 
 		
-		StrategyIronCondor stL = ex.getIronCondor(InvProb.LOWER_STRANGLE, TradeRatio.NONE, 0.50);
+		StrategyIronCondor stL = ex.getIronCondor(InvApproach.LOWER_STRANGLE, TradeRatio.NONE, 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ratioed = ex.getIronCondor(InvProb.LOWER_STRANGLE, TradeRatio.HIGH, 0.50);
+		StrategyIronCondor ratioed = ex.getIronCondor(InvApproach.LOWER_STRANGLE, TradeRatio.HIGH, 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor stH = ex.getIronCondor(InvProb.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
+		StrategyIronCondor stH = ex.getIronCondor(InvApproach.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
 		System.out.println(ex.toString());
 
-		StrategyIronCondor ratioleft = ex.getIronCondor(InvProb.LEFT, TradeRatio.VHIGH, 0.50);
+		StrategyIronCondor ratioleft = ex.getIronCondor(InvApproach.LEFT, TradeRatio.VHIGH, 0.50);
 		System.out.println(ex.toString());
 
 
@@ -182,7 +182,7 @@ public class TestBroker {
 			return false;
 		}
 		// now more aggressive
-		strat = ex.getIronCondor(InvProb.LOW, TradeRatio.LOW, 0.75); 
+		strat = ex.getIronCondor(InvApproach.LOW, TradeRatio.LOW, 0.75); 
 		if(!strat.getMaxProfit().equals(245.0)) {
 			System.out.println("ERROR ic+ max profit " + strat.getMaxProfit());
 			return false;

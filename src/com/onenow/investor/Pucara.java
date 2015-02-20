@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
-import com.onenow.finance.InvProb;
+import com.onenow.finance.InvApproach;
+import com.onenow.finance.StrategyCallBuy;
+import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.TradeRatio;
 import com.onenow.finance.Underlying;
@@ -38,14 +40,15 @@ public class Pucara {
 	
 //	getChannelPrices(getContractFactory());
 
-	public static void launchExocet() {
+	public static void launchBottomExocet() {
 		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
-		StrategyIronCondor swing = spxExocet.getIronCondor(InvProb.SWING, TradeRatio.NONE, 0.50);
-		if(swing!=null) {
-			System.out.println(spxExocet.toString());
-		}
+		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+		System.out.println(swingCall.toString());
 	}
 	
+	public static void launchTopExocet() {
+
+	}
 	
 	
 //	public synchronized void run() {

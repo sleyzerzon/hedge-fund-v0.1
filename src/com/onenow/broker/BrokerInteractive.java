@@ -68,22 +68,37 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		timeStamp = getMarketPrices().setRealTime(inv, rtvolume);
 		System.out.println(getMarketPrices().getRealTime(timeStamp, inv).toString());
 		
-		if(isCounterMarket() && isUnderVWAP() && isOutOfMarket()) { // BUY
-			getPucara().launchExocet();
+		if(isBullMarket()) {
+			if(isUnderVWAP(6) && isMomentumReversedUp()) { // BUY call
+				getPucara().launchBottomExocet();
+			}
+			if(isOverVWAP(12) && isMomentumReversedDown()) { // BUY put
+				// getPucara().launchTopExocet();
+			}
+		}
+		if(isBearMarket()){
+			
 		}
 		if(isGoalAchieved() || isMarketClose() ) { // SELL
 			
 		}
+		
 	}
 	
-	private boolean isCounterMarket() {
+	private boolean isCounterMarket() { // price under VWAP in bull market, over in bear market
 		return true;
 	}
 	
-	private boolean isUnderVWAP() {
+	private boolean isUnderVWAP(Integer buffer) {
 		return true;
 	}
-	private boolean isOutOfMarket() {
+	private boolean isOverVWAP(Integer buffer) { 
+		return true;
+	}
+	private boolean isMomentumReversedUp() { 
+		return true;
+	}
+	private boolean isMomentumReversedDown() { 
 		return true;
 	}
 	
@@ -93,6 +108,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	
 	private boolean isMarketClose() {
 		return false;
+	}
+	private boolean isBullMarket() {
+		boolean bull=true;
+		return bull;
+	}
+	private boolean isBearMarket() {
+		return !isBullMarket();
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {

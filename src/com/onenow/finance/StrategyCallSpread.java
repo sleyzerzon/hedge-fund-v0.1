@@ -63,7 +63,7 @@ public class StrategyCallSpread extends StrategyOptions {
 	}
 	
 	// PRIVATE
-	private Trade getCallBuy() {
+	public Trade getCallBuy() {
 		return callBuy;
 	}
 

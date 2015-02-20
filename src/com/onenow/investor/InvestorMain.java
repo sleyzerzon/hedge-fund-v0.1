@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
-import com.onenow.finance.InvProb;
+import com.onenow.finance.InvApproach;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.TradeRatio;
 import com.onenow.finance.Underlying;

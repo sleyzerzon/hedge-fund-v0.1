@@ -1,15 +1,15 @@
 package com.onenow.investor;
 
 import com.onenow.broker.BrokerActivityImpl;
-import com.onenow.finance.InvProb;
+import com.onenow.finance.InvApproach;
 import com.onenow.finance.InvType;
 import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.Strategy;
-import com.onenow.finance.StrategyCall;
+import com.onenow.finance.StrategyCallBuy;
 import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
-import com.onenow.finance.StrategyPut;
+import com.onenow.finance.StrategyPutBuy;
 import com.onenow.finance.StrategyPutSpread;
 import com.onenow.finance.Trade;
 import com.onenow.finance.TradeRatio;
@@ -18,7 +18,7 @@ import com.onenow.finance.Underlying;
 
 public class Exocet {
 	
-	private Strategy exocet;
+	private Strategy strategy;
 	
 	private Integer quant;
 	private Underlying under;
@@ -31,7 +31,7 @@ public class Exocet {
 	private Double agression;
 	private Double spread=5.0; // TODO: generalize
 	
-	private InvProb prob;
+	private InvApproach approach;
 	private TradeRatio ratio;
 			
 	public Exocet() {
@@ -45,77 +45,90 @@ public class Exocet {
 		setBroker(broker);
 	}
 
-	public StrategyCall getCall() {
-		StrategyCall call = new StrategyCall();
-		
-		return call;
-	}
-	public StrategyPut getPut() {
-		StrategyPut put = new StrategyPut();
-		
-		return put;
-	}
-	public StrategyCallSpread getCallSpread(	InvProb prob, TradeRatio ratio,
-												Double agression) {
-		setProb(prob);
+	public StrategyCallBuy getCall(				InvApproach approach, TradeRatio ratio, Double agression) {
+		setApproach(approach);
 		setRatio(ratio);
 		setAgression(agression);
 		
-		getIndexPrice();		
-		setExocet(new StrategyCallSpread(getCallBuy(), getCallSell()));
-		
+		lookupIndexPrice();		
+		setStrategy(new StrategyCallBuy(getCallBuy())); // no put
+
 		setCheckpoints();
-		return (StrategyCallSpread) getExocet();
+		return (StrategyCallBuy) getStrategy();
 	}
 	
-	public StrategyPutSpread getPutSpread(	InvProb prob, TradeRatio ratio, Double agression) {
-		setProb(prob);
+	public StrategyPutBuy getPut(					InvApproach approach, TradeRatio ratio, Double agression) {
+		setApproach(approach);
 		setRatio(ratio);
 		setAgression(agression);
 		
-		getIndexPrice();
-		setExocet(new StrategyPutSpread(getPutBuy(), getPutSell()));
+		lookupIndexPrice();		
+		setStrategy(new StrategyPutBuy(getPutBuy())); // no call
+
 		setCheckpoints();
-		return (StrategyPutSpread) getExocet();	
+		return (StrategyPutBuy) getStrategy();
 	}
 	
-	public StrategyIronCondor getIronCondor(	InvProb prob, TradeRatio ratio, Double agression) {
-		setProb(prob);
+	public StrategyCallSpread getCallSpread(	InvApproach approach, TradeRatio ratio, Double agression) {
+		setApproach(approach);
 		setRatio(ratio);
 		setAgression(agression);
 		
-		getIndexPrice();
-		setExocet(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
+		lookupIndexPrice();		
+		setStrategy(new StrategyCallSpread(getCallBuy(), getCallSell()));
+		
+		setCheckpoints();
+		return (StrategyCallSpread) getStrategy();
+	}
+	
+	public StrategyPutSpread getPutSpread(		InvApproach approach, TradeRatio ratio, Double agression) {
+		setApproach(approach);
+		setRatio(ratio);
+		setAgression(agression);
+		
+		lookupIndexPrice();
+		setStrategy(new StrategyPutSpread(getPutBuy(), getPutSell()));
+		setCheckpoints();
+		return (StrategyPutSpread) getStrategy();	
+	}
+	
+	public StrategyIronCondor getIronCondor(	InvApproach approach, TradeRatio ratio, Double agression) {
+		setApproach(approach);
+		setRatio(ratio);
+		setAgression(agression);
+		
+		lookupIndexPrice();
+		setStrategy(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
 											getPutBuy(), getPutSell()));
 		setCheckpoints();
-		return (StrategyIronCondor) getExocet();
+		return (StrategyIronCondor) getStrategy();
 	}
 		
 	// PRIVATE
-	private void getIndexPrice() {
+	private void lookupIndexPrice() {
 		InvestmentIndex index = new InvestmentIndex(getUnder());
 		Double price = getBroker().getPrice(index, TradeType.LAST.toString());
 		setUnderPrice(price);
 	}
 
 	private void setCheckpoints() {
-		Double price15Min=2053.96; // TODO: get it from broker
+		Double referencePrice = getUnderPrice(); 
 		
-		getExocet().setPastCheckpoint((price15Min).intValue()); 
-		getExocet().setFutureCheckpoint(estClosing().intValue());
+		getStrategy().setPastCheckpoint((referencePrice).intValue()); 
+		getStrategy().setFutureCheckpoint(estClosing().intValue());
 		Integer num = (int) Math.round(getUnderPrice());
 		
-		getExocet().setPresentCheckpoint(num);
-		getExocet().addNewCheckpoint(num+1.0);
-		getExocet().addNewCheckpoint(num+2.0);
-		getExocet().addNewCheckpoint(num+3.0);
-		getExocet().addNewCheckpoint(num+4.0);
-		getExocet().addNewCheckpoint(num+5.0);
-		getExocet().addNewCheckpoint(num-1.0);
-		getExocet().addNewCheckpoint(num-2.0);
-		getExocet().addNewCheckpoint(num-3.0);
-		getExocet().addNewCheckpoint(num-4.0);
-		getExocet().addNewCheckpoint(num-5.0);
+		getStrategy().setPresentCheckpoint(num);
+		getStrategy().addNewCheckpoint(num+1.0);
+		getStrategy().addNewCheckpoint(num+2.0);
+		getStrategy().addNewCheckpoint(num+3.0);
+		getStrategy().addNewCheckpoint(num+4.0);
+		getStrategy().addNewCheckpoint(num+5.0);
+		getStrategy().addNewCheckpoint(num-1.0);
+		getStrategy().addNewCheckpoint(num-2.0);
+		getStrategy().addNewCheckpoint(num-3.0);
+		getStrategy().addNewCheckpoint(num-4.0);
+		getStrategy().addNewCheckpoint(num-5.0);
 	}
 	
 	private Trade getCallBuy() {
@@ -139,18 +152,17 @@ public class Exocet {
 	
 	private Trade getInv(InvType invType, TradeType tradeType) {
 		
-		InvestmentOption inv = 	new InvestmentOption(getUnder(), invType, getExp(), 
-								getStrike(invType, tradeType));
+		InvestmentOption inv = 	new InvestmentOption(getUnder(), invType, getExp(), getStrike(invType, tradeType));
 		
 		Integer mQuant=getQuant();
 				
-		if(tradeType.equals(TradeType.BUY)) { // ratio protection
-			mQuant=getMQuant();		
-			boolean onlyUpper = getProb().equals(InvProb.LOWER_STRANGLE) || getProb().equals(InvProb.LEFT);
-			if(invType.equals(InvType.PUT) && onlyUpper) { 
-			   mQuant=getQuant(); // protect only upside on strangles
-			} 
-		} 
+//		if(tradeType.equals(TradeType.BUY)) { // ratio protection
+//			mQuant=getMQuant();		
+//			boolean onlyUpper = getProb().equals(InvApproach.LOWER_STRANGLE) || getProb().equals(InvApproach.LEFT);
+//			if(invType.equals(InvType.PUT) && onlyUpper) { 
+//			   mQuant=getQuant(); // protect only upside on strangles
+//			} 
+//		} 
 		
 		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType.toString(), inv, getAgression()));
 		return trade;
@@ -204,28 +216,28 @@ public class Exocet {
 	// CALL SELL
 	private Double getCallSellStrike() {
 		Double strike=0.0;
-		if(getProb().equals(InvProb.HIGH)) { strike=getHPCallSellStrike(); }
-		if(getProb().equals(InvProb.MID)) { strike=getMPCallSellStrike(); }
-		if(getProb().equals(InvProb.LOW)) { strike=getLPCallSellStrike(); }
-		if(getProb().equals(InvProb.LOWER_STRANGLE)) { strike=getLowerStrangleCallSellStrike(); }
-		if(getProb().equals(InvProb.UPPER_STRANGLE)) { strike=getUpperStrangleCallSellStrike(); }
-		if(getProb().equals(InvProb.LEFT)) { strike=getLeftCallSellStrike(); }
-//		if(getProb().equals(InvProb.RIGHT)) { strike=getRightCallSellStrike(); }
-		if(getProb().equals(InvProb.SWING)) { strike=getSwingCallSellStrike(); }
+		if(getProb().equals(InvApproach.HIGH)) { strike=getHPCallSellStrike(); }
+		if(getProb().equals(InvApproach.MID)) { strike=getMPCallSellStrike(); }
+		if(getProb().equals(InvApproach.LOW)) { strike=getLPCallSellStrike(); }
+		if(getProb().equals(InvApproach.LOWER_STRANGLE)) { strike=getLowerStrangleCallSellStrike(); }
+		if(getProb().equals(InvApproach.UPPER_STRANGLE)) { strike=getUpperStrangleCallSellStrike(); }
+		if(getProb().equals(InvApproach.LEFT)) { strike=getLeftCallSellStrike(); }
+		//		if(getProb().equals(InvProb.RIGHT)) { strike=getRightCallSellStrike(); }
+		if(getProb().equals(InvApproach.SWING)) { strike=getSwingCallSellStrike(); }
 		return strike;
 	}
 	
 	private Double getSwingCallSellStrike() {
 		Double strike=0.0;
-		
-		// for strikes from highest trading to: lowest, current price
-		// get price of call sell & call buy
-		// calculate spread at a strike
-		// calculate gain % if price moves 2 spreads
-		// choose that strike
-		
+		strike = getStrikeBelowClosing();		
 		return strike;
 	}
+	
+	// for strikes from highest trading to: lowest, current price
+	// get price of call sell & call buy
+	// calculate spread at a strike
+	// calculate gain % if price moves 2 spreads
+	// choose that strike
 	
 	private Double getHPCallSellStrike() {
 		Double strike = 0.0;
@@ -246,7 +258,6 @@ public class Exocet {
 		strike = getLowerStrangleCallSellStrike()-getSpread();
 		return strike;		
 	}
-	// *** STRANGLE
 	private Double getLowerStrangleCallSellStrike() { // call or put?
 		Double strike = 0.0;
 		strike = getStrikeAboveClosing()-getSpread();
@@ -261,22 +272,21 @@ public class Exocet {
 	// PUT SELL
 	private Double getPutSellStrike() {
 		Double strike=0.0;
-		if(getProb().equals(InvProb.HIGH)) { strike=getHPPutSellStrike(); }
-		if(getProb().equals(InvProb.MID)) { strike=getMPPutSellStrike(); }
-		if(getProb().equals(InvProb.LOW)) { strike=getLPPutSellStrike(); }
-		if(getProb().equals(InvProb.LOWER_STRANGLE)) { strike=getUnderStranglePutSellStrike(); }
-		if(getProb().equals(InvProb.UPPER_STRANGLE)) { strike=getUpperStranglePutSellStrike(); }
-		if(getProb().equals(InvProb.LEFT)) { strike=getLeftPutSellStrike(); }
-//		if(getProb().equals(InvProb.RIGHT)) { strike=getRightPutSellStrike(); }
-		if(getProb().equals(InvProb.SWING)) { strike=getSwingPutSellStrike(); }
+		if(getProb().equals(InvApproach.HIGH)) { strike=getHPPutSellStrike(); }
+		if(getProb().equals(InvApproach.MID)) { strike=getMPPutSellStrike(); }
+		if(getProb().equals(InvApproach.LOW)) { strike=getLPPutSellStrike(); }
+		if(getProb().equals(InvApproach.LOWER_STRANGLE)) { strike=getUnderStranglePutSellStrike(); }
+		if(getProb().equals(InvApproach.UPPER_STRANGLE)) { strike=getUpperStranglePutSellStrike(); }
+		if(getProb().equals(InvApproach.LEFT)) { strike=getLeftPutSellStrike(); }
+		//		if(getProb().equals(InvProb.RIGHT)) { strike=getRightPutSellStrike(); }
+		if(getProb().equals(InvApproach.SWING)) { strike=getSwingPutSellStrike(); }
 		return strike;
 	}
 	private Double getSwingPutSellStrike() {
 		Double strike=0.0;
 		
 		return strike;
-	}
-	
+	}	
 	private Double getHPPutSellStrike() {
 		Double strike = 0.0;
 		strike = getLPPutSellStrike()-getSpread(); // TODO: do based on delta
@@ -296,7 +306,6 @@ public class Exocet {
 		strike = getUnderStranglePutSellStrike()-getSpread();
 		return strike;		
 	}
-	// *** STRANGLE
 	private Double getUnderStranglePutSellStrike() { // lower than estClosing
 		Double strike = 0.0;
 		strike = getStrikeBelowClosing(); // always call
@@ -322,6 +331,8 @@ public class Exocet {
 		return strike;
 	}
 
+	
+	
 	// TODO: STUDY how long ago priceBefore is the best predictor of closing?
 	public Double estClosing() {
 		// TODO: use actuals
@@ -360,7 +371,7 @@ public class Exocet {
 				"RATIO " + getRatio() + ", " +
 				"AGGRESSION " + getAgression() + ", " + 
 				"EST CLOSING " + Math.round(estClosing()) + "\n";
-		s = s + getExocet().toString();
+		s = s + getStrategy().toString();
 		return s;
 	}
 	
@@ -383,12 +394,12 @@ public class Exocet {
 	}
 	
 	// SET GET
-	public Strategy getExocet() {
-		return exocet;
+	public Strategy getStrategy() {
+		return strategy;
 	}
 
-	public void setExocet(Strategy exocet) {
-		this.exocet = exocet;
+	public void setStrategy(Strategy strat) {
+		this.strategy = strat;
 	}
 
 	public Integer getQuant() {
@@ -439,12 +450,12 @@ public class Exocet {
 		this.spread = spread;
 	}
 
-	public InvProb getProb() {
-		return prob;
+	public InvApproach getProb() {
+		return approach;
 	}
 
-	public void setProb(InvProb prob) {
-		this.prob = prob;
+	public void setApproach(InvApproach approach) {
+		this.approach = approach;
 	}
 
 	public TradeRatio getRatio() {
