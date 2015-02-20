@@ -1,5 +1,7 @@
 package com.onenow.investor;
 
+import com.onenow.finance.Intraday;
+
 public class Candle {
 	
 	private Double highPrice;
@@ -17,10 +19,80 @@ public class Candle {
 	private Integer volumeOpen;
 	private Integer volumeClose;
 	
+	private Intraday intraDay;
+	
 	public Candle() {
 		
 	}
+	
+	public Candle(Intraday intraDay) {
+		setIntraDay(intraDay);
+	}
+	
+	public boolean isPriceSpreadNormal() {
+		boolean normal=true;
+		normal = !getIntraDay().getPriceSpreadStats().isAboveNormal(getPriceSpread()) &&
+				 !getIntraDay().getPriceSpreadStats().isBelowNormal(getPriceSpread());		
+		return normal;
+	}
+	public boolean isVWAPSpreadNormal() {
+		boolean normal=true;
+		normal = !getIntraDay().getVWAPSpreadStats().isAboveNormal(getVWAPSpread()) &&
+				 !getIntraDay().getVWAPSpreadStats().isBelowNormal(getVWAPSpread());
+		return normal;
+	}
+	public boolean isSizeNormal() {
+		boolean normal=true;
+		normal = !getIntraDay().getSizeStats().isAboveNormal(getSizeTotal()*1.0) &&
+				 !getIntraDay().getSizeStats().isBelowNormal(getSizeTotal()*1.0);		
+		return normal;
+	}
+	
+	public boolean isPriceSpreadVolumeRatioNormal() {
+		boolean normal=true;
+		normal = !getIntraDay().getPriceSpreadToSizeRatioStats().isAboveNormal(getPriceSpreadToSizeRatio()) &&
+				 !getIntraDay().getPriceSpreadToSizeRatioStats().isBelowNormal(getPriceSpreadToSizeRatio());		
+		return normal;
+	}
 
+	public boolean isVWAPSpreadVolumeRatioNormal() {
+		boolean normal=true;
+		normal = getIntraDay().getVWAPSpreadToSizeRatioStats().isAboveNormal(getVWAPSpreadToSizeRatio()) &&
+				getIntraDay().getVWAPSpreadToSizeRatioStats().isBelowNormal(getVWAPSpreadToSizeRatio());
+		return normal;
+	}
+
+	public Double getPriceSpread() {
+		Double spread=0.0;
+		spread = closePrice-openPrice;
+		return spread;
+	}
+
+	public Double getVWAPSpread() {
+		Double spread=0.0;
+		spread = closeVWAP-openVWAP;
+		return spread;
+	}
+	
+	public Double getPriceSpreadToSizeRatio() {
+		Double ratio=0.0;
+		ratio= getPriceSpread() / getSizeTotal(); // result to effort
+		return ratio;
+	}
+
+	public Double getVWAPSpreadToSizeRatio() {
+		Double ratio=0.0;
+		ratio= getVWAPSpread() / getSizeTotal(); // result to effort
+		return ratio;
+	}
+
+	// PRIVATE
+
+	// TEST
+	
+	// PRINT
+	
+	// SET GET
 	public Double getHighPrice() {
 		return highPrice;
 	}
@@ -108,6 +180,15 @@ public class Candle {
 	private void setVolumeClose(Integer volumeClose) {
 		this.volumeClose = volumeClose;
 	}
+
+	private Intraday getIntraDay() {
+		return intraDay;
+	}
+
+	private void setIntraDay(Intraday intraDay) {
+		this.intraDay = intraDay;
+	}
+
 
 
 }

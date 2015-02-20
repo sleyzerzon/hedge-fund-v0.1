@@ -68,8 +68,11 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		timeStamp = getMarketPrices().setRealTime(inv, rtvolume);
 		System.out.println(getMarketPrices().getRealTime(timeStamp, inv).toString());
 		
-		if(isCounterMarket() && isUnderVWAP()) {
+		if(isCounterMarket() && isUnderVWAP() && isOutOfMarket()) { // BUY
 			getPucara().launchExocet();
+		}
+		if(isGoalAchieved() || isMarketClose() ) { // SELL
+			
 		}
 	}
 	
@@ -79,6 +82,17 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	
 	private boolean isUnderVWAP() {
 		return true;
+	}
+	private boolean isOutOfMarket() {
+		return true;
+	}
+	
+	private boolean isGoalAchieved() {
+		return false;
+	}
+	
+	private boolean isMarketClose() {
+		return false;
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {

@@ -32,7 +32,7 @@ public class Stats {
         return sum/nums.size();
     }
 	
-    double getVariance() {
+    private double getVariance() {
         double mean = getMean();
         double temp = 0;
         for(double a :data)
@@ -40,10 +40,26 @@ public class Stats {
         return temp/nums.size();
     }
 
-    double getStdDev() {
+    private double getStdDev() {
         return Math.sqrt(getVariance());
     }
+    
+    public boolean isAboveNormal(Double val) {
+    	boolean normal=true;
+    	if( val>(getMean()+getStdDev()) ) {
+    		normal=false;
+    	}
+    	return normal;
+    }
+    public boolean isBelowNormal(Double val) {
+    	boolean normal=true;
+    	if(val<(getMean()-getStdDev())) {
+    		normal=false;
+    	}
+    	return normal;
+    }
 
+    // TODO
     public double median() {
        double[] b = new double[data.length];
        System.arraycopy(data, 0, b, 0, b.length);

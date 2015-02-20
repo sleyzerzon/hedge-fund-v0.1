@@ -10,6 +10,12 @@ public class Intraday {
 	
 	List<Candle> candles;
 	
+	Stats sizeStats;
+	Stats priceSpreadStats;
+	Stats VWAPSpreadStats;
+	Stats priceSpreadToSizeRatioStats;
+	Stats VWAPSpreadToSizeRatioStats;
+	
 	
 	public Intraday() {
 		setCandles(new ArrayList<Candle>());
@@ -19,43 +25,62 @@ public class Intraday {
 	public Double getMeanSize() {
 		Double mean = 0.0;
 		List<Double> sizes = new ArrayList<Double>();
-		Stats stats = new Stats(sizes);
+		setSizeStats(new Stats(sizes));
 		for(Candle candle:getCandles()) {
 			Integer size = candle.getSizeTotal();	
 			sizes.add(size*1.0);
 		}
-		mean = stats.getMean();		
+		mean = getSizeStats().getMean();		
 		return mean;
 	}
 	
-	public Double getMeanSpread() {
+	public Double getMeanPriceSpread() {
 		Double mean = 0.0;
 		List<Double> spreads = new ArrayList<Double>();
-		Stats stats = new Stats(spreads);
+		setPriceSpreadStats(new Stats(spreads));
 		for(Candle candle:getCandles()) {
-			Double close = candle.getClosePrice();		
-			Double open = candle.getOpenPrice();
-			Double spread = close-open;
+			Double spread = candle.getPriceSpread();		
 			spreads.add(spread);
 		}
-		mean = stats.getMean();
+		mean = getPriceSpreadStats().getMean();
 		return mean;
 	}
 
 	public Double getMeanVWAPSpread() {
 		Double mean = 0.0;
 		List<Double> spreads = new ArrayList<Double>();
-		Stats stats = new Stats(spreads);
+		setVWAPSpreadStats(new Stats(spreads));
 		for(Candle candle:getCandles()) {
-			Double close = candle.getCloseVWAP();
-			Double open = candle.getOpenVWAP();		
-			Double spread = close-open;
+			Double spread = candle.getVWAPSpread();
 			spreads.add(spread);
 		}
-		mean = stats.getMean();
+		mean = getVWAPSpreadStats().getMean();
+		return mean;
+	}
+	
+	public Double getMeanPriceSpreadToSizeRatio() {
+		Double mean=0.0;
+		List<Double> ratios = new ArrayList<Double>();
+		setPriceSpreadToSizeRatioStats(new Stats(ratios));
+		for(Candle candle:getCandles()) {
+			Double ratio = candle.getPriceSpreadToSizeRatio();
+			ratios.add(ratio);
+		}	
+		mean = getPriceSpreadToSizeRatioStats().getMean();
 		return mean;
 	}
 
+	public Double getMeanVWAPSpreadToSizeRatio() {
+		Double mean=0.0;
+		List<Double> ratios = new ArrayList<Double>();
+		setVWAPSpreadToSizeRatioStats(new Stats(ratios));
+		for(Candle candle:getCandles()) {
+			Double ratio = candle.getVWAPSpreadToSizeRatio();
+			ratios.add(ratio);
+		}	
+		mean = getVWAPSpreadToSizeRatioStats().getMean();		
+		return mean;
+	}
 	
 	// TEST
 	
@@ -68,6 +93,46 @@ public class Intraday {
 
 	public void setCandles(List<Candle> candles) {
 		this.candles = candles;
+	}
+
+	public Stats getSizeStats() {
+		return sizeStats;
+	}
+
+	private void setSizeStats(Stats sizeStats) {
+		this.sizeStats = sizeStats;
+	}
+
+	public Stats getPriceSpreadStats() {
+		return priceSpreadStats;
+	}
+
+	private void setPriceSpreadStats(Stats priceStats) {
+		this.priceSpreadStats = priceStats;
+	}
+
+	public Stats getVWAPSpreadStats() {
+		return VWAPSpreadStats;
+	}
+
+	private void setVWAPSpreadStats(Stats vWAPStats) {
+		VWAPSpreadStats = vWAPStats;
+	}
+
+	public Stats getPriceSpreadToSizeRatioStats() {
+		return priceSpreadToSizeRatioStats;
+	}
+
+	private void setPriceSpreadToSizeRatioStats(Stats priceSpreadToSizeRatioStats) {
+		this.priceSpreadToSizeRatioStats = priceSpreadToSizeRatioStats;
+	}
+
+	public Stats getVWAPSpreadToSizeRatioStats() {
+		return VWAPSpreadToSizeRatioStats;
+	}
+
+	private void setVWAPSpreadToSizeRatioStats(Stats vWAPSpreadToSizeRatioStats) {
+		VWAPSpreadToSizeRatioStats = vWAPSpreadToSizeRatioStats;
 	}
 
 }
