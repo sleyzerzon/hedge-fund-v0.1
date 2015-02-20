@@ -6,8 +6,10 @@ import com.onenow.finance.InvType;
 import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.Strategy;
+import com.onenow.finance.StrategyCall;
 import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
+import com.onenow.finance.StrategyPut;
 import com.onenow.finance.StrategyPutSpread;
 import com.onenow.finance.Trade;
 import com.onenow.finance.TradeRatio;
@@ -43,6 +45,16 @@ public class Exocet {
 		setBroker(broker);
 	}
 
+	public StrategyCall getCall() {
+		StrategyCall call = new StrategyCall();
+		
+		return call;
+	}
+	public StrategyPut getPut() {
+		StrategyPut put = new StrategyPut();
+		
+		return put;
+	}
 	public StrategyCallSpread getCallSpread(	InvProb prob, TradeRatio ratio,
 												Double agression) {
 		setProb(prob);
@@ -82,7 +94,7 @@ public class Exocet {
 	// PRIVATE
 	private void getIndexPrice() {
 		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.LAST);
+		Double price = getBroker().getPrice(index, TradeType.LAST.toString());
 		setUnderPrice(price);
 	}
 
@@ -140,7 +152,7 @@ public class Exocet {
 			} 
 		} 
 		
-		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType, inv, getAgression()));
+		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType.toString(), inv, getAgression()));
 		return trade;
 	}
 	
@@ -329,10 +341,10 @@ public class Exocet {
 		Double putStrike =  callStrike + 2*separation;
 		// look at extremes
 		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
-		Double putMid = getBroker().getBestBid(TradeType.BUY, putExt, 0.50);
+		Double putMid = getBroker().getBestBid(TradeType.BUY.toString(), putExt, 0.50);
 		Double estClosingPut = putStrike-putMid;
 		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
-		Double callMid = getBroker().getBestBid(TradeType.BUY, callExt, 0.50);	
+		Double callMid = getBroker().getBestBid(TradeType.BUY.toString(), callExt, 0.50);	
 		Double estClosingCall = callStrike+callMid;
 		
 		Double estClosing = (estClosingPut+estClosingCall)/2;

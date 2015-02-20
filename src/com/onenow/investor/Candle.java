@@ -29,55 +29,88 @@ public class Candle {
 		setIntraDay(intraDay);
 	}
 	
+	// PRICE SPREAD
 	public boolean isPriceSpreadNormal() {
 		boolean normal=true;
-		normal = !getIntraDay().getPriceSpreadStats().isAboveNormal(getPriceSpread()) &&
-				 !getIntraDay().getPriceSpreadStats().isBelowNormal(getPriceSpread());		
+		normal = !isPriceSpreadAboveNormal() && !isPriceSpreaBelowdNormal();		
 		return normal;
 	}
-	public boolean isVWAPSpreadNormal() {
+	public boolean isPriceSpreadAboveNormal() {
 		boolean normal=true;
-		normal = !getIntraDay().getVWAPSpreadStats().isAboveNormal(getVWAPSpread()) &&
-				 !getIntraDay().getVWAPSpreadStats().isBelowNormal(getVWAPSpread());
+		normal = getIntraDay().getPriceSpreadStats().isAboveNormal(getPriceSpread());		
 		return normal;
 	}
-	public boolean isSizeNormal() {
+	public boolean isPriceSpreaBelowdNormal() {
 		boolean normal=true;
-		normal = !getIntraDay().getSizeStats().isAboveNormal(getSizeTotal()*1.0) &&
-				 !getIntraDay().getSizeStats().isBelowNormal(getSizeTotal()*1.0);		
+		normal = !getIntraDay().getPriceSpreadStats().isBelowNormal(getPriceSpread());		
 		return normal;
 	}
-	
-	public boolean isPriceSpreadVolumeRatioNormal() {
-		boolean normal=true;
-		normal = !getIntraDay().getPriceSpreadToSizeRatioStats().isAboveNormal(getPriceSpreadToSizeRatio()) &&
-				 !getIntraDay().getPriceSpreadToSizeRatioStats().isBelowNormal(getPriceSpreadToSizeRatio());		
-		return normal;
-	}
-
-	public boolean isVWAPSpreadVolumeRatioNormal() {
-		boolean normal=true;
-		normal = getIntraDay().getVWAPSpreadToSizeRatioStats().isAboveNormal(getVWAPSpreadToSizeRatio()) &&
-				getIntraDay().getVWAPSpreadToSizeRatioStats().isBelowNormal(getVWAPSpreadToSizeRatio());
-		return normal;
-	}
-
 	public Double getPriceSpread() {
 		Double spread=0.0;
 		spread = closePrice-openPrice;
 		return spread;
 	}
 
+	// VWAP SPREAD
+	public boolean isVWAPSpreadNormal() {
+		boolean normal=true;
+		normal = !isVWAPSpreadAboveNormal() && !isVWAPSpreadBelowNormal();
+		return normal;
+	}
+	public boolean isVWAPSpreadAboveNormal() {
+		boolean normal=true;
+		normal = getIntraDay().getVWAPSpreadStats().isAboveNormal(getVWAPSpread());
+		return normal;
+	}
+	public boolean isVWAPSpreadBelowNormal() {
+		boolean normal=true;
+		normal = getIntraDay().getVWAPSpreadStats().isBelowNormal(getVWAPSpread());
+		return normal;
+	}
+	
 	public Double getVWAPSpread() {
 		Double spread=0.0;
 		spread = closeVWAP-openVWAP;
 		return spread;
 	}
 	
+	// SIZE
+	public boolean isSizeNormal() {
+		boolean normal=true;
+		normal = !isSizeAboveNormal() && !isSizeBelowNormal();		
+		return normal;
+	}
+	public boolean isSizeAboveNormal() {
+		boolean normal=true;
+		normal = getIntraDay().getSizeStats().isAboveNormal(getSizeTotal()*1.0);		
+		return normal;
+	}
+	public boolean isSizeBelowNormal() {
+		boolean normal=true;
+		normal = getIntraDay().getSizeStats().isBelowNormal(getSizeTotal()*1.0);		
+		return normal;
+	}
+	
+	// PRICE / VOLUME RATIO
+	public boolean isPriceSpreadVolumeRatioNormal() {
+		boolean normal=true;
+		normal = !getIntraDay().getPriceSpreadToSizeRatioStats().isAboveNormal(getPriceSpreadToSizeRatio()) &&
+				 !getIntraDay().getPriceSpreadToSizeRatioStats().isBelowNormal(getPriceSpreadToSizeRatio());		
+		return normal;
+	}
+	
 	public Double getPriceSpreadToSizeRatio() {
 		Double ratio=0.0;
 		ratio= getPriceSpread() / getSizeTotal(); // result to effort
 		return ratio;
+	}
+
+	// VWAP / VOLUME RATIO
+	public boolean isVWAPSpreadVolumeRatioNormal() {
+		boolean normal=true;
+		normal = getIntraDay().getVWAPSpreadToSizeRatioStats().isAboveNormal(getVWAPSpreadToSizeRatio()) &&
+				getIntraDay().getVWAPSpreadToSizeRatioStats().isBelowNormal(getVWAPSpreadToSizeRatio());
+		return normal;
 	}
 
 	public Double getVWAPSpreadToSizeRatio() {

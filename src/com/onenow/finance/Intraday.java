@@ -20,8 +20,57 @@ public class Intraday {
 	public Intraday() {
 		setCandles(new ArrayList<Candle>());
 	}
+	
+	// PUBLIC
+	
+	// TODO take only complete candles; ignore opening / close high volume?
 
-	// PRIVATE
+	public boolean isLastCandleNormal() { 
+		boolean normal=true;
+		Integer last = getCandles().size()-1;
+		normal = isCandleNormal(last);
+		return normal;
+	}
+	public boolean isCandleNormal(Integer which) { // VWAP-based
+		boolean normal = false;
+		Candle candle = getCandles().get(which);
+		String s="";
+		if(candle.isVWAPSpreadAboveNormal() && candle.isSizeAboveNormal()) {
+			return true;
+		} 
+		if(candle.isVWAPSpreadBelowNormal() && candle.isSizeBelowNormal()) {
+			return true;
+		} 
+		if(candle.isVWAPSpreadNormal() && candle.isSizeNormal()) {
+			return true;
+		} 
+		System.out.println("Price-Volume anomaly(candle): VWAP");
+		return normal;
+	}
+	
+	public boolean isLastPriceSpreadNormal() { 
+		boolean normal=true;
+		normal = getLastCandle().isPriceSpreadNormal();
+		return normal;
+	}
+	public boolean isLastVWAPSpreadNormal() {
+		boolean normal=true;
+		Candle last = getCandles().get(getCandles().size()-1);
+		normal = getLastCandle().isVWAPSpreadNormal();		
+		return normal;		
+	}
+	public boolean isLastSizeNormal() {
+		boolean normal=true;
+		Candle last = getCandles().get(getCandles().size()-1);
+		normal = getLastCandle().isSizeNormal();				
+		return normal;
+	}
+	private Candle getLastCandle() {
+		Candle last;
+		last=getCandles().get(getCandles().size()-1);
+		return last;
+	}
+
 	public Double getMeanSize() {
 		Double mean = 0.0;
 		List<Double> sizes = new ArrayList<Double>();
@@ -81,6 +130,9 @@ public class Intraday {
 		mean = getVWAPSpreadToSizeRatioStats().getMean();		
 		return mean;
 	}
+	
+	// PRIVATE
+
 	
 	// TEST
 	

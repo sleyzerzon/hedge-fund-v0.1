@@ -129,7 +129,7 @@ public class BrokerActivityImpl implements BrokerActivity {
 	}
 
 	@Override
-	public Double getBestBid (TradeType type, Investment inv, Double aggression) {
+	public Double getBestBid (String type, Investment inv, Double aggression) {
 		
 		Double price = 0.0;
 		
@@ -155,7 +155,7 @@ public class BrokerActivityImpl implements BrokerActivity {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
+	public Double getPrice(Investment inv, String type) {
 		Double price = 0.0;
 		
 		price = getBroker().getPrice(inv, type);
