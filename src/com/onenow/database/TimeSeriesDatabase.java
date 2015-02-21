@@ -1,4 +1,4 @@
-package com.onenow.analyst;
+package com.onenow.database;
 
 import java.util.List;
 import java.util.Map;

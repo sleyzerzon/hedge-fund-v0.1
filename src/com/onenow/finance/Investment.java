@@ -1,5 +1,6 @@
 package com.onenow.finance;
 
+import com.onenow.analyst.Intraday;
 import com.onenow.investor.Contract;
 
 public class Investment {

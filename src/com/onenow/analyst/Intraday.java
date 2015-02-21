@@ -1,9 +1,8 @@
-package com.onenow.finance;
+package com.onenow.analyst;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.onenow.investor.Candle;
 import com.onenow.investor.Stats;
 
 public class Intraday {

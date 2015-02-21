@@ -1,6 +1,5 @@
-package com.onenow.investor;
+package com.onenow.analyst;
 
-import com.onenow.finance.Intraday;
 
 public class Candle {
 	
