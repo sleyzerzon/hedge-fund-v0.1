@@ -6,6 +6,8 @@ import java.util.List;
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvApproach;
+import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.StrategyCallBuy;
 import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
@@ -29,16 +31,39 @@ public class Pucara {
 		
 	}
 	
-	public Pucara(String index, String expDate) {
+	public Pucara(String index, String expDate) throws InterruptedException {
 		setIB(new BrokerInteractive(this));
 		setBroker(new BrokerActivityImpl(IB));
 		setIndexName(index);
 		setExpDate(expDate);
 		getIB().initMarket(index, expDate, 2100); // TODO: seed
+		getChannelPrices(getContractFactory());
 	}
 
 	
-//	getChannelPrices(getContractFactory());
+	
+	public static void launch() throws InterruptedException {
+		
+		while(true) {
+			System.out.println(getAnomalies());
+			
+			if(isBullMarket()) {
+				if(isUnderVWAP(6) && isMomentumReversedUp()) { // BUY call
+					launchBottomExocet();
+				}
+				if(isOverVWAP(12) && isMomentumReversedDown()) { // BUY put
+					// launchTopExocet();
+				}
+			}
+			if(isBearMarket()){
+				
+			}
+			if(isGoalAchieved() || isMarketClose() ) { // SELL
+				
+			}
+			Thread.sleep(50000);
+		}
+	}
 
 	public static void launchBottomExocet() {
 		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
@@ -49,7 +74,59 @@ public class Pucara {
 	public static void launchTopExocet() {
 
 	}
+
 	
+	// PRIVATE
+	private static String getAnomalies() {
+		return "";
+	}
+	
+	private boolean isCounterMarket() { // price under VWAP in bull market, over in bear market
+		return true;
+	}
+	
+	private static boolean isUnderVWAP(Integer buffer) {
+		return true;
+	}
+	private static boolean isOverVWAP(Integer buffer) { 
+		return true;
+	}
+	private static boolean isMomentumReversedUp() { // commensurate: by deviation
+		return isPriceUp() && isVolumeUp();
+	}
+	
+	private static boolean isPriceUp() {
+		return true;
+	}
+	private static boolean isVolumeUp() {
+		return true;
+	}
+	
+	private static boolean isMomentumReversedDown() { // commensurate: by deviation 
+		return isPriceDown() && isVolumeDown();
+	}
+	private static boolean isPriceDown() {
+		return true;
+	}
+	private static boolean isVolumeDown() {
+		return true;
+	}
+	
+	private static boolean isGoalAchieved() {
+		return false;
+	}
+	
+	private static boolean isMarketClose() {
+		return false;
+	}
+	private static boolean isBullMarket() {
+		boolean bull=true;
+		return bull;
+	}
+	private static boolean isBearMarket() {
+		return !isBullMarket();
+	}
+
 	
 //	public synchronized void run() {
 //	    while(!priceUpdate) {
@@ -68,12 +145,13 @@ public class Pucara {
 	
 	private void getChannelPrices(ContractFactory contractFactory) throws InterruptedException {
 		
-//		Contract index = contractFactory.indexToQuote("SPX");
-//		getContractFactory().addChannel(getChannels(), index);
+		InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
+		Contract index = contractFactory.getIndexToQuote(indexInv);
+		getContractFactory().addChannel(getChannels(), index);
 //		Contract index = contractFactory.getIndexToQuote("RUT");
 //		getContractFactory().addChannel(getChannels(), index);
-//		Contract option = contractFactory.optionToQuote("SPX");
-//		getContractFactory().addChannel(getChannels(), option);
+		Contract option = contractFactory.getOptionToQuote(indexInv);
+		getContractFactory().addChannel(getChannels(), option);
 
 		for(int i=0; i<getChannels().size(); i++) {			
 			Channel channel = getChannels().get(i);
@@ -83,12 +161,12 @@ public class Pucara {
 				String end = endList.get(j);
 											
 //				QuoteBar quoteHistory = new QuoteBar(channel);
-////				getController().reqHistoricalData(	channel.getContract(), 
+//				getController().reqHistoricalData(	channel.getContract(), 
 //													end, 1, DurationUnit.DAY, BarSize._1_hour, 
 //													WhatToShow.TRADES, false,
 //													quoteHistory);
-//			    Thread.sleep(12000);
-//				System.out.println("...");
+			    Thread.sleep(12000);
+				System.out.println("...");
 			}
 			System.out.println(channel.toString());
 		}
@@ -117,6 +195,12 @@ public class Pucara {
 		return list;
 	}
 
+	
+	// TEST
+	
+	// PRINT
+	
+	// SET GET
 	private static BrokerActivityImpl getBroker() {
 		return broker;
 	}

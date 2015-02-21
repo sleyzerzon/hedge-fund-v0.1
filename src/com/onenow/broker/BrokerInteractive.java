@@ -48,74 +48,35 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	private final ArrayList<String> accountList = new ArrayList<String>();
 	
 	public BrokerInteractive() {
-		
-	}
-	public BrokerInteractive(Pucara pucara) {
-		setPucara(pucara);
-		
 		connectToServer();
 		
 		setUnderList(new ArrayList<Underlying>());
 		setMarketPortfolio(new Portfolio());
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
-		setTrades(new ArrayList<Trade>());
+		setTrades(new ArrayList<Trade>());		
 	}
-
+	
+//	public BrokerInteractive(Pucara pucara) {
+//		setPucara(pucara);
+//		
+//		connectToServer();
+//		
+//		setUnderList(new ArrayList<Underlying>());
+//		setMarketPortfolio(new Portfolio());
+//		setMyPortfolio(new Portfolio());
+//		setMarketPrices(new MarketPrice());
+//		setTrades(new ArrayList<Trade>());
+//	}
 
 	public void setRealTime(Investment inv, String rtvolume) {
 		Long timeStamp;
 		timeStamp = getMarketPrices().setRealTime(inv, rtvolume);
 		System.out.println(getMarketPrices().getRealTime(timeStamp, inv).toString());
-		
-		if(isBullMarket()) {
-			if(isUnderVWAP(6) && isMomentumReversedUp()) { // BUY call
-				getPucara().launchBottomExocet();
-			}
-			if(isOverVWAP(12) && isMomentumReversedDown()) { // BUY put
-				// getPucara().launchTopExocet();
-			}
-		}
-		if(isBearMarket()){
-			
-		}
-		if(isGoalAchieved() || isMarketClose() ) { // SELL
-			
-		}
-		
+//		getPucara().launch();
+				
 	}
 	
-	private boolean isCounterMarket() { // price under VWAP in bull market, over in bear market
-		return true;
-	}
-	
-	private boolean isUnderVWAP(Integer buffer) {
-		return true;
-	}
-	private boolean isOverVWAP(Integer buffer) { 
-		return true;
-	}
-	private boolean isMomentumReversedUp() { 
-		return true;
-	}
-	private boolean isMomentumReversedDown() { 
-		return true;
-	}
-	
-	private boolean isGoalAchieved() {
-		return false;
-	}
-	
-	private boolean isMarketClose() {
-		return false;
-	}
-	private boolean isBullMarket() {
-		boolean bull=true;
-		return bull;
-	}
-	private boolean isBearMarket() {
-		return !isBullMarket();
-	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
 		getMarketPrices().setDepth(inv, depth);

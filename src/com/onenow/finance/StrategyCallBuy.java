@@ -24,10 +24,11 @@ public class StrategyCallBuy extends StrategyOptions {
 	// PRINT
 	public String toString() {
 		String s = "";
-//		s = s + super.toString();
+		s = s + super.toString();
 		return s;
 	}
 
+	// SET GET
 	private Trade getCallBuy() {
 		return callBuy;
 	}
@@ -37,6 +38,5 @@ public class StrategyCallBuy extends StrategyOptions {
 	}
 	
 
-	// SET GET
 
 }

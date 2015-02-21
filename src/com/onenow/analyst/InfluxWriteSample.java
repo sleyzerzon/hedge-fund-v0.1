@@ -8,9 +8,9 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Serie;
 
-public class TimeSeriesDatabase {
+public class InfluxWriteSample {
 
-	public TimeSeriesDatabase() {
+	public InfluxWriteSample() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -49,8 +49,5 @@ public class TimeSeriesDatabase {
 				}
 				System.out.println();
 			}
-		}
-
-		System.out.println(sers.size() + " entries");
-	}
+		}	}
 }
