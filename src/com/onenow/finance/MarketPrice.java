@@ -1,11 +1,16 @@
 package com.onenow.finance;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.influxdb.InfluxDB;
+import org.influxdb.InfluxDBFactory;
+import org.influxdb.dto.Serie;
 
 import com.onenow.investor.DataType;
 import com.onenow.investor.QuoteDepth.DeepRow;
@@ -18,6 +23,10 @@ public class MarketPrice {
 	HashMap<String, Boolean>				flag;	// flag
 
 	HashMap<String, List<Long>>				times;
+	
+	InfluxDB DB;
+	String priceDB="PRICE";
+	String sizeDB="SIZE";
 
 	public MarketPrice() {
 		setPrices(new HashMap<String, Double>());
@@ -81,10 +90,127 @@ public class MarketPrice {
 			type = DataType.TRADEFLAG.toString();
 	//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
 			
-			System.out.println(getRealTime(lastTradeTime, inv).toString()); // see what written
+//			System.out.println(getRealTime(lastTradeTime, inv).toString()); // see what written
 		}
 	}
 	
+	private void dbConnect() { 
+		// http://tsdb.enremmeta.com:8083/ 
+		// user: root
+		// pass: root
+		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+	}
+	
+	private void dbCreate() {
+		getDB().createDatabase(getPriceDB());
+		getDB().createDatabase(getSizeDB());
+	}
+	
+	private void writePrice(Investment inv, String dataType, Long time, Double price) {
+		String name = getLookupKey(inv, dataType);
+		Serie serie = new Serie.Builder(name)
+		.columns("Time", "$")
+		.values(time, price)
+		.build();
+		getDB().write(getPriceDB(), TimeUnit.MILLISECONDS, serie);
+	}
+
+	private void writeSize(Investment inv, String dataType, Long time, Integer size) {
+		String name = getLookupKey(inv, dataType);
+		Serie serie = new Serie.Builder(name)
+		.columns("Time", "Size")
+		.values(time, size)
+		.build();
+		getDB().write(getSizeDB(), TimeUnit.MILLISECONDS, serie);
+	}
+
+	private List<Serie> dbQuery(String dbName, String serieName, String window) {
+		List<Serie> series = new ArrayList<Serie>();
+		
+		String query = 	"select * from " +
+						serieName + 
+						"where time > " +
+						"now() - " + window; 
+		
+		series = getDB().query(	dbName, query,
+								TimeUnit.MILLISECONDS);
+		return series;
+	}
+	
+	private String queryToString(List<Serie> series) {
+		String s = "";
+		
+		for (Serie ser : series) {
+			for (String col : ser.getColumns()) {
+				System.out.print(col + "\t");
+			}
+			System.out.println();
+			for (Map<String, Object> row : ser.getRows()) {
+				for (String col : ser.getColumns()) {
+					System.out.print(row.get(col) + "\t");
+				}
+				System.out.println();
+			}
+		}
+		System.out.println(series.size() + " entries");
+		return s;
+	}
+
+	private String getTimedLookupKey(Long time, Investment inv, String dataType) {
+		String s="";
+		s = time.toString() + "-";
+		s = s + getLookupKey(inv, dataType);
+		return s;
+	}
+	private String getLookupKey(Investment inv, String dataType) {
+		Underlying under = inv.getUnder();
+		String lookup = under.getTicker() + "-" + 
+		                inv.getInvType() + "-" +
+		                dataType;		
+		if (inv instanceof InvestmentOption) {
+			Double strike = ((InvestmentOption) inv).getStrikePrice();
+			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
+			lookup = lookup + "-" + strike + "-" + exp; 
+		}
+		return (lookup);
+	}
+
+	// influxDB.createDatabase("aTimeSeries");
+//	for (int i = -10; i < 10; i++) {
+//		Serie serie1 = new Serie.Builder("serie2Name")
+//				.columns("column1", "column2")
+//				.values(System.currentTimeMillis() + 3600000 * i, 1)
+//				.values(System.currentTimeMillis() + 3600000 * i, 2)
+//				.build();
+//		Serie serie2 = new Serie.Builder("serie2Name")
+//				.columns("column1", "column2")
+//				.values(System.currentTimeMillis() + 3600000 * i, 1)
+//				.values(System.currentTimeMillis() + 3600000 * i, 2)
+//				.build();
+//		influxDB.write("aTimeSeries", TimeUnit.MILLISECONDS, serie1, serie2);
+//	}
+//	List<Serie> sers = influxDB
+//			.query("aTimeSeries",
+//					"select * from serie2Name where time > now() - 3h",
+//					TimeUnit.MILLISECONDS);
+//	
+//	
+//	for (Serie ser : sers) {
+//		for (String col : ser.getColumns()) {
+//			System.out.print(col + "\t");
+//		}
+//		System.out.println();
+//		for (Map<String, Object> row : ser.getRows()) {
+//			for (String col : ser.getColumns()) {
+//				System.out.print(row.get(col) + "\t");
+//			}
+//			System.out.println();
+//		}
+//	}
+//
+//	System.out.println(sers.size() + " entries");
+//}
+
 	
 	public String getRealTime(Long tradeTime, Investment inv) {
 		
@@ -184,7 +310,7 @@ public class MarketPrice {
 		
 	public void setSize(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookupKey(inv, dataType), size);
-//		System.out.println(dataType.toString() + " " +	getSize(inv, dataType) + " " + inv.toString());
+		System.out.println(dataType.toString() + " " +	getSize(inv, dataType) + " " + inv.toString());
 	}
 	
 	public Integer getTimedSize(Long time, Investment inv, String dataType) {
@@ -211,7 +337,7 @@ public class MarketPrice {
 	
 	public void setPrice(Investment inv, Double price, String dataType) {
 		getPrices().put(getLookupKey(inv, dataType), price);
-//		System.out.println(dataType.toString() + " $" +  getPrice(inv, dataType)  + " " + inv.toString() + "\n");
+		System.out.println(dataType.toString() + " $" +  getPrice(inv, dataType)  + " " + inv.toString() + "\n");
 	}
 	
 	public Double getTimedPrice(Long time, Investment inv, String dataType) {
@@ -233,25 +359,6 @@ public class MarketPrice {
 			e.printStackTrace();
 		} 
 		return price;
-	}
-
-	private String getTimedLookupKey(Long time, Investment inv, String dataType) {
-		String s="";
-		s = time.toString() + "-";
-		s = s + getLookupKey(inv, dataType);
-		return s;
-	}
-	private String getLookupKey(Investment inv, String dataType) {
-		Underlying under = inv.getUnder();
-		String lookup = under.getTicker() + "-" + 
-		                inv.getInvType() + "-" +
-		                dataType;		
-		if (inv instanceof InvestmentOption) {
-			Double strike = ((InvestmentOption) inv).getStrikePrice();
-			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-			lookup = lookup + "-" + strike + "-" + exp; 
-		}
-		return (lookup);
 	}
 
 	// PRINT
@@ -304,6 +411,29 @@ public class MarketPrice {
 		this.times = times;
 	}
 
+	private InfluxDB getDB() {
+		return DB;
+	}
 
+	private void setDB(InfluxDB dB) {
+		DB = dB;
+	}
 
+	private String getPriceDB() {
+		return priceDB;
+	}
+
+	private void setPriceDB(String priceDB) {
+		this.priceDB = priceDB;
+	}
+
+	private String getSizeDB() {
+		return sizeDB;
+	}
+
+	private void setSizeDB(String sizeDB) {
+		this.sizeDB = sizeDB;
+	}
+
+	
 }
