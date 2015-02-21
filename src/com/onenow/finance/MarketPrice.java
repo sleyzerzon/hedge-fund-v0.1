@@ -81,7 +81,7 @@ public class MarketPrice {
 			type = DataType.TRADEFLAG.toString();
 	//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
 			
-			System.out.println(getRealTime(lastTradeTime, inv).toString());
+			System.out.println(getRealTime(lastTradeTime, inv).toString()); // see what written
 		}
 	}
 	
@@ -184,7 +184,7 @@ public class MarketPrice {
 		
 	public void setSize(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookupKey(inv, dataType), size);
-		System.out.println("Size size " +  dataType.toString() + " " +	getSize(inv, dataType) + " " + inv.toString());
+//		System.out.println(dataType.toString() + " " +	getSize(inv, dataType) + " " + inv.toString());
 	}
 	
 	public Integer getTimedSize(Long time, Investment inv, String dataType) {
@@ -211,7 +211,7 @@ public class MarketPrice {
 	
 	public void setPrice(Investment inv, Double price, String dataType) {
 		getPrices().put(getLookupKey(inv, dataType), price);
-		System.out.println(dataType.toString() + " $" +  getPrice(inv, dataType)  + " " + inv.toString() + "\n");
+//		System.out.println(dataType.toString() + " $" +  getPrice(inv, dataType)  + " " + inv.toString() + "\n");
 	}
 	
 	public Double getTimedPrice(Long time, Investment inv, String dataType) {

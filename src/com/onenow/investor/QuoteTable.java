@@ -342,14 +342,6 @@ public class QuoteTable extends AbstractTableModel {
 		this.investment = investment;
 	}
 
-//	private BrokerInteractive getBroker() {
-//		return broker;
-//	}
-//
-//	private void setBroker(BrokerInteractive broker) {
-//		this.broker = broker;
-//	}
-
 	private MarketPrice getMarketPrice() {
 		return marketPrice;
 	}

@@ -54,23 +54,14 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		setUnderList(new ArrayList<Underlying>());
 		setMarketPortfolio(new Portfolio());
 		InitMarket init = new InitMarket(getMarketPortfolio());
+		
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());		
 		
+		getQuotes();
+//		getMarketDepth(); No market depth for index/options
 	}
-	
-//	public BrokerInteractive(Pucara pucara) {
-//		setPucara(pucara);
-//		
-//		connectToServer();
-//		
-//		setUnderList(new ArrayList<Underlying>());
-//		setMarketPortfolio(new Portfolio());
-//		setMyPortfolio(new Portfolio());
-//		setMarketPrices(new MarketPrice());
-//		setTrades(new ArrayList<Trade>());
-//	}
 	
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
@@ -170,45 +161,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		return price;
 		
 	}
-		
-		
-//		// TODO: type
-//		
-//		Double price=0.0;
-//		
-//		String ticker = inv.getUnder().getTicker();
-//
-//		QuoteTable quoteTable = new QuoteTable(getController());
-//
-//		if(inv instanceof InvestmentIndex) {
-//			Contract index = getContractFactory().indexToQuote(ticker);			
-//			quoteTable.addContract(index);		
-//			try {
-//				Thread.sleep(20000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			};
-//			System.out.println("XXXXXXXXXXXXXXXXXXX INDEX " + price);
-//		}
-//
-//		if(inv instanceof InvestmentOption) {
-//			Contract option = getContractFactory().optionToQuote(ticker);			
-//			quoteTable.addContract(option);
-//			try {
-//				Thread.sleep(20000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			};
-//			System.out.println("XXXXXXXXXXXXXXXXXXX OPTION " + price);
-//		}
-//		
-//
-//		price = quoteTable.getLastClose();
-//
-//		
-//		return price;
-//	}
-	
+			
 	///// CONNECTION HANDLER
 	@Override
 	public void connected() {
