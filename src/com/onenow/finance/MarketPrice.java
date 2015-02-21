@@ -59,7 +59,7 @@ public class MarketPrice {
 //			System.out.println(split);
 			i++;
 		}
-		Long time = Long.parseLong(lastTradeTime)*1000; 	// TODO: converted to milliseconds
+		Long time = Long.parseLong(lastTradeTime); 	// TODO: *1000 ?
 		fillRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
 					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
 		return time;
@@ -80,6 +80,8 @@ public class MarketPrice {
 			getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), VWAP);
 			type = DataType.TRADEFLAG.toString();
 	//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
+			
+			System.out.println(getRealTime(lastTradeTime, inv).toString());
 		}
 	}
 	
@@ -121,7 +123,7 @@ public class MarketPrice {
 	
 	public void setTime(Investment inv, Long time) {
 		getTime(inv).add(time);
-		
+		System.out.println("Last time " +  	getTime(inv).toString() + " " + inv.toString());
 	}
 	public List<Long> getTime(Investment inv) {
 		String dataType = DataType.LASTTIME.toString();
@@ -162,7 +164,8 @@ public class MarketPrice {
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
-		getDepth().put(getLookupKey(inv, DataType.MARKETDEPTH.toString()), depth);		
+		getDepth().put(getLookupKey(inv, DataType.MARKETDEPTH.toString()), depth);
+		System.out.println("Depth " +  	getDepth(inv).toString() + " " + inv.toString());
 	}
 	
 	public ArrayList<DeepRow> getDepth(Investment inv) {
@@ -181,7 +184,9 @@ public class MarketPrice {
 		
 	public void setSize(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookupKey(inv, dataType), size);
+		System.out.println("Size size " +  dataType.toString() + " " +	getSize(inv, dataType) + " " + inv.toString());
 	}
+	
 	public Integer getTimedSize(Long time, Investment inv, String dataType) {
 		String key = getTimedLookupKey(time, inv, dataType);
 		Integer size=0;
@@ -206,6 +211,7 @@ public class MarketPrice {
 	
 	public void setPrice(Investment inv, Double price, String dataType) {
 		getPrices().put(getLookupKey(inv, dataType), price);
+		System.out.println(dataType.toString() + "$ " +  getPrice(inv, dataType)  + " " + inv.toString());
 	}
 	
 	public Double getTimedPrice(Long time, Investment inv, String dataType) {

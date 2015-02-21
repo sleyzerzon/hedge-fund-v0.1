@@ -25,7 +25,6 @@ import com.onenow.investor.QuoteTable;
 public class QuoteTable extends AbstractTableModel {
 
 	private InvestorController controller;
-//	private BrokerInteractive broker;
 	private MarketPrice marketPrice;
 	
 	private ContractFactory contractFactory = new ContractFactory();
@@ -35,12 +34,9 @@ public class QuoteTable extends AbstractTableModel {
 		
 	}
 
-//	public QuoteTable(BrokerInteractive broker, InvestorController cont, Investment inv) {
-
 	public QuoteTable(InvestorController cont, MarketPrice mPrice, Investment inv) {
 		
 		setController(cont);
-//		setBroker(broker);
 		setMarketPrice(mPrice);
 		
 		setInvestment(inv);
