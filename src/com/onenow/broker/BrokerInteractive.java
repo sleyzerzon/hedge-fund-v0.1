@@ -95,7 +95,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) { 
-			QuoteTable quote = new QuoteTable(this, getController(), inv);
+			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
 		}
 	}
 

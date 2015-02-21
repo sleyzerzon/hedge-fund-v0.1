@@ -25,7 +25,9 @@ import com.onenow.investor.QuoteTable;
 public class QuoteTable extends AbstractTableModel {
 
 	private InvestorController controller;
-	private BrokerInteractive broker;
+//	private BrokerInteractive broker;
+	private MarketPrice marketPrice;
+	
 	private ContractFactory contractFactory = new ContractFactory();
 	private Investment investment;
 
@@ -33,10 +35,13 @@ public class QuoteTable extends AbstractTableModel {
 		
 	}
 
-	public QuoteTable(BrokerInteractive broker, InvestorController cont, Investment inv) {
+//	public QuoteTable(BrokerInteractive broker, InvestorController cont, Investment inv) {
 
+	public QuoteTable(InvestorController cont, MarketPrice mPrice, Investment inv) {
+		
 		setController(cont);
-		setBroker(broker);
+//		setBroker(broker);
+		setMarketPrice(mPrice);
 		
 		setInvestment(inv);
 		Contract contract = getContractFactory().getContract(getInvestment());
@@ -229,22 +234,22 @@ public class QuoteTable extends AbstractTableModel {
 				case BID:
 					m_bid = price;
 //					System.out.println("Bid " + m_bid);
-					getBroker().setBidPrice(getInvestment(), m_bid);
+					getMarketPrice().setPrice(getInvestment(), m_bid, TradeType.SELL.toString());
 					break;
 				case ASK:
 					m_ask = price;
 //					System.out.println("Ask " + m_ask);
-					getBroker().setAskPrice(getInvestment(), m_ask);
+					getMarketPrice().setPrice(getInvestment(), m_ask, TradeType.BUY.toString());
 					break;
 				case LAST:
 					m_last = price;
 //					System.out.println("Last " + m_last);
-					getBroker().setClosePrice(getInvestment(), m_last);
+					getMarketPrice().setPrice(getInvestment(), m_last, TradeType.LAST.toString());
 					break;
 				case CLOSE:
 					m_close = price;
 //					System.out.println("Close " + m_close);
-					getBroker().setClosePrice(getInvestment(), m_close);
+					getMarketPrice().setPrice(getInvestment(), m_close, TradeType.CLOSE.toString());
 					break;
 				default: break;	
 			}
@@ -255,17 +260,17 @@ public class QuoteTable extends AbstractTableModel {
 			switch( tickType) {
 				case BID_SIZE:
 					m_bidSize = size;
-					getBroker().setBidSize(getInvestment(), m_bidSize);
+					getMarketPrice().setSize(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
 //					System.out.println("Bid size " + m_bidSize);
 					break;
 				case ASK_SIZE:
 					m_askSize = size;
-					getBroker().setAskSize(getInvestment(), m_askSize);
+					getMarketPrice().setSize(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
 //					System.out.println("Ask size " + m_askSize);
 					break;
 				case VOLUME:
 					m_volume = size;
-					getBroker().setVolume(getInvestment(), m_volume);
+					getMarketPrice().setSize(getInvestment(), m_volume, DataType.VOLUME.toString());
 //					System.out.println("Volume size " + m_volume);
 					break;
                 default: break; 
@@ -279,7 +284,7 @@ public class QuoteTable extends AbstractTableModel {
 			switch( tickType) {
 				case LAST_TIMESTAMP:
 					m_lastTime = Long.parseLong( value) * 1000;
-					getBroker().setLastTime(getInvestment(), m_lastTime);
+//					getMarketPrice().setLastTime(getInvestment(), m_lastTime);
 //					System.out.println("Last time " + m_lastTime);
 					break;
 				case AVG_VOLUME:
@@ -296,7 +301,7 @@ public class QuoteTable extends AbstractTableModel {
 					break;
 				case RT_VOLUME:
 //					System.out.println("RT_VOLUME " + value); 
-					getBroker().setRealTime(getInvestment(), value);
+					getMarketPrice().setRealTime(getInvestment(), value);
 					// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
 					break;
 				case VOLUME_RATE:
@@ -341,12 +346,20 @@ public class QuoteTable extends AbstractTableModel {
 		this.investment = investment;
 	}
 
-	private BrokerInteractive getBroker() {
-		return broker;
+//	private BrokerInteractive getBroker() {
+//		return broker;
+//	}
+//
+//	private void setBroker(BrokerInteractive broker) {
+//		this.broker = broker;
+//	}
+
+	private MarketPrice getMarketPrice() {
+		return marketPrice;
 	}
 
-	private void setBroker(BrokerInteractive broker) {
-		this.broker = broker;
+	private void setMarketPrice(MarketPrice marketPrice) {
+		this.marketPrice = marketPrice;
 	}
 
 }
