@@ -32,11 +32,12 @@ public class Pucara {
 	}
 	
 	public Pucara(String index, String expDate) throws InterruptedException {
-		setIB(new BrokerInteractive(this));
-		setBroker(new BrokerActivityImpl(IB));
+//		setIB(new BrokerInteractive(this));
+//		setBroker(new BrokerActivityImpl(IB));
 		setIndexName(index);
 		setExpDate(expDate);
-		getIB().initMarket(index, expDate, 2100); // TODO: seed
+		
+//		getIB().initMarket(index, expDate, 2100); // TODO: seed
 		getChannelPrices(getContractFactory());
 	}
 

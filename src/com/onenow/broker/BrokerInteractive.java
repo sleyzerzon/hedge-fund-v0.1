@@ -69,6 +69,36 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 //		setTrades(new ArrayList<Trade>());
 //	}
 
+	public void initMarket(String name, String expDate, Integer seed) { // create the investments
+		Underlying under = new Underlying(name);
+		
+		InvestmentIndex index = new InvestmentIndex(under);
+		Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
+		Transaction indexTrans = new Transaction(indexTrade);
+		getMarketPortfolio().enterTransaction(indexTrans);
+		
+		for (Double strike=(double) (seed-200); strike<(seed+200); strike=strike+5) {
+			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
+			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
+			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
+			Trade putTrade = new Trade(call, TradeType.BUY, 1, 0.0);
+			Transaction optTrans = new Transaction(callTrade, putTrade);
+			getMarketPortfolio().enterTransaction(optTrans);
+		}
+
+		System.out.println(getMarketPortfolio().toString());
+		
+		getQuotes();
+//		getMarketDepth(); No market depth for index/options
+	}
+	
+	private void getQuotes() {
+		List<Investment> invs = getMarketPortfolio().getInvestments();
+		for(Investment inv:invs) { 
+			QuoteTable quote = new QuoteTable(this, getController(), inv);
+		}
+	}
+
 	public void setRealTime(Investment inv, String rtvolume) {
 		Long timeStamp;
 		timeStamp = getMarketPrices().setRealTime(inv, rtvolume);
@@ -144,35 +174,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	}
 
-	public void initMarket(String name, String expDate, Integer seed) { // create the investments
-		Underlying under = new Underlying(name);
-		
-		InvestmentIndex index = new InvestmentIndex(under);
-		Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
-		Transaction indexTrans = new Transaction(indexTrade);
-		getMarketPortfolio().enterTransaction(indexTrans);
-		
-		for (Double strike=(double) (seed-200); strike<(seed+200); strike=strike+5) {
-			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
-			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
-			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
-			Trade putTrade = new Trade(call, TradeType.BUY, 1, 0.0);
-			Transaction optTrans = new Transaction(callTrade, putTrade);
-			getMarketPortfolio().enterTransaction(optTrans);
-		}
-
-		System.out.println(getMarketPortfolio().toString());
-		
-		getQuotes();
-//		getMarketDepth(); No market depth for index/options
-	}
-	
-	private void getQuotes() {
-		List<Investment> invs = getMarketPortfolio().getInvestments();
-		for(Investment inv:invs) { 
-			QuoteTable quote = new QuoteTable(this, getController(), inv);
-		}
-	}
 	
 	private void getMarketDepth() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();

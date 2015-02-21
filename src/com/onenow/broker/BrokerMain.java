@@ -8,7 +8,7 @@ public class BrokerMain {
 	public static void main(String[] args) {
 
 		setIB(new BrokerInteractive());
-		setBroker(new BrokerActivityImpl(IB));
+		setBroker(new BrokerActivityImpl(getIB()));
 		getIB().initMarket("SPX", "20150319", 2100);
 
 	}
