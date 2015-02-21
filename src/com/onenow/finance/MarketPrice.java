@@ -12,23 +12,23 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Serie;
 
+import com.onenow.database.Lookup;
 import com.onenow.investor.DataType;
 import com.onenow.investor.QuoteDepth.DeepRow;
 
 public class MarketPrice {
 
+	Lookup lookup;
+
 	HashMap<String, Double> 				prices; // $
 	HashMap<String, Integer> 				size; 	// volume
 	HashMap<String, ArrayList<DeepRow>>		depth;	// market depth
 	HashMap<String, Boolean>				flag;	// flag
-
 	HashMap<String, List<Long>>				times;
-	
-	InfluxDB DB;
-	String priceDB="PRICE";
-	String sizeDB="SIZE";
 
+	
 	public MarketPrice() {
+		setLookup(new Lookup());
 		setPrices(new HashMap<String, Double>());
 		setSize(new HashMap<String, Integer>());
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
@@ -79,14 +79,14 @@ public class MarketPrice {
 		String type="";
 		
 		type = TradeType.LAST.toString();
-		String key = getTimedLookupKey(lastTradeTime, inv, type);
+		String key = getLookup().getTimedKey(lastTradeTime, inv, type);
 		if(lastSize>0) { // TODO: ignore busts with negative size
-			getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), lastPrice);
-			getSize().put(getTimedLookupKey(lastTradeTime, inv, type), lastSize);		
+			getPrices().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastPrice);
+			getSize().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastSize);		
 			type = DataType.VOLUME.toString();
-			getSize().put(getTimedLookupKey(lastTradeTime, inv, type), volume);		
+			getSize().put(getLookup().getTimedKey(lastTradeTime, inv, type), volume);		
 			type = DataType.VWAP.toString();
-			getPrices().put(getTimedLookupKey(lastTradeTime, inv, type), VWAP);
+			getPrices().put(getLookup().getTimedKey(lastTradeTime, inv, type), VWAP);
 			type = DataType.TRADEFLAG.toString();
 	//		getFlag().put(getTimedLookupKey(lastTradeTime, inv, type), splitFlag); // TODO
 			
@@ -94,86 +94,7 @@ public class MarketPrice {
 		}
 	}
 	
-	private void dbConnect() { 
-		// http://tsdb.enremmeta.com:8083/ 
-		// user: root
-		// pass: root
-		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
-	}
 	
-	private void dbCreate() {
-		getDB().createDatabase(getPriceDB());
-		getDB().createDatabase(getSizeDB());
-	}
-	
-	private void writePrice(Investment inv, String dataType, Long time, Double price) {
-		String name = getLookupKey(inv, dataType);
-		Serie serie = new Serie.Builder(name)
-		.columns("Time", "$")
-		.values(time, price)
-		.build();
-		getDB().write(getPriceDB(), TimeUnit.MILLISECONDS, serie);
-	}
-
-	private void writeSize(Investment inv, String dataType, Long time, Integer size) {
-		String name = getLookupKey(inv, dataType);
-		Serie serie = new Serie.Builder(name)
-		.columns("Time", "Size")
-		.values(time, size)
-		.build();
-		getDB().write(getSizeDB(), TimeUnit.MILLISECONDS, serie);
-	}
-
-	private List<Serie> dbQuery(String dbName, String serieName, String window) {
-		List<Serie> series = new ArrayList<Serie>();
-		
-		String query = 	"select * from " +
-						serieName + 
-						"where time > " +
-						"now() - " + window; 
-		
-		series = getDB().query(	dbName, query,
-								TimeUnit.MILLISECONDS);
-		return series;
-	}
-	
-	private String queryToString(List<Serie> series) {
-		String s = "";
-		
-		for (Serie ser : series) {
-			for (String col : ser.getColumns()) {
-				System.out.print(col + "\t");
-			}
-			System.out.println();
-			for (Map<String, Object> row : ser.getRows()) {
-				for (String col : ser.getColumns()) {
-					System.out.print(row.get(col) + "\t");
-				}
-				System.out.println();
-			}
-		}
-		System.out.println(series.size() + " entries");
-		return s;
-	}
-
-	private String getTimedLookupKey(Long time, Investment inv, String dataType) {
-		String s="";
-		s = time.toString() + "-";
-		s = s + getLookupKey(inv, dataType);
-		return s;
-	}
-	private String getLookupKey(Investment inv, String dataType) {
-		Underlying under = inv.getUnder();
-		String lookup = under.getTicker() + "-" + 
-		                inv.getInvType() + "-" +
-		                dataType;		
-		if (inv instanceof InvestmentOption) {
-			Double strike = ((InvestmentOption) inv).getStrikePrice();
-			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-			lookup = lookup + "-" + strike + "-" + exp; 
-		}
-		return (lookup);
-	}
 
 	// influxDB.createDatabase("aTimeSeries");
 //	for (int i = -10; i < 10; i++) {
@@ -253,7 +174,7 @@ public class MarketPrice {
 	}
 	public List<Long> getTime(Investment inv) {
 		String dataType = DataType.LASTTIME.toString();
-		String key = getLookupKey(inv, dataType);
+		String key = getLookup().getKey(inv, dataType);
 		List<Long> timeList=new ArrayList<Long>();
 		try {
 			timeList = (ArrayList<Long>) (getTimes().get(key)); // let price be null to know it's not set
@@ -264,11 +185,11 @@ public class MarketPrice {
 	}
 
 	public void setFlag(Investment inv, boolean flag) {
-		getFlag().put(getLookupKey(inv, DataType.TRADEFLAG.toString()), flag);	
+		getFlag().put(getLookup().getKey(inv, DataType.TRADEFLAG.toString()), flag);	
 	}
 	
 	public boolean getTimedFlag(Long time, Investment inv, String dataType) {
-		String key = getTimedLookupKey(time, inv, dataType);
+		String key = getLookup().getTimedKey(time, inv, dataType);
 		boolean flag=false;
 		try {
 			flag = (boolean) (getFlag().get(key)); 
@@ -279,7 +200,7 @@ public class MarketPrice {
 	}
 	
 	public boolean getFlag(Investment inv) {
-		String key = getLookupKey(inv, DataType.TRADEFLAG.toString());
+		String key = getLookup().getKey(inv, DataType.TRADEFLAG.toString());
 		boolean flag = false;
 		try {
 			flag = (boolean) (getFlag().get(key)); // let price be null to know it's not set
@@ -290,12 +211,12 @@ public class MarketPrice {
 	}
 	
 	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
-		getDepth().put(getLookupKey(inv, DataType.MARKETDEPTH.toString()), depth);
+		getDepth().put(getLookup().getKey(inv, DataType.MARKETDEPTH.toString()), depth);
 		System.out.println("Depth " +  	getDepth(inv).toString() + " " + inv.toString());
 	}
 	
 	public ArrayList<DeepRow> getDepth(Investment inv) {
-		String key = getLookupKey(inv, DataType.MARKETDEPTH.toString());
+		String key = getLookup().getKey(inv, DataType.MARKETDEPTH.toString());
 		ArrayList<DeepRow> depth = new ArrayList<DeepRow>();
 		try {
 			depth = (ArrayList<DeepRow>) (getDepth().get(key)); // let price be null to know it's not set
@@ -309,12 +230,12 @@ public class MarketPrice {
 	}
 		
 	public void setSize(Investment inv, Integer size, String dataType) {
-		getSize().put(getLookupKey(inv, dataType), size);
+		getSize().put(getLookup().getKey(inv, dataType), size);
 		System.out.println(dataType.toString() + " " +	getSize(inv, dataType) + " " + inv.toString());
 	}
 	
 	public Integer getTimedSize(Long time, Investment inv, String dataType) {
-		String key = getTimedLookupKey(time, inv, dataType);
+		String key = getLookup().getTimedKey(time, inv, dataType);
 		Integer size=0;
 		try {
 			size = (Integer) (getSize().get(key)); 
@@ -325,7 +246,7 @@ public class MarketPrice {
 	}
 	
 	public Integer getSize(Investment inv, String dataType) {
-		String key = getLookupKey(inv, dataType);
+		String key = getLookup().getKey(inv, dataType);
 		Integer size=0;
 		try {
 			size = (Integer) (getSize().get(key)); 
@@ -336,12 +257,12 @@ public class MarketPrice {
 	}
 	
 	public void setPrice(Investment inv, Double price, String dataType) {
-		getPrices().put(getLookupKey(inv, dataType), price);
+		getPrices().put(getLookup().getKey(inv, dataType), price);
 		System.out.println(dataType.toString() + " $" +  getPrice(inv, dataType)  + " " + inv.toString() + "\n");
 	}
 	
 	public Double getTimedPrice(Long time, Investment inv, String dataType) {
-		String key = getTimedLookupKey(time, inv, dataType);
+		String key = getLookup().getTimedKey(time, inv, dataType);
 		Double price=0.0;
 		try {
 			price = (Double) (getPrices().get(key)); // let price be null to know it's not set
@@ -351,7 +272,7 @@ public class MarketPrice {
 		return price;		
 	}
 	public Double getPrice(Investment inv, String dataType) {
-		String key = getLookupKey(inv, dataType);
+		String key = getLookup().getKey(inv, dataType);
 		Double price=0.0;
 		try {
 			price = (Double) (getPrices().get(key)); // let price be null to know it's not set
@@ -411,28 +332,12 @@ public class MarketPrice {
 		this.times = times;
 	}
 
-	private InfluxDB getDB() {
-		return DB;
+	private Lookup getLookup() {
+		return lookup;
 	}
 
-	private void setDB(InfluxDB dB) {
-		DB = dB;
-	}
-
-	private String getPriceDB() {
-		return priceDB;
-	}
-
-	private void setPriceDB(String priceDB) {
-		this.priceDB = priceDB;
-	}
-
-	private String getSizeDB() {
-		return sizeDB;
-	}
-
-	private void setSizeDB(String sizeDB) {
-		this.sizeDB = sizeDB;
+	private void setLookup(Lookup lookup) {
+		this.lookup = lookup;
 	}
 
 	
