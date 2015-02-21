@@ -19,6 +19,7 @@ import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.ConnectionStatus;
 import com.onenow.investor.DataType;
+import com.onenow.investor.InitMarket;
 import com.onenow.investor.InvestorController;
 import com.onenow.investor.Pucara;
 import com.onenow.investor.QuoteDepth;
@@ -52,9 +53,11 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 		setUnderList(new ArrayList<Underlying>());
 		setMarketPortfolio(new Portfolio());
+		InitMarket init = new InitMarket(getMarketPortfolio());
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());		
+		
 	}
 	
 //	public BrokerInteractive(Pucara pucara) {
@@ -68,29 +71,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 //		setMarketPrices(new MarketPrice());
 //		setTrades(new ArrayList<Trade>());
 //	}
-
-	public void initMarket(String name, String expDate, Integer seed) { // create the investments
-		Underlying under = new Underlying(name);
-		
-		InvestmentIndex index = new InvestmentIndex(under);
-		Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
-		Transaction indexTrans = new Transaction(indexTrade);
-		getMarketPortfolio().enterTransaction(indexTrans);
-		
-		for (Double strike=(double) (seed-200); strike<(seed+200); strike=strike+5) {
-			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
-			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
-			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
-			Trade putTrade = new Trade(call, TradeType.BUY, 1, 0.0);
-			Transaction optTrans = new Transaction(callTrade, putTrade);
-			getMarketPortfolio().enterTransaction(optTrans);
-		}
-
-		System.out.println(getMarketPortfolio().toString());
-		
-		getQuotes();
-//		getMarketDepth(); No market depth for index/options
-	}
 	
 	private void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();

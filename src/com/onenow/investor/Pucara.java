@@ -8,6 +8,7 @@ import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvApproach;
 import com.onenow.finance.Investment;
 import com.onenow.finance.InvestmentIndex;
+import com.onenow.finance.Portfolio;
 import com.onenow.finance.StrategyCallBuy;
 import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
@@ -26,18 +27,18 @@ public class Pucara {
 	
 	private static String indexName;
 	private static String expDate;
+	
+	private Portfolio marketPortfolio = new Portfolio();
 
 	public Pucara() {
 		
 	}
 	
 	public Pucara(String index, String expDate) throws InterruptedException {
-//		setIB(new BrokerInteractive(this));
-//		setBroker(new BrokerActivityImpl(IB));
 		setIndexName(index);
 		setExpDate(expDate);
 		
-//		getIB().initMarket(index, expDate, 2100); // TODO: seed
+		InitMarket init = new InitMarket(getMarketPortfolio()); // TODO: seed
 		getChannelPrices(getContractFactory());
 	}
 
@@ -48,7 +49,7 @@ public class Pucara {
 		while(true) {
 			System.out.println(getAnomalies());
 			
-			if(isBullMarket()) {
+			if(isBullMarket()) { // TODO: futures market?
 				if(isUnderVWAP(6) && isMomentumReversedUp()) { // BUY call
 					launchBottomExocet();
 				}
@@ -256,6 +257,14 @@ public class Pucara {
 
 	private static void setIB(BrokerInteractive iB) {
 		IB = iB;
+	}
+
+	private Portfolio getMarketPortfolio() {
+		return marketPortfolio;
+	}
+
+	private void setMarketPortfolio(Portfolio marketPortfolio) {
+		this.marketPortfolio = marketPortfolio;
 	}
 
 

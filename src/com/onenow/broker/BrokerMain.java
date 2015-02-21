@@ -9,7 +9,6 @@ public class BrokerMain {
 
 		setIB(new BrokerInteractive());
 		setBroker(new BrokerActivityImpl(getIB()));
-		getIB().initMarket("SPX", "20150319", 2100);
 
 	}
 

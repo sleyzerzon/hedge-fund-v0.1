@@ -211,7 +211,7 @@ public class MarketPrice {
 	
 	public void setPrice(Investment inv, Double price, String dataType) {
 		getPrices().put(getLookupKey(inv, dataType), price);
-		System.out.println(dataType.toString() + "$ " +  getPrice(inv, dataType)  + " " + inv.toString());
+		System.out.println(dataType.toString() + " $" +  getPrice(inv, dataType)  + " " + inv.toString() + "\n");
 	}
 	
 	public Double getTimedPrice(Long time, Investment inv, String dataType) {
