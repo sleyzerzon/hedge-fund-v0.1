@@ -36,6 +36,7 @@ private void dbCreate() {
 	getDB().createDatabase(DBname.SIZE.toString());
 }
 
+// WRITE
 public void writePrice(Long time, Investment inv, String dataType, Double price) {
 	String name = getLookup().getKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
@@ -54,10 +55,11 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
+// READ
 public List<Serie> readPrice(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = dbQuery(	DBname.PRICE.toString(), name,
+	List<Serie> series = queryPrice(	DBname.PRICE.toString(), name,
 									fromDate, toDate, sampling);
 	return series;
 }
@@ -65,12 +67,13 @@ public List<Serie> readPrice(	Investment inv, String dataType,
 public List<Serie> readSize(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = dbQuery(	DBname.SIZE.toString(), name, 
+	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  
 									fromDate, toDate, sampling);
 	return series;
 }
 
-public List<Serie> dbQuery(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+// QUERY
+public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
@@ -90,7 +93,17 @@ public List<Serie> dbQuery(String dbName, String serieName, String fromDate, Str
 	return series;
 }
 
-public List<Candle> priceQueryToCandles(List<Serie> series) {
+public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+	List<Serie> series = new ArrayList<Serie>();
+	
+	// TODO
+	
+	return series;
+}
+
+
+// QUERY CONVERSION
+public List<Candle> queryToPriceCandles(List<Serie> series) {
 	List<Candle> candles = new ArrayList<Candle>();
 	String s="";
 	
@@ -111,6 +124,12 @@ public List<Candle> priceQueryToCandles(List<Serie> series) {
 	return candles;
 }
 
+public Integer queryToTotalSize(List<Serie> series) {
+	Integer size = 0;
+	
+	return size;
+}
+
 public String queryToString(List<Serie> series) {
 	String s = "";
 	
@@ -129,6 +148,12 @@ public String queryToString(List<Serie> series) {
 //	System.out.println(series.size() + " entries");
 	return s;
 }
+
+
+// TEST
+
+
+// PRINT
 
 // SET GET
 private InfluxDB getDB() {

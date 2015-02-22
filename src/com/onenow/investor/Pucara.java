@@ -3,6 +3,8 @@ package com.onenow.investor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.onenow.analyst.Candle;
+import com.onenow.analyst.Intraday;
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvApproach;
@@ -81,8 +83,9 @@ public class Pucara {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		
 		for(Investment inv:invs) {
-
-			Double price = getMarketPrice().getPriceFromDB(inv, dataType, fromDate, toDate, sampling); 
+			
+			Intraday day = new Intraday();
+			List<Candle> price = getMarketPrice().getPriceFromDB(inv, dataType, fromDate, toDate, sampling); 
 			Integer size = getMarketPrice().getSizeFromDB(inv, dataType, fromDate, toDate, sampling);		
 		}
 		

@@ -8,6 +8,7 @@ import com.onenow.investor.Stats;
 public class Intraday {
 	
 	List<Candle> candles;
+	List<Integer> sizes;
 	
 	Stats sizeStats;
 	Stats priceSpreadStats;

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.influxdb.dto.Serie;
 
+import com.onenow.analyst.Candle;
 import com.onenow.database.DBname;
 import com.onenow.database.Lookup;
 import com.onenow.database.TSDB;
@@ -94,8 +95,9 @@ public class MarketPrice {
 		Integer size=0;
 		List<Serie> series = getDB().readSize(	inv, dataType,
 												fromDate, toDate, sampling);
-		String result = getDB().queryToString(series);
-		System.out.println("SIZE" + result);
+//		String result = getDB().queryToString(series);
+//		System.out.println("SIZE" + result);
+		Integer candles = getDB().queryToTotalSize(series); 
 		return size;
 	}
 
@@ -130,14 +132,15 @@ public class MarketPrice {
 	}
 	
 	// PRICE
-	public Double getPriceFromDB(	Investment inv, String dataType, 
+	public List<Candle> getPriceFromDB(	Investment inv, String dataType, 
 									String fromDate, String toDate, String sampling) {
-		Double price=0.0;
+//		Double price=0.0;
 		List<Serie> series = getDB().readPrice(	inv, dataType,
 												fromDate, toDate, sampling);
-		String result = getDB().queryToString(series);
-		System.out.println("PRICE" + result);
-		return price;
+//		String result = getDB().queryToString(series);
+//		System.out.println("PRICE" + result);
+		List<Candle> candles = getDB().queryToPriceCandles(series); 
+		return candles;
 	}
 
 	private void setPriceDB(Long lastTradeTime, Investment inv, String type, Double lastPrice) {
