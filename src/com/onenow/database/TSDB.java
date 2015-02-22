@@ -18,6 +18,8 @@ public class TSDB {
 
 	public TSDB() {
 		setLookup(new Lookup());
+		dbConnect();
+		dbCreate();
 	}
 
 
@@ -33,7 +35,7 @@ private void dbCreate() {
 	getDB().createDatabase(DBname.SIZE.toString());
 }
 
-private void writePrice(Investment inv, String dataType, Long time, Double price) {
+public void writePrice(Long time, Investment inv, String dataType, Double price) {
 	String name = getLookup().getKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
 	.columns("Timestamp", "Price ($)")
@@ -42,7 +44,7 @@ private void writePrice(Investment inv, String dataType, Long time, Double price
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-private void writeSize(Investment inv, String dataType, Long time, Integer size) {
+public void writeSize(Long time, Investment inv, String dataType, Integer size) {
 	String name = getLookup().getKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
 	.columns("Timestamp (ms)", "Size (#)")
@@ -51,20 +53,43 @@ private void writeSize(Investment inv, String dataType, Long time, Integer size)
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-private List<Serie> dbQuery(String dbName, String serieName, String window) {
+public List<Serie> readPrice(	Investment inv, String dataType,
+								String fromDate, String toDate, String sampling) {
+	String name = getLookup().getKey(inv, dataType);
+	List<Serie> series = dbQuery(	DBname.PRICE.toString(), name,
+									fromDate, toDate, sampling);
+	return series;
+}
+
+public List<Serie> readSize(	Investment inv, String dataType,
+								String fromDate, String toDate, String sampling) {
+	String name = getLookup().getKey(inv, dataType);
+	List<Serie> series = dbQuery(	DBname.SIZE.toString(), name, 
+									fromDate, toDate, sampling);
+	return series;
+}
+
+public List<Serie> dbQuery(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
-	String query = 	"select * from " +
-					serieName + 
-					"where time > " +
-					"now() - " + window; 
-	
+	String query = 	"SELECT " +
+						"FIRST(value)" + ", " +
+						"LAST(value)" + ", " +
+						"MIN(value)" + ", " +
+						"MAX(value)" + ", " + 
+					"FROM " + serieName + 
+					"WHERE " +
+						"time > " + "'" + fromDate + "'" +
+						"time < " + "'" + toDate + "'" + 
+					"GROUP BY " +
+						"time" + "(" + sampling + ")";
+					
 	series = getDB().query(	dbName, query,
 							TimeUnit.MILLISECONDS);
 	return series;
 }
 
-private String queryToString(List<Serie> series) {
+public String queryToString(List<Serie> series) {
 	String s = "";
 	
 	for (Serie ser : series) {
@@ -79,7 +104,7 @@ private String queryToString(List<Serie> series) {
 			System.out.println();
 		}
 	}
-	System.out.println(series.size() + " entries");
+//	System.out.println(series.size() + " entries");
 	return s;
 }
 

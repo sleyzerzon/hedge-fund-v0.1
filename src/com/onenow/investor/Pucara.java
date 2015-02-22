@@ -8,6 +8,7 @@ import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvApproach;
 import com.onenow.finance.Investment;
 import com.onenow.finance.InvestmentIndex;
+import com.onenow.finance.MarketPrice;
 import com.onenow.finance.Portfolio;
 import com.onenow.finance.StrategyCallBuy;
 import com.onenow.finance.StrategyCallSpread;
@@ -28,7 +29,8 @@ public class Pucara {
 	private static String indexName;
 	private static String expDate;
 	
-	private Portfolio marketPortfolio = new Portfolio();
+	private static Portfolio marketPortfolio = new Portfolio();
+	private static MarketPrice marketPrice = new MarketPrice();
 
 	public Pucara() {
 		
@@ -45,6 +47,15 @@ public class Pucara {
 	
 	
 	public static void launch() throws InterruptedException {
+		
+		Investment inv = getMarketPortfolio().getInvestments().get(0);
+		String dataType = DataType.LASTTIME.toString();
+		String fromDate = "2015-02-16";
+		String toDate = "2015-02-23";
+		String sampling = "1h";
+		
+		Double price = getMarketPrice().getPriceFromDB(inv, dataType, fromDate, toDate, sampling); 
+		Integer size = getMarketPrice().getSizeFromDB(inv, dataType, fromDate, toDate, sampling);
 		
 		while(true) {
 			System.out.println(getAnomalies());
@@ -259,12 +270,20 @@ public class Pucara {
 		IB = iB;
 	}
 
-	private Portfolio getMarketPortfolio() {
+	private static Portfolio getMarketPortfolio() {
 		return marketPortfolio;
 	}
 
 	private void setMarketPortfolio(Portfolio marketPortfolio) {
 		this.marketPortfolio = marketPortfolio;
+	}
+
+	private static MarketPrice getMarketPrice() {
+		return marketPrice;
+	}
+
+	private static void setMarketPrice(MarketPrice marketPrice) {
+		Pucara.marketPrice = marketPrice;
 	}
 
 

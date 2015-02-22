@@ -230,22 +230,22 @@ public class QuoteTable extends AbstractTableModel {
 				case BID:
 					m_bid = price;
 //					System.out.println("Bid " + m_bid);
-					getMarketPrice().setPrice(getInvestment(), m_bid, TradeType.SELL.toString());
+					getMarketPrice().setPriceMap(getInvestment(), m_bid, TradeType.SELL.toString());
 					break;
 				case ASK:
 					m_ask = price;
 //					System.out.println("Ask " + m_ask);
-					getMarketPrice().setPrice(getInvestment(), m_ask, TradeType.BUY.toString());
+					getMarketPrice().setPriceMap(getInvestment(), m_ask, TradeType.BUY.toString());
 					break;
 				case LAST:
 					m_last = price;
 //					System.out.println("Last " + m_last);
-					getMarketPrice().setPrice(getInvestment(), m_last, TradeType.LAST.toString());
+					getMarketPrice().setPriceMap(getInvestment(), m_last, TradeType.LAST.toString());
 					break;
 				case CLOSE:
 					m_close = price;
 //					System.out.println("Close " + m_close);
-					getMarketPrice().setPrice(getInvestment(), m_close, TradeType.CLOSE.toString());
+					getMarketPrice().setPriceMap(getInvestment(), m_close, TradeType.CLOSE.toString());
 					break;
 				default: break;	
 			}
@@ -256,17 +256,17 @@ public class QuoteTable extends AbstractTableModel {
 			switch( tickType) {
 				case BID_SIZE:
 					m_bidSize = size;
-					getMarketPrice().setSize(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
+					getMarketPrice().setSizeMap(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
 //					System.out.println("Bid size " + m_bidSize);
 					break;
 				case ASK_SIZE:
 					m_askSize = size;
-					getMarketPrice().setSize(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
+					getMarketPrice().setSizeMap(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
 //					System.out.println("Ask size " + m_askSize);
 					break;
 				case VOLUME:
 					m_volume = size;
-					getMarketPrice().setSize(getInvestment(), m_volume, DataType.VOLUME.toString());
+					getMarketPrice().setSizeMap(getInvestment(), m_volume, DataType.VOLUME.toString());
 //					System.out.println("Volume size " + m_volume);
 					break;
                 default: break; 

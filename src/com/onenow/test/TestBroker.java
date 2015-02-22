@@ -225,12 +225,12 @@ public class TestBroker {
 
 	private void setAllTrade() {
 		// get ready to buy something
-		setTradeStock1(new Trade(getStock(), TradeType.BUY, 50, getBroker().getPrice(stock, TradeType.BUY)));
-		setTradeStock2(new Trade(getStock(), TradeType.SELL, 150, getBroker().getPrice(stock, TradeType.SELL)));
-		setTradeCall1(new Trade(getCall1(), TradeType.BUY, 100, getBroker().getPrice(getCall1(), TradeType.BUY)));
-		setTradeCall2(new Trade(getCall2(), TradeType.SELL, 100, getBroker().getPrice(getCall2(), TradeType.SELL)));
-		setTradePut1(new Trade(getPut1(), TradeType.SELL, 100, getBroker().getPrice(getPut1(), TradeType.SELL)));
-		setTradePut2(new Trade(getPut2(), TradeType.BUY, 100, getBroker().getPrice(getPut2(), TradeType.BUY)));
+		setTradeStock1(new Trade(getStock(), TradeType.BUY, 50, getBroker().getPriceFromMap(stock, TradeType.BUY)));
+		setTradeStock2(new Trade(getStock(), TradeType.SELL, 150, getBroker().getPriceFromMap(stock, TradeType.SELL)));
+		setTradeCall1(new Trade(getCall1(), TradeType.BUY, 100, getBroker().getPriceFromMap(getCall1(), TradeType.BUY)));
+		setTradeCall2(new Trade(getCall2(), TradeType.SELL, 100, getBroker().getPriceFromMap(getCall2(), TradeType.SELL)));
+		setTradePut1(new Trade(getPut1(), TradeType.SELL, 100, getBroker().getPriceFromMap(getPut1(), TradeType.SELL)));
+		setTradePut2(new Trade(getPut2(), TradeType.BUY, 100, getBroker().getPriceFromMap(getPut2(), TradeType.BUY)));
 	}
 
 	private void setAllInv(Underlying theUnder) {

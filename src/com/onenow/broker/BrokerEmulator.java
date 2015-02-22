@@ -85,11 +85,11 @@ public class BrokerEmulator implements Broker {
 //		getMarketPrices().setPrice(put1, 9.50, 9.49);
 //		getMarketPrices().setPrice(put2, 8.33, 8.32);
 		// create trades based on market price
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPrice(stock, TradeType.BUY.toString()));
-		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY.toString()));
-		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY.toString()));
-		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY.toString()));
-		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY.toString()));
+		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(stock, TradeType.BUY.toString()));
+		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call1, TradeType.BUY.toString()));
+		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call2, TradeType.BUY.toString()));
+		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put1, TradeType.BUY.toString()));
+		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put2, TradeType.BUY.toString()));
 		// transact it
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
 		marketPortfolio.enterTransaction(trans);
@@ -131,21 +131,21 @@ public class BrokerEmulator implements Broker {
 //		getMarketPrices().setPrice(call0, 0.05, 0.05);
 		
 		// create trades based on market price
-		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPrice(index, TradeType.LAST.toString()));
-		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().getPrice(put0, TradeType.BUY.toString()));
-		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPrice(put1, TradeType.BUY.toString()));
-		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPrice(put2, TradeType.BUY.toString()));
-		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().getPrice(put3, TradeType.BUY.toString()));
-		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().getPrice(put4, TradeType.BUY.toString()));
-		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().getPrice(put5, TradeType.BUY.toString()));
-		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().getPrice(put6, TradeType.BUY.toString()));
+		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(index, TradeType.LAST.toString()));
+		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put0, TradeType.BUY.toString()));
+		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put1, TradeType.BUY.toString()));
+		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put2, TradeType.BUY.toString()));
+		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put3, TradeType.BUY.toString()));
+		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put4, TradeType.BUY.toString()));
+		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put5, TradeType.BUY.toString()));
+		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put6, TradeType.BUY.toString()));
 
-		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().getPrice(call0, TradeType.BUY.toString()));
-		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPrice(call1, TradeType.BUY.toString()));
-		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPrice(call2, TradeType.BUY.toString()));
-		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().getPrice(call3, TradeType.BUY.toString()));
-		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().getPrice(call4, TradeType.BUY.toString()));
-		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().getPrice(call5, TradeType.BUY.toString()));
+		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call0, TradeType.BUY.toString()));
+		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call1, TradeType.BUY.toString()));
+		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call2, TradeType.BUY.toString()));
+		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call3, TradeType.BUY.toString()));
+		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call4, TradeType.BUY.toString()));
+		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(call5, TradeType.BUY.toString()));
 
 		
 		// transact it

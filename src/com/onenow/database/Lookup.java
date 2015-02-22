@@ -10,8 +10,6 @@ public class Lookup {
 		
 	}
 
-
-
 public String getTimedKey(Long time, Investment inv, String dataType) {
 	String s="";
 	s = time.toString() + "-";
@@ -30,6 +28,5 @@ public String getKey(Investment inv, String dataType) {
 	}
 	return (lookup);
 }
-
 
 }
