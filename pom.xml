@@ -5,42 +5,30 @@
 	<artifactId>summityak</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<build>
-		<!-- <sourceDirectory>src</sourceDirectory> -->
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<includes>
-					<include>**/*.java</include>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>swfgen</directory>
-				<includes>
-					<include>**/*.java</include>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>gen</directory>
-				<includes>
-					<include>**/*.java</include>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>InteractiveBrokers</directory>
-				<includes>
-					<include>**/*.java</include>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-		</resources>
+		<sourceDirectory>src</sourceDirectory>
+
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>swfgen</source>
+								<source>gen</source>
+								<source>InteractiveBrokers</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
