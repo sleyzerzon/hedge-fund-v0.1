@@ -9,6 +9,7 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Serie;
 
+import com.onenow.analyst.Candle;
 import com.onenow.finance.Investment;
 
 public class TSDB {
@@ -87,6 +88,27 @@ public List<Serie> dbQuery(String dbName, String serieName, String fromDate, Str
 	series = getDB().query(	dbName, query,
 							TimeUnit.MILLISECONDS);
 	return series;
+}
+
+public List<Candle> priceQueryToCandles(List<Serie> series) {
+	List<Candle> candles = new ArrayList<Candle>();
+	String s="";
+	
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			s = s + col + "\t";
+		}
+		s = s + "\n";
+		System.out.println("\n");
+		for (Map<String, Object> row : ser.getRows()) {
+			for (String col : ser.getColumns()) {
+				s = s + row.get(col) + "\t";
+			}
+			s = s + "\n";
+		}
+	}
+	
+	return candles;
 }
 
 public String queryToString(List<Serie> series) {

@@ -48,14 +48,7 @@ public class Pucara {
 	
 	public static void launch() throws InterruptedException {
 		
-		Investment inv = getMarketPortfolio().getInvestments().get(0);
-		String dataType = DataType.LASTTIME.toString();
-		String fromDate = "2015-02-16";
-		String toDate = "2015-02-23";
-		String sampling = "1h";
-		
-		Double price = getMarketPrice().getPriceFromDB(inv, dataType, fromDate, toDate, sampling); 
-		Integer size = getMarketPrice().getSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+		setCandles();
 		
 		while(true) {
 			System.out.println(getAnomalies());
@@ -76,6 +69,23 @@ public class Pucara {
 			}
 			Thread.sleep(50000);
 		}
+	}
+	
+	private static void setCandles() {
+
+		String dataType = DataType.LASTTIME.toString();
+		String fromDate = "2015-02-16";
+		String toDate = "2015-02-23";
+		String sampling = "1h";
+
+		List<Investment> invs = getMarketPortfolio().getInvestments();
+		
+		for(Investment inv:invs) {
+
+			Double price = getMarketPrice().getPriceFromDB(inv, dataType, fromDate, toDate, sampling); 
+			Integer size = getMarketPrice().getSizeFromDB(inv, dataType, fromDate, toDate, sampling);		
+		}
+		
 	}
 
 	public static void launchBottomExocet() {
