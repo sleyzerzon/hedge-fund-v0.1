@@ -2,6 +2,7 @@ package com.onenow.analyst;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.InfluxDB;
@@ -17,27 +18,23 @@ public class InfluxWriteSample {
 	public static void main(String[] argv) throws Exception {
 		InfluxDB influxDB = InfluxDBFactory.connect(
 				"http://tsdb.enremmeta.com:8086", "root", "root");
-
-		// influxDB.createDatabase("aTimeSeries");
-		for (int i = -10; i < 10; i++) {
-			Serie serie1 = new Serie.Builder("serie2Name")
-					.columns("column1", "column2")
-					.values(System.currentTimeMillis() + 3600000 * i, 1)
-					.values(System.currentTimeMillis() + 3600000 * i, 2)
-					.build();
-			Serie serie2 = new Serie.Builder("serie2Name")
-					.columns("column1", "column2")
-					.values(System.currentTimeMillis() + 3600000 * i, 1)
-					.values(System.currentTimeMillis() + 3600000 * i, 2)
-					.build();
-			influxDB.write("aTimeSeries", TimeUnit.MILLISECONDS, serie1, serie2);
+		//SELECT FIRST(column1),LAST(column1),MIN(column1),MAX(column1) FROM serie2Name WHERE time > '2015-02-19' AND time < '2015-02-21' GROUP BY time(15m)
+		long timeNow = System.currentTimeMillis();
+		Random random  = new Random(timeNow);
+		
+		for (int i = -15000; i < 15000; i++) {
+			long ts = timeNow + 5*1000 * i;
+			Serie serie1 = new Serie.Builder("TimeSeries")
+					.columns("time", "value").values(ts, random.nextInt(100)).
+					values(ts, random.nextInt(1000)).build();
+			influxDB.write("TEST", TimeUnit.MILLISECONDS, serie1);
 		}
+
 		List<Serie> sers = influxDB
-				.query("aTimeSeries",
-						"select * from serie2Name where time > now() - 3h",
+				.query("TEST",
+						"SELECT FIRST(value),LAST(value),MIN(value),MAX(value),SUM(value) FROM TimeSeries WHERE time > '2015-02-21' AND time < '2015-02-23' GROUP BY time(15m)",
 						TimeUnit.MILLISECONDS);
-		
-		
+
 		for (Serie ser : sers) {
 			for (String col : ser.getColumns()) {
 				System.out.print(col + "\t");
@@ -49,5 +46,8 @@ public class InfluxWriteSample {
 				}
 				System.out.println();
 			}
-		}	}
+		}
+
+		// System.out.println(sers.size() + " entries");
+	}
 }

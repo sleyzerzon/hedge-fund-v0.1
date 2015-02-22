@@ -12,8 +12,8 @@ import com.onenow.workflow.ConstantsWorkflow;
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 @Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
 public interface OpenTsdbActivity {
-	@Activity
-	
-	@Activity 
-	public List<Integer> getPriceData(String cloud);
+//	@Activity
+//	
+//	@Activity 
+//	public List<Integer> getPriceData(String cloud);
 }
