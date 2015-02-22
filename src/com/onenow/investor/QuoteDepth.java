@@ -101,13 +101,13 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
 			switch( operation) {
 				case INSERT:
 					m_rows.add( pos, new DeepRow( mm, price, size) );
-					getBroker().setDepth(getInvestment(), m_rows);
+//					getBroker().setDepth(getInvestment(), m_rows); TODO
 					System.out.println("Deep insert " + mm + " " + price + " " + size);
 					fireTableRowsInserted(pos, pos);
 					break;
 				case UPDATE:
 					m_rows.get( pos).update( mm, price, size);
-					getBroker().setDepth(getInvestment(), m_rows);
+//					getBroker().setDepth(getInvestment(), m_rows); TODO
 					System.out.println("Deep update " + mm + " " + price + " " + size);
 					fireTableRowsUpdated(pos, pos);
 					break;
@@ -119,7 +119,7 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
 						// this happens but seems to be harmless
 						// System.out.println( "can't remove " + pos);
 					}
-					getBroker().setDepth(getInvestment(), m_rows);
+//					getBroker().setDepth(getInvestment(), m_rows); TODO
 					System.out.println("Deep delete ");
 					fireTableRowsDeleted(pos, pos);
 					break;
