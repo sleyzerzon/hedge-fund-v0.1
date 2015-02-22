@@ -29,11 +29,11 @@ public class YakSwfStarter {
 		// service, ConstantsWorkflow.AWS_SWF_DOMAIN);
 		// SummitWorkflowClientExternal client = factory.getClient();
 		// client.mainFlow();
-		PurchaseWorkflowClientExternalFactory factory = new PurchaseWorkflowClientExternalFactoryImpl(
-				service, ConstantsWorkflow.AWS_SWF_DOMAIN);
-		PurchaseWorkflowClientExternal client = factory.getClient();
-		client.mainFlow();
-		System.out.println("Execution ID: " + client.getWorkflowExecution().getRunId() + "; " + client.getWorkflowExecution().getWorkflowId());
+//		PurchaseWorkflowClientExternalFactory factory = new PurchaseWorkflowClientExternalFactoryImpl(
+//				service, ConstantsWorkflow.AWS_SWF_DOMAIN);
+//		PurchaseWorkflowClientExternal client = factory.getClient();
+//		client.mainFlow();
+//		System.out.println("Execution ID: " + client.getWorkflowExecution().getRunId() + "; " + client.getWorkflowExecution().getWorkflowId());
 
 	}
 }

@@ -1,9 +1,6 @@
 package com.onenow.summit;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.onenow.database.CustomerAccount;
 
 public class YakConfig {
 
@@ -32,14 +29,14 @@ public class YakConfig {
 	public void setOpenTSDBPort(int openTSDBPort) {
 		this.openTSDBPort = openTSDBPort;
 	}
-
-	public List<CustomerAccount> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(List<CustomerAccount> accounts) {
-		this.accounts = accounts;
-	}
-
-	private List<CustomerAccount> accounts;
+//
+//	public List<CustomerAccount> getAccounts() {
+//		return accounts;
+//	}
+//
+//	public void setAccounts(List<CustomerAccount> accounts) {
+//		this.accounts = accounts;
+//	}
+//
+//	private List<CustomerAccount> accounts;
 }

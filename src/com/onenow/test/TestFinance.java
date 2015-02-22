@@ -106,16 +106,18 @@ public class TestFinance {
 	private static Trade getPutBuy(Underlying under, Integer quantity, Date exp) {
 		Double putBuyStrike = 385.00;
 		Double putBuyPrice = 8.33;		
-		Trade putBuy = new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
-							TradeType.BUY, quantity, putBuyPrice);
+		Trade putBuy = null;
+//		new Trade(	new InvestmentOption(under, InvType.PUT, exp, putBuyStrike), 
+//							TradeType.BUY, quantity, putBuyPrice);
 		return putBuy;
 	}
 
 	private static Trade getPutSell(Underlying under, Integer quantity, Date exp) {
 		Double putSellStrike = 390.00;
 		Double putSellPrice = 9.5;
-		Trade putSell = new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
-							TradeType.SELL, quantity, putSellPrice);
+		Trade putSell = null;
+//		new Trade(	new InvestmentOption(under, InvType.PUT, exp, putSellStrike), 
+//							TradeType.SELL, quantity, putSellPrice);
 		return putSell;
 	}
 
@@ -123,16 +125,18 @@ public class TestFinance {
 			Date exp) {
 		Double callSellStrike = 400.00;
 		Double callSellPrice = 8.85;
-		Trade callSell = new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
-				TradeType.SELL, quantity, callSellPrice);
+		Trade callSell =null;
+//		new Trade(new InvestmentOption(under, InvType.CALL, exp, callSellStrike), 
+//				TradeType.SELL, quantity, callSellPrice);
 		return callSell;
 	}
 
 	private static Trade getCallBuy(Underlying under, Integer quantity, Date exp) {
 		Double callBuyStrike = 405.00;
 		Double callBuyPrice = 7.41;
-		Trade callBuy = new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
-				TradeType.BUY, quantity, callBuyPrice);
+		Trade callBuy =null;
+//				new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
+//				TradeType.BUY, quantity, callBuyPrice);
 		return callBuy;
 	}
 

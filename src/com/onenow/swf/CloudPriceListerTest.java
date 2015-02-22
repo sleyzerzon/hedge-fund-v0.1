@@ -1,7 +1,5 @@
 package com.onenow.swf;
 
-import com.onenow.broker.CloudPriceLister;
-import com.onenow.broker.CloudPriceListerImpl;
 
 public class CloudPriceListerTest {
 
@@ -10,10 +8,10 @@ public class CloudPriceListerTest {
 	}
 
 	public static void main(String[] argv) throws Exception {
-		CloudPriceLister c = new CloudPriceListerImpl();
-		System.out.println(c.getRegions());
-		System.out.println(c.getInstanceTypes());
-
-		System.out.println(c.getProducts());
+//		CloudPriceLister c = new CloudPriceListerImpl();
+//		System.out.println(c.getRegions());
+//		System.out.println(c.getInstanceTypes());
+//
+//		System.out.println(c.getProducts());
 	}
 }

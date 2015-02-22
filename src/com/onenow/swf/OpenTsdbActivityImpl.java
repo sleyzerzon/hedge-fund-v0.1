@@ -1,12 +1,15 @@
 package com.onenow.swf;
 
-import com.onenow.broker.CloudPriceLister;
+import java.util.List;
+
 import com.onenow.summit.AwsPricing;
 import com.onenow.summit.Yak;
 
-public class OpenTsdbActivityImpl implements CloudPriceLister {
+public class OpenTsdbActivityImpl  //implements CloudPriceLister
+//
+{
 
-	@Override
+//	@Override
 	public AwsPricing onDemandPricing() {
 		try {
 			AwsPricing pricing = Yak.readPricing();

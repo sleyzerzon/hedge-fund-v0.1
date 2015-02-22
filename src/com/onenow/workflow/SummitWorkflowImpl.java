@@ -6,14 +6,12 @@ import java.util.Set;
 
 import com.amazonaws.services.simpleworkflow.flow.annotations.Asynchronous;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
-import com.onenow.broker.CloudPriceListerClient;
-import com.onenow.broker.CloudPriceListerClientImpl;
 import com.sforce.soap.enterprise.sobject.Cloud__c;
 
 public class SummitWorkflowImpl implements SummitWorkflow {
 
-	private CloudPriceListerClient cloudPriceLister = new CloudPriceListerClientImpl();
-	private DatabaseSystemActivityClient sforce = new DatabaseSystemActivityClientImpl();
+//	private CloudPriceListerClient cloudPriceLister = new CloudPriceListerClientImpl();
+//	private DatabaseSystemActivityClient sforce = new DatabaseSystemActivityClientImpl();
 	private SummitWorkflowSelfClient selfClient = new SummitWorkflowSelfClientImpl();
 
 	private int counter = 0;
@@ -28,9 +26,9 @@ public class SummitWorkflowImpl implements SummitWorkflow {
 			providers.add(provider);
 		}
 		for (String provider : providers) {
-			Promise<List<String>> instTypes = cloudPriceLister
-					.getInstanceTypes(provider);
-			processInstanceTypes(provider, instTypes);
+//			Promise<List<String>> instTypes = cloudPriceLister
+//					.getInstanceTypes(provider);
+//			processInstanceTypes(provider, instTypes);
 
 		}
 	}
@@ -45,8 +43,8 @@ public class SummitWorkflowImpl implements SummitWorkflow {
 
 	@Override
 	public void mainFlow() {
-		Promise<List<Cloud__c>> clouds = sforce.getClouds();
-		processCloudList(clouds);
+//		Promise<List<Cloud__c>> clouds = sforce.getClouds();
+//		processCloudList(clouds);
 
 	}
 

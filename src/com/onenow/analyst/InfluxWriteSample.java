@@ -28,6 +28,9 @@ public class InfluxWriteSample {
 					.columns("time", "value").values(ts, random.nextInt(100)).
 					values(ts, random.nextInt(1000)).build();
 			influxDB.write("TEST", TimeUnit.MILLISECONDS, serie1);
+			if (i % 100 == 0) {
+				System.out.println ("Wrote " + (i + 15000) + " items");
+			}
 		}
 
 		List<Serie> sers = influxDB

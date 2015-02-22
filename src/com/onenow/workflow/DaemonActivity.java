@@ -7,7 +7,6 @@ import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflow;
 import com.amazonaws.services.simpleworkflow.AmazonSimpleWorkflowClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivityWorker;
 import com.onenow.broker.BrokerActivityImpl;
-import com.onenow.broker.CloudPriceListerImpl;
 import com.onenow.summit.ConstantsSummit;
 
 public class DaemonActivity {

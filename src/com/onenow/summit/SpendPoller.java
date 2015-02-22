@@ -52,10 +52,10 @@ public class SpendPoller {
 		OpenTsdbConnection.getInstance().connect(config.getOpenTSDBHost(),
 				config.getOpenTSDBPort());
 
-		AccountCloud acct = config.getAccounts().get(0).getCloud();
+		//AccountCloud acct = config.getAccounts().get(0).getCloud();
 		AwsPricing awsPricing = Yak.readPricing();
-		String access = acct.getAccess();
-		String secret = acct.getSecret();
+		String access = "";// acct.getAccess();
+		String secret = "";//acct.getSecret();
 		Logger.log("Logging in with " + access + " and " + secret);
 		EmrFacade emr = new EmrFacade(access, secret);
 		String[] clusters = new String[] { "j-3HRPLTDZCE2C7", "j-3EQKELQA7E8YQ" };
