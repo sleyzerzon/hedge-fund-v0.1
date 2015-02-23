@@ -52,7 +52,7 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 	.columns("Timestamp (ms)", "Size (#)")
 	.values(time, size)
 	.build();
-	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
 // READ
@@ -81,6 +81,7 @@ public List<Serie> queryPrice(String dbName, String serieName, String fromDate, 
 						"LAST(value)" + ", " +
 						"MIN(value)" + ", " +
 						"MAX(value)" + ", " + 
+						"SUM(value) " +  
 					"FROM " + serieName + 
 					"WHERE " +
 						"time > " + "'" + fromDate + "'" +
@@ -124,8 +125,8 @@ public List<Candle> queryToPriceCandles(List<Serie> series) {
 	return candles;
 }
 
-public Integer queryToTotalSize(List<Serie> series) {
-	Integer size = 0;
+public List<Integer> queryToTotalSize(List<Serie> series) {
+	List<Integer> size = new ArrayList<Integer>();
 	
 	return size;
 }

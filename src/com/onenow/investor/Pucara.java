@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.analyst.Candle;
-import com.onenow.analyst.Intraday;
+import com.onenow.analyst.Chart;
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvApproach;
@@ -33,6 +33,9 @@ public class Pucara {
 	
 	private static Portfolio marketPortfolio = new Portfolio();
 	private static MarketPrice marketPrice = new MarketPrice();
+	
+	static List<String> samplingRate;
+
 
 	public Pucara() {
 		
@@ -50,9 +53,11 @@ public class Pucara {
 	
 	public static void launch() throws InterruptedException {
 		
-		setCandles();
-		
+				
 		while(true) {
+			
+			setCharts("2015-02-16", "2015-02-23");
+			
 			System.out.println(getAnomalies());
 			
 			if(isBullMarket()) { // TODO: futures market?
@@ -73,20 +78,42 @@ public class Pucara {
 		}
 	}
 	
-	private static void setCandles() {
-
-		String dataType = DataType.LASTTIME.toString();
-		String fromDate = "2015-02-16";
-		String toDate = "2015-02-23";
-		String sampling = "1h";
+	private static void setCharts(String fromDate, String toDate) {
 
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		
-		for(Investment inv:invs) {
+		for(String sampling:getSamplingRate()) {
+			for(Investment inv:invs) {
+
+				String dataType = DataType.LASTTIME.toString();
+
+				Chart chart = new Chart();
+				List<Candle> price = getMarketPrice().getPriceFromDB(inv, DataType.LASTTIME.toString(), fromDate, toDate, sampling); 
+				List<Integer> sizes = getMarketPrice().getSizeFromDB(inv, DataType.LASTTIME.toString(), fromDate, toDate, sampling);
 			
-			Intraday day = new Intraday();
-			List<Candle> price = getMarketPrice().getPriceFromDB(inv, dataType, fromDate, toDate, sampling); 
-			Integer size = getMarketPrice().getSizeFromDB(inv, dataType, fromDate, toDate, sampling);		
+				chart.setPrices(price);
+				chart.setSizes(sizes);
+				
+				if(sampling.equals(SamplingRate.FIVEMIN.toString())) {
+					inv.setChart5min(chart);
+				}		
+				if(sampling.equals(SamplingRate.FIFTEENMIN.toString())) {
+					inv.setChart15min(chart);
+				}
+				if(sampling.equals(SamplingRate.SIXTYMIN.toString())) {
+					inv.setChart60min(chart);
+				}
+				if(sampling.equals(SamplingRate.FOURHS.toString())) {
+					inv.setChart240min(chart);
+				}
+				if(sampling.equals(SamplingRate.DAILY.toString())) {
+					inv.setChartDaily(chart);
+				}
+				if(sampling.equals(SamplingRate.WEEKLY.toString())) {
+					inv.setChartWeekly(chart);
+				}	
+
+			}
 		}
 		
 	}
@@ -94,6 +121,15 @@ public class Pucara {
 	// SCALPING 5, 15, 60min
 	// SWINGING 60, 240, daily
 	// TREND 4hr, daily, weekly
+	
+	private void setSampling() {
+		getSamplingRate().add(SamplingRate.FIVEMIN.toString());
+		getSamplingRate().add(SamplingRate.FIFTEENMIN.toString());
+		getSamplingRate().add(SamplingRate.SIXTYMIN.toString());
+		getSamplingRate().add(SamplingRate.FOURHS.toString());
+		getSamplingRate().add(SamplingRate.DAILY.toString());
+		getSamplingRate().add(SamplingRate.WEEKLY.toString());		
+	}
 
 	public static void launchBottomExocet() {
 		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
@@ -313,6 +349,14 @@ public class Pucara {
 
 	private static void setMarketPrice(MarketPrice marketPrice) {
 		Pucara.marketPrice = marketPrice;
+	}
+
+	private static List<String> getSamplingRate() {
+		return samplingRate;
+	}
+
+	private void setSamplingRate(List<String> samplingRate) {
+		this.samplingRate = samplingRate;
 	}
 
 

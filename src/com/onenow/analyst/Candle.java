@@ -18,13 +18,13 @@ public class Candle {
 	private Integer volumeOpen;
 	private Integer volumeClose;
 	
-	private Intraday intraDay;
+	private Chart intraDay;
 	
 	public Candle() {
 		
 	}
 	
-	public Candle(Intraday intraDay) {
+	public Candle(Chart intraDay) {
 		setIntraDay(intraDay);
 	}
 	
@@ -213,11 +213,11 @@ public class Candle {
 		this.volumeClose = volumeClose;
 	}
 
-	private Intraday getIntraDay() {
+	private Chart getIntraDay() {
 		return intraDay;
 	}
 
-	private void setIntraDay(Intraday intraDay) {
+	private void setIntraDay(Chart intraDay) {
 		this.intraDay = intraDay;
 	}
 

@@ -1,6 +1,6 @@
 package com.onenow.finance;
 
-import com.onenow.analyst.Intraday;
+import com.onenow.analyst.Chart;
 import com.onenow.investor.Contract;
 
 public class Investment {
@@ -11,7 +11,12 @@ public class Investment {
 	private Reward reward;
 	private Risk risk;
 	
-	private Intraday today;
+	private Chart chart5min = new Chart();
+	private Chart chart15min = new Chart();;
+	private Chart chart60min = new Chart();;
+	private Chart chart240min = new Chart();;
+	private Chart chartDaily = new Chart();;
+	private Chart chartWeekly = new Chart();;
 	
 	
 	// CONSTRUCTOR
@@ -26,7 +31,6 @@ public class Investment {
 		setReward(new Reward());
 		setRisk(new Risk());
 		
-		setToday(new Intraday());
 	}
 
 	// PUBLIC
@@ -85,12 +89,52 @@ public class Investment {
 		this.risk = risk;
 	}
 
-	public Intraday getToday() {
-		return today;
+	public Chart getChart5min() {
+		return chart5min;
 	}
 
-	public void setToday(Intraday today) {
-		this.today = today;
+	public void setChart5min(Chart chart5min) {
+		this.chart5min = chart5min;
+	}
+
+	public Chart getChart15min() {
+		return chart15min;
+	}
+
+	public void setChart15min(Chart chart15min) {
+		this.chart15min = chart15min;
+	}
+
+	public Chart getChart60min() {
+		return chart60min;
+	}
+
+	public void setChart60min(Chart chart60min) {
+		this.chart60min = chart60min;
+	}
+
+	public Chart getChart240min() {
+		return chart240min;
+	}
+
+	public void setChart240min(Chart cahrt240min) {
+		this.chart240min = cahrt240min;
+	}
+
+	public Chart getChartDaily() {
+		return chartDaily;
+	}
+
+	public void setChartDaily(Chart chartDaily) {
+		this.chartDaily = chartDaily;
+	}
+
+	public Chart getChartWeekly() {
+		return chartWeekly;
+	}
+
+	public void setChartWeekly(Chart chartWeekly) {
+		this.chartWeekly = chartWeekly;
 	}
 
 }

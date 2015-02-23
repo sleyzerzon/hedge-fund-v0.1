@@ -80,27 +80,26 @@ public class MarketPrice {
 								Integer volume, Double VWAP, boolean splitFlag) {
 
 		if(lastSize>0) { // TODO: ignore busts with negative size
-			setSizeDB(lastTradeTime, inv, TradeType.LAST.toString(), lastSize);		
+//			setSizeDB(lastTradeTime, inv, TradeType.LAST.toString(), lastSize);		
 			setPriceDB(lastTradeTime, inv, TradeType.LAST.toString(), lastPrice);
-			setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
-			setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
+//			setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
+//			setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 			//writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
 			
-			System.out.println(realTimeToString(lastTradeTime, inv)); // see what written
+//			System.out.println(realTimeToString(lastTradeTime, inv)); // see what written
 		}
 	}
 	//
 				
 	// SIZE
-	public Integer getSizeFromDB(	Investment inv, String dataType, 
+	public List<Integer> getSizeFromDB(	Investment inv, String dataType, 
 									String fromDate, String toDate, String sampling) {
-		Integer size=0;
 		List<Serie> series = getDB().readSize(	inv, dataType,
 												fromDate, toDate, sampling);
 //		String result = getDB().queryToString(series);
 //		System.out.println("SIZE" + result);
-		Integer candles = getDB().queryToTotalSize(series); 
-		return size;
+		List<Integer> ints = getDB().queryToTotalSize(series); 
+		return ints;
 	}
 
 	private void setSizeDB(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
@@ -110,7 +109,7 @@ public class MarketPrice {
 
 	public void setSizeMap(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookup().getKey(inv, dataType), size);
-		System.out.println(dataType.toString() + " " +	getSizeFromMap(inv, dataType) + " " + inv.toString()); // log
+//		System.out.println(dataType.toString() + " " +	getSizeFromMap(inv, dataType) + " " + inv.toString()); // log
 	}
 	public Integer getSizeFromTimedMap(Long time, Investment inv, String dataType) {
 		String key = getLookup().getTimedKey(time, inv, dataType);
@@ -152,7 +151,7 @@ public class MarketPrice {
 
 	public void setPriceMap(Investment inv, Double price, String dataType) {
 		getPrices().put(getLookup().getKey(inv, dataType), price);
-		System.out.println(dataType.toString() + " $" +  getPriceFromMap(inv, dataType)  + " " + inv.toString() + "\n"); // log
+//		System.out.println(dataType.toString() + " $" +  getPriceFromMap(inv, dataType)  + " " + inv.toString() + "\n"); // log
 	}
 	
 	public Double getPriceFromTimedMap(Long time, Investment inv, String dataType) {
