@@ -56,10 +56,10 @@ public class Pucara {
 			System.out.println(getAnomalies());
 			
 			if(isBullMarket()) { // TODO: futures market?
-				if(isUnderVWAP(6) && isMomentumReversedUp()) { // BUY call
+				if(isVolumeSpike() && isUnderVWAP(6) && isMomentumReversedUp() && isFuturesGuidingUp()) { // BUY call
 					launchBottomExocet();
 				}
-				if(isOverVWAP(12) && isMomentumReversedDown()) { // BUY put
+				if(isVolumeSpike() && isOverVWAP(12) && isMomentumReversedDown() && isFuturesGuidingDown()) { // BUY put
 					// launchTopExocet();
 				}
 			}
@@ -90,6 +90,10 @@ public class Pucara {
 		}
 		
 	}
+	
+	// SCALPING 5, 15, 60min
+	// SWINGING 60, 240, daily
+	// TREND 4hr, daily, weekly
 
 	public static void launchBottomExocet() {
 		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
@@ -105,6 +109,18 @@ public class Pucara {
 	// PRIVATE
 	private static String getAnomalies() {
 		return "";
+	}
+	
+	private static boolean isVolumeSpike() {
+		return true;
+	}
+	
+	private static boolean isFuturesGuidingUp(){
+		return true;
+	}
+	
+	private static boolean isFuturesGuidingDown() {
+		return true;
 	}
 	
 	private boolean isCounterMarket() { // price under VWAP in bull market, over in bear market
