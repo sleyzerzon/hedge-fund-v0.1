@@ -14,9 +14,13 @@ import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
 import com.onenow.broker.Broker;
 import com.onenow.broker.BrokerInteractive;
+import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentOption;
+import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.TradeType;
+import com.onenow.finance.Underlying;
 import com.onenow.investor.InvestorController.ITopMktDataHandler;
 import com.onenow.investor.InvestorController.TopMktDataAdapter;
 import com.onenow.investor.QuoteTable;
@@ -299,6 +303,7 @@ public class QuoteTable extends AbstractTableModel {
 					System.out.println("RT_VOLUME " + value); 
 					getMarketPrice().setRealTime(getInvestment(), value);
 					// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
+//					InvestmentStock inv=new InvestmentStock(new Underlying("SPX"));
 					break;
 				case VOLUME_RATE:
 					System.out.println("VOLUME_RATE " + value); // not for indices

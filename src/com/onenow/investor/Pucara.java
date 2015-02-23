@@ -58,7 +58,7 @@ public class Pucara {
 			
 			setCharts("2015-02-16", "2015-02-23");
 			
-			System.out.println(getAnomalies());
+			System.out.println(anomaliesToString());
 			
 			if(isBullMarket()) { // TODO: futures market?
 				if(isVolumeSpike() && isUnderVWAP(6) && isMomentumReversedUp() && isFuturesGuidingUp()) { // BUY call
@@ -78,6 +78,26 @@ public class Pucara {
 		}
 	}
 	
+	private static String anomaliesToString() {
+		String s="";
+		List<Investment> invs = getMarketPortfolio().getInvestments();
+
+		for(Investment inv:invs) {
+			for(String sampling:getSamplingRate()) {
+				Chart chart = inv.getCharts().get(sampling);
+				if(!chart.isLastCandleNormal()) {
+					s = s + "ANOMALY: last candle " + sampling + " " + inv.toString() + "\n";
+				}
+			}
+		}
+		
+		return s;
+	}
+
+	// SCALPING 5, 15, 60min
+	// SWINGING 60, 240, daily
+	// TREND 4hr, daily, weekly
+
 	private static void setCharts(String fromDate, String toDate) {
 
 		List<Investment> invs = getMarketPortfolio().getInvestments();
@@ -94,34 +114,12 @@ public class Pucara {
 				chart.setPrices(price);
 				chart.setSizes(sizes);
 				
-				if(sampling.equals(SamplingRate.FIVEMIN.toString())) {
-					inv.setChart5min(chart);
-				}		
-				if(sampling.equals(SamplingRate.FIFTEENMIN.toString())) {
-					inv.setChart15min(chart);
-				}
-				if(sampling.equals(SamplingRate.SIXTYMIN.toString())) {
-					inv.setChart60min(chart);
-				}
-				if(sampling.equals(SamplingRate.FOURHS.toString())) {
-					inv.setChart240min(chart);
-				}
-				if(sampling.equals(SamplingRate.DAILY.toString())) {
-					inv.setChartDaily(chart);
-				}
-				if(sampling.equals(SamplingRate.WEEKLY.toString())) {
-					inv.setChartWeekly(chart);
-				}	
-
+				inv.getCharts().put(sampling, chart);				
 			}
 		}
 		
 	}
-	
-	// SCALPING 5, 15, 60min
-	// SWINGING 60, 240, daily
-	// TREND 4hr, daily, weekly
-	
+		
 	private void setSampling() {
 		getSamplingRate().add(SamplingRate.FIVEMIN.toString());
 		getSamplingRate().add(SamplingRate.FIFTEENMIN.toString());
@@ -143,9 +141,6 @@ public class Pucara {
 
 	
 	// PRIVATE
-	private static String getAnomalies() {
-		return "";
-	}
 	
 	private static boolean isVolumeSpike() {
 		return true;
