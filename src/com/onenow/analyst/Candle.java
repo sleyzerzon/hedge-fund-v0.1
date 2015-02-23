@@ -129,7 +129,7 @@ public class Candle {
 		return highPrice;
 	}
 
-	private void setHighPrice(Double highPrice) {
+	public void setHighPrice(Double highPrice) {
 		this.highPrice = highPrice;
 	}
 
@@ -137,7 +137,7 @@ public class Candle {
 		return lowPrice;
 	}
 
-	private void setLowPrice(Double lowPrice) {
+	public void setLowPrice(Double lowPrice) {
 		this.lowPrice = lowPrice;
 	}
 
@@ -145,7 +145,7 @@ public class Candle {
 		return openPrice;
 	}
 
-	private void setOpenPrice(Double openPrice) {
+	public void setOpenPrice(Double openPrice) {
 		this.openPrice = openPrice;
 	}
 
@@ -153,7 +153,7 @@ public class Candle {
 		return closePrice;
 	}
 
-	private void setClosePrice(Double closePrice) {
+	public void setClosePrice(Double closePrice) {
 		this.closePrice = closePrice;
 	}
 

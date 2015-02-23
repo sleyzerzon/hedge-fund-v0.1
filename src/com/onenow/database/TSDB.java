@@ -40,18 +40,20 @@ private void dbCreate() {
 public void writePrice(Long time, Investment inv, String dataType, Double price) {
 	String name = getLookup().getKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
-	.columns("Timestamp", "Price ($)")
+	.columns("time", "price")
 	.values(time, price)
 	.build();
+	System.out.println("WRITE PRICE" + DBname.PRICE.toString() + " " + serie);
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
 public void writeSize(Long time, Investment inv, String dataType, Integer size) {
 	String name = getLookup().getKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
-	.columns("Timestamp (ms)", "Size (#)")
+	.columns("time", "size")
 	.values(time, size)
 	.build();
+	System.out.println("WRITE SIZE" + DBname.SIZE.toString() + " " + serie);
 	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
@@ -59,7 +61,7 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 public List<Serie> readPrice(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = queryPrice(	DBname.PRICE.toString(), name,
+	List<Serie> series = query(	DBname.PRICE.toString(), name,
 									fromDate, toDate, sampling);
 	return series;
 }
@@ -67,13 +69,13 @@ public List<Serie> readPrice(	Investment inv, String dataType,
 public List<Serie> readSize(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  
+	List<Serie> series = query(	DBname.SIZE.toString(), name,  
 									fromDate, toDate, sampling);
 	return series;
 }
 
 // QUERY
-public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+public List<Serie> query(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
@@ -94,20 +96,27 @@ public List<Serie> queryPrice(String dbName, String serieName, String fromDate, 
 	return series;
 }
 
-public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
-	List<Serie> series = new ArrayList<Serie>();
-	
-	// TODO
-	
-	return series;
-}
+//public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+//	List<Serie> series = new ArrayList<Serie>();
+//	
+//	// TODO
+//	
+//	return series;
+//}
 
 
 // QUERY CONVERSION
 public List<Candle> queryToPriceCandles(List<Serie> series) {
 	List<Candle> candles = new ArrayList<Candle>();
-	String s="";
 	
+	Candle candle = new Candle();
+//	candle.setClosePrice(closePrice);
+//	candle.setOpenPrice(openPrice);
+//	candle.setHighPrice(highPrice);
+//	candle.setLowPrice(lowPrice);
+//	candles.add(candle);
+	
+	String s="";
 	for (Serie ser : series) {
 		for (String col : ser.getColumns()) {
 			s = s + col + "\t";
@@ -128,6 +137,24 @@ public List<Candle> queryToPriceCandles(List<Serie> series) {
 public List<Integer> queryToTotalSize(List<Serie> series) {
 	List<Integer> size = new ArrayList<Integer>();
 	
+//	Integer num = 0;
+//	size.add(num);
+	
+	String s="";
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			s = s + col + "\t";
+		}
+		s = s + "\n";
+		System.out.println("\n");
+		for (Map<String, Object> row : ser.getRows()) {
+			for (String col : ser.getColumns()) {
+				s = s + row.get(col) + "\t";
+			}
+			s = s + "\n";
+		}
+	}
+
 	return size;
 }
 

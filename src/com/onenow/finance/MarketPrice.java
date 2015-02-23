@@ -31,7 +31,6 @@ public class MarketPrice {
 		setSize(new HashMap<String, Integer>());
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
 		setTimes(new HashMap<String, List<Long>>());
-//		setDB(new TSDB());
 		setDB(new TSDB());
 	}
 

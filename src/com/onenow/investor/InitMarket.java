@@ -37,10 +37,20 @@ public class InitMarket {
 
 		initAllIndicesAndOptions(expDate);
 		initAllStocks();
+		initAllFutures();
 
 		System.out.println(getMarketPortfolio().toString());		
 	}
 
+	private void initAllFutures() {
+		Underlying under = new Underlying("ES");
+		InvestmentStock stock = new InvestmentStock(under);
+		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
+		Transaction stockTrans = new Transaction(stockTrade);
+		getMarketPortfolio().enterTransaction(stockTrans);		
+
+	}
+	
 	private void initAllStocks() {
 		for (String stock:getSNP500()) {
 			setStock(stock);

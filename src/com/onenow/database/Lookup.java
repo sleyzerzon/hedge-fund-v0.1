@@ -18,14 +18,15 @@ public String getTimedKey(Long time, Investment inv, String dataType) {
 }
 public String getKey(Investment inv, String dataType) {
 	Underlying under = inv.getUnder();
-	String lookup = under.getTicker() + "-" + 
-	                inv.getInvType() + "-" +
-	                dataType;		
+	String lookup = ""; 
+	lookup = under.getTicker() + "-" + inv.getInvType();		
 	if (inv instanceof InvestmentOption) {
 		Double strike = ((InvestmentOption) inv).getStrikePrice();
 		String exp = (String) ((InvestmentOption) inv).getExpirationDate();
 		lookup = lookup + "-" + strike + "-" + exp; 
 	}
+	lookup = lookup + "-" + dataType;
+	
 	return (lookup);
 }
 
