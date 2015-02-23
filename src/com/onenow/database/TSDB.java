@@ -20,7 +20,7 @@ public class TSDB {
 	public TSDB() {
 		setLookup(new Lookup());
 		dbConnect();
-		dbCreate();
+//		dbCreate();
 	}
 
 
