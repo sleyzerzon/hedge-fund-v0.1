@@ -88,6 +88,7 @@ public class MarketPrice {
 			System.out.println(realTimeToString(lastTradeTime, inv)); // see what written
 		}
 	}
+	//
 				
 	// SIZE
 	public Integer getSizeFromDB(	Investment inv, String dataType, 
