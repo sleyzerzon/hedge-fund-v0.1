@@ -36,7 +36,7 @@ public class MarketPrice {
 
 	
 	// REAL-TIME
-	public Long setRealTime(Investment inv, String rtvolume) {
+	public void setRealTime(Investment inv, String rtvolume) {
 		String lastTradedPrice="";
 		String lastTradeSize="";
 		String lastTradeTime="";
@@ -50,38 +50,44 @@ public class MarketPrice {
 			if(i==1) { //	Last trade price
 				lastTradedPrice = split;
 				if(lastTradedPrice.equals("")) {
-					lastTradedPrice="0.0";
+					return;
+//					lastTradedPrice="0.0";
 				}
 			}
 			if(i==2) { //	Last trade size
 				lastTradeSize = split;
 				if(lastTradeSize.equals("")) {
-					lastTradeSize="0";
+					return;
+//					lastTradeSize="0";
 				}
 			}
 			if(i==3) { //	Last trade time
 				lastTradeTime = split;
 //				System.out.println("LAST " + split + " " + lastTradeTime);
 				if(lastTradeTime.equals("")) {
-					lastTradeTime="0";
+					return;
+//					lastTradeTime="0";
 				}
 			}
 			if(i==4) { //	Total volume
 				totalVolume = split;
 				if(totalVolume.equals("")) {
-					totalVolume="0";
+					return;
+//					totalVolume="0";
 				}
 			}
 			if(i==5) { //	VWAP
 				VWAP = split;
 				if(VWAP.equals("")) {
-					VWAP="0.0";
+					return;
+//					VWAP="0.0";
 				}
 			}
 			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
 				splitFlag = split;
 				if(splitFlag.equals("")) {
-					splitFlag="false";
+					return;
+//					splitFlag="false";
 				}
 			}
 //			System.out.println(split);
@@ -90,7 +96,7 @@ public class MarketPrice {
 		Long time = Long.parseLong(lastTradeTime); 	// TODO: *1000 ?
 		fillRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
 					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
-		return time;
+		return;
 	}
  	
 	private void fillRealTime(	Long lastTradeTime, Investment inv, Double lastPrice, Integer lastSize, 
