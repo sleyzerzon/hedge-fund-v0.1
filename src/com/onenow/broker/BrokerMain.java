@@ -7,9 +7,19 @@ public class BrokerMain {
 
 	public static void main(String[] args) {
 
-		setIB(new BrokerInteractive());
-		setBroker(new BrokerActivityImpl(getIB()));
-
+		try {
+			setIB(new BrokerInteractive());
+		} catch (Exception e) {
+			System.out.println("COULD NOT CREATE BROKER\n");
+			e.printStackTrace();
+		}
+		
+		try {
+			setBroker(new BrokerActivityImpl(getIB()));
+		} catch (Exception e) {
+			System.out.println("COULD NOT EXECUTE BROKER\n");
+			e.printStackTrace();
+		}
 	}
 
 	// SET GET

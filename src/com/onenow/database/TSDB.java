@@ -26,10 +26,13 @@ public class TSDB {
 
 
 private void dbConnect() { 
-	// http://tsdb.enremmeta.com:8083/ 
-	// user: root
-	// pass: root
-	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+	try {
+		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+	} catch (Exception e) {
+		System.out.println("COULD NOT CONNECT TO DB\n");
+		e.printStackTrace();
+		return;
+	}
 }
 
 private void dbCreate() {
@@ -61,17 +64,29 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 // READ
 public List<Serie> readPrice(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
+
+	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = query(	DBname.PRICE.toString(), name,
-									fromDate, toDate, sampling);
+	
+	try {
+		series = query(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 	return series;
 }
 
 public List<Serie> readSize(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
+
+	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = query(	DBname.SIZE.toString(), name,  
-									fromDate, toDate, sampling);
+	
+	try {
+		series = query(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 	return series;
 }
 
@@ -93,8 +108,7 @@ public List<Serie> query(String dbName, String serieName, String fromDate, Strin
 					"GROUP BY " +
 						"time" + "(" + getDBSamplingString(sampling) + ")";
 					
-	series = getDB().query(	dbName, query,
-							TimeUnit.MILLISECONDS);
+	series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	return series;
 }
 
