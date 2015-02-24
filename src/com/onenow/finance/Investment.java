@@ -13,7 +13,7 @@ public class Investment {
 	private Reward reward;
 	private Risk risk;
 	
-	HashMap<String, Chart> charts;
+	HashMap<String, Chart> charts = new HashMap<String, Chart>();
 	
 	
 	// CONSTRUCTOR

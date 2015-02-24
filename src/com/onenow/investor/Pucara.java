@@ -109,16 +109,21 @@ public class Pucara {
 		
 		for(String sampling:getSamplingRate()) {
 			for(Investment inv:invs) {
-
 				Chart chart = new Chart();
-				List<Candle> price = getMarketPrice().getPriceFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling); 
-				List<Integer> sizes = getMarketPrice().getSizeFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
+				List<Candle> price = new ArrayList<Candle>();
+				List<Integer> sizes = new ArrayList<Integer>();
+
+				price = getMarketPrice().getPriceFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
+				sizes = getMarketPrice().getSizeFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 			
-				chart.setPrices(price);
-				chart.setSizes(sizes);
-				
-				inv.getCharts().put(sampling, chart);				
+				if(price!=null && sizes !=null) {
+					chart.setPrices(price);
+					chart.setSizes(sizes);
+					inv.getCharts().put(sampling, chart);	
+					System.out.println("...got chart " + inv.toString() + price.toString() + " " + sizes.toString());
+				}
 			}
+			System.out.println("+++ got all cahrts");
 		}
 		
 	}

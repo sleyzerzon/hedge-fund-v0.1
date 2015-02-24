@@ -68,11 +68,7 @@ public List<Serie> readPrice(	Investment inv, String dataType,
 	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
 	
-	try {
-		series = query(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
+	series = query(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
 	return series;
 }
 
@@ -82,11 +78,7 @@ public List<Serie> readSize(	Investment inv, String dataType,
 	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
 	
-	try {
-		series = query(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
+	series = query(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
 	return series;
 }
 
@@ -100,7 +92,7 @@ public List<Serie> query(String dbName, String serieName, String fromDate, Strin
 						"MIN(value)" + ", " +
 						"MAX(value)" + ", " + 
 						"SUM(value) " +  
-					"FROM " + "'" + serieName + "' " +
+					"FROM " + "\"" + serieName + "\" " +
 					"WHERE " +
 						"time > " + "'" + fromDate + "' " + 
 						"AND " +
@@ -108,7 +100,12 @@ public List<Serie> query(String dbName, String serieName, String fromDate, Strin
 					"GROUP BY " +
 						"time" + "(" + getDBSamplingString(sampling) + ")";
 					
-	series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+	try {
+		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+	} catch (Exception e) {
+//		e.printStackTrace(); some time series don't exist or have data
+	}
+	
 	return series;
 }
 
