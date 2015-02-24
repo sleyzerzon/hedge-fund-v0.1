@@ -131,7 +131,7 @@ public class BrokerEmulator implements Broker {
 //		getMarketPrices().setPrice(call0, 0.05, 0.05);
 		
 		// create trades based on market price
-		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(index, TradeType.LAST.toString()));
+		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(index, TradeType.TRADED.toString()));
 		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put0, TradeType.BUY.toString()));
 		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put1, TradeType.BUY.toString()));
 		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().getPriceFromMap(put2, TradeType.BUY.toString()));

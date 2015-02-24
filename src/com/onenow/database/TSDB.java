@@ -43,7 +43,7 @@ public void writePrice(Long time, Investment inv, String dataType, Double price)
 	.columns("time", "price")
 	.values(time, price)
 	.build();
-	System.out.println("WRITE " + DBname.PRICE.toString() + " " + serie + "\n");
+	System.out.println("WRITE " + DBname.PRICE.toString() + " " + serie);
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 

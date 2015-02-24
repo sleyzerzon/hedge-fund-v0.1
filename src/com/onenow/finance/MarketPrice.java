@@ -97,8 +97,8 @@ public class MarketPrice {
 								Integer volume, Double VWAP, boolean splitFlag) {
 
 		if(lastSize>0) { // TODO: ignore busts with negative size
-			setSizeDB(lastTradeTime, inv, TradeType.LAST.toString(), lastSize);		
-			setPriceDB(lastTradeTime, inv, TradeType.LAST.toString(), lastPrice);
+			setSizeDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastSize);		
+			setPriceDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastPrice);
 //			setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
 //			setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 			//writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
@@ -265,7 +265,7 @@ public class MarketPrice {
 	
 	public String realTimeMapToString(Long tradeTime, Investment inv) {
 		
-		Integer size = getSizeFromTimedMap(tradeTime, inv, TradeType.LAST.toString());
+		Integer size = getSizeFromTimedMap(tradeTime, inv, TradeType.TRADED.toString());
 		Integer volume = getSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());
 		
 		String sizeS = size.toString();
@@ -289,7 +289,7 @@ public class MarketPrice {
 		if(print) {
 			s = "\n" + inv.toString() + "\n";
 			s = s +	"REAL TIME " +
-					"Price " + getPriceFromTimedMap(tradeTime, inv, TradeType.LAST.toString()) + " " +
+					"Price " + getPriceFromTimedMap(tradeTime, inv, TradeType.TRADED.toString()) + " " +
 					"Size " + sizeS + " " + 
 					"Volume " + volumeS + " " +
 					"VWAP " + getPriceFromTimedMap(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +

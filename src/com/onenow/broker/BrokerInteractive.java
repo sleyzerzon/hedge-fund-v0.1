@@ -106,7 +106,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 					notDone++;
 					return false;
 				}
-				Double lastPrice = getMarketPrices().getPriceFromMap(inv, TradeType.LAST.toString());
+				Double lastPrice = getMarketPrices().getPriceFromMap(inv, TradeType.TRADED.toString());
 				if(lastPrice==null) {
 					notDone++;
 					return false;

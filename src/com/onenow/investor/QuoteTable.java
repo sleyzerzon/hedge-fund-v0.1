@@ -244,7 +244,7 @@ public class QuoteTable extends AbstractTableModel {
 				case LAST:
 					m_last = price;
 //					System.out.println("Last " + m_last);
-					getMarketPrice().setPriceMap(getInvestment(), m_last, TradeType.LAST.toString());
+					getMarketPrice().setPriceMap(getInvestment(), m_last, TradeType.TRADED.toString());
 					break;
 				case CLOSE:
 					m_close = price;

@@ -107,7 +107,7 @@ public class Exocet {
 	// PRIVATE
 	private void lookupIndexPrice() {
 		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.LAST.toString());
+		Double price = getBroker().getPrice(index, TradeType.TRADED.toString());
 		setUnderPrice(price);
 	}
 
