@@ -97,7 +97,7 @@ public class MarketPrice {
 								Integer volume, Double VWAP, boolean splitFlag) {
 
 		if(lastSize>0) { // TODO: ignore busts with negative size
-//			setSizeDB(lastTradeTime, inv, TradeType.LAST.toString(), lastSize);		
+			setSizeDB(lastTradeTime, inv, TradeType.LAST.toString(), lastSize);		
 			setPriceDB(lastTradeTime, inv, TradeType.LAST.toString(), lastPrice);
 //			setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
 //			setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
