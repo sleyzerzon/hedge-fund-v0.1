@@ -49,22 +49,40 @@ public class MarketPrice {
 //			System.out.println("SPLIT " + split + " " + i);
 			if(i==1) { //	Last trade price
 				lastTradedPrice = split;
+				if(lastTradedPrice.equals("")) {
+					lastTradedPrice="0.0";
+				}
 			}
 			if(i==2) { //	Last trade size
 				lastTradeSize = split;
+				if(lastTradeSize.equals("")) {
+					lastTradeSize="0";
+				}
 			}
 			if(i==3) { //	Last trade time
 				lastTradeTime = split;
 //				System.out.println("LAST " + split + " " + lastTradeTime);
+				if(lastTradeTime.equals("")) {
+					lastTradeTime="0";
+				}
 			}
 			if(i==4) { //	Total volume
 				totalVolume = split;
+				if(totalVolume.equals("")) {
+					totalVolume="0";
+				}
 			}
 			if(i==5) { //	VWAP
 				VWAP = split;
+				if(VWAP.equals("")) {
+					VWAP="0.0";
+				}
 			}
 			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
 				splitFlag = split;
+				if(splitFlag.equals("")) {
+					splitFlag="false";
+				}
 			}
 //			System.out.println(split);
 			i++;
@@ -85,7 +103,7 @@ public class MarketPrice {
 //			setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 			//writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
 			
-//			System.out.println(realTimeToString(lastTradeTime, inv)); // see what written
+//			System.out.println(realTimeMapToString(lastTradeTime, inv)); // see what written
 		}
 	}
 	//
@@ -245,7 +263,7 @@ public class MarketPrice {
 		return s;
 	}
 	
-	public String realTimeToString(Long tradeTime, Investment inv) {
+	public String realTimeMapToString(Long tradeTime, Investment inv) {
 		
 		Integer size = getSizeFromTimedMap(tradeTime, inv, TradeType.LAST.toString());
 		Integer volume = getSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());

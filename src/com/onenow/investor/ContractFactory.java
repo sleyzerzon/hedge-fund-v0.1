@@ -9,8 +9,10 @@ import com.ib.client.ComboLeg;
 import com.ib.client.Types.SecType;
 import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentFuture;
 import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.InvestmentOption;
+import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.Underlying;
 
 public class ContractFactory {
@@ -94,6 +96,14 @@ public class ContractFactory {
 			return getOptionToQuote(inv);			
 		}
 
+		if(inv instanceof InvestmentStock) {
+			return getStockToQuote(inv);			
+		}
+
+		if(inv instanceof InvestmentFuture) {
+			return getFutureToQuote(inv);			
+		}
+
 		return contract;
 	}
 	
@@ -101,7 +111,7 @@ public class ContractFactory {
 		String p_secType=SecType.OPT.toString();	
 
 		String p_symbol=inv.getUnder().getTicker();
-		String p_exchange="SMART";		// or "BEST"; "Comp Exchange"???
+		String p_exchange="SMART";		
 		
 		int p_conId=0;
 		
@@ -109,9 +119,9 @@ public class ContractFactory {
 		double p_strike=0.0;
 		String p_right="";
 		if(inv instanceof InvestmentOption) {
-			p_expiry=((InvestmentOption) inv).getExpirationDate();	// "20120316"
-			p_strike=((InvestmentOption) inv).getStrikePrice();		// 20.0
-			p_right=inv.getInvType().toString(); 					// "P" ... "Put/call"
+			p_expiry=((InvestmentOption) inv).getExpirationDate();	
+			p_strike=((InvestmentOption) inv).getStrikePrice();		
+			p_right=inv.getInvType().toString(); 					
 		}
 		
 		String p_multiplier="100";
@@ -132,7 +142,41 @@ public class ContractFactory {
                     p_secIdType, p_secId);
 		return cont;	
 	}
-	
+
+	public Contract getFutureToQuote(Investment inv) {
+		String p_secType=SecType.FUT.toString();	
+
+
+		String p_symbol=inv.getUnder().getTicker();
+		String p_exchange="GLOBEX";		
+		
+		int p_conId=0;
+		
+		String p_expiry=((InvestmentFuture) inv).getExpirationDate();
+		
+		
+		double p_strike=0.0;
+		String p_right="";
+		
+		String p_multiplier="100";
+		String p_currency="USD";
+		String p_localSymbol="";
+		String p_tradingClass="";
+		ArrayList<ComboLeg> p_comboLegs=new ArrayList<ComboLeg>();
+		String p_primaryExch="";
+		boolean p_includeExpired=false;
+		String p_secIdType="";
+		String p_secId="";
+		
+		Contract cont = new Contract();
+		cont = new Contract(p_conId, p_symbol, p_secType, p_expiry,
+                    p_strike, p_right, p_multiplier,
+                    p_exchange, p_currency, p_localSymbol, p_tradingClass,
+                    p_comboLegs, p_primaryExch, p_includeExpired,
+                    p_secIdType, p_secId);
+		return cont;	
+	}
+
 	
 	public Contract getIndexToQuote(Investment inv) {
 		String p_secType=SecType.IND.toString();	
@@ -178,17 +222,17 @@ public class ContractFactory {
 	}
 	
 	public Contract getStockToQuote(Investment inv) {	
-		String p_secType=SecType.STK.toString();	// "OPT"
+		String p_secType=SecType.STK.toString();	
 		String p_symbol=inv.getUnder().getTicker();
 
 		int p_conId=0;
 		
-		String p_expiry="";		// "20120316"
-		double p_strike=0.0;	// 20.0
-		String p_right=""; 	// "P" ... "Put/call"
+		String p_expiry="";		
+		double p_strike=0.0;	
+		String p_right=""; 	
 		
 		String p_multiplier="100";
-		String p_exchange="SMART";		// or "BEST"; "Comp Exchange"???
+		String p_exchange="SMART";		
 		String p_currency="USD";
 		String p_localSymbol="";
 		String p_tradingClass="";

@@ -11,7 +11,8 @@ public class InvestmentFuture extends Investment {
 	}
 	
 	public InvestmentFuture (Underlying underlying, String expDate) {
-		super(underlying, InvType.INDEX);
+		super(underlying, InvType.FUTURE);
+		setExpirationDate(expDate);
 	}
 	
 	// PUBLIC
@@ -29,7 +30,7 @@ public class InvestmentFuture extends Investment {
 	}
 
 	// SET GET
-	private String getExpirationDate() {
+	public String getExpirationDate() {
 		return expirationDate;
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.onenow.finance.InvType;
 import com.onenow.finance.Investment;
+import com.onenow.finance.InvestmentFuture;
 import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.InvestmentOption;
 import com.onenow.finance.InvestmentStock;
@@ -35,23 +36,24 @@ public class InitMarket {
 	private void initMarket() { // create the investments
 		String expDate="20150326";
 
-		initAllIndicesAndOptions(expDate);
+		initAllIndicesAndOptions("20150326");
+		initAllFutures("20150320");
 		initAllStocks();
-		initAllFutures();
 
 		System.out.println(getMarketPortfolio().toString());		
 	}
 
-	private void initAllFutures() {
+	private void initAllFutures(String expDate) {
 		Underlying under = new Underlying("ES");
-		InvestmentStock stock = new InvestmentStock(under);
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
-		Transaction stockTrans = new Transaction(stockTrade);
+		InvestmentFuture future = new InvestmentFuture(under, expDate);
+		Trade futureTrade = new Trade(future, TradeType.BUY, 1, 0.0);
+		Transaction stockTrans = new Transaction(futureTrade);
 		getMarketPortfolio().enterTransaction(stockTrans);		
 
 	}
 	
 	private void initAllStocks() {
+		setSNP500List();
 		for (String stock:getSNP500()) {
 			setStock(stock);
 		}
