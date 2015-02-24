@@ -100,7 +100,8 @@ public class InitMarket {
 			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
 			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
 			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
-			Transaction optTrans = new Transaction(callTrade, putTrade);
+//			Transaction optTrans = new Transaction(callTrade, putTrade);
+			Transaction optTrans = new Transaction(callTrade);
 			getMarketPortfolio().enterTransaction(optTrans);
 		}
 	}
