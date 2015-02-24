@@ -16,6 +16,7 @@ import com.onenow.finance.StrategyCallBuy;
 import com.onenow.finance.StrategyCallSpread;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.TradeRatio;
+import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
 
 public class Pucara {
@@ -34,7 +35,7 @@ public class Pucara {
 	private static Portfolio marketPortfolio = new Portfolio();
 	private static MarketPrice marketPrice = new MarketPrice();
 	
-	static List<String> samplingRate;
+	static List<String> samplingRate = new ArrayList<String>();
 
 
 	public Pucara() {
@@ -46,7 +47,10 @@ public class Pucara {
 		setExpDate(expDate);
 		
 		InitMarket init = new InitMarket(getMarketPortfolio()); // TODO: seed
-		getChannelPrices(getContractFactory());
+		
+		setSampling();
+		
+//		getChannelPrices(getContractFactory());
 	}
 
 	
@@ -58,13 +62,16 @@ public class Pucara {
 			
 			setCharts("2015-02-16", "2015-02-23");
 			
-			System.out.println(anomaliesToString());
+//			System.out.println(anomaliesToString());
 			
 			if(isBullMarket()) { // TODO: futures market?
-				if(isVolumeSpike() && isUnderVWAP(6) && isMomentumReversedUp() && isFuturesGuidingUp()) { // BUY call
+				// has been trading in range! And it is breaking out!
+				if(isVolumeSpike() &&isMomentumReversedUp() && isFuturesGuidingUp()) { // BUY call
+//					isUnderVWAP(6)
 					launchBottomExocet();
 				}
-				if(isVolumeSpike() && isOverVWAP(12) && isMomentumReversedDown() && isFuturesGuidingDown()) { // BUY put
+				if(isVolumeSpike() && isMomentumReversedDown() && isFuturesGuidingDown()) { // BUY put
+					// isOverVWAP(12)
 					// launchTopExocet();
 				}
 			}
@@ -74,6 +81,8 @@ public class Pucara {
 			if(isGoalAchieved() || isMarketClose() ) { // SELL
 				
 			}
+			
+			System.out.println(",,,,,");
 			Thread.sleep(50000);
 		}
 	}
@@ -94,10 +103,6 @@ public class Pucara {
 		return s;
 	}
 
-	// SCALPING 5, 15, 60min
-	// SWINGING 60, 240, daily
-	// TREND 4hr, daily, weekly
-
 	private static void setCharts(String fromDate, String toDate) {
 
 		List<Investment> invs = getMarketPortfolio().getInvestments();
@@ -105,11 +110,9 @@ public class Pucara {
 		for(String sampling:getSamplingRate()) {
 			for(Investment inv:invs) {
 
-				String dataType = DataType.LASTTIME.toString();
-
 				Chart chart = new Chart();
-				List<Candle> price = getMarketPrice().getPriceFromDB(inv, DataType.LASTTIME.toString(), fromDate, toDate, sampling); 
-				List<Integer> sizes = getMarketPrice().getSizeFromDB(inv, DataType.LASTTIME.toString(), fromDate, toDate, sampling);
+				List<Candle> price = getMarketPrice().getPriceFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling); 
+				List<Integer> sizes = getMarketPrice().getSizeFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 			
 				chart.setPrices(price);
 				chart.setSizes(sizes);
@@ -121,12 +124,16 @@ public class Pucara {
 	}
 		
 	private void setSampling() {
-		getSamplingRate().add(SamplingRate.FIVEMIN.toString());
-		getSamplingRate().add(SamplingRate.FIFTEENMIN.toString());
-		getSamplingRate().add(SamplingRate.SIXTYMIN.toString());
-		getSamplingRate().add(SamplingRate.FOURHS.toString());
-		getSamplingRate().add(SamplingRate.DAILY.toString());
-		getSamplingRate().add(SamplingRate.WEEKLY.toString());		
+		getSamplingRate().add(SamplingRate.SCALPSHORT.toString());
+		getSamplingRate().add(SamplingRate.SCALPMEDIUM.toString());
+		getSamplingRate().add(SamplingRate.SCALPLONG.toString());
+		getSamplingRate().add(SamplingRate.SWINGSHORT.toString());
+		getSamplingRate().add(SamplingRate.SWINGMEDIUM.toString());
+		getSamplingRate().add(SamplingRate.SWINGLONG.toString());		
+		getSamplingRate().add(SamplingRate.TRENDSHORT.toString());
+		getSamplingRate().add(SamplingRate.TRENDMEDIUM.toString());
+		getSamplingRate().add(SamplingRate.TRENDLONG.toString());
+
 	}
 
 	public static void launchBottomExocet() {
@@ -200,21 +207,6 @@ public class Pucara {
 		return !isBullMarket();
 	}
 
-	
-//	public synchronized void run() {
-//	    while(!priceUpdate) {
-//	        try {
-//	            wait();
-//	        } catch (InterruptedException e) {}
-//	    }
-//        launchExocet();
-//        priceUpdate=false;
-//        notifyAll();
-//        
-//        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-//	}
-
-	
 	
 	private void getChannelPrices(ContractFactory contractFactory) throws InterruptedException {
 		

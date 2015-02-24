@@ -11,6 +11,7 @@ import org.influxdb.dto.Serie;
 
 import com.onenow.analyst.Candle;
 import com.onenow.finance.Investment;
+import com.onenow.investor.SamplingRate;
 
 public class TSDB {
 	
@@ -84,16 +85,52 @@ public List<Serie> query(String dbName, String serieName, String fromDate, Strin
 						"MIN(value)" + ", " +
 						"MAX(value)" + ", " + 
 						"SUM(value) " +  
-					"FROM " + serieName + 
+					"FROM " + "'" + serieName + "' " +
 					"WHERE " +
-						"time > " + "'" + fromDate + "'" +
-						"time < " + "'" + toDate + "'" + 
+						"time > " + "'" + fromDate + "' " + 
+						"AND " +
+						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + sampling + ")";
+						"time" + "(" + getDBSamplingString(sampling) + ")";
 					
 	series = getDB().query(	dbName, query,
 							TimeUnit.MILLISECONDS);
 	return series;
+}
+
+// SCALPING 5, 15, 60min
+// SWINGING 60, 240, daily
+// TREND 4hr, daily, weekly
+private String getDBSamplingString(String samplingRate) {
+	String dbSamplingRate="";
+	if(samplingRate.equals("SCALPSHORT")) {
+		return "5m";
+	}
+	if(samplingRate.equals("SCALPMEDIUM")) {
+		return "15m";
+	}
+	if(samplingRate.equals("SCALPLONG")) {
+		return "60m";
+	}
+	if(samplingRate.equals("SWINGSHORT")) {
+		return "60m";
+	}
+	if(samplingRate.equals("SWINGMEDIUM")) {
+		return "4h";
+	}
+	if(samplingRate.equals("SWINGLONG")) {
+		return "1d";
+	}
+	if(samplingRate.equals("TRENDSHORT")) {
+		return "4h";
+	}
+	if(samplingRate.equals("TRENDMEDIUM")) {
+		return "1d";
+	}
+	if(samplingRate.equals("TRENDLONG")) {
+		return "1w";
+	}
+	return dbSamplingRate;
 }
 
 //public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {

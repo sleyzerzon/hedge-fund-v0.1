@@ -46,51 +46,42 @@ public class MarketPrice {
 		
 		int i=1;
 		for(String split:rtvolume.split(";")) {
-//			System.out.println("SPLIT " + split + " " + i);
 			if(i==1) { //	Last trade price
 				lastTradedPrice = split;
 				if(lastTradedPrice.equals("")) {
 					return;
-//					lastTradedPrice="0.0";
 				}
 			}
 			if(i==2) { //	Last trade size
 				lastTradeSize = split;
 				if(lastTradeSize.equals("")) {
 					return;
-//					lastTradeSize="0";
 				}
 			}
 			if(i==3) { //	Last trade time
 				lastTradeTime = split;
-//				System.out.println("LAST " + split + " " + lastTradeTime);
 				if(lastTradeTime.equals("")) {
 					return;
-//					lastTradeTime="0";
 				}
 			}
 			if(i==4) { //	Total volume
 				totalVolume = split;
 				if(totalVolume.equals("")) {
 					return;
-//					totalVolume="0";
 				}
 			}
 			if(i==5) { //	VWAP
 				VWAP = split;
 				if(VWAP.equals("")) {
 					return;
-//					VWAP="0.0";
 				}
 			}
 			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
 				splitFlag = split;
 				if(splitFlag.equals("")) {
 					return;
-//					splitFlag="false";
 				}
 			}
-//			System.out.println(split);
 			i++;
 		}
 		Long time = Long.parseLong(lastTradeTime); 	// TODO: *1000 ?
@@ -105,14 +96,13 @@ public class MarketPrice {
 		if(lastSize>0) { // TODO: ignore busts with negative size
 			setSizeDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastSize);		
 			setPriceDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastPrice);
-//			setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
-//			setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
-			//writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
+			// setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
+			// setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
+			// writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
 			
 //			System.out.println(realTimeMapToString(lastTradeTime, inv)); // see what written
 		}
 	}
-	//
 				
 	// SIZE
 	public List<Integer> getSizeFromDB(	Investment inv, String dataType, 

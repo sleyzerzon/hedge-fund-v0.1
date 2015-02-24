@@ -16,8 +16,9 @@ public class InvestorMain {
 	
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
-		Pucara pa38 = new Pucara("SPX", "20150319");
+		Pucara ia58 = new Pucara("SPX", "20150319");
 		
+		ia58.launch();
 	}
 	
 }
