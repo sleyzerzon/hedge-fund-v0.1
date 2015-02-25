@@ -94,9 +94,9 @@ public class Pucara {
 		for(Investment inv:invs) {
 			for(String sampling:getSamplingRate()) {
 				Chart chart = inv.getCharts().get(sampling);
-				if(!chart.isLastCandleNormal()) {
-					s = s + "ANOMALY: last candle " + sampling + " " + inv.toString() + "\n";
-				}
+//				if(!chart.isLastCandleNormal()) {
+//					s = s + "ANOMALY: last candle " + sampling + " " + inv.toString() + "\n";
+//				}
 			}
 		}
 		
@@ -113,16 +113,15 @@ public class Pucara {
 				
 				chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 				
+				if(chart!=null) {
+				inv.getCharts().put(sampling, chart);	
+				System.out.println("...got chart " + inv.toString() + chart.toString());
+			}
+
 //				List<Candle> candle = new ArrayList<Candle>();
 //				List<Integer> sizes = new ArrayList<Integer>();
 //				price = getMarketPrice().getPriceFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 //				sizes = getMarketPrice().getSizeFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);			
-//				if(price!=null && sizes !=null) {
-//					chart.setPrices(price);
-//					chart.setSizes(sizes);
-//					inv.getCharts().put(sampling, chart);	
-//					System.out.println("...got chart " + inv.toString() + price.toString() + " " + sizes.toString());
-//				}
 				
 			}
 			System.out.println("+++ got all cahrts");

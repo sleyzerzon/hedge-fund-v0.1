@@ -109,33 +109,32 @@ public class MarketPrice {
 	// CANDLES
 	public Chart queryChart(Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
+		
 		Chart chart = new Chart();
-		
-		List<Candle> candles = getPriceFromDB(inv, dataType, fromDate, toDate, sampling);
+		List<Candle> prices = getPriceFromDB(inv, dataType, fromDate, toDate, sampling);
 		List<Integer> sizes = getSizeFromDB(inv, dataType, fromDate, toDate, sampling);
-		
+		chart.setPrices(prices);
+		chart.setSizes(sizes);
+
 		return chart;
 	}
 		
 	public List<Candle> getPriceFromDB(	Investment inv, String dataType, 
 		String fromDate, String toDate, String sampling) {
-		//Double price=0.0;
 		List<Serie> series = getDB().readPrice(	inv, dataType,
 								fromDate, toDate, sampling);
-		//String result = getDB().queryToString(series);
-		//System.out.println("PRICE" + result);
-		List<Candle> candles = queryToPriceCandles(series); 
+		List<Candle> candles = priceSeriesToCandles(series); 
 		return candles;
 	}
 	
-	private List<Candle> queryToPriceCandles(List<Serie> series) {
+	private List<Candle> priceSeriesToCandles(List<Serie> series) {
 		List<Candle> candles = new ArrayList<Candle>();
 				
 		String s="";
 		for (Serie ser : series) {
 			for (String col : ser.getColumns()) {
 				s = s + col + "\t";
-				System.out.println("column " + col);
+//				System.out.println("column " + col);
 			}
 			s = s + "\n";
 			for (Map<String, Object> row : ser.getRows()) {
@@ -143,7 +142,7 @@ public class MarketPrice {
 				Integer i=0;
 				for (String col : ser.getColumns()) {
 					s = s + row.get(col) + "\t";
-					System.out.println("row " + row + " " + row.get(col));
+//					System.out.println("row " + row + " " + row.get(col));
 					if(i.equals(1)) {
 						candle.setOpenPrice(new Double(row.get(col).toString()));
 					}
@@ -156,47 +155,68 @@ public class MarketPrice {
 					if(i.equals(4)) {
 						candle.setHighPrice(new Double(row.get(col).toString()));
 					}
+					if(i.equals(5)) {
+						//	sum
+					}
 					i++;
 				}
 				s = s + "\n";
 				candles.add(candle);
 			}
 		}
-		System.out.println(s);	
+		System.out.println("CANDLE: " + s + "\n");	
 		return candles;
 	}
 	
 	public List<Integer> getSizeFromDB(	Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
+		List<Integer> sizes = new ArrayList<Integer>();
 		List<Serie> series = getDB().readSize(	inv, dataType, fromDate, toDate, sampling);
-		String result = queryToString(series);
-		System.out.println("SIZE" + result);
-		List<Integer> ints = queryToTotalSize(series); 
-		return ints;
+		sizes = sizeSeriesToInts(series); 
+		return sizes;
+		
 	}
 
-	public List<Integer> queryToTotalSize(List<Serie> series) {
-		List<Integer> size = new ArrayList<Integer>();
-		
-//		Integer num = 0;
-//		size.add(num);
+	public List<Integer> sizeSeriesToInts(List<Serie> series) {
+		List<Integer> sizes = new ArrayList<Integer>();
 		
 		String s="";
 		for (Serie ser : series) {
 			for (String col : ser.getColumns()) {
 				s = s + col + "\t";
+//				System.out.println("column " + col);
 			}
 			s = s + "\n";
 			for (Map<String, Object> row : ser.getRows()) {
+				Candle candle = new Candle();
+				Integer i=0;
 				for (String col : ser.getColumns()) {
 					s = s + row.get(col) + "\t";
+//					System.out.println("row " + row + " " + row.get(col));
+					if(i.equals(1)) {
+						// open 
+					}
+					if(i.equals(2)) {
+						// close
+					}
+					if(i.equals(3)) {
+						// low
+					}
+					if(i.equals(4)) {
+						// high
+					}
+					if(i.equals(5)) {
+						Double num = new Double(row.get(col).toString());
+						sizes.add((int) Math.round(num));
+					}
+					i++;
 				}
 				s = s + "\n";
 			}
 		}
-		System.out.println(s);
-		return size;
+		System.out.println("SIZES: " + s + "\n");	
+		return sizes;
 	}
 	public String queryToString(List<Serie> series) {
 		String s = "";
