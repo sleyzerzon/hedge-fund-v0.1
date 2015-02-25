@@ -3,10 +3,12 @@ package com.onenow.finance;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.influxdb.dto.Serie;
 
 import com.onenow.analyst.Candle;
+import com.onenow.analyst.Chart;
 import com.onenow.database.DBname;
 import com.onenow.database.Lookup;
 import com.onenow.database.TSDB;
@@ -103,18 +105,120 @@ public class MarketPrice {
 //			System.out.println(realTimeMapToString(lastTradeTime, inv)); // see what written
 		}
 	}
+	
+	// CANDLES
+	public Chart queryChart(Investment inv, String dataType, 
+			String fromDate, String toDate, String sampling) {
+		Chart chart = new Chart();
+		
+		List<Candle> candles = getPriceFromDB(inv, dataType, fromDate, toDate, sampling);
+		List<Integer> sizes = getSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+		
+		return chart;
+	}
+		
+	public List<Candle> getPriceFromDB(	Investment inv, String dataType, 
+		String fromDate, String toDate, String sampling) {
+		//Double price=0.0;
+		List<Serie> series = getDB().readPrice(	inv, dataType,
+								fromDate, toDate, sampling);
+		//String result = getDB().queryToString(series);
+		//System.out.println("PRICE" + result);
+		List<Candle> candles = queryToPriceCandles(series); 
+		return candles;
+	}
+	
+	private List<Candle> queryToPriceCandles(List<Serie> series) {
+		List<Candle> candles = new ArrayList<Candle>();
 				
-	// SIZE
+		String s="";
+		for (Serie ser : series) {
+			for (String col : ser.getColumns()) {
+				s = s + col + "\t";
+				System.out.println("column " + col);
+			}
+			s = s + "\n";
+			for (Map<String, Object> row : ser.getRows()) {
+				Candle candle = new Candle();
+				Integer i=0;
+				for (String col : ser.getColumns()) {
+					s = s + row.get(col) + "\t";
+					System.out.println("row " + row + " " + row.get(col));
+					if(i.equals(1)) {
+						candle.setOpenPrice(new Double(row.get(col).toString()));
+					}
+					if(i.equals(2)) {
+						candle.setClosePrice(new Double(row.get(col).toString()));
+					}
+					if(i.equals(3)) {
+						candle.setLowPrice(new Double(row.get(col).toString()));
+					}
+					if(i.equals(4)) {
+						candle.setHighPrice(new Double(row.get(col).toString()));
+					}
+					i++;
+				}
+				s = s + "\n";
+				candles.add(candle);
+			}
+		}
+		System.out.println(s);	
+		return candles;
+	}
+	
 	public List<Integer> getSizeFromDB(	Investment inv, String dataType, 
-									String fromDate, String toDate, String sampling) {
-		List<Serie> series = getDB().readSize(	inv, dataType,
-												fromDate, toDate, sampling);
-//		String result = getDB().queryToString(series);
-//		System.out.println("SIZE" + result);
-		List<Integer> ints = getDB().queryToTotalSize(series); 
+			String fromDate, String toDate, String sampling) {
+		
+		List<Serie> series = getDB().readSize(	inv, dataType, fromDate, toDate, sampling);
+		String result = queryToString(series);
+		System.out.println("SIZE" + result);
+		List<Integer> ints = queryToTotalSize(series); 
 		return ints;
 	}
 
+	public List<Integer> queryToTotalSize(List<Serie> series) {
+		List<Integer> size = new ArrayList<Integer>();
+		
+//		Integer num = 0;
+//		size.add(num);
+		
+		String s="";
+		for (Serie ser : series) {
+			for (String col : ser.getColumns()) {
+				s = s + col + "\t";
+			}
+			s = s + "\n";
+			for (Map<String, Object> row : ser.getRows()) {
+				for (String col : ser.getColumns()) {
+					s = s + row.get(col) + "\t";
+				}
+				s = s + "\n";
+			}
+		}
+		System.out.println(s);
+		return size;
+	}
+	public String queryToString(List<Serie> series) {
+		String s = "";
+		
+		for (Serie ser : series) {
+			for (String col : ser.getColumns()) {
+				System.out.print(col + "\t");
+			}
+			System.out.println();
+			for (Map<String, Object> row : ser.getRows()) {
+				for (String col : ser.getColumns()) {
+					System.out.print(row.get(col) + "\t");
+				}
+				System.out.println();
+			}
+		}
+//		System.out.println(series.size() + " entries");
+		return s;
+	}
+
+				
+	// SIZE
 	private void setSizeDB(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
 		// getSize().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastSize);
 		getDB().writeSize(lastTradeTime, inv, type, lastSize);
@@ -146,17 +250,6 @@ public class MarketPrice {
 	}
 	
 	// PRICE
-	public List<Candle> getPriceFromDB(	Investment inv, String dataType, 
-									String fromDate, String toDate, String sampling) {
-//		Double price=0.0;
-		List<Serie> series = getDB().readPrice(	inv, dataType,
-												fromDate, toDate, sampling);
-//		String result = getDB().queryToString(series);
-//		System.out.println("PRICE" + result);
-		List<Candle> candles = getDB().queryToPriceCandles(series); 
-		return candles;
-	}
-
 	private void setPriceDB(Long lastTradeTime, Investment inv, String type, Double lastPrice) {
 		//getPrices().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastPrice);
 		getDB().writePrice(lastTradeTime, inv, type, lastPrice);

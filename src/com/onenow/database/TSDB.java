@@ -106,48 +106,9 @@ public List<Serie> queryPrice(String dbName, String serieName, String fromDate, 
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data
 	}
-	
 	return series;
 }
 
-public List<Candle> queryToPriceCandles(List<Serie> series) {
-	List<Candle> candles = new ArrayList<Candle>();
-	
-	
-	String s="";
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			s = s + col + "\t";
-			System.out.println("column " + col);
-		}
-		s = s + "\n";
-		for (Map<String, Object> row : ser.getRows()) {
-			Candle candle = new Candle();
-			Integer i=0;
-			for (String col : ser.getColumns()) {
-				s = s + row.get(col) + "\t";
-				System.out.println("row " + row + " " + row.get(col));
-				if(i.equals(1)) {
-					candle.setOpenPrice(new Double(row.get(col).toString()));
-				}
-				if(i.equals(2)) {
-					candle.setClosePrice(new Double(row.get(col).toString()));
-				}
-				if(i.equals(3)) {
-					candle.setLowPrice(new Double(row.get(col).toString()));
-				}
-				if(i.equals(4)) {
-					candle.setHighPrice(new Double(row.get(col).toString()));
-				}
-				i++;
-			}
-			s = s + "\n";
-			candles.add(candle);
-		}
-	}
-	System.out.println(s);	
-	return candles;
-}
 
 // SIZE
 public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
@@ -175,48 +136,6 @@ public List<Serie> querySize(String dbName, String serieName, String fromDate, S
 	}
 	
 	return series;
-}
-
-public List<Integer> queryToTotalSize(List<Serie> series) {
-	List<Integer> size = new ArrayList<Integer>();
-	
-//	Integer num = 0;
-//	size.add(num);
-	
-	String s="";
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			s = s + col + "\t";
-		}
-		s = s + "\n";
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				s = s + row.get(col) + "\t";
-			}
-			s = s + "\n";
-		}
-	}
-	System.out.println(s);
-	return size;
-}
-
-public String queryToString(List<Serie> series) {
-	String s = "";
-	
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			System.out.print(col + "\t");
-		}
-		System.out.println();
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				System.out.print(row.get(col) + "\t");
-			}
-			System.out.println();
-		}
-	}
-//	System.out.println(series.size() + " entries");
-	return s;
 }
 
 

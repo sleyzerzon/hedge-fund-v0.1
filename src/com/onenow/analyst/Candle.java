@@ -125,10 +125,11 @@ public class Candle {
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = s + "high " + getHighPrice() + " " +
-				"low " + getLowPrice() + " " +
-				"open " + getOpenPrice() + " " +
-				"close " + getClosePrice() + "\n";
+		s = s + "high=" + getHighPrice() + " " +
+				"low=" + getLowPrice() + " " +
+				"open=" + getOpenPrice() + " " +
+				"close=" + getClosePrice() + " " +
+				"size=" + getSizeTotal() + "\n";
 
 		return s;
 	}
