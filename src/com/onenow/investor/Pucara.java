@@ -113,16 +113,11 @@ public class Pucara {
 				
 				chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 				
-				if(chart!=null) {
+				if(!chart.getSizes().isEmpty()) {
 				inv.getCharts().put(sampling, chart);	
 				System.out.println("...got chart " + inv.toString() + chart.toString());
-			}
-
-//				List<Candle> candle = new ArrayList<Candle>();
-//				List<Integer> sizes = new ArrayList<Integer>();
-//				price = getMarketPrice().getPriceFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
-//				sizes = getMarketPrice().getSizeFromDB(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);			
-				
+				}
+				System.out.println("+++");
 			}
 			System.out.println("+++ got all cahrts");
 		}

@@ -134,7 +134,7 @@ public class MarketPrice {
 		for (Serie ser : series) {
 			for (String col : ser.getColumns()) {
 				s = s + col + "\t";
-//				System.out.println("column " + col);
+//				System.out.println("column " + col); column names
 			}
 			s = s + "\n";
 			for (Map<String, Object> row : ser.getRows()) {
@@ -142,7 +142,7 @@ public class MarketPrice {
 				Integer i=0;
 				for (String col : ser.getColumns()) {
 					s = s + row.get(col) + "\t";
-//					System.out.println("row " + row + " " + row.get(col));
+//					System.out.println("row " + row + " " + row.get(col)); full row
 					if(i.equals(1)) {
 						candle.setOpenPrice(new Double(row.get(col).toString()));
 					}
@@ -164,7 +164,7 @@ public class MarketPrice {
 				candles.add(candle);
 			}
 		}
-		System.out.println("CANDLE: " + s + "\n");	
+//		System.out.println("CANDLE: " + s + "\n");	full candle
 		return candles;
 	}
 	
@@ -185,7 +185,7 @@ public class MarketPrice {
 		for (Serie ser : series) {
 			for (String col : ser.getColumns()) {
 				s = s + col + "\t";
-//				System.out.println("column " + col);
+//				System.out.println("column " + col); column names
 			}
 			s = s + "\n";
 			for (Map<String, Object> row : ser.getRows()) {
@@ -193,7 +193,7 @@ public class MarketPrice {
 				Integer i=0;
 				for (String col : ser.getColumns()) {
 					s = s + row.get(col) + "\t";
-//					System.out.println("row " + row + " " + row.get(col));
+//					System.out.println("row " + row + " " + row.get(col)); full row
 					if(i.equals(1)) {
 						// open 
 					}
@@ -215,7 +215,7 @@ public class MarketPrice {
 				s = s + "\n";
 			}
 		}
-		System.out.println("SIZES: " + s + "\n");	
+//		System.out.println("SIZES: " + s + "\n");	full series
 		return sizes;
 	}
 	public String queryToString(List<Serie> series) {
