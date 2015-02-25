@@ -68,7 +68,7 @@ public List<Serie> readPrice(	Investment inv, String dataType,
 	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
 	
-	series = query(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
+	series = queryPrice(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
 	return series;
 }
 
@@ -78,20 +78,20 @@ public List<Serie> readSize(	Investment inv, String dataType,
 	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
 	
-	series = query(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
+	series = querySize(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
 	return series;
 }
 
-// QUERY
-public List<Serie> query(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+// PRICE
+public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
-						"FIRST(value)" + ", " +
-						"LAST(value)" + ", " +
-						"MIN(value)" + ", " +
-						"MAX(value)" + ", " + 
-						"SUM(value) " +  
+						"FIRST(price)" + ", " +
+						"LAST(price)" + ", " +
+						"MIN(price)" + ", " +
+						"MAX(price)" + ", " + 
+						"SUM(price) " +  
 					"FROM " + "\"" + serieName + "\" " +
 					"WHERE " +
 						"time > " + "'" + fromDate + "' " + 
@@ -101,6 +101,7 @@ public List<Serie> query(String dbName, String serieName, String fromDate, Strin
 						"time" + "(" + getDBSamplingString(sampling) + ")";
 					
 	try {
+//		System.out.println("QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data
@@ -109,9 +110,119 @@ public List<Serie> query(String dbName, String serieName, String fromDate, Strin
 	return series;
 }
 
-// SCALPING 5, 15, 60min
-// SWINGING 60, 240, daily
-// TREND 4hr, daily, weekly
+public List<Candle> queryToPriceCandles(List<Serie> series) {
+	List<Candle> candles = new ArrayList<Candle>();
+	
+	
+	String s="";
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			s = s + col + "\t";
+			System.out.println("column " + col);
+		}
+		s = s + "\n";
+		for (Map<String, Object> row : ser.getRows()) {
+			Candle candle = new Candle();
+			Integer i=0;
+			for (String col : ser.getColumns()) {
+				s = s + row.get(col) + "\t";
+				System.out.println("row " + row + " " + row.get(col));
+				if(i.equals(1)) {
+					candle.setOpenPrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(2)) {
+					candle.setClosePrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(3)) {
+					candle.setLowPrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(4)) {
+					candle.setHighPrice(new Double(row.get(col).toString()));
+				}
+				i++;
+			}
+			s = s + "\n";
+			candles.add(candle);
+		}
+	}
+	System.out.println(s);	
+	return candles;
+}
+
+// SIZE
+public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+	List<Serie> series = new ArrayList<Serie>();
+	
+	String query = 	"SELECT " +
+						"FIRST(size)" + ", " +
+						"LAST(size)" + ", " +
+						"MIN(size)" + ", " +
+						"MAX(size)" + ", " + 
+						"SUM(size) " +  
+					"FROM " + "\"" + serieName + "\" " +
+					"WHERE " +
+						"time > " + "'" + fromDate + "' " + 
+						"AND " +
+						"time < " + "'" + toDate + "' " + 
+					"GROUP BY " +
+						"time" + "(" + getDBSamplingString(sampling) + ")";
+					
+	try {
+//		System.out.println("QUERY " + query);
+		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+	} catch (Exception e) {
+//		e.printStackTrace(); some time series don't exist or have data
+	}
+	
+	return series;
+}
+
+public List<Integer> queryToTotalSize(List<Serie> series) {
+	List<Integer> size = new ArrayList<Integer>();
+	
+//	Integer num = 0;
+//	size.add(num);
+	
+	String s="";
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			s = s + col + "\t";
+		}
+		s = s + "\n";
+		for (Map<String, Object> row : ser.getRows()) {
+			for (String col : ser.getColumns()) {
+				s = s + row.get(col) + "\t";
+			}
+			s = s + "\n";
+		}
+	}
+	System.out.println(s);
+	return size;
+}
+
+public String queryToString(List<Serie> series) {
+	String s = "";
+	
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			System.out.print(col + "\t");
+		}
+		System.out.println();
+		for (Map<String, Object> row : ser.getRows()) {
+			for (String col : ser.getColumns()) {
+				System.out.print(row.get(col) + "\t");
+			}
+			System.out.println();
+		}
+	}
+//	System.out.println(series.size() + " entries");
+	return s;
+}
+
+
+//SCALPING 5, 15, 60min
+//SWINGING 60, 240, daily
+//TREND 4hr, daily, weekly
 private String getDBSamplingString(String samplingRate) {
 	String dbSamplingRate="";
 	if(samplingRate.equals("SCALPSHORT")) {
@@ -143,89 +254,6 @@ private String getDBSamplingString(String samplingRate) {
 	}
 	return dbSamplingRate;
 }
-
-//public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
-//	List<Serie> series = new ArrayList<Serie>();
-//	
-//	// TODO
-//	
-//	return series;
-//}
-
-
-// QUERY CONVERSION
-public List<Candle> queryToPriceCandles(List<Serie> series) {
-	List<Candle> candles = new ArrayList<Candle>();
-	
-	Candle candle = new Candle();
-//	candle.setClosePrice(closePrice);
-//	candle.setOpenPrice(openPrice);
-//	candle.setHighPrice(highPrice);
-//	candle.setLowPrice(lowPrice);
-//	candles.add(candle);
-	
-	String s="";
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			s = s + col + "\t";
-		}
-		s = s + "\n";
-		System.out.println("\n");
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				s = s + row.get(col) + "\t";
-			}
-			s = s + "\n";
-		}
-	}
-	
-	return candles;
-}
-
-public List<Integer> queryToTotalSize(List<Serie> series) {
-	List<Integer> size = new ArrayList<Integer>();
-	
-//	Integer num = 0;
-//	size.add(num);
-	
-	String s="";
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			s = s + col + "\t";
-		}
-		s = s + "\n";
-		System.out.println("\n");
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				s = s + row.get(col) + "\t";
-			}
-			s = s + "\n";
-		}
-	}
-
-	return size;
-}
-
-public String queryToString(List<Serie> series) {
-	String s = "";
-	
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			System.out.print(col + "\t");
-		}
-		System.out.println();
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				System.out.print(row.get(col) + "\t");
-			}
-			System.out.println();
-		}
-	}
-//	System.out.println(series.size() + " entries");
-	return s;
-}
-
-
 // TEST
 
 

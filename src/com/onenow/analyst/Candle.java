@@ -123,6 +123,15 @@ public class Candle {
 	// TEST
 	
 	// PRINT
+	public String toString() {
+		String s = "";
+		s = s + "high " + getHighPrice() + " " +
+				"low " + getLowPrice() + " " +
+				"open " + getOpenPrice() + " " +
+				"close " + getClosePrice() + "\n";
+
+		return s;
+	}
 	
 	// SET GET
 	public Double getHighPrice() {

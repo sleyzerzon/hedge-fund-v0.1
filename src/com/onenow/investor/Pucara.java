@@ -60,7 +60,7 @@ public class Pucara {
 				
 		while(true) {
 			
-			setCharts("2015-02-16", "2015-02-23");
+			setCharts("2015-02-21", "2015-02-28");
 			
 //			System.out.println(anomaliesToString());
 			
