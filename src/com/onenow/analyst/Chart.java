@@ -7,21 +7,108 @@ import com.onenow.investor.Stats;
 
 public class Chart {
 	
-	List<Candle> prices;
-	List<Integer> sizes;
+	List<Candle> prices = new ArrayList<Candle>();
+	List<Integer> sizes = new ArrayList<Integer>();
+	
+	List<Integer> upSize = new ArrayList<Integer>();
+	List<Integer> downSize = new ArrayList<Integer>();
 	
 	Stats sizeStats;
 	Stats priceSpreadStats;
-	Stats VWAPSpreadStats;
 	Stats priceSpreadToSizeRatioStats;
-	Stats VWAPSpreadToSizeRatioStats;
+	
+//	Stats VWAPSpreadStats;
+//	Stats VWAPSpreadToSizeRatioStats;
 	
 	
 	public Chart() {
-//		setCandles(new ArrayList<Candle>());
 	}
 	
 	// PUBLIC
+	
+	
+	
+	private List<Integer> getUpDownSize() {
+		List<Integer> upVolume = new ArrayList<Integer>();
+
+		int i=0;
+		Candle prevPrice = new Candle();
+		for(Candle price:getPrices()) {
+			if(i>0) { // wait to have two candles
+				if(isHigherAndLower(prevPrice, price)) {
+//					getUpSize().add(getSizes().get(i));
+				}
+				if(isHigherPrice(prevPrice, price)) {
+					getUpSize().add(getSizes().get(i));
+				} else {
+					getUpSize().add(0);
+				}
+				if(isLowerPrice(prevPrice, price)) {
+					getDownSize().add(getSizes().get(i));
+				} else {
+					getDownSize().add(0);
+				}
+			} else { // zero when n/a
+				getUpSize().add(0);
+				getDownSize().add(0);
+			}
+			prevPrice = price;
+			i++;
+		}
+		
+		return upVolume;
+	}
+	
+	private boolean isIgnore(Integer which) {
+		boolean ignore = false;
+		if(which.equals(0)) {
+			ignore=true;
+		}
+		return ignore;
+	}
+	
+	private boolean isUp(Integer which) {
+		boolean isUp = false;
+		if(which.equals(0)) {
+			return false;
+		}
+		
+		return isUp;
+	}
+	
+	private boolean isDown(Integer which) {
+		boolean isDown = false;
+		if(which.equals(0)) {
+			return false;
+		}
+		
+		return isDown;
+	}
+	
+	private boolean isHigherPrice(Candle first, Candle second) {
+		boolean higher = false;
+		if(second.getHighPrice()>first.getHighPrice()) {
+			higher = true;
+		}
+		return higher;
+	}
+
+	private boolean isLowerPrice(Candle first, Candle second) {
+		boolean lower = false;
+		if(second.getLowPrice()<first.getLowPrice()) {
+			lower = true;
+		}		
+		return lower;
+	}
+
+	private boolean isHigherAndLower(Candle first, Candle second) {
+		boolean isBoth = false;
+		if(isHigherPrice(first, second) && isLowerPrice(first, second)) {
+			isBoth=true;
+		}
+		return isBoth;
+	}
+
 	
 	// TODO take only complete candles; ignore opening / close high volume?
 
@@ -163,28 +250,12 @@ public class Chart {
 		this.priceSpreadStats = priceStats;
 	}
 
-	public Stats getVWAPSpreadStats() {
-		return VWAPSpreadStats;
-	}
-
-	private void setVWAPSpreadStats(Stats vWAPStats) {
-		VWAPSpreadStats = vWAPStats;
-	}
-
 	public Stats getPriceSpreadToSizeRatioStats() {
 		return priceSpreadToSizeRatioStats;
 	}
 
 	private void setPriceSpreadToSizeRatioStats(Stats priceSpreadToSizeRatioStats) {
 		this.priceSpreadToSizeRatioStats = priceSpreadToSizeRatioStats;
-	}
-
-	public Stats getVWAPSpreadToSizeRatioStats() {
-		return VWAPSpreadToSizeRatioStats;
-	}
-
-	private void setVWAPSpreadToSizeRatioStats(Stats vWAPSpreadToSizeRatioStats) {
-		VWAPSpreadToSizeRatioStats = vWAPSpreadToSizeRatioStats;
 	}
 
 	public List<Candle> getPrices() {
@@ -201,6 +272,22 @@ public class Chart {
 
 	public void setSizes(List<Integer> sizes) {
 		this.sizes = sizes;
+	}
+
+	private List<Integer> getUpSize() {
+		return upSize;
+	}
+
+	private void setUpSize(List<Integer> upSize) {
+		this.upSize = upSize;
+	}
+
+	private List<Integer> getDownSize() {
+		return downSize;
+	}
+
+	private void setDownSize(List<Integer> downSize) {
+		this.downSize = downSize;
 	}
 
 }

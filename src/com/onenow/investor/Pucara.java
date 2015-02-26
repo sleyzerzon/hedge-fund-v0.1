@@ -107,6 +107,7 @@ public class Pucara {
 
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		
+		
 		for(String sampling:getSamplingRate()) {
 			for(Investment inv:invs) {
 				Chart chart = new Chart();
@@ -115,11 +116,11 @@ public class Pucara {
 				
 				if(!chart.getSizes().isEmpty()) {
 				inv.getCharts().put(sampling, chart);	
-				System.out.println("...got chart " + inv.toString() + chart.toString());
+				System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" +chart.toString());
+				} else {
+					System.out.println("- chart " + inv.toString() + " " + sampling);
 				}
-				System.out.println("+++");
 			}
-			System.out.println("+++ got all cahrts");
 		}
 		
 	}
