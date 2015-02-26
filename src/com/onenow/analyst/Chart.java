@@ -10,9 +10,6 @@ public class Chart {
 	List<Candle> prices = new ArrayList<Candle>();
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	List<Integer> upSize = new ArrayList<Integer>();
-	List<Integer> downSize = new ArrayList<Integer>();
-	
 	Stats sizeStats;
 	Stats priceSpreadStats;
 	Stats priceSpreadToSizeRatioStats;
@@ -24,86 +21,76 @@ public class Chart {
 	public Chart() {
 	}
 	
-	// PUBLIC
-	
-	
-	
-	private List<Integer> getUpDownSize() {
-		List<Integer> upVolume = new ArrayList<Integer>();
-
-		int i=0;
-		Candle prevPrice = new Candle();
-		for(Candle price:getPrices()) {
-			if(i>0) { // wait to have two candles
-				if(isHigherAndLower(prevPrice, price)) {
-//					getUpSize().add(getSizes().get(i));
-				}
-				if(isHigherPrice(prevPrice, price)) {
-					getUpSize().add(getSizes().get(i));
-				} else {
-					getUpSize().add(0);
-				}
-				if(isLowerPrice(prevPrice, price)) {
-					getDownSize().add(getSizes().get(i));
-				} else {
-					getDownSize().add(0);
-				}
-			} else { // zero when n/a
-				getUpSize().add(0);
-				getDownSize().add(0);
-			}
-			prevPrice = price;
-			i++;
-		}
-		
-		return upVolume;
-	}
-	
+	// PUBLIC	
 	private boolean isIgnore(Integer which) {
 		boolean ignore = false;
 		if(which.equals(0)) {
 			ignore=true;
+		}
+		if(which>0) {
+			Candle previous = getPrices().get(which-1);
+			Candle current = getPrices().get(which);
+			if(!isHigherPrice(previous, current)) {
+				ignore=true;
+			}
+			if(!isLowerPrice(previous, current)) {
+				ignore=true;
+			}
+			if(isHigherAndLower(previous, current)) {
+				if( !(current.getHighPrice()==current.getClosePrice()) ||
+					 !(current.getLowPrice()==current.getClosePrice()) ) {
+					ignore=true;
+				}
+			}
 		}
 		return ignore;
 	}
 	
 	private boolean isUp(Integer which) {
 		boolean isUp = false;
-		if(which.equals(0)) {
+		if(isIgnore(which)) {
 			return false;
 		}
-		
+		Candle previous = getPrices().get(which-1);
+		Candle current = getPrices().get(which);
+		if(isHigherPrice(previous, current)) {
+			isUp=true;
+		}
 		return isUp;
 	}
 	
 	private boolean isDown(Integer which) {
 		boolean isDown = false;
-		if(which.equals(0)) {
+		if(isIgnore(which)) {
 			return false;
 		}
-		
+		Candle previous = getPrices().get(which-1);
+		Candle current = getPrices().get(which);
+		if(isLowerPrice(previous, current)) {
+			isDown=true;
+		}
 		return isDown;
 	}
 	
-	private boolean isHigherPrice(Candle first, Candle second) {
+	private boolean isHigherPrice(Candle previous, Candle current) {
 		boolean higher = false;
-		if(second.getHighPrice()>first.getHighPrice()) {
+		if(current.getHighPrice()>previous.getHighPrice()) {
 			higher = true;
 		}
 		return higher;
 	}
 
-	private boolean isLowerPrice(Candle first, Candle second) {
+	private boolean isLowerPrice(Candle previous, Candle current) {
 		boolean lower = false;
-		if(second.getLowPrice()<first.getLowPrice()) {
+		if(current.getLowPrice()<previous.getLowPrice()) {
 			lower = true;
 		}		
 		return lower;
 	}
 
-	private boolean isHigherAndLower(Candle first, Candle second) {
+	private boolean isHigherAndLower(Candle previous, Candle current) {
 		boolean isBoth = false;
-		if(isHigherPrice(first, second) && isLowerPrice(first, second)) {
+		if(isHigherPrice(previous, current) && isLowerPrice(previous, current)) {
 			isBoth=true;
 		}
 		return isBoth;
@@ -274,20 +261,5 @@ public class Chart {
 		this.sizes = sizes;
 	}
 
-	private List<Integer> getUpSize() {
-		return upSize;
-	}
-
-	private void setUpSize(List<Integer> upSize) {
-		this.upSize = upSize;
-	}
-
-	private List<Integer> getDownSize() {
-		return downSize;
-	}
-
-	private void setDownSize(List<Integer> downSize) {
-		this.downSize = downSize;
-	}
 
 }

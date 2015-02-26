@@ -12,17 +12,22 @@ public class Candle {
 //	private Double lowVWAP;
 //	private Double openVWAP;
 //	private Double closeVWAP;
-//	
-//	private Integer sizeTotal;
-//	
-//	private Integer volumeOpen;
-//	private Integer volumeClose;
 	
+	private Integer sizeTotal;
+	
+	private Integer volumeOpen;
+	private Integer volumeClose;
+	
+//	private Chart intraDay;
 	
 	public Candle() {
 		
 	}
-		
+	
+	public Candle(Chart intraDay) {
+//		setIntraDay(intraDay);
+	}
+	
 	// PRICE SPREAD
 //	public boolean isPriceSpreadNormal() {
 //		boolean normal=true;
@@ -119,14 +124,12 @@ public class Candle {
 	
 	// PRINT
 	public String toString() {
-		String s = "\n";
+		String s = "";
 		s = s + "high=" + getHighPrice() + " " +
 				"low=" + getLowPrice() + " " +
 				"open=" + getOpenPrice() + " " +
-				"close=" + getClosePrice() + "\n";
-		
-//		+
-//				"size=" + getSizeTotal() + "\n";
+				"close=" + getClosePrice() + " " +
+				"size=" + getSizeTotal() + "\n";
 
 		return s;
 	}
@@ -164,61 +167,61 @@ public class Candle {
 		this.closePrice = closePrice;
 	}
 
-//	public Double getHighVWAP() {
-//		return highVWAP;
-//	}
-//
-//	private void setHighVWAP(Double highVWAP) {
-//		this.highVWAP = highVWAP;
-//	}
-//
-//	public Double getLowVWAP() {
-//		return lowVWAP;
-//	}
-//
-//	private void setLowVWAP(Double lowVWAP) {
-//		this.lowVWAP = lowVWAP;
-//	}
-//
-//	public Double getOpenVWAP() {
-//		return openVWAP;
-//	}
-//
-//	private void setOpenVWAP(Double openVWAP) {
-//		this.openVWAP = openVWAP;
-//	}
-//
-//	public Double getCloseVWAP() {
-//		return closeVWAP;
-//	}
-//
-//	private void setCloseVWAP(Double closeVWAP) {
-//		this.closeVWAP = closeVWAP;
-//	}
-//
-//	public Integer getSizeTotal() {
-//		return sizeTotal;
-//	}
-//
-//	public void setSizeTotal(Integer sizeTotal) {
-//		this.sizeTotal = sizeTotal;
-//	}
-//
-//	public Integer getVolumeOpen() {
-//		return volumeOpen;
-//	}
-//
-//	private void setVolumeOpen(Integer volumeOpen) {
-//		this.volumeOpen = volumeOpen;
-//	}
-//
-//	public Integer getVolumeClose() {
-//		return volumeClose;
-//	}
-//
-//	private void setVolumeClose(Integer volumeClose) {
-//		this.volumeClose = volumeClose;
-//	}
+	public Double getHighVWAP() {
+		return highVWAP;
+	}
+
+	private void setHighVWAP(Double highVWAP) {
+		this.highVWAP = highVWAP;
+	}
+
+	public Double getLowVWAP() {
+		return lowVWAP;
+	}
+
+	private void setLowVWAP(Double lowVWAP) {
+		this.lowVWAP = lowVWAP;
+	}
+
+	public Double getOpenVWAP() {
+		return openVWAP;
+	}
+
+	private void setOpenVWAP(Double openVWAP) {
+		this.openVWAP = openVWAP;
+	}
+
+	public Double getCloseVWAP() {
+		return closeVWAP;
+	}
+
+	private void setCloseVWAP(Double closeVWAP) {
+		this.closeVWAP = closeVWAP;
+	}
+
+	public Integer getSizeTotal() {
+		return sizeTotal;
+	}
+
+	public void setSizeTotal(Integer sizeTotal) {
+		this.sizeTotal = sizeTotal;
+	}
+
+	public Integer getVolumeOpen() {
+		return volumeOpen;
+	}
+
+	private void setVolumeOpen(Integer volumeOpen) {
+		this.volumeOpen = volumeOpen;
+	}
+
+	public Integer getVolumeClose() {
+		return volumeClose;
+	}
+
+	private void setVolumeClose(Integer volumeClose) {
+		this.volumeClose = volumeClose;
+	}
 
 
 
