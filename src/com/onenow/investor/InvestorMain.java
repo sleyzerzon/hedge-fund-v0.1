@@ -16,8 +16,23 @@ public class InvestorMain {
 	
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
-		Pucara pa38 = new Pucara("SPX", "20150319");
+		Pucara ia58 = new Pucara();
 		
+		try {
+			ia58 = new Pucara("SPX", "20150319");		
+		} catch (Exception e) {
+			System.out.println("COULD NOT CREATE INVESTOR\n");
+			e.printStackTrace();
+			return;
+		}
+
+		try {
+			ia58.launch();
+		} catch (Exception e) {
+			System.out.println("COULD NOT EXECUTE INVESTOR\n");
+			e.printStackTrace();
+		}
+
 	}
 	
 }

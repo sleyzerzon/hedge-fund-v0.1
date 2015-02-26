@@ -34,12 +34,10 @@ public class InitMarket {
 	}
 	
 	private void initMarket() { // create the investments
-		String expDate="20150326";
-
 		initAllIndicesAndOptions("20150326");
 		initAllFutures("20150320");
 		initAllStocks();
-
+		
 		System.out.println(getMarketPortfolio().toString());		
 	}
 

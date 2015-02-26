@@ -11,6 +11,7 @@ import org.influxdb.dto.Serie;
 
 import com.onenow.analyst.Candle;
 import com.onenow.finance.Investment;
+import com.onenow.investor.SamplingRate;
 
 public class TSDB {
 	
@@ -25,10 +26,13 @@ public class TSDB {
 
 
 private void dbConnect() { 
-	// http://tsdb.enremmeta.com:8083/ 
-	// user: root
-	// pass: root
-	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+	try {
+		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+	} catch (Exception e) {
+		System.out.println("COULD NOT CONNECT TO DB\n");
+		e.printStackTrace();
+		return;
+	}
 }
 
 private void dbCreate() {
@@ -60,124 +64,115 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 // READ
 public List<Serie> readPrice(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
+
+	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = query(	DBname.PRICE.toString(), name,
-									fromDate, toDate, sampling);
+	
+	series = queryPrice(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
 	return series;
 }
 
 public List<Serie> readSize(	Investment inv, String dataType,
 								String fromDate, String toDate, String sampling) {
+
+	List<Serie> series = new ArrayList<Serie>();
 	String name = getLookup().getKey(inv, dataType);
-	List<Serie> series = query(	DBname.SIZE.toString(), name,  
-									fromDate, toDate, sampling);
+	
+	series = querySize(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
 	return series;
 }
 
-// QUERY
-public List<Serie> query(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+// PRICE
+public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
-						"FIRST(value)" + ", " +
-						"LAST(value)" + ", " +
-						"MIN(value)" + ", " +
-						"MAX(value)" + ", " + 
-						"SUM(value) " +  
-					"FROM " + serieName + 
+						"FIRST(price)" + ", " +
+						"LAST(price)" + ", " +
+						"MIN(price)" + ", " +
+						"MAX(price)" + ", " + 
+						"SUM(price) " +  
+					"FROM " + "\"" + serieName + "\" " +
 					"WHERE " +
-						"time > " + "'" + fromDate + "'" +
-						"time < " + "'" + toDate + "'" + 
+						"time > " + "'" + fromDate + "' " + 
+						"AND " +
+						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + sampling + ")";
+						"time" + "(" + getDBSamplingString(sampling) + ")";
 					
-	series = getDB().query(	dbName, query,
-							TimeUnit.MILLISECONDS);
+	try {
+//		System.out.println("QUERY " + query);
+		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+	} catch (Exception e) {
+//		e.printStackTrace(); some time series don't exist or have data
+	}
 	return series;
 }
 
-//public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
-//	List<Serie> series = new ArrayList<Serie>();
-//	
-//	// TODO
-//	
-//	return series;
-//}
 
-
-// QUERY CONVERSION
-public List<Candle> queryToPriceCandles(List<Serie> series) {
-	List<Candle> candles = new ArrayList<Candle>();
+// SIZE
+public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+	List<Serie> series = new ArrayList<Serie>();
 	
-	Candle candle = new Candle();
-//	candle.setClosePrice(closePrice);
-//	candle.setOpenPrice(openPrice);
-//	candle.setHighPrice(highPrice);
-//	candle.setLowPrice(lowPrice);
-//	candles.add(candle);
-	
-	String s="";
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			s = s + col + "\t";
-		}
-		s = s + "\n";
-		System.out.println("\n");
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				s = s + row.get(col) + "\t";
-			}
-			s = s + "\n";
-		}
+	String query = 	"SELECT " +
+						"FIRST(size)" + ", " +
+						"LAST(size)" + ", " +
+						"MIN(size)" + ", " +
+						"MAX(size)" + ", " + 
+						"SUM(size) " +  
+					"FROM " + "\"" + serieName + "\" " +
+					"WHERE " +
+						"time > " + "'" + fromDate + "' " + 
+						"AND " +
+						"time < " + "'" + toDate + "' " + 
+					"GROUP BY " +
+						"time" + "(" + getDBSamplingString(sampling) + ")";
+					
+	try {
+//		System.out.println("QUERY " + query);
+		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+	} catch (Exception e) {
+//		e.printStackTrace(); some time series don't exist or have data
 	}
 	
-	return candles;
-}
-
-public List<Integer> queryToTotalSize(List<Serie> series) {
-	List<Integer> size = new ArrayList<Integer>();
-	
-//	Integer num = 0;
-//	size.add(num);
-	
-	String s="";
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			s = s + col + "\t";
-		}
-		s = s + "\n";
-		System.out.println("\n");
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				s = s + row.get(col) + "\t";
-			}
-			s = s + "\n";
-		}
-	}
-
-	return size;
-}
-
-public String queryToString(List<Serie> series) {
-	String s = "";
-	
-	for (Serie ser : series) {
-		for (String col : ser.getColumns()) {
-			System.out.print(col + "\t");
-		}
-		System.out.println();
-		for (Map<String, Object> row : ser.getRows()) {
-			for (String col : ser.getColumns()) {
-				System.out.print(row.get(col) + "\t");
-			}
-			System.out.println();
-		}
-	}
-//	System.out.println(series.size() + " entries");
-	return s;
+	return series;
 }
 
 
+//SCALPING 5, 15, 60min
+//SWINGING 60, 240, daily
+//TREND 4hr, daily, weekly
+private String getDBSamplingString(String samplingRate) {
+	String dbSamplingRate="";
+	if(samplingRate.equals("SCALPSHORT")) {
+		return "5m";
+	}
+	if(samplingRate.equals("SCALPMEDIUM")) {
+		return "15m";
+	}
+	if(samplingRate.equals("SCALPLONG")) {
+		return "60m";
+	}
+	if(samplingRate.equals("SWINGSHORT")) {
+		return "60m";
+	}
+	if(samplingRate.equals("SWINGMEDIUM")) {
+		return "4h";
+	}
+	if(samplingRate.equals("SWINGLONG")) {
+		return "1d";
+	}
+	if(samplingRate.equals("TRENDSHORT")) {
+		return "4h";
+	}
+	if(samplingRate.equals("TRENDMEDIUM")) {
+		return "1d";
+	}
+	if(samplingRate.equals("TRENDLONG")) {
+		return "1w";
+	}
+	return dbSamplingRate;
+}
 // TEST
 
 
