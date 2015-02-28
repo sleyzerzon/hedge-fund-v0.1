@@ -9,6 +9,10 @@ public class Chart {
 	
 	List<Candle> prices = new ArrayList<Candle>();
 	List<Integer> sizes = new ArrayList<Integer>();
+
+	AnalysisPriceOnly priceOnlyAnalysis;
+	AnalysisVolumePrice volumePriceAnalysis;
+	AnalysisMomentum momentumAnalysis;
 	
 	Stats sizeStats;
 	Stats priceSpreadStats;
@@ -22,80 +26,19 @@ public class Chart {
 	}
 	
 	// PUBLIC	
-	private boolean isIgnore(Integer which) {
-		boolean ignore = false;
-		if(which.equals(0)) {
-			ignore=true;
-		}
-		if(which>0) {
-			Candle previous = getPrices().get(which-1);
-			Candle current = getPrices().get(which);
-			if(!isHigherPrice(previous, current)) {
-				ignore=true;
-			}
-			if(!isLowerPrice(previous, current)) {
-				ignore=true;
-			}
-			if(isHigherAndLower(previous, current)) {
-				if( !(current.getHighPrice()==current.getClosePrice()) ||
-					 !(current.getLowPrice()==current.getClosePrice()) ) {
-					ignore=true;
-				}
-			}
-		}
-		return ignore;
+	public String getAnalysis() {
+		String s = "";
+		
+		setPriceOnlyAnalysis(new AnalysisPriceOnly(prices));
+		setVolumePriceAnalysis(new AnalysisVolumePrice(prices, sizes, priceOnlyAnalysis));
+		setMomentumAnalysis(new AnalysisMomentum());
+		
+		s = s + getPriceOnlyAnalysis().toString();
+		s = s + getVolumePriceAnalysis().toString();
+		s = s + getMomentumAnalysis().toString();
+		
+		return s;
 	}
-	
-	private boolean isUp(Integer which) {
-		boolean isUp = false;
-		if(isIgnore(which)) {
-			return false;
-		}
-		Candle previous = getPrices().get(which-1);
-		Candle current = getPrices().get(which);
-		if(isHigherPrice(previous, current)) {
-			isUp=true;
-		}
-		return isUp;
-	}
-	
-	private boolean isDown(Integer which) {
-		boolean isDown = false;
-		if(isIgnore(which)) {
-			return false;
-		}
-		Candle previous = getPrices().get(which-1);
-		Candle current = getPrices().get(which);
-		if(isLowerPrice(previous, current)) {
-			isDown=true;
-		}
-		return isDown;
-	}
-	
-	private boolean isHigherPrice(Candle previous, Candle current) {
-		boolean higher = false;
-		if(current.getHighPrice()>previous.getHighPrice()) {
-			higher = true;
-		}
-		return higher;
-	}
-
-	private boolean isLowerPrice(Candle previous, Candle current) {
-		boolean lower = false;
-		if(current.getLowPrice()<previous.getLowPrice()) {
-			lower = true;
-		}		
-		return lower;
-	}
-
-	private boolean isHigherAndLower(Candle previous, Candle current) {
-		boolean isBoth = false;
-		if(isHigherPrice(previous, current) && isLowerPrice(previous, current)) {
-			isBoth=true;
-		}
-		return isBoth;
-	}
-
 	
 	// TODO take only complete candles; ignore opening / close high volume?
 
@@ -215,7 +158,7 @@ public class Chart {
 	public String toString() {
 		String s="";
 		s = s + prices.toString() + "\n" +
-				sizes.toString() + "\n\n";
+				sizes.toString();
 		return s;
 	}
 
@@ -260,6 +203,31 @@ public class Chart {
 	public void setSizes(List<Integer> sizes) {
 		this.sizes = sizes;
 	}
+
+	public AnalysisPriceOnly getPriceOnlyAnalysis() {
+		return priceOnlyAnalysis;
+	}
+
+	private void setPriceOnlyAnalysis(AnalysisPriceOnly priceOnlyAnalysis) {
+		this.priceOnlyAnalysis = priceOnlyAnalysis;
+	}
+
+	public AnalysisVolumePrice getVolumePriceAnalysis() {
+		return volumePriceAnalysis;
+	}
+
+	private void setVolumePriceAnalysis(AnalysisVolumePrice volumePriceAnalysis) {
+		this.volumePriceAnalysis = volumePriceAnalysis;
+	}
+
+	private AnalysisMomentum getMomentumAnalysis() {
+		return momentumAnalysis;
+	}
+
+	private void setMomentumAnalysis(AnalysisMomentum momentumAnalysis) {
+		this.momentumAnalysis = momentumAnalysis;
+	}
+
 
 
 }

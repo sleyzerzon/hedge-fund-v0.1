@@ -20,6 +20,14 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
 
 public class Pucara {
+	
+	// wait for break-out
+	// in bull market only from low only
+	// after the low has been confirmed three times
+	// sell two supports level before / -20 points from low, 7 day term
+	// stop loss at 2x credit
+	// close at Friday noon, never go through expiration
+	// max loss 2% of capital
 
 	private static BrokerInteractive IB;
 	private static BrokerActivityImpl broker;
@@ -38,6 +46,9 @@ public class Pucara {
 	static List<String> samplingRate = new ArrayList<String>();
 
 
+//***	 Look for signals, particularly at resitance & support
+//***	 Confirm via price, volume, and momentum
+//***	 Become familiar with the rythm of the underlying
 	public Pucara() {
 		
 	}
@@ -57,6 +68,7 @@ public class Pucara {
 	
 	public static void launch() throws InterruptedException {
 		
+		// MOMENTUM rsi>0.5, uptrending chi, stoch, 1hr....goign up
 				
 		while(true) {
 			
@@ -115,8 +127,9 @@ public class Pucara {
 				chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 				
 				if(!chart.getSizes().isEmpty()) {
-				inv.getCharts().put(sampling, chart);	
-				System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" +chart.toString());
+					inv.getCharts().put(sampling, chart);	
+					System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" +chart.toString());
+					System.out.println(chart.getAnalysis() + "\n");
 				} else {
 					System.out.println("- chart " + inv.toString() + " " + sampling);
 				}
