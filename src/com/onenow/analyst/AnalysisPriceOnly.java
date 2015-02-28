@@ -11,28 +11,58 @@ public class AnalysisPriceOnly {
 	}
 		
 	// MOST POWERFUL
-	private boolean isThreeWhiteSoldiers() { 
-		boolean threeWhiteSoldiers = false;
-		// TODO
-		return threeWhiteSoldiers;
+	public boolean isUpTrend(int which) { // THREE WHITE SOLDIERS: three+ sessions
+		boolean upTrend = false;
+		
+		if(which>1) {			
+			upTrend = isOpenUpCurrentToPrevious(which-2) && 
+					  isCloseUpCurrentToSelf(which-2) &&
+					  isOpenUpCurrentToPrevious(which-1) && 
+					  isCloseUpCurrentToSelf(which-1) &&
+					  isOpenUpCurrentToPrevious(which) && 
+					  isCloseUpCurrentToSelf(which);
+
+		}
+		return upTrend;
+	}
+
+	public boolean isDownTrend(int which) { // THREE BLACK CROWS: three+ sessions
+		boolean downTrend = false;
+
+		if(which>1) {
+			downTrend = isOpenDownCurrentToPrevious(which-2) &&
+					    isCloseDownCurrentToSelf(which-2) &&
+					    isOpenDownCurrentToPrevious(which-1) && 
+					    isCloseDownCurrentToSelf(which-1) &&
+					    isOpenDownCurrentToPrevious(which) && 
+					    isCloseDownCurrentToSelf(which);
+		}
+
+		return downTrend;
 	}
 	
-	private boolean isThreeBlackCrows() {
-		boolean threeBlackCrows = false;
-		// TODO
-		return threeBlackCrows;
-	}
-	
-	public boolean isEngulfing(int which) { // break into up and down
+	public boolean isEngulfingBearish(int which) { 
 		boolean engulfing = false;
 		if(which>0) {
-			if(isHighUpAndLowDownCurrentToPrevious(which)) {
+			if(isHighUpAndLowDownCurrentToPrevious(which) && 
+			   isOutsideBarClosingDown(which)) {
 				engulfing=true;
 			}
 		}
 		return engulfing;
 	}
-	
+
+	public boolean isEngulfingBullish(int which) { 
+		boolean engulfing = false;
+		if(which>0) {
+			if(isHighUpAndLowDownCurrentToPrevious(which) &&
+			   isOutsideBarClosingUp(which)) {
+				engulfing=true;
+			}
+		}
+		return engulfing;
+	}
+
 	public boolean isPriceGap(int which) {
 		boolean gap = false;
 		if(which>0) {
@@ -69,35 +99,6 @@ public class AnalysisPriceOnly {
 		return reversalDay;
 	}
 	
-	public boolean isUpTrend(int which) { // three+ sessions
-		boolean upTrend = false;
-		
-		if(which>1) {			
-			upTrend = isOpenUpCurrentToPrevious(which-2) && 
-					  isCloseUpCurrentToSelf(which-2) &&
-					  isOpenUpCurrentToPrevious(which-1) && 
-					  isCloseUpCurrentToSelf(which-1) &&
-					  isOpenUpCurrentToPrevious(which) && 
-					  isCloseUpCurrentToSelf(which);
-
-		}
-		return upTrend;
-	}
-
-	public boolean isDownTrend(int which) { // three+ sessions
-		boolean downTrend = false;
-
-		if(which>1) {
-			downTrend = isOpenDownCurrentToPrevious(which-2) &&
-					    isCloseDownCurrentToSelf(which-2) &&
-					    isOpenDownCurrentToPrevious(which-1) && 
-					    isCloseDownCurrentToSelf(which-1) &&
-					    isOpenDownCurrentToPrevious(which) && 
-					    isCloseDownCurrentToSelf(which);
-		}
-
-		return downTrend;
-	}
 
 	// IN OUT: CLARIFIES IF ENGULFING UP/DOWN
 	public boolean isOutsideBarClosingDown(int which) {
@@ -166,23 +167,6 @@ public class AnalysisPriceOnly {
 		boolean supportOrResistance = false;
 		// TODO: within 5-10 points of level defended 3 times
 		return supportOrResistance;
-	}
-
-	
-	// SEQUENCES OF HIGHS AND LOWS
-	private Integer getPreviousHigh(Integer which) {
-		Integer previous = 0;
-		if(which>0) {
-			
-		}
-		return previous;
-	}
-	private Integer getPreviousLow(Integer which) {
-		Integer previous = 0;
-		if(which>0) {
-			
-		}
-		return previous;
 	}
 	
 	
@@ -430,14 +414,40 @@ public class AnalysisPriceOnly {
 		s = s + "> PRICE(" + which + ")\t= ";  
 
 		// EMPHASIS
-		if(isAtResistanceOrSupport()) {  // TODO: ignore all others otherwise?
+		if(isAtResistanceOrSupport()) {  // TODO: ignore all others otherwise; not reversal otherwise
 			s = s + "!!! @SUPPORT/RESISTANCE. ";
 		}
 		
-		// MOST IMPORTANT
-		if(isEngulfing(which)) {
-			s = s + "ENGULFING: *most* powerful reversal down. ";
+		// REVERSAL SIGNALS
+		// head and shoulders
+		// double top or bottom
+		// wedges
+		// triangles
+		if(isPriceGap(which)) {
+			s = s + "PRICE GAP: *fast* REVERSAL signal. ";
 		}
+		
+		// OTHER REVERSAL SIGNALS (swinch ch6)
+		// cup and handle reversal
+		// price spike reversal
+		
+		// MOST IMPORTANT: CONFIRMATION
+		// bullish engulfing
+		// bearish engulfing
+		// three white soldiers
+		// three black crows
+		
+		if(isEngulfingBearish(which)) {
+			s = s + "ENGULFING: *most* powerful REVERSAL DOWN (80%). ";
+		}
+		if(isEngulfingBullish(which)) {
+			s = s + "ENGULFING: *most* powerful REVERSAL UP (80%). ";
+		}
+		
+		// inside up
+		// inside down
+		// outside up
+		// outside down
 		if(isOutsideBarClosingDown(which)) {
 			s = s + "OUTSIDE BAR: moving down. ";
 		}
@@ -446,12 +456,6 @@ public class AnalysisPriceOnly {
 		}
 		if(isInsideBar(which)) {
 			s = s + "INSDIE BAR: pausing. ";
-		}
-		if(isThreeWhiteSoldiers()) {
-			s = s + "THREE WHITE SOLIDERS: *. ";
-		}
-		if(isThreeBlackCrows()) {
-			s = s + "THREE BLACK CROWS: *. ";				
 		}
 		
 		// SWING TRADING
@@ -464,11 +468,11 @@ public class AnalysisPriceOnly {
 		}
 
 		if(isUpTrend(which)) { 
-			s = s + "UP-TREND. ";
+			s = s + "UP-TREND: three white soldiers. ";
 		}
 
 		if(isDownTrend(which)) { 
-			s = s + "DOWN-TREND. ";
+			s = s + "DOWN-TREND: three black crows. ";
 		}
 		
 		// OTHER SIGNALS
@@ -484,9 +488,29 @@ public class AnalysisPriceOnly {
 		if(isThreeBarReversalUp(which)) {
 			s = s + "THREE BAR REVERSAL UP. ";
 		}
+
+		//CONINUATION SIGNALS
+		// long-legged doji and spinning top
+		// doji star
 		if(isDojiBar(which)) {
 			s = s + "DOJI BAR: reversal? ";
 		}
+		// thrusting lines
+		// separating lines
+		// in neck lines
+		// black side-by-side lines
+		// tasuki gap
+		// gap filled
+		
+		
+		// YET MORE REVERSAL SIGNALS
+		// hammer and hanging man
+		// harami
+		// harami cross
+		// inverted hammer
+		// abandoned baby
+		// squeeze alert
+		// morning star and evening star
 		
 		return s;
 	}

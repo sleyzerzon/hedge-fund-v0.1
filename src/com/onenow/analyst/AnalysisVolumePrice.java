@@ -32,6 +32,11 @@ public class AnalysisVolumePrice {
 		String s = "";
 		
 		s = s + "> VOLUME(" + which + ")\t= ";  
+		
+		// VOLUME INDICATORS
+		// On Balance Volume (OBV)
+		// Chaikin Money Flow (CMF)
+		// Accumulation Distribution (A/D)
 
 		if(getPriceAnalysis().isIgnorePriceSignalForVolume(which)) {
 			s = s + "IGNORE. ";

@@ -67,7 +67,8 @@ public class Pucara {
 		
 		setSampling();
 		
-//		getChannelPrices(getContractFactory());
+		// !!!!!!!!!!!!!!!!!!!!!!!
+//		getChannelPrices(getContractFactory()); 
 	}
 
 	
