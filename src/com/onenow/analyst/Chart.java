@@ -26,16 +26,16 @@ public class Chart {
 	}
 	
 	// PUBLIC	
-	public String getAnalysis() {
+	public String getAnalysis(int which) {
 		String s = "";
 		
 		setPriceOnlyAnalysis(new AnalysisPriceOnly(prices));
 		setVolumePriceAnalysis(new AnalysisVolumePrice(prices, sizes, priceOnlyAnalysis));
 		setMomentumAnalysis(new AnalysisMomentum());
 		
-		s = s + getPriceOnlyAnalysis().toString();
-		s = s + getVolumePriceAnalysis().toString();
-		s = s + getMomentumAnalysis().toString();
+		s = s + getPriceOnlyAnalysis().toString(which) + "\n";
+		s = s + getVolumePriceAnalysis().toString(which) + "\n";
+		s = s + getMomentumAnalysis().toString(which) + "\n";
 		
 		return s;
 	}

@@ -28,6 +28,12 @@ public class Pucara {
 	// stop loss at 2x credit
 	// close at Friday noon, never go through expiration
 	// max loss 2% of capital
+	
+	// 30-day 1955 .1 delta put at $500 credit, with $200 margin each
+	// make $10k with 20 contracts; with $4k margin => 2.5x return
+	// + limit: $100 ($2k loss in the month) ... 20-point decrease 
+	// ratio?
+	// 
 
 	private static BrokerInteractive IB;
 	private static BrokerActivityImpl broker;
@@ -129,7 +135,12 @@ public class Pucara {
 				if(!chart.getSizes().isEmpty()) {
 					inv.getCharts().put(sampling, chart);	
 					System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" +chart.toString());
-					System.out.println(chart.getAnalysis() + "\n");
+					
+					for(int i=0; i<chart.getPrices().size(); i++) {
+						System.out.println(chart.getAnalysis(i));
+					}
+					System.out.println("\n");
+					
 				} else {
 					System.out.println("- chart " + inv.toString() + " " + sampling);
 				}

@@ -40,6 +40,42 @@ public class AnalysisPriceOnly {
 	}
 
 	
+	// PRIVATE
+	public boolean isIgnorePriceSignalForVolume(Integer which) {
+		boolean ignore = false;
+		if(which.equals(0)) {
+			ignore=true;
+			System.out.println("ignore: first element");
+		}
+		if(which>0) {
+			Candle previous = getPrices().get(which-1);
+			Candle current = getPrices().get(which);
+			if(!isHigherHighPrice(previous, current)) {
+				ignore=true;
+				System.out.println("ignore: not higher high");
+			}
+			if(!isLowerLowPrice(previous, current)) {
+				ignore=true;
+			}
+			if(isHigherHighAndLowerLow(previous, current)) {
+				if( !(current.getHighPrice()==current.getClosePrice()) ||
+					 !(current.getLowPrice()==current.getClosePrice()) ) {
+					ignore=true;
+					System.out.println("ignore: higher high and lower low, but not closing high/low");
+				}
+			}
+		}
+		return ignore;
+	}
+	
+	public boolean isLessImportantPriceSignal() {
+		boolean lessImportant = false;
+		
+		lessImportant = !isAtResistanceOrSupport();
+		
+		return lessImportant;
+	}
+	
 	// SEQUENCES OF HIGHS AND LOWS
 	private Integer getPreviousHigh(Integer which) {
 		Integer previous = 0;
@@ -130,38 +166,11 @@ public class AnalysisPriceOnly {
 		return insideBar;
 	}
 
-	// PRIVATE
-	public boolean isIgnore(Integer which) {
-		boolean ignore = false;
-		if(which.equals(0)) {
-			ignore=true;
-			System.out.println("ignore: first element");
-		}
-		if(which>0) {
-			Candle previous = getPrices().get(which-1);
-			Candle current = getPrices().get(which);
-			if(!isHigherHighPrice(previous, current)) {
-				ignore=true;
-				System.out.println("ignore: not higher high");
-			}
-			if(!isLowerLowPrice(previous, current)) {
-				ignore=true;
-			}
-			if(isHigherHighAndLowerLow(previous, current)) {
-				if( !(current.getHighPrice()==current.getClosePrice()) ||
-					 !(current.getLowPrice()==current.getClosePrice()) ) {
-					ignore=true;
-					System.out.println("ignore: higher high and lower low, but not closing high/low");
-				}
-			}
-		}
-		return ignore;
-	}
 	
 	// OPEN AND CLOSE
 	private boolean isCloseUp(int which) {
 		boolean closeUp = false;
-		if(isIgnore(which)) {
+		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
 		}
 		if(which>0) {
@@ -176,7 +185,7 @@ public class AnalysisPriceOnly {
 	
 	private boolean isCloseDown(int which) {
 		boolean closeDown = false;
-		if(isIgnore(which)) {
+		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
 		}
 		if(which>0) {
@@ -200,7 +209,7 @@ public class AnalysisPriceOnly {
 
 	private boolean isHighUp(Integer which) {
 		boolean isUp = false;
-		if(isIgnore(which)) {
+		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
 		}
 		if(which>0) {
@@ -215,7 +224,7 @@ public class AnalysisPriceOnly {
 	
 	private boolean isLowDown(Integer which) {
 		boolean isDown = false;
-		if(isIgnore(which)) {
+		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
 		}
 		if(which>0) {
@@ -262,7 +271,6 @@ public class AnalysisPriceOnly {
 		String s = "";
 		
 		for(int i=0; i<getPrices().size(); i++) {
-			s = s + "> PRICE [" + i + "]\t";  
 			s = s + toString(i);
 		}
 			
@@ -271,42 +279,44 @@ public class AnalysisPriceOnly {
 	
 	public String toString(int which) {
 		String s = "";
-		if(isIgnore(which)) {
-			s = "= IGNORE" + "\n";
+		s = s + "> PRICE(" + which + ")\t";  
+
+		if(isIgnorePriceSignalForVolume(which)) {
+			s = s + "= IGNORE. ";
 		} else {
 			if(isAtResistanceOrSupport()) {
-				s = "!!! @SUPPORT/RESISTANCE" + "\n";
+				s = s + "!!! @SUPPORT/RESISTANCE. ";
 			}
 			if(isEngulfing(which)) {
-				s = "ENGULFING: *most* powerful reversal down";
+				s = s + "ENGULFING: *most* powerful reversal down. ";
 			}
 			if(isThreeWhiteSoldiers()) {
-				s = "THREE WHITE SOLIDERS: *" + "\n";
+				s = s + "THREE WHITE SOLIDERS: *. ";
 			}
 			if(isThreeBlackCrows()) {
-				s = "THREE BLACK CROWS: *" + "\n";				
+				s = s + "THREE BLACK CROWS: *. ";				
 			}
 			
 			if(isIsolatedHigh(which)) {
-				s = "ISOLATED HIGH: look at closing (moving UP if closes near high, else moving DOWN)" + "\n";
+				s = s + "ISOLATED HIGH: look at closing (moving UP if closes near high, else moving DOWN). ";
 			}
 			if(isIsolatedLow(which)) {
-				s = "ISOLATED LOW: look at closing (moving DOWN if closes near low, else moving UP)" + "\n";
+				s = s + "ISOLATED LOW: look at closing (moving DOWN if closes near low, else moving UP). ";
 			}
 			if(isThreeBarReversalDown(which)) {
-				s = "THREE BAR REVERSAL DOWN" + "\n";
+				s = s + "THREE BAR REVERSAL DOWN. ";
 			}
 			if(isThreeBarReversalUp(which)) {
-				s = "THREE BAR REVERSAL UP" + "\n";
+				s = s + "THREE BAR REVERSAL UP. ";
 			}
 			if(isDojiBar(which)) {
-				s = "DOJI BAR: reversal?" + "\n";
+				s = s + "DOJI BAR: reversal? ";
 			}
 			if(isOutsideBar(which)) {
-				s = "OUTSIDE BAR: moving down" + "\n";
+				s = s + "OUTSIDE BAR: moving down. ";
 			}
 			if(isInsideBar(which)) {
-				s = "INSDIE BAR: pausing" + "\n";
+				s = s + "INSDIE BAR: pausing. ";
 			}
 		}
 		return s;
