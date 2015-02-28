@@ -5,6 +5,7 @@ import java.util.List;
 public class AnalysisPriceOnly {
 	List<Candle> prices;
 	
+	// TODO: CHANNES, WEDGES, RAISING RANGES, 
 	public AnalysisPriceOnly(List<Candle> prices) {
 		setPrices(prices);
 	}
@@ -32,7 +33,73 @@ public class AnalysisPriceOnly {
 		return engulfing;
 	}
 	
-	// IN OUT: ENGULFING UP/DOWN
+	public boolean isPriceGap(int which) {
+		boolean gap = false;
+		if(which>0) {
+			
+			
+		}
+		
+		return gap;
+	}
+	
+	// SWING
+	public boolean isNarrowRangeDay(int which) {  
+		boolean narrowRange = false;
+		// TODO DOJI by small % rather than exactly equal
+		
+		Candle current = getPrices().get(which);
+		Double range = Math.abs(current.getClosePrice()-current.getOpenPrice());
+		if(range<5) {
+			narrowRange = true;
+		}
+		
+		return narrowRange;
+	}
+	
+	public boolean isReversalDay(int which) {
+		boolean reversalDay = false;
+	
+		if(isUpTrend(which-1) && !isUpTrend(which)) {			
+			reversalDay = true;
+		}
+		if(isDownTrend(which-1) && !isDownTrend(which)) {
+			reversalDay = true;
+		}
+		return reversalDay;
+	}
+	
+	public boolean isUpTrend(int which) { // three+ sessions
+		boolean upTrend = false;
+		
+		if(which>1) {			
+			upTrend = isOpenUpCurrentToPrevious(which-2) && 
+					  isCloseUpCurrentToSelf(which-2) &&
+					  isOpenUpCurrentToPrevious(which-1) && 
+					  isCloseUpCurrentToSelf(which-1) &&
+					  isOpenUpCurrentToPrevious(which) && 
+					  isCloseUpCurrentToSelf(which);
+
+		}
+		return upTrend;
+	}
+
+	public boolean isDownTrend(int which) { // three+ sessions
+		boolean downTrend = false;
+
+		if(which>1) {
+			downTrend = isOpenDownCurrentToPrevious(which-2) &&
+					    isCloseDownCurrentToSelf(which-2) &&
+					    isOpenDownCurrentToPrevious(which-1) && 
+					    isCloseDownCurrentToSelf(which-1) &&
+					    isOpenDownCurrentToPrevious(which) && 
+					    isCloseDownCurrentToSelf(which);
+		}
+
+		return downTrend;
+	}
+
+	// IN OUT: CLARIFIES IF ENGULFING UP/DOWN
 	public boolean isOutsideBarClosingDown(int which) {
 		boolean outsideBar = false;
 		if(isHighUpAndLowDownCurrentToPrevious(which) && isCloseDownCurrentToSelf(which)) { 
@@ -177,6 +244,34 @@ public class AnalysisPriceOnly {
 	
 	
 	// OPEN AND CLOSE: CURRENT
+	private boolean isOpenUpCurrentToPrevious(int which) {
+		boolean openUp = false;
+		if(isIgnorePriceSignalForVolume(which)) {
+			return false;
+		}
+		if(which>0) {
+			Candle current = getPrices().get(which);
+			if(current.getOpenPrice()>current.getClosePrice()) {
+				
+			}
+		}
+		return openUp;
+	}
+
+	private boolean isOpenDownCurrentToPrevious(int which) {
+		boolean openUp = false;
+		if(isIgnorePriceSignalForVolume(which)) {
+			return false;
+		}
+		if(which>0) {
+			Candle current = getPrices().get(which);
+			if(current.getOpenPrice()<current.getClosePrice()) {
+				
+			}
+		}
+		return openUp;
+	}
+
 	private boolean isCloseUpCurrentToSelf(int which) {
 		boolean closeUp = false;
 		if(isIgnorePriceSignalForVolume(which)) {
@@ -334,9 +429,12 @@ public class AnalysisPriceOnly {
 		String s = "";
 		s = s + "> PRICE(" + which + ")\t= ";  
 
+		// EMPHASIS
 		if(isAtResistanceOrSupport()) {  // TODO: ignore all others otherwise?
 			s = s + "!!! @SUPPORT/RESISTANCE. ";
 		}
+		
+		// MOST IMPORTANT
 		if(isEngulfing(which)) {
 			s = s + "ENGULFING: *most* powerful reversal down. ";
 		}
@@ -354,7 +452,26 @@ public class AnalysisPriceOnly {
 		}
 		if(isThreeBlackCrows()) {
 			s = s + "THREE BLACK CROWS: *. ";				
-		}		
+		}
+		
+		// SWING TRADING
+		if(isNarrowRangeDay(which)) {
+			s = s + "*NARROW* RANGE. ";
+		}
+		
+		if(isReversalDay(which)) {
+			s = s + "*REVERSAL* DAY. ";
+		}
+
+		if(isUpTrend(which)) { 
+			s = s + "UP-TREND. ";
+		}
+
+		if(isDownTrend(which)) { 
+			s = s + "DOWN-TREND. ";
+		}
+		
+		// OTHER SIGNALS
 		if(isIsolatedHigh(which)) {
 			s = s + "ISOLATED HIGH: look at closing (moving UP if closes near high, else moving DOWN). ";
 		}
