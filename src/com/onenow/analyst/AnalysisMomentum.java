@@ -17,7 +17,7 @@ public class AnalysisMomentum {
 	public String toString(int which) {
 		String s = "";
 		
-		s = s + "> MOMENTUM(" + which + ")\t";  
+		s = s + "> MOMENTUM(" + which + ")\t= ";  
 		
 		return s;
 	}

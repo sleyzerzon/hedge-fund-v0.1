@@ -31,8 +31,14 @@ public class AnalysisVolumePrice {
 	public String toString(int which) {
 		String s = "";
 		
-		s = s + "> VOLUME(" + which + ")\t";  
+		s = s + "> VOLUME(" + which + ")\t= ";  
 
+		if(getPriceAnalysis().isIgnorePriceSignalForVolume(which)) {
+			s = s + "IGNORE. ";
+		} else {
+			
+		}
+		
 		return s;
 	}
 
