@@ -87,11 +87,11 @@ public class AnalysisVolumePrice {
 		} else {
 			
 			if(isVolumeWeaknessForUptrend(which)) {
-				s = s + "***ENTRY POINT*** up-trend weakness. ";
+				s = s + "<<<ENTRY POINT>>> up-trend weakness. ";
 			}
 
 			if(isVolumeWeaknessForDowntrend(which)) {
-				s = s + "***ENTRY POINT*** down-trend weakness. ";
+				s = s + "<<<ENTRY POINT>>> down-trend weakness. ";
 			}
 
 		}
