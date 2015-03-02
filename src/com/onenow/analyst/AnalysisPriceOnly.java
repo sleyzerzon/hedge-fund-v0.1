@@ -25,6 +25,10 @@ public class AnalysisPriceOnly {
 					  isClosePriceUpCurrentToSelf(which-1) &&
 					  isOpenPriceUpCurrentToPrevious(which) && 
 					  isClosePriceUpCurrentToSelf(which);
+			
+			if(upTrend) {
+				System.out.println("up-trend " + (which-2) + " to " + (which-1) + " to " + which);
+			}
 
 		}
 		return upTrend;
@@ -40,6 +44,11 @@ public class AnalysisPriceOnly {
 					    isClosePriceDownCurrentToSelf(which-1) &&
 					    isOpenPriceDownCurrentToPrevious(which) && 
 					    isClosePriceDownCurrentToSelf(which);
+
+			if(downTrend) {
+				System.out.println("down-trend " + (which-2) + " to " + (which-1) + " to " + which);
+
+			}
 		}
 
 		return downTrend;
@@ -51,6 +60,7 @@ public class AnalysisPriceOnly {
 			if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) && 
 			   isOutsideBarClosingDown(which)) {
 				engulfing=true;
+				System.out.println("engulfing bearish at " + which);
 			}
 		}
 		return engulfing;
@@ -62,6 +72,7 @@ public class AnalysisPriceOnly {
 			if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) &&
 			   isOutsideBarClosingUp(which)) {
 				engulfing=true;
+				System.out.println("engulfing bullish at " + which);
 			}
 		}
 		return engulfing;
@@ -73,6 +84,9 @@ public class AnalysisPriceOnly {
 			if(isOpenPriceUpCurrentToPrevious(which) || 
 					isOpenPriceDownCurrentToPrevious(which)) {
 				gap = true;
+				if(gap) {
+					System.out.println("gap at " + which);
+				}
 			}
 		}
 		return gap;
@@ -87,6 +101,7 @@ public class AnalysisPriceOnly {
 		Double range = Math.abs(current.getClosePrice()-current.getOpenPrice());
 		if(range<5) {
 			narrowRange = true;
+			System.out.println("narrow range at " + which);
 		}
 		
 		return narrowRange;
@@ -97,8 +112,10 @@ public class AnalysisPriceOnly {
 	
 		if(isUpTrend(which-1) && !isUpTrend(which)) {			
 			reversalDay = true;
+			System.out.println("reversal day up at " + which);
 		}
 		if(isDownTrend(which-1) && !isDownTrend(which)) {
+			System.out.println("reversal day down at " + which);
 			reversalDay = true;
 		}
 		return reversalDay;
@@ -111,6 +128,7 @@ public class AnalysisPriceOnly {
 		if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) && 
 				isClosePriceDownCurrentToSelf(which)) { 
 			outsideBar = true;
+			System.out.println("outside bar closing down at " + which);
 		}
 		return outsideBar;
 	}
@@ -120,6 +138,7 @@ public class AnalysisPriceOnly {
 		if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) && 
 				isClosePriceUpCurrentToSelf(which)) { 
 			outsideBar = true;
+			System.out.println("outside bar closign up at " + which);
 		}
 		return outsideBar;
 	}
@@ -130,6 +149,7 @@ public class AnalysisPriceOnly {
 			if(isLowerHighPriceCurrentToPreviousIndex(which) && 
 					isHigherLowPriceCurrentToPreviousIndex(which)) {
 				insideBar = true;
+				System.out.println("inside bar at " + which);
 			}
 		}
 		return insideBar;
@@ -143,9 +163,11 @@ public class AnalysisPriceOnly {
 			if(!isIgnorePriceSignalForVolume(i)) {
 				if(isHigherHighPriceCurrentToPreviousIndex(i)) {
 					getNewHighIndex().add(i);
+					System.out.println("new high at " + i);
 				}
 				if(isLowerLowPriceCurrentToPreviousIndex(i)) {
 					getNewLowIndex().add(i);
+					System.out.println("new low at " + i);
 				}
 			}
 		}
@@ -158,6 +180,7 @@ public class AnalysisPriceOnly {
 		for(int i=last; i>=0; i++) {
 			if(getNewHighIndex().get(last).equals(which)) { // for which specifically
 				newHigh = true;
+				System.out.println("current is new high at " + which);
 			}
 		}
 		return newHigh;
@@ -170,6 +193,7 @@ public class AnalysisPriceOnly {
 		for(int i=last; i>=0; i++) {		
 			if(getNewLowIndex().get(last).equals(which)) { // for which specifically
 				newLow = true;
+				System.out.println("current is low high at " + which);
 			}
 		}
 
@@ -209,6 +233,7 @@ public class AnalysisPriceOnly {
 	public boolean isLessImportantPriceSignal() {
 		boolean lessImportant = false;
 		
+		// TODO
 		lessImportant = !isAtResistanceOrSupport();
 		
 		return lessImportant;
@@ -229,6 +254,7 @@ public class AnalysisPriceOnly {
 				Candle current = getPrices().get(which);
 				if(current.getClosePrice()<current.getHighPrice()) {
 					isolatedHigh=true;
+					System.out.println("isolated high at " + which);
 				}
 			}
 		}
@@ -241,6 +267,7 @@ public class AnalysisPriceOnly {
 				Candle current = getPrices().get(which);
 				if(current.getClosePrice()>current.getLowPrice()) {
 					isolatedLow=true;
+					System.out.println("isolated low at " + which);
 				}
 			}		
 		}
@@ -254,6 +281,7 @@ public class AnalysisPriceOnly {
 			if(isHigherHighPriceCurrentToPreviousIndex(which-1) && 
 					isLowerLowPriceCurrentToPreviousIndex(which)) {
 				threeBarReversalDown = true;
+				System.out.println("three bar reversal down at " + which);
 			}
 		}
 		return threeBarReversalDown;
@@ -265,6 +293,7 @@ public class AnalysisPriceOnly {
 			if(isLowerLowPriceCurrentToPreviousIndex(which-1) && 
 					isHigherHighPriceCurrentToPreviousIndex(which)) {
 				threeBarReversalUp = true;
+				System.out.println("three bar reversal up at " + which);
 			}
 		}		
 		return threeBarReversalUp;
@@ -276,6 +305,7 @@ public class AnalysisPriceOnly {
 		if(!isClosePriceUpCurrentToSelf(which) && 
 				!isClosePriceDownCurrentToSelf(which)) {
 			dojiBar = true;
+			System.out.println("doji at " + which);
 		}
 		return dojiBar;
 	}
@@ -292,6 +322,7 @@ public class AnalysisPriceOnly {
 			Candle previous = getPrices().get(which-1);
 			if(current.getOpenPrice()>previous.getClosePrice()) {
 				openUp = true;
+				System.out.println("opening up at " + which);
 			}
 		}
 		return openUp;
@@ -307,6 +338,7 @@ public class AnalysisPriceOnly {
 			Candle previous = getPrices().get(which-1);
 			if(current.getOpenPrice()<previous.getClosePrice()) {
 				openDown = true;
+				System.out.println("opening down at " + which);
 			}
 		}
 		return openDown;
@@ -320,7 +352,8 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle current = getPrices().get(which);
 			if(current.getClosePrice()>current.getOpenPrice()) {
-				
+				closeUp = true;
+				System.out.println("close up at " + which);
 			}
 		}
 		return closeUp;
@@ -335,6 +368,7 @@ public class AnalysisPriceOnly {
 			Candle current = getPrices().get(which);
 			if(current.getClosePrice()<current.getOpenPrice()) {
 				closeDown = true;
+				System.out.println("close down at " + which);
 			}
 		}		
 		return closeDown;
@@ -346,6 +380,7 @@ public class AnalysisPriceOnly {
 		if(isHigherHighPriceCurrentToPreviousIndex(which) && 
 				isLowerLowPriceCurrentToPreviousIndex(which)) {
 			isUpAndDown = true;
+			System.out.println("higher high and lower low at " + which);
 		}
 		return isUpAndDown;
 	}
@@ -360,6 +395,7 @@ public class AnalysisPriceOnly {
 			Candle current = getPrices().get(which);
 			if(isHigherHighPriceCurrentToPreviousCandle(previous, current)) {
 				isUp=true;
+				System.out.println("higher high at " + which);
 			}
 		}
 		return isUp;
@@ -375,6 +411,7 @@ public class AnalysisPriceOnly {
 			Candle current = getPrices().get(which);
 			if(isLowerHighPriceCurrentToPreviousCandle(previous, current)) {
 				isUp=true;
+				System.out.println("lower high at " + which);
 			}
 		}
 		return isUp;
@@ -390,6 +427,7 @@ public class AnalysisPriceOnly {
 			Candle current = getPrices().get(which);
 			if(isLowerLowPriceCurrentToPreviousCandle(previous, current)) {
 				isDown=true;
+				System.out.println("lower low at " + which);
 			}
 		}
 		return isDown;
@@ -405,6 +443,7 @@ public class AnalysisPriceOnly {
 			Candle current = getPrices().get(which);
 			if(isHigherLowPriceCurrentToPreviousCandle(previous, current)) {
 				isDown=true;
+				System.out.println("higher low at " + which);
 			}
 		}
 		return isDown;
@@ -415,6 +454,7 @@ public class AnalysisPriceOnly {
 		boolean higher = false;
 		if(current.getHighPrice()>previous.getHighPrice()) {
 			higher = true;
+			System.out.println("higher high at current to prevous candle");
 		}
 		return higher;
 	}
@@ -423,6 +463,7 @@ public class AnalysisPriceOnly {
 		boolean higher = false;
 		if(current.getHighPrice()<previous.getHighPrice()) {
 			higher = true;
+			System.out.println("lower high at current to prevous candle");
 		}
 		return higher;
 	}
@@ -431,6 +472,7 @@ public class AnalysisPriceOnly {
 		boolean lower = false;
 		if(current.getLowPrice()<previous.getLowPrice()) {
 			lower = true;
+			System.out.println("lower low at current to prevous candle");
 		}		
 		return lower;
 	}
@@ -439,6 +481,7 @@ public class AnalysisPriceOnly {
 		boolean lower = false;
 		if(current.getLowPrice()>previous.getLowPrice()) {
 			lower = true;
+			System.out.println("higher low at current to prevous candle");
 		}		
 		return lower;
 	}
@@ -447,6 +490,7 @@ public class AnalysisPriceOnly {
 		boolean isBoth = false;
 		if(isHigherHighPriceCurrentToPreviousCandle(previous, current) && isLowerLowPriceCurrentToPreviousCandle(previous, current)) {
 			isBoth=true;
+			System.out.println("higher high and lower low at current to prevous candle");
 		}
 		return isBoth;
 	}

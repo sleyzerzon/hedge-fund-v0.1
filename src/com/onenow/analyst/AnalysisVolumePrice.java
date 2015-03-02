@@ -31,6 +31,7 @@ public class AnalysisVolumePrice {
 	
 			if( getSizes().get(currentHighIndex) < getSizes().get(previousHighIndex) ) {
 				uptrendWeakness = true;
+				System.out.println("weakness: " + previousHighIndex + " to " + currentHighIndex);
 			}
 		}
 		
@@ -51,6 +52,7 @@ public class AnalysisVolumePrice {
 			
 			if( getSizes().get(currentLowIndex) < getSizes().get(previousLowIndex)) {
 				downtrendWeakness = true;
+				System.out.println("weakness: " + previousLowIndex + " to " + currentLowIndex);
 			}
 		}
 		return downtrendWeakness;
