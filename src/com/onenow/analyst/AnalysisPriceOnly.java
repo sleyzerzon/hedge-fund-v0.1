@@ -5,6 +5,9 @@ import java.util.List;
 public class AnalysisPriceOnly {
 	List<Candle> prices;
 	
+	List<Integer> newHighIndex;
+	List<Integer> newLowIndex;
+	
 	// TODO: CHANNES, WEDGES, RAISING RANGES, 
 	public AnalysisPriceOnly(List<Candle> prices) {
 		setPrices(prices);
@@ -126,6 +129,60 @@ public class AnalysisPriceOnly {
 		}
 		return insideBar;
 	}
+	
+	// LAST HIGH/LOW BAR
+	public Integer getCurrentHighIndex(Integer which) {
+		Integer currentHigh = 0;
+
+		for(int i=getNewHighIndex().size()-1; i>=0; i--) {
+			if(getNewHighIndex().get(i) <= which) {
+				currentHigh = i;
+			}
+		}
+		return currentHigh;
+	}
+
+	public Integer getPreviousHighIndex(Integer which) {
+		Integer previousHigh = 0;
+
+		previousHigh = getCurrentHighIndex(which) - 1;
+
+		return previousHigh;
+	}
+	
+	public Integer getCurrentLowIndex(Integer which) {
+		Integer currentLow = 0;
+
+		for(int i=getNewLowIndex().size()-1; i>=0; i--) {
+			if(getNewLowIndex().get(i) <= which) {
+				currentLow = i;
+			}
+		}
+
+		return currentLow;
+	}
+
+	public Integer getPreviousLowIndex(Integer which) {
+		Integer previousLow = 0;
+		
+		previousLow = getCurrentLowIndex(which) - 1;
+
+		return previousLow;
+	}
+	
+	public void setMeaningfulHighsAndLowsForVolume() {	
+		for(int i=0; i<getPrices().size(); i++) {
+			if(!isIgnorePriceSignalForVolume(i)) {
+				if(isUpTrend(i)) {
+					getNewHighIndex().add(i);
+				}
+				if(isDownTrend(i)) {
+					getNewLowIndex().add(i);
+				}
+			}
+		}
+	}
+
 	
 	// IMPORTANCE
 	public boolean isIgnorePriceSignalForVolume(Integer which) {
@@ -558,5 +615,22 @@ public class AnalysisPriceOnly {
 	private void setPrices(List<Candle> prices) {
 		this.prices = prices;
 	}
+
+	private List<Integer> getNewHighIndex() {
+		return newHighIndex;
+	}
+
+	private void setNewHighIndex(List<Integer> newHighIndex) {
+		this.newHighIndex = newHighIndex;
+	}
+
+	private List<Integer> getNewLowIndex() {
+		return newLowIndex;
+	}
+
+	private void setNewLowIndex(List<Integer> newLowIndex) {
+		this.newLowIndex = newLowIndex;
+	}
+
 	
 }

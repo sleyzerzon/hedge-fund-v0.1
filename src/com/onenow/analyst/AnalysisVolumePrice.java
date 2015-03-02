@@ -17,6 +17,16 @@ public class AnalysisVolumePrice {
 	}
 	
 
+	public void isVolumeIncrease(Integer which) {
+		
+	}
+	
+	public void getSlope() {
+		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
+		
+		// getPreviousHighIndex
+		
+	}
 	
 	// TEST
 	

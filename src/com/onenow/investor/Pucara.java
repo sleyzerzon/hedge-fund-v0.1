@@ -39,7 +39,11 @@ public class Pucara {
 	// 30-day (2016) $1.25 , (2012): $1.25 ..., (2002): ?
 	// make 
 	// + limit equal to credit
-	// ratio 1:3 @
+	
+	// ratio 1:2 credit-wise = sell 15x(2085-80) for $1200 credit; buy 1x(2095) for $500
+	// - above 2100 profit $1200spread-500put-250buy back=550
+	// - above 2085, below 2095 profit 550+nx100, up to $1500
+	// - below 2085, move to later calendar
 
 	private static BrokerInteractive IB;
 	private static BrokerActivityImpl broker;
