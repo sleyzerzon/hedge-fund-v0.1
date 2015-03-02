@@ -66,10 +66,10 @@ public class AnalysisPriceOnly {
 	public boolean isPriceGap(int which) {
 		boolean gap = false;
 		if(which>0) {
-			
-			
+			if(isOpenUpCurrentToPrevious(which) || isOpenDownCurrentToPrevious(which)) {
+				gap = true;
+			}
 		}
-		
 		return gap;
 	}
 	
@@ -235,25 +235,27 @@ public class AnalysisPriceOnly {
 		}
 		if(which>0) {
 			Candle current = getPrices().get(which);
-			if(current.getOpenPrice()>current.getClosePrice()) {
-				
+			Candle previous = getPrices().get(which-1);
+			if(current.getOpenPrice()>previous.getClosePrice()) {
+				openUp = true;
 			}
 		}
 		return openUp;
 	}
 
 	private boolean isOpenDownCurrentToPrevious(int which) {
-		boolean openUp = false;
+		boolean openDown = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
 		}
 		if(which>0) {
 			Candle current = getPrices().get(which);
-			if(current.getOpenPrice()<current.getClosePrice()) {
-				
+			Candle previous = getPrices().get(which-1);
+			if(current.getOpenPrice()<previous.getClosePrice()) {
+				openDown = true;
 			}
 		}
-		return openUp;
+		return openDown;
 	}
 
 	private boolean isCloseUpCurrentToSelf(int which) {
@@ -411,7 +413,7 @@ public class AnalysisPriceOnly {
 	
 	public String toString(int which) {
 		String s = "";
-		s = s + "> PRICE(" + which + ")\t= ";  
+		s = s + "> PRICE(" + which + ")";  
 
 		// EMPHASIS
 		if(isAtResistanceOrSupport()) {  // TODO: ignore all others otherwise; not reversal otherwise
@@ -428,7 +430,7 @@ public class AnalysisPriceOnly {
 	
 	public String toStringReversal(int which) {
 		String s = "\t";
-		s = s + "REVERSAL. " + "\t";  
+		s = s + "REVERSAL " + "\t= ";  
 		
 		// REVERSAL SIGNALS
 		// head and shoulders
@@ -446,8 +448,8 @@ public class AnalysisPriceOnly {
 	}
 	
 	public String toStringConfirmation(int which) {
-		String s = "\t";
-		s = s + "CONFIRMATION. " + "\t";
+		String s = "\t\t";
+		s = s + "CONFIRMATION " + "\t= ";
 		
 		// MOST IMPORTANT: CONFIRMATION
 		// bullish engulfing
@@ -480,8 +482,8 @@ public class AnalysisPriceOnly {
 	}
 	
 	public String toStringSwing(int which) {
-		String s = "\t"; 
-		s = s + "SWING. " + "\t";
+		String s = "\t\t"; 
+		s = s + "SWING " + "\t\t= ";
 		
 		// SWING TRADING
 		if(isNarrowRangeDay(which)) {
@@ -518,8 +520,8 @@ public class AnalysisPriceOnly {
 	}
 	
 	public String toStringContinuation(int which) {
-		String s = "\t"; 
-		s = s + "CONTINUATION" + "\t";
+		String s = "\t\t"; 
+		s = s + "CONTINUATION " + "\t= ";
 
 		//CONINUATION SIGNALS
 		// long-legged doji and spinning top

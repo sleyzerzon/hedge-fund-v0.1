@@ -33,7 +33,13 @@ public class Pucara {
 	// make $10k with 20 contracts; with $4k margin => 2.5x return
 	// + limit: $100 ($2k loss in the month) ... 20-point decrease 
 	// ratio?
-	// 
+	
+	// @2085-80; resistance $2085, $2002
+	// 5-day (2016) ~$0.40 , (2012) $0.55 ... , (2002): ? 
+	// 30-day (2016) $1.25 , (2012): $1.25 ..., (2002): ?
+	// make 
+	// + limit equal to credit
+	// ratio 1:3 @
 
 	private static BrokerInteractive IB;
 	private static BrokerActivityImpl broker;
