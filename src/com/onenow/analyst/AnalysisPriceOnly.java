@@ -314,15 +314,17 @@ public class AnalysisPriceOnly {
 	// OPEN AND CLOSE: CURRENT
 	private boolean isOpenPriceUpCurrentToPrevious(int which) {
 		boolean openUp = false;
+		double benchmarkGap = 0.5; // TODO: correct? do based on underlying price
+		
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
 		}
 		if(which>0) {
 			Candle current = getPrices().get(which);
 			Candle previous = getPrices().get(which-1);
-			if(current.getOpenPrice()>previous.getClosePrice()) {
+			if(current.getOpenPrice()> (previous.getClosePrice()+benchmarkGap) ) {
 				openUp = true;
-				System.out.println("opening up at " + which);
+				System.out.println("opening up by " + benchmarkGap + " at " + which);
 			}
 		}
 		return openUp;

@@ -31,7 +31,7 @@ public class AnalysisVolumePrice {
 	
 			if( getSizes().get(currentHighIndex) < getSizes().get(previousHighIndex) ) {
 				uptrendWeakness = true;
-				System.out.println("weakness: " + previousHighIndex + " to " + currentHighIndex);
+				System.out.println("weakness high: " + previousHighIndex + " to " + currentHighIndex);
 			}
 		}
 		
@@ -52,7 +52,7 @@ public class AnalysisVolumePrice {
 			
 			if( getSizes().get(currentLowIndex) < getSizes().get(previousLowIndex)) {
 				downtrendWeakness = true;
-				System.out.println("weakness: " + previousLowIndex + " to " + currentLowIndex);
+				System.out.println("weakness low: " + previousLowIndex + " to " + currentLowIndex);
 			}
 		}
 		return downtrendWeakness;
@@ -79,7 +79,8 @@ public class AnalysisVolumePrice {
 		
 		s = s + "> VOLUME(" + which + ")\t= ";  
 		
-		// VOLUME INDICATORS
+		// VOLUME INDICATORS:  		
+		// MOMENTUM rsi>0.45, uptrending chi (positive slope), stoch (?), 1hr....goign up
 		// On Balance Volume (OBV)
 		// Chaikin Money Flow (CMF)
 		// Accumulation Distribution (A/D)
@@ -89,11 +90,11 @@ public class AnalysisVolumePrice {
 		} else {
 			
 			if(isVolumeWeaknessForUptrend(which)) {
-				s = s + "<<<ENTRY POINT>>> up-trend weakness. ";
+				s = s + "<<<ENTRY POINT>>> ANOMALY: up-trend weakness. ";
 			}
 
 			if(isVolumeWeaknessForDowntrend(which)) {
-				s = s + "<<<ENTRY POINT>>> down-trend weakness. ";
+				s = s + "<<<ENTRY POINT>>> ANOMALY: down-trend weakness. ";
 			}
 
 		}

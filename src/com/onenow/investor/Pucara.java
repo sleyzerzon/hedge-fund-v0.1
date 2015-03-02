@@ -71,27 +71,31 @@ public class Pucara {
 	public Pucara(String index, String expDate) throws InterruptedException {
 		setIndexName(index);
 		setExpDate(expDate);
+		setSampling();
+		
+		InitMarket init = new InitMarket(getMarketPortfolio()); // TODO: seed		
+		
+	}
+
+	public Pucara(String index, String expDate, boolean setChannel) throws InterruptedException {
+		setIndexName(index);
+		setExpDate(expDate);
+		setSampling();
 		
 		InitMarket init = new InitMarket(getMarketPortfolio()); // TODO: seed
 		
-		setSampling();
-		
-		// !!!!!!!!!!!!!!!!!!!!!!!
-//		getChannelPrices(getContractFactory()); 
+		if(setChannel) {
+			getChannelPrices(getContractFactory());
+		}
 	}
-
 	
 	
 	public static void launch() throws InterruptedException {
-		
-		// MOMENTUM rsi>0.5, uptrending chi, stoch, 1hr....goign up
-				
+						
 		while(true) {
 			
-			setCharts("2015-02-21", "2015-02-28");
-			
-//			System.out.println(anomaliesToString());
-			
+			setAndAnalyzeCharts("2015-02-21", "2015-02-28");
+						
 			if(isBullMarket()) { // TODO: futures market?
 				// has been trading in range! And it is breaking out!
 				if(isVolumeSpike() &&isMomentumReversedUp() && isFuturesGuidingUp()) { // BUY call
@@ -115,31 +119,15 @@ public class Pucara {
 		}
 	}
 	
-	private static String anomaliesToString() {
-		String s="";
-		List<Investment> invs = getMarketPortfolio().getInvestments();
-
-		for(Investment inv:invs) {
-			for(String sampling:getSamplingRate()) {
-				Chart chart = inv.getCharts().get(sampling);
-//				if(!chart.isLastCandleNormal()) {
-//					s = s + "ANOMALY: last candle " + sampling + " " + inv.toString() + "\n";
-//				}
-			}
-		}
-		
-		return s;
-	}
-
-	private static void setCharts(String fromDate, String toDate) {
+	private static void setAndAnalyzeCharts(String fromDate, String toDate) {
 
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		
-		
+		// TODO: underlying price, resistance/support?
 		for(String sampling:getSamplingRate()) {
 			for(Investment inv:invs) {
-				Chart chart = new Chart();
 				
+				Chart chart = new Chart();
 				chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 				
 				if(!chart.getSizes().isEmpty()) {
