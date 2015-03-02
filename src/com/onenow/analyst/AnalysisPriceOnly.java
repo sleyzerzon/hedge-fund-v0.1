@@ -417,6 +417,18 @@ public class AnalysisPriceOnly {
 		if(isAtResistanceOrSupport()) {  // TODO: ignore all others otherwise; not reversal otherwise
 			s = s + "!!! @SUPPORT/RESISTANCE. ";
 		}
+
+		s = s + toStringReversal(which) + "\n";
+		s = s + toStringConfirmation(which) + "\n";
+		s = s + toStringSwing(which) + "\n";
+		s = s + toStringContinuation(which) + "\n";
+		
+		return s;
+	}
+	
+	public String toStringReversal(int which) {
+		String s = "\t";
+		s = s + "REVERSAL. " + "\t";  
 		
 		// REVERSAL SIGNALS
 		// head and shoulders
@@ -425,11 +437,17 @@ public class AnalysisPriceOnly {
 		// triangles
 		if(isPriceGap(which)) {
 			s = s + "PRICE GAP: *fast* REVERSAL signal. ";
-		}
-		
+		}		
 		// OTHER REVERSAL SIGNALS (swinch ch6)
 		// cup and handle reversal
 		// price spike reversal
+		
+		return s;
+	}
+	
+	public String toStringConfirmation(int which) {
+		String s = "\t";
+		s = s + "CONFIRMATION. " + "\t";
 		
 		// MOST IMPORTANT: CONFIRMATION
 		// bullish engulfing
@@ -457,6 +475,13 @@ public class AnalysisPriceOnly {
 		if(isInsideBar(which)) {
 			s = s + "INSDIE BAR: pausing. ";
 		}
+		
+		return s;
+	}
+	
+	public String toStringSwing(int which) {
+		String s = "\t"; 
+		s = s + "SWING. " + "\t";
 		
 		// SWING TRADING
 		if(isNarrowRangeDay(which)) {
@@ -488,6 +513,13 @@ public class AnalysisPriceOnly {
 		if(isThreeBarReversalUp(which)) {
 			s = s + "THREE BAR REVERSAL UP. ";
 		}
+		
+		return s;
+	}
+	
+	public String toStringContinuation(int which) {
+		String s = "\t"; 
+		s = s + "CONTINUATION" + "\t";
 
 		//CONINUATION SIGNALS
 		// long-legged doji and spinning top
