@@ -17,12 +17,46 @@ public class AnalysisVolumePrice {
 	}
 	
 
-	public void isVolumeIncrease(Integer which) {
+	public boolean isVolumeWeaknessForUptrend(Integer which) {
 		
+		boolean uptrendWeakness = false;
+		
+		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
+			getPriceAnalysis().isHighUpCurrentToPrevious(which)) {
+			
+			getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
+			
+			Integer currentHighIndex = getPriceAnalysis().getCurrentHighIndex(which);
+			Integer previousHighIndex = getPriceAnalysis().getPreviousHighIndex(which); 
+	
+			if( getSizes().get(currentHighIndex) < getSizes().get(previousHighIndex) ) {
+				uptrendWeakness = true;
+			}
+		}
+		
+		return uptrendWeakness;
+	}
+	
+	public boolean isVolumeWeaknessForDowntrend(Integer which) {
+		
+		boolean downtrendWeakness = false;
+		
+		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
+			getPriceAnalysis().isHighUpCurrentToPrevious(which)) {
+			
+			getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
+	
+			Integer currentLowIndex = getPriceAnalysis().getCurrentLowIndex(which);
+			Integer previousLowIndex = getPriceAnalysis().getPreviousLowIndex(which);
+			
+			if( getSizes().get(currentLowIndex) < getSizes().get(previousLowIndex)) {
+				downtrendWeakness = true;
+			}
+		}
+		return downtrendWeakness;
 	}
 	
 	public void getSlope() {
-		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
 		
 		// getPreviousHighIndex
 		
@@ -52,6 +86,14 @@ public class AnalysisVolumePrice {
 			s = s + "IGNORE. ";
 		} else {
 			
+			if(isVolumeWeaknessForUptrend(which)) {
+				s = s + "***ENTRY POINT*** up-trend weakness. ";
+			}
+
+			if(isVolumeWeaknessForDowntrend(which)) {
+				s = s + "***ENTRY POINT*** down-trend weakness. ";
+			}
+
 		}
 		
 		return s;

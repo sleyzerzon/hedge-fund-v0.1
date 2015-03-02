@@ -131,18 +131,18 @@ public class AnalysisPriceOnly {
 	}
 	
 	// LAST HIGH/LOW BAR
-	public Integer getCurrentHighIndex(Integer which) {
+	public Integer getCurrentHighIndex(Integer which) { // looks back from which
 		Integer currentHigh = 0;
 
 		for(int i=getNewHighIndex().size()-1; i>=0; i--) {
-			if(getNewHighIndex().get(i) <= which) {
+			if(getNewHighIndex().get(i).equals(which)) {
 				currentHigh = i;
 			}
 		}
 		return currentHigh;
 	}
 
-	public Integer getPreviousHighIndex(Integer which) {
+	public Integer getPreviousHighIndex(Integer which) { 
 		Integer previousHigh = 0;
 
 		previousHigh = getCurrentHighIndex(which) - 1;
@@ -150,11 +150,11 @@ public class AnalysisPriceOnly {
 		return previousHigh;
 	}
 	
-	public Integer getCurrentLowIndex(Integer which) {
+	public Integer getCurrentLowIndex(Integer which) { // looks back from which
 		Integer currentLow = 0;
 
 		for(int i=getNewLowIndex().size()-1; i>=0; i--) {
-			if(getNewLowIndex().get(i) <= which) {
+			if(getNewLowIndex().get(i).equals(which)) {
 				currentLow = i;
 			}
 		}
@@ -352,7 +352,7 @@ public class AnalysisPriceOnly {
 		return isUpAndDown;
 	}
 
-	private boolean isHighUpCurrentToPrevious(Integer which) {
+	public boolean isHighUpCurrentToPrevious(Integer which) {
 		boolean isUp = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -382,7 +382,7 @@ public class AnalysisPriceOnly {
 		return isUp;
 	}
 
-	private boolean isLowDownCurrentToPrevious(Integer which) {
+	public boolean isLowDownCurrentToPrevious(Integer which) {
 		boolean isDown = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;

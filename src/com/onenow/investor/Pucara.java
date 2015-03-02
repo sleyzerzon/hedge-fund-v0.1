@@ -35,14 +35,13 @@ public class Pucara {
 	// ratio?
 	
 	// @2085-80; resistance $2085, $2002
-	// 5-day (2016) ~$0.40 , (2012) $0.55 ... , (2002): ? 
+	// 5-day (high 2016) ~$0.40 , (mid 2012) $0.55 ... , (low 2002): ? 
 	// 30-day (2016) $1.25 , (2012): $1.25 ..., (2002): ?
-	// make 
-	// + limit equal to credit
 	
-	// ratio 1:2 credit-wise = sell 15x(2085-80) for $1200 credit; buy 1x(2095) for $500
-	// - above 2100 profit $1200spread-500put-250buy back=550
-	// - above 2085, below 2095 profit 550+nx100, up to $1500
+	// act at $2005, sell based on levels of channel protection
+	// ratio 1:2 credit-wise = sell 20x(2085-80) for $1600 credit; buy 1x(2105) for $800
+	// - above 2105 profit $1600credit-800put-250buy back=550
+	// - above 2085, below 2005 profit 550+nx100, up to $2550
 	// - below 2085, move to later calendar
 
 	private static BrokerInteractive IB;
