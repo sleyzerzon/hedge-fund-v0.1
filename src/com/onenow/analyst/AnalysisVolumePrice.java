@@ -20,14 +20,14 @@ public class AnalysisVolumePrice {
 	public boolean isVolumeWeaknessForUptrend(Integer which) {
 		
 		boolean uptrendWeakness = false;
-		
+
+		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
+
 		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
-			getPriceAnalysis().isHighUpCurrentToPrevious(which)) {
-			
-			getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
-			
-			Integer currentHighIndex = getPriceAnalysis().getCurrentHighIndex(which);
-			Integer previousHighIndex = getPriceAnalysis().getPreviousHighIndex(which); 
+			getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which)) {
+					
+			Integer currentHighIndex = which;
+			Integer previousHighIndex = which-1; 
 	
 			if( getSizes().get(currentHighIndex) < getSizes().get(previousHighIndex) ) {
 				uptrendWeakness = true;
@@ -40,14 +40,14 @@ public class AnalysisVolumePrice {
 	public boolean isVolumeWeaknessForDowntrend(Integer which) {
 		
 		boolean downtrendWeakness = false;
-		
+
+		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
+
 		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
-			getPriceAnalysis().isHighUpCurrentToPrevious(which)) {
-			
-			getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
-	
-			Integer currentLowIndex = getPriceAnalysis().getCurrentLowIndex(which);
-			Integer previousLowIndex = getPriceAnalysis().getPreviousLowIndex(which);
+			getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which)) {
+				
+			Integer currentLowIndex = which;
+			Integer previousLowIndex = which-1;
 			
 			if( getSizes().get(currentLowIndex) < getSizes().get(previousLowIndex)) {
 				downtrendWeakness = true;

@@ -1,5 +1,6 @@
 package com.onenow.analyst;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AnalysisPriceOnly {
@@ -18,12 +19,12 @@ public class AnalysisPriceOnly {
 		boolean upTrend = false;
 		
 		if(which>1) {			
-			upTrend = isOpenUpCurrentToPrevious(which-2) && 
-					  isCloseUpCurrentToSelf(which-2) &&
-					  isOpenUpCurrentToPrevious(which-1) && 
-					  isCloseUpCurrentToSelf(which-1) &&
-					  isOpenUpCurrentToPrevious(which) && 
-					  isCloseUpCurrentToSelf(which);
+			upTrend = isOpenPriceUpCurrentToPrevious(which-2) && 
+					  isClosePriceUpCurrentToSelf(which-2) &&
+					  isOpenPriceUpCurrentToPrevious(which-1) && 
+					  isClosePriceUpCurrentToSelf(which-1) &&
+					  isOpenPriceUpCurrentToPrevious(which) && 
+					  isClosePriceUpCurrentToSelf(which);
 
 		}
 		return upTrend;
@@ -33,12 +34,12 @@ public class AnalysisPriceOnly {
 		boolean downTrend = false;
 
 		if(which>1) {
-			downTrend = isOpenDownCurrentToPrevious(which-2) &&
-					    isCloseDownCurrentToSelf(which-2) &&
-					    isOpenDownCurrentToPrevious(which-1) && 
-					    isCloseDownCurrentToSelf(which-1) &&
-					    isOpenDownCurrentToPrevious(which) && 
-					    isCloseDownCurrentToSelf(which);
+			downTrend = isOpenPriceDownCurrentToPrevious(which-2) &&
+					    isClosePriceDownCurrentToSelf(which-2) &&
+					    isOpenPriceDownCurrentToPrevious(which-1) && 
+					    isClosePriceDownCurrentToSelf(which-1) &&
+					    isOpenPriceDownCurrentToPrevious(which) && 
+					    isClosePriceDownCurrentToSelf(which);
 		}
 
 		return downTrend;
@@ -47,7 +48,7 @@ public class AnalysisPriceOnly {
 	public boolean isEngulfingBearish(int which) { 
 		boolean engulfing = false;
 		if(which>0) {
-			if(isHighUpAndLowDownCurrentToPrevious(which) && 
+			if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) && 
 			   isOutsideBarClosingDown(which)) {
 				engulfing=true;
 			}
@@ -58,7 +59,7 @@ public class AnalysisPriceOnly {
 	public boolean isEngulfingBullish(int which) { 
 		boolean engulfing = false;
 		if(which>0) {
-			if(isHighUpAndLowDownCurrentToPrevious(which) &&
+			if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) &&
 			   isOutsideBarClosingUp(which)) {
 				engulfing=true;
 			}
@@ -69,7 +70,8 @@ public class AnalysisPriceOnly {
 	public boolean isPriceGap(int which) {
 		boolean gap = false;
 		if(which>0) {
-			if(isOpenUpCurrentToPrevious(which) || isOpenDownCurrentToPrevious(which)) {
+			if(isOpenPriceUpCurrentToPrevious(which) || 
+					isOpenPriceDownCurrentToPrevious(which)) {
 				gap = true;
 			}
 		}
@@ -106,7 +108,8 @@ public class AnalysisPriceOnly {
 	// IN OUT: CLARIFIES IF ENGULFING UP/DOWN
 	public boolean isOutsideBarClosingDown(int which) {
 		boolean outsideBar = false;
-		if(isHighUpAndLowDownCurrentToPrevious(which) && isCloseDownCurrentToSelf(which)) { 
+		if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) && 
+				isClosePriceDownCurrentToSelf(which)) { 
 			outsideBar = true;
 		}
 		return outsideBar;
@@ -114,7 +117,8 @@ public class AnalysisPriceOnly {
 
 	public boolean isOutsideBarClosingUp(int which) {
 		boolean outsideBar = false;
-		if(isHighUpAndLowDownCurrentToPrevious(which) && isCloseUpCurrentToSelf(which)) { 
+		if(isHigherHighAndLowerLowPriceCurrentToPreviousIndex(which) && 
+				isClosePriceUpCurrentToSelf(which)) { 
 			outsideBar = true;
 		}
 		return outsideBar;
@@ -123,64 +127,53 @@ public class AnalysisPriceOnly {
 	public boolean isInsideBar(int which) {
 		boolean insideBar = false;
 		if(which>0) {
-			if(isHighDownCurrentToPrevious(which) && isLowUpCurrentToPrevious(which)) {
+			if(isLowerHighPriceCurrentToPreviousIndex(which) && 
+					isHigherLowPriceCurrentToPreviousIndex(which)) {
 				insideBar = true;
 			}
 		}
 		return insideBar;
 	}
 	
-	// LAST HIGH/LOW BAR
-	public Integer getCurrentHighIndex(Integer which) { // looks back from which
-		Integer currentHigh = 0;
-
-		for(int i=getNewHighIndex().size()-1; i>=0; i--) {
-			if(getNewHighIndex().get(i).equals(which)) {
-				currentHigh = i;
-			}
-		}
-		return currentHigh;
-	}
-
-	public Integer getPreviousHighIndex(Integer which) { 
-		Integer previousHigh = 0;
-
-		previousHigh = getCurrentHighIndex(which) - 1;
-
-		return previousHigh;
-	}
-	
-	public Integer getCurrentLowIndex(Integer which) { // looks back from which
-		Integer currentLow = 0;
-
-		for(int i=getNewLowIndex().size()-1; i>=0; i--) {
-			if(getNewLowIndex().get(i).equals(which)) {
-				currentLow = i;
-			}
-		}
-
-		return currentLow;
-	}
-
-	public Integer getPreviousLowIndex(Integer which) {
-		Integer previousLow = 0;
-		
-		previousLow = getCurrentLowIndex(which) - 1;
-
-		return previousLow;
-	}
-	
-	public void setMeaningfulHighsAndLowsForVolume() {	
+	// LAST HIGH/LOW LINE
+	public void setMeaningfulHighsAndLowsForVolume() {
+		setNewHighIndex(new ArrayList<Integer>());
+		setNewLowIndex(new ArrayList<Integer>());
 		for(int i=0; i<getPrices().size(); i++) {
 			if(!isIgnorePriceSignalForVolume(i)) {
-				if(isUpTrend(i)) {
+				if(isHigherHighPriceCurrentToPreviousIndex(i)) {
 					getNewHighIndex().add(i);
 				}
-				if(isDownTrend(i)) {
+				if(isLowerLowPriceCurrentToPreviousIndex(i)) {
 					getNewLowIndex().add(i);
 				}
 			}
 		}
+	}
+
+	public boolean isIndexNewHigh(Integer which) { 
+		boolean newHigh = false;
+
+		Integer last = getNewHighIndex().size()-1; 
+		for(int i=last; i>=0; i++) {
+			if(getNewHighIndex().get(last).equals(which)) { // for which specifically
+				newHigh = true;
+			}
+		}
+		return newHigh;
+	}
+		
+	public boolean isCurrentIndexNewLow(Integer which) { // looks back
+		boolean newLow = false;
+
+		Integer last = getNewLowIndex().size()-1; 
+		for(int i=last; i>=0; i++) {		
+			if(getNewLowIndex().get(last).equals(which)) { // for which specifically
+				newLow = true;
+			}
+		}
+
+		return newLow;
 	}
 
 	
@@ -194,14 +187,15 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle previous = getPrices().get(which-1);
 			Candle current = getPrices().get(which);
-			if(!isHigherHighPriceCurrentToPrevious(previous, current)) {
+			if(!isHigherHighPriceCurrentToPreviousCandle(previous, current)) {
 				ignore=true;
 				System.out.println("ignore: not higher high");
 			}
-			if(!isLowerLowPriceCurrentToPrevious(previous, current)) {
+			if(!isLowerLowPriceCurrentToPreviousCandle(previous, current)) {
 				ignore=true;
+				System.out.println("ignore: not lower low");
 			}
-			if(isHigherHighAndLowerLowCurrentToPrevious(previous, current)) {
+			if(isHigherHighAndLowerLowCurrentToPreviousCandle(previous, current)) {
 				if( !(current.getHighPrice()==current.getClosePrice()) ||
 					 !(current.getLowPrice()==current.getClosePrice()) ) {
 					ignore=true;
@@ -231,7 +225,7 @@ public class AnalysisPriceOnly {
 	public boolean isIsolatedHigh(int which) {
 		boolean isolatedHigh = false;
 		if(which>0) {
-			if(isHighUpCurrentToPrevious(which)) {
+			if(isHigherHighPriceCurrentToPreviousIndex(which)) {
 				Candle current = getPrices().get(which);
 				if(current.getClosePrice()<current.getHighPrice()) {
 					isolatedHigh=true;
@@ -243,7 +237,7 @@ public class AnalysisPriceOnly {
 	public boolean isIsolatedLow(int which) {
 		boolean isolatedLow = false;
 		if(which>0) {
-			if(isLowDownCurrentToPrevious(which)) {
+			if(isLowerLowPriceCurrentToPreviousIndex(which)) {
 				Candle current = getPrices().get(which);
 				if(current.getClosePrice()>current.getLowPrice()) {
 					isolatedLow=true;
@@ -257,7 +251,8 @@ public class AnalysisPriceOnly {
 	public boolean isThreeBarReversalDown(int which) {
 		boolean threeBarReversalDown = false;
 		if(which>1) {
-			if(isHighUpCurrentToPrevious(which-1) && isLowDownCurrentToPrevious(which)) {
+			if(isHigherHighPriceCurrentToPreviousIndex(which-1) && 
+					isLowerLowPriceCurrentToPreviousIndex(which)) {
 				threeBarReversalDown = true;
 			}
 		}
@@ -267,7 +262,8 @@ public class AnalysisPriceOnly {
 	public boolean isThreeBarReversalUp(int which) {
 		boolean threeBarReversalUp = false;
 		if(which>1) {
-			if(isLowDownCurrentToPrevious(which-1) && isHighUpCurrentToPrevious(which)) {
+			if(isLowerLowPriceCurrentToPreviousIndex(which-1) && 
+					isHigherHighPriceCurrentToPreviousIndex(which)) {
 				threeBarReversalUp = true;
 			}
 		}		
@@ -277,7 +273,8 @@ public class AnalysisPriceOnly {
 	// DOJI
 	public boolean isDojiBar(int which) {
 		boolean dojiBar = false;
-		if(!isCloseUpCurrentToSelf(which) && !isCloseDownCurrentToSelf(which)) {
+		if(!isClosePriceUpCurrentToSelf(which) && 
+				!isClosePriceDownCurrentToSelf(which)) {
 			dojiBar = true;
 		}
 		return dojiBar;
@@ -285,7 +282,7 @@ public class AnalysisPriceOnly {
 	
 	
 	// OPEN AND CLOSE: CURRENT
-	private boolean isOpenUpCurrentToPrevious(int which) {
+	private boolean isOpenPriceUpCurrentToPrevious(int which) {
 		boolean openUp = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -300,7 +297,7 @@ public class AnalysisPriceOnly {
 		return openUp;
 	}
 
-	private boolean isOpenDownCurrentToPrevious(int which) {
+	private boolean isOpenPriceDownCurrentToPrevious(int which) {
 		boolean openDown = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -315,7 +312,7 @@ public class AnalysisPriceOnly {
 		return openDown;
 	}
 
-	private boolean isCloseUpCurrentToSelf(int which) {
+	private boolean isClosePriceUpCurrentToSelf(int which) {
 		boolean closeUp = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -329,7 +326,7 @@ public class AnalysisPriceOnly {
 		return closeUp;
 	}
 	
-	private boolean isCloseDownCurrentToSelf(int which) {
+	private boolean isClosePriceDownCurrentToSelf(int which) {
 		boolean closeDown = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -344,15 +341,16 @@ public class AnalysisPriceOnly {
 	}
 	
 	// HIGH AND LOW: CURRENT TO PREVIOUS
-	private boolean isHighUpAndLowDownCurrentToPrevious(Integer which) {
+	private boolean isHigherHighAndLowerLowPriceCurrentToPreviousIndex(Integer which) {
 		boolean isUpAndDown = false;
-		if(isHighUpCurrentToPrevious(which) && isLowDownCurrentToPrevious(which)) {
+		if(isHigherHighPriceCurrentToPreviousIndex(which) && 
+				isLowerLowPriceCurrentToPreviousIndex(which)) {
 			isUpAndDown = true;
 		}
 		return isUpAndDown;
 	}
 
-	public boolean isHighUpCurrentToPrevious(Integer which) {
+	public boolean isHigherHighPriceCurrentToPreviousIndex(Integer which) {
 		boolean isUp = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -360,14 +358,14 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle previous = getPrices().get(which-1);
 			Candle current = getPrices().get(which);
-			if(isHigherHighPriceCurrentToPrevious(previous, current)) {
+			if(isHigherHighPriceCurrentToPreviousCandle(previous, current)) {
 				isUp=true;
 			}
 		}
 		return isUp;
 	}
 
-	private boolean isHighDownCurrentToPrevious(Integer which) {
+	private boolean isLowerHighPriceCurrentToPreviousIndex(Integer which) {
 		boolean isUp = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -375,14 +373,14 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle previous = getPrices().get(which-1);
 			Candle current = getPrices().get(which);
-			if(isLowerHighPriceCurrentToPrevious(previous, current)) {
+			if(isLowerHighPriceCurrentToPreviousCandle(previous, current)) {
 				isUp=true;
 			}
 		}
 		return isUp;
 	}
 
-	public boolean isLowDownCurrentToPrevious(Integer which) {
+	public boolean isLowerLowPriceCurrentToPreviousIndex(Integer which) {
 		boolean isDown = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -390,14 +388,14 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle previous = getPrices().get(which-1);
 			Candle current = getPrices().get(which);
-			if(isLowerLowPriceCurrentToPrevious(previous, current)) {
+			if(isLowerLowPriceCurrentToPreviousCandle(previous, current)) {
 				isDown=true;
 			}
 		}
 		return isDown;
 	}
 
-	private boolean isLowUpCurrentToPrevious(Integer which) {
+	private boolean isHigherLowPriceCurrentToPreviousIndex(Integer which) {
 		boolean isDown = false;
 		if(isIgnorePriceSignalForVolume(which)) {
 			return false;
@@ -405,7 +403,7 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle previous = getPrices().get(which-1);
 			Candle current = getPrices().get(which);
-			if(isHigherLowPriceCurrentToPrevious(previous, current)) {
+			if(isHigherLowPriceCurrentToPreviousCandle(previous, current)) {
 				isDown=true;
 			}
 		}
@@ -413,7 +411,7 @@ public class AnalysisPriceOnly {
 	}
 
 	// CANDLE COMPARISON: CURRENT TO PREVIOUS
-	private boolean isHigherHighPriceCurrentToPrevious(Candle previous, Candle current) {
+	public boolean isHigherHighPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean higher = false;
 		if(current.getHighPrice()>previous.getHighPrice()) {
 			higher = true;
@@ -421,7 +419,7 @@ public class AnalysisPriceOnly {
 		return higher;
 	}
 	
-	private boolean isLowerHighPriceCurrentToPrevious(Candle previous, Candle current) {
+	private boolean isLowerHighPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean higher = false;
 		if(current.getHighPrice()<previous.getHighPrice()) {
 			higher = true;
@@ -429,7 +427,7 @@ public class AnalysisPriceOnly {
 		return higher;
 	}
 
-	private boolean isLowerLowPriceCurrentToPrevious(Candle previous, Candle current) {
+	public boolean isLowerLowPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean lower = false;
 		if(current.getLowPrice()<previous.getLowPrice()) {
 			lower = true;
@@ -437,7 +435,7 @@ public class AnalysisPriceOnly {
 		return lower;
 	}
 
-	private boolean isHigherLowPriceCurrentToPrevious(Candle previous, Candle current) {
+	private boolean isHigherLowPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean lower = false;
 		if(current.getLowPrice()>previous.getLowPrice()) {
 			lower = true;
@@ -445,9 +443,9 @@ public class AnalysisPriceOnly {
 		return lower;
 	}
 
-	private boolean isHigherHighAndLowerLowCurrentToPrevious(Candle previous, Candle current) {
+	private boolean isHigherHighAndLowerLowCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean isBoth = false;
-		if(isHigherHighPriceCurrentToPrevious(previous, current) && isLowerLowPriceCurrentToPrevious(previous, current)) {
+		if(isHigherHighPriceCurrentToPreviousCandle(previous, current) && isLowerLowPriceCurrentToPreviousCandle(previous, current)) {
 			isBoth=true;
 		}
 		return isBoth;
