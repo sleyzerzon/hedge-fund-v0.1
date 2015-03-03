@@ -17,52 +17,77 @@ public class AnalysisVolumePrice {
 	}
 	
 
-	public boolean isVolumeWeaknessForUptrend(Integer which) {
-		
+	public boolean isVolumeWeaknessForUptrend(Integer which) { // signal before entry
 		boolean uptrendWeakness = false;
-
-		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
-
 		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
 			getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which)) {
-					
 			Integer currentHighIndex = which;
-			Integer previousHighIndex = which-1; 
-	
+			Integer previousHighIndex = which-1;
 			if( getSizes().get(currentHighIndex) < getSizes().get(previousHighIndex) ) {
 				uptrendWeakness = true;
-				System.out.println("weakness high: " + previousHighIndex + " to " + currentHighIndex);
+				System.out.println("weak high: " + previousHighIndex + " to " + currentHighIndex);
 			}
 		}
-		
 		return uptrendWeakness;
 	}
 	
-	public boolean isVolumeWeaknessForDowntrend(Integer which) {
-		
+	public boolean isVolumeWeaknessForDowntrend(Integer which) { // signal before entry
 		boolean downtrendWeakness = false;
-
-		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
-
 		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
-			getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which)) {
-				
+			getPriceAnalysis().isLowerLowPriceCurrentToPreviousIndex(which)) {
 			Integer currentLowIndex = which;
 			Integer previousLowIndex = which-1;
-			
 			if( getSizes().get(currentLowIndex) < getSizes().get(previousLowIndex)) {
 				downtrendWeakness = true;
-				System.out.println("weakness low: " + previousLowIndex + " to " + currentLowIndex);
+				System.out.println("weak low: " + previousLowIndex + " to " + currentLowIndex);
 			}
 		}
 		return downtrendWeakness;
 	}
-	
-	public void getSlope() {
 		
-		// getPreviousHighIndex
-		
+	// after weakness signal
+	// use this for confirmation before entry
+	public boolean isVolumePriceAgreementUp(Integer which) { 		
+		boolean volumePriceAgreement = false;
+		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
+				getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which)) {
+			Integer currentHighIndex = which;
+			Integer previousHighIndex = which-1;
+			if( getSizes().get(currentHighIndex) > getSizes().get(previousHighIndex) ) {
+				volumePriceAgreement = true;
+				System.out.println("volume-price agreement high: " + previousHighIndex + " to " + currentHighIndex);
+			}
+		}
+		return volumePriceAgreement;
 	}
+
+	public boolean isVolumePriceAgreementDown(Integer which) { 		
+		boolean volumePriceAgreement = false;
+		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
+				getPriceAnalysis().isLowerLowPriceCurrentToPreviousIndex(which)) {
+				Integer currentLowIndex = which;
+				Integer previousLowIndex = which-1;
+				if( getSizes().get(currentLowIndex) > getSizes().get(previousLowIndex)) {
+					volumePriceAgreement = true;
+					System.out.println("volume-price agreement low: " + previousLowIndex + " to " + currentLowIndex);
+				}
+			}
+		return volumePriceAgreement;
+	}
+
+	public boolean isVolumeHighAnomaly(Integer which) {
+		boolean volumeAnomaly = false;	
+		if(		!getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which) ||
+				!getPriceAnalysis().isLowerLowPriceCurrentToPreviousIndex(which) ) {
+		
+				if(getSizes().get(which) > getSizes().get(which-1)) {
+					volumeAnomaly = true;
+					System.out.println("volume high anomaly: " + which + " to " + (which-1));
+				}				
+		}
+		return volumeAnomaly;
+	}
+
 	
 	// TEST
 	
@@ -79,6 +104,8 @@ public class AnalysisVolumePrice {
 		
 		s = s + "> VOLUME(" + which + ")\t= ";  
 		
+		getPriceAnalysis().setMeaningfulHighsAndLowsForVolume();
+
 		// VOLUME INDICATORS:  		
 		// MOMENTUM rsi>0.45, uptrending chi (positive slope), stoch (?), 1hr....goign up
 		// On Balance Volume (OBV)
@@ -90,11 +117,23 @@ public class AnalysisVolumePrice {
 		} else {
 			
 			if(isVolumeWeaknessForUptrend(which)) {
-				s = s + "<<<ENTRY POINT>>> ANOMALY: up-trend weakness. ";
+				s = s + "ANOMALY <<<POSSIBLE ENTRY POINT>>>: up-trend weakness. ";
 			}
 
 			if(isVolumeWeaknessForDowntrend(which)) {
-				s = s + "<<<ENTRY POINT>>> ANOMALY: down-trend weakness. ";
+				s = s + "ANOMALY <<<POSSIBLE ENTRY POINT>>>: down-trend weakness. ";
+			}
+
+			if(isVolumePriceAgreementUp(which)) {
+				s = s + "<<<ENTRY POINT>>: bullish after anomaly";
+			}
+
+			if(isVolumePriceAgreementDown(which)) {
+				s = s + "<<<ENTRY POINT>>: bearish after anomaly";
+			}
+			
+			if(isVolumeHighAnomaly(which)) {
+				s = s + "ANOMALY: volume high";
 			}
 
 		}

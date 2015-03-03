@@ -78,6 +78,7 @@ public class Pucara {
 	}
 
 	public Pucara(String index, String expDate, boolean setChannel) throws InterruptedException {
+		
 		setIndexName(index);
 		setExpDate(expDate);
 		setSampling();
