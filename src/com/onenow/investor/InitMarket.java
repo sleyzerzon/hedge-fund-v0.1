@@ -30,10 +30,10 @@ public class InitMarket {
 	
 	public InitMarket(Portfolio portfolio) {
 		setMarketPortfolio(portfolio);
-		initMarket();
+		initWholeMarket();
 	}
 	
-	private void initMarket() { // create the investments
+	private void initWholeMarket() { // create the investments
 		initAllIndicesAndOptions("20150326");
 		initAllFutures("20150320");
 		initAllStocks();

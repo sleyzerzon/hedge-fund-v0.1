@@ -35,7 +35,7 @@ public class Pucara {
 	// ratio?
 	
 	// @2085-80; resistance $2085, $2002
-	// 5-day (high 2016) ~$0.40 , (mid 2012) $0.55 ... , (low 2002): ? 
+	// 5-day (high 2016) ~$0.40 , (mid 2012) $0.55 ... , (low 2002): $0.80? 
 	// 30-day (2016) $1.25 , (2012): $1.25 ..., (2002): ?
 	
 	// act at $2005, sell based on levels of channel protection
@@ -95,7 +95,7 @@ public class Pucara {
 						
 		while(true) {
 			
-			setAndAnalyzeCharts("2015-02-21", "2015-02-28");
+			setAllCharts("2015-02-21", "2015-02-28");
 						
 			if(isBullMarket()) { // TODO: futures market?
 				// has been trading in range! And it is breaking out!
@@ -120,45 +120,67 @@ public class Pucara {
 		}
 	}
 	
-	private static void setAndAnalyzeCharts(String fromDate, String toDate) {
-
-		List<Investment> invs = getMarketPortfolio().getInvestments();
-		
-		// TODO: underlying price, resistance/support?
+	private static void setAllCharts(String fromDate, String toDate) {
 		for(String sampling:getSamplingRate()) {
-			for(Investment inv:invs) {
-				
-				Chart chart = new Chart();
-				chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
-				
-				if(!chart.getSizes().isEmpty()) {
-					inv.getCharts().put(sampling, chart);	
-					System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" +chart.toString());
-					
-					for(int i=0; i<chart.getPrices().size(); i++) {
-						System.out.println(chart.getAnalysis(i));
-					}
-					System.out.println("\n");
-					
-				} else {
-					System.out.println("- chart " + inv.toString() + " " + sampling);
-				}
+			for(Investment inv:getMarketPortfolio().getInvestments()) {
+				setAndAnalyzeChart(inv, fromDate, toDate, sampling);
 			}
 		}
+	}
+	
+	private static void analyzeAllCharts() {
 		
+	}
+
+	// TODO: underlying price, resistance/support?
+	private static void setAndAnalyzeChart(Investment inv, String fromDate, String toDate, String sampling) {
+
+		Chart chart = new Chart();
+		chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
+		
+		if(!chart.getSizes().isEmpty()) {
+			inv.getCharts().put(sampling, chart);	
+			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString());
+			
+			System.out.println(getChartAnalysis(chart) + "\n");
+			
+		} else {
+			System.out.println("- chart " + inv.toString() + " " + sampling);
+		}		
+	}
+	
+	private static String getChartAnalysis(Chart chart) {
+		String s = "";
+		chart.setAnalysis();
+		for(int i=0; i<chart.getPrices().size(); i++) {
+			s = s + chart.getPriceAnalysis(i);
+			s = s + chart.getVolumeAnalysis(i);
+			s = s + chart.getMomentumAnalysis(i);
+		}		
+		return s;
 	}
 		
 	private void setSampling() {
+		setSamplingRate(new ArrayList<String>());
+		setScalpSampling();
+		setSwingSampling();
+		setTrendSampling();
+	}
+	
+	private void setScalpSampling() {
 		getSamplingRate().add(SamplingRate.SCALPSHORT.toString());
 		getSamplingRate().add(SamplingRate.SCALPMEDIUM.toString());
-		getSamplingRate().add(SamplingRate.SCALPLONG.toString());
+		getSamplingRate().add(SamplingRate.SCALPLONG.toString());		
+	}
+	private void setSwingSampling() {
 		getSamplingRate().add(SamplingRate.SWINGSHORT.toString());
 		getSamplingRate().add(SamplingRate.SWINGMEDIUM.toString());
-		getSamplingRate().add(SamplingRate.SWINGLONG.toString());		
+		getSamplingRate().add(SamplingRate.SWINGLONG.toString());				
+	}
+	private void setTrendSampling() {
 		getSamplingRate().add(SamplingRate.TRENDSHORT.toString());
 		getSamplingRate().add(SamplingRate.TRENDMEDIUM.toString());
-		getSamplingRate().add(SamplingRate.TRENDLONG.toString());
-
+		getSamplingRate().add(SamplingRate.TRENDLONG.toString());		
 	}
 
 	public static void launchBottomExocet() {
@@ -167,10 +189,6 @@ public class Pucara {
 		System.out.println(swingCall.toString());
 	}
 	
-	public static void launchTopExocet() {
-
-	}
-
 	
 	// PRIVATE
 	
