@@ -35,7 +35,7 @@ public class Pucara {
 	// ratio?
 	
 	// @2085-80; resistance $2085, $2002
-	// 5-day (high 2016) ~$0.40 , (mid 2012) $0.55 ... , (low 2002): $0.80? 
+	// 5-day (high 2016) ~$0.40 , (mid 2012) $0.55 ... , (low 2002): $1.1  => 2X
 	// 30-day (2016) $1.25 , (2012): $1.25 ..., (2002): ?
 	
 	// act at $2005, sell based on levels of channel protection
@@ -52,9 +52,6 @@ public class Pucara {
 
 	private ParseDate parser = new ParseDate();
 	
-	private static String indexName;
-	private static String expDate;
-	
 	private static Portfolio marketPortfolio = new Portfolio();
 	private static MarketPrice marketPrice = new MarketPrice();
 	
@@ -69,50 +66,26 @@ public class Pucara {
 	}
 	
 	public Pucara(String index, String expDate) throws InterruptedException {
-		setIndexName(index);
-		setExpDate(expDate);
-		setSampling();
-		
-		InitMarket init = new InitMarket(getMarketPortfolio()); // TODO: seed		
-		
-	}
+		setSamplingRate(getSampling("all"));	
+		InitMarket init = new InitMarket(getMarketPortfolio()); 		
+	}	
+	
+	public static void launch(Underlying under) throws InterruptedException {
 
-	public Pucara(String index, String expDate, boolean setChannel) throws InterruptedException {
-		
-		setIndexName(index);
-		setExpDate(expDate);
-		setSampling();
-		
-		InitMarket init = new InitMarket(getMarketPortfolio()); // TODO: seed
-		
-		if(setChannel) {
-			getChannelPrices(getContractFactory());
-		}
-	}
-	
-	
-	public static void launch() throws InterruptedException {
-						
+//		getChannelPrices(getContractFactory());
+
 		while(true) {
 			
-			setAllCharts("2015-02-21", "2015-02-28");
-						
-			if(isBullMarket()) { // TODO: futures market?
-				// has been trading in range! And it is breaking out!
-				if(isVolumeSpike() &&isMomentumReversedUp() && isFuturesGuidingUp()) { // BUY call
-//					isUnderVWAP(6)
-					launchBottomExocet();
-				}
-				if(isVolumeSpike() && isMomentumReversedDown() && isFuturesGuidingDown()) { // BUY put
-					// isOverVWAP(12)
-					// launchTopExocet();
-				}
+			setAllCharts();
+			analyzeAllInvestmentCharts();
+			EntranceExitDecisioning decisioning = new EntranceExitDecisioning(under);
+
+			if(decisioning.EnterNowAtTop()) {
+				launchBottomExocet(under);
 			}
-			if(isBearMarket()){
-				
-			}
-			if(isGoalAchieved() || isMarketClose() ) { // SELL
-				
+
+			if(decisioning.EnterNowAtTop()) {
+				launchTopExocet(under);
 			}
 			
 			System.out.println(",,,,,");
@@ -120,34 +93,64 @@ public class Pucara {
 		}
 	}
 	
-	private static void setAllCharts(String fromDate, String toDate) {
+	public static void launchBottomExocet(Underlying under) {
+		String expDate = "20150319";
+		Exocet spxExocet = new Exocet(100, under, expDate, getBroker());
+		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+		System.out.println(swingCall.toString());
+	}
+
+	public static void launchTopExocet(Underlying index) {
+//		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
+//		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+//		System.out.println(swingCall.toString());
+	}
+
+	
+	private static void setAllCharts() {
+		String fromDate = "2015-02-21"; // TODO: date
+		String toDate = "2015-02-28";
 		for(String sampling:getSamplingRate()) {
 			for(Investment inv:getMarketPortfolio().getInvestments()) {
-				setAndAnalyzeChart(inv, fromDate, toDate, sampling);
+				setInvestmentChart(inv, fromDate, toDate, sampling);
 			}
 		}
 	}
 	
-	private static void analyzeAllCharts() {
-		
+	private static void analyzeAllInvestmentCharts() {
+		for(Investment inv:getMarketPortfolio().getInvestments()) {
+			for(String trading:getTradingOptions()) {
+				String analysis = "";
+				for(String sampling:getSampling(trading)) { 
+					analysis = analysis + getInvestmentAnalysis(inv, sampling);
+				}			
+				System.out.println(analysis + "\n");
+			}			
+		}	
+	}
+
+	private static String getInvestmentAnalysis(Investment inv, String sampling) {
+		String s = "";
+		Chart chart = inv.getCharts().get(sampling);
+		s = s + ">> " + sampling + "\t"; 
+		s = s + getChartAnalysis(chart);
+		return s;
 	}
 
 	// TODO: underlying price, resistance/support?
-	private static void setAndAnalyzeChart(Investment inv, String fromDate, String toDate, String sampling) {
+	private static void setInvestmentChart(Investment inv, String fromDate, String toDate, String sampling) {
 
 		Chart chart = new Chart();
 		chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
 		
 		if(!chart.getSizes().isEmpty()) {
-			inv.getCharts().put(sampling, chart);	
-			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString());
-			
-			System.out.println(getChartAnalysis(chart) + "\n");
-			
+			inv.getCharts().put(sampling, chart); // sampling is key	
+			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString());			
 		} else {
 			System.out.println("- chart " + inv.toString() + " " + sampling);
 		}		
 	}
+	
 	
 	private static String getChartAnalysis(Chart chart) {
 		String s = "";
@@ -160,34 +163,49 @@ public class Pucara {
 		return s;
 	}
 		
-	private void setSampling() {
-		setSamplingRate(new ArrayList<String>());
-		setScalpSampling();
-		setSwingSampling();
-		setTrendSampling();
+	private static List<String> getSampling(String rate) {
+		List<String> list = new ArrayList<String>();
+		if(rate.equals(SamplingRate.SCALP.toString()) || rate.equals("all")) {
+			list.addAll(getScalpSampling());
+		}
+		if(rate.equals(SamplingRate.SWING.toString()) || rate.equals("all")) {
+			list.addAll(getSwingSampling());
+		}
+		if(rate.equals(SamplingRate.TREND.toString()) || rate.equals("all")) {
+			list.addAll(getTrendSampling());
+		}
+		return list;
 	}
 	
-	private void setScalpSampling() {
-		getSamplingRate().add(SamplingRate.SCALPSHORT.toString());
-		getSamplingRate().add(SamplingRate.SCALPMEDIUM.toString());
-		getSamplingRate().add(SamplingRate.SCALPLONG.toString());		
+	private static List<String> getTradingOptions() {
+		List<String> list = new ArrayList<String>();
+		list.add(SamplingRate.SCALP.toString());
+		list.add(SamplingRate.SWING.toString());
+		list.add(SamplingRate.TREND.toString());
+		return list;
 	}
-	private void setSwingSampling() {
-		getSamplingRate().add(SamplingRate.SWINGSHORT.toString());
-		getSamplingRate().add(SamplingRate.SWINGMEDIUM.toString());
-		getSamplingRate().add(SamplingRate.SWINGLONG.toString());				
+	private static List<String> getScalpSampling() {
+		List<String> list = new ArrayList<String>();
+		list.add(SamplingRate.SCALPSHORT.toString());
+		list.add(SamplingRate.SCALPMEDIUM.toString());
+		list.add(SamplingRate.SCALPLONG.toString());					
+		return list;
 	}
-	private void setTrendSampling() {
-		getSamplingRate().add(SamplingRate.TRENDSHORT.toString());
-		getSamplingRate().add(SamplingRate.TRENDMEDIUM.toString());
-		getSamplingRate().add(SamplingRate.TRENDLONG.toString());		
+	private static List<String> getSwingSampling() {
+		List<String> list = new ArrayList<String>();
+		list.add(SamplingRate.SWINGSHORT.toString());
+		list.add(SamplingRate.SWINGMEDIUM.toString());
+		list.add(SamplingRate.SWINGLONG.toString());								
+		return list;
+	}
+	private static List<String> getTrendSampling() {
+		List<String> list = new ArrayList<String>();
+		list.add(SamplingRate.TRENDSHORT.toString());
+		list.add(SamplingRate.TRENDMEDIUM.toString());
+		list.add(SamplingRate.TRENDLONG.toString());							
+		return list;
 	}
 
-	public static void launchBottomExocet() {
-		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
-		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
-		System.out.println(swingCall.toString());
-	}
 	
 	
 	// PRIVATE
@@ -339,22 +357,6 @@ public class Pucara {
 
 	private void setParser(ParseDate parser) {
 		this.parser = parser;
-	}
-
-	private static String getIndexName() {
-		return indexName;
-	}
-
-	private void setIndexName(String indexName) {
-		this.indexName = indexName;
-	}
-
-	private static String getExpDate() {
-		return expDate;
-	}
-
-	private void setExpDate(String expDate) {
-		this.expDate = expDate;
 	}
 
 	private static BrokerInteractive getIB() {

@@ -7,6 +7,7 @@ import java.util.List;
 import com.onenow.broker.BrokerActivityImpl;
 import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.InvApproach;
+import com.onenow.finance.InvestmentIndex;
 import com.onenow.finance.StrategyIronCondor;
 import com.onenow.finance.TradeRatio;
 import com.onenow.finance.Underlying;
@@ -16,18 +17,20 @@ public class InvestorMain {
 	
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
-		Pucara ia58 = new Pucara();
+		Pucara ia58;
 		
 		try {
-			ia58 = new Pucara("SPX", "20150319");		
+			ia58 = new Pucara();		
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INVESTOR\n");
 			e.printStackTrace();
 			return;
 		}
+		
+		Underlying index = new Underlying("SPX");
 
 		try {
-			ia58.launch();
+			ia58.launch(index);
 		} catch (Exception e) {
 			System.out.println("COULD NOT EXECUTE INVESTOR\n");
 			e.printStackTrace();

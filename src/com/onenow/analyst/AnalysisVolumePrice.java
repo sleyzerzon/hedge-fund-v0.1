@@ -8,8 +8,6 @@ public class AnalysisVolumePrice {
 	List<Integer> sizes;
 	AnalysisPriceOnly priceAnalysis;
 
-	// on up-trend: volume increases on high
-	// on down-trend: volume decreases on lows
 	public AnalysisVolumePrice(List<Candle> prices, List<Integer> sizes, AnalysisPriceOnly analysis) {
 		setPrices(prices);
 		setSizes(sizes);
@@ -17,6 +15,9 @@ public class AnalysisVolumePrice {
 	}
 	
 
+	// ANOMALIES
+	// on up-trend: volume should increase on high
+	// on down-trend: volume increase on low
 	public boolean isVolumeWeaknessForUptrend(Integer which) { // signal before entry
 		boolean uptrendWeakness = false;
 		if(!getPriceAnalysis().isIgnorePriceSignalForVolume(which) && 
@@ -44,7 +45,22 @@ public class AnalysisVolumePrice {
 		}
 		return downtrendWeakness;
 	}
+	
+	public boolean isVolumeHighAnomaly(Integer which) {
+		boolean volumeAnomaly = false;	
+		if(		!getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which) ||
+				!getPriceAnalysis().isLowerLowPriceCurrentToPreviousIndex(which) ) {
 		
+				if(getSizes().get(which) > getSizes().get(which-1)) {
+					volumeAnomaly = true;
+					System.out.println("volume high anomaly: " + which + " to " + (which-1));
+				}				
+		}
+		return volumeAnomaly;
+	}
+
+		
+	// AGREEMENT
 	// after weakness signal
 	// use this for confirmation before entry
 	public boolean isVolumePriceAgreementUp(Integer which) { 		
@@ -73,19 +89,6 @@ public class AnalysisVolumePrice {
 				}
 			}
 		return volumePriceAgreement;
-	}
-
-	public boolean isVolumeHighAnomaly(Integer which) {
-		boolean volumeAnomaly = false;	
-		if(		!getPriceAnalysis().isHigherHighPriceCurrentToPreviousIndex(which) ||
-				!getPriceAnalysis().isLowerLowPriceCurrentToPreviousIndex(which) ) {
-		
-				if(getSizes().get(which) > getSizes().get(which-1)) {
-					volumeAnomaly = true;
-					System.out.println("volume high anomaly: " + which + " to " + (which-1));
-				}				
-		}
-		return volumeAnomaly;
 	}
 
 	

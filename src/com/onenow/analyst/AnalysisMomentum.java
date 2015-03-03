@@ -5,7 +5,6 @@ public class AnalysisMomentum {
 	public AnalysisMomentum() {
 		
 	}
-
 	
 	// PRINT
 	public String toString() {
