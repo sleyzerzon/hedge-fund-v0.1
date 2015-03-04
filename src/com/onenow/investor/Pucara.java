@@ -54,6 +54,7 @@ public class Pucara {
 	
 	private static Portfolio marketPortfolio = new Portfolio();
 	private static MarketPrice marketPrice = new MarketPrice();
+	private static Underlying index;
 	
 	static List<String> samplingRate = new ArrayList<String>();
 
@@ -61,16 +62,18 @@ public class Pucara {
 //***	 Look for signals, particularly at resitance & support
 //***	 Confirm via price, volume, and momentum
 //***	 Become familiar with the rythm of the underlying
+	
 	public Pucara() {
 		
 	}
 	
-	public Pucara(String index, String expDate) throws InterruptedException {
+	public Pucara(Underlying index) throws InterruptedException {
+		setIndex(index);
+		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
 		setSamplingRate(getSampling("all"));	
-		InitMarket init = new InitMarket(getMarketPortfolio()); 		
 	}	
 	
-	public static void launch(Underlying under) throws InterruptedException {
+	public static void launch() throws InterruptedException {
 
 //		getChannelPrices(getContractFactory());
 
@@ -78,14 +81,14 @@ public class Pucara {
 			
 			setAllCharts();
 			analyzeAllInvestmentCharts();
-			EntranceExitDecisioning decisioning = new EntranceExitDecisioning(under);
+			EntranceExitDecisioning decisioning = new EntranceExitDecisioning(getIndex());
 
 			if(decisioning.EnterNowAtTop()) {
-				launchBottomExocet(under);
+				launchBottomExocet(getIndex());
 			}
 
 			if(decisioning.EnterNowAtTop()) {
-				launchTopExocet(under);
+				launchTopExocet(getIndex());
 			}
 			
 			System.out.println(",,,,,");
@@ -389,6 +392,14 @@ public class Pucara {
 
 	private void setSamplingRate(List<String> samplingRate) {
 		this.samplingRate = samplingRate;
+	}
+
+	private static Underlying getIndex() {
+		return index;
+	}
+
+	private static void setIndex(Underlying index) {
+		Pucara.index = index;
 	}
 
 

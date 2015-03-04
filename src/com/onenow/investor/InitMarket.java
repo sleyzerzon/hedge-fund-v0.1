@@ -31,36 +31,47 @@ public class InitMarket {
 
 	public InitMarket(Portfolio portfolio) {
 		setMarketPortfolio(portfolio);
-		initWholeMarket();
+		initWholeMarket(new Underlying("all"));
 	}
-	
-	private void initWholeMarket() { // create the investments
-		initAllIndicesAndOptions();
-		initAllFutures();
-		initAllStocks();		
+
+	public InitMarket(Underlying index, Portfolio portfolio) {
+		setMarketPortfolio(portfolio);
+		initWholeMarket(index);
+	}
+
+	private void initWholeMarket(Underlying index) { // create the investments
+		initIndicesAndOptions(index);
+		initStocks(index);		
+		initFutures();
 		System.out.println(getMarketPortfolio().toString());		
 	}
 	 
 	// INDEX AND OPTIONS
-	private void initAllIndicesAndOptions() {
+	private void initIndicesAndOptions(Underlying index) {
 		OptionExpiration exps = new OptionExpiration();
 		for(String expDate:exps.getIndexExpList()) {
-			initExpirationAllIndicesAndOptions(expDate);
+			initExpirationIndicesAndOptions(index, expDate);
 		}
 	}
 	
-	private void initExpirationAllIndicesAndOptions(String expDate) {
-		String spx="SPX";
-		Integer seedSPX=2100;		// TODO: seed
-		setIndexAndOptions(spx, expDate, seedSPX);
-		
-		String ndx="NDX";
-		Integer seedNDX=4450;		// TODO: seed
-		setIndexAndOptions(ndx, expDate, seedNDX);
+	private void initExpirationIndicesAndOptions(Underlying index, String expDate) {
+		if(index.getTicker().equals("SPX")) {
+			String spx="SPX";
+			Integer seedSPX=2100;		// TODO: seed
+			setIndexAndOptions(spx, expDate, seedSPX);
+		} else {
+			String spx="SPX";
+			Integer seedSPX=2100;		// TODO: seed
+			setIndexAndOptions(spx, expDate, seedSPX);
 
-		String rut="RUT";
-		Integer seedRUT=1350;		// TODO: seed
-		setIndexAndOptions(rut, expDate, seedRUT);
+			String ndx="NDX";
+			Integer seedNDX=4450;		// TODO: seed
+			setIndexAndOptions(ndx, expDate, seedNDX);
+	
+			String rut="RUT";
+			Integer seedRUT=1350;		// TODO: seed
+			setIndexAndOptions(rut, expDate, seedRUT);
+		}
 	}
 	
 	private void setIndexAndOptions(String name, String expDate, Integer seed) {
@@ -75,25 +86,27 @@ public class InitMarket {
 		getMarketPortfolio().enterTransaction(indexTrans);
 	}	
 	private void setOptions(Underlying under, String expDate, Integer seed) {
-		for (Double strike=(double) (seed-200); strike<(seed+200); strike=strike+5) {
+		Double range = 100.0;
+		Integer interval = 5;
+		for (Double strike=(double) (seed-range); strike<(seed+range); strike=strike+interval) {
 			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
 			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
 			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
 			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
-//			Transaction optTrans = new Transaction(callTrade, putTrade); // TODO: puts
-			Transaction optTrans = new Transaction(callTrade);
+			Transaction optTrans = new Transaction(callTrade, putTrade); // TODO: puts
+//			Transaction optTrans = new Transaction(callTrade);
 			getMarketPortfolio().enterTransaction(optTrans);
 		}
 	}
 
 	// FUTURES
-	private void initAllFutures() {
+	private void initFutures() {
 		OptionExpiration exps = new OptionExpiration();
 		for(String expDate:exps.getFuturesExpList()) {
-			initExpirationAllIndicesAndOptions(expDate);
+			initExpFutures(expDate);
 		}
 	}
-	private void initExpAllFutures(String expDate) {
+	private void initExpFutures(String expDate) {
 		Underlying under = new Underlying("ES");
 		InvestmentFuture future = new InvestmentFuture(under, expDate);
 		Trade futureTrade = new Trade(future, TradeType.BUY, 1, 0.0);
@@ -103,10 +116,12 @@ public class InitMarket {
 	}
 
 	// STOCKS
-	private void initAllStocks() {
-		setSNP500List();
-		for (String stock:getSNP500()) {
-			setStock(stock);
+	private void initStocks(Underlying index) {
+		if(index.getTicker().equals("SPX")) {
+			setSNP500List();
+			for (String stock:getSNP500()) {
+				setStock(stock);
+			}
 		}
 	}
 

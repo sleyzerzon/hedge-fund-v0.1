@@ -1,17 +1,44 @@
 package com.onenow.investor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OptionExpiration {
 	
-	List<String> indexExpList;
-	List<String> futuresExpList;
+	List<String> indexExpList = new ArrayList<String>();
+	List<String> futuresExpList = new ArrayList<String>();
 	
 	public OptionExpiration() {
 		initIndexExpList();
 		initFuturesExpList();
 	}
 	
+	// PRIVATE
+	private void initIndexExpList() {
+		getIndexExpList().add("20150307");
+		getIndexExpList().add("20150314");
+		getIndexExpList().add("20150321");
+		getIndexExpList().add("20150328");
+		getIndexExpList().add("20150404");
+		getIndexExpList().add("20150411");
+		getIndexExpList().add("20150418");
+		getIndexExpList().add("20150425");
+
+	}
+
+	private void initFuturesExpList() {
+		getIndexExpList().add("20150306");
+		getIndexExpList().add("20150313");
+		getIndexExpList().add("20150320");
+		getIndexExpList().add("20150327");
+		getIndexExpList().add("20150402");
+		getIndexExpList().add("20150417");
+		getIndexExpList().add("20150515");
+		getIndexExpList().add("20150529");
+
+	}
+
+	// PUBLIC
 	public String getNextIndexExp() {
 		String s = "";
 		s = getIndexExpList().get(0);
@@ -46,31 +73,6 @@ public class OptionExpiration {
 		String s = "";
 		s = getFuturesExpList().get(4);				
 		return s;
-	}
-
-	// PRIVATE
-	private void initIndexExpList() {
-		getIndexExpList().add("20150307");
-		getIndexExpList().add("20150314");
-		getIndexExpList().add("20150321");
-		getIndexExpList().add("20150328");
-		getIndexExpList().add("20150404");
-		getIndexExpList().add("20150411");
-		getIndexExpList().add("20150418");
-		getIndexExpList().add("20150425");
-
-	}
-
-	private void initFuturesExpList() {
-		getIndexExpList().add("20150305");
-		getIndexExpList().add("20150312");
-		getIndexExpList().add("20150319");
-		getIndexExpList().add("20150326");
-		getIndexExpList().add("20150402");
-		getIndexExpList().add("20150409");
-		getIndexExpList().add("20150416");
-		getIndexExpList().add("20150423");
-
 	}
 
 	// SET GET

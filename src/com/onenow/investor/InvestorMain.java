@@ -17,20 +17,21 @@ public class InvestorMain {
 	
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
+		Underlying index = new Underlying("SPX");
+
 		Pucara ia58;
 		
 		try {
-			ia58 = new Pucara();		
+			ia58 = new Pucara(index);		
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INVESTOR\n");
 			e.printStackTrace();
 			return;
 		}
 		
-		Underlying index = new Underlying("SPX");
 
 		try {
-			ia58.launch(index);
+			ia58.launch();
 		} catch (Exception e) {
 			System.out.println("COULD NOT EXECUTE INVESTOR\n");
 			e.printStackTrace();
