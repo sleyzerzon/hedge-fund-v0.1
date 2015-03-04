@@ -94,10 +94,10 @@ public class Pucara {
 	}
 	
 	public static void launchBottomExocet(Underlying under) {
-		String expDate = "20150319";
-		Exocet spxExocet = new Exocet(100, under, expDate, getBroker());
-		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
-		System.out.println(swingCall.toString());
+//		String expDate = "20150319";
+//		Exocet spxExocet = new Exocet(100, under, expDate, getBroker());
+//		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+//		System.out.println(swingCall.toString());
 	}
 
 	public static void launchTopExocet(Underlying index) {

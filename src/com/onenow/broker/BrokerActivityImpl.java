@@ -12,7 +12,7 @@ import com.onenow.finance.TradeType;
 import com.onenow.finance.Transaction;
 import com.onenow.finance.Underlying;
 import com.onenow.investor.Contract;
-import com.onenow.investor.InvestorController;
+import com.onenow.investor.BrokerController;
 import com.onenow.investor.QuoteTable;
 
 public class BrokerActivityImpl implements BrokerActivity { 

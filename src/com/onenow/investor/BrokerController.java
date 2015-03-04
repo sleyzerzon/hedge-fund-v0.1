@@ -44,7 +44,7 @@ import com.ib.controller.Profile;
 import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.investor.QuoteTable.QuoteSingle;
 
-public class InvestorController implements EWrapper {
+public class BrokerController implements EWrapper {
 	private ApiConnection m_client;
 	private final ILogger m_outLogger;
 	private final ILogger m_inLogger;
@@ -85,7 +85,7 @@ public class InvestorController implements EWrapper {
 		void show(String string);
 	}
 	
-	public InvestorController( ConnectionHandler handler, ILogger inLogger, ILogger outLogger) {
+	public BrokerController( ConnectionHandler handler, ILogger inLogger, ILogger outLogger) {
 		m_connectionHandler = handler;
 		m_client = new ApiConnection( this, inLogger, outLogger);
 		m_inLogger = inLogger;

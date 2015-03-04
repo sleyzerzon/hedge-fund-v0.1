@@ -21,14 +21,14 @@ import com.onenow.finance.InvestmentStock;
 import com.onenow.finance.MarketPrice;
 import com.onenow.finance.TradeType;
 import com.onenow.finance.Underlying;
-import com.onenow.investor.InvestorController.ITopMktDataHandler;
-import com.onenow.investor.InvestorController.TopMktDataAdapter;
+import com.onenow.investor.BrokerController.ITopMktDataHandler;
+import com.onenow.investor.BrokerController.TopMktDataAdapter;
 import com.onenow.investor.QuoteTable;
 
 
 public class QuoteTable extends AbstractTableModel {
 
-	private InvestorController controller;
+	private BrokerController controller;
 	private MarketPrice marketPrice;
 	
 	private ContractFactory contractFactory = new ContractFactory();
@@ -38,7 +38,7 @@ public class QuoteTable extends AbstractTableModel {
 		
 	}
 
-	public QuoteTable(InvestorController cont, MarketPrice mPrice, Investment inv) {
+	public QuoteTable(BrokerController cont, MarketPrice mPrice, Investment inv) {
 		
 		setController(cont);
 		setMarketPrice(mPrice);
@@ -323,11 +323,11 @@ public class QuoteTable extends AbstractTableModel {
 		}
 	}
 
-	private InvestorController getController() {
+	private BrokerController getController() {
 		return controller;
 	}
 
-	private void setController(InvestorController controller) {
+	private void setController(BrokerController controller) {
 		this.controller = controller;
 	}
 

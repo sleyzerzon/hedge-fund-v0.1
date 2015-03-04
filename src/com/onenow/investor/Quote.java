@@ -6,8 +6,8 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
-import com.onenow.investor.InvestorController.ITopMktDataHandler;
-import com.onenow.investor.InvestorController.TopMktDataAdapter;
+import com.onenow.investor.BrokerController.ITopMktDataHandler;
+import com.onenow.investor.BrokerController.TopMktDataAdapter;
 
 
 public class Quote extends TopMktDataAdapter implements ITopMktDataHandler {

@@ -9,9 +9,9 @@ import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.ib.controller.Bar;
 import com.onenow.finance.Underlying;
-import com.onenow.investor.InvestorController.IHistoricalDataHandler;
-import com.onenow.investor.InvestorController.IRealTimeBarHandler;
-import com.onenow.investor.InvestorController.ITopMktDataHandler;
+import com.onenow.investor.BrokerController.IHistoricalDataHandler;
+import com.onenow.investor.BrokerController.IRealTimeBarHandler;
+import com.onenow.investor.BrokerController.ITopMktDataHandler;
 
 
 public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler { //  

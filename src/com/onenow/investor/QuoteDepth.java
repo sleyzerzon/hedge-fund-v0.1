@@ -18,7 +18,7 @@ import apidemo.util.NewTabbedPanel.NewTabPanel;
 import com.ib.client.Types.DeepSide;
 import com.ib.client.Types.DeepType;
 //import com.ib.controller.ApiController.IDeepMktDataHandler;
-import com.onenow.investor.InvestorController.IDeepMktDataHandler;
+import com.onenow.investor.BrokerController.IDeepMktDataHandler;
 import com.onenow.broker.BrokerInteractive;
 import com.onenow.finance.Investment;
 
@@ -27,7 +27,7 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
 	final DeepModel m_buy = new DeepModel();
 	final DeepModel m_sell = new DeepModel();
 
-	private InvestorController controller;
+	private BrokerController controller;
 	private BrokerInteractive broker;
 	private ContractFactory contractFactory = new ContractFactory();
 	private Investment investment;
@@ -36,7 +36,7 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
 		
 	}
 		
-	public QuoteDepth(BrokerInteractive broker, InvestorController cont, Investment inv) {
+	public QuoteDepth(BrokerInteractive broker, BrokerController cont, Investment inv) {
 
 		setController(cont);
 		setBroker(broker);
@@ -167,11 +167,11 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
 		}
 	}
 
-	private InvestorController getController() {
+	private BrokerController getController() {
 		return controller;
 	}
 
-	private void setController(InvestorController controller) {
+	private void setController(BrokerController controller) {
 		this.controller = controller;
 	}
 
