@@ -14,7 +14,7 @@ public class AnalysisMomentum {
 	}
 
 	public String toString(int which) {
-		String s = "";
+		String s = "\t\t";
 		
 		// MOMENTUM OSCILLATORS
 		// Relative Strength Index

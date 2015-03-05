@@ -103,7 +103,7 @@ public class AnalysisVolumePrice {
 	}
 
 	public String toString(int which) {
-		String s = "";
+		String s = "\t\t";
 		
 		s = s + "> VOLUME(" + which + ")\t= ";  
 		

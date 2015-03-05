@@ -125,6 +125,7 @@ public class Pucara {
 		for(Investment inv:getMarketPortfolio().getInvestments()) {
 			for(String trading:getTradingOptions()) {
 				String analysis = "";
+				analysis = analysis + "=====" + inv.toString() + "=====" + "\n";
 				for(String sampling:getSampling(trading)) { 
 					analysis = analysis + getInvestmentAnalysis(inv, sampling);
 				}			
@@ -134,8 +135,7 @@ public class Pucara {
 	}
 
 	private static String getInvestmentAnalysis(Investment inv, String sampling) {
-		String s = "";
-		s = s + inv.toString() + "\n";
+		String s = "\n";
 		s = s + ">> " + sampling + "\t"; 
 		Chart chart = inv.getCharts().get(sampling);
 		if(chart!=null) { // not all sampling cases may be available
