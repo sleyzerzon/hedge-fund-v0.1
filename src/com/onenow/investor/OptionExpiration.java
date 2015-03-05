@@ -17,25 +17,24 @@ public class OptionExpiration {
 	private void initIndexExpList() {
 		getIndexExpList().add("20150307");
 		getIndexExpList().add("20150314");
-		getIndexExpList().add("20150321");
-		getIndexExpList().add("20150328");
-		getIndexExpList().add("20150404");
-		getIndexExpList().add("20150411");
-		getIndexExpList().add("20150418");
-		getIndexExpList().add("20150425");
+//		getIndexExpList().add("20150321");
+//		getIndexExpList().add("20150328");
+//		getIndexExpList().add("20150404");
+//		getIndexExpList().add("20150411");
+//		getIndexExpList().add("20150418");
+//		getIndexExpList().add("20150425");
 
 	}
 
 	private void initFuturesExpList() {
-		getIndexExpList().add("20150306");
-		getIndexExpList().add("20150313");
-		getIndexExpList().add("20150320");
-		getIndexExpList().add("20150327");
-		getIndexExpList().add("20150402");
-		getIndexExpList().add("20150417");
-		getIndexExpList().add("20150515");
-		getIndexExpList().add("20150529");
-
+//		getIndexExpList().add("20150306");
+//		getIndexExpList().add("20150313");
+//		getIndexExpList().add("20150320");
+//		getIndexExpList().add("20150327");
+//		getIndexExpList().add("20150402");
+//		getIndexExpList().add("20150417");
+//		getIndexExpList().add("20150515");
+//		getIndexExpList().add("20150529");
 	}
 
 	// PUBLIC

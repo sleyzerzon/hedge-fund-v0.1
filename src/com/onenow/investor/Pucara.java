@@ -70,14 +70,15 @@ public class Pucara {
 	public Pucara(Underlying index) throws InterruptedException {
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
-		setSamplingRate(getSampling("all"));	
+		setSamplingRate(getSampling("all"));
+		System.out.println("SAMPLING: " + getSamplingRate().toString() + "\n");
 	}	
 	
 	public static void launch() throws InterruptedException {
 
 //		getChannelPrices(getContractFactory());
 
-		while(true) {
+//		while(true) {
 			
 			setAllCharts();
 			analyzeAllInvestmentCharts();
@@ -93,7 +94,7 @@ public class Pucara {
 			
 			System.out.println(",,,,,");
 			Thread.sleep(50000);
-		}
+//		}
 	}
 	
 	public static void launchBottomExocet(Underlying under) {
@@ -134,9 +135,15 @@ public class Pucara {
 
 	private static String getInvestmentAnalysis(Investment inv, String sampling) {
 		String s = "";
-		Chart chart = inv.getCharts().get(sampling);
+		s = s + inv.toString() + "\n";
 		s = s + ">> " + sampling + "\t"; 
-		s = s + getChartAnalysis(chart);
+		Chart chart = inv.getCharts().get(sampling);
+		if(chart!=null) { // not all sampling cases may be available
+			s = s + getChartAnalysis(chart);			
+		} else {
+			s = s + "null";
+		}
+		s = s + "\n";
 		return s;
 	}
 
