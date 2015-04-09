@@ -13,8 +13,7 @@ import com.onenow.finance.TradeRatio;
 import com.onenow.finance.Underlying;
 
 public class InvestorMain {
-	
-	
+		
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
 		Underlying index = new Underlying("SPX");
