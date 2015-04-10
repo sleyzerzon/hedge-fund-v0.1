@@ -1,4 +1,4 @@
-package com.onenow.instrument;
+package com.onenow.portfolio;
 
 import java.util.Date;
 import java.util.List;

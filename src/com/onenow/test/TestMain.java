@@ -1,6 +1,6 @@
 package com.onenow.test;
 
-import com.onenow.database.DatabaseSystemActivityImpl;
+import com.onenow.admin.DatabaseSystemActivityImpl;
 
 public class TestMain {
 

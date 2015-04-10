@@ -8,8 +8,6 @@ import com.onenow.constant.InvApproach;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.StrategyIronCondor;
-import com.onenow.instrument.TradeRatio;
 import com.onenow.instrument.Underlying;
 
 public class InvestorMain {

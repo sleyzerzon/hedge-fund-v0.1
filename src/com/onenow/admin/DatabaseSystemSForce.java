@@ -1,4 +1,4 @@
-package com.onenow.database;
+package com.onenow.admin;
 
 import java.util.ArrayList;
 import java.util.Date;

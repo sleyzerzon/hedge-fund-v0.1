@@ -1,4 +1,4 @@
-package com.onenow.portfolio;
+package com.onenow.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,8 @@ import java.util.List;
 import com.ib.client.Types.SecType;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.Underlying;
-import com.onenow.portfolio.Stats;
+import com.onenow.util.ParseDate;
+import com.onenow.util.Stats;
 
 public class Channel {
 

@@ -1,4 +1,4 @@
-package com.onenow.portfolio;
+package com.onenow.execution;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -18,11 +18,9 @@ import apidemo.util.NewTabbedPanel.NewTabPanel;
 import com.ib.client.Types.DeepSide;
 import com.ib.client.Types.DeepType;
 import com.onenow.instrument.Investment;
+import com.onenow.portfolio.BrokerController;
 //import com.ib.controller.ApiController.IDeepMktDataHandler;
 import com.onenow.portfolio.BrokerController.IDeepMktDataHandler;
-import com.onenow.execution.BrokerInteractive;
-import com.onenow.execution.Contract;
-import com.onenow.execution.ContractFactory;
 
 
 public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {

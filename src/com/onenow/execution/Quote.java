@@ -1,4 +1,4 @@
-package com.onenow.portfolio;
+package com.onenow.execution;
 
 import static com.ib.controller.Formats.fmtPct;
 
@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
+import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
 

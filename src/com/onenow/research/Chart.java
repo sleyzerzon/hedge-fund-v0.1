@@ -6,7 +6,7 @@ import java.util.List;
 import com.onenow.alpha.AnalysisMomentum;
 import com.onenow.alpha.AnalysisPriceOnly;
 import com.onenow.alpha.AnalysisVolumePrice;
-import com.onenow.portfolio.Stats;
+import com.onenow.util.Stats;
 
 public class Chart {
 	

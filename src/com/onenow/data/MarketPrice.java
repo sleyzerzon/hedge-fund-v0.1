@@ -1,4 +1,4 @@
-package com.onenow.instrument;
+package com.onenow.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,8 @@ import com.onenow.constant.DataType;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Lookup;
 import com.onenow.database.TSDB;
-import com.onenow.portfolio.QuoteDepth.DeepRow;
+import com.onenow.execution.QuoteDepth.DeepRow;
+import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 

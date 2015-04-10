@@ -43,7 +43,7 @@ import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.execution.Contract;
-import com.onenow.portfolio.QuoteTable.QuoteSingle;
+import com.onenow.execution.QuoteTable.QuoteSingle;
 
 public class BrokerController implements EWrapper {
 	private ApiConnection m_client;

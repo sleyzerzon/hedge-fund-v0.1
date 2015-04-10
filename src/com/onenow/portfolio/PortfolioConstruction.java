@@ -7,14 +7,6 @@ import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.Strategy;
-import com.onenow.instrument.StrategyCallBuy;
-import com.onenow.instrument.StrategyCallSpread;
-import com.onenow.instrument.StrategyIronCondor;
-import com.onenow.instrument.StrategyPutBuy;
-import com.onenow.instrument.StrategyPutSpread;
-import com.onenow.instrument.Trade;
-import com.onenow.instrument.TradeRatio;
 import com.onenow.instrument.Underlying;
 
 public class PortfolioConstruction {

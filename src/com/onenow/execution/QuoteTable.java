@@ -1,4 +1,4 @@
-package com.onenow.portfolio;
+package com.onenow.execution;
 
 import static com.ib.controller.Formats.*;
 
@@ -15,16 +15,13 @@ import com.ib.controller.Formats;
 import com.onenow.constant.DataType;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
-import com.onenow.execution.Broker;
-import com.onenow.execution.BrokerInteractive;
-import com.onenow.execution.Contract;
-import com.onenow.execution.ContractFactory;
+import com.onenow.data.MarketPrice;
+import com.onenow.execution.QuoteTable;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
-import com.onenow.instrument.MarketPrice;
 import com.onenow.instrument.Underlying;
-import com.onenow.portfolio.QuoteTable;
+import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
 

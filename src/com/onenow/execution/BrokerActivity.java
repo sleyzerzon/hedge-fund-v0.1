@@ -9,10 +9,10 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrati
 import com.onenow.constant.ConstantsWorkflow;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.Portfolio;
-import com.onenow.instrument.Trade;
-import com.onenow.instrument.Transaction;
 import com.onenow.instrument.Underlying;
+import com.onenow.portfolio.Portfolio;
+import com.onenow.portfolio.Trade;
+import com.onenow.portfolio.Transaction;
 
 @ActivityRegistrationOptions(	defaultTaskScheduleToStartTimeoutSeconds = 300, 
 								defaultTaskStartToCloseTimeoutSeconds = 300, 

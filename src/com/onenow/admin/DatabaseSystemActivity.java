@@ -1,4 +1,4 @@
-package com.onenow.database;
+package com.onenow.admin;
 
 import java.util.Date;
 import java.util.List;

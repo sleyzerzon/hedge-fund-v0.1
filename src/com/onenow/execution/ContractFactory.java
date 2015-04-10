@@ -8,14 +8,14 @@ import java.util.List;
 import com.ib.client.ComboLeg;
 import com.ib.client.Types.SecType;
 import com.onenow.constant.InvType;
+import com.onenow.data.Channel;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
-import com.onenow.portfolio.Channel;
-import com.onenow.portfolio.ParseDate;
+import com.onenow.util.ParseDate;
 
 public class ContractFactory {
 

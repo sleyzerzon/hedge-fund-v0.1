@@ -3,22 +3,22 @@ package com.onenow.test;
 import java.util.Date;
 import java.util.List;
 
+import com.onenow.admin.DatabaseSystemActivityImpl;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
-import com.onenow.database.DatabaseSystemActivityImpl;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.Portfolio;
-import com.onenow.instrument.Strategy;
-import com.onenow.instrument.StrategyCallSpread;
-import com.onenow.instrument.StrategyIronCondor;
-import com.onenow.instrument.StrategyPutSpread;
-import com.onenow.instrument.Trade;
-import com.onenow.instrument.TradeRatio;
-import com.onenow.instrument.Transaction;
 import com.onenow.instrument.Underlying;
+import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.PortfolioConstruction;
+import com.onenow.portfolio.Strategy;
+import com.onenow.portfolio.StrategyCallSpread;
+import com.onenow.portfolio.StrategyIronCondor;
+import com.onenow.portfolio.StrategyPutSpread;
+import com.onenow.portfolio.Trade;
+import com.onenow.portfolio.TradeRatio;
+import com.onenow.portfolio.Transaction;
 import com.sforce.ws.ConnectionException;
 
 public class TestBroker {

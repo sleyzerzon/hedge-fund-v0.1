@@ -1,4 +1,4 @@
-package com.onenow.instrument;
+package com.onenow.portfolio;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +8,10 @@ import java.util.List;
 import com.onenow.constant.InvTerm;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
+import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvestmentReserved;
+import com.onenow.instrument.Underlying;
 
 public class Portfolio {
 
