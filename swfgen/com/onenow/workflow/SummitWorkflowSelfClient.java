@@ -9,6 +9,7 @@ package com.onenow.workflow;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.amazonaws.services.simpleworkflow.flow.StartWorkflowOptions;
 import com.amazonaws.services.simpleworkflow.flow.WorkflowSelfClient;
+import com.onenow.aws.SummitWorkflow;
 
 public interface SummitWorkflowSelfClient extends WorkflowSelfClient
 {

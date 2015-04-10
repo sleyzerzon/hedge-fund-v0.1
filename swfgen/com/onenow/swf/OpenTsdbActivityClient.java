@@ -9,6 +9,7 @@ package com.onenow.swf;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.amazonaws.services.simpleworkflow.flow.ActivitiesClient;
 import com.amazonaws.services.simpleworkflow.flow.ActivitySchedulingOptions;
+import com.onenow.aws.OpenTsdbActivity;
 
 public interface OpenTsdbActivityClient extends ActivitiesClient
 {

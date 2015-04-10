@@ -3,22 +3,22 @@ package com.onenow.test;
 import java.util.Date;
 import java.util.List;
 
-import com.onenow.broker.BrokerActivityImpl;
+import com.onenow.constant.InvApproach;
+import com.onenow.constant.InvType;
+import com.onenow.constant.TradeType;
 import com.onenow.database.DatabaseSystemActivityImpl;
-import com.onenow.finance.InvApproach;
-import com.onenow.finance.InvType;
-import com.onenow.finance.Investment;
-import com.onenow.finance.Portfolio;
-import com.onenow.finance.Strategy;
-import com.onenow.finance.StrategyCallSpread;
-import com.onenow.finance.StrategyIronCondor;
-import com.onenow.finance.StrategyPutSpread;
-import com.onenow.finance.Trade;
-import com.onenow.finance.TradeRatio;
-import com.onenow.finance.TradeType;
-import com.onenow.finance.Transaction;
-import com.onenow.finance.Underlying;
-import com.onenow.investor.Exocet;
+import com.onenow.execution.BrokerActivityImpl;
+import com.onenow.instrument.Investment;
+import com.onenow.instrument.Portfolio;
+import com.onenow.instrument.Strategy;
+import com.onenow.instrument.StrategyCallSpread;
+import com.onenow.instrument.StrategyIronCondor;
+import com.onenow.instrument.StrategyPutSpread;
+import com.onenow.instrument.Trade;
+import com.onenow.instrument.TradeRatio;
+import com.onenow.instrument.Transaction;
+import com.onenow.instrument.Underlying;
+import com.onenow.portfolio.PortfolioConstruction;
 import com.sforce.ws.ConnectionException;
 
 public class TestBroker {
@@ -81,7 +81,7 @@ public class TestBroker {
 	}
 	
 	private boolean testExocet() {
-		Exocet ex = new Exocet(100, new Underlying("spx"), getExpDate(), getBroker());
+		PortfolioConstruction ex = new PortfolioConstruction(100, new Underlying("spx"), getExpDate(), getBroker());
 		
 		StrategyIronCondor hp = ex.getIronCondor(InvApproach.HIGH, TradeRatio.NONE, 0.60);
 		System.out.println(ex.toString());
@@ -120,7 +120,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testPutSpread(Exocet ex, StrategyPutSpread strat) {
+	private boolean testPutSpread(PortfolioConstruction ex, StrategyPutSpread strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
@@ -136,7 +136,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testCallSpread(Exocet ex, StrategyCallSpread strat) {
+	private boolean testCallSpread(PortfolioConstruction ex, StrategyCallSpread strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
@@ -152,7 +152,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testIronCondor(Exocet ex, StrategyIronCondor strat) {
+	private boolean testIronCondor(PortfolioConstruction ex, StrategyIronCondor strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);

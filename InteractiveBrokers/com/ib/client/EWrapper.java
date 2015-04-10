@@ -3,7 +3,7 @@
 
 package com.ib.client;
 
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 
 public interface EWrapper {

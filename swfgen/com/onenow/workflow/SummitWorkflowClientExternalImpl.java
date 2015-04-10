@@ -12,6 +12,7 @@ import com.amazonaws.services.simpleworkflow.flow.WorkflowClientExternalBase;
 import com.amazonaws.services.simpleworkflow.flow.generic.GenericWorkflowClientExternal;
 import com.amazonaws.services.simpleworkflow.model.WorkflowExecution;
 import com.amazonaws.services.simpleworkflow.model.WorkflowType;
+import com.onenow.aws.SummitWorkflow;
 
 class SummitWorkflowClientExternalImpl extends WorkflowClientExternalBase implements SummitWorkflowClientExternal {
 

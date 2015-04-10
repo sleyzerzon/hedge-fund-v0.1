@@ -3,7 +3,7 @@
 
 package com.ib.controller;
 
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 
 public class Position {

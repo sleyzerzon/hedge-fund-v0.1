@@ -20,7 +20,7 @@ import com.ib.client.CommissionReport;
 import com.ib.client.Execution;
 import com.ib.client.ExecutionFilter;
 import com.ib.controller.ApiController.ITradeReportHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class TradesPanel extends JPanel implements ITradeReportHandler {
 	private ArrayList<FullExec> m_trades = new ArrayList<FullExec>();

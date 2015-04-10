@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class EWrapperMsgGenerator {
     public static final String SCANNER_PARAMETERS = "SCANNER PARAMETERS:";

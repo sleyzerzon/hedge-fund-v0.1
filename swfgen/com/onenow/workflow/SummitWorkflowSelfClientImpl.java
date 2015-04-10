@@ -13,6 +13,7 @@ import com.amazonaws.services.simpleworkflow.flow.StartWorkflowOptions;
 import com.amazonaws.services.simpleworkflow.flow.WorkflowSelfClientBase;
 import com.amazonaws.services.simpleworkflow.flow.generic.ContinueAsNewWorkflowExecutionParameters;
 import com.amazonaws.services.simpleworkflow.flow.generic.GenericWorkflowClient;
+import com.onenow.aws.SummitWorkflow;
 
 public class SummitWorkflowSelfClientImpl extends WorkflowSelfClientBase implements SummitWorkflowSelfClient {
 

@@ -7,6 +7,7 @@
 package com.onenow.workflow;
 
 import com.amazonaws.services.simpleworkflow.flow.WorkflowClientFactory;
+import com.onenow.aws.SummitWorkflow;
 
 public interface SummitWorkflowClientFactory extends WorkflowClientFactory<SummitWorkflowClient> {
     

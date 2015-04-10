@@ -11,7 +11,7 @@ import com.ib.contracts.ComboContract;
 import com.ib.contracts.FutContract;
 import com.ib.contracts.OptContract;
 import com.ib.contracts.StkContract;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 import java.util.ArrayList;
 

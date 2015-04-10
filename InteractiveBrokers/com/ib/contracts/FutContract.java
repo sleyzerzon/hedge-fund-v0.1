@@ -4,7 +4,7 @@
 package com.ib.contracts;
 
 import com.ib.client.Types.SecType;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class FutContract extends Contract {
     public FutContract(String symbol, String expiry) {

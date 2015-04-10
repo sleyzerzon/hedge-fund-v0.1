@@ -1,5 +1,5 @@
 /**
- * This code was generated from {@link com.onenow.investor.PurchaseWorkflow}.
+ * This code was generated from {@link com.onenow.portfolio.PurchaseWorkflow}.
  *
  * Any changes made directly to this file will be lost when 
  * the code is regenerated.

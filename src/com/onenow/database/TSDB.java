@@ -9,9 +9,10 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Serie;
 
-import com.onenow.analyst.Candle;
-import com.onenow.finance.Investment;
-import com.onenow.investor.SamplingRate;
+import com.onenow.constant.DBname;
+import com.onenow.constant.SamplingRate;
+import com.onenow.instrument.Investment;
+import com.onenow.research.Candle;
 
 public class TSDB {
 	

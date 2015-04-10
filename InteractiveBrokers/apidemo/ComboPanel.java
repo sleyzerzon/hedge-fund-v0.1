@@ -40,7 +40,7 @@ import com.ib.client.Types.Action;
 import com.ib.client.Types.SecType;
 import com.ib.controller.ApiController.IContractDetailsHandler;
 import com.ib.controller.ApiController.IEfpHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 
 public class ComboPanel extends JPanel implements INewTab {

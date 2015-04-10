@@ -5,7 +5,7 @@ package com.ib.client;
 
 import java.util.ArrayList;
 
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class ContractDetails {
     private Contract m_contract;

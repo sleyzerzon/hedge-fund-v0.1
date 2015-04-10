@@ -33,7 +33,7 @@ import com.ib.client.Types.MktDataType;
 import com.ib.client.Types.NewsType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class ApiController implements EWrapper {
 	private ApiConnection m_client;

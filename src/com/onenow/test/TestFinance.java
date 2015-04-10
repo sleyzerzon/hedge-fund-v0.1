@@ -2,17 +2,17 @@ package com.onenow.test;
 
 import java.util.Date;
 
+import com.onenow.constant.InvType;
+import com.onenow.constant.TradeType;
 import com.onenow.database.DatabaseSystemActivityImpl;
-import com.onenow.finance.InvType;
-import com.onenow.finance.InvestmentOption;
-import com.onenow.finance.MarketAnalytics;
-import com.onenow.finance.Sequence;
-import com.onenow.finance.StrategyCallSpread;
-import com.onenow.finance.StrategyIronCondor;
-import com.onenow.finance.StrategyPutSpread;
-import com.onenow.finance.Trade;
-import com.onenow.finance.TradeType;
-import com.onenow.finance.Underlying;
+import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.Sequence;
+import com.onenow.instrument.StrategyCallSpread;
+import com.onenow.instrument.StrategyIronCondor;
+import com.onenow.instrument.StrategyPutSpread;
+import com.onenow.instrument.Trade;
+import com.onenow.instrument.Underlying;
+import com.onenow.risk.MarketAnalytics;
 import com.sforce.ws.ConnectionException;
 
 public class TestFinance {

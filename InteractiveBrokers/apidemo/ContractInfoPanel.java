@@ -26,7 +26,7 @@ import com.ib.client.ContractDetails;
 import com.ib.client.Types.FundamentalType;
 import com.ib.controller.ApiController.IContractDetailsHandler;
 import com.ib.controller.ApiController.IFundamentalsHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class ContractInfoPanel extends JPanel {
 	private final Contract m_contract = new Contract();

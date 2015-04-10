@@ -45,7 +45,7 @@ import com.ib.controller.ApiController.IDeepMktDataHandler;
 import com.ib.controller.ApiController.IHistoricalDataHandler;
 import com.ib.controller.ApiController.IRealTimeBarHandler;
 import com.ib.controller.ApiController.IScannerHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class MarketDataPanel extends JPanel {
 	private final Contract m_contract = new Contract();

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ib.client.Types.SecType;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class EClientSocket {
 

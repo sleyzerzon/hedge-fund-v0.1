@@ -13,6 +13,7 @@ import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.amazonaws.services.simpleworkflow.flow.generic.GenericWorkflowClient;
 import com.amazonaws.services.simpleworkflow.model.WorkflowExecution;
 import com.amazonaws.services.simpleworkflow.model.WorkflowType;
+import com.onenow.aws.SummitWorkflow;
 
 class SummitWorkflowClientImpl extends WorkflowClientBase implements SummitWorkflowClient {
 

@@ -12,6 +12,7 @@ import com.amazonaws.services.simpleworkflow.flow.DataConverter;
 import com.amazonaws.services.simpleworkflow.flow.core.Promise;
 import com.amazonaws.services.simpleworkflow.flow.generic.GenericActivityClient;
 import com.amazonaws.services.simpleworkflow.model.ActivityType;
+import com.onenow.aws.OpenTsdbActivity;
 
 public class OpenTsdbActivityClientImpl extends ActivitiesClientBase implements OpenTsdbActivityClient {
 

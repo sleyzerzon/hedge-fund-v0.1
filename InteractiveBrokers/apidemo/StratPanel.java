@@ -31,7 +31,7 @@ import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Bar;
 import com.ib.controller.ApiController.IHistoricalDataHandler;
 import com.ib.controller.ApiController.IRealTimeBarHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 
 public class StratPanel extends StackPanel implements IHistoricalDataHandler, IRealTimeBarHandler {

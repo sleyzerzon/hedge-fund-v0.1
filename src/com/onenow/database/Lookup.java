@@ -1,8 +1,8 @@
 package com.onenow.database;
 
-import com.onenow.finance.Investment;
-import com.onenow.finance.InvestmentOption;
-import com.onenow.finance.Underlying;
+import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.Underlying;
 
 public class Lookup {
 	

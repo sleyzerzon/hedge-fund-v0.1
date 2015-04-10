@@ -46,7 +46,7 @@ import com.ib.client.Types.TimeInForce;
 import com.ib.client.Types.TriggerMethod;
 import com.ib.client.Types.VolatilityType;
 import com.ib.controller.ApiController.IOrderHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class TicketDlg extends JDialog {
 	private boolean m_editContract;

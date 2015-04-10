@@ -40,7 +40,7 @@ import com.ib.client.Types.SecType;
 import com.ib.controller.ApiController.IContractDetailsHandler;
 import com.ib.controller.ApiController.IOptHandler;
 import com.ib.controller.ApiController.TopMktDataAdapter;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class OptionChainsPanel extends JPanel {
 	private Contract m_underContract = new Contract();

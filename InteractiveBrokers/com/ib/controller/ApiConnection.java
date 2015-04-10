@@ -26,7 +26,7 @@ import com.ib.client.TagValue;
 import com.ib.client.Types.AlgoStrategy;
 import com.ib.client.Types.HedgeType;
 import com.ib.client.Types.SecType;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 // NOTE: TWS 936 SERVER_VERSION is 67.
 

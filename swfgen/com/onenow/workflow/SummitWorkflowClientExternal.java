@@ -8,6 +8,7 @@ package com.onenow.workflow;
 
 import com.amazonaws.services.simpleworkflow.flow.StartWorkflowOptions;
 import com.amazonaws.services.simpleworkflow.flow.WorkflowClientExternal;
+import com.onenow.aws.SummitWorkflow;
 
 public interface SummitWorkflowClientExternal extends WorkflowClientExternal
 {

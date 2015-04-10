@@ -12,6 +12,7 @@ import com.amazonaws.services.simpleworkflow.flow.WorkflowClientFactoryBase;
 import com.amazonaws.services.simpleworkflow.flow.generic.GenericWorkflowClient;
 import com.amazonaws.services.simpleworkflow.model.WorkflowExecution;
 import com.amazonaws.services.simpleworkflow.model.WorkflowType;
+import com.onenow.aws.SummitWorkflow;
 
 public class SummitWorkflowClientFactoryImpl extends WorkflowClientFactoryBase<SummitWorkflowClient> implements SummitWorkflowClientFactory {
     

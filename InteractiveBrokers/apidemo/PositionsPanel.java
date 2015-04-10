@@ -19,7 +19,7 @@ import apidemo.util.NewTabbedPanel.NewTabPanel;
 
 import com.ib.controller.Formats;
 import com.ib.controller.ApiController.IPositionHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 
 public class PositionsPanel extends NewTabPanel {

@@ -23,7 +23,7 @@ import com.ib.client.OrderState;
 import com.ib.client.OrderStatus;
 import com.ib.client.OrderType;
 import com.ib.controller.ApiController.ILiveOrderHandler;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class OrdersPanel extends JPanel {
 	private OrdersModel m_model = new OrdersModel();

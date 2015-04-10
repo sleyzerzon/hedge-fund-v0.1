@@ -11,7 +11,7 @@ import com.ib.client.EWrapper;
 import com.ib.client.Execution;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
-import com.onenow.investor.Contract;
+import com.onenow.execution.Contract;
 
 public class Test implements EWrapper {
 	EClientSocket m_s = new EClientSocket(this);
