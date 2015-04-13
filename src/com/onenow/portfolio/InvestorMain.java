@@ -19,6 +19,7 @@ public class InvestorMain {
 		PortfolioFactory portfolioFactory;
 		
 		try {
+			System.out.println("TRYING TO CREATE INVESTOR");
 			portfolioFactory = new PortfolioFactory(index);		// create it
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INVESTOR\n");
@@ -28,6 +29,7 @@ public class InvestorMain {
 		
 
 		try {
+			System.out.println("TRYING TO LAUNCH INVESTOR");
 			portfolioFactory.launch();							// launch it
 		} catch (Exception e) {
 			System.out.println("COULD NOT EXECUTE INVESTOR\n");

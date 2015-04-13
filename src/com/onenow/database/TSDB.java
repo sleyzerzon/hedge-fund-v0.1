@@ -28,6 +28,7 @@ public class TSDB {
 
 private void dbConnect() { 
 	try {
+		System.out.println("CONNECTING TO DB");
 		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
 	} catch (Exception e) {
 		System.out.println("COULD NOT CONNECT TO DB\n");

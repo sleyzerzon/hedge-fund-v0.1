@@ -108,11 +108,48 @@ public class MarketPrice {
 		}
 	}
 	
+	public String realTimeMapToString(Long tradeTime, Investment inv) {
+		
+		Integer size = getSizeFromTimedMap(tradeTime, inv, TradeType.TRADED.toString());
+		Integer volume = getSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());
+		
+		String sizeS = size.toString();
+		String volumeS = volume.toString();
+		
+		if(size<0) {
+			sizeS = "(" + sizeS + ")";
+		}
+		
+		boolean print = true;
+		if(size>500) {
+			sizeS = "***" + sizeS;
+			print = true;
+		}
+		if(volume>5000) {
+			volumeS = "***" + volumeS;
+			print = true;
+		}
+		
+		String s = "";
+		if(print) {
+			s = "\n" + inv.toString() + "\n";
+			s = s +	"REAL TIME " +
+					"Price " + getPriceFromTimedMap(tradeTime, inv, TradeType.TRADED.toString()) + " " +
+					"Size " + sizeS + " " + 
+					"Volume " + volumeS + " " +
+					"VWAP " + getPriceFromTimedMap(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
+	//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
+		}
+		return s;
+	}
+
+	
 	// CANDLES
 	public Chart queryChart(Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
 		Chart chart = new Chart();
+		// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 		List<Candle> prices = getPriceFromDB(inv, dataType, fromDate, toDate, sampling);
 		List<Integer> sizes = getSizeFromDB(inv, dataType, fromDate, toDate, sampling);
 		chart.setPrices(prices);
@@ -121,6 +158,7 @@ public class MarketPrice {
 		return chart;
 	}
 		
+	// QUERY PRICE
 	public List<Candle> getPriceFromDB(	Investment inv, String dataType, 
 		String fromDate, String toDate, String sampling) {
 		List<Serie> series = getDB().readPrice(	inv, dataType,
@@ -142,7 +180,7 @@ public class MarketPrice {
 			for (Map<String, Object> row : ser.getRows()) {
 				Candle candle = new Candle();
 				Integer i=0;
-				for (String col : ser.getColumns()) {
+				for (String col : ser.getColumns()) {	// iterate columns to create candle
 					s = s + row.get(col) + "\t";
 //					System.out.println("row " + row + " " + row.get(col)); full row
 					if(i.equals(1)) {
@@ -170,6 +208,7 @@ public class MarketPrice {
 		return candles;
 	}
 	
+	// QUERY SIZE
 	public List<Integer> getSizeFromDB(	Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
@@ -193,7 +232,7 @@ public class MarketPrice {
 			for (Map<String, Object> row : ser.getRows()) {
 				Candle candle = new Candle();
 				Integer i=0;
-				for (String col : ser.getColumns()) {
+				for (String col : ser.getColumns()) {	// iterate columsn to get ints
 					s = s + row.get(col) + "\t";
 //					System.out.println("row " + row + " " + row.get(col)); full row
 					if(i.equals(1)) {
@@ -367,6 +406,8 @@ public class MarketPrice {
 		}
 		return depth;
 	}
+	
+	
 	// PRINT
 	public String toString() {
 		String s="";
@@ -374,41 +415,6 @@ public class MarketPrice {
 		return s;
 	}
 	
-	public String realTimeMapToString(Long tradeTime, Investment inv) {
-		
-		Integer size = getSizeFromTimedMap(tradeTime, inv, TradeType.TRADED.toString());
-		Integer volume = getSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());
-		
-		String sizeS = size.toString();
-		String volumeS = volume.toString();
-		
-		if(size<0) {
-			sizeS = "(" + sizeS + ")";
-		}
-		
-		boolean print = true;
-		if(size>500) {
-			sizeS = "***" + sizeS;
-			print = true;
-		}
-		if(volume>5000) {
-			volumeS = "***" + volumeS;
-			print = true;
-		}
-		
-		String s = "";
-		if(print) {
-			s = "\n" + inv.toString() + "\n";
-			s = s +	"REAL TIME " +
-					"Price " + getPriceFromTimedMap(tradeTime, inv, TradeType.TRADED.toString()) + " " +
-					"Size " + sizeS + " " + 
-					"Volume " + volumeS + " " +
-					"VWAP " + getPriceFromTimedMap(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
-	//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
-		}
-		return s;
-	}
-
 	
 	// TEST
 	

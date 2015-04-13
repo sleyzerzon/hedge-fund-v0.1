@@ -1,0 +1,23 @@
+	// NOTES
+	// wait for break-out
+	// in bull market only from low only
+	// after the low has been confirmed three times
+	// sell two supports level before / -20 points from low, 7 day term
+	// stop loss at 2x credit
+	// close at Friday noon, never go through expiration
+	// max loss 2% of capital
+	
+	// 30-day 1955 .1 delta put at $500 credit, with $200 margin each
+	// make $10k with 20 contracts; with $4k margin => 2.5x return
+	// + limit: $100 ($2k loss in the month) ... 20-point decrease 
+	// ratio?
+	
+	// @2085-80; resistance $2085, $2002
+	// 5-day (high 2016) ~$0.40 , (mid 2012) $0.55 ... , (low 2002): $1.1  => 2X
+	// 30-day (2016) $1.25 , (2012): $1.25 ..., (2002): ?
+	
+	// act at $2005, sell based on levels of channel protection
+	// ratio 1:2 credit-wise = sell 20x(2085-80) for $1600 credit; buy 1x(2105) for $800
+	// - above 2105 profit $1600credit-800put-250buy back=550
+	// - above 2085, below 2005 profit 550+nx100, up to $2550
+	// - below 2085, move to later calendar

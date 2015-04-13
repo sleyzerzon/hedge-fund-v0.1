@@ -15,8 +15,11 @@ public class EntranceExitDecisioning {
 
 	}
 
+	// PUBLIC
 	public boolean EnterNowAtTop() {
 		boolean enter = false;
+		
+		// TODO: detect top of market
 		
 		return enter;
 	}
@@ -24,15 +27,78 @@ public class EntranceExitDecisioning {
 	public boolean EnterNowAtBottom() {
 		boolean enter = true;
 		
+		// TODO: detect bottom of market 
+		
 		return enter;
 	}
 
 	public boolean exitNow() {
 		boolean enter = true;
 		
+		// TODO: determine it's time to exit 
+		
 		return enter;
 	}
 
+
+	// PRIVATE
+	private static boolean isVolumeSpike() {
+		return true;
+	}
+	
+	private static boolean isFuturesGuidingUp(){
+		return true;
+	}
+	
+	private static boolean isFuturesGuidingDown() {
+		return true;
+	}
+	
+	private boolean isCounterMarket() { // price under VWAP in bull market, over in bear market
+		return true;
+	}
+	
+	private static boolean isUnderVWAP(Integer buffer) {
+		return true;
+	}
+	private static boolean isOverVWAP(Integer buffer) { 
+		return true;
+	}
+	private static boolean isMomentumReversedUp() { // commensurate: by deviation
+		return isPriceUp() && isVolumeUp();
+	}
+	
+	private static boolean isPriceUp() {
+		return true;
+	}
+	private static boolean isVolumeUp() {
+		return true;
+	}
+	
+	private static boolean isMomentumReversedDown() { // commensurate: by deviation 
+		return isPriceDown() && isVolumeDown();
+	}
+	private static boolean isPriceDown() {
+		return true;
+	}
+	private static boolean isVolumeDown() {
+		return true;
+	}
+	
+	private static boolean isGoalAchieved() {
+		return false;
+	}
+	
+	private static boolean isMarketClose() {
+		return false;
+	}
+	private static boolean isBullMarket() {
+		boolean bull=true;
+		return bull;
+	}
+	private static boolean isBearMarket() {
+		return !isBullMarket();
+	}
 
 //	if(isBullMarket()) { // TODO: futures market?
 //	// has been trading in range! And it is breaking out!
@@ -52,6 +118,8 @@ public class EntranceExitDecisioning {
 //	
 //}
 
+	
+	// SET GET
 	private Underlying getUnder() {
 		return under;
 	}
