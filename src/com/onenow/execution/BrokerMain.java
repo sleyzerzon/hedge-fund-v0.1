@@ -6,6 +6,7 @@ public class BrokerMain {
 	private static BrokerActivityImpl broker;
 
 	public static void main(String[] args) {
+		// 1 100 Max rate of messages per second has been exceeded:max=50 rec=138 (1)
 
 		try {
 			setIB(new BrokerInteractive()); // create Interactive Brokers

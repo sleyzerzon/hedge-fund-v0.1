@@ -20,8 +20,9 @@ import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.ParseDate;
 
-public class Pucara {
+public class PortfolioFactory {
 	
+	// NOTES
 	// wait for break-out
 	// in bull market only from low only
 	// after the low has been confirmed three times
@@ -64,11 +65,11 @@ public class Pucara {
 //***	 Confirm via price, volume, and momentum
 //***	 Become familiar with the rythm of the underlying
 	
-	public Pucara() {
+	public PortfolioFactory() {
 		
 	}
 	
-	public Pucara(Underlying index) throws InterruptedException {
+	public PortfolioFactory(Underlying index) throws InterruptedException {
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
 		setSamplingRate(getSampling("all"));
@@ -79,18 +80,18 @@ public class Pucara {
 
 //		getChannelPrices(getContractFactory());
 
-//		while(true) {
+//		while(true) {							// In Real-Time Constantly
 			
 			setAllCharts();
 			analyzeAllInvestmentCharts();
 			EntranceExitDecisioning decisioning = new EntranceExitDecisioning(getIndex());
 
-			if(decisioning.EnterNowAtTop()) {
-				launchBottomExocet(getIndex());
+			if(decisioning.EnterNowAtBottom()) {
+				goLong(getIndex());
 			}
 
 			if(decisioning.EnterNowAtTop()) {
-				launchTopExocet(getIndex());
+				goShort(getIndex());
 			}
 			
 			System.out.println(",,,,,");
@@ -98,20 +99,22 @@ public class Pucara {
 //		}
 	}
 	
-	public static void launchBottomExocet(Underlying under) {
+	// LONG AND SHORT
+	public static void goLong(Underlying under) {
 //		String expDate = "20150319";
 //		Exocet spxExocet = new Exocet(100, under, expDate, getBroker());
 //		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
 //		System.out.println(swingCall.toString());
 	}
 
-	public static void launchTopExocet(Underlying index) {
+	public static void goShort(Underlying index) {
 //		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
 //		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
 //		System.out.println(swingCall.toString());
 	}
 
 	
+	// CHARTS
 	private static void setAllCharts() {
 		String fromDate = "2015-02-21"; // TODO: date
 		String toDate = "2015-02-28";
@@ -122,6 +125,21 @@ public class Pucara {
 		}
 	}
 	
+	// TODO: underlying price, resistance/support?
+	private static void setInvestmentChart(Investment inv, String fromDate, String toDate, String sampling) {
+
+		Chart chart = new Chart();
+		chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
+		
+		if(!chart.getSizes().isEmpty()) {
+			inv.getCharts().put(sampling, chart); // sampling is key	
+			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString());			
+		} else {
+			System.out.println("- chart " + inv.toString() + " " + sampling);
+		}		
+	}
+
+	// ANALYSIS
 	private static void analyzeAllInvestmentCharts() {
 		for(Investment inv:getMarketPortfolio().getInvestments()) {
 			for(String trading:getTradingOptions()) {
@@ -146,22 +164,7 @@ public class Pucara {
 		}
 		s = s + "\n";
 		return s;
-	}
-
-	// TODO: underlying price, resistance/support?
-	private static void setInvestmentChart(Investment inv, String fromDate, String toDate, String sampling) {
-
-		Chart chart = new Chart();
-		chart = getMarketPrice().queryChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
-		
-		if(!chart.getSizes().isEmpty()) {
-			inv.getCharts().put(sampling, chart); // sampling is key	
-			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString());			
-		} else {
-			System.out.println("- chart " + inv.toString() + " " + sampling);
-		}		
-	}
-	
+	}	
 	
 	private static String getChartAnalysis(Chart chart) {
 		String s = "";
@@ -174,6 +177,7 @@ public class Pucara {
 		return s;
 	}
 		
+	// RATE
 	private static List<String> getSampling(String rate) {
 		List<String> list = new ArrayList<String>();
 		if(rate.equals(SamplingRate.SCALP.toString()) || rate.equals("all")) {
@@ -220,7 +224,6 @@ public class Pucara {
 	
 	
 	// PRIVATE
-	
 	private static boolean isVolumeSpike() {
 		return true;
 	}
@@ -391,7 +394,7 @@ public class Pucara {
 	}
 
 	private static void setMarketPrice(MarketPrice marketPrice) {
-		Pucara.marketPrice = marketPrice;
+		PortfolioFactory.marketPrice = marketPrice;
 	}
 
 	private static List<String> getSamplingRate() {
@@ -407,7 +410,7 @@ public class Pucara {
 	}
 
 	private static void setIndex(Underlying index) {
-		Pucara.index = index;
+		PortfolioFactory.index = index;
 	}
 
 

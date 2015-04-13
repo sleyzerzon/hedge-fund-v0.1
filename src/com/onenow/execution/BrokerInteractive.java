@@ -19,7 +19,7 @@ import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.portfolio.Pucara;
+import com.onenow.portfolio.PortfolioFactory;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.portfolio.BrokerController.ConnectionHandler;
@@ -29,7 +29,7 @@ import com.onenow.risk.MarketAnalytics;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
-	private Pucara pucara;
+	private PortfolioFactory pucara;
 	
 	private List<Underlying> underList;
 	private Portfolio marketPortfolio;
@@ -298,12 +298,12 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 
 
-	private Pucara getPucara() {
+	private PortfolioFactory getPucara() {
 		return pucara;
 	}
 
 
-	private void setPucara(Pucara pucara) {
+	private void setPucara(PortfolioFactory pucara) {
 		this.pucara = pucara;
 	}
 

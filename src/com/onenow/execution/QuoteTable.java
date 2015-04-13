@@ -303,7 +303,7 @@ public class QuoteTable extends AbstractTableModel {
 					System.out.println("RT_VOLUME " + value); 
 					getMarketPrice().setRealTime(getInvestment(), value);
 					// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
-//					InvestmentStock inv=new InvestmentStock(new Underlying("SPX"));
+					// InvestmentStock inv=new InvestmentStock(new Underlying("SPX"));
 					break;
 				case VOLUME_RATE:
 					System.out.println("VOLUME_RATE " + value); // not for indices

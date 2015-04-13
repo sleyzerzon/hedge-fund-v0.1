@@ -140,12 +140,9 @@ public List<Serie> querySize(String dbName, String serieName, String fromDate, S
 }
 
 
-//SCALPING 5, 15, 60min
-//SWINGING 60, 240, daily
-//TREND 4hr, daily, weekly
 private String getDBSamplingString(String samplingRate) {
 	String dbSamplingRate="";
-	if(samplingRate.equals("SCALPSHORT")) {
+	if(samplingRate.equals("SCALPSHORT")) {		//SCALPING 5min, 15min, 60min
 		return "5m";
 	}
 	if(samplingRate.equals("SCALPMEDIUM")) {
@@ -154,7 +151,7 @@ private String getDBSamplingString(String samplingRate) {
 	if(samplingRate.equals("SCALPLONG")) {
 		return "60m";
 	}
-	if(samplingRate.equals("SWINGSHORT")) {
+	if(samplingRate.equals("SWINGSHORT")) {		//SWINGING 60min, 240min, daily
 		return "60m";
 	}
 	if(samplingRate.equals("SWINGMEDIUM")) {
@@ -163,7 +160,7 @@ private String getDBSamplingString(String samplingRate) {
 	if(samplingRate.equals("SWINGLONG")) {
 		return "1d";
 	}
-	if(samplingRate.equals("TRENDSHORT")) {
+	if(samplingRate.equals("TRENDSHORT")) {		//TREND 4hr, daily, weekly
 		return "4h";
 	}
 	if(samplingRate.equals("TRENDMEDIUM")) {

@@ -31,61 +31,62 @@ public class InitMarket {
 
 	public InitMarket(Portfolio portfolio) {
 		setMarketPortfolio(portfolio);
-		initWholeMarket(new Underlying("all"));
+		initMarketInstruments(new Underlying("all"));
 	}
 
 	public InitMarket(Underlying index, Portfolio portfolio) {
 		setMarketPortfolio(portfolio);
-		initWholeMarket(index);
+		initMarketInstruments(index);
 	}
 
-	private void initWholeMarket(Underlying index) { // create the investments
-		initIndicesAndOptions(index);
+	private void initMarketInstruments(Underlying index) { // create the investments
+		initIndexAndOptions(index);
 		initStocks(index);		
 		initFutures();
 		System.out.println(getMarketPortfolio().toString());		
 	}
 	 
 	// INDEX AND OPTIONS
-	private void initIndicesAndOptions(Underlying index) {
+	private void initIndexAndOptions(Underlying index) { 
 		OptionExpiration exps = new OptionExpiration();
-		for(String expDate:exps.getIndexExpList()) {
-			initExpirationIndicesAndOptions(index, expDate);
+		for(String expDate:exps.getIndexExpList()) { // for every option expiration expiration
+			seedAndAddIndexAndOptionsToPortoflio(index, expDate);
 		}
 	}
 	
-	private void initExpirationIndicesAndOptions(Underlying index, String expDate) {
-		if(index.getTicker().equals("SPX")) {
+	// TODO: seed amount automatically from real-time market value
+	private void seedAndAddIndexAndOptionsToPortoflio(Underlying index, String expDate) {
+		if(index.getTicker().equals("SPX")) { 	// just SPX
 			String spx="SPX";
-			Integer seedSPX=2100;		// TODO: seed
-			setIndexAndOptions(spx, expDate, seedSPX);
-		} else {
+			Integer seedSPX=2100;		
+			addIndexAndOptionsToPortfolio(spx, expDate, seedSPX);
+		} else {								// all major indices
 			String spx="SPX";
-			Integer seedSPX=2100;		// TODO: seed
-			setIndexAndOptions(spx, expDate, seedSPX);
+			Integer seedSPX=2100;		
+			addIndexAndOptionsToPortfolio(spx, expDate, seedSPX);
 
 			String ndx="NDX";
-			Integer seedNDX=4450;		// TODO: seed
-			setIndexAndOptions(ndx, expDate, seedNDX);
+			Integer seedNDX=4450;		
+			addIndexAndOptionsToPortfolio(ndx, expDate, seedNDX);
 	
 			String rut="RUT";
-			Integer seedRUT=1350;		// TODO: seed
-			setIndexAndOptions(rut, expDate, seedRUT);
+			Integer seedRUT=1350;		
+			addIndexAndOptionsToPortfolio(rut, expDate, seedRUT);
 		}
 	}
 	
-	private void setIndexAndOptions(String name, String expDate, Integer seed) {
+	private void addIndexAndOptionsToPortfolio(String name, String expDate, Integer seed) {
 		Underlying under = new Underlying(name);
-		setIndex(under);		
-		setOptions(under, expDate, seed);
+		addIndexToPortfolio(under);		
+		addOptionsToPortfolio(under, expDate, seed);
 	}
-	private void setIndex(Underlying under) {
+	private void addIndexToPortfolio(Underlying under) {
 		InvestmentIndex index = new InvestmentIndex(under);
 		Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
 		Transaction indexTrans = new Transaction(indexTrade);
 		getMarketPortfolio().enterTransaction(indexTrans);
 	}	
-	private void setOptions(Underlying under, String expDate, Integer seed) {
+	private void addOptionsToPortfolio(Underlying under, String expDate, Integer seed) {
 		Double range = 100.0;
 		Integer interval = 5;
 		for (Double strike=(double) (seed-range); strike<(seed+range); strike=strike+interval) {

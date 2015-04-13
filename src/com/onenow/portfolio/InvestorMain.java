@@ -14,12 +14,12 @@ public class InvestorMain {
 		
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
-		Underlying index = new Underlying("SPX");
+		Underlying index = new Underlying("SPX");				// invest in only SPX-related instruments
 
-		Pucara ia58;
+		PortfolioFactory portfolioFactory;
 		
 		try {
-			ia58 = new Pucara(index);		
+			portfolioFactory = new PortfolioFactory(index);		// create it
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INVESTOR\n");
 			e.printStackTrace();
@@ -28,7 +28,7 @@ public class InvestorMain {
 		
 
 		try {
-			ia58.launch();
+			portfolioFactory.launch();							// launch it
 		} catch (Exception e) {
 			System.out.println("COULD NOT EXECUTE INVESTOR\n");
 			e.printStackTrace();
