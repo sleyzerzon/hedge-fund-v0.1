@@ -38,7 +38,8 @@ public class PortfolioFactory {
 	public PortfolioFactory(Underlying index) throws InterruptedException {
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
-		setSamplingRate(getSampling("all"));
+		// setSamplingRate(getOptionsSampling("all"));
+		setSamplingRate(getOptionsSampling("default"));
 		System.out.println("SAMPLING: " + getSamplingRate().toString() + "\n");
 	}	
 	
@@ -84,6 +85,7 @@ public class PortfolioFactory {
 	// CHARTS
 	// TODO: underlying price, resistance/support?
 	private static void getUptodateInvestmentCharts() {
+		System.out.println("\n\n" + "GETTING CHARTS: " + getSamplingRate());
 		String fromDate = "2015-02-21"; 	// TODO: configurable date
 		String toDate = "2015-02-28";
 		for(String sampling:getSamplingRate()) {
@@ -108,11 +110,12 @@ public class PortfolioFactory {
 
 	// ANALYSIS
 	private static void analyzeUptodateInvestmentCharts() {
+		System.out.println("\n\n" + "ANALYZING CHARTS");
 		for(Investment inv:getMarketPortfolio().getInvestments()) {
 			for(String trading:getTradingOptions()) {
 				String analysis = "";
 				analysis = analysis + "=====" + inv.toString() + "=====" + "\n";
-				for(String sampling:getSampling(trading)) { 
+				for(String sampling:getOptionsSampling(trading)) { 
 					analysis = analysis + getInvestmentAnalysis(inv, sampling);
 				}			
 				System.out.println(analysis + "\n");
@@ -144,9 +147,12 @@ public class PortfolioFactory {
 		return s;
 	}
 		
-	// RATE
-	private static List<String> getSampling(String rate) {
+	// TRADING RATE
+	private static List<String> getOptionsSampling(String rate) {
 		List<String> list = new ArrayList<String>();
+		if(rate.equals("default")) {
+			list.addAll(getDefaultSampling());
+		}
 		if(rate.equals(SamplingRate.SCALP.toString()) || rate.equals("all")) {
 			list.addAll(getScalpSampling());
 		}
@@ -164,6 +170,11 @@ public class PortfolioFactory {
 		list.add(SamplingRate.SCALP.toString());
 		list.add(SamplingRate.SWING.toString());
 		list.add(SamplingRate.TREND.toString());
+		return list;
+	}
+	private static List<String> getDefaultSampling() {
+		List<String> list = new ArrayList<String>();
+		list.add(SamplingRate.SCALPSHORT.toString());
 		return list;
 	}
 	private static List<String> getScalpSampling() {
