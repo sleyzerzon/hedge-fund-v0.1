@@ -1,9 +1,6 @@
 # HEDGE
 ## Open source hedge fund platform
 
-# Repository
-### https://github.com/pablo-tech/hedge-fund.git
-
 # Source Packages:
 ### * Admin
 #### /src/com.onenow.admin
