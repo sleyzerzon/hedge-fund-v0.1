@@ -26,6 +26,16 @@
 >> ##### Logic: performs system QA
 >> ##### Location: Test package
 
+# System Requirements:
+
+> ### * Third Party Software  
+>>##### Interactive Brokers: the IB_Gateway or Trader Workstation is required.  To run it in the cloud, a special configuration is required.
+>>##### Location: <a href="https://www.interactivebrokers.com/en/?f=%2Fen%2Fcontrol%2Fsystemstandalone-ibGateway.php%3Fos%3Dunix">Linux download for the IB_Gateway</a>
+
+
+> ### * Amazon Web Services  
+
+
 # Source Packages:
 
 > ### * Admin
@@ -79,7 +89,7 @@
 >> ##### Location: /src/com.onenow.test
 
 > ### * Util
->> ##### Logic: Stats,�
+>> ##### Logic: Stats, etc.
 >> ##### Location: /src/com.onenow.util
 
 # Source by 3rd Parties:
