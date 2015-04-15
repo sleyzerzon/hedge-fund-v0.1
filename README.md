@@ -1,5 +1,8 @@
-# HEDGE
+# HEDGE 
 ## Open source hedge fund platform
+
+# Documentation:
+>>##### * For more detailed information read the <a href="http://pablo-tech.github.io/hedge-fund/JavaDoc/index.html">javadoc</a>
 
 # Running the Application:
 
@@ -76,7 +79,7 @@
 >> ##### Location: /src/com.onenow.test
 
 > ### * Util
->> ##### Logic: Stats,É
+>> ##### Logic: Stats,ï¿½
 >> ##### Location: /src/com.onenow.util
 
 # Source by 3rd Parties:
