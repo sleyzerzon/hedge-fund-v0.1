@@ -3,13 +3,17 @@ package com.onenow.execution;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ib.client.Types.BarSize;
+import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.NewsType;
+import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.DataType;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
+import com.onenow.data.Channel;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.execution.QuoteDepth.DeepRow;
@@ -26,6 +30,7 @@ import com.onenow.portfolio.BrokerController.ConnectionHandler;
 import com.onenow.portfolio.BrokerController.IBulletinHandler;
 import com.onenow.portfolio.BrokerController.ITimeHandler;
 import com.onenow.risk.MarketAnalytics;
+import com.onenow.util.ParseDate;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
@@ -45,35 +50,125 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	private final ArrayList<String> accountList = new ArrayList<String>();
 	
+	private ContractFactory contractFactory = new ContractFactory();
+	private List<Channel> channels = new ArrayList<Channel>();
+
+	private ParseDate parser = new ParseDate();
+
+	
+	/**
+	 * Get quotes after initializing overall market and my portfolio
+	 */
 	public BrokerInteractive() {
+
+		// TODO: test invest in only SPX-related instruments
+		Underlying index = new Underlying("SPX");				
+
 		connectToServer();
 		
+		// create new underlying list, portfolio, then initialize the market
 		setUnderList(new ArrayList<Underlying>());
 		setMarketPortfolio(new Portfolio());
-		InitMarket init = new InitMarket(getMarketPortfolio());
 		
+		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
+
+		
+		// my porfolio, prices, and trades
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());		
 		
-		getQuotes();
+//		getQuotes();
 //		getMarketDepth(); No market depth for index/options
 	}
 	
-	private void getQuotes() {
-		List<Investment> invs = getMarketPortfolio().getInvestments();
-		for(Investment inv:invs) { 
-			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
-		}
-	}
-	
+	/**
+	 * Connect to gateway at set IP and port
+	 */
 	private void connectToServer() {
-		setController(new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger()));		
+		setController(new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger()));
+		// default Trader Work Station port: 7496
+		// default IB Gateway port: 4001
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
 		
 	}
 
+	/**
+	 * For every investment, request quotes
+	 */
+	public void getQuotes() {
+		// historical: no
+		// real-time
+		List<Investment> invs = getMarketPortfolio().getInvestments();
+		for(Investment inv:invs) {		// real-time
+			System.out.println("...getting quote for " + inv.toString());
+			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
+		}
+	}
 	
+	
+	/**
+	 * Get price channel price history
+	 */
+//	private void getChannelPrices(ContractFactory contractFactory) throws InterruptedException {
+	
+		public void getChannelPrices() throws InterruptedException {
+		
+		InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
+		Contract index = getContractFactory().getIndexToQuote(indexInv);
+		getContractFactory().addChannel(getChannels(), index);
+		
+//		Contract index = contractFactory.getIndexToQuote("RUT");
+//		getContractFactory().addChannel(getChannels(), index);
+//		Contract option = contractFactory.getOptionToQuote(indexInv);
+//		getContractFactory().addChannel(getChannels(), option);
+
+		for(int i=0; i<getChannels().size(); i++) {			
+			Channel channel = getChannels().get(i);
+			List<String> endList = getEndList(channel);
+			
+			for(int j=0; j<endList.size(); j++) {
+				String end = endList.get(j);
+											
+				QuoteBar quoteHistory = new QuoteBar(channel);
+				getController().reqHistoricalData(	channel.getContract(), 
+													end, 1, DurationUnit.DAY, BarSize._1_hour, 
+													WhatToShow.TRADES, false,
+													quoteHistory);
+			    Thread.sleep(12000);
+				System.out.println("...");
+			}
+			System.out.println(channel.toString());
+		}
+	}
+	private List<String> getEndList(Channel channel) {
+		List<String> list = new ArrayList<String>();
+		String date="";
+		for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
+			try {
+				date = channel.getResDayList().get(i); 
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
+			try {
+				date = channel.getSupDayList().get(j); 
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent			
+			try {
+				date = channel.getRecentDayList().get(k); // Recent
+				list.add(parser.removeDash(date));
+			} catch (Exception e) { } // nothing to do
+		}
+		return list;
+	}
+	
+	/**
+	 * Get market depth where available
+	 * No market depth for index/options
+	 */
 	private void getMarketDepth() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) { 
@@ -240,7 +335,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		this.outLogger = outLogger;
 	}
 
-	private BrokerController getController() {
+	public BrokerController getController() {
 		return controller;
 	}
 
@@ -307,4 +402,27 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		this.pucara = pucara;
 	}
 
+	public ContractFactory getContractFactory() {
+		return contractFactory;
+	}
+
+	public void setContractFactory(ContractFactory contractFactory) {
+		this.contractFactory = contractFactory;
+	}
+
+	public List<Channel> getChannels() {
+		return channels;
+	}
+
+	public void setChannels(List<Channel> channels) {
+		this.channels = channels;
+	}
+
+	private ParseDate getParser() {
+		return parser;
+	}
+	
+	private void setParser(ParseDate parser) {
+		this.parser = parser;
+	}
 }

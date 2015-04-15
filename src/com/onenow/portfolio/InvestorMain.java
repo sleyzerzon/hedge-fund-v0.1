@@ -14,7 +14,8 @@ public class InvestorMain {
 		
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
-		Underlying index = new Underlying("SPX");				// invest in only SPX-related instruments
+		// TODO: test invest in only SPX-related instruments
+		Underlying index = new Underlying("SPX");				
 
 		PortfolioFactory portfolioFactory;
 		

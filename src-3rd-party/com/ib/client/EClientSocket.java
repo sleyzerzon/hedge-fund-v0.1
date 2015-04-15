@@ -619,8 +619,25 @@ public class EClientSocket {
         }
     }
 
+    /**
+     * Request market data
+     * @param tickerId
+     * @param contract
+     * @param genericTickList
+     * @param snapshot
+     * @param mktDataOptions
+     */
     public synchronized void reqMktData(int tickerId, Contract contract,
     		String genericTickList, boolean snapshot, List<TagValue> mktDataOptions) {
+    	
+    	String req = "..." + "Request Market Data" + "\n";
+    	req = req + "tickerId " + tickerId + "\n";
+    	req = req + "contract " + contract.toString();
+    	req = req + "genericTickList " + genericTickList + "\n";
+    	req = req + "snapshot " + snapshot + "\n";
+    	req = req + "mktDataOptions " + mktDataOptions.toString();
+    	System.out.println(req);
+    	
         if (!m_connected) {
             error(EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
             return;
@@ -824,6 +841,20 @@ public class EClientSocket {
                                                 String endDateTime, String durationStr,
                                                 String barSizeSetting, String whatToShow,
                                                 int useRTH, int formatDate, List<TagValue> chartOptions) {
+    	
+    	String req = "";
+    	req = req + "..." + "Requesting Historical Data" + "\n";
+    	req = req + "tickerId " + tickerId + "\n";
+    	req = req + "contract " + contract.toString();
+    	req = req + "endDateTime " + endDateTime + "\n";
+    	req = req + "durationStr " + durationStr + "\n";
+    	req = req + "barSizeSetting " + barSizeSetting + "\n";
+    	req = req + "whatToShow " + whatToShow + "\n";
+    	req = req + "useRTH " + useRTH + "\n";
+    	req = req + "formatDate " + formatDate + "\n";
+    	req = req + "chartOptions " + chartOptions.toString() + "\n";
+    	System.out.println(req);
+    	
         // not connected?
         if( !m_connected) {
             notConnected();

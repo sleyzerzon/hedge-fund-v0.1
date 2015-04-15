@@ -11,7 +11,7 @@ import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.portfolio.PortfolioConstruction;
+import com.onenow.portfolio.PortfolioAction;
 import com.onenow.portfolio.Strategy;
 import com.onenow.portfolio.StrategyCallSpread;
 import com.onenow.portfolio.StrategyIronCondor;
@@ -81,7 +81,7 @@ public class TestBroker {
 	}
 	
 	private boolean testExocet() {
-		PortfolioConstruction ex = new PortfolioConstruction(100, new Underlying("spx"), getExpDate(), getBroker());
+		PortfolioAction ex = new PortfolioAction(100, new Underlying("spx"), getExpDate(), getBroker());
 		
 		StrategyIronCondor hp = ex.getIronCondor(InvApproach.HIGH, TradeRatio.NONE, 0.60);
 		System.out.println(ex.toString());
@@ -120,7 +120,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testPutSpread(PortfolioConstruction ex, StrategyPutSpread strat) {
+	private boolean testPutSpread(PortfolioAction ex, StrategyPutSpread strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
@@ -136,7 +136,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testCallSpread(PortfolioConstruction ex, StrategyCallSpread strat) {
+	private boolean testCallSpread(PortfolioAction ex, StrategyCallSpread strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);
@@ -152,7 +152,7 @@ public class TestBroker {
 		return true;
 	}
 
-	private boolean testIronCondor(PortfolioConstruction ex, StrategyIronCondor strat) {
+	private boolean testIronCondor(PortfolioAction ex, StrategyIronCondor strat) {
 		String s="";
 		s = s + ex.toString();
 		System.out.println(s);

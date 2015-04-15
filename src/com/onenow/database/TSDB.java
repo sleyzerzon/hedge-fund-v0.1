@@ -19,6 +19,9 @@ public class TSDB {
 	InfluxDB DB;
 	Lookup lookup;
 
+	/**
+	 * Default constructor connects to database
+	 */
 	public TSDB() {
 		setLookup(new Lookup());
 		dbConnect();
@@ -172,6 +175,8 @@ private String getDBSamplingString(String samplingRate) {
 	}
 	return dbSamplingRate;
 }
+
+
 // TEST
 
 

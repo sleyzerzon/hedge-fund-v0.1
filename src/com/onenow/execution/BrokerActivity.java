@@ -14,6 +14,10 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 
+/**
+ * Standard interface for all brokers
+ * Architecture to run as an Amazon Simple Work Flow activity 
+ */
 @ActivityRegistrationOptions(	defaultTaskScheduleToStartTimeoutSeconds = 300, 
 								defaultTaskStartToCloseTimeoutSeconds = 300, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)

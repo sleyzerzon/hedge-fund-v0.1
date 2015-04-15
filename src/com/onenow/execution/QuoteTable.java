@@ -38,6 +38,12 @@ public class QuoteTable extends AbstractTableModel {
 		
 	}
 
+	/**
+	 * Request market data, specifying the different data tick types requested
+	 * @param cont
+	 * @param mPrice
+	 * @param inv
+	 */
 	public QuoteTable(BrokerController cont, MarketPrice mPrice, Investment inv) {
 		
 		setController(cont);
@@ -45,8 +51,9 @@ public class QuoteTable extends AbstractTableModel {
 		
 		setInvestment(inv);
 		Contract contract = getContractFactory().getContract(getInvestment());
-//		System.out.println("Contract " + contract.toString());
+		System.out.println("Contract " + contract.toString());
 		
+		// set quote on table to receive callbacks later
 		QuoteSingle quote = new QuoteSingle(this, contract.description() );
 		m_rows.add(quote);
 		
@@ -79,7 +86,7 @@ public class QuoteTable extends AbstractTableModel {
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	} 
 
-	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>();
+	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>(); // TODO: why here?
 
 
 	void addRow( QuoteSingle row) { // callback
@@ -88,6 +95,7 @@ public class QuoteTable extends AbstractTableModel {
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 
+	// PRINT
 	public String toString(int which) {
 		QuoteSingle row = m_rows.get(which);
 		String s="\n";
@@ -188,6 +196,10 @@ public class QuoteTable extends AbstractTableModel {
 		getController().cancelMktData( m_rows.get( i) );
 	}
 	
+	/**
+	 * Single quote class
+	 *
+	 */
 	public class QuoteSingle extends TopMktDataAdapter {
 		AbstractTableModel m_model;
 		String m_description;
@@ -210,6 +222,7 @@ public class QuoteTable extends AbstractTableModel {
 			m_description = description;
 		}
 
+		// single quote to string
 		public String toString() {
 			String s="\n\n";
 			s = s + "QUOTE" + "\n";
@@ -278,6 +291,9 @@ public class QuoteTable extends AbstractTableModel {
 			m_model.fireTableDataChanged();			
 		}
 		
+		/**
+		 * Handler of all callback tick types
+		 */
 		// reqScannerSubscription 
 		// for 500 companies: $120 / mo
 		@Override public void tickString(TickType tickType, String value) {
@@ -323,6 +339,7 @@ public class QuoteTable extends AbstractTableModel {
 		}
 	}
 
+	// SET GET
 	private BrokerController getController() {
 		return controller;
 	}

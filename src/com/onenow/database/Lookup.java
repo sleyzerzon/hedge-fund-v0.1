@@ -4,6 +4,10 @@ import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
 
+/**
+ * Generate the database key for individual time series and data points
+ *
+ */
 public class Lookup {
 	
 	public Lookup() {

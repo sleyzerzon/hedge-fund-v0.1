@@ -9,7 +9,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
 
-public class PortfolioConstruction {
+public class PortfolioAction {
 	
 	private Strategy strategy;
 	
@@ -27,11 +27,11 @@ public class PortfolioConstruction {
 	private InvApproach approach;
 	private TradeRatio ratio;
 			
-	public PortfolioConstruction() {
+	public PortfolioAction() {
 		
 	}
 	
-	public PortfolioConstruction(Integer quant, Underlying under, String exp, BrokerActivityImpl broker) {
+	public PortfolioAction(Integer quant, Underlying under, String exp, BrokerActivityImpl broker) {
 		setQuant(quant);
 		setUnder(under);
 		setExp(exp);	

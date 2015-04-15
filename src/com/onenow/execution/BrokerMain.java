@@ -5,20 +5,27 @@ public class BrokerMain {
 	private static BrokerInteractive IB;
 	private static BrokerActivityImpl broker;
 
+	/**
+	 * The principal process for all interactions with Wall Street and gateways thereof
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		// 1 100 Max rate of messages per second has been exceeded:max=50 rec=138 (1)
 
+		// create Interactive Brokers broker & start getting quotes
 		try {
-			setIB(new BrokerInteractive()); // create Interactive Brokers
+			setIB(new BrokerInteractive()); 
 		} catch (Exception e) {
-			System.out.println("COULD NOT CREATE BROKER\n");
+			System.out.println("COULD NOT CREATE INTERACTIVE BROKER\n");
 			e.printStackTrace();
 		}
 		
+		getIB().getQuotes();
+		
+		// set the overall broker: for when there are multiple brokers
 		try {
-			setBroker(new BrokerActivityImpl(getIB())); // run Broker 
+			setBroker(new BrokerActivityImpl(getIB()));  
 		} catch (Exception e) {
-			System.out.println("COULD NOT EXECUTE BROKER\n");
+			System.out.println("COULD NOT SET MASTER BROKER\n");
 			e.printStackTrace();
 		}
 	}

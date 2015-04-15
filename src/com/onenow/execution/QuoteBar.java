@@ -15,8 +15,11 @@ import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.BrokerController.IRealTimeBarHandler;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 
-
-public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler { //  
+/**
+ * Handle historical data callbacks 
+ *
+ */
+public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
 	final BarModel m_model = new BarModel();
 	final ArrayList<Bar> m_rows = new ArrayList<Bar>();
@@ -34,7 +37,7 @@ public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, IT
 	// *** IHistoricalDataHandler
 	@Override public void historicalData(Bar bar, boolean hasGaps) {
 		m_rows.add(bar);
-//		System.out.println("History " + bar.toString());
+		System.out.println("History " + bar.toString());
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
 		}		

@@ -21,16 +21,16 @@ import com.onenow.research.Chart;
 import com.onenow.util.ParseDate;
 
 public class PortfolioFactory {
-
-	private static BrokerInteractive IB;
-	private static BrokerActivityImpl broker;
 	
 	private static Portfolio marketPortfolio = new Portfolio();
 	private static MarketPrice marketPrice = new MarketPrice();
 	private static Underlying index;
 	
 	static List<String> samplingRate = new ArrayList<String>();
-	
+
+	private static BrokerInteractive IB;
+	private static BrokerActivityImpl broker;
+
 	public PortfolioFactory() {
 		
 	}
@@ -38,7 +38,6 @@ public class PortfolioFactory {
 	public PortfolioFactory(Underlying index) throws InterruptedException {
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
-		// setSamplingRate(getOptionsSampling("all"));
 		setSamplingRate(getOptionsSampling("default"));
 		System.out.println("SAMPLING: " + getSamplingRate().toString() + "\n");
 	}	
@@ -55,11 +54,11 @@ public class PortfolioFactory {
 			EntranceExitDecisioning decisioning = new EntranceExitDecisioning(getIndex());
 
 			if(decisioning.EnterNowAtBottom()) {
-				goLong(getIndex());
+//				goLong(getIndex());
 			}
 
 			if(decisioning.EnterNowAtTop()) {
-				goShort(getIndex());
+//				goShort(getIndex());
 			}
 			
 			System.out.println(",,,,,");
@@ -69,16 +68,17 @@ public class PortfolioFactory {
 	
 	// LONG AND SHORT
 	public static void goLong(Underlying under) {
-//		String expDate = "20150319";
-//		Exocet spxExocet = new Exocet(100, under, expDate, getBroker());
-//		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
-//		System.out.println(swingCall.toString());
+		String expDate = "20150319"; // TODO: generate dynamically
+		PortfolioAction spxExocet = new PortfolioAction(100, under, expDate, getBroker());
+		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+		System.out.println(swingCall.toString());
 	}
 
 	public static void goShort(Underlying index) {
-//		Exocet spxExocet = new Exocet(100, new Underlying(getIndexName()), getExpDate(), getBroker());
-//		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
-//		System.out.println(swingCall.toString());
+		String expDate = "20150319"; // TODO: generate dynamically
+		PortfolioAction spxExocet = new PortfolioAction(100, index, expDate, getBroker());
+		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+		System.out.println(swingCall.toString());
 	}
 
 	

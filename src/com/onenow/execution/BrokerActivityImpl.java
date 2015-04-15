@@ -13,6 +13,9 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 
+/**
+ * Implement the BrokerActivity interface
+ */
 public class BrokerActivityImpl implements BrokerActivity { 
 
 	private static BrokerEmulator brokerEmulator;
@@ -20,10 +23,17 @@ public class BrokerActivityImpl implements BrokerActivity {
 	private static BrokerAWS brokerAWS;
 	private static BrokerGoogle brokerGoogle;
 
+	/**
+	 * Default constructor creates an emulator
+	 */
 	public BrokerActivityImpl() {
 		setBrokerEmulator(new BrokerEmulator());
 	}
 
+	/**
+	 * This advanced constructor takes in an Interactive Brokers broker
+	 * @param ib  
+	 */
 	public BrokerActivityImpl(BrokerInteractive ib) {
 		setBrokerEmulator(null);
 		setBrokerInteractive(ib);
@@ -31,6 +41,10 @@ public class BrokerActivityImpl implements BrokerActivity {
 		setBrokerGoogle(null);
 	}
 	
+	/**
+	 * A broker is selected to operate with
+	 * @return
+	 */
 	private Broker getBroker() {
 		Broker broker = null;
 		if(getBrokerEmulator()!=null) {

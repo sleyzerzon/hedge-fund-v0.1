@@ -17,6 +17,10 @@ import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.util.ParseDate;
 
+/**
+ * Translate investment objects into contract in the format of the specific Wall Street Broker 
+ *
+ */
 public class ContractFactory {
 
 	public ContractFactory() {
@@ -24,7 +28,7 @@ public class ContractFactory {
 	}
 	
 	
-	public static void addChannel(List<Channel> channels, Contract contract) {
+	public void addChannel(List<Channel> channels, Contract contract) {
 
 		String today = new ParseDate().getToday();
 

@@ -409,12 +409,10 @@ public class BrokerController implements EWrapper {
 		}
 	}
 
-    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, 
-    		ITopMktDataHandler row) {
+    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, ITopMktDataHandler row) {
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, row);
-    	m_client.reqMktData( reqId, contract, genericTickList, snapshot, 
-    			Collections.<TagValue>emptyList() );
+    	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
     }
 
