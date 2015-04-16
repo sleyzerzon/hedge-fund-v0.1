@@ -87,7 +87,9 @@ public class InitMarket {
 	 * @param index
 	 */
 	private void initOptions(Underlying index) { 
-		OptionExpiration exps = new OptionExpiration();
+		ExpirationDate exps = new ExpirationDate();
+		exps.initOptionExpList(); 
+
 		for(String expDate:exps.getIndexExpList()) { // for every option expiration expiration
 			seedAndAddOptionsToPortoflio(index, expDate);
 		}
@@ -143,7 +145,9 @@ public class InitMarket {
 	 * Initialize all futures
 	 */
 	private void initFutures() {
-		OptionExpiration exps = new OptionExpiration();
+		ExpirationDate exps = new ExpirationDate();
+		exps.initFuturesExpList(); 
+
 		for(String expDate:exps.getFuturesExpList()) {
 			initExpFutures(expDate);
 		}
@@ -167,10 +171,10 @@ public class InitMarket {
 			
 // 1 100 Max rate of messages per second has been exceeded:max=50 rec=138 (1)
 // TODO: remove when running at scale 
-//			setSNP500List();
-//			for (String stock:getSNP500()) {
-//				setStock(stock);
-//			}
+			setSNP500List();
+			for (String stock:getSNP500()) {
+				setStock(stock);
+			}
 		}
 	}
 

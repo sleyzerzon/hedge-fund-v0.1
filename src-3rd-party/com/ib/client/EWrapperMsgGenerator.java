@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.onenow.execution.Contract;
+import com.onenow.test.ErrorLive;
 
 /**
  * Generates messages for Interactive Brokers
@@ -557,11 +558,17 @@ public class EWrapperMsgGenerator {
     public static String error( String str) { return str;}
 
 	public static String error(int id, int errorCode, String errorMsg) {
+				
 		String err = Integer.toString(id);
         err += " | ";
         err += Integer.toString(errorCode);
         err += " | ";
         err += errorMsg;
+        
+		// report back to 1NOW
+		ErrorLive errorLive = new ErrorLive(); 
+        errorLive.receiveError(err);
+        
         return err;
 	}
 

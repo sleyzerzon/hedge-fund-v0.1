@@ -28,7 +28,7 @@ public class TSDB {
 //		dbCreate();
 	}
 
-
+// INIT
 private void dbConnect() { 
 	try {
 		System.out.println("CONNECTING TO DB");
@@ -87,7 +87,7 @@ public List<Serie> readSize(	Investment inv, String dataType,
 	return series;
 }
 
-// PRICE
+// QUERIES
 public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
@@ -115,7 +115,6 @@ public List<Serie> queryPrice(String dbName, String serieName, String fromDate, 
 }
 
 
-// SIZE
 public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
@@ -143,7 +142,7 @@ public List<Serie> querySize(String dbName, String serieName, String fromDate, S
 	return series;
 }
 
-
+// CONFIG
 private String getDBSamplingString(String samplingRate) {
 	String dbSamplingRate="";
 	if(samplingRate.equals("SCALPSHORT")) {		//SCALPING 5min, 15min, 60min

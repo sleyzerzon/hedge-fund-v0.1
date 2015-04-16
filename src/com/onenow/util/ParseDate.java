@@ -7,15 +7,23 @@ public class ParseDate {
 
 	public ParseDate() {
 		
-	}
+	}	
 	
-	
+	/**
+	 * Returns today's date in dashed format without time
+	 * @return
+	 */
 	public String getToday() {
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // "yyyy-MM-dd HH:mm"
 		return sdf.format(today);
 	}
 
+	/**
+	 * Removes dashes from a dashed date
+	 * @param dashed
+	 * @return
+	 */
 	public String removeDash(String dashed) {
 		String end="";
 		String year=getDashedYear(dashed);
@@ -26,17 +34,26 @@ public class ParseDate {
 		return end;
 	}
 	
+	/** 
+	 * Extracts the year from a dashed date
+	 * @param dashed
+	 * @return
+	 */
 	public String getDashedYear(String dashed) {
 		String s = "";
 		s = dashed.substring(0, 4);
 		return s;
 	}
+	/**
+	 * Extracts the year from an undashed date
+	 * @param unDashed
+	 * @return
+	 */
 	public String getUnDashedYear(String unDashed) {
 		String s = "";
 		s = unDashed.substring(0, 4);
 		return s;
 	}
-
 	public String getDashedMonth(String dashed) {
 		String s = "";
 		s= dashed.substring(5, 7);
@@ -59,6 +76,11 @@ public class ParseDate {
 		return s;
 	}
 	
+	/**
+	 * Gets an undashed date from a dashed date
+	 * @param dashedDate
+	 * @return
+	 */
 	public String getUndashedDate(String dashedDate) {
 		String year = getDashedYear(dashedDate);
 		String month = getDashedMonth(dashedDate);
@@ -66,6 +88,11 @@ public class ParseDate {
 		String unDashedDate = year + month + day;
 		return unDashedDate;		
 	}
+	/**
+	 * Gets a dashed date from an undashed date
+	 * @param unDashedDate
+	 * @return
+	 */
 	public String getDashedDate(String unDashedDate) {
 		String year = getUnDashedYear(unDashedDate);
 		String month = getUnDashedMonth(unDashedDate);
@@ -74,6 +101,17 @@ public class ParseDate {
 		return dashedDate;
 	}
 	
+	public int getMonthsToPresent(String unDashedYearMonth) {
+		int months = 0;
+		
+		return months;
+	}
+	
+	/**
+	 * Counts the number of weeks from an old date to present date
+	 * @param dashedDate
+	 * @return
+	 */
 	public int getWeeksToPresent(String dashedDate) {
 		String dashedToday = getToday();
 		int weeksToPresent = 0;
@@ -86,6 +124,12 @@ public class ParseDate {
 			}
 			dashedDate = getDatePlus(dashedDate, 7); // skip a week
 		}
+	}
+	
+	public boolean isLaterMonth(String yearMonth1, String yearMonth2) {
+		boolean later = true;
+		
+		return later;
 	}
 
 	/**
@@ -108,6 +152,19 @@ public class ParseDate {
 		return later;
 	}
 	
+	
+	public String getMonthPlus(String yearMonth, Integer num) {
+		String s="";
+		
+		return s;
+	}
+	
+	/**
+	 * Returns a new date from an old date plus the number of days since
+	 * @param dashedDate
+	 * @param num
+	 * @return
+	 */
 	public String getDatePlus(String dashedDate, Integer num){
 //		System.out.println("Dashed date " + dashedDate + ". Num " + num);
 		
