@@ -142,19 +142,19 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
 			try {
 				date = channel.getResDayList().get(i); 
-				list.add(parser.removeDash(date));
+				list.add(parser.removeDash(date).concat(" 16:30:00"));
 			} catch (Exception e) { } // nothing to do
 		}
 		for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
 			try {
 				date = channel.getSupDayList().get(j); 
-				list.add(parser.removeDash(date));
+				list.add(parser.removeDash(date).concat(" 16:30:00"));
 			} catch (Exception e) { } // nothing to do
 		}
 		for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent			
 			try {
 				date = channel.getRecentDayList().get(k); // Recent
-				list.add(parser.removeDash(date));
+				list.add(parser.removeDash(date).concat(" 16:30:00"));
 			} catch (Exception e) { } // nothing to do
 		}
 		return list;

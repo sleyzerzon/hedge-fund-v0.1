@@ -3,10 +3,14 @@ package com.onenow.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.onenow.util.ParseDate;
+
 public class OptionExpiration {
 	
 	List<String> indexExpList = new ArrayList<String>();
 	List<String> futuresExpList = new ArrayList<String>();
+	
+	ParseDate parser = new ParseDate();
 	
 	public OptionExpiration() {
 		initIndexExpList();
@@ -15,12 +19,19 @@ public class OptionExpiration {
 	
 	// PRIVATE
 	private void initIndexExpList() {
-		String startingDate = "20150418";
+		String unDashedDate = "20150416";
+		int numDates = 3;
 		
-		getIndexExpList().add("20150416");
-//		getIndexExpList().add("20150424");
-
+		for(int i=0; i<numDates; i++) {
+			getIndexExpList().add(unDashedDate);
+			System.out.println("+ Added index option expiration " + unDashedDate);
+			
+			String dashedDate = getParser().getDashedDate(unDashedDate);
+			dashedDate = getParser().getDatePlus(dashedDate, 7); // a week later
+			unDashedDate = getParser().getUndashedDate(dashedDate);
+		}
 	}
+	
 
 	private void initFuturesExpList() {
 		getFuturesExpList().add("201506");
@@ -79,6 +90,14 @@ public class OptionExpiration {
 
 	private void setFuturesExpList(List<String> futuresExpList) {
 		this.futuresExpList = futuresExpList;
+	}
+
+	public ParseDate getParser() {
+		return parser;
+	}
+
+	public void setParser(ParseDate parser) {
+		this.parser = parser;
 	}
 
 }
