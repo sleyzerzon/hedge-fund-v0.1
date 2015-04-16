@@ -9,8 +9,11 @@ import com.onenow.constant.InvTerm;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentFuture;
+import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentReserved;
+import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
 
 public class Portfolio {
@@ -171,6 +174,55 @@ public class Portfolio {
 		}
 		return s;
 	}
+	public String toIndicesString() {
+		String s = "";
+		Integer i = 0;
+		System.out.println("\n" + "INITIALIZED INDICES");
+		for(Investment inv:getInvestments()) {
+			if(inv instanceof InvestmentIndex) {
+				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+			}
+			i++;
+		}
+		return s;
+	}
+	public String toOptionsString() {
+		String s = "";
+		Integer i = 0;
+		System.out.println("\n" + "INITIALIZED OPTIONS");
+		for(Investment inv:getInvestments()) {
+			if(inv instanceof InvestmentOption) {
+				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+			}
+			i++;
+		}
+		return s;
+	}
+	public String toStocksString() {
+		String s = "";
+		Integer i = 0;
+		System.out.println("\n" + "INITIALIZED STOCKS");
+		for(Investment inv:getInvestments()) {
+			if(inv instanceof InvestmentStock) {
+				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+			}
+			i++;
+		}
+		return s;
+	}
+	public String toFuturesString() {
+		String s = "";
+		Integer i = 0;
+		System.out.println("\n" + "INITIALIZED FUTURES");
+		for(Investment inv:getInvestments()) {
+			if(inv instanceof InvestmentFuture) {
+				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+			}
+			i++;
+		}
+		return s;
+	}
+
 	
 	// TEST
 

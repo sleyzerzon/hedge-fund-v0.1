@@ -72,14 +72,11 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
 
-		
 		// my porfolio, prices, and trades
 		setMyPortfolio(new Portfolio());
 		setMarketPrices(new MarketPrice());
 		setTrades(new ArrayList<Trade>());		
 		
-//		getQuotes();
-//		getMarketDepth(); No market depth for index/options
 	}
 	
 	/**
@@ -94,14 +91,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 
 	/**
-	 * For every investment, request quotes
+	 * For every currently-traded investment: request quotes
+	 * Quotes are in response to specific request, or real-time notifications
 	 */
 	public void getQuotes() {
-		// historical: no
-		// real-time
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) {		// real-time
-			System.out.println("...getting quote for " + inv.toString());
+			System.out.println("\n> " + "getting quote for " + inv.toString());
 			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
 		}
 	}
@@ -110,9 +106,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	/**
 	 * Get price channel price history
 	 */
-//	private void getChannelPrices(ContractFactory contractFactory) throws InterruptedException {
-	
-		public void getChannelPrices() throws InterruptedException {
+	public void getChannelPrices() throws InterruptedException {
 		
 		InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
 		Contract index = getContractFactory().getIndexToQuote(indexInv);
@@ -131,6 +125,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 				String end = endList.get(j);
 											
 				QuoteBar quoteHistory = new QuoteBar(channel);
+				System.out.println("\n..." + "getting quote for " + indexInv.toString());
 				getController().reqHistoricalData(	channel.getContract(), 
 													end, 1, DurationUnit.DAY, BarSize._1_hour, 
 													WhatToShow.TRADES, false,

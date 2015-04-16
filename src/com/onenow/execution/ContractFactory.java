@@ -159,12 +159,11 @@ public class ContractFactory {
 		int p_conId=0;
 		
 		String p_expiry=((InvestmentFuture) inv).getExpirationDate();
-		
+		String p_multiplier="50";		
 		
 		double p_strike=0.0;
 		String p_right="";
 		
-		String p_multiplier="100";
 		String p_currency="USD";
 		String p_localSymbol="";
 		String p_tradingClass="";

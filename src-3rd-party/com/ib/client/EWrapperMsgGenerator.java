@@ -9,6 +9,11 @@ import java.util.Date;
 
 import com.onenow.execution.Contract;
 
+/**
+ * Generates messages for Interactive Brokers
+ * Such as: 200 No security definition has been found for the request
+ * 
+ */
 public class EWrapperMsgGenerator {
     public static final String SCANNER_PARAMETERS = "SCANNER PARAMETERS:";
     public static final String FINANCIAL_ADVISOR = "FA:";
@@ -543,6 +548,11 @@ public class EWrapperMsgGenerator {
     	return "id=" + reqId + " =============== end ===============";
     }
 
+    /**
+     * Error message generator
+     * @param ex
+     * @return
+     */
     public static String error( Exception ex) { return "Error - " + ex;}
     public static String error( String str) { return str;}
 
