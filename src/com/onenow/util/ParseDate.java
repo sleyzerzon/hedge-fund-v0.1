@@ -74,21 +74,43 @@ public class ParseDate {
 		return dashedDate;
 	}
 	
+	public int getWeeksToPresent(String dashedDate) {
+		String dashedToday = getToday();
+		int weeksToPresent = 0;
+		while(true) {
+			if(isLaterDate(dashedDate, dashedToday)) {
+				weeksToPresent++;
+//				System.out.println("week++");
+			} else {
+				return weeksToPresent;
+			}
+			dashedDate = getDatePlus(dashedDate, 7); // skip a week
+		}
+	}
 
-	public boolean isLaterDate(String date1, String date2) {
+	/**
+	 * Returns true if dashedDate2 is later than dashedDate1
+	 * @param dashedDate1
+	 * @param dashedDate2
+	 * @return
+	 */
+	public boolean isLaterDate(String dashedDate1, String dashedDate2) {
 		boolean later = true;
-		Integer year1 = Integer.parseInt(getDashedYear(date1));
-		Integer year2 = Integer.parseInt(getDashedYear(date2));
+		Integer year1 = Integer.parseInt(getDashedYear(dashedDate1));
+		Integer year2 = Integer.parseInt(getDashedYear(dashedDate2));
 		if(year1>year2) { return false; }
-		Integer month1 = Integer.parseInt(getDashedMonth(date1));
-		Integer month2 = Integer.parseInt(getDashedMonth(date2));
+		Integer month1 = Integer.parseInt(getDashedMonth(dashedDate1));
+		Integer month2 = Integer.parseInt(getDashedMonth(dashedDate2));
 		if(month1>month2) { return false; }
-		Integer day1 = Integer.parseInt(getDashedDay(date1));
-		Integer day2 = Integer.parseInt(getDashedDay(date2));
+		Integer day1 = Integer.parseInt(getDashedDay(dashedDate1));
+		Integer day2 = Integer.parseInt(getDashedDay(dashedDate2));
 		if(day1>day2) { return false; }
 		return later;
 	}
+	
 	public String getDatePlus(String dashedDate, Integer num){
+//		System.out.println("Dashed date " + dashedDate + ". Num " + num);
+		
 		String s= "";
 		Integer day=0;
 		Integer month=0;
@@ -110,16 +132,20 @@ public class ParseDate {
 		} catch (NumberFormatException e) { } // nothing to do
 
 		newDay=day+num;
+//		System.out.println("New day " + newDay + ". Old day " + day + ". Delta " + num);
 		if(newDay>31) {
 			newDay=newDay-31;
 			month=month+1;
 		}
 		newMonth=month;
+//		System.out.println("New month " + month);
 		if(month>12) {
 			newMonth=newMonth-12;
 			year=year+1;
 		}
+		
 		newYear=year;
+//		System.out.println("New year " + year);
 
 		sDay=newDay.toString();
 		if(newDay<10){
@@ -131,8 +157,11 @@ public class ParseDate {
 		}
 		sYear=newYear.toString();
 		s=sYear+"-"+sMonth+"-"+sDay;
+		
+//		System.out.println("Date plus is " + s + "\n");
 		return s;
 	}
+	
 	public Integer getElapsedDays(String d1, String d2) {
 		Integer elapsedDays = 0;
 		Integer elapsedMonths = 0;

@@ -13,25 +13,27 @@ public class OptionExpiration {
 	ParseDate parser = new ParseDate();
 	
 	public OptionExpiration() {
-		initIndexExpList();
+		initOptionExpList();
 		initFuturesExpList(); 
 	}
 	
 	// PRIVATE
-	private void initIndexExpList() {
-		String unDashedDate = "20150416";
-		int numDates = 3;
+	private void initOptionExpList() {
+		String unDashedStartDate = "20150402";
+		String dashedStartDate = getParser().getDashedDate(unDashedStartDate);
 		
-		for(int i=0; i<numDates; i++) {
+		int weeksToPresent = getParser().getWeeksToPresent(dashedStartDate);
+//		System.out.println("weeks to present " + weeksToPresent);
+		
+		int numExpDates = 3; 		
+		for(int i=weeksToPresent; i<(weeksToPresent+numExpDates); i++) {
+//			System.out.println("i " + i);
+			String dashedDate = getParser().getDatePlus(dashedStartDate, 7*i); // a number of weeks later
+			String unDashedDate = getParser().getUndashedDate(dashedDate);
 			getIndexExpList().add(unDashedDate);
-			System.out.println("+ Added index option expiration " + unDashedDate);
-			
-			String dashedDate = getParser().getDashedDate(unDashedDate);
-			dashedDate = getParser().getDatePlus(dashedDate, 7); // a week later
-			unDashedDate = getParser().getUndashedDate(dashedDate);
+			System.out.println("+ Added index option expiration " + unDashedDate);			
 		}
-	}
-	
+	}	
 
 	private void initFuturesExpList() {
 		getFuturesExpList().add("201506");
