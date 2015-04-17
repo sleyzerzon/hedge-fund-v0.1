@@ -16,9 +16,9 @@ import com.onenow.research.Candle;
 
 public class TSDB {
 	
-	InfluxDB DB;
-	Lookup lookup;
-
+	private InfluxDB DB;
+	private Lookup lookup;
+	
 	/**
 	 * Default constructor connects to database
 	 */
@@ -26,6 +26,7 @@ public class TSDB {
 		setLookup(new Lookup());
 		dbConnect();
 //		dbCreate();
+		
 	}
 
 // INIT
@@ -45,7 +46,7 @@ private void dbCreate() {
 	getDB().createDatabase(DBname.SIZE.toString());
 }
 
-// WRITE
+// PRICE
 public void writePrice(Long time, Investment inv, String dataType, Double price) {
 	String name = getLookup().getKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
@@ -56,38 +57,20 @@ public void writePrice(Long time, Investment inv, String dataType, Double price)
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-public void writeSize(Long time, Investment inv, String dataType, Integer size) {
-	String name = getLookup().getKey(inv, dataType);
-	Serie serie = new Serie.Builder(name)
-	.columns("time", "size")
-	.values(time, size)
-	.build();
-	System.out.println("WRITE " + DBname.SIZE.toString() + " " + serie);
-	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
-}
-
-// READ
-public List<Serie> readPrice(	Investment inv, String dataType,
-								String fromDate, String toDate, String sampling) {
-
-	List<Serie> series = new ArrayList<Serie>();
-	String name = getLookup().getKey(inv, dataType);
+public List<Candle> readPriceFromDB(	Investment inv, String dataType, 
+		String fromDate, String toDate, String sampling) {
 	
-	series = queryPrice(	DBname.PRICE.toString(), name, fromDate, toDate, sampling);
-	return series;
-}
+		List<Candle> candles = new ArrayList<Candle>();
+		
+		String name = getLookup().getKey(inv, dataType);
 
-public List<Serie> readSize(	Investment inv, String dataType,
-								String fromDate, String toDate, String sampling) {
+		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, fromDate, toDate, sampling);
 
-	List<Serie> series = new ArrayList<Serie>();
-	String name = getLookup().getKey(inv, dataType);
-	
-	series = querySize(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
-	return series;
-}
+		candles = priceSeriesToCandles(series); 
+		
+		return candles;
+	}
 
-// QUERIES
 public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
 	
@@ -114,6 +97,70 @@ public List<Serie> queryPrice(String dbName, String serieName, String fromDate, 
 	return series;
 }
 
+private List<Candle> priceSeriesToCandles(List<Serie> series) {
+	List<Candle> candles = new ArrayList<Candle>();
+			
+	String s="";
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			s = s + col + "\t";
+//			System.out.println("column " + col); column names
+		}
+		s = s + "\n";
+		for (Map<String, Object> row : ser.getRows()) {
+			Candle candle = new Candle();
+			Integer i=0;
+			for (String col : ser.getColumns()) {	// iterate columns to create candle
+				s = s + row.get(col) + "\t";
+//				System.out.println("row " + row + " " + row.get(col)); full row
+				if(i.equals(1)) {
+					candle.setOpenPrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(2)) {
+					candle.setClosePrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(3)) {
+					candle.setLowPrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(4)) {
+					candle.setHighPrice(new Double(row.get(col).toString()));
+				}
+				if(i.equals(5)) {
+					//	sum
+				}
+				i++;
+			}
+			s = s + "\n";
+			candles.add(candle);
+		}
+	}
+//	System.out.println("CANDLE: " + s + "\n");	full candle
+	return candles;
+}
+// SIZE
+public void writeSize(Long time, Investment inv, String dataType, Integer size) {
+	String name = getLookup().getKey(inv, dataType);
+	Serie serie = new Serie.Builder(name)
+	.columns("time", "size")
+	.values(time, size)
+	.build();
+	System.out.println("WRITE " + DBname.SIZE.toString() + " " + serie);
+	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+}
+
+public List<Integer> readSizeFromDB(	Investment inv, String dataType, 
+		String fromDate, String toDate, String sampling) {
+	
+	List<Integer> sizes = new ArrayList<Integer>();
+	
+	String name = getLookup().getKey(inv, dataType);
+	
+	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
+	
+	sizes = sizeSeriesToInts(series); 
+	
+	return sizes;
+}
 
 public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
 	List<Serie> series = new ArrayList<Serie>();
@@ -140,6 +187,47 @@ public List<Serie> querySize(String dbName, String serieName, String fromDate, S
 	}
 	
 	return series;
+}
+
+private List<Integer> sizeSeriesToInts(List<Serie> series) {
+	List<Integer> sizes = new ArrayList<Integer>();
+	
+	String s="";
+	for (Serie ser : series) {
+		for (String col : ser.getColumns()) {
+			s = s + col + "\t";
+//			System.out.println("column " + col); column names
+		}
+		s = s + "\n";
+		for (Map<String, Object> row : ser.getRows()) {
+			Candle candle = new Candle();
+			Integer i=0;
+			for (String col : ser.getColumns()) {	// iterate columsn to get ints
+				s = s + row.get(col) + "\t";
+//				System.out.println("row " + row + " " + row.get(col)); full row
+				if(i.equals(1)) {
+					// open 
+				}
+				if(i.equals(2)) {
+					// close
+				}
+				if(i.equals(3)) {
+					// low
+				}
+				if(i.equals(4)) {
+					// high
+				}
+				if(i.equals(5)) {
+					Double num = new Double(row.get(col).toString());
+					sizes.add((int) Math.round(num));
+				}
+				i++;
+			}
+			s = s + "\n";
+		}
+	}
+//	System.out.println("SIZES: " + s + "\n");	full series
+	return sizes;
 }
 
 // CONFIG
@@ -176,29 +264,31 @@ private String getDBSamplingString(String samplingRate) {
 }
 
 
-// TEST
+	// PRIVATE
 
 
-// PRINT
-
-// SET GET
-private InfluxDB getDB() {
-	return DB;
-}
-
-private void setDB(InfluxDB dB) {
-	DB = dB;
-}
-
-
-private Lookup getLookup() {
-	return lookup;
-}
-
-
-private void setLookup(Lookup lookup) {
-	this.lookup = lookup;
-}
-
+	// TEST
+	
+	
+	// PRINT
+	
+	// SET GET
+	private InfluxDB getDB() {
+		return DB;
+	}
+	
+	private void setDB(InfluxDB dB) {
+		DB = dB;
+	}	
+	
+	private Lookup getLookup() {
+		return lookup;
+	}
+	
+	
+	private void setLookup(Lookup lookup) {
+		this.lookup = lookup;
+	}
+	
 
 }

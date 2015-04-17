@@ -2,7 +2,6 @@ package com.onenow.execution;
 
 import static com.ib.controller.Formats.*;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -54,7 +53,7 @@ public class QuoteTable extends AbstractTableModel {
 		System.out.println("Contract " + contract.toString());
 		
 		// set quote on table to receive callbacks later
-		QuoteSingle quote = new QuoteSingle(this, contract.description() );
+		QuoteSingle quote = new QuoteSingle(this, contract.description(), getInvestment(), getMarketPrice());
 		m_rows.add(quote);
 		
 		String volumeTicks = 	"233, " + //  TickType.RT_VOLUME
@@ -86,32 +85,14 @@ public class QuoteTable extends AbstractTableModel {
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	} 
 
+	
 	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>(); // TODO: why here?
-
 
 	void addRow( QuoteSingle row) { // callback
 		m_rows.add( row);
 //		System.out.println("Quote " + toString(0));
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
-
-	// PRINT
-	public String toString(int which) {
-		QuoteSingle row = m_rows.get(which);
-		String s="\n";
-		s = s + "-\n";
-		s = s + "Description " + row.m_description + "\n";
-		s = s + "Bid Size " + row.m_bidSize + "\n";
-		s = s + "Bid " + fmt( row.m_bid) + "\n";
-		s = s + "Ask " + fmt( row.m_ask) + "\n";
-		s = s + "Last " + row.m_askSize + "\n";
-		s = s + "Ask Size " + row.m_askSize + "\n";
-		s = s + "Time " + fmtTime( row.m_lastTime) + "\n";
-		s = s + "Change " + row.change() + "\n";
-		s = s + "Volume " + Formats.fmt0( row.m_volume) + "\n";
-		s = s + "-\n";
-		return s;
-	}				
 	
 	public void desubscribe() {
 		for (QuoteSingle row : m_rows) {
@@ -119,6 +100,12 @@ public class QuoteTable extends AbstractTableModel {
 		}
 	}		
 
+	public void cancel(int i) {
+		getController().cancelMktData( m_rows.get( i) );
+	}
+
+
+	// INTERFACE
 	@Override public int getRowCount() {
 		return m_rows.size();
 	}
@@ -141,7 +128,24 @@ public class QuoteTable extends AbstractTableModel {
 			default: return null;
 		}
 	}
-
+	
+	@Override public Object getValueAt(int rowIn, int col) {
+		QuoteSingle row = m_rows.get( rowIn);
+		switch( col) {
+			case 0: return row.m_description;
+			case 1: return row.m_bidSize;
+			case 2: return fmt( row.m_bid);
+			case 3: return fmt( row.m_ask);
+			case 4: return row.m_askSize;
+			case 5: return fmt( row.m_last);
+			case 6: return fmtTime( row.m_lastTime);
+			case 7: return row.change();
+			case 8: return Formats.fmt0( row.m_volume);
+			default: return null;
+		}
+	}
+	
+	// PUBLIC
 	public Double getLastAsk() {
 		Integer size = m_rows.size();
 		QuoteSingle quote = m_rows.get(size-1);
@@ -169,175 +173,28 @@ public class QuoteTable extends AbstractTableModel {
 //		System.out.println(quote.toString());
 		return price;
 	}
+
+	// PRIVATE
+
+	// TEST
 	
-	@Override public Object getValueAt(int rowIn, int col) {
-		QuoteSingle row = m_rows.get( rowIn);
-		switch( col) {
-			case 0: return row.m_description;
-			case 1: return row.m_bidSize;
-			case 2: return fmt( row.m_bid);
-			case 3: return fmt( row.m_ask);
-			case 4: return row.m_askSize;
-			case 5: return fmt( row.m_last);
-			case 6: return fmtTime( row.m_lastTime);
-			case 7: return row.change();
-			case 8: return Formats.fmt0( row.m_volume);
-			default: return null;
-		}
-	}
-	
-	public void color(TableCellRenderer rend, int rowIn, Color def) {
-		QuoteSingle row = m_rows.get( rowIn);
-		Color c = row.m_frozen ? Color.gray : def;
-		((JLabel)rend).setForeground( c);
-	}
-
-	public void cancel(int i) {
-		getController().cancelMktData( m_rows.get( i) );
-	}
-	
-	/**
-	 * Single quote class
-	 *
-	 */
-	public class QuoteSingle extends TopMktDataAdapter {
-		AbstractTableModel m_model;
-		String m_description;
-		double m_bid;
-		double m_ask;
-		double m_last;
-		long m_lastTime;
-		int m_bidSize;
-		int m_askSize;
-		double m_close;
-		int m_volume;
-		boolean m_frozen;
-		
-		public QuoteSingle () {
-			
-		}
-		
-		QuoteSingle( AbstractTableModel model, String description) {
-			m_model = model;
-			m_description = description;
-		}
-
-		// single quote to string
-		public String toString() {
-			String s="\n\n";
-			s = s + "QUOTE" + "\n";
-			s = s + "Description " + m_description + "\n";
-			s = s + "Bid " + m_bid + "\n";
-			s = s + "Ask " + m_ask + "\n";
-			s = s + "Last " + m_last + "\n";
-			s = s + "Last time " + m_lastTime + "\n";
-			s = s + "Bid size " + m_bidSize + "\n";
-			s = s + "Ask size " + m_askSize + "\n";
-			s = s + "Close " + m_close + "\n";
-			s = s + "Frozen " + m_frozen + "\n";
-			return s;
-		}
-		
-		public String change() {
-			return m_close == 0	? null : fmtPct( (m_last - m_close) / m_close);
-		}
-
-		@Override public void tickPrice( TickType tickType, double price, int canAutoExecute) {
-			switch( tickType) {
-				case BID:
-					m_bid = price;
-//					System.out.println("Bid " + m_bid);
-					getMarketPrice().setPriceMap(getInvestment(), m_bid, TradeType.SELL.toString());
-					break;
-				case ASK:
-					m_ask = price;
-//					System.out.println("Ask " + m_ask);
-					getMarketPrice().setPriceMap(getInvestment(), m_ask, TradeType.BUY.toString());
-					break;
-				case LAST:
-					m_last = price;
-//					System.out.println("Last " + m_last);
-					getMarketPrice().setPriceMap(getInvestment(), m_last, TradeType.TRADED.toString());
-					break;
-				case CLOSE:
-					m_close = price;
-//					System.out.println("Close " + m_close);
-					getMarketPrice().setPriceMap(getInvestment(), m_close, TradeType.CLOSE.toString());
-					break;
-				default: break;	
-			}
-			m_model.fireTableDataChanged(); // should use a timer to be more efficient
-		}
-
-		@Override public void tickSize( TickType tickType, int size) {
-			switch( tickType) {
-				case BID_SIZE:
-					m_bidSize = size;
-					getMarketPrice().setSizeMap(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
-//					System.out.println("Bid size " + m_bidSize);
-					break;
-				case ASK_SIZE:
-					m_askSize = size;
-					getMarketPrice().setSizeMap(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
-//					System.out.println("Ask size " + m_askSize);
-					break;
-				case VOLUME:
-					m_volume = size;
-					getMarketPrice().setSizeMap(getInvestment(), m_volume, DataType.VOLUME.toString());
-//					System.out.println("Volume size " + m_volume);
-					break;
-                default: break; 
-			}
-			m_model.fireTableDataChanged();			
-		}
-		
-		/**
-		 * Handler of all callback tick types
-		 */
-		// reqScannerSubscription 
-		// for 500 companies: $120 / mo
-		@Override public void tickString(TickType tickType, String value) {
-			switch( tickType) {
-				case LAST_TIMESTAMP:
-					m_lastTime = Long.parseLong( value) * 1000;
-//					getMarketPrice().setLastTime(getInvestment(), m_lastTime);
-//					System.out.println("Last time " + m_lastTime);
-					break;
-				case AVG_VOLUME:
-					System.out.println("AVG_VOLUME " + value); // not for indices
-					break;
-				case OPTION_CALL_VOLUME:
-					System.out.println("OPTION_CALL_VOLUME " + value); // stocks 
-					break;
-				case OPTION_PUT_VOLUME:
-					System.out.println("OPTION_PUT_VOLUME " + value); // stocks
-					break;
-				case AUCTION_VOLUME:
-					System.out.println("AUCTION_VOLUME " + value); // subscribe to
-					break;
-				case RT_VOLUME:
-					System.out.println("RT_VOLUME " + value); 
-					getMarketPrice().setRealTime(getInvestment(), value);
-					// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
-					// InvestmentStock inv=new InvestmentStock(new Underlying("SPX"));
-					break;
-				case VOLUME_RATE:
-					System.out.println("VOLUME_RATE " + value); // not for indices
-					break;
-				
-                default: break; 
-			}
-		}
-		
-		@Override public void marketDataType(MktDataType marketDataType) {
-			m_frozen = marketDataType == MktDataType.Frozen;
-			m_model.fireTableDataChanged();
-			
-			if(m_frozen==true) {
-				System.out.println("...frozen data");
-			}
-		}
-	}
+	// PRINT
+	public String toString(int which) {
+		QuoteSingle row = m_rows.get(which);
+		String s="\n";
+		s = s + "-\n";
+		s = s + "Description " + row.m_description + "\n";
+		s = s + "Bid Size " + row.m_bidSize + "\n";
+		s = s + "Bid " + fmt( row.m_bid) + "\n";
+		s = s + "Ask " + fmt( row.m_ask) + "\n";
+		s = s + "Last " + row.m_askSize + "\n";
+		s = s + "Ask Size " + row.m_askSize + "\n";
+		s = s + "Time " + fmtTime( row.m_lastTime) + "\n";
+		s = s + "Change " + row.change() + "\n";
+		s = s + "Volume " + Formats.fmt0( row.m_volume) + "\n";
+		s = s + "-\n";
+		return s;
+	}				
 
 	// SET GET
 	private BrokerController getController() {

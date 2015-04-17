@@ -18,37 +18,40 @@ public class Orchestrator {
 		
 	}
 	
-	// WRITE
+	// SIZE	
+	public void writeSize(Long time, Investment inv, String dataType, Integer size) {
+		
+		getTSDB().writeSize(time, inv, dataType, size);		// write
+		// TODO: SNS
+	}
+	
+	// TODO: READ! BUT WHY RETURN SERIES???
+//	public List<Serie> readSize(	Investment inv, String dataType,
+//			String fromDate, String toDate, String sampling) {
+//
+//	List<Serie> series = new ArrayList<Serie>();
+//	series = getTSDB().readSize(inv, dataType, fromDate, toDate, sampling);
+//	
+//	return series;
+//	}
+
+	// PRICE
 	public void writePrice(Long time, Investment inv, String dataType, Double price) {
 		
 		getTSDB().writePrice(time, inv, dataType, price);	// write
 		// TODO: SNS
 	}
 
-	public void writeSize(Long time, Investment inv, String dataType, Integer size) {
-		
-		getTSDB().writeSize(time, inv, dataType, size);		// write
-		// TODO: SNS
-	}
+	// TODO: READ!  BUT WHY RETURN SERIES???
+//	public List<Serie> readPrice(	Investment inv, String dataType,
+//									String fromDate, String toDate, String sampling) {
+//
+//		List<Serie> series = new ArrayList<Serie>();
+//		series = getTSDB().readPrice(inv, dataType, fromDate, toDate, sampling);
+//
+//		return series;
+//	}
 
-	// READ
-	public List<Serie> readPrice(	Investment inv, String dataType,
-									String fromDate, String toDate, String sampling) {
-
-		List<Serie> series = new ArrayList<Serie>();
-		series = getTSDB().readPrice(inv, dataType, fromDate, toDate, sampling);
-
-		return series;
-	}
-
-	public List<Serie> readSize(	Investment inv, String dataType,
-									String fromDate, String toDate, String sampling) {
-
-		List<Serie> series = new ArrayList<Serie>();
-		series = getTSDB().readSize(inv, dataType, fromDate, toDate, sampling);
-				
-		return series;
-	}
 	
 	// TEST
 

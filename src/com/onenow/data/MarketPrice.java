@@ -27,7 +27,7 @@ public class MarketPrice {
 	HashMap<String, Boolean>				flag;	// flag
 	HashMap<String, List<Long>>				times;
 
-	TSDB DB;
+	TSDB DB;	
 	
 	public MarketPrice() {
 		setLookup(new Lookup());
@@ -37,259 +37,51 @@ public class MarketPrice {
 		setTimes(new HashMap<String, List<Long>>());
 		setDB(new TSDB());
 	}
-
 	
 	// REAL-TIME
-	public void setRealTime(Investment inv, String rtvolume) {
-		String lastTradedPrice="";
-		String lastTradeSize="";
-		String lastTradeTime="";
-		String totalVolume="";
-		String VWAP="";
-		String splitFlag="";
-		
-		int i=1;
-		for(String split:rtvolume.split(";")) {
-			if(i==1) { //	Last trade price
-				lastTradedPrice = split;
-				if(lastTradedPrice.equals("")) {
-					return;
-				}
-			}
-			if(i==2) { //	Last trade size
-				lastTradeSize = split;
-				if(lastTradeSize.equals("")) {
-					return;
-				}
-			}
-			if(i==3) { //	Last trade time
-				lastTradeTime = split;
-				if(lastTradeTime.equals("")) {
-					return;
-				}
-			}
-			if(i==4) { //	Total volume
-				totalVolume = split;
-				if(totalVolume.equals("")) {
-					return;
-				}
-			}
-			if(i==5) { //	VWAP
-				VWAP = split;
-				if(VWAP.equals("")) {
-					return;
-				}
-			}
-			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
-				splitFlag = split;
-				if(splitFlag.equals("")) {
-					return;
-				}
-			}
-			i++;
-		}
-		Long time = Long.parseLong(lastTradeTime); 	// TODO: *1000 ?
-		fillRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
-					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
-		return;
-	}
- 	
-	private void fillRealTime(	Long lastTradeTime, Investment inv, Double lastPrice, Integer lastSize, 
+	public void writeRealTime(	Long lastTradeTime, Investment inv, Double lastPrice, Integer lastSize, 
 								Integer volume, Double VWAP, boolean splitFlag) {
 
 		if(lastSize>0) { // TODO: ignore busts with negative size
-			setSizeDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastSize);		
-			setPriceDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastPrice);
-			// setSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
-			// setPriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
-			// writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
+			writeSizeToDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastSize);		
+			writePriceToDB(lastTradeTime, inv, TradeType.TRADED.toString(), lastPrice);
+			
+			// TODO: create these time series
+			// writeSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
+			// writePriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
+			 writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);
 			
 //			System.out.println(realTimeMapToString(lastTradeTime, inv)); // see what written
 		}
 	}
-	
-	public String realTimeMapToString(Long tradeTime, Investment inv) {
-		
-		Integer size = getSizeFromTimedMap(tradeTime, inv, TradeType.TRADED.toString());
-		Integer volume = getSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());
-		
-		String sizeS = size.toString();
-		String volumeS = volume.toString();
-		
-		if(size<0) {
-			sizeS = "(" + sizeS + ")";
-		}
-		
-		boolean print = true;
-		if(size>500) {
-			sizeS = "***" + sizeS;
-			print = true;
-		}
-		if(volume>5000) {
-			volumeS = "***" + volumeS;
-			print = true;
-		}
-		
-		String s = "";
-		if(print) {
-			s = "\n" + inv.toString() + "\n";
-			s = s +	"REAL TIME " +
-					"Price " + getPriceFromTimedMap(tradeTime, inv, TradeType.TRADED.toString()) + " " +
-					"Size " + sizeS + " " + 
-					"Volume " + volumeS + " " +
-					"VWAP " + getPriceFromTimedMap(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
-	//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
-		}
-		return s;
-	}
 
 	
 	// CANDLES
-	public Chart queryChart(Investment inv, String dataType, 
+	public Chart getChartFromDB(Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
 		Chart chart = new Chart();
 		// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
-		List<Candle> prices = getPriceFromDB(inv, dataType, fromDate, toDate, sampling);
-		List<Integer> sizes = getSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+		List<Candle> prices = getDB().readPriceFromDB(inv, dataType, fromDate, toDate, sampling);
+		List<Integer> sizes = getDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
 		chart.setPrices(prices);
 		chart.setSizes(sizes);
 
 		return chart;
 	}
 		
-	// QUERY PRICE
-	public List<Candle> getPriceFromDB(	Investment inv, String dataType, 
-		String fromDate, String toDate, String sampling) {
-		List<Serie> series = getDB().readPrice(	inv, dataType,
-								fromDate, toDate, sampling);
-		List<Candle> candles = priceSeriesToCandles(series); 
-		return candles;
-	}
 	
-	private List<Candle> priceSeriesToCandles(List<Serie> series) {
-		List<Candle> candles = new ArrayList<Candle>();
-				
-		String s="";
-		for (Serie ser : series) {
-			for (String col : ser.getColumns()) {
-				s = s + col + "\t";
-//				System.out.println("column " + col); column names
-			}
-			s = s + "\n";
-			for (Map<String, Object> row : ser.getRows()) {
-				Candle candle = new Candle();
-				Integer i=0;
-				for (String col : ser.getColumns()) {	// iterate columns to create candle
-					s = s + row.get(col) + "\t";
-//					System.out.println("row " + row + " " + row.get(col)); full row
-					if(i.equals(1)) {
-						candle.setOpenPrice(new Double(row.get(col).toString()));
-					}
-					if(i.equals(2)) {
-						candle.setClosePrice(new Double(row.get(col).toString()));
-					}
-					if(i.equals(3)) {
-						candle.setLowPrice(new Double(row.get(col).toString()));
-					}
-					if(i.equals(4)) {
-						candle.setHighPrice(new Double(row.get(col).toString()));
-					}
-					if(i.equals(5)) {
-						//	sum
-					}
-					i++;
-				}
-				s = s + "\n";
-				candles.add(candle);
-			}
-		}
-//		System.out.println("CANDLE: " + s + "\n");	full candle
-		return candles;
-	}
-	
-	// QUERY SIZE
-	public List<Integer> getSizeFromDB(	Investment inv, String dataType, 
-			String fromDate, String toDate, String sampling) {
-		
-		List<Integer> sizes = new ArrayList<Integer>();
-		List<Serie> series = getDB().readSize(	inv, dataType, fromDate, toDate, sampling);
-		sizes = sizeSeriesToInts(series); 
-		return sizes;
-		
-	}
-
-	public List<Integer> sizeSeriesToInts(List<Serie> series) {
-		List<Integer> sizes = new ArrayList<Integer>();
-		
-		String s="";
-		for (Serie ser : series) {
-			for (String col : ser.getColumns()) {
-				s = s + col + "\t";
-//				System.out.println("column " + col); column names
-			}
-			s = s + "\n";
-			for (Map<String, Object> row : ser.getRows()) {
-				Candle candle = new Candle();
-				Integer i=0;
-				for (String col : ser.getColumns()) {	// iterate columsn to get ints
-					s = s + row.get(col) + "\t";
-//					System.out.println("row " + row + " " + row.get(col)); full row
-					if(i.equals(1)) {
-						// open 
-					}
-					if(i.equals(2)) {
-						// close
-					}
-					if(i.equals(3)) {
-						// low
-					}
-					if(i.equals(4)) {
-						// high
-					}
-					if(i.equals(5)) {
-						Double num = new Double(row.get(col).toString());
-						sizes.add((int) Math.round(num));
-					}
-					i++;
-				}
-				s = s + "\n";
-			}
-		}
-//		System.out.println("SIZES: " + s + "\n");	full series
-		return sizes;
-	}
-	public String queryToString(List<Serie> series) {
-		String s = "";
-		
-		for (Serie ser : series) {
-			for (String col : ser.getColumns()) {
-				System.out.print(col + "\t");
-			}
-			System.out.println();
-			for (Map<String, Object> row : ser.getRows()) {
-				for (String col : ser.getColumns()) {
-					System.out.print(row.get(col) + "\t");
-				}
-				System.out.println();
-			}
-		}
-//		System.out.println(series.size() + " entries");
-		return s;
-	}
-
-				
 	// SIZE
-	private void setSizeDB(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
+	private void writeSizeToDB(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
 		// getSize().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastSize);
 		getDB().writeSize(lastTradeTime, inv, type, lastSize);
 	}
 
-	public void setSizeMap(Investment inv, Integer size, String dataType) {
+	public void writeSizeToMap(Investment inv, Integer size, String dataType) {
 		getSize().put(getLookup().getKey(inv, dataType), size);
 //		System.out.println(dataType.toString() + " " +	getSizeFromMap(inv, dataType) + " " + inv.toString()); // log
 	}
-	public Integer getSizeFromTimedMap(Long time, Investment inv, String dataType) {
+	public Integer readSizeFromTimedMap(Long time, Investment inv, String dataType) {
 		String key = getLookup().getTimedKey(time, inv, dataType);
 		Integer size=0;
 		try {
@@ -299,7 +91,7 @@ public class MarketPrice {
 		} 		
 		return size;		
 	}
-	public Integer getSizeFromMap(Investment inv, String dataType) {
+	public Integer readSizeFromMap(Investment inv, String dataType) {
 		String key = getLookup().getKey(inv, dataType);
 		Integer size=0;
 		try {
@@ -311,17 +103,17 @@ public class MarketPrice {
 	}
 	
 	// PRICE
-	private void setPriceDB(Long lastTradeTime, Investment inv, String type, Double lastPrice) {
+	private void writePriceToDB(Long lastTradeTime, Investment inv, String type, Double lastPrice) {
 		//getPrices().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastPrice);
 		getDB().writePrice(lastTradeTime, inv, type, lastPrice);
 	}
 
-	public void setPriceMap(Investment inv, Double price, String dataType) {
+	public void writePriceToMap(Investment inv, Double price, String dataType) {
 		getPrices().put(getLookup().getKey(inv, dataType), price);
 //		System.out.println(dataType.toString() + " $" +  getPriceFromMap(inv, dataType)  + " " + inv.toString() + "\n"); // log
 	}
 	
-	public Double getPriceFromTimedMap(Long time, Investment inv, String dataType) {
+	public Double readPriceFromTimedMap(Long time, Investment inv, String dataType) {
 		String key = getLookup().getTimedKey(time, inv, dataType);
 		Double price=0.0;
 		try {
@@ -331,7 +123,7 @@ public class MarketPrice {
 		} 
 		return price;		
 	}
-	public Double getPriceFromMap(Investment inv, String dataType) {
+	public Double readPriceFromMap(Investment inv, String dataType) {
 		String key = getLookup().getKey(inv, dataType);
 		Double price=0.0;
 		try {
@@ -415,6 +207,40 @@ public class MarketPrice {
 		return s;
 	}
 	
+	public String realTimeMapToString(Long tradeTime, Investment inv) {
+		
+		Integer size = readSizeFromTimedMap(tradeTime, inv, TradeType.TRADED.toString());
+		Integer volume = readSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());
+		
+		String sizeS = size.toString();
+		String volumeS = volume.toString();
+		
+		if(size<0) {
+			sizeS = "(" + sizeS + ")";
+		}
+		
+		boolean print = true;
+		if(size>500) {
+			sizeS = "***" + sizeS;
+			print = true;
+		}
+		if(volume>5000) {
+			volumeS = "***" + volumeS;
+			print = true;
+		}
+		
+		String s = "";
+		if(print) {
+			s = "\n" + inv.toString() + "\n";
+			s = s +	"REAL TIME " +
+					"Price " + readPriceFromTimedMap(tradeTime, inv, TradeType.TRADED.toString()) + " " +
+					"Size " + sizeS + " " + 
+					"Volume " + volumeS + " " +
+					"VWAP " + readPriceFromTimedMap(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
+	//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
+		}
+		return s;
+	}
 	
 	// TEST
 	

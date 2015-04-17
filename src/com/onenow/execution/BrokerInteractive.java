@@ -97,7 +97,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public void getQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) {		// real-time
-			System.out.println("\n> " + "getting quote for " + inv.toString());
+			System.out.println("\n> " + "getting quote for live investment " + inv.toString());
 			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
 		}
 	}
@@ -178,22 +178,22 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		Integer notDone=0;
 		for(Investment inv:invs) {
 			if(inv instanceof InvestmentIndex) { // only check the index
-				Double buyPrice = getMarketPrices().getPriceFromMap(inv, TradeType.BUY.toString());
+				Double buyPrice = getMarketPrices().readPriceFromMap(inv, TradeType.BUY.toString());
 				if(buyPrice==null) {
 					notDone++;
 					return false;
 				}
-				Double sellPrice = getMarketPrices().getPriceFromMap(inv, TradeType.SELL.toString());
+				Double sellPrice = getMarketPrices().readPriceFromMap(inv, TradeType.SELL.toString());
 				if(sellPrice==null) {
 					notDone++;
 					return false;
 				}
-				Double closePrice = getMarketPrices().getPriceFromMap(inv, TradeType.CLOSE.toString());
+				Double closePrice = getMarketPrices().readPriceFromMap(inv, TradeType.CLOSE.toString());
 				if(closePrice==null) {
 					notDone++;
 					return false;
 				}
-				Double lastPrice = getMarketPrices().getPriceFromMap(inv, TradeType.TRADED.toString());
+				Double lastPrice = getMarketPrices().readPriceFromMap(inv, TradeType.TRADED.toString());
 				if(lastPrice==null) {
 					notDone++;
 					return false;
@@ -239,7 +239,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public Double getPrice(Investment inv, String dataType) {
 		Double price=0.0;
 		
-		price = getMarketPrices().getPriceFromMap(inv, dataType);
+		price = getMarketPrices().readPriceFromMap(inv, dataType);
 	
 		if(price==null) {
 			return 0.0;

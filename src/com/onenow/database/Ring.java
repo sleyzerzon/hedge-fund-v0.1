@@ -18,13 +18,18 @@ public class Ring {
 		String dataType = event.getDataType(); 
 		Double price = event.getPrice();
 
-		// TODO: Write to rings instead (orchestrator, investor...)
+		// TODO: Write to different rings instead (orchestrator, investor...)
 		getOrch().writePrice(time, inv, dataType, price);	// write
 	}
 
-	public void writeSize(Long time, Investment inv, String dataType, Integer size) {
+	public void writeSize(EventSizeWrite event) {
 
-		// TODO: Write to rings instead (orchestrator, investor...)
+		Long time = event.getTime();
+		Investment inv = event.getInv();
+		String dataType = event.getDataType();
+		Integer size = event.getSize();
+		
+		// TODO: Write to different rings instead (orchestrator, investor...)
 		getOrch().writeSize(time, inv, dataType, size);		// write
 	}
 
