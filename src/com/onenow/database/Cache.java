@@ -35,13 +35,13 @@ public class Cache {
 	
 	
 	// PRICE
-	public void writePrice(Long timeStamp, Investment inv, String type, Double lastPrice) {
-		
+	public void writePrice(Long timeStamp, Investment inv, String type, Double price) {
+		// keep last in memory
 		String key = getLookup().getInvestmentKey(inv, type);
-		getPrices().put(key, lastPrice);			// keep in memory
-		
-		// distribute via ring
-		getDB().writePrice(timeStamp, inv, type, lastPrice);								// write to database
+		getPrices().put(key, price);			
+		// fast write to ring
+		EventPriceWrite event = new EventPriceWrite(timeStamp, inv, type, price);
+		getRing().writePrice(event);
 	}
 
 	/**
@@ -62,14 +62,14 @@ public class Cache {
 	/**
 	 * Read the latest price
 	 * @param inv
-	 * @param dataType
+	 * @param type
 	 * @return
 	 */
-	public double readPrice(Investment inv, String dataType) {
-		// TODO
-		double price = 0.0;
-		
-		return price;
+	public double readPrice(Investment inv, String type) {
+
+		String key = getLookup().getInvestmentKey(inv, type);
+
+		return getPrices().get(key);
 	}
 
 	
@@ -101,16 +101,13 @@ public class Cache {
 	
 
 	// SIZE
-	public void writeSize(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
-		
+	public void writeSize(Long timeStamp, Investment inv, String type, Integer size) {
+		// keep last in memory
 		String key = getLookup().getInvestmentKey(inv, type);
-		getSize().put(key, lastSize);		// keep in memory
-		
-		// write to ring instead
-		getDB().writeSize(lastTradeTime, inv, type, lastSize);							// write through to DB
-		
-//		System.out.println("WROTE " + type.toString() + " " +	getSizeFromMap(inv, type) + " " + inv.toString());
-
+		getSize().put(key, size);		
+		// fast write to ring
+		EventSizeWrite event = new EventSizeWrite(timeStamp, inv, type, size);
+		getRing().writeSize(event);
 	}
 
 	public List<Integer> readSize(	Investment inv, String dataType, 

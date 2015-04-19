@@ -4,25 +4,14 @@ import static com.ib.controller.Formats.*;
 
 import java.util.ArrayList;
 
-import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
 
-import com.ib.client.TickType;
-import com.ib.client.Types.MktDataType;
 import com.ib.controller.Formats;
-import com.onenow.constant.DataType;
-import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
 import com.onenow.data.MarketPrice;
 import com.onenow.execution.QuoteTable;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.InvestmentStock;
-import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
-import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
 
 
 public class QuoteTable extends AbstractTableModel {
@@ -30,11 +19,11 @@ public class QuoteTable extends AbstractTableModel {
 	private BrokerController controller;
 	private MarketPrice marketPrice;
 	
-	private ContractFactory contractFactory = new ContractFactory();
+	private ContractFactory contractFactory;
 	private Investment investment;
 
 	public QuoteTable() {
-		
+		setContractFactory(new ContractFactory());
 	}
 
 	/**
