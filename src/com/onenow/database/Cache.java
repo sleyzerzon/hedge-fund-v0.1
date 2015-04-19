@@ -17,17 +17,13 @@ public class Cache {
 	HashMap<String, ArrayList<DeepRow>>		depth;		// market depth
 	HashMap<String, Boolean>				flag;		// flag
 
-	TSDB DB;	
-
 	Ring ring;
 	
 	public Cache() {
 		setLookup(new Lookup());
 		setPrices(new HashMap<String, Double>());
 		setSize(new HashMap<String, Integer>());
-		setDepth(new HashMap<String, ArrayList<DeepRow>>());
-		setDB(new TSDB());
-		
+		setDepth(new HashMap<String, ArrayList<DeepRow>>());		
 	}
 	
 	// PUBLIC
@@ -56,7 +52,8 @@ public class Cache {
 	public List<Candle> readPrice(	Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
-		return getDB().readPriceFromDB(inv, dataType, fromDate, toDate, sampling);
+		// convert to callback from ring event
+		return getRing().readPrice(inv, dataType, fromDate, toDate, sampling);
 	}
 
 	/**
@@ -113,7 +110,8 @@ public class Cache {
 	public List<Integer> readSize(	Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
-		return getDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+		// convert to callback from ring event
+		return getRing().readSize(inv, dataType, fromDate, toDate, sampling);
 	}
 
 	
@@ -277,14 +275,6 @@ public class Cache {
 		this.flag = flag;
 	}
 	
-	private TSDB getDB() {
-		return DB;
-	}
-
-	private void setDB(TSDB dB) {
-		DB = dB;
-	}
-
 	public Lookup getLookup() {
 		return lookup;
 	}
