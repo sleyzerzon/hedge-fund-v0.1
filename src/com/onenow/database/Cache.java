@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.onenow.constant.DataType;
-import com.onenow.constant.TradeType;
 import com.onenow.execution.QuoteDepth.DeepRow;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 
 public class Cache {
 	
-	Lookup lookup;
-	HashMap<String, Double> 				prices; // $
-	HashMap<String, Integer> 				size; 	// volume
-	HashMap<String, ArrayList<DeepRow>>		depth;	// market depth
-	HashMap<String, Boolean>				flag;	// flag
-	HashMap<String, List<Long>>				times;
+	Lookup 									lookup;		// key
+	HashMap<String, Double> 				prices; 	// $
+	HashMap<String, Integer> 				size; 		// volume
+
+	HashMap<String, ArrayList<DeepRow>>		depth;		// market depth
+	HashMap<String, Boolean>				flag;		// flag
 
 	TSDB DB;	
 
@@ -28,7 +26,6 @@ public class Cache {
 		setPrices(new HashMap<String, Double>());
 		setSize(new HashMap<String, Integer>());
 		setDepth(new HashMap<String, ArrayList<DeepRow>>());
-		setTimes(new HashMap<String, List<Long>>());
 		setDB(new TSDB());
 		
 	}
@@ -36,57 +33,43 @@ public class Cache {
 	// PUBLIC
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 	
+	
 	// PRICE
+	public void writePrice(Long timeStamp, Investment inv, String type, Double lastPrice) {
+		
+		String key = getLookup().getInvestmentKey(inv, type);
+		getPrices().put(key, lastPrice);			// keep in memory
+		
+		// distribute via ring
+		getDB().writePrice(timeStamp, inv, type, lastPrice);								// write to database
+	}
+
+	/**
+	 * Read price from a time range (from database)
+	 * @param inv
+	 * @param dataType
+	 * @param fromDate
+	 * @param toDate
+	 * @param sampling
+	 * @return
+	 */
 	public List<Candle> readPrice(	Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
 		return getDB().readPriceFromDB(inv, dataType, fromDate, toDate, sampling);
 	}
-	
 
-	// SIZE
-	public List<Integer> readSize(	Investment inv, String dataType, 
-			String fromDate, String toDate, String sampling) {
-	
-		return getDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
-	}
-
-	public void writeSize(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
-		// getSize().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastSize);
-		getDB().writeSize(lastTradeTime, inv, type, lastSize);	
-	}
-
-//	public void writeSizeToMap(Investment inv, Integer size, String dataType) {
-//		getSize().put(getLookup().getKey(inv, dataType), size);
-////		System.out.println(dataType.toString() + " " +	getSizeFromMap(inv, dataType) + " " + inv.toString()); // log
-//	}
-//	public Integer readSizeFromTimedMap(Long time, Investment inv, String dataType) {
-//		String key = getLookup().getTimedKey(time, inv, dataType);
-//		Integer size=0;
-//		try {
-//			size = (Integer) (getSize().get(key)); 
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 		
-//		return size;		
-//	}
-//	public Integer readSizeFromMap(Investment inv, String dataType) {
-//		String key = getLookup().getKey(inv, dataType);
-//		Integer size=0;
-//		try {
-//			size = (Integer) (getSize().get(key)); 
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 		
-//		return size;
-//	}
-	
-	
-	// PRICE
-
-	public void writePrice(Long lastTradeTime, Investment inv, String type, Double lastPrice) {
-		//getPrices().put(getLookup().getTimedKey(lastTradeTime, inv, type), lastPrice);
-		getDB().writePrice(lastTradeTime, inv, type, lastPrice);
+	/**
+	 * Read the latest price
+	 * @param inv
+	 * @param dataType
+	 * @return
+	 */
+	public double readPrice(Investment inv, String dataType) {
+		// TODO
+		double price = 0.0;
+		
+		return price;
 	}
 
 	
@@ -116,8 +99,54 @@ public class Cache {
 //		return price;
 //	}
 	
-	// FLAG
+
+	// SIZE
+	public void writeSize(Long lastTradeTime, Investment inv, String type, Integer lastSize) {
+		
+		String key = getLookup().getInvestmentKey(inv, type);
+		getSize().put(key, lastSize);		// keep in memory
+		
+		// write to ring instead
+		getDB().writeSize(lastTradeTime, inv, type, lastSize);							// write through to DB
+		
+//		System.out.println("WROTE " + type.toString() + " " +	getSizeFromMap(inv, type) + " " + inv.toString());
+
+	}
+
+	public List<Integer> readSize(	Investment inv, String dataType, 
+			String fromDate, String toDate, String sampling) {
+		
+		return getDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+	}
+
 	
+//	public void writeSizeToMap(Investment inv, Integer size, String dataType) {
+//		getSize().put(getLookup().getKey(inv, dataType), size);
+////		System.out.println(dataType.toString() + " " +	getSizeFromMap(inv, dataType) + " " + inv.toString()); // log
+//	}
+//	public Integer readSizeFromTimedMap(Long time, Investment inv, String dataType) {
+//		String key = getLookup().getTimedKey(time, inv, dataType);
+//		Integer size=0;
+//		try {
+//			size = (Integer) (getSize().get(key)); 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 		
+//		return size;		
+//	}
+//	public Integer readSizeFromMap(Investment inv, String dataType) {
+//		String key = getLookup().getKey(inv, dataType);
+//		Integer size=0;
+//		try {
+//			size = (Integer) (getSize().get(key)); 
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 		
+//		return size;
+//	}
+	
+		
+	// FLAG	
 	public void writeFlag(Long lastTradeTime, Investment inv, String type, boolean splitFlag) { // TODO: DB write
 		//getFlag().put(getLookup().getTimedKey(lastTradeTime, inv, type), splitFlag); // TODO
 	}
@@ -167,23 +196,6 @@ public class Cache {
 //		return depth;
 //	}
 		
-
-	// TIME
-//	public void setTimeMap(Investment inv, Long time) {
-//		getTimeFromMap(inv).add(time);
-//		System.out.println("Last time " +  	getTimeFromMap(inv).toString() + " " + inv.toString()); // log
-//	}
-//	public List<Long> getTimeFromMap(Investment inv) {
-//		String dataType = DataType.LASTTIME.toString();
-//		String key = getLookup().getKey(inv, dataType);
-//		List<Long> timeList=new ArrayList<Long>();
-//		try {
-//			timeList = (ArrayList<Long>) (getTimes().get(key)); // let price be null to know it's not set
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
-//		return timeList;
-//	}
 
 	
 	// TEST
@@ -267,14 +279,6 @@ public class Cache {
 	private void setFlag(HashMap<String, Boolean> flag) {
 		this.flag = flag;
 	}
-
-	private HashMap<String, List<Long>> getTimes() {
-		return times;
-	}
-
-	private void setTimes(HashMap<String, List<Long>> times) {
-		this.times = times;
-	}
 	
 	private TSDB getDB() {
 		return DB;
@@ -290,6 +294,14 @@ public class Cache {
 
 	public void setLookup(Lookup lookup) {
 		this.lookup = lookup;
+	}
+
+	public Ring getRing() {
+		return ring;
+	}
+
+	public void setRing(Ring ring) {
+		this.ring = ring;
 	}
 
 }

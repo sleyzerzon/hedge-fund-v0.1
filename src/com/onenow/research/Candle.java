@@ -13,7 +13,7 @@ public class Candle {
 //	private Double openVWAP;
 //	private Double closeVWAP;
 	
-	private Integer sizeTotal;
+//	private Integer sizeTotal;
 	
 	private Integer volumeOpen;
 	private Integer volumeClose;
@@ -38,8 +38,8 @@ public class Candle {
 		s = s + "high=" + getHighPrice() + " " +
 				"low=" + getLowPrice() + " " +
 				"open=" + getOpenPrice() + " " +
-				"close=" + getClosePrice() + " " +
-				"size=" + getSizeTotal() + "\n";
+				"close=" + getClosePrice() + "\n"; // +
+//				"size=" + getSizeTotal() + "\n";
 
 		return s;
 	}
@@ -77,13 +77,13 @@ public class Candle {
 		this.closePrice = closePrice;
 	}
 
-	public Integer getSizeTotal() {
-		return sizeTotal;
-	}
-
-	public void setSizeTotal(Integer sizeTotal) {
-		this.sizeTotal = sizeTotal;
-	}
+//	public Integer getSizeTotal() {
+//		return sizeTotal;
+//	}
+//
+//	public void setSizeTotal(Integer sizeTotal) {
+//		this.sizeTotal = sizeTotal;
+//	}
 
 	public Integer getVolumeOpen() {
 		return volumeOpen;

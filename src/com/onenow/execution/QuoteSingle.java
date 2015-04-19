@@ -54,22 +54,22 @@ public class QuoteSingle extends TopMktDataAdapter {
 			case BID:
 				m_bid = price;
 //				System.out.println("Bid " + m_bid);
-				getMarketPrice().writePriceToMap(getInvestment(), m_bid, TradeType.SELL.toString());
+				getMarketPrice().writePriceNotRealTime(getInvestment(), m_bid, TradeType.SELL.toString());
 				break;
 			case ASK:
 				m_ask = price;
 //				System.out.println("Ask " + m_ask);
-				getMarketPrice().writePriceToMap(getInvestment(), m_ask, TradeType.BUY.toString());
+				getMarketPrice().writePriceNotRealTime(getInvestment(), m_ask, TradeType.BUY.toString());
 				break;
 			case LAST:
 				m_last = price;
 //				System.out.println("Last " + m_last);
-				getMarketPrice().writePriceToMap(getInvestment(), m_last, TradeType.TRADED.toString());
+				getMarketPrice().writePriceNotRealTime(getInvestment(), m_last, TradeType.TRADED.toString());
 				break;
 			case CLOSE:
 				m_close = price;
 //				System.out.println("Close " + m_close);
-				getMarketPrice().writePriceToMap(getInvestment(), m_close, TradeType.CLOSE.toString());
+				getMarketPrice().writePriceNotRealTime(getInvestment(), m_close, TradeType.CLOSE.toString());
 				break;
 			default: break;	
 		}
@@ -80,17 +80,17 @@ public class QuoteSingle extends TopMktDataAdapter {
 		switch( tickType) {
 			case BID_SIZE:
 				m_bidSize = size;
-				getMarketPrice().writeSizeToMap(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
+				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
 //				System.out.println("Bid size " + m_bidSize);
 				break;
 			case ASK_SIZE:
 				m_askSize = size;
-				getMarketPrice().writeSizeToMap(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
+				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
 //				System.out.println("Ask size " + m_askSize);
 				break;
 			case VOLUME:
 				m_volume = size;
-				getMarketPrice().writeSizeToMap(getInvestment(), m_volume, DataType.VOLUME.toString());
+				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_volume, DataType.VOLUME.toString());
 //				System.out.println("Volume size " + m_volume);
 				break;
             default: break; 

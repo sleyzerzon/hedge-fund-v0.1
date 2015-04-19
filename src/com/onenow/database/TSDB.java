@@ -48,7 +48,7 @@ private void dbCreate() {
 
 // PRICE
 public void writePrice(Long time, Investment inv, String dataType, Double price) {
-	String name = getLookup().getKey(inv, dataType);
+	String name = getLookup().getInvestmentKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	.values(time, price)
@@ -62,7 +62,7 @@ public List<Candle> readPriceFromDB(	Investment inv, String dataType,
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String name = getLookup().getKey(inv, dataType);
+		String name = getLookup().getInvestmentKey(inv, dataType);
 
 		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, fromDate, toDate, sampling);
 
@@ -139,7 +139,7 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 }
 // SIZE
 public void writeSize(Long time, Investment inv, String dataType, Integer size) {
-	String name = getLookup().getKey(inv, dataType);
+	String name = getLookup().getInvestmentKey(inv, dataType);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(time, size)
@@ -153,7 +153,7 @@ public List<Integer> readSizeFromDB(	Investment inv, String dataType,
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String name = getLookup().getKey(inv, dataType);
+	String name = getLookup().getInvestmentKey(inv, dataType);
 	
 	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
 	

@@ -23,26 +23,38 @@ public class MarketPrice {
 	Cache cache;
 	
 	public MarketPrice() {
+		setCache(new Cache());
 	}
 	
-	// REAL-TIME
-	public void writeRealTime(	Long lastTradeTime, Investment inv, Double lastPrice, Integer lastSize, 
+	// WRITE REAL-TIME 
+	public void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
 								Integer volume, Double VWAP, boolean splitFlag) {
 
-		if(lastSize>0) { // TODO: ignore busts with negative size
-			getCache().writeSize(lastTradeTime, inv, TradeType.TRADED.toString(), lastSize);		
-			getCache().writePrice(lastTradeTime, inv, TradeType.TRADED.toString(), lastPrice);
+		if(lastSize>0) { 
+			// TODO: ignore busts with negative size
+			// TODO: IMPORTANT write both size and price or none
+			getCache().writeSize(timeStamp, inv, TradeType.TRADED.toString(), lastSize);		
+			getCache().writePrice(timeStamp, inv, TradeType.TRADED.toString(), lastPrice);
 			
 			// TODO: create these time series: VWAP & VOLUME
 			// writeSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
 			// writePriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 			
-			 getCache().writeFlag(lastTradeTime, inv, DataType.TRADEFLAG.toString(), splitFlag);			
+			 getCache().writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);			
 		}
 	}
-
 	
-	// CANDLES
+	// WRITE NOT REAL-TIME
+	public void writeSizeNotRealTime(Investment inv, int size, String tupe) {
+		// TODO: ignore
+	}
+
+	public void writePriceNotRealTime(Investment inv, double price, String tupe) {
+		// TODO: ignore
+	}
+	
+	
+	// CANDLES READ
 	public Chart getChart(Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
@@ -54,6 +66,33 @@ public class MarketPrice {
 
 		return chart;
 	}		
+	
+	// PRICE READ
+	/**
+	 * Get the latest price, based on the last time-stamp
+	 * @param inv
+	 * @param dataType
+	 */
+	public double readPrice(Investment inv, String dataType) {
+
+		return getCache().readPrice(inv, dataType);
+	}
+
+	/**
+	 * Get the price during a time window
+	 * @param inv
+	 * @param dataType
+	 * @param fromDate
+	 * @param toDate
+	 * @param sampling
+	 * @return
+	 */
+	public List<Candle> readPrice(	Investment inv, String dataType, 
+			String fromDate, String toDate, String sampling) {
+		
+		return getCache().readPrice(inv, dataType, fromDate, toDate, sampling);
+
+	}
 		
 	
 	// PRINT
@@ -65,6 +104,7 @@ public class MarketPrice {
 
 	
 	// TEST
+	
 	
 	// SET GET
 	public Cache getCache() {

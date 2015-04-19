@@ -170,43 +170,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 			QuoteDepth resultPanel = new QuoteDepth(this, getController(), inv);
 		}
 	}
-
-
-	private boolean allQuotesSet() {
-		boolean allSet=true;
-		List<Investment> invs = getMarketPortfolio().getInvestments();
-		Integer notDone=0;
-		for(Investment inv:invs) {
-			if(inv instanceof InvestmentIndex) { // only check the index
-				Double buyPrice = getMarketPrices().readPriceFromMap(inv, TradeType.BUY.toString());
-				if(buyPrice==null) {
-					notDone++;
-					return false;
-				}
-				Double sellPrice = getMarketPrices().readPriceFromMap(inv, TradeType.SELL.toString());
-				if(sellPrice==null) {
-					notDone++;
-					return false;
-				}
-				Double closePrice = getMarketPrices().readPriceFromMap(inv, TradeType.CLOSE.toString());
-				if(closePrice==null) {
-					notDone++;
-					return false;
-				}
-				Double lastPrice = getMarketPrices().readPriceFromMap(inv, TradeType.TRADED.toString());
-				if(lastPrice==null) {
-					notDone++;
-					return false;
-				}
-			}
-		}
-		Integer all=invs.size()*4;
-		if(notDone/all>0.9) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
 	///// BROKER
 	@Override
@@ -239,7 +202,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public Double getPrice(Investment inv, String dataType) {
 		Double price=0.0;
 		
-		price = getMarketPrices().readPriceFromMap(inv, dataType);
+		price = getMarketPrices().readPrice(inv, dataType);
 	
 		if(price==null) {
 			return 0.0;
@@ -297,6 +260,48 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		System.out.println(string);
 	}
 
+	
+	// TEST
+	/**
+	 * Test if the prices are set for the investments under consideration
+	 * @return
+	 */
+	//TODO: use it for testing
+	private boolean allQuotesSet() {
+	boolean allSet=true;
+	List<Investment> invs = getMarketPortfolio().getInvestments();
+	Integer notDone=0;
+	for(Investment inv:invs) {
+		if(inv instanceof InvestmentIndex) { // only check the index
+			Double buyPrice = getMarketPrices().readPrice(inv, TradeType.BUY.toString());
+			if(buyPrice==null) {
+				notDone++;
+				return false;
+			}
+			Double sellPrice = getMarketPrices().readPrice(inv, TradeType.SELL.toString());
+			if(sellPrice==null) {
+				notDone++;
+				return false;
+			}
+			Double closePrice = getMarketPrices().readPrice(inv, TradeType.CLOSE.toString());
+			if(closePrice==null) {
+				notDone++;
+				return false;
+			}
+			Double lastPrice = getMarketPrices().readPrice(inv, TradeType.TRADED.toString());
+			if(lastPrice==null) {
+				notDone++;
+				return false;
+			}
+		}
+	}
+	Integer all=invs.size()*4;
+	if(notDone/all>0.9) {
+		return true;
+	} else {
+		return false;
+	}
+}
 	
 	// PRINT
 	public String toString() {
