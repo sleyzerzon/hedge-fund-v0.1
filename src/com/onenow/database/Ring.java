@@ -43,7 +43,7 @@ public class Ring {
 //			e.printStackTrace();
 		}
 		
-//		System.out.println("PRICE CANDLES " + candles.toString());
+		System.out.println("PRICE CANDLES " + candles.toString());
 		
 		// convert to callback from event
 		return candles;

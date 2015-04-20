@@ -31,14 +31,6 @@ public class InitMarket {
 		
 	}
 
-//	/**
-//	 * Init all market instruments 
-//	 * @param portfolio
-//	 */
-//	public InitMarket(Portfolio portfolio) {
-//		setMarketPortfolio(portfolio); // empty portfolio reference set
-//		initMarketInstruments(new Underlying("all"));
-//	}
 
 	/**
 	 * Init market instruments relevant to an index

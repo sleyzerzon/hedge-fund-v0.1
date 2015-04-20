@@ -8,11 +8,44 @@ public class InitSNPMarket {
 	List<String> SNP500 = new ArrayList<String>();
 
 	public InitSNPMarket() {
-		setSNP500Alist();
+		setSNP500List1();
 //		setSNP500OtherList();
 	}
 	
-	private void setSNP500Alist() {
+	private void setSNP500List1() {
+		
+		getSNP500().add("BA");
+		getSNP500().add("BAC");
+		getSNP500().add("BAX");
+		getSNP500().add("BBBY");
+		getSNP500().add("BBT");
+		getSNP500().add("BBY");
+		getSNP500().add("BCR");
+		getSNP500().add("BDX");
+		getSNP500().add("BEAM");
+		getSNP500().add("BEN");
+		getSNP500().add("BF.B");
+		getSNP500().add("BHI");
+		getSNP500().add("BIG");
+		getSNP500().add("BIIB");
+		getSNP500().add("BK");
+		getSNP500().add("BLK");
+		getSNP500().add("BLL");
+		getSNP500().add("BMC");
+		getSNP500().add("BMS");
+		getSNP500().add("BMY");
+		getSNP500().add("BRCM");
+		getSNP500().add("BRK.B");
+		getSNP500().add("BSX");
+		getSNP500().add("BTU");
+		getSNP500().add("BWA");
+		getSNP500().add("BXP");
+		
+
+	}
+
+	private void setSNP500OtherList() {
+
 		getSNP500().add("A");
 		getSNP500().add("AA");
 		getSNP500().add("AAPL");
@@ -60,36 +93,8 @@ public class InitSNPMarket {
 		getSNP500().add("AVY");
 		getSNP500().add("AXP");
 		getSNP500().add("AZO");
-	}
-
-	private void setSNP500OtherList() {
-
-		getSNP500().add("BA");
-		getSNP500().add("BAC");
-		getSNP500().add("BAX");
-		getSNP500().add("BBBY");
-		getSNP500().add("BBT");
-		getSNP500().add("BBY");
-		getSNP500().add("BCR");
-		getSNP500().add("BDX");
-		getSNP500().add("BEAM");
-		getSNP500().add("BEN");
-		getSNP500().add("BF.B");
-		getSNP500().add("BHI");
-		getSNP500().add("BIG");
-		getSNP500().add("BIIB");
-		getSNP500().add("BK");
-		getSNP500().add("BLK");
-		getSNP500().add("BLL");
-		getSNP500().add("BMC");
-		getSNP500().add("BMS");
-		getSNP500().add("BMY");
-		getSNP500().add("BRCM");
-		getSNP500().add("BRK.B");
-		getSNP500().add("BSX");
-		getSNP500().add("BTU");
-		getSNP500().add("BWA");
-		getSNP500().add("BXP");
+		
+		
 		getSNP500().add("C");
 		getSNP500().add("CA");
 		getSNP500().add("CAG");

@@ -1,20 +1,10 @@
 package com.onenow.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.influxdb.dto.Serie;
-
-import com.onenow.constant.DBname;
-import com.onenow.constant.DataType;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Cache;
 import com.onenow.database.EventRT;
-import com.onenow.database.Lookup;
-import com.onenow.database.TSDB;
-import com.onenow.execution.QuoteDepth.DeepRow;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -77,11 +67,16 @@ public class MarketPrice {
 	}
 
 
-	// READ CANDLES
+	// READ CHART
 	public Chart getChart(Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
 		
-		return getCache().readChart(inv, dataType, fromDate, toDate, sampling);
+		Chart chart = new Chart();
+		
+		chart = getCache().readChart(inv, dataType, fromDate, toDate, sampling);
+		System.out.println("READ CHART " + chart);
+		
+		return chart;
 	}		
 			
 	

@@ -98,7 +98,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) {		// real-time
 			System.out.println("\n> " + "getting quote for live investment " + inv.toString());
+			
 			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
+			
 		}
 	}
 	

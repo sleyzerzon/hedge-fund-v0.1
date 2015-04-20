@@ -23,17 +23,19 @@ public class QuoteTable extends AbstractTableModel {
 	private Investment investment;
 
 	public QuoteTable() {
-		setContractFactory(new ContractFactory());
+
 	}
 
 	/**
-	 * Request market data, specifying the different data tick types requested
+	 * Constructor that requests market data, specifying the different data tick types requested
 	 * @param cont
 	 * @param mPrice
 	 * @param inv
 	 */
 	public QuoteTable(BrokerController cont, MarketPrice mPrice, Investment inv) {
 		
+		setContractFactory(new ContractFactory());
+
 		setController(cont);
 		setMarketPrice(mPrice);
 		

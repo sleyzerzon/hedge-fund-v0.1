@@ -51,8 +51,10 @@ public class Cache {
 	public double readPrice(Investment inv, String dataType) {
 		
 		String key = getLookup().getInvestmentKey(inv, dataType);
-
-		return getLastEventRT().get(key).getPrice();
+		
+		Double price = getLastEventRT().get(key).getPrice();
+		
+		return price;
 	}
 	
 	/**
@@ -90,6 +92,8 @@ public class Cache {
 		
 		if( getCharts().get(key) == null ) {
 
+			System.out.println("CHART NULL");
+			
 			// TODO IMPORTANT get from cache, and if not available get from DB
 			List<Candle> prices = getRing().readPrice(inv, dataType, fromDate, toDate, sampling);
 			List<Integer> sizes = getRing().readSize(inv, dataType, fromDate, toDate, sampling);
