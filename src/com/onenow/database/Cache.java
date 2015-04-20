@@ -1,47 +1,62 @@
 package com.onenow.database;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.onenow.execution.QuoteDepth.DeepRow;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
+import com.onenow.research.Chart;
 
 public class Cache {
 	
-	Lookup 									lookup;		// key
-	HashMap<String, Double> 				prices; 	// $
-	HashMap<String, Integer> 				size; 		// volume
-
-	HashMap<String, ArrayList<DeepRow>>		depth;		// market depth
-	HashMap<String, Boolean>				flag;		// flag
-
-	Ring ring;
+	Lookup 									lookup;			// key
+	
+	HashMap<String, EventRT>				lastEventRT; 	// last set of price/size/etc
+	HashMap<String, Chart>					charts;			// price history in chart format
+	
+	Ring 									ring;
 	
 	public Cache() {
 		setLookup(new Lookup());
-		setPrices(new HashMap<String, Double>());
-		setSize(new HashMap<String, Integer>());
-		setDepth(new HashMap<String, ArrayList<DeepRow>>());		
+		setLastEventRT(new HashMap<String, EventRT>());
+		setCharts(new HashMap<String, Chart>());
+		setRing(new Ring());
 	}
+	
 	
 	// PUBLIC
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 	
-	
-	// PRICE
-	public void writePrice(Long timeStamp, Investment inv, String type, Double price) {
-		// keep last in memory
-		String key = getLookup().getInvestmentKey(inv, type);
-		getPrices().put(key, price);			
-		// fast write to ring
-		EventPriceWrite event = new EventPriceWrite(timeStamp, inv, type, price);
-		getRing().writePrice(event);
-	}
+	// REAL-TIME
+	public void writeEventRT(EventRT event) {
 
+		String key = getLookup().getInvestmentKey(event.getInv(), event.getDataType());
+
+		// keep last in memory
+		if( event.getTime() > getLastEventRT().get(key).getTime() ) {
+			getLastEventRT().put(key, event);
+		}
+		
+		// fast write to ring
+		getRing().writeEventRT(event);
+	}
+	
+	// READ PRICE
 	/**
-	 * Read price from a time range (from database)
+	 * Gets the latest real-time price
+	 * @param inv
+	 * @param dataType
+	 * @return
+	 */
+	public double readPrice(Investment inv, String dataType) {
+		
+		String key = getLookup().getInvestmentKey(inv, dataType);
+
+		return getLastEventRT().get(key).getPrice();
+	}
+	
+	/**
+	 * Gets the price for a time window
 	 * @param inv
 	 * @param dataType
 	 * @param fromDate
@@ -51,146 +66,45 @@ public class Cache {
 	 */
 	public List<Candle> readPrice(	Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
-		
-		// convert to callback from ring event
-		return getRing().readPrice(inv, dataType, fromDate, toDate, sampling);
-	}
 
+		Chart chart = readChart(inv, dataType, fromDate, toDate, sampling);
+		
+		return chart.getPrices();
+	}
+	
+	// READ CHARTS
 	/**
-	 * Read the latest price
+	 * Creates a chart from size and price information from the ring/database
 	 * @param inv
-	 * @param type
+	 * @param dataType
+	 * @param fromDate
+	 * @param toDate
+	 * @param sampling
 	 * @return
 	 */
-	public double readPrice(Investment inv, String type) {
-
-		String key = getLookup().getInvestmentKey(inv, type);
-
-		return getPrices().get(key);
-	}
-
-	
-//	public void writePriceToMap(Investment inv, Double price, String dataType) {
-//		getPrices().put(getLookup().getKey(inv, dataType), price);
-////		System.out.println(dataType.toString() + " $" +  getPriceFromMap(inv, dataType)  + " " + inv.toString() + "\n"); // log
-//	}
-//	
-//	public Double readPriceFromTimedMap(Long time, Investment inv, String dataType) {
-//		String key = getLookup().getTimedKey(time, inv, dataType);
-//		Double price=0.0;
-//		try {
-//			price = (Double) (getPrices().get(key)); // let price be null to know it's not set
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
-//		return price;		
-//	}
-//	public Double readPriceFromMap(Investment inv, String dataType) {
-//		String key = getLookup().getKey(inv, dataType);
-//		Double price=0.0;
-//		try {
-//			price = (Double) (getPrices().get(key)); // let price be null to know it's not set
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 
-//		return price;
-//	}
-	
-
-	// SIZE
-	public void writeSize(Long timeStamp, Investment inv, String type, Integer size) {
-		// keep last in memory
-		String key = getLookup().getInvestmentKey(inv, type);
-		getSize().put(key, size);		
-		// fast write to ring
-		EventSizeWrite event = new EventSizeWrite(timeStamp, inv, type, size);
-		getRing().writeSize(event);
-	}
-
-	public List<Integer> readSize(	Investment inv, String dataType, 
+	public Chart readChart(Investment inv, String dataType, 
 			String fromDate, String toDate, String sampling) {
-		
-		// convert to callback from ring event
-		return getRing().readSize(inv, dataType, fromDate, toDate, sampling);
-	}
 
-	
-//	public void writeSizeToMap(Investment inv, Integer size, String dataType) {
-//		getSize().put(getLookup().getKey(inv, dataType), size);
-////		System.out.println(dataType.toString() + " " +	getSizeFromMap(inv, dataType) + " " + inv.toString()); // log
-//	}
-//	public Integer readSizeFromTimedMap(Long time, Investment inv, String dataType) {
-//		String key = getLookup().getTimedKey(time, inv, dataType);
-//		Integer size=0;
-//		try {
-//			size = (Integer) (getSize().get(key)); 
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 		
-//		return size;		
-//	}
-//	public Integer readSizeFromMap(Investment inv, String dataType) {
-//		String key = getLookup().getKey(inv, dataType);
-//		Integer size=0;
-//		try {
-//			size = (Integer) (getSize().get(key)); 
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 		
-//		return size;
-//	}
-	
+		String key = getLookup().getChartKey(inv, dataType, fromDate, toDate, sampling);
+		Chart chart = new Chart();
 		
-	// FLAG	
-	public void writeFlag(Long lastTradeTime, Investment inv, String type, boolean splitFlag) { // TODO: DB write
-		//getFlag().put(getLookup().getTimedKey(lastTradeTime, inv, type), splitFlag); // TODO
-	}
-	
-	
-//	public void setFlagMap(Investment inv, boolean flag) {
-//		getFlag().put(getLookup().getKey(inv, DataType.TRADEFLAG.toString()), flag);	
-//	}	
-//	public boolean getFlagFromTimedMap(Long time, Investment inv, String dataType) {
-//		String key = getLookup().getTimedKey(time, inv, dataType);
-//		boolean flag=false;
-//		try {
-//			flag = (boolean) (getFlag().get(key)); 
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 		
-//		return flag;			
-//	}
-//	public boolean getFlag(Investment inv) {
-//		String key = getLookup().getKey(inv, DataType.TRADEFLAG.toString());
-//		boolean flag = false;
-//		try {
-//			flag = (boolean) (getFlag().get(key)); // let price be null to know it's not set
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 	
-//		return flag;		
-//	}
-	
-	
-	// DEPTH
-//	public void setDepth(Investment inv, ArrayList<DeepRow> depth) {
-//		getDepth().put(getLookup().getKey(inv, DataType.MARKETDEPTH.toString()), depth);
-//		System.out.println("Depth " +  	getDepthFromMap(inv).toString() + " " + inv.toString());
-//	}
-//	public ArrayList<DeepRow> getDepthFromMap(Investment inv) {
-//		String key = getLookup().getKey(inv, DataType.MARKETDEPTH.toString());
-//		ArrayList<DeepRow> depth = new ArrayList<DeepRow>();
-//		try {
-//			depth = (ArrayList<DeepRow>) (getDepth().get(key)); // let price be null to know it's not set
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} 	
-//		if(depth==null) {
-//			depth=new ArrayList<DeepRow>(); // return empty
-//		}
-//		return depth;
-//	}
+		if( getCharts().get(key) == null ) {
+
+			// TODO IMPORTANT get from cache, and if not available get from DB
+			List<Candle> prices = getRing().readPrice(inv, dataType, fromDate, toDate, sampling);
+			List<Integer> sizes = getRing().readSize(inv, dataType, fromDate, toDate, sampling);
+			chart.setPrices(prices);
+			chart.setSizes(sizes);
+
+			// keep last in memory
+			getCharts().put(key, chart);
+
+		} else {
+			chart = getCharts().get(key);
+		}
 		
+		return chart;
+	}				
 
 	
 	// TEST
@@ -200,81 +114,12 @@ public class Cache {
 	// TODO: print all the data in memory, not just prices, from Maps/Ring/etc
 	public String toString() {
 		String s="";
-		s = getPrices().toString();
+		s = getLastEventRT().toString();
 		return s;
 	}
-
-	
-// TODO: convert to print from whatever source what Real-time information was just written
-//	public String realTimeMapToString(Long tradeTime, Investment inv) {
-//		
-//		Integer size = getCache().readSizeFromTimedMap(tradeTime, inv, TradeType.TRADED.toString());
-//		Integer volume = readSizeFromTimedMap(tradeTime, inv, DataType.VOLUME.toString());
-//		
-//		String sizeS = size.toString();
-//		String volumeS = volume.toString();
-//		
-//		if(size<0) {
-//			sizeS = "(" + sizeS + ")";
-//		}
-//		
-//		boolean print = true;
-//		if(size>500) {
-//			sizeS = "***" + sizeS;
-//			print = true;
-//		}
-//		if(volume>5000) {
-//			volumeS = "***" + volumeS;
-//			print = true;
-//		}
-//		
-//		String s = "";
-//		if(print) {
-//			s = "\n" + inv.toString() + "\n";
-//			s = s +	"REAL TIME " +
-//					"Price " + readPriceFromTimedMap(tradeTime, inv, TradeType.TRADED.toString()) + " " +
-//					"Size " + sizeS + " " + 
-//					"Volume " + volumeS + " " +
-//					"VWAP " + readPriceFromTimedMap(tradeTime, inv, DataType.VWAP.toString()) + "\n\n" ; // +
-//	//				"Trade Flag " + getTimedFlag(tradeTime, inv, DataType.TRADEFLAG.toString()); // TODO
-//		}
-//		return s;
-//	}
 	
 	
 	// SET GET
-	private HashMap<String, Double> getPrices() {
-		return prices;
-	}
-
-	private void setPrices(HashMap<String, Double> prices) {
-		this.prices = prices;
-	}
-
-	private HashMap<String, Integer> getSize() {
-		return size;
-	}
-
-	private void setSize(HashMap<String, Integer> size) {
-		this.size = size;
-	}
-
-	private HashMap<String, ArrayList<DeepRow>> getDepth() {
-		return depth;
-	}
-
-	private void setDepth(HashMap<String, ArrayList<DeepRow>> depth) {
-		this.depth = depth;
-	}
-
-	private HashMap<String, Boolean> getFlag() {
-		return flag;
-	}
-
-	private void setFlag(HashMap<String, Boolean> flag) {
-		this.flag = flag;
-	}
-	
 	public Lookup getLookup() {
 		return lookup;
 	}
@@ -290,5 +135,24 @@ public class Cache {
 	public void setRing(Ring ring) {
 		this.ring = ring;
 	}
+
+	public HashMap<String, EventRT> getLastEventRT() {
+		return lastEventRT;
+	}
+
+	public void setLastEventRT(HashMap<String, EventRT> lastEventRT) {
+		this.lastEventRT = lastEventRT;
+	}
+
+
+	public HashMap<String, Chart> getCharts() {
+		return charts;
+	}
+
+
+	public void setCharts(HashMap<String, Chart> charts) {
+		this.charts = charts;
+	}
+
 
 }

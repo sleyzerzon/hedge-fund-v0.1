@@ -1,12 +1,5 @@
 package com.onenow.database;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import org.influxdb.dto.Serie;
-
-import com.onenow.constant.DBname;
 import com.onenow.instrument.Investment;
 
 public class Orchestrator {

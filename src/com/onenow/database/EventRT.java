@@ -2,20 +2,32 @@ package com.onenow.database;
 
 import com.onenow.instrument.Investment;
 
-public class EventSizeWrite {
+public class EventRT {
 
 	private Long time;
 	private Investment inv;
-	private String dataType;
+	private String dataType; 
+
+	private Double price;
 	private Integer size;
-	
-	public EventSizeWrite(Long time, Investment inv, String dataType, Integer size) {
+
+	/** Set real-time price/size/etc 
+	 * 
+	 * @param time
+	 * @param inv
+	 * @param dataType
+	 * @param price
+	 * @param size
+	 */
+	public EventRT(Long time, Investment inv, String dataType, Double price, int size) {
 		setTime(time);
 		setInv(inv);
 		setDataType(dataType);
+		setPrice(price);
 		setSize(size);
 	}
-
+	
+	
 	// SET GET
 	public Long getTime() {
 		return time;
@@ -39,6 +51,14 @@ public class EventSizeWrite {
 
 	public void setDataType(String dataType) {
 		this.dataType = dataType;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 	public Integer getSize() {

@@ -48,6 +48,7 @@ public class Lookup {
 		
 		return (lookup);
 	}
+	
 	/**
 	 * Key to find the latest time stamp available for an investment
 	 * @param inv
@@ -62,6 +63,19 @@ public class Lookup {
 		return s;
 	}
 
+	
+	public String getChartKey(Investment inv, String dataType, String fromDate, String toDate, String sampling) {
+		String s = "";
+		
+		s = inv.toString() + "-";
+		s = s + dataType;
+		s = s + fromDate + "." + toDate + "-";
+		s = s + sampling;
+		return s;
+		
+	}
+	
+	
 }
 
 
