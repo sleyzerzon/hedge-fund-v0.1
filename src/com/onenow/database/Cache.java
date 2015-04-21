@@ -92,7 +92,7 @@ public class Cache {
 		
 		if( getCharts().get(key) == null ) {
 
-			System.out.println("CHART NULL");
+//			System.out.println("CHART NULL");
 			
 			// TODO IMPORTANT get from cache, and if not available get from DB
 			List<Candle> prices = getRing().readPrice(inv, dataType, fromDate, toDate, sampling);

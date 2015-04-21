@@ -9,10 +9,10 @@ import com.onenow.research.Candle;
 public class Ring {
 	
 	Orchestrator orch = new Orchestrator();
-	TSDB DB;	
+	TSDB TSDB;	
 
 	public Ring() {
-		
+		setTSDB(new TSDB());
 	}
 	
 	// WRITE
@@ -34,16 +34,16 @@ public class Ring {
 	public List<Candle> readPrice(	Investment inv, String dataType, 
 									String fromDate, String toDate, String sampling) {
 
-//		System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
+		//		System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
 		
 		List<Candle> candles = new ArrayList<Candle>();
 		try {
-			candles = getDB().readPriceFromDB(inv, dataType, fromDate, toDate, sampling);
+			candles = getTSDB().readPriceFromDB(inv, dataType, fromDate, toDate, sampling);
 		} catch (Exception e) {
-//			e.printStackTrace();
+						e.printStackTrace();
 		}
 		
-		System.out.println("PRICE CANDLES " + candles.toString());
+//		System.out.println("PRICE CANDLES " + candles.toString());
 		
 		// convert to callback from event
 		return candles;
@@ -53,17 +53,17 @@ public class Ring {
 	public List<Integer> readSize(	Investment inv, String dataType, 
 									String fromDate, String toDate, String sampling) {
 
-//		System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
+		//		System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		
 		try {
-			sizes = getDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+			sizes = getTSDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
 		} catch (Exception e) {
-//			e.printStackTrace();
+			//			e.printStackTrace();
 		}
 		
-//		System.out.println("SIZES " + sizes.toString());
+		//		System.out.println("SIZES " + sizes.toString());
 		
 		// convert to callback from event
 		return sizes;
@@ -115,12 +115,12 @@ public class Ring {
 		this.orch = orch;
 	}
 
-	public TSDB getDB() {
-		return DB;
+	public TSDB getTSDB() {
+		return TSDB;
 	}
 
-	public void setDB(TSDB dB) {
-		DB = dB;
+	public void setTSDB(TSDB dB) {
+		TSDB = dB;
 	}
 	
 }
