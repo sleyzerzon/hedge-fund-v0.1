@@ -7,6 +7,7 @@ import com.onenow.database.Cache;
 import com.onenow.database.EventRT;
 import com.onenow.database.Orchestrator;
 import com.onenow.instrument.Investment;
+import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 
@@ -14,11 +15,11 @@ public class MarketPrice {
 
 	Cache cache; 		// just storage
 	
-	InitMarket initMarket;
+	Portfolio portfolio;
 	Orchestrator orchestrator;
 	
-	public MarketPrice(InitMarket initMarket) {
-		setInitMarket(initMarket);
+	public MarketPrice(Portfolio marketPortfolio) {
+		setPortfolio(marketPortfolio);
 		setCache(new Cache(this));
 		setOrchestrator( new Orchestrator(this) );
 	}
@@ -106,20 +107,20 @@ public class MarketPrice {
 		this.cache = cache;
 	}
 
-	public InitMarket getInitMarket() {
-		return initMarket;
-	}
-
-	public void setInitMarket(InitMarket initMarket) {
-		this.initMarket = initMarket;
-	}
-
 	public Orchestrator getOrchestrator() {
 		return orchestrator;
 	}
 
 	public void setOrchestrator(Orchestrator orchestrator) {
 		this.orchestrator = orchestrator;
+	}
+
+	public Portfolio getPortfolio() {
+		return portfolio;
+	}
+
+	public void setPortfolio(Portfolio portfolio) {
+		this.portfolio = portfolio;
 	}
 	
 }

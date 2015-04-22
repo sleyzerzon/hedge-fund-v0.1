@@ -74,7 +74,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 		// my porfolio, prices, and trades
 		setMyPortfolio(new Portfolio());
-		setMarketPrices(new MarketPrice(initMarket));
+		setMarketPrices(new MarketPrice(getMarketPortfolio()));
 		setTrades(new ArrayList<Trade>());		
 		
 	}

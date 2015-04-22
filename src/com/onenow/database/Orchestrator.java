@@ -11,11 +11,9 @@ import com.onenow.research.Candle;
 
 public class Orchestrator {
 
+	MarketPrice marketPrice;
 	Lookup lookup;
 	TSDB TSDB;
-	
-	MarketPrice marketPrice;
-	Cache cache;
 
 
 	public Orchestrator() {
@@ -24,7 +22,6 @@ public class Orchestrator {
 
 	public Orchestrator(MarketPrice marketPrice) {
 		setMarketPrice(marketPrice);
-		setCache(getMarketPrice().getCache());
 		setTSDB(new TSDB());
 	}
 
@@ -39,7 +36,7 @@ public class Orchestrator {
 	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
 									String fromDate, String toDate) {
 
-		System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
+		// System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
 		
 		List<Candle> candles = new ArrayList<Candle>();
 		try {
@@ -48,7 +45,7 @@ public class Orchestrator {
 			e.printStackTrace();
 		}
 		
-//		System.out.println("PRICE CANDLES " + candles.toString());
+		// System.out.println("PRICE CANDLES " + candles.toString());
 		
 		// convert to callback from event
 		return candles;
@@ -58,7 +55,7 @@ public class Orchestrator {
 	public List<Integer> readSize(	Investment inv, String dataType, String sampling, 
 									String fromDate, String toDate) {
 
-		System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
+		// System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		
@@ -122,14 +119,6 @@ public class Orchestrator {
 
 	public void setTSDB(TSDB tSDB) {
 		TSDB = tSDB;
-	}
-
-	public Cache getCache() {
-		return cache;
-	}
-
-	public void setCache(Cache cache) {
-		this.cache = cache;
 	}
 
 	public MarketPrice getMarketPrice() {

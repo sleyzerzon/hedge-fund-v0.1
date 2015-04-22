@@ -64,7 +64,6 @@ public class Cache {
 	public double readPrice(Investment inv, String dataType) {
 		
 		String key = getLookup().getInvestmentKey(inv, dataType);
-		
 		Double price = getLastEventRT().get(key).getPrice();  // HIT
 	
 		// MISS: fill with the last data from chart until RT vents start to hit
@@ -90,8 +89,7 @@ public class Cache {
 	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
 									String fromDate, String toDate) {
 
-		Chart chart = readChart(inv, dataType, sampling, fromDate, toDate);
-		
+		Chart chart = readChart(inv, dataType, sampling, fromDate, toDate);	
 		return chart.getPrices();
 	}
 	
@@ -109,14 +107,12 @@ public class Cache {
 							String fromDate, String toDate) {
 
 		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
-		
 		Chart chart = getCharts().get(key);
 		
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
 			
 			chart = new Chart();
-			System.out.println("CHART MISS: " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
 			
 			// TODO IMPORTANT get from cache, and if not available get from DB
 			List<Candle> prices = getMarketPrice().getOrchestrator().readPrice(inv, dataType, sampling, fromDate, toDate);

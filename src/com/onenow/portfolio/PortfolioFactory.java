@@ -40,7 +40,7 @@ public class PortfolioFactory {
 		setMarketPortfolio(new Portfolio());
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
-		setMarketPrice(new MarketPrice(init));
+		setMarketPrice(new MarketPrice(getMarketPortfolio()));
 		
 		setSamplingRate(getOptionsSampling("default"));
 		System.out.println("SAMPLING: " + getSamplingRate().toString() + "\n");
