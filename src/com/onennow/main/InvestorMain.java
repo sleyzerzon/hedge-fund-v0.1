@@ -1,4 +1,4 @@
-package com.onenow.portfolio;
+package com.onennow.main;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
+import com.onenow.portfolio.PortfolioFactory;
 
 public class InvestorMain {
 		

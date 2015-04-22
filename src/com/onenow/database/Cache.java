@@ -3,31 +3,44 @@ package com.onenow.database;
 import java.util.HashMap;
 import java.util.List;
 
+import com.onenow.constant.SamplingRate;
+import com.onenow.constant.TradeType;
+import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
+import com.onenow.util.ParseDate;
 
 public class Cache {
+	
+	MarketPrice								marketPrice;
+	Ring 									ring;			// fast stores critical path data
 	
 	Lookup 									lookup;			// key
 	
 	HashMap<String, EventRT>				lastEventRT; 	// last set of price/size/etc
 	HashMap<String, Chart>					charts;			// price history in chart format
 	
-	Ring 									ring;
+	
+	ParseDate	parser = new ParseDate();
 	
 	public Cache() {
+		
+	}
+	
+	public Cache(MarketPrice marketPrice) {
+		setMarketPrice(marketPrice);
+		setRing(new Ring(getMarketPrice().getOrchestrator()));
 		setLookup(new Lookup());
 		setLastEventRT(new HashMap<String, EventRT>());
 		setCharts(new HashMap<String, Chart>());
-		setRing(new Ring());
 	}
 	
 	
 	// PUBLIC
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 	
-	// REAL-TIME
+	// REAL-TIME from broker
 	public void writeEventRT(EventRT event) {
 
 		String key = getLookup().getInvestmentKey(event.getInv(), event.getDataType());
@@ -37,13 +50,13 @@ public class Cache {
 			getLastEventRT().put(key, event);
 		}
 		
-		// fast write to ring
+		// CRITICAL PATH: fast write to ring
 		getRing().writeEventRT(event);
 	}
 	
 	// READ PRICE
 	/**
-	 * Gets the latest real-time price
+	 * Gets the last price traded
 	 * @param inv
 	 * @param dataType
 	 * @return
@@ -52,7 +65,15 @@ public class Cache {
 		
 		String key = getLookup().getInvestmentKey(inv, dataType);
 		
-		Double price = getLastEventRT().get(key).getPrice();
+		Double price = getLastEventRT().get(key).getPrice();  // HIT
+	
+		// MISS: fill with the last data from chart until RT vents start to hit
+		if(price==null) {
+			List<Candle> candles = readPrice(	inv, TradeType.TRADED.toString(), SamplingRate.SCALP.toString(), 
+												getParser().getToday(), getParser().getToday()); 
+			Candle last = candles.get(candles.size()-1);
+			price = last.getClosePrice();
+		} 
 		
 		return price;
 	}
@@ -66,10 +87,10 @@ public class Cache {
 	 * @param sampling
 	 * @return
 	 */
-	public List<Candle> readPrice(	Investment inv, String dataType, 
-			String fromDate, String toDate, String sampling) {
+	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate) {
 
-		Chart chart = readChart(inv, dataType, fromDate, toDate, sampling);
+		Chart chart = readChart(inv, dataType, sampling, fromDate, toDate);
 		
 		return chart.getPrices();
 	}
@@ -84,28 +105,32 @@ public class Cache {
 	 * @param sampling
 	 * @return
 	 */
-	public Chart readChart(Investment inv, String dataType, 
-			String fromDate, String toDate, String sampling) {
+	public Chart readChart(	Investment inv, String dataType, String sampling, 
+							String fromDate, String toDate) {
 
-		String key = getLookup().getChartKey(inv, dataType, fromDate, toDate, sampling);
-		Chart chart = new Chart();
+		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
 		
-		if( getCharts().get(key) == null ) {
-
-//			System.out.println("CHART NULL");
-			
-			// TODO IMPORTANT get from cache, and if not available get from DB
-			List<Candle> prices = getRing().readPrice(inv, dataType, fromDate, toDate, sampling);
-			List<Integer> sizes = getRing().readSize(inv, dataType, fromDate, toDate, sampling);
-			chart.setPrices(prices);
-			chart.setSizes(sizes);
-
-			// keep last in memory
-			getCharts().put(key, chart);
-
-		} else {
-			chart = getCharts().get(key);
+		Chart chart = getCharts().get(key);
+		
+		// MISS
+		if(chart==null) {
+			chart = new Chart();
 		}
+		
+//		if( chart == null ) { // MISS
+//
+////			System.out.println("CHART MISS");
+//			
+//			// TODO IMPORTANT get from cache, and if not available get from DB
+//			List<Candle> prices = getRing().readPrice(inv, dataType, sampling, fromDate, toDate);
+//			List<Integer> sizes = getRing().readSize(inv, dataType, sampling, fromDate, toDate);
+//			chart.setPrices(prices);
+//			chart.setSizes(sizes);
+//
+//			// keep last in memory
+//			getCharts().put(key, chart);
+//
+//		} 
 		
 		return chart;
 	}				
@@ -156,6 +181,24 @@ public class Cache {
 
 	public void setCharts(HashMap<String, Chart> charts) {
 		this.charts = charts;
+	}
+
+
+	public ParseDate getParser() {
+		return parser;
+	}
+
+
+	public void setParser(ParseDate parser) {
+		this.parser = parser;
+	}
+
+	public MarketPrice getMarketPrice() {
+		return marketPrice;
+	}
+
+	public void setMarketPrice(MarketPrice marketPrice) {
+		this.marketPrice = marketPrice;
 	}
 
 

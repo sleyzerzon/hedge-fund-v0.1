@@ -70,11 +70,11 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		setUnderList(new ArrayList<Underlying>());
 		setMarketPortfolio(new Portfolio());
 		
-		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
+		InitMarket initMarket = new InitMarket(index, getMarketPortfolio()); 		
 
 		// my porfolio, prices, and trades
 		setMyPortfolio(new Portfolio());
-		setMarketPrices(new MarketPrice());
+		setMarketPrices(new MarketPrice(initMarket));
 		setTrades(new ArrayList<Trade>());		
 		
 	}

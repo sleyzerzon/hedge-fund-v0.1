@@ -57,8 +57,8 @@ public void writePrice(Long time, Investment inv, String dataType, Double price)
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-public List<Candle> readPriceFromDB(	Investment inv, String dataType, 
-		String fromDate, String toDate, String sampling) {
+public List<Candle> readPriceFromDB(	Investment inv, String dataType, String sampling,
+										String fromDate, String toDate) {
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
@@ -71,7 +71,7 @@ public List<Candle> readPriceFromDB(	Investment inv, String dataType,
 		return candles;
 	}
 
-public List<Serie> queryPrice(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+public List<Serie> queryPrice(String dbName, String serieName, String sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
@@ -155,14 +155,14 @@ public List<Integer> readSizeFromDB(	Investment inv, String dataType,
 	
 	String name = getLookup().getInvestmentKey(inv, dataType);
 	
-	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  fromDate, toDate, sampling);
+	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  sampling, fromDate, toDate);
 	
 	sizes = sizeSeriesToInts(series); 
 	
 	return sizes;
 }
 
-public List<Serie> querySize(String dbName, String serieName, String fromDate, String toDate, String sampling) {
+public List<Serie> querySize(String dbName, String serieName, String sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +

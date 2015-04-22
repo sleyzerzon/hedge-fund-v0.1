@@ -64,15 +64,13 @@ public class Lookup {
 	}
 
 	
-	public String getChartKey(Investment inv, String dataType, String fromDate, String toDate, String sampling) {
+	public String getChartKey(Investment inv, String dataType, String sampling, String fromDate, String toDate) {
 		String s = "";
-		
 		s = inv.toString() + "-";
-		s = s + dataType;
-		s = s + fromDate + "." + toDate + "-";
-		s = s + sampling;
+		s = s + dataType + "-";
+		s = s + sampling + "-";
+		s = s + fromDate + "-" + toDate;
 		return s;
-		
 	}
 	
 	

@@ -22,8 +22,8 @@ import com.onenow.util.ParseDate;
 
 public class PortfolioFactory {
 	
-	private static Portfolio marketPortfolio = new Portfolio();
-	private static MarketPrice marketPrice = new MarketPrice();
+	private static Portfolio marketPortfolio;
+	private static MarketPrice marketPrice;
 	private static Underlying index;
 	
 	static List<String> samplingRate = new ArrayList<String>();
@@ -36,8 +36,12 @@ public class PortfolioFactory {
 	}
 	
 	public PortfolioFactory(Underlying index) throws InterruptedException {
+		
+		setMarketPortfolio(new Portfolio());
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
+		setMarketPrice(new MarketPrice(init));
+		
 		setSamplingRate(getOptionsSampling("default"));
 		System.out.println("SAMPLING: " + getSamplingRate().toString() + "\n");
 	}	
@@ -90,19 +94,19 @@ public class PortfolioFactory {
 		String toDate = "2015-02-28";
 		for(String sampling:getSamplingRate()) {
 			for(Investment inv:getMarketPortfolio().getInvestments()) {
-				getInvestmentChart(inv, fromDate, toDate, sampling);
+				getInvestmentChart(inv, sampling, fromDate, toDate);
 			}
 		}
 	}
 	
-	private static void getInvestmentChart(Investment inv, String fromDate, String toDate, String sampling) {
+	private static void getInvestmentChart(Investment inv, String sampling, String fromDate, String toDate) {
 
 		Chart chart = new Chart();
-		chart = getMarketPrice().getChart(inv, TradeType.TRADED.toString(), fromDate, toDate, sampling);
+		chart = getMarketPrice().getChart(inv, TradeType.TRADED.toString(), sampling, fromDate, toDate);
 		
 		if(!chart.getSizes().isEmpty()) {
 			inv.getCharts().put(sampling, chart); // sampling is key	
-			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString());			
+			System.out.println("\n" + "+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString() + "\n");			
 		} else {
 			System.out.println("- chart " + inv.toString() + " " + sampling);
 		}		

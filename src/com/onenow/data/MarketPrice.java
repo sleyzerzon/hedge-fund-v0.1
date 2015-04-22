@@ -5,16 +5,22 @@ import java.util.List;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Cache;
 import com.onenow.database.EventRT;
+import com.onenow.database.Orchestrator;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 
 public class MarketPrice {
 
-	Cache cache;
+	Cache cache; 		// just storage
 	
-	public MarketPrice() {
-		setCache(new Cache());
+	InitMarket initMarket;
+	Orchestrator orchestrator;
+	
+	public MarketPrice(InitMarket initMarket) {
+		setInitMarket(initMarket);
+		setCache(new Cache(this));
+		setOrchestrator( new Orchestrator(this) );
 	}
 	
 	// WRITE REAL-TIME 
@@ -60,20 +66,20 @@ public class MarketPrice {
 		
 	}
 	
-	public List<Candle> readPrice(	Investment inv, String dataType, 
-			String fromDate, String toDate, String sampling) {
+	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate) {
 		
-		return getCache().readPrice(inv, dataType, fromDate, toDate, sampling);
+		return getCache().readPrice(inv, dataType, sampling, fromDate, toDate);
 	}
 
 
 	// READ CHART
-	public Chart getChart(Investment inv, String dataType, 
-			String fromDate, String toDate, String sampling) {
+	public Chart getChart(	Investment inv, String dataType, String sampling,
+							String fromDate, String toDate) {
 		
 		Chart chart = new Chart();
 		
-		chart = getCache().readChart(inv, dataType, fromDate, toDate, sampling);
+		chart = getCache().readChart(inv, dataType, sampling, fromDate, toDate);
 		//		System.out.println("READ CHART " + chart);
 		
 		return chart;
@@ -98,6 +104,22 @@ public class MarketPrice {
 
 	public void setCache(Cache cache) {
 		this.cache = cache;
+	}
+
+	public InitMarket getInitMarket() {
+		return initMarket;
+	}
+
+	public void setInitMarket(InitMarket initMarket) {
+		this.initMarket = initMarket;
+	}
+
+	public Orchestrator getOrchestrator() {
+		return orchestrator;
+	}
+
+	public void setOrchestrator(Orchestrator orchestrator) {
+		this.orchestrator = orchestrator;
 	}
 	
 }

@@ -8,12 +8,18 @@ import com.onenow.research.Candle;
 
 public class Ring {
 	
-	Orchestrator orch = new Orchestrator();
 	TSDB TSDB;	
+	Orchestrator 							orchestrator; 	
 
 	public Ring() {
-		setTSDB(new TSDB());
+		
 	}
+
+	public Ring(Orchestrator orch) {
+		setTSDB(new TSDB());
+		setOrchestrator(orch);
+	}
+	
 	
 	// WRITE
 	public void writeEventRT(EventRT event) {
@@ -26,19 +32,19 @@ public class Ring {
 		int size = event.getSize();
 
 		// TODO: INSERT RING AND EVENTS HERE.  Write to different rings instead (orchestrator, investor...)
-		getOrch().writePrice(time, inv, dataType, price);	
-		getOrch().writeSize(time, inv, dataType, size);		
+		getOrchestrator().writePrice(time, inv, dataType, price);	
+		getOrchestrator().writeSize(time, inv, dataType, size);		
 	}
 	
 	// READ
-	public List<Candle> readPrice(	Investment inv, String dataType, 
-									String fromDate, String toDate, String sampling) {
+	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate) {
 
 		//		System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
 		
 		List<Candle> candles = new ArrayList<Candle>();
 		try {
-			candles = getTSDB().readPriceFromDB(inv, dataType, fromDate, toDate, sampling);
+			candles = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
 		} catch (Exception e) {
 						e.printStackTrace();
 		}
@@ -50,15 +56,15 @@ public class Ring {
 
 	}
 
-	public List<Integer> readSize(	Investment inv, String dataType, 
-									String fromDate, String toDate, String sampling) {
+	public List<Integer> readSize(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate) {
 
 		//		System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		
 		try {
-			sizes = getTSDB().readSizeFromDB(inv, dataType, fromDate, toDate, sampling);
+			sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
 		} catch (Exception e) {
 			//			e.printStackTrace();
 		}
@@ -79,7 +85,7 @@ public class Ring {
 //		Double price = event.getPrice();
 //
 //		// TODO: INSERT RING AND EVENTS HERE.  Write to different rings instead (orchestrator, investor...)
-//		getOrch().writePrice(time, inv, dataType, price);	// write
+//		getOrchestrator().writePrice(time, inv, dataType, price);	// write
 //	}
 //
 //	public List<Candle> readPrice(	Investment inv, String dataType, 
@@ -95,7 +101,7 @@ public class Ring {
 //		Integer size = event.getSize();
 //		
 //		// TODO: INSERT RING AND EVENTS HERE.  Write to different rings instead (orchestrator, investor...)
-//		getOrch().writeSize(time, inv, dataType, size);		// write
+//		getOrchestrator().writeSize(time, inv, dataType, size);		// write
 //	}
 //	
 //	public List<Integer> readSize(	Investment inv, String dataType, 
@@ -107,14 +113,6 @@ public class Ring {
 
 
 	// SET GET
-	public Orchestrator getOrch() {
-		return orch;
-	}
-
-	public void setOrch(Orchestrator orch) {
-		this.orch = orch;
-	}
-
 	public TSDB getTSDB() {
 		return TSDB;
 	}
@@ -122,5 +120,14 @@ public class Ring {
 	public void setTSDB(TSDB dB) {
 		TSDB = dB;
 	}
+
+	public Orchestrator getOrchestrator() {
+		return orchestrator;
+	}
+
+	public void setOrchestrator(Orchestrator orchestrator) {
+		this.orchestrator = orchestrator;
+	}
+
 	
 }

@@ -1,16 +1,29 @@
 package com.onenow.database;
 
+import com.onenow.data.Chartist;
+import com.onenow.data.InitMarket;
+import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 
 public class Orchestrator {
-	
-	TSDB TSDB = new TSDB();
+
 	Lookup lookup;
+	TSDB TSDB = new TSDB();
+	
+	MarketPrice marketPrice;
+	Cache cache;
+
 
 	public Orchestrator() {
 		
 	}
-	
+
+	public Orchestrator(MarketPrice marketPrice) {
+		setMarketPrice(marketPrice);
+		setCache(getMarketPrice().getCache());
+		setTSDB(new TSDB());
+	}
+
 	// SIZE	
 	public void writeSize(Long time, Investment inv, String dataType, Integer size) {
 		
@@ -65,6 +78,22 @@ public class Orchestrator {
 
 	public void setTSDB(TSDB tSDB) {
 		TSDB = tSDB;
+	}
+
+	public Cache getCache() {
+		return cache;
+	}
+
+	public void setCache(Cache cache) {
+		this.cache = cache;
+	}
+
+	public MarketPrice getMarketPrice() {
+		return marketPrice;
+	}
+
+	public void setMarketPrice(MarketPrice marketPrice) {
+		this.marketPrice = marketPrice;
 	}
 
 }

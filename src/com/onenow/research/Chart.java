@@ -62,6 +62,15 @@ public class Chart {
 		return s;
 	}
 	
+	public Double getLastPrice() {
+		Double price = 0.0;
+		
+		List<Candle> candles = getPrices();
+		Candle last = candles.get(candles.size()-1);
+		price = last.getClosePrice();
+		
+		return price;
+	}
 	
 	// PRIVATE
 
