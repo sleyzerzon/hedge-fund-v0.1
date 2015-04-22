@@ -64,7 +64,7 @@ public List<Candle> readPriceFromDB(	Investment inv, String dataType, String sam
 		
 		String name = getLookup().getInvestmentKey(inv, dataType);
 
-		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, fromDate, toDate, sampling);
+		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, sampling, fromDate, toDate);
 
 		candles = priceSeriesToCandles(series); 
 		
@@ -148,8 +148,8 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-public List<Integer> readSizeFromDB(	Investment inv, String dataType, 
-		String fromDate, String toDate, String sampling) {
+public List<Integer> readSizeFromDB(	Investment inv, String dataType, String sampling,
+										String fromDate, String toDate) {
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	

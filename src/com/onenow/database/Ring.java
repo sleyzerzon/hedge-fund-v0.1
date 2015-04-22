@@ -36,44 +36,7 @@ public class Ring {
 		getOrchestrator().writeSize(time, inv, dataType, size);		
 	}
 	
-	// READ
-	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
-									String fromDate, String toDate) {
 
-		//		System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
-		
-		List<Candle> candles = new ArrayList<Candle>();
-		try {
-			candles = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
-		} catch (Exception e) {
-						e.printStackTrace();
-		}
-		
-//		System.out.println("PRICE CANDLES " + candles.toString());
-		
-		// convert to callback from event
-		return candles;
-
-	}
-
-	public List<Integer> readSize(	Investment inv, String dataType, String sampling, 
-									String fromDate, String toDate) {
-
-		//		System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + fromDate + " " + toDate + " " + sampling);
-		
-		List<Integer> sizes = new ArrayList<Integer>();
-		
-		try {
-			sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
-		} catch (Exception e) {
-			//			e.printStackTrace();
-		}
-		
-		//		System.out.println("SIZES " + sizes.toString());
-		
-		// convert to callback from event
-		return sizes;
-	}
 
 
 	

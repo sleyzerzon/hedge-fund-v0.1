@@ -97,7 +97,7 @@ public class Cache {
 	
 	// READ CHARTS
 	/**
-	 * Creates a chart from size and price information from the ring/database
+	 * One-off chart read creates a chart from size and price information from the memory/database
 	 * @param inv
 	 * @param dataType
 	 * @param fromDate
@@ -112,25 +112,22 @@ public class Cache {
 		
 		Chart chart = getCharts().get(key);
 		
-		// MISS
+		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
+			
 			chart = new Chart();
-		}
-		
-//		if( chart == null ) { // MISS
-//
-////			System.out.println("CHART MISS");
-//			
-//			// TODO IMPORTANT get from cache, and if not available get from DB
-//			List<Candle> prices = getRing().readPrice(inv, dataType, sampling, fromDate, toDate);
-//			List<Integer> sizes = getRing().readSize(inv, dataType, sampling, fromDate, toDate);
-//			chart.setPrices(prices);
-//			chart.setSizes(sizes);
-//
-//			// keep last in memory
-//			getCharts().put(key, chart);
-//
-//		} 
+			System.out.println("CHART MISS: " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
+			
+			// TODO IMPORTANT get from cache, and if not available get from DB
+			List<Candle> prices = getMarketPrice().getOrchestrator().readPrice(inv, dataType, sampling, fromDate, toDate);
+			List<Integer> sizes = getMarketPrice().getOrchestrator().readSize(inv, dataType, sampling, fromDate, toDate);
+			chart.setPrices(prices);
+			chart.setSizes(sizes);
+
+			// keep last in memory
+			getCharts().put(key, chart);
+
+		} 
 		
 		return chart;
 	}				

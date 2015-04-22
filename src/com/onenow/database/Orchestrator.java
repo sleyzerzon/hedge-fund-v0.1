@@ -1,14 +1,18 @@
 package com.onenow.database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.onenow.data.Chartist;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
+import com.onenow.research.Candle;
 
 public class Orchestrator {
 
 	Lookup lookup;
-	TSDB TSDB = new TSDB();
+	TSDB TSDB;
 	
 	MarketPrice marketPrice;
 	Cache cache;
@@ -30,6 +34,46 @@ public class Orchestrator {
 		getTSDB().writeSize(time, inv, dataType, size);		// write
 		// TODO: SNS
 	}
+	
+	// READ
+	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate) {
+
+		System.out.println("READ PRICE " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
+		
+		List<Candle> candles = new ArrayList<Candle>();
+		try {
+			candles = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+//		System.out.println("PRICE CANDLES " + candles.toString());
+		
+		// convert to callback from event
+		return candles;
+
+	}
+
+	public List<Integer> readSize(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate) {
+
+		System.out.println("READ SIZE " + inv.toString() + " " + dataType + " " + sampling + " " + fromDate + " " + toDate);
+		
+		List<Integer> sizes = new ArrayList<Integer>();
+		
+		try {
+			sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//		System.out.println("SIZES " + sizes.toString());
+		
+		// convert to callback from event
+		return sizes;
+	}
+	
 	
 	// TODO: READ! BUT WHY RETURN SERIES???
 //	public List<Serie> readSize(	Investment inv, String dataType,
