@@ -13,27 +13,21 @@ import com.onenow.util.ParseDate;
 
 public class Cache {
 	
-	MarketPrice								marketPrice;
-	Ring 									ring;			// fast stores critical path data
-	
+	TSDB 									TSDB;			// database
+
 	Lookup 									lookup;			// key
 	
 	HashMap<String, EventRT>				lastEventRT; 	// last set of price/size/etc
 	HashMap<String, Chart>					charts;			// price history in chart format
 	
-	
 	ParseDate	parser = new ParseDate();
 	
 	public Cache() {
-		
-	}
-	
-	public Cache(MarketPrice marketPrice) {
-		setMarketPrice(marketPrice);
-		setRing(new Ring(getMarketPrice().getOrchestrator()));
 		setLookup(new Lookup());
 		setLastEventRT(new HashMap<String, EventRT>());
 		setCharts(new HashMap<String, Chart>());
+		setTSDB(new TSDB());
+
 	}
 	
 	
@@ -51,8 +45,26 @@ public class Cache {
 		}
 		
 		// CRITICAL PATH: fast write to ring
-		getRing().writeEventRT(event);
+		writeEventToRing(event);
 	}
+		
+	public void writeEventToRing(EventRT event) {
+
+		Long time = event.getTime(); 
+		Investment inv = event.getInv(); 
+		String dataType = event.getDataType(); 
+
+		Double price = event.getPrice();
+		int size = event.getSize();
+
+		// TODO: INSERT RING AND EVENTS HERE.  Write to different rings instead (orchestrator, investor...)
+		getTSDB().writePrice(time, inv, dataType, price);	// write
+		// TODO: SQS/SNS ORCHESTRATION
+		getTSDB().writeSize(time, inv, dataType, size);		// write
+		// TODO: SQS/SNS ORCHESTRATION
+
+	}
+
 	
 	// READ PRICE
 	/**
@@ -63,6 +75,7 @@ public class Cache {
 	 */
 	public double readPrice(Investment inv, String dataType) {
 		
+		// HIT
 		String key = getLookup().getInvestmentKey(inv, dataType);
 		Double price = getLastEventRT().get(key).getPrice();  // HIT
 	
@@ -106,6 +119,7 @@ public class Cache {
 	public Chart readChart(	Investment inv, String dataType, String sampling, 
 							String fromDate, String toDate) {
 
+		// HIT
 		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
 		Chart chart = getCharts().get(key);
 		
@@ -115,19 +129,29 @@ public class Cache {
 			chart = new Chart();
 			
 			// TODO IMPORTANT get from cache, and if not available get from DB
-			List<Candle> prices = getMarketPrice().getOrchestrator().readPrice(inv, dataType, sampling, fromDate, toDate);
-			List<Integer> sizes = getMarketPrice().getOrchestrator().readSize(inv, dataType, sampling, fromDate, toDate);
-			chart.setPrices(prices);
-			chart.setSizes(sizes);
+			try{
+				List<Candle> prices = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
+				List<Integer> sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
+				
+				chart.setPrices(prices);
+				chart.setSizes(sizes);
 
-			// keep last in memory
-			getCharts().put(key, chart);
+				// keep last in memory
+				getCharts().put(key, chart);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		} 
 		
 		return chart;
 	}				
 
+	// Pre-fetch charts
+	public void prefetchCharts() {
+		
+	}
 	
 	// TEST
 	
@@ -148,14 +172,6 @@ public class Cache {
 
 	public void setLookup(Lookup lookup) {
 		this.lookup = lookup;
-	}
-
-	public Ring getRing() {
-		return ring;
-	}
-
-	public void setRing(Ring ring) {
-		this.ring = ring;
 	}
 
 	public HashMap<String, EventRT> getLastEventRT() {
@@ -186,12 +202,12 @@ public class Cache {
 		this.parser = parser;
 	}
 
-	public MarketPrice getMarketPrice() {
-		return marketPrice;
+	public TSDB getTSDB() {
+		return TSDB;
 	}
 
-	public void setMarketPrice(MarketPrice marketPrice) {
-		this.marketPrice = marketPrice;
+	public void setTSDB(TSDB tSDB) {
+		TSDB = tSDB;
 	}
 
 

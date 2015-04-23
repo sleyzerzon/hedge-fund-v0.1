@@ -5,7 +5,6 @@ import java.util.List;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Cache;
 import com.onenow.database.EventRT;
-import com.onenow.database.Orchestrator;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
@@ -16,12 +15,10 @@ public class MarketPrice {
 	Cache cache; 		// just storage
 	
 	Portfolio portfolio;
-	Orchestrator orchestrator;
 	
 	public MarketPrice(Portfolio marketPortfolio) {
 		setPortfolio(marketPortfolio);
-		setCache(new Cache(this));
-		setOrchestrator( new Orchestrator(this) );
+		setCache(new Cache());
 	}
 	
 	// WRITE REAL-TIME 
@@ -105,14 +102,6 @@ public class MarketPrice {
 
 	public void setCache(Cache cache) {
 		this.cache = cache;
-	}
-
-	public Orchestrator getOrchestrator() {
-		return orchestrator;
-	}
-
-	public void setOrchestrator(Orchestrator orchestrator) {
-		this.orchestrator = orchestrator;
 	}
 
 	public Portfolio getPortfolio() {
