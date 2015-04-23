@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.MarketPrice;
+import com.onenow.data.TradingRate;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -13,14 +13,15 @@ import com.onenow.util.ParseDate;
 
 public class Cache {
 	
-	TSDB 									TSDB;			// database
+	private TSDB 									TSDB;			// database
 
-	Lookup 									lookup;			// key
+	private Lookup 									lookup;			// key
 	
-	HashMap<String, EventRT>				lastEventRT; 	// last set of price/size/etc
-	HashMap<String, Chart>					charts;			// price history in chart format
+	private HashMap<String, EventRT>				lastEventRT; 	// last set of price/size/etc
+	private HashMap<String, Chart>					charts;			// price history in chart format
 	
-	ParseDate	parser = new ParseDate();
+	private ParseDate	parser = new ParseDate();
+
 	
 	public Cache() {
 		setLookup(new Lookup());
@@ -148,10 +149,6 @@ public class Cache {
 		return chart;
 	}				
 
-	// Pre-fetch charts
-	public void prefetchCharts() {
-		
-	}
 	
 	// TEST
 	
@@ -209,6 +206,5 @@ public class Cache {
 	public void setTSDB(TSDB tSDB) {
 		TSDB = tSDB;
 	}
-
 
 }

@@ -12,14 +12,28 @@ import com.onenow.research.Chart;
 
 public class MarketPrice {
 
-	Cache cache; 		// just storage
+	private Cache cache; 		// just storage
 	
-	Portfolio portfolio;
+	private Portfolio portfolio;
+
 	
 	public MarketPrice(Portfolio marketPortfolio) {
 		setPortfolio(marketPortfolio);
 		setCache(new Cache());
+		
+		prefetchCharts();
 	}
+	
+	// PRE-FETCH CHARTS
+	public void prefetchCharts() {
+
+		PreFetch R1 = new PreFetch("pre-fetch", getPortfolio(), getCache());
+	    R1.run();
+
+	}
+	
+
+	
 	
 	// WRITE REAL-TIME 
 	public void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
