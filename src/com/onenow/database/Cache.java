@@ -77,7 +77,8 @@ public class Cache {
 		
 		// update the charts
 		for(String sampling:getTradingRate().getTradingRate("")) {
-			readChart(inv, dataType, sampling, "2015-02-21", "2015-02-28");
+			// use miss function to force update of charts
+			readThroughChartOnMiss(inv, dataType, sampling, "2015-02-21", "2015-04-24");
 		}
 
 	}
@@ -146,29 +147,39 @@ public class Cache {
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
 			s = "x cache MISS";
-			
 			chart = new Chart();
-			
-			// TODO IMPORTANT get from cache, and if not available get from DB
-			try{
-				List<Candle> prices = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
-				List<Integer> sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
-				
-				chart.setPrices(prices);
-				chart.setSizes(sizes);
-
-				// keep last in memory (with data)
-				if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) {
-					getCharts().put(key, chart);
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			chart = readThroughChartOnMiss(inv, dataType, sampling, fromDate, toDate);
 
 		} 
 		
-		System.out.println(s + "\n" + "IN MEM " + "\n" + chart.toString());		
+//		System.out.println(s + "\n" + "IN MEM " + "\n" + chart.toString());		
+		return chart;
+	}
+
+
+	private Chart readThroughChartOnMiss(Investment inv, String dataType,
+			String sampling, String fromDate, String toDate) {
+		
+		Chart chart = new Chart();
+		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
+		
+		try{
+			List<Candle> prices = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
+			List<Integer> sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
+			
+			chart.setPrices(prices);
+			chart.setSizes(sizes);
+
+			// keep last in memory (with data)
+			if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) {
+				getCharts().put(key, chart);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("x read through " + chart.toString());
 		return chart;
 	}				
 

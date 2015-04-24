@@ -46,7 +46,7 @@ public class Investment {
 	// PRINT:
 	public String toString() {
 		String s = "";
-		s = getUnder().toString() + " " + getInvType();
+		s = getUnder().toString() + "-" + getInvType();
 		return s;
 	}
 	
