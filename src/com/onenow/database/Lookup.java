@@ -70,6 +70,7 @@ public class Lookup {
 		s = s + dataType + "-";
 		s = s + sampling + "-";
 		s = s + fromDate + "-" + toDate;
+		System.out.println("key " + s);
 		return s;
 	}
 	

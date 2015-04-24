@@ -107,9 +107,9 @@ public class PortfolioFactory {
 		
 		if(!chart.getSizes().isEmpty()) {
 			inv.getCharts().put(sampling, chart); // sampling is key	
-			System.out.println("\n" + "+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString() + "\n");			
+			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString() + "\n\n");			
 		} else {
-			System.out.println("- chart " + inv.toString() + " " + sampling);
+			System.out.println("- chart " + inv.toString() + " " + sampling  + "\n\n");
 		}		
 	}
 
