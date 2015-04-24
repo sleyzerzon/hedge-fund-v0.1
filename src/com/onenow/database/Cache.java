@@ -135,13 +135,17 @@ public class Cache {
 	 */
 	public Chart readChart(	Investment inv, String dataType, String sampling, 
 							String fromDate, String toDate) {
+		
+		String s = "";
 
-		// HIT
+		// HIT?
 		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
 		Chart chart = getCharts().get(key);
-				
+		s = "x cache HIT ";
+		
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
+			s = "x cache MISS";
 			
 			chart = new Chart();
 			
@@ -153,8 +157,10 @@ public class Cache {
 				chart.setPrices(prices);
 				chart.setSizes(sizes);
 
-				// keep last in memory
-				getCharts().put(key, chart);
+				// keep last in memory (with data)
+				if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) {
+					getCharts().put(key, chart);
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -162,7 +168,7 @@ public class Cache {
 
 		} 
 		
-		System.out.println("NOW IN MEM: " + "\n" + chart.toString());		
+		System.out.println(s + "\n" + "IN MEM " + "\n" + chart.toString());		
 		return chart;
 	}				
 

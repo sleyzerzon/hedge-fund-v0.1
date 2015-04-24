@@ -60,15 +60,15 @@ public class PortfolioFactory {
 			EntranceExitDecisioning decisioning = new EntranceExitDecisioning(getIndex());
 
 			if(decisioning.EnterNowAtBottom()) {
-//				goLong(getIndex());
+				// goLong(getIndex());
 			}
 
 			if(decisioning.EnterNowAtTop()) {
-//				goShort(getIndex());
+				// goShort(getIndex());
 			}
 			
 			System.out.println(",,,,,");
-			Thread.sleep(50000);
+			// Thread.sleep(50000);
 		}
 	}
 	
