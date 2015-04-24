@@ -22,13 +22,14 @@ public class Cache {
 	
 	private ParseDate	parser = new ParseDate();
 
+	private TradingRate tradingRate;
 	
 	public Cache() {
 		setLookup(new Lookup());
 		setLastEventRT(new HashMap<String, EventRT>());
 		setCharts(new HashMap<String, Chart>());
 		setTSDB(new TSDB());
-
+		setTradingRate(new TradingRate());
 	}
 	
 	
@@ -38,10 +39,20 @@ public class Cache {
 	// REAL-TIME from broker
 	public void writeEventRT(EventRT event) {
 
+		boolean writeToMem = false;
+		
 		String key = getLookup().getInvestmentKey(event.getInv(), event.getDataType());
-
+		
 		// keep last in memory
-		if( event.getTime() > getLastEventRT().get(key).getTime() ) {
+		if(getLastEventRT().get(key) == null) { 	// never written before
+			writeToMem = true;
+		} else {		
+			if( event.getTime() > getLastEventRT().get(key).getTime() ) {
+				writeToMem = true;
+			}
+		}
+		
+		if(writeToMem) {
 			getLastEventRT().put(key, event);
 		}
 		
@@ -58,11 +69,16 @@ public class Cache {
 		Double price = event.getPrice();
 		int size = event.getSize();
 
-		// TODO: INSERT RING AND EVENTS HERE.  Write to different rings instead (orchestrator, investor...)
+		// TODO: INSERT RING
+		// write
 		getTSDB().writePrice(time, inv, dataType, price);	// write
-		// TODO: SQS/SNS ORCHESTRATION
 		getTSDB().writeSize(time, inv, dataType, size);		// write
 		// TODO: SQS/SNS ORCHESTRATION
+		
+		// update the charts
+		for(String sampling:getTradingRate().getTradingRate("")) {
+			readChart(inv, dataType, sampling, "2015-02-21", "2015-02-28");
+		}
 
 	}
 
@@ -123,7 +139,7 @@ public class Cache {
 		// HIT
 		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
 		Chart chart = getCharts().get(key);
-		
+				
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
 			
@@ -146,6 +162,7 @@ public class Cache {
 
 		} 
 		
+		System.out.println("NOW IN MEM: " + "\n" + chart.toString());		
 		return chart;
 	}				
 
@@ -205,6 +222,16 @@ public class Cache {
 
 	public void setTSDB(TSDB tSDB) {
 		TSDB = tSDB;
+	}
+
+
+	public TradingRate getTradingRate() {
+		return tradingRate;
+	}
+
+
+	public void setTradingRate(TradingRate tradingRate) {
+		this.tradingRate = tradingRate;
 	}
 
 }

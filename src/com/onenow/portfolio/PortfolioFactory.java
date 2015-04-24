@@ -103,7 +103,7 @@ public class PortfolioFactory {
 	private void getInvestmentChart(Investment inv, String sampling, String fromDate, String toDate) {
 
 		Chart chart = new Chart();
-		chart = getMarketPrice().getChart(inv, TradeType.TRADED.toString(), sampling, fromDate, toDate);
+		chart = getMarketPrice().readChart(inv, TradeType.TRADED.toString(), sampling, fromDate, toDate);
 		
 		if(!chart.getSizes().isEmpty()) {
 			inv.getCharts().put(sampling, chart); // sampling is key	

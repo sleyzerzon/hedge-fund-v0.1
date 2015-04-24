@@ -16,23 +16,18 @@ public class MarketPrice {
 	
 	private Portfolio portfolio;
 
+	private TradingRate tradingRate;
+
+	
+	public MarketPrice() {
+		
+	}
 	
 	public MarketPrice(Portfolio marketPortfolio) {
 		setPortfolio(marketPortfolio);
 		setCache(new Cache());
-		
-		prefetchCharts();
+		setTradingRate(new TradingRate());
 	}
-	
-	// PRE-FETCH CHARTS
-	public void prefetchCharts() {
-
-		PreFetch R1 = new PreFetch("pre-fetch", getPortfolio(), getCache());
-	    R1.run();
-
-	}
-	
-
 	
 	
 	// WRITE REAL-TIME 
@@ -86,13 +81,13 @@ public class MarketPrice {
 
 
 	// READ CHART
-	public Chart getChart(	Investment inv, String dataType, String sampling,
+	public Chart readChart(	Investment inv, String dataType, String sampling,
 							String fromDate, String toDate) {
 		
 		Chart chart = new Chart();
 		
 		chart = getCache().readChart(inv, dataType, sampling, fromDate, toDate);
-		//		System.out.println("READ CHART " + chart);
+		System.out.println("READ CHART " + "\n" + chart);
 		
 		return chart;
 	}		
@@ -124,6 +119,14 @@ public class MarketPrice {
 
 	public void setPortfolio(Portfolio portfolio) {
 		this.portfolio = portfolio;
+	}
+
+	public TradingRate getTradingRate() {
+		return tradingRate;
+	}
+
+	public void setTradingRate(TradingRate tradingRate) {
+		this.tradingRate = tradingRate;
 	}
 	
 }

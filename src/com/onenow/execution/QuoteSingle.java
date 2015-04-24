@@ -123,7 +123,7 @@ public class QuoteSingle extends TopMktDataAdapter {
 				System.out.println("AUCTION_VOLUME " + value); // subscribe to
 				break;
 			case RT_VOLUME:
-				System.out.println("RT_VOLUME " + value); 
+				System.out.println("\n" + "RT_VOLUME " + value); 
 				parseAndWriteRealTime(getInvestment(), value);
 				// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
 				// InvestmentStock inv=new InvestmentStock(new Underlying("SPX"));

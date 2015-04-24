@@ -13,11 +13,13 @@ import com.onenow.constant.DBname;
 import com.onenow.constant.SamplingRate;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
+import com.onenow.util.ParseDate;
 
 public class TSDB {
 	
 	private InfluxDB DB;
 	private Lookup lookup;
+	private ParseDate parseDate;
 	
 	/**
 	 * Default constructor connects to database
@@ -27,6 +29,7 @@ public class TSDB {
 		dbConnect();
 //		dbCreate();
 		
+		setParseDate(new ParseDate());
 	}
 
 // INIT
@@ -53,8 +56,12 @@ public void writePrice(Long time, Investment inv, String dataType, Double price)
 	.columns("time", "price")
 	.values(time, price)
 	.build();
-	System.out.println("WRITE " + DBname.PRICE.toString() + " " + serie + "\n");
-	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+	System.out.println("WRITE " + DBname.PRICE.toString() + " " + serie);
+	try {
+		getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 }
 
 public List<Candle> readPriceFromDB(	Investment inv, String dataType, String sampling,
@@ -145,7 +152,11 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 	.values(time, size)
 	.build();
 	System.out.println("WRITE " + DBname.SIZE.toString() + " " + serie);
-	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+	try {
+		getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 }
 
 public List<Integer> readSizeFromDB(	Investment inv, String dataType, String sampling,
@@ -288,6 +299,14 @@ private String getDBSamplingString(String samplingRate) {
 	
 	private void setLookup(Lookup lookup) {
 		this.lookup = lookup;
+	}
+
+	public ParseDate getParseDate() {
+		return parseDate;
+	}
+
+	public void setParseDate(ParseDate parseDate) {
+		this.parseDate = parseDate;
 	}
 	
 
