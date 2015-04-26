@@ -22,7 +22,9 @@ public class BrokerMain {
 			e.printStackTrace();
 		}
 		
-		getIB().getQuotes();
+		getIB().getLiveQuotes();
+		
+		System.out.println("AFTER QUOTES");
 		
 		// set the overall broker: for when there are multiple brokers
 		try {

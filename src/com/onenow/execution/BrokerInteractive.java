@@ -79,6 +79,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	}
 	
+	// INIT
 	/**
 	 * Connect to gateway at set IP and port
 	 */
@@ -90,28 +91,42 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		
 	}
 
+	// GET QUOTES
 	/**
 	 * For every currently-traded investment: request quotes
 	 * Quotes are in response to specific request, or real-time notifications
 	 */
-	public void getQuotes() {
+	public void getLiveQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) {		// real-time
-			System.out.println("\n> " + "getting quote for live investment " + inv.toString());
+			System.out.println("\n> " + "getting quote for live investment: " + inv.toString());
 			
-			QuoteTable quote = new QuoteTable(getController(), getMarketPrices(), inv);
+			QuoteTable quoteLive = new QuoteTable(getController(), getMarketPrices(), inv);
 			
 		}
 	}
+
+	public QuoteBar readHistoricalQuotes(String end, Investment inv) {
+
+		System.out.println("\n> " + "getting historical quote for investment: " + inv.toString());
+		Contract contract = getContractFactory().getContract(inv);
+		QuoteBar quoteHistory = new QuoteBar();
+		
+		getController().reqHistoricalData(	contract, 
+											end, 1, DurationUnit.DAY, BarSize._1_hour, 
+											WhatToShow.TRADES, false,
+											quoteHistory);
+		return quoteHistory;
+	}
 	
-	
+	// CHANNELS
 	/**
 	 * Get price channel price history
 	 */
 	public void getChannelPrices() throws InterruptedException {
 		
 		InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
-		Contract index = getContractFactory().getIndexToQuote(indexInv);
+		Contract index = getContractFactory().getContract(indexInv);
 		getContractFactory().addChannel(getChannels(), index);
 		
 //		Contract index = contractFactory.getIndexToQuote("RUT");
@@ -125,19 +140,18 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 			
 			for(int j=0; j<endList.size(); j++) {
 				String end = endList.get(j);
-											
-				QuoteBar quoteHistory = new QuoteBar(channel);
-				System.out.println("\n..." + "getting quote for " + indexInv.toString());
-				getController().reqHistoricalData(	channel.getContract(), 
-													end, 1, DurationUnit.DAY, BarSize._1_hour, 
-													WhatToShow.TRADES, false,
-													quoteHistory);
+
+				System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
+				
+				QuoteBar quoteHistory = readHistoricalQuotes(end, channel.getInvestment());
+				
 			    Thread.sleep(12000);
 				System.out.println("...");
 			}
 			System.out.println(channel.toString());
 		}
 	}
+	
 	private List<String> getEndList(Channel channel) {
 		List<String> list = new ArrayList<String>();
 		String date="";

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.TradingRate;
+import com.onenow.data.Sampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -22,14 +22,14 @@ public class Cache {
 	
 	private ParseDate	parser = new ParseDate();
 
-	private TradingRate tradingRate;
+	private Sampling sampling;
 	
 	public Cache() {
 		setLookup(new Lookup());
 		setLastEventRT(new HashMap<String, EventRT>());
 		setCharts(new HashMap<String, Chart>());
 		setTSDB(new TSDB());
-		setTradingRate(new TradingRate());
+		setSampling(new Sampling());
 	}
 	
 	
@@ -76,9 +76,9 @@ public class Cache {
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
-		for(String sampling:getTradingRate().getTradingRate("")) {
+		for(String sampling:getSampling().getSamplingList("")) {
 			// use miss function to force update of charts
-			readThroughChartOnMiss(inv, dataType, sampling, "2015-02-21", "2015-04-24");
+			readThroughChartOnMissFromL1(inv, dataType, sampling, "2015-02-21", "2015-04-24");
 		}
 
 	}
@@ -120,7 +120,7 @@ public class Cache {
 	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
 									String fromDate, String toDate) {
 
-		Chart chart = readChart(inv, dataType, sampling, fromDate, toDate);	
+		Chart chart = readChartFromL0(inv, dataType, sampling, fromDate, toDate);	
 		return chart.getPrices();
 	}
 	
@@ -134,12 +134,12 @@ public class Cache {
 	 * @param sampling
 	 * @return
 	 */
-	public Chart readChart(	Investment inv, String dataType, String sampling, 
+	public Chart readChartFromL0(	Investment inv, String dataType, String sampling, 
 							String fromDate, String toDate) {
 		
 		String s = "";
 
-		// HIT?
+		// HIT? Memory is L0
 		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
 		Chart chart = getCharts().get(key);
 		s = "x cache HIT ";
@@ -148,7 +148,7 @@ public class Cache {
 		if(chart==null) {
 			s = "x cache MISS";
 			chart = new Chart();
-			chart = readThroughChartOnMiss(inv, dataType, sampling, fromDate, toDate);
+			chart = readThroughChartOnMissFromL1(inv, dataType, sampling, fromDate, toDate);
 
 		} 
 		
@@ -157,29 +157,34 @@ public class Cache {
 	}
 
 
-	private Chart readThroughChartOnMiss(Investment inv, String dataType,
+	private Chart readThroughChartOnMissFromL1(Investment inv, String dataType,
 			String sampling, String fromDate, String toDate) {
 		
 		Chart chart = new Chart();
 		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
 		
-		try{
+//		try{
+			// database is L1
 			List<Candle> prices = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
 			List<Integer> sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
 			
 			chart.setPrices(prices);
 			chart.setSizes(sizes);
 
-			// keep last in memory (with data)
-			if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) {
+			// if L1 is empty, get data from L2 (3rd party DB)
+			if(chart.getPrices().size() < 5) {
+				
+			}
+			
+			// keep last in L0 memory (with data)
+			if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) { // TODO: both not empty?
 				getCharts().put(key, chart);
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
-		System.out.println("x read through " + chart.toString());
+		System.out.println("x READ-THROUGH " + "\n" + chart.toString());
 		return chart;
 	}				
 
@@ -242,13 +247,13 @@ public class Cache {
 	}
 
 
-	public TradingRate getTradingRate() {
-		return tradingRate;
+	public Sampling getSampling() {
+		return sampling;
 	}
 
 
-	public void setTradingRate(TradingRate tradingRate) {
-		this.tradingRate = tradingRate;
+	public void setSampling(Sampling sampling) {
+		this.sampling = sampling;
 	}
 
 }

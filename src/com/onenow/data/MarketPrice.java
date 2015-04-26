@@ -86,7 +86,7 @@ public class MarketPrice {
 		
 		Chart chart = new Chart();
 		
-		chart = getCache().readChart(inv, dataType, sampling, fromDate, toDate);
+		chart = getCache().readChartFromL0(inv, dataType, sampling, fromDate, toDate);
 		System.out.println("READ CHART " + "\n" + chart);
 		
 		return chart;

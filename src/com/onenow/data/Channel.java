@@ -8,13 +8,18 @@ import java.util.List;
 
 import com.ib.client.Types.SecType;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ContractFactory;
+import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.util.ParseDate;
 import com.onenow.util.Stats;
 
 public class Channel {
 
+	private Investment investment;
 	private Contract contract;
+	private ContractFactory contractFactory;
+	
 	private HashMap resistanceDayMap = new HashMap();
 	private HashMap supportDayMap = new HashMap();
 	private HashMap recentDayMap = new HashMap();
@@ -41,10 +46,16 @@ public class Channel {
 		
 	}
 	
-	public Channel(Contract contract) {
-		setContract(contract);
-		
+	public Channel(Investment inv) {
+		setInvestment(inv);
+		setContractFactory(new ContractFactory());
+		setContract(getContractFactory().getContract(inv));
 	}
+	
+//	public Channel(Contract contract) {
+//		setContract(contract);
+//		
+//	}
 
 	public void addResistance(String date) {
 		if(!getResistanceDayMap().containsKey(date)) {
@@ -458,6 +469,22 @@ public class Channel {
 
 	private void setContract(Contract contract) {
 		this.contract = contract;
+	}
+
+	public ContractFactory getContractFactory() {
+		return contractFactory;
+	}
+
+	public void setContractFactory(ContractFactory contractFactory) {
+		this.contractFactory = contractFactory;
+	}
+
+	public Investment getInvestment() {
+		return investment;
+	}
+
+	public void setInvestment(Investment investment) {
+		this.investment = investment;
 	}
 
 	

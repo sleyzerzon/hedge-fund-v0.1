@@ -11,6 +11,7 @@ import org.influxdb.dto.Serie;
 
 import com.onenow.constant.DBname;
 import com.onenow.constant.SamplingRate;
+import com.onenow.data.Sampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.util.ParseDate;
@@ -20,6 +21,7 @@ public class TSDB {
 	private InfluxDB DB;
 	private Lookup lookup;
 	private ParseDate parseDate;
+	private Sampling sampling;
 	
 	/**
 	 * Default constructor connects to database
@@ -93,7 +95,7 @@ public List<Serie> queryPrice(String dbName, String serieName, String sampling, 
 						"AND " +
 						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + getDBSamplingString(sampling) + ")";
+						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
 					
 	try {
 //		System.out.println("QUERY " + query);
@@ -188,7 +190,7 @@ public List<Serie> querySize(String dbName, String serieName, String sampling, S
 						"AND " +
 						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + getDBSamplingString(sampling) + ")";
+						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
 					
 	try {
 //		System.out.println("QUERY " + query);
@@ -241,39 +243,6 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 	return sizes;
 }
 
-// CONFIG
-private String getDBSamplingString(String samplingRate) {
-	String dbSamplingRate="";
-	if(samplingRate.equals("SCALPSHORT")) {		//SCALPING 5min, 15min, 60min
-		return "5m";
-	}
-	if(samplingRate.equals("SCALPMEDIUM")) {
-		return "15m";
-	}
-	if(samplingRate.equals("SCALPLONG")) {
-		return "60m";
-	}
-	if(samplingRate.equals("SWINGSHORT")) {		//SWINGING 60min, 240min, daily
-		return "60m";
-	}
-	if(samplingRate.equals("SWINGMEDIUM")) {
-		return "4h";
-	}
-	if(samplingRate.equals("SWINGLONG")) {
-		return "1d";
-	}
-	if(samplingRate.equals("TRENDSHORT")) {		//TREND 4hr, daily, weekly
-		return "4h";
-	}
-	if(samplingRate.equals("TRENDMEDIUM")) {
-		return "1d";
-	}
-	if(samplingRate.equals("TRENDLONG")) {
-		return "1w";
-	}
-	return dbSamplingRate;
-}
-
 
 	// PRIVATE
 
@@ -307,6 +276,14 @@ private String getDBSamplingString(String samplingRate) {
 
 	public void setParseDate(ParseDate parseDate) {
 		this.parseDate = parseDate;
+	}
+
+	public Sampling getSampling() {
+		return sampling;
+	}
+
+	public void setSampling(Sampling sampling) {
+		this.sampling = sampling;
 	}
 	
 

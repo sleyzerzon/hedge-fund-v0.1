@@ -9,6 +9,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
+import com.onenow.data.Sampling;
 import com.onenow.data.TradingRate;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
@@ -27,7 +28,7 @@ public class PortfolioFactory {
 	private static MarketPrice marketPrice;
 	private static Underlying index;
 
-	private TradingRate tradingRate;
+	private Sampling sampling;
 	static List<String> samplingRate = new ArrayList<String>();
 
 	private static BrokerInteractive IB;
@@ -45,7 +46,7 @@ public class PortfolioFactory {
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
 		setMarketPrice(new MarketPrice(getMarketPortfolio()));
 		
-		setTradingRate(new TradingRate());
+		setSampling(new Sampling());
 	}	
 	
 	public void launch() throws InterruptedException {
@@ -93,7 +94,7 @@ public class PortfolioFactory {
 	private void getUptodateInvestmentCharts() {
 		String fromDate = "2015-02-21"; 	// TODO: configurable date
 		String toDate = "2015-02-28";
-		for(String sampling:getTradingRate().getTradingRate("")) {
+		for(String sampling:getSampling().getSamplingList("")) {
 			for(Investment inv:getMarketPortfolio().getInvestments()) {
 				getInvestmentChart(inv, sampling, fromDate, toDate);
 			}
@@ -117,10 +118,10 @@ public class PortfolioFactory {
 	private void analyzeUptodateInvestmentCharts() {
 		System.out.println("\n\n" + "ANALYZING CHARTS");
 		for(Investment inv:getMarketPortfolio().getInvestments()) {
-			for(String trading:getTradingRate().getTradingOptions()) {
+			for(String trading:getSampling().getTradingOptions()) {
 				String analysis = "";
 				analysis = analysis + "=====" + inv.toString() + "=====" + "\n";
-				for(String sampling:getTradingRate().getTradingRate(trading)) { 
+				for(String sampling:getSampling().getSamplingList(trading)) { 
 					analysis = analysis + getInvestmentAnalysis(inv, sampling);
 				}			
 				System.out.println(analysis + "\n");
@@ -199,12 +200,12 @@ public class PortfolioFactory {
 		PortfolioFactory.index = index;
 	}
 
-	public TradingRate getTradingRate() {
-		return tradingRate;
+	public Sampling getSampling() {
+		return sampling;
 	}
 
-	public void setTradingRate(TradingRate tradingRate) {
-		this.tradingRate = tradingRate;
+	public void setSampling(Sampling sampling) {
+		this.sampling = sampling;
 	}
 
 }
