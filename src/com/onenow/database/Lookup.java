@@ -1,5 +1,9 @@
 package com.onenow.database;
 
+import javax.sql.DataSource;
+
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
@@ -22,10 +26,10 @@ public class Lookup {
 	 * @param dataType
 	 * @return
 	 */
-	public String getInvestmentTimedKey(Long time, Investment inv, String dataType) {
+	public String getInvestmentTimedKey(Long time, Investment inv, String dataType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
 		String s="";
 		s = time.toString() + "-";
-		s = s + getInvestmentKey(inv, dataType);
+		s = s + getInvestmentKey(inv, dataType, source, timing);
 		return s;
 	}
 	
@@ -35,18 +39,18 @@ public class Lookup {
 	 * @param dataType
 	 * @return
 	 */
-	public String getInvestmentKey(Investment inv, String dataType) {
+	public String getInvestmentKey(Investment inv, String dataType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
 		Underlying under = inv.getUnder();
-		String lookup = ""; 
-		lookup = under.getTicker() + "-" + inv.getInvType();		
+		String s = ""; 
+		s = under.getTicker() + "-" + inv.getInvType();		
 		if (inv instanceof InvestmentOption) {
 			Double strike = ((InvestmentOption) inv).getStrikePrice();
 			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-			lookup = lookup + "-" + strike + "-" + exp; 
+			s = s + "-" + strike + "-" + exp; 
 		}
-		lookup = lookup + "-" + dataType;
-		
-		return (lookup);
+		s = s + "-" + dataType + "-";
+		s = s + "-" + source.toString() + "-" + timing.toString();
+		return (s);
 	}
 	
 	/**
@@ -64,12 +68,15 @@ public class Lookup {
 	}
 
 	
-	public String getChartKey(Investment inv, String dataType, String sampling, String fromDate, String toDate) {
+	public String getChartKey(	Investment inv, String dataType, String sampling, 
+								String fromDate, String toDate,
+								InvDataSource source, InvDataTiming timing) {
 		String s = "";
 		s = inv.toString() + "-";
 		s = s + dataType + "-";
 		s = s + sampling + "-";
-		s = s + fromDate + "-" + toDate;
+		s = s + fromDate + "-" + toDate + "-";
+		s = s + source.toString() + "-" + timing.toString();
 		System.out.println("key " + s);
 		return s;
 	}

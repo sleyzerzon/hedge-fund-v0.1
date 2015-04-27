@@ -3,6 +3,8 @@ package com.onenow.database;
 import java.util.HashMap;
 import java.util.List;
 
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Sampling;
@@ -41,7 +43,8 @@ public class Cache {
 
 		boolean writeToMem = false;
 		
-		String key = getLookup().getInvestmentKey(event.getInv(), event.getDataType());
+		String key = getLookup().getInvestmentKey(	event.getInv(), event.getDataType(),
+													event.getSource(), event.getTiming());
 		
 		// keep last in memory
 		if(getLastEventRT().get(key) == null) { 	// never written before
@@ -65,20 +68,27 @@ public class Cache {
 		Long time = event.getTime(); 
 		Investment inv = event.getInv(); 
 		String dataType = event.getDataType(); 
+		
+		InvDataSource source = event.getSource();
+		InvDataTiming timing = event.getTiming();
 
 		Double price = event.getPrice();
 		int size = event.getSize();
 
 		// TODO: INSERT RING
 		// write
-		getTSDB().writePrice(time, inv, dataType, price);	// write
-		getTSDB().writeSize(time, inv, dataType, size);		// write
+		getTSDB().writePrice(	time, inv, dataType, price,
+								source, timing);				
+		getTSDB().writeSize(time, inv, dataType, size,			
+								source, timing);		
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
 		for(String sampling:getSampling().getSamplingList("")) {
 			// use miss function to force update of charts
-			readThroughChartOnMissFromL1(inv, dataType, sampling, "2015-02-21", "2015-04-24");
+			readThroughChartOnMissFromL1(	inv, dataType, sampling, 
+											"2015-02-21", "2015-04-24",
+											source, timing);
 		}
 
 	}
@@ -93,9 +103,12 @@ public class Cache {
 	 */
 	public double readPrice(Investment inv, String dataType) {
 		
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.REALTIME;
+		
 		// HIT
-		String key = getLookup().getInvestmentKey(inv, dataType);
-		Double price = getLastEventRT().get(key).getPrice();  // HIT
+		String key = getLookup().getInvestmentKey(inv, dataType, source, timing);
+		Double price = getLastEventRT().get(key).getPrice();  
 	
 		// MISS: fill with the last data from chart until RT vents start to hit
 		if(price==null) {
@@ -120,7 +133,12 @@ public class Cache {
 	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
 									String fromDate, String toDate) {
 
-		Chart chart = readChartFromL0(inv, dataType, sampling, fromDate, toDate);	
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.REALTIME;
+		
+		Chart chart = readChartFromL0(	inv, dataType, sampling, 
+										fromDate, toDate,
+										source, timing);	
 		return chart.getPrices();
 	}
 	
@@ -135,12 +153,14 @@ public class Cache {
 	 * @return
 	 */
 	public Chart readChartFromL0(	Investment inv, String dataType, String sampling, 
-							String fromDate, String toDate) {
+									String fromDate, String toDate,
+									InvDataSource source, InvDataTiming timing) {
 		
 		String s = "";
 
 		// HIT? Memory is L0
-		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
+		String key = getLookup().getChartKey(	inv, dataType, sampling, fromDate, toDate,
+												source, timing);
 		Chart chart = getCharts().get(key);
 		s = "x cache HIT ";
 		
@@ -148,7 +168,8 @@ public class Cache {
 		if(chart==null) {
 			s = "x cache MISS";
 			chart = new Chart();
-			chart = readThroughChartOnMissFromL1(inv, dataType, sampling, fromDate, toDate);
+			chart = readThroughChartOnMissFromL1(	inv, dataType, sampling, fromDate, toDate,
+													source, timing);
 
 		} 
 		
@@ -157,35 +178,45 @@ public class Cache {
 	}
 
 
-	private Chart readThroughChartOnMissFromL1(Investment inv, String dataType,
-			String sampling, String fromDate, String toDate) {
+	private Chart readThroughChartOnMissFromL1(	Investment inv, String dataType, String sampling, 
+												String fromDate, String toDate,
+												InvDataSource source, InvDataTiming timing) {
 		
 		Chart chart = new Chart();
-		String key = getLookup().getChartKey(inv, dataType, sampling, fromDate, toDate);
+		String key = getLookup().getChartKey(	inv, dataType, sampling, fromDate, toDate,
+												source, timing);
 		
-//		try{
+		try{	// needed because TSDB can't throw exceptions: some time series just don't exist or have data 
+			
 			// database is L1
-			List<Candle> prices = getTSDB().readPriceFromDB(inv, dataType, sampling, fromDate, toDate);
-			List<Integer> sizes = getTSDB().readSizeFromDB(inv, dataType, sampling, fromDate, toDate);
+			List<Candle> prices = getTSDB().readPriceFromDB(	inv, dataType, sampling, fromDate, toDate,
+																source, timing);
+			List<Integer> sizes = getTSDB().readSizeFromDB(		inv, dataType, sampling, fromDate, toDate,
+																source, timing);
 			
 			chart.setPrices(prices);
 			chart.setSizes(sizes);
 
 			// if L1 is empty, get data from L2 (3rd party DB)
 			if(chart.getPrices().size() < 5) {
-				
+				augmentL3(chart);
 			}
 			
 			// keep last in L0 memory (with data)
 			if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) { // TODO: both not empty?
 				getCharts().put(key, chart);
 			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println("x READ-THROUGH " + "\n" + chart.toString());
 		return chart;
+	}
+
+
+	private void augmentL3(Chart chart) {
+		System.out.println("Small chart: " + chart.getPrices().size());
 	}				
 
 	

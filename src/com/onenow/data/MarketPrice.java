@@ -2,6 +2,8 @@ package com.onenow.data;
 
 import java.util.List;
 
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Cache;
 import com.onenow.database.EventRT;
@@ -16,7 +18,7 @@ public class MarketPrice {
 	
 	private Portfolio portfolio;
 
-	private TradingRate tradingRate;
+	private Sampling sampling;
 
 	
 	public MarketPrice() {
@@ -26,17 +28,20 @@ public class MarketPrice {
 	public MarketPrice(Portfolio marketPortfolio) {
 		setPortfolio(marketPortfolio);
 		setCache(new Cache());
-		setTradingRate(new TradingRate());
+		setSampling(new Sampling());
 	}
 	
 	
 	// WRITE REAL-TIME 
 	public void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
-								Integer volume, Double VWAP, boolean splitFlag) {
+								Integer volume, Double VWAP, boolean splitFlag,
+								InvDataSource source, InvDataTiming timing) {
 
 		if(lastSize>0) { 
 			
-			EventRT event = new EventRT(timeStamp, inv, TradeType.TRADED.toString(), lastPrice, lastSize);
+			EventRT event = new EventRT(	timeStamp, inv, TradeType.TRADED.toString(), 
+											lastPrice, lastSize,
+											source, timing);
 			getCache().writeEventRT(event);
 			
 			
@@ -82,11 +87,13 @@ public class MarketPrice {
 
 	// READ CHART
 	public Chart readChart(	Investment inv, String dataType, String sampling,
-							String fromDate, String toDate) {
+							String fromDate, String toDate,
+							InvDataSource source, InvDataTiming timing) {
 		
 		Chart chart = new Chart();
 		
-		chart = getCache().readChartFromL0(inv, dataType, sampling, fromDate, toDate);
+		chart = getCache().readChartFromL0(	inv, dataType, sampling, fromDate, toDate,
+											source, timing);
 		System.out.println("READ CHART " + "\n" + chart);
 		
 		return chart;
@@ -121,12 +128,12 @@ public class MarketPrice {
 		this.portfolio = portfolio;
 	}
 
-	public TradingRate getTradingRate() {
-		return tradingRate;
+	public Sampling getSampling() {
+		return sampling;
 	}
 
-	public void setTradingRate(TradingRate tradingRate) {
-		this.tradingRate = tradingRate;
+	public void setSampling(Sampling sampling) {
+		this.sampling = sampling;
 	}
 	
 }

@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
-public enum DataType {
+public enum InvDataType {
 	BIDSIZE, ASKSIZE, VOLUME, LASTTIME, FROZEN, MARKETDEPTH, VWAP, TRADEFLAG
 }

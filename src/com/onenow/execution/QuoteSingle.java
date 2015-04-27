@@ -6,7 +6,9 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
-import com.onenow.constant.DataType;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.InvDataType;
 import com.onenow.constant.TradeType;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
@@ -80,17 +82,17 @@ public class QuoteSingle extends TopMktDataAdapter {
 		switch( tickType) {
 			case BID_SIZE:
 				m_bidSize = size;
-				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_bidSize, DataType.BIDSIZE.toString());
+				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_bidSize, InvDataType.BIDSIZE.toString());
 //				System.out.println("Bid size " + m_bidSize);
 				break;
 			case ASK_SIZE:
 				m_askSize = size;
-				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_askSize, DataType.ASKSIZE.toString());
+				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_askSize, InvDataType.ASKSIZE.toString());
 //				System.out.println("Ask size " + m_askSize);
 				break;
 			case VOLUME:
 				m_volume = size;
-				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_volume, DataType.VOLUME.toString());
+				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_volume, InvDataType.VOLUME.toString());
 //				System.out.println("Volume size " + m_volume);
 				break;
             default: break; 
@@ -195,8 +197,12 @@ public class QuoteSingle extends TopMktDataAdapter {
 			i++;
 		}
 		Long time = Long.parseLong(lastTradeTime); 	// TODO: *1000 ?
+		
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.REALTIME;
 		getMarketPrice().writeRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
-					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag));
+					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
+					source, timing);
 		return;
 	}
 

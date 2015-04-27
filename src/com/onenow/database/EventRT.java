@@ -1,5 +1,7 @@
 package com.onenow.database;
 
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.instrument.Investment;
 
 public class EventRT {
@@ -10,6 +12,9 @@ public class EventRT {
 
 	private Double price;
 	private Integer size;
+	
+	private InvDataSource source;
+	private InvDataTiming timing;
 
 	/** Set real-time price/size/etc 
 	 * 
@@ -19,12 +24,15 @@ public class EventRT {
 	 * @param price
 	 * @param size
 	 */
-	public EventRT(Long time, Investment inv, String dataType, Double price, int size) {
+	public EventRT(	Long time, Investment inv, String dataType, Double price, int size,
+					InvDataSource source, InvDataTiming timing) {
 		setTime(time);
 		setInv(inv);
 		setDataType(dataType);
 		setPrice(price);
 		setSize(size);
+		setSource(source);
+		setTiming(timing);
 	}
 	
 	
@@ -67,5 +75,25 @@ public class EventRT {
 
 	public void setSize(Integer size) {
 		this.size = size;
+	}
+
+
+	public InvDataSource getSource() {
+		return source;
+	}
+
+
+	public void setSource(InvDataSource source) {
+		this.source = source;
+	}
+
+
+	public InvDataTiming getTiming() {
+		return timing;
+	}
+
+
+	public void setTiming(InvDataTiming timing) {
+		this.timing = timing;
 	}
 }

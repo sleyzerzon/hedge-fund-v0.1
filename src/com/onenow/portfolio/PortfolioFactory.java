@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.constant.InvApproach;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.Sampling;
-import com.onenow.data.TradingRate;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;
@@ -104,7 +105,13 @@ public class PortfolioFactory {
 	private void getInvestmentChart(Investment inv, String sampling, String fromDate, String toDate) {
 
 		Chart chart = new Chart();
-		chart = getMarketPrice().readChart(inv, TradeType.TRADED.toString(), sampling, fromDate, toDate);
+		
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.REALTIME;
+		
+		chart = getMarketPrice().readChart(	inv, TradeType.TRADED.toString(), sampling, 
+											fromDate, toDate,
+											source, timing);
 		
 		if(!chart.getSizes().isEmpty()) {
 			inv.getCharts().put(sampling, chart); // sampling is key	

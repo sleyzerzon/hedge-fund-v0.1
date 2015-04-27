@@ -10,7 +10,7 @@ import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.constant.ConnectionStatus;
-import com.onenow.constant.DataType;
+import com.onenow.constant.InvDataType;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
@@ -98,7 +98,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	 */
 	public void getLiveQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
-		for(Investment inv:invs) {		// real-time
+		for(Investment inv:invs) {		
 			System.out.println("\n> " + "getting quote for live investment: " + inv.toString());
 			
 			QuoteTable quoteLive = new QuoteTable(getController(), getMarketPrices(), inv);

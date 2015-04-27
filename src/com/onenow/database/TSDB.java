@@ -10,6 +10,8 @@ import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Serie;
 
 import com.onenow.constant.DBname;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.data.Sampling;
 import com.onenow.instrument.Investment;
@@ -32,6 +34,7 @@ public class TSDB {
 //		dbCreate();
 		
 		setParseDate(new ParseDate());
+		setSampling(new Sampling());
 	}
 
 // INIT
@@ -52,8 +55,8 @@ private void dbCreate() {
 }
 
 // PRICE
-public void writePrice(Long time, Investment inv, String dataType, Double price) {
-	String name = getLookup().getInvestmentKey(inv, dataType);
+public void writePrice(Long time, Investment inv, String dataType, Double price, InvDataSource source, InvDataTiming timing) {
+	String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	.values(time, price)
@@ -67,11 +70,12 @@ public void writePrice(Long time, Investment inv, String dataType, Double price)
 }
 
 public List<Candle> readPriceFromDB(	Investment inv, String dataType, String sampling,
-										String fromDate, String toDate) {
+										String fromDate, String toDate,
+										InvDataSource source, InvDataTiming timing) {
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String name = getLookup().getInvestmentKey(inv, dataType);
+		String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
 
 		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, sampling, fromDate, toDate);
 
@@ -101,7 +105,7 @@ public List<Serie> queryPrice(String dbName, String serieName, String sampling, 
 //		System.out.println("QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
-//		e.printStackTrace(); some time series don't exist or have data
+//		e.printStackTrace();  some time series don't exist or have data
 	}
 	return series;
 }
@@ -147,8 +151,8 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 	return candles;
 }
 // SIZE
-public void writeSize(Long time, Investment inv, String dataType, Integer size) {
-	String name = getLookup().getInvestmentKey(inv, dataType);
+public void writeSize(Long time, Investment inv, String dataType, Integer size, InvDataSource source, InvDataTiming timing) {
+	String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(time, size)
@@ -162,11 +166,12 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size) 
 }
 
 public List<Integer> readSizeFromDB(	Investment inv, String dataType, String sampling,
-										String fromDate, String toDate) {
+										String fromDate, String toDate,
+										InvDataSource source, InvDataTiming timing) {
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String name = getLookup().getInvestmentKey(inv, dataType);
+	String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
 	
 	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  sampling, fromDate, toDate);
 	
