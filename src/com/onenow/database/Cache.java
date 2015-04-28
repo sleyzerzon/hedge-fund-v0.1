@@ -8,6 +8,8 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Sampling;
+import com.onenow.execution.Broker;
+import com.onenow.execution.QuoteBar;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -15,23 +17,29 @@ import com.onenow.util.ParseDate;
 
 public class Cache {
 	
-	private TSDB 									TSDB;			// database
+	private Broker 	broker;
+	private TSDB 	TSDB;			// database
 
-	private Lookup 									lookup;			// key
+	private Lookup 	lookup;			// key
 	
-	private HashMap<String, EventRT>				lastEventRT; 	// last set of price/size/etc
-	private HashMap<String, Chart>					charts;			// price history in chart format
+	private HashMap<String, EventRT>	lastEventRT; 	// last set of price/size/etc
+	private HashMap<String, Chart>		charts;			// price history in chart format
 	
 	private ParseDate	parser = new ParseDate();
-
 	private Sampling sampling;
 	
+
 	public Cache() {
-		setLookup(new Lookup());
-		setLastEventRT(new HashMap<String, EventRT>());
-		setCharts(new HashMap<String, Chart>());
-		setTSDB(new TSDB());
-		setSampling(new Sampling());
+		
+	}
+	
+	public Cache(Broker broker) {
+		this.broker = broker;
+		this.lookup = new Lookup();
+		this.lastEventRT = new HashMap<String, EventRT>();
+		this.charts = new HashMap<String, Chart>();
+		this.TSDB = new TSDB();
+		this.sampling = new Sampling();
 	}
 	
 	
@@ -43,20 +51,20 @@ public class Cache {
 
 		boolean writeToMem = false;
 		
-		String key = getLookup().getInvestmentKey(	event.getInv(), event.getDataType(),
+		String key = lookup.getInvestmentKey(	event.getInv(), event.getDataType(),
 													event.getSource(), event.getTiming());
 		
 		// keep last in memory
-		if(getLastEventRT().get(key) == null) { 	// never written before
+		if(lastEventRT.get(key) == null) { 	// never written before
 			writeToMem = true;
 		} else {		
-			if( event.getTime() > getLastEventRT().get(key).getTime() ) {
+			if( event.getTime() > lastEventRT.get(key).getTime() ) {
 				writeToMem = true;
 			}
 		}
 		
 		if(writeToMem) {
-			getLastEventRT().put(key, event);
+			lastEventRT.put(key, event);
 		}
 		
 		// CRITICAL PATH: fast write to ring
@@ -77,18 +85,18 @@ public class Cache {
 
 		// TODO: INSERT RING
 		// write
-		getTSDB().writePrice(	time, inv, dataType, price,
+		TSDB.writePrice(	time, inv, dataType, price,
 								source, timing);				
-		getTSDB().writeSize(	time, inv, dataType, size,			
+		TSDB.writeSize(	time, inv, dataType, size,			
 								source, timing);		
 		
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
-		for(String sampling:getSampling().getSamplingList("")) {
+		for(String sampling:sampling.getList("")) {
 			// use miss function to force update of charts
 			readthroughChartFromL12(	inv, dataType, sampling, 
-											"2015-02-21", "2015-04-24",
+											"2015-02-21", "2015-04-28", // TODO: From/To Date actual
 											source, timing);
 		}
 
@@ -121,10 +129,10 @@ public class Cache {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
-		String key = getLookup().getInvestmentKey(inv, dataType, source, timing);
-		Double price = getLastEventRT().get(key).getPrice();
+		String key = lookup.getInvestmentKey(inv, dataType, source, timing);
+		Double price = lastEventRT.get(key).getPrice();
 		
-		System.out.println("Cache Price READ: L0 " + price);
+		System.out.println("Cache PRICE READ: L0 " + price);
 
 		return price;
 	}
@@ -146,7 +154,7 @@ public class Cache {
 		Candle last = candles.get(candles.size()-1);
 		price = last.getClosePrice();
 		
-		System.out.println("Cache Price from Chart READ " + price);
+		System.out.println("Cache PRICE from Chart READ " + price);
 
 		return price;
 	
@@ -170,21 +178,21 @@ public class Cache {
 		String s = "";
 
 		// HIT? Memory is L0
-		s = "Cache HIT: Chart";		
+		s = "Cache Chart HIT: L0";		
 		Chart chart = readChartFromL0(	inv, dataType, sampling, 
 										fromDate, toDate, 
 										source, timing);
 		
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
-			s = "Cache MISS: Chart";
+			s = "Cache Chart MISS: L0";
 			chart = readthroughChartFromL12(	inv, dataType, sampling, 
 										fromDate, toDate,
 										source, timing);
 
 		} 
 		
-		System.out.println("Cache CHART READ: " + "\n" + chart.toString());
+		System.out.println(s + "\n" + chart.toString());
 
 		return chart;
 	}
@@ -194,10 +202,10 @@ public class Cache {
 									String fromDate, String toDate,
 									InvDataSource source, InvDataTiming timing) {
 		Chart chart = new Chart();
-		String key = getLookup().getChartKey(	inv, dataType, sampling, 
+		String key = lookup.getChartKey(	inv, dataType, sampling, 
 												fromDate, toDate,
 												source, timing);
-		chart = getCharts().get(key);
+		chart = charts.get(key);
 
 		System.out.println("Cache Chart READ: L0" + "\n" + chart.toString());
 		return chart;
@@ -214,17 +222,17 @@ public class Cache {
 								fromDate, toDate, 
 								source, timing, chart);
 
-			// if L1 is empty, get data from L2 (3rd party DB)
-			if(chart.getPrices().size() < 5) {
-				readChartFromL2(chart);
+			// if L1 is empty/low, augment with data from L2 (3rd party DB)
+			if(chart.getPrices().size() < 10) {
+				readChartFromL2(inv, toDate);
 			}
 			
 			// keep last in L0 memory (with data)
 			if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) { // TODO: both not empty?
-				String key = getLookup().getChartKey(	inv, dataType, sampling, 
+				String key = lookup.getChartKey(	inv, dataType, sampling, 
 														fromDate, toDate,
 														source, timing);
-				getCharts().put(key, chart);
+				charts.put(key, chart);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -239,21 +247,40 @@ public class Cache {
 									String sampling, String fromDate, String toDate,
 									InvDataSource source, InvDataTiming timing, Chart chart) {
 		
-		List<Candle> prices = getTSDB().readPriceFromDB(	inv, dataType, sampling, 
+		List<Candle> prices = TSDB.readPriceFromDB(	inv, dataType, sampling, 
 															fromDate, toDate,
 															source, timing);
-		List<Integer> sizes = getTSDB().readSizeFromDB(		inv, dataType, sampling, 
+		List<Integer> sizes = TSDB.readSizeFromDB(		inv, dataType, sampling, 
 															fromDate, toDate,
 															source, timing);
 		
 		chart.setPrices(prices);
 		chart.setSizes(sizes);
-		System.out.println("Cache Chart READ CHART: L1" + "\n" + chart.toString());
+		System.out.println("Cache Chart READ: L1" + "\n" + chart.toString());
 	}
 
 
-	private void readChartFromL2(Chart chart) {
-		System.out.println("Cache Chart READ: L2" + "\n"  + chart.getPrices().size());
+	private void readChartFromL2(Investment inv, String toDate) {
+		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
+
+		paceHistoricalQuery();
+
+	    QuoteBar history = broker.readHistoricalQuotes(inv, getParser().getCloseToday()); // TODO: progressively past
+		
+		if(history.equals("")) {
+			System.out.println("WARNING: HISTORICAL DATA FARM DOWN?"); 
+		} else {
+			System.out.println("HISTORY " + history.toString());
+		}
+	}
+
+	private void paceHistoricalQuery() {
+		System.out.println("...pacing historical query");
+	    try {
+			Thread.sleep(12000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}				
 
 	
@@ -264,64 +291,17 @@ public class Cache {
 	// TODO: print all the data in memory, not just prices, from Maps/Ring/etc
 	public String toString() {
 		String s="";
-		s = getLastEventRT().toString();
+		s = lastEventRT.toString();
 		return s;
 	}
 	
 	
 	// SET GET
-	public Lookup getLookup() {
-		return lookup;
-	}
-
-	public void setLookup(Lookup lookup) {
-		this.lookup = lookup;
-	}
-
-	public HashMap<String, EventRT> getLastEventRT() {
-		return lastEventRT;
-	}
-
-	public void setLastEventRT(HashMap<String, EventRT> lastEventRT) {
-		this.lastEventRT = lastEventRT;
-	}
-
-
-	public HashMap<String, Chart> getCharts() {
-		return charts;
-	}
-
-
-	public void setCharts(HashMap<String, Chart> charts) {
-		this.charts = charts;
-	}
-
-
 	public ParseDate getParser() {
 		return parser;
 	}
-
-
 	public void setParser(ParseDate parser) {
 		this.parser = parser;
-	}
-
-	public TSDB getTSDB() {
-		return TSDB;
-	}
-
-	public void setTSDB(TSDB tSDB) {
-		TSDB = tSDB;
-	}
-
-
-	public Sampling getSampling() {
-		return sampling;
-	}
-
-
-	public void setSampling(Sampling sampling) {
-		this.sampling = sampling;
 	}
 
 }

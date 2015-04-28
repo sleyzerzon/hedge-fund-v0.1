@@ -51,7 +51,7 @@ public class Sampling {
 	}
 	
 	
-	public List<String> getSamplingList(String rate) {
+	public List<String> getList(String rate) {
 		List<String> list = new ArrayList<String>();
 		if(rate.equals("default") || rate.equals("")) {
 			list.addAll(getDefaultSampling());

@@ -33,8 +33,6 @@ import com.onenow.risk.MarketAnalytics;
 import com.onenow.util.ParseDate;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
-
-	private PortfolioFactory pucara;
 	
 	private List<Underlying> underList;
 	private Portfolio marketPortfolio;
@@ -74,9 +72,10 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 		// my porfolio, prices, and trades
 		setMyPortfolio(new Portfolio());
-		setMarketPrices(new MarketPrice(getMarketPortfolio()));
+		setMarketPrices(new MarketPrice(getMarketPortfolio(), this));
 		setTrades(new ArrayList<Trade>());		
-		
+	
+		 getLiveQuotes(); // run the broker
 	}
 	
 	// INIT
@@ -106,7 +105,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		}
 	}
 
-	public QuoteBar readHistoricalQuotes(String end, Investment inv) {
+	public QuoteBar readHistoricalQuotes(Investment inv, String end) {
 
 		System.out.println("\n> " + "getting historical quote for investment: " + inv.toString());
 		Contract contract = getContractFactory().getContract(inv);
@@ -143,7 +142,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 				System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
 				
-				QuoteBar quoteHistory = readHistoricalQuotes(end, channel.getInvestment());
+				QuoteBar quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
 				
 			    Thread.sleep(12000);
 				System.out.println("...");
@@ -408,15 +407,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		this.trades = trades;
 	}
 
-
-	private PortfolioFactory getPucara() {
-		return pucara;
-	}
-
-
-	private void setPucara(PortfolioFactory pucara) {
-		this.pucara = pucara;
-	}
 
 	public ContractFactory getContractFactory() {
 		return contractFactory;

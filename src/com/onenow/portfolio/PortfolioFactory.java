@@ -45,7 +45,7 @@ public class PortfolioFactory {
 		setMarketPortfolio(new Portfolio());
 		setIndex(index);
 		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
-		setMarketPrice(new MarketPrice(getMarketPortfolio()));
+		setMarketPrice(new MarketPrice(getMarketPortfolio(), broker));
 		
 		setSampling(new Sampling());
 	}	
@@ -95,7 +95,7 @@ public class PortfolioFactory {
 	private void getUptodateInvestmentCharts() {
 		String fromDate = "2015-02-21"; 	// TODO: configurable date
 		String toDate = "2015-02-28";
-		for(String sampling:getSampling().getSamplingList("")) {
+		for(String sampling:getSampling().getList("")) {
 			for(Investment inv:getMarketPortfolio().getInvestments()) {
 				getInvestmentChart(inv, sampling, fromDate, toDate);
 			}
@@ -128,7 +128,7 @@ public class PortfolioFactory {
 			for(String trading:getSampling().getTradingOptions()) {
 				String analysis = "";
 				analysis = analysis + "=====" + inv.toString() + "=====" + "\n";
-				for(String sampling:getSampling().getSamplingList(trading)) { 
+				for(String sampling:getSampling().getList(trading)) { 
 					analysis = analysis + getInvestmentAnalysis(inv, sampling);
 				}			
 				System.out.println(analysis + "\n");

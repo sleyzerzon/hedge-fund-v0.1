@@ -18,6 +18,13 @@ public class ParseDate {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // "yyyy-MM-dd HH:mm"
 		return sdf.format(today);
 	}
+	
+	public String getCloseToday() {
+		String s = "";
+		s = s + " 16:30:00";
+		return s;
+	}
+	
 
 	/**
 	 * Removes dashes from a dashed date
