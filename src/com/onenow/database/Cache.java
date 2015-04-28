@@ -79,14 +79,15 @@ public class Cache {
 		// write
 		getTSDB().writePrice(	time, inv, dataType, price,
 								source, timing);				
-		getTSDB().writeSize(time, inv, dataType, size,			
+		getTSDB().writeSize(	time, inv, dataType, size,			
 								source, timing);		
+		
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
 		for(String sampling:getSampling().getSamplingList("")) {
 			// use miss function to force update of charts
-			readThroughChartOnMissFromL1(	inv, dataType, sampling, 
+			readthroughChartFromL12(	inv, dataType, sampling, 
 											"2015-02-21", "2015-04-24",
 											source, timing);
 		}
@@ -102,45 +103,55 @@ public class Cache {
 	 * @return
 	 */
 	public double readPrice(Investment inv, String dataType) {
-		
-		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.REALTIME;
-		
+
 		// HIT
-		String key = getLookup().getInvestmentKey(inv, dataType, source, timing);
-		Double price = getLastEventRT().get(key).getPrice();  
-	
-		// MISS: fill with the last data from chart until RT vents start to hit
+		Double price = readPriceFromL0(inv, dataType);  
+
+		// MISS: fill with the last data from chart until RT events start to hit
 		if(price==null) {
-			List<Candle> candles = readPrice(	inv, TradeType.TRADED.toString(), SamplingRate.SCALP.toString(), 
-												getParser().getToday(), getParser().getToday()); 
-			Candle last = candles.get(candles.size()-1);
-			price = last.getClosePrice();
+			price = readPriceFromChart(inv, dataType);
 		} 
 		
+		System.out.println("Cache PRICE READ: " + price);
+
 		return price;
 	}
-	
-	/**
-	 * Gets the price for a time window
-	 * @param inv
-	 * @param dataType
-	 * @param fromDate
-	 * @param toDate
-	 * @param sampling
-	 * @return
-	 */
-	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
-									String fromDate, String toDate) {
 
+	private Double readPriceFromL0(Investment inv, String dataType) {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
+				
+		String key = getLookup().getInvestmentKey(inv, dataType, source, timing);
+		Double price = getLastEventRT().get(key).getPrice();
 		
-		Chart chart = readChartFromL0(	inv, dataType, sampling, 
-										fromDate, toDate,
-										source, timing);	
-		return chart.getPrices();
+		System.out.println("Cache Price READ: L0 " + price);
+
+		return price;
 	}
+
+	private Double readPriceFromChart(Investment inv, String dataType) {
+		
+		Double price;
+		String scalping = SamplingRate.SCALP.toString();
+		String today = getParser().getToday();
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.REALTIME;
+				
+		Chart chart = readChart(	inv, dataType, scalping, 
+									today, today,
+									source, timing);
+		
+		List<Candle> candles = chart.getPrices(); 
+		
+		Candle last = candles.get(candles.size()-1);
+		price = last.getClosePrice();
+		
+		System.out.println("Cache Price from Chart READ " + price);
+
+		return price;
+	
+	}
+
 	
 	// READ CHARTS
 	/**
@@ -152,71 +163,97 @@ public class Cache {
 	 * @param sampling
 	 * @return
 	 */
-	public Chart readChartFromL0(	Investment inv, String dataType, String sampling, 
+	public Chart readChart(	Investment inv, String dataType, String sampling, 
 									String fromDate, String toDate,
 									InvDataSource source, InvDataTiming timing) {
 		
 		String s = "";
 
 		// HIT? Memory is L0
-		String key = getLookup().getChartKey(	inv, dataType, sampling, fromDate, toDate,
-												source, timing);
-		Chart chart = getCharts().get(key);
-		s = "x cache HIT ";
+		s = "Cache HIT: Chart";		
+		Chart chart = readChartFromL0(	inv, dataType, sampling, 
+										fromDate, toDate, 
+										source, timing);
 		
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
-			s = "x cache MISS";
-			chart = new Chart();
-			chart = readThroughChartOnMissFromL1(	inv, dataType, sampling, fromDate, toDate,
-													source, timing);
+			s = "Cache MISS: Chart";
+			chart = readthroughChartFromL12(	inv, dataType, sampling, 
+										fromDate, toDate,
+										source, timing);
 
 		} 
 		
-//		System.out.println(s + "\n" + "IN MEM " + "\n" + chart.toString());		
+		System.out.println("Cache CHART READ: " + "\n" + chart.toString());
+
 		return chart;
 	}
 
 
-	private Chart readThroughChartOnMissFromL1(	Investment inv, String dataType, String sampling, 
-												String fromDate, String toDate,
-												InvDataSource source, InvDataTiming timing) {
-		
+	private Chart readChartFromL0(	Investment inv, String dataType, String sampling, 
+									String fromDate, String toDate,
+									InvDataSource source, InvDataTiming timing) {
 		Chart chart = new Chart();
-		String key = getLookup().getChartKey(	inv, dataType, sampling, fromDate, toDate,
+		String key = getLookup().getChartKey(	inv, dataType, sampling, 
+												fromDate, toDate,
 												source, timing);
+		chart = getCharts().get(key);
+
+		System.out.println("Cache Chart READ: L0" + "\n" + chart.toString());
+		return chart;
+	}
+
+
+	private Chart readthroughChartFromL12(	Investment inv, String dataType, String sampling, 
+											String fromDate, String toDate,
+											InvDataSource source, InvDataTiming timing) {		
+		Chart chart = new Chart();
 		
-		try{	// needed because TSDB can't throw exceptions: some time series just don't exist or have data 
-			
-			// database is L1
-			List<Candle> prices = getTSDB().readPriceFromDB(	inv, dataType, sampling, fromDate, toDate,
-																source, timing);
-			List<Integer> sizes = getTSDB().readSizeFromDB(		inv, dataType, sampling, fromDate, toDate,
-																source, timing);
-			
-			chart.setPrices(prices);
-			chart.setSizes(sizes);
+		try{	// needed because TSDB can't throw exceptions: some time series just don't exist or have data 			
+			readChartFromL1(	inv, dataType, sampling, 
+								fromDate, toDate, 
+								source, timing, chart);
 
 			// if L1 is empty, get data from L2 (3rd party DB)
 			if(chart.getPrices().size() < 5) {
-				augmentL3(chart);
+				readChartFromL2(chart);
 			}
 			
 			// keep last in L0 memory (with data)
 			if(!chart.getSizes().isEmpty() && !chart.getPrices().isEmpty()) { // TODO: both not empty?
+				String key = getLookup().getChartKey(	inv, dataType, sampling, 
+														fromDate, toDate,
+														source, timing);
 				getCharts().put(key, chart);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println("x READ-THROUGH " + "\n" + chart.toString());
+		System.out.println("Cache Chart READ-THROUGH: L12" + "\n" + chart.toString());
 		return chart;
 	}
 
 
-	private void augmentL3(Chart chart) {
-		System.out.println("Small chart: " + chart.getPrices().size());
+	private void readChartFromL1(	Investment inv, String dataType,
+									String sampling, String fromDate, String toDate,
+									InvDataSource source, InvDataTiming timing, Chart chart) {
+		
+		List<Candle> prices = getTSDB().readPriceFromDB(	inv, dataType, sampling, 
+															fromDate, toDate,
+															source, timing);
+		List<Integer> sizes = getTSDB().readSizeFromDB(		inv, dataType, sampling, 
+															fromDate, toDate,
+															source, timing);
+		
+		chart.setPrices(prices);
+		chart.setSizes(sizes);
+		System.out.println("Cache Chart READ CHART: L1" + "\n" + chart.toString());
+	}
+
+
+	private void readChartFromL2(Chart chart) {
+		System.out.println("Cache Chart READ: L2" + "\n"  + chart.getPrices().size());
 	}				
 
 	

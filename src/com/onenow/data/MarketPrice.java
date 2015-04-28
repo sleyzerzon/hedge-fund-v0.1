@@ -78,11 +78,11 @@ public class MarketPrice {
 		
 	}
 	
-	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
-									String fromDate, String toDate) {
-		
-		return getCache().readPrice(inv, dataType, sampling, fromDate, toDate);
-	}
+//	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
+//									String fromDate, String toDate) {
+//		
+//		return getCache().readPrice(inv, dataType, sampling, fromDate, toDate);
+//	}
 
 
 	// READ CHART
@@ -92,7 +92,7 @@ public class MarketPrice {
 		
 		Chart chart = new Chart();
 		
-		chart = getCache().readChartFromL0(	inv, dataType, sampling, fromDate, toDate,
+		chart = getCache().readChart(	inv, dataType, sampling, fromDate, toDate,
 											source, timing);
 		System.out.println("READ CHART " + "\n" + chart);
 		
