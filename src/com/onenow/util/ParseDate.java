@@ -25,6 +25,12 @@ public class ParseDate {
 		return s;
 	}
 	
+	public String getTomorrow() {
+		String s = "";
+		s = s + getDatePlus(getToday(), 1);
+		return s;
+	}
+	
 
 	/**
 	 * Removes dashes from a dashed date

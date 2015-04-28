@@ -27,9 +27,9 @@ public class Lookup {
 	 * @return
 	 */
 	public String getInvestmentTimedKey(Long time, Investment inv, String dataType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
-		String s="";
-		s = time.toString() + "-";
-		s = s + getInvestmentKey(inv, dataType, source, timing);
+		String s = "";
+		s = s + time.toString();
+		s = s + "-" + getInvestmentKey(inv, dataType, source, timing);
 		return s;
 	}
 	
@@ -42,13 +42,13 @@ public class Lookup {
 	public String getInvestmentKey(Investment inv, String dataType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
 		Underlying under = inv.getUnder();
 		String s = ""; 
-		s = under.getTicker() + "-" + inv.getInvType();		
+		s = s + under.getTicker() + "-" + inv.getInvType();		
 		if (inv instanceof InvestmentOption) {
 			Double strike = ((InvestmentOption) inv).getStrikePrice();
 			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
 			s = s + "-" + strike + "-" + exp; 
 		}
-		s = s + "-" + dataType + "-";
+		s = s + "-" + dataType;
 		s = s + "-" + source.toString() + "-" + timing.toString();
 		return (s);
 	}
@@ -62,8 +62,8 @@ public class Lookup {
 	 */
 	public String getTimestampKey(Investment inv, String dataType, Long timeStamp) {
 		String s = "";
-		s = inv.toString() + "-";
-		s = s + dataType;
+		s = inv.toString();
+		s = s + "-" + dataType;
 		return s;
 	}
 
@@ -72,11 +72,11 @@ public class Lookup {
 								String fromDate, String toDate,
 								InvDataSource source, InvDataTiming timing) {
 		String s = "";
-		s = inv.toString() + "-";
-		s = s + dataType + "-";
-		s = s + sampling + "-";
-		s = s + fromDate + "-" + toDate + "-";
-		s = s + source.toString() + "-" + timing.toString();
+		s = s + inv.toString();
+		s = s + "-" + dataType;
+		s = s + "-" + sampling;
+		s = s + "-" + fromDate + "-" + toDate;
+		s = s + "-" + source.toString() + "-" + timing.toString();
 		System.out.println("key " + s);
 		return s;
 	}

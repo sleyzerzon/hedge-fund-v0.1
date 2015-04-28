@@ -25,8 +25,8 @@ public class Cache {
 	private HashMap<String, EventRT>	lastEventRT; 	// last set of price/size/etc
 	private HashMap<String, Chart>		charts;			// price history in chart format
 	
-	private ParseDate	parser = new ParseDate();
-	private Sampling sampling;
+	private ParseDate	parseDate = new ParseDate();
+	private Sampling 	sampling;
 	
 
 	public Cache() {
@@ -95,9 +95,9 @@ public class Cache {
 		// update the charts
 		for(String sampling:sampling.getList("")) {
 			// use miss function to force update of charts
-			readthroughChartFromL12(	inv, dataType, sampling, 
-											"2015-02-21", "2015-04-28", // TODO: From/To Date actual
-											source, timing);
+			readthroughChartFromL12(	inv, dataType, sampling,
+										"2015-01-01", parseDate.getTomorrow(), // TODO: From/To Date actual
+										source, timing);
 		}
 
 	}
@@ -220,7 +220,8 @@ public class Cache {
 		try{	// needed because TSDB can't throw exceptions: some time series just don't exist or have data 			
 			readChartFromL1(	inv, dataType, sampling, 
 								fromDate, toDate, 
-								source, timing, chart);
+								source, timing, 
+								chart);
 
 			// if L1 is empty/low, augment with data from L2 (3rd party DB)
 			if(chart.getPrices().size() < 10) {
@@ -247,23 +248,23 @@ public class Cache {
 									String sampling, String fromDate, String toDate,
 									InvDataSource source, InvDataTiming timing, Chart chart) {
 		
-		List<Candle> prices = TSDB.readPriceFromDB(	inv, dataType, sampling, 
-															fromDate, toDate,
-															source, timing);
+		List<Candle> prices = TSDB.readPriceFromDB(		inv, dataType, sampling, 
+														fromDate, toDate,
+														source, timing);
 		List<Integer> sizes = TSDB.readSizeFromDB(		inv, dataType, sampling, 
-															fromDate, toDate,
-															source, timing);
+														fromDate, toDate,
+														source, timing);
 		
 		chart.setPrices(prices);
 		chart.setSizes(sizes);
-		System.out.println("Cache Chart READ: L1" + "\n" + chart.toString());
+		System.out.println("Cache Chart READ: L1" + "\n" + fromDate + " " + toDate + " " + chart.toString());
 	}
 
 
 	private void readChartFromL2(Investment inv, String toDate) {
 		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
 
-		paceHistoricalQuery();
+//		paceHistoricalQuery();
 
 	    QuoteBar history = broker.readHistoricalQuotes(inv, getParser().getCloseToday()); // TODO: progressively past
 		
@@ -298,10 +299,10 @@ public class Cache {
 	
 	// SET GET
 	public ParseDate getParser() {
-		return parser;
+		return parseDate;
 	}
 	public void setParser(ParseDate parser) {
-		this.parser = parser;
+		this.parseDate = parser;
 	}
 
 }
