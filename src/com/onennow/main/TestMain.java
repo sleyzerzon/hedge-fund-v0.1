@@ -19,11 +19,11 @@ public class TestMain {
 		}
 
 		System.out.println("TESTING FINANCE");
-		TestFinance financeTester = new TestFinance(logDB);
+//		TestFinance financeTester = new TestFinance(logDB);
 //		financeTester.test();
 		
 		System.out.println("TESTING BROKER");
-		TestBroker brokerTester = new TestBroker(logDB);
+//		TestBroker brokerTester = new TestBroker(logDB);
 //		brokerTester.test();
 		
 		System.out.println("TESTING UTIL");

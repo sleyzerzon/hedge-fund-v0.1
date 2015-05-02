@@ -1,11 +1,14 @@
 package com.onenow.test;
 
 import com.onenow.admin.DatabaseSystemActivityImpl;
+import com.onenow.util.ParseDate;
 import com.sforce.ws.ConnectionException;
 
 public class TestUtil {
 	
 	private DatabaseSystemActivityImpl logDB;
+	
+	private ParseDate parseDate;
 
 	public TestUtil() {
 		
@@ -13,13 +16,15 @@ public class TestUtil {
 	
 	public TestUtil(DatabaseSystemActivityImpl logDB) {
 		this.logDB = logDB;
+		this.parseDate = new ParseDate();
 	}
+	
+	
 	
 	public boolean test() {
 		boolean result;
 		try {
-			result = true;
-			// result = 	testBuy();
+			result = parseDate.test();
 		} catch (Exception e) {
 			result = false;
 			e.printStackTrace();

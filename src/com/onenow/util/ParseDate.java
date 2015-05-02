@@ -3,7 +3,9 @@ package com.onenow.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ParseDate {
+import com.onenow.test.Testable;
+
+public class ParseDate implements Testable {
 
 	public ParseDate() {
 		
@@ -178,65 +180,49 @@ public class ParseDate {
 		return s;
 	}
 	
-	/**
-	 * Returns a new date from an old date plus the number of days since
-	 * @param dashedDate
-	 * @param plusDays
-	 * @return
-	 */
-	public String getDashedDatePlus(String dashedDate, Integer plusDays){
-//		System.out.println("Dashed date " + dashedDate + ". Num " + num);
-		
-		String s= "";
-		Integer day=0;
-		Integer month=0;
-		Integer year=0;
-		Integer newDay=0;
-		Integer newMonth=0;
-		Integer newYear=0;
-		String sDay="";
-		String sMonth="";
-		String sYear="";
-		try {
-			day = Integer.parseInt(getDashedDay(dashedDate));
-		} catch (NumberFormatException e) { } // nothing to do		
-		try {
-			month = Integer.parseInt(getDashedMonth(dashedDate));
-		} catch (NumberFormatException e) { } // nothing to do 
-		try {
-			year = Integer.parseInt(getDashedYear(dashedDate));
-		} catch (NumberFormatException e) { } // nothing to do
 
-		newDay=day+plusDays;
-//		System.out.println("New day " + newDay + ". Old day " + day + ". Delta " + num);
-		if(newDay>31) {
-			newDay=newDay-31;
-			month=month+1;
+	
+	private int getMonthLength(int month) {
+		if(month==1) { // jan
+			return 31;
 		}
-		newMonth=month;
-//		System.out.println("New month " + month);
-		if(month>12) {
-			newMonth=newMonth-12;
-			year=year+1;
+		if(month==2) { // feb TODO: every 4 years it has 29 days
+			return 28;
 		}
-		
-		newYear=year;
-//		System.out.println("New year " + year);
-
-		sDay=newDay.toString();
-		if(newDay<10){
-			sDay="0"+sDay;
+		if(month==3) { // mar
+			return 31;
 		}
-		sMonth=newMonth.toString();
-		if(newMonth<10){
-			sMonth="0"+sMonth;
+		if(month==4) { // apr
+			return 30;
 		}
-		sYear=newYear.toString();
-		s=sYear+"-"+sMonth+"-"+sDay;
-		
-//		System.out.println("Date plus is " + s + "\n");
-		return s;
+		if(month==5) { // may
+			return 31;
+		}
+		if(month==6) { // jun
+			return 30;
+		}
+		if(month==7) { // jul
+			return 31;
+		}
+		if(month==8) { // aug
+			return 31;
+		}
+		if(month==9) { // sep
+			return 30;
+		}
+		if(month==10) { // oct
+			return 31;
+		}
+		if(month==11) { // nov
+			return 30;
+		}
+		if(month==12 || month==0) { // dec
+			return 31;
+		}
+		return -1;
 	}
+	
+
 	
 	public Integer getElapsedDays(String dashedDay1, String dahsedDay2) {
 		Integer elapsedDays = 0;
@@ -281,49 +267,171 @@ public class ParseDate {
 		return elapsedTotal;
 	}
 	
-	private int getMonthLenth(int month) {
-		if(month==1) { // jan
-			return 30;
+	/**
+	 * Returns a new date from an old date plus the number of days since
+	 * @param dashedDate
+	 * @param plusDays
+	 * @return
+	 */
+	public String getDashedDatePlus(String dashedDate, Integer plusDays){
+//		System.out.println("Dashed date " + dashedDate + ". Num " + num);
+		
+		String s= "";
+		Integer day=0;
+		Integer month=0;
+		Integer year=0;
+		Integer newDay=0;
+		Integer newMonth=0;
+		Integer newYear=0;
+		String sDay="";
+		String sMonth="";
+		String sYear="";
+		try {
+			day = Integer.parseInt(getDashedDay(dashedDate));
+		} catch (NumberFormatException e) { } // nothing to do		
+		try {
+			month = Integer.parseInt(getDashedMonth(dashedDate));
+		} catch (NumberFormatException e) { } // nothing to do 
+		try {
+			year = Integer.parseInt(getDashedYear(dashedDate));
+		} catch (NumberFormatException e) { } // nothing to do
+
+		newDay=day+plusDays;
+		int monthLength = getMonthLength(month);
+//		System.out.println("New day " + newDay + ". Old day " + day + ". Delta " + num);
+		if(newDay>monthLength) {
+			newDay=newDay-monthLength;
+			month=month+1;
 		}
-		if(month==2) { // feb TODO: every 4 years it has 29 days
-			return 28;
+		newMonth=month;
+//		System.out.println("New month " + month);
+		if(month>12) {
+			newMonth=newMonth-12;
+			year=year+1;
 		}
-		if(month==3) { // mar
-			return 31;
+		
+		newYear=year;
+//		System.out.println("New year " + year);
+
+		sDay = getTwoDigitString(newDay);
+		sMonth = getTwoDigitString(newMonth);
+		sYear=newYear.toString();
+		s=sYear+"-"+sMonth+"-"+sDay;
+		
+//		System.out.println("Date plus is " + s + "\n");
+		return s;
+	}
+	
+	public String getDashedDateMinus(String dashedDate, Integer minusDays){
+//		System.out.println("Dashed date " + dashedDate + ". Num " + num);
+		
+		String s= "";
+		Integer day=0;
+		Integer month=0;
+		Integer year=0;
+		Integer newDay=0;
+		Integer newMonth=0;
+		Integer newYear=0;
+		String sDay="";
+		String sMonth="";
+		String sYear="";
+		try {
+			day = Integer.parseInt(getDashedDay(dashedDate));
+		} catch (NumberFormatException e) { } // nothing to do		
+		try {
+			month = Integer.parseInt(getDashedMonth(dashedDate));
+		} catch (NumberFormatException e) { } // nothing to do 
+		try {
+			year = Integer.parseInt(getDashedYear(dashedDate));
+		} catch (NumberFormatException e) { } // nothing to do
+
+		newDay=day-minusDays;
+		int prevMonthLength = getMonthLength(month-1);
+//		System.out.println("New day " + newDay + ". Old day " + day + ". Delta " + num);
+		if(newDay<1) {
+			newDay=prevMonthLength-newDay;
+			month=month-1;
 		}
-		if(month==4) { // apr
-			return 30;
+		newMonth=month;
+//		System.out.println("New month " + month);
+		if(month<1) {
+			newMonth=newMonth+12;
+			year=year-1;
 		}
-		if(month==5) { // may
-			return 31;
+		newYear=year;
+//		System.out.println("New year " + year);
+
+		sDay = getTwoDigitString(newDay);
+		sMonth = getTwoDigitString(newMonth);
+		sYear=newYear.toString();
+		s=sYear+"-"+sMonth+"-"+sDay;
+		
+//		System.out.println("Date plus is " + s + "\n");
+		return s;
+	}
+
+	private String getTwoDigitString(Integer newDay) {
+		String sDay;
+		sDay=newDay.toString();
+		if(newDay<10){
+			sDay="0"+sDay;
 		}
-		if(month==6) { // jun
-			return 30;
-		}
-		if(month==7) { // jul
-			return 31;
-		}
-		if(month==8) { // aug
-			return 31;
-		}
-		if(month==9) { // sep
-			return 30;
-		}
-		if(month==10) { // oct
-			return 31;
-		}
-		if(month==11) { // nov
-			return 30;
-		}
-		if(month==12) { // dec
-			return 31;
-		}
-		return -1;
+		return sDay;
 	}
 	
 	// TEST
+	public boolean test() {
+		
+		boolean result = 	testDatePlus() && 
+							testDateMinus();
+		
+		
+		return result;
+		
+	}
 	
+	private boolean testDatePlus() {
+		
+		boolean result = false;
+		
+		String date1 = "2015-02-28";
+		String date2 = "2015-12-31";		
+		int delta = 1;
+		
+		String dateOut1 = getDashedDatePlus(date1, delta);	
+		String dateOut2 = getDashedDatePlus(date2, delta);	
+
+		if(	dateOut1.equals("2015-03-01") &&
+			dateOut2.equals("2016-01-01")) {
+			result = true;
+		}		
+		
+//		System.out.println("testDatePlus " + date2);
+		
+		return result;
+	}
 	
+	private boolean testDateMinus() {
+		
+		boolean result = false;
+
+		String date1 = "2015-03-01";
+		String date2 = "2015-01-01";
+		int delta = 1;
+		
+		String dateOut1 = getDashedDateMinus(date1, delta);
+		String dateOut2 = getDashedDateMinus(date2, delta);
+		
+		if(	dateOut1.equals("2015-02-28") &&
+			dateOut2.equals("2014-12-31")) {
+			result = true;
+		}
+
+		System.out.println("testDateMinus " + dateOut1);
+		System.out.println("testDateMinus " + dateOut2);
+		
+		return result;
+	}
 	
 	// PRINT
 	
