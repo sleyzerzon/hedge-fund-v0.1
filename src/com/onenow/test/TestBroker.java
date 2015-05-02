@@ -52,7 +52,8 @@ public class TestBroker {
 	}
 	
 	public TestBroker (DatabaseSystemActivityImpl logDB) {
-		setLogDB(logDB);
+		
+		this.logDB = logDB;
 
 		try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
@@ -94,9 +95,9 @@ public class TestBroker {
 		// print to screen
 		System.out.println(s);
 		// save to database
-		if(getLogDB().isDBLive()) {
+		if(logDB.isDBLive()) {
 			try {
-				getLogDB().newLog("TestBroker", s);
+				logDB.newLog("TestBroker", s);
 			} catch (ConnectionException e) {
 				e.printStackTrace();
 			}

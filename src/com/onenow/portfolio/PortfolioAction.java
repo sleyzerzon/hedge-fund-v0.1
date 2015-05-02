@@ -100,7 +100,7 @@ public class PortfolioAction {
 	// PRIVATE
 	private void lookupIndexPrice() {
 		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.TRADED.toString());
+		Double price = getBroker().getPrice(index, TradeType.TRADED);
 		setUnderPrice(price);
 	}
 
@@ -157,7 +157,7 @@ public class PortfolioAction {
 //			} 
 //		} 
 		
-		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType.toString(), inv, getAgression()));
+		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType, inv, getAgression()));
 		return trade;
 	}
 	
@@ -345,10 +345,10 @@ public class PortfolioAction {
 		Double putStrike =  callStrike + 2*separation;
 		// look at extremes
 		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
-		Double putMid = getBroker().getBestBid(TradeType.BUY.toString(), putExt, 0.50);
+		Double putMid = getBroker().getBestBid(TradeType.BUY, putExt, 0.50);
 		Double estClosingPut = putStrike-putMid;
 		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
-		Double callMid = getBroker().getBestBid(TradeType.BUY.toString(), callExt, 0.50);	
+		Double callMid = getBroker().getBestBid(TradeType.BUY, callExt, 0.50);	
 		Double estClosingCall = callStrike+callMid;
 		
 		Double estClosing = (estClosingPut+estClosingCall)/2;

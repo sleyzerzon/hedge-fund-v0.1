@@ -3,6 +3,7 @@ package com.onenow.instrument;
 import java.util.HashMap;
 
 import com.onenow.constant.InvType;
+import com.onenow.constant.SamplingRate;
 import com.onenow.execution.Contract;
 import com.onenow.research.Chart;
 import com.onenow.risk.Reward;
@@ -16,7 +17,7 @@ public class Investment {
 	private Reward reward;
 	private Risk risk;
 	
-	HashMap<String, Chart> charts = new HashMap<String, Chart>();
+	HashMap<SamplingRate, Chart> charts = new HashMap<SamplingRate, Chart>();
 	
 	
 	// CONSTRUCTOR
@@ -89,11 +90,11 @@ public class Investment {
 		this.risk = risk;
 	}
 
-	public HashMap<String, Chart> getCharts() {
+	public HashMap<SamplingRate, Chart> getCharts() {
 		return charts;
 	}
 
-	public void setCharts(HashMap<String, Chart> charts) {
+	public void setCharts(HashMap<SamplingRate, Chart> charts) {
 		this.charts = charts;
 	}
 

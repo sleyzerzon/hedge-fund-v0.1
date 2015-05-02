@@ -51,18 +51,16 @@ public class Sampling {
 	}
 	
 	
-	public List<SamplingRate> getList(String rate) {
+	// call multiple times to get all
+	public List<SamplingRate> getList(SamplingRate rate) { 
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
-		if(rate.equals("default") || rate.equals("")) {
-			list.addAll(getDefaultSampling());
-		}
-		if(rate.equals(SamplingRate.SCALP) || rate.equals("all")) {
+		if(rate.equals(SamplingRate.SCALP)) {
 			list.addAll(getScalpSampling());
 		}
-		if(rate.equals(SamplingRate.SWING) || rate.equals("all")) {
+		if(rate.equals(SamplingRate.SWING)) {
 			list.addAll(getSwingSampling());
 		}
-		if(rate.equals(SamplingRate.TREND) || rate.equals("all")) {
+		if(rate.equals(SamplingRate.TREND)) {
 			list.addAll(getTrendSampling());
 		}
 		return list;
@@ -73,11 +71,6 @@ public class Sampling {
 		list.add(SamplingRate.SCALP);
 		list.add(SamplingRate.SWING);
 		list.add(SamplingRate.TREND);
-		return list;
-	}
-	private List<SamplingRate> getDefaultSampling() {
-		List<SamplingRate> list = new ArrayList<SamplingRate>();
-		list.add(SamplingRate.SCALPSHORT);
 		return list;
 	}
 	private List<SamplingRate> getScalpSampling() {

@@ -1,6 +1,10 @@
-package com.onenow.test;
+package com.onennow.main;
 
 import com.onenow.admin.DatabaseSystemActivityImpl;
+import com.onenow.test.TestBroker;
+import com.onenow.test.TestDatabase;
+import com.onenow.test.TestFinance;
+import com.onenow.test.TestUtil;
 
 public class TestMain {
 
@@ -15,12 +19,16 @@ public class TestMain {
 		}
 
 		System.out.println("TESTING FINANCE");
-		TestFinance finance = new TestFinance(logDB);
-//		finance.test();
+		TestFinance financeTester = new TestFinance(logDB);
+//		financeTester.test();
 		
 		System.out.println("TESTING BROKER");
-		TestBroker broker = new TestBroker(logDB);
-//		broker.test();
+		TestBroker brokerTester = new TestBroker(logDB);
+//		brokerTester.test();
+		
+		System.out.println("TESTING UTIL");
+		TestUtil utilTester = new TestUtil(logDB);
+		utilTester.test();
 
 	}
 

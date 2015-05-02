@@ -95,21 +95,21 @@ public class PortfolioFactory {
 	private void getUptodateInvestmentCharts() {
 		String fromDate = "2015-02-21"; 	// TODO: configurable date
 		String toDate = "2015-02-28";
-		for(String sampling:getSampling().getList("")) {
+		for(SamplingRate sampling:getSampling().getList(SamplingRate.SCALPSHORT)) { // TODO: what rates?
 			for(Investment inv:getMarketPortfolio().getInvestments()) {
 				getInvestmentChart(inv, sampling, fromDate, toDate);
 			}
 		}
 	}
 	
-	private void getInvestmentChart(Investment inv, String sampling, String fromDate, String toDate) {
+	private void getInvestmentChart(Investment inv, SamplingRate sampling, String fromDate, String toDate) {
 
 		Chart chart = new Chart();
 		
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 		
-		chart = getMarketPrice().readChart(	inv, TradeType.TRADED.toString(), sampling, 
+		chart = getMarketPrice().readChart(	inv, TradeType.TRADED, sampling, 
 											fromDate, toDate,
 											source, timing);
 		
@@ -125,10 +125,10 @@ public class PortfolioFactory {
 	private void analyzeUptodateInvestmentCharts() {
 		System.out.println("\n\n" + "ANALYZING CHARTS");
 		for(Investment inv:getMarketPortfolio().getInvestments()) {
-			for(String trading:getSampling().getTradingOptions()) {
+			for(SamplingRate trading:getSampling().getTradingOptions()) {
 				String analysis = "";
 				analysis = analysis + "=====" + inv.toString() + "=====" + "\n";
-				for(String sampling:getSampling().getList(trading)) { 
+				for(SamplingRate sampling:getSampling().getList(trading)) { 
 					analysis = analysis + getInvestmentAnalysis(inv, sampling);
 				}			
 				System.out.println(analysis + "\n");
@@ -136,7 +136,7 @@ public class PortfolioFactory {
 		}	
 	}
 
-	private String getInvestmentAnalysis(Investment inv, String sampling) {
+	private String getInvestmentAnalysis(Investment inv, SamplingRate sampling) {
 		String s = "\n";
 		s = s + ">> " + sampling + "\t"; 
 		Chart chart = inv.getCharts().get(sampling);

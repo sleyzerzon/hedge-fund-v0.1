@@ -33,7 +33,7 @@ public class TestFinance {
 	}
 	
 	public TestFinance(DatabaseSystemActivityImpl logDB) {
-		setLogDB(logDB);
+		this.logDB = logDB;
 	}
 
 	public boolean test() {
@@ -67,9 +67,9 @@ public class TestFinance {
 		// print to screen
 		System.out.println(s);
 		// save to db
-		if(getLogDB().isDBLive()) {
+		if(logDB.isDBLive()) {
 			try {
-				getLogDB().newLog("TestFinance", s);
+				logDB.newLog("TestFinance", s);
 			} catch (ConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -151,14 +151,6 @@ public class TestFinance {
 //				new Trade(new InvestmentOption(under, InvType.CALL, exp, callBuyStrike), 
 //				TradeType.BUY, quantity, callBuyPrice);
 		return callBuy;
-	}
-
-	private DatabaseSystemActivityImpl getLogDB() {
-		return logDB;
-	}
-
-	private void setLogDB(DatabaseSystemActivityImpl logDB) {
-		this.logDB = logDB;
 	}
 
 	

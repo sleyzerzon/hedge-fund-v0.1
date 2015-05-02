@@ -42,7 +42,13 @@ public class BrokerGoogle implements Broker {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, String type) {
+	public Double getPrice(Investment inv, TradeType type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -96,7 +96,7 @@ public class Cache {
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
-		for(SamplingRate sampling:sampling.getList("")) {
+		for(SamplingRate sampling:sampling.getList(SamplingRate.SCALPSHORT)) { // TODO: what sampling?
 			// use miss function to force update of charts
 			readthroughChartFromL12(	inv, tradeType, sampling,
 										origin, parseDate.getTomorrow(), // TODO: From/To Date actual
