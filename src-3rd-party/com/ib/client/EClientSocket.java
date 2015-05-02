@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -289,6 +290,7 @@ public class EClientSocket {
             eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
         }
         catch( Exception e) {
+        	System.out.println ("COULD NOT CONNECT TO GATEWAY / TWS");
         	e.printStackTrace();
         	eDisconnect();
             connectionError(); 

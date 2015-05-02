@@ -5,7 +5,7 @@ import com.sforce.ws.ConnectionException;
 
 public class TestDatabase {
 	
-	private DatabaseSystemActivityImpl logDB;
+	private DatabaseSystemActivityImpl logDB = null;
 	
 	// CONSTRUCTOR
 	public TestDatabase() {
@@ -25,14 +25,17 @@ public class TestDatabase {
 		if(success==true) {
 			s = s + "\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestDatabase";
 		} else {
-			s = s + "ERROR " + "TestDatabase";
+			s = s + "TEST ERROR: " + "TestDatabase";
 		}
+		// print to screen
 		System.out.println(s);
-		try {
-			getLogDB().newLog("TestDatabase", s);
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// save to DB
+		if(getLogDB()!=null) {
+			try {
+				getLogDB().newLog("TestDatabase", s);
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
 		}
 		return success;
 		
@@ -41,16 +44,25 @@ public class TestDatabase {
 	
 	private boolean testDB() {
 		
-		DatabaseSystemActivityImpl db = new DatabaseSystemActivityImpl();
+		boolean success = true;
 		
-		System.out.println("\n\n" + "DB");
-		db.toString();
+		
+		try {
+			DatabaseSystemActivityImpl db = new DatabaseSystemActivityImpl();	
+			System.out.println("\n\n" + "DB");
+			db.toString();
+		} catch (Exception e) {
+			success = false;
+			e.printStackTrace();
+			System.out.println("ERROR: Could not initialize: DatabaseSystemActivityImpl");
+		}
 		
 //		if(!tx.getNetPremium().equals(39761.0)) {
 //			System.out.println("ERROR premium " + tx.getNetPremium());
 //			return false;
 //		}
-		return true;
+		
+		return success;
 	}
 
 	private DatabaseSystemActivityImpl getLogDB() {

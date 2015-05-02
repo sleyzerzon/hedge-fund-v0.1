@@ -20,16 +20,16 @@ public class Cache {
 	
 	private Broker 	broker;
 	private TSDB 	TSDB;			// database
-
+	
+	private Sampling 	sampling;
 	private Lookup 	lookup;			// key
 	
 	private HashMap<String, EventRT>	lastEventRT; 	// last set of price/size/etc
 	private HashMap<String, Chart>		charts;			// price history in chart format
-	private HashMap<String, Long> 		lastHistroy;	// most recent date captured from L2
-	
+
+	private String		origin = "2015-05-01";	
 	private ParseDate	parseDate = new ParseDate();
-	private String		origin = "2015-01-01";
-	private Sampling 	sampling;
+
 	
 
 	public Cache() {
@@ -244,7 +244,7 @@ public class Cache {
 												source, timing);
 			charts.put(key, chart);				
 			
-			// augment L1 with data from L2 (3rd party DB)
+			// augment L1 with data from L2 (3rd party DB), if data not complete from origin
 			readHistoryFromL2(inv, toDate);
 
 		} catch (Exception e) {
@@ -276,34 +276,39 @@ public class Cache {
 	private void readHistoryFromL2(Investment inv, String toDate) {
 		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
 
-//		paceHistoricalQuery();
 
-//		for(lastHistory) {
-		
-			TradeType dataType = TradeType.TRADED; // TODO: traded?
+		// go from origin 
+		String date = origin;
+		while(true) { 
+			
+			
+			TradeType tradeType = TradeType.TRADED; // TODO: traded?
 			InvDataSource source = InvDataSource.IB;
 			InvDataTiming timing = InvDataTiming.HISTORICAL;
-			
-//			String key = lookup.getChartKey(	inv, dataType, sampling, 
-//												origin, toDate,
-//												source, timing);
 
-//		}
+			// TODO: only if it is not already in L1
+				// paceHistoricalQuery();
+				QuoteHistory history = broker.readHistoricalQuotes(inv, getParser().getClose(date)); 
+	    
+			if(history.equals("")) {
+				System.out.println("WARNING: HISTORICAL DATA FARM DOWN?"); 
+			} else {
+				System.out.println("HISTORY " + history.toString());
+			}
 		
-		// TODO: progressively past
-	    QuoteHistory history = broker.readHistoricalQuotes(inv, getParser().getCloseToday()); 
+			readthroughL2ToHistoricalL1(inv, history, 
+										tradeType, 
+										source, timing);	
 		
-		if(history.equals("")) {
-			System.out.println("WARNING: HISTORICAL DATA FARM DOWN?"); 
-		} else {
-			System.out.println("HISTORY " + history.toString());
+			date = getParser().getDashedDatePlus(date, 1);
+			
+			// all through today
+			if(getParser().isLaterDate(date, getParser().getToday())) { 
+				return;
+			}
 		}
-		
-		readthroughL2ToHistoricalL1(inv, history, 
-									dataType, 
-									source, timing);
-		
 	}
+	
 
 	private void readthroughL2ToHistoricalL1(Investment inv, QuoteHistory history, 
 											TradeType dataType,

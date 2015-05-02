@@ -70,13 +70,17 @@ public class TestBroker {
 		if(success==true) {
 			s = s + "NO ERRORS FOUND==AT-ALL==: " + "TestBroker" + "\n\n";
 		} else {
-			s = s + "ERROR " + "TestBroker"  + "\n\n";
+			s = s + "TEST ERROR: " + "TestBroker"  + "\n\n";
 		}
+		// print to screen
 		System.out.println(s);
-		try {
-			getLogDB().newLog("TestBroker", s);
-		} catch (ConnectionException e) {
-			e.printStackTrace();
+		// save to database
+		if(getLogDB().isDBLive()) {
+			try {
+				getLogDB().newLog("TestBroker", s);
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

@@ -47,14 +47,18 @@ public class TestFinance {
 			s = s + "\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestFinance";
 			System.out.println("\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestFinance");
 		} else {
-			s = s + "\n" + "ERROR " + "TestFinance";
+			s = s + "\n" + "TEST ERROR: " + "TestFinance";
 		}
+		// print to screen
 		System.out.println(s);
-		try {
-			getLogDB().newLog("TestFinance", s);
-		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// save to db
+		if(getLogDB().isDBLive()) {
+			try {
+				getLogDB().newLog("TestFinance", s);
+			} catch (ConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		Sequence seq = new Sequence();

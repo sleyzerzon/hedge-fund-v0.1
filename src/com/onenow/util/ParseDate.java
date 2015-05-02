@@ -19,15 +19,21 @@ public class ParseDate {
 		return sdf.format(today);
 	}
 	
+	public String getClose(String date) {
+		String s = "";
+		s = date + " 16:30:00";
+		return s;
+	}
+	
 	public String getCloseToday() {
 		String s = "";
-		s = s + " 16:30:00";
+		s = getClose(getToday());
 		return s;
 	}
 	
 	public String getTomorrow() {
 		String s = "";
-		s = s + getDatePlus(getToday(), 1);
+		s = s + getDashedDatePlus(getToday(), 1);
 		return s;
 	}
 	
@@ -135,7 +141,7 @@ public class ParseDate {
 			} else {
 				return weeksToPresent;
 			}
-			dashedDate = getDatePlus(dashedDate, 7); // skip a week
+			dashedDate = getDashedDatePlus(dashedDate, 7); // skip a week
 		}
 	}
 	
@@ -147,20 +153,20 @@ public class ParseDate {
 
 	/**
 	 * Returns true if dashedDate2 is later than dashedDate1
-	 * @param dashedDate1
-	 * @param dashedDate2
+	 * @param dashedDate
+	 * @param dashedCheckAgainstDate
 	 * @return
 	 */
-	public boolean isLaterDate(String dashedDate1, String dashedDate2) {
+	public boolean isLaterDate(String dashedDate, String dashedCheckAgainstDate) {
 		boolean later = true;
-		Integer year1 = Integer.parseInt(getDashedYear(dashedDate1));
-		Integer year2 = Integer.parseInt(getDashedYear(dashedDate2));
+		Integer year1 = Integer.parseInt(getDashedYear(dashedDate));
+		Integer year2 = Integer.parseInt(getDashedYear(dashedCheckAgainstDate));
 		if(year1>year2) { return false; }
-		Integer month1 = Integer.parseInt(getDashedMonth(dashedDate1));
-		Integer month2 = Integer.parseInt(getDashedMonth(dashedDate2));
+		Integer month1 = Integer.parseInt(getDashedMonth(dashedDate));
+		Integer month2 = Integer.parseInt(getDashedMonth(dashedCheckAgainstDate));
 		if(month1>month2) { return false; }
-		Integer day1 = Integer.parseInt(getDashedDay(dashedDate1));
-		Integer day2 = Integer.parseInt(getDashedDay(dashedDate2));
+		Integer day1 = Integer.parseInt(getDashedDay(dashedDate));
+		Integer day2 = Integer.parseInt(getDashedDay(dashedCheckAgainstDate));
 		if(day1>day2) { return false; }
 		return later;
 	}
@@ -175,10 +181,10 @@ public class ParseDate {
 	/**
 	 * Returns a new date from an old date plus the number of days since
 	 * @param dashedDate
-	 * @param num
+	 * @param plusDays
 	 * @return
 	 */
-	public String getDatePlus(String dashedDate, Integer num){
+	public String getDashedDatePlus(String dashedDate, Integer plusDays){
 //		System.out.println("Dashed date " + dashedDate + ". Num " + num);
 		
 		String s= "";
@@ -201,7 +207,7 @@ public class ParseDate {
 			year = Integer.parseInt(getDashedYear(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do
 
-		newDay=day+num;
+		newDay=day+plusDays;
 //		System.out.println("New day " + newDay + ". Old day " + day + ". Delta " + num);
 		if(newDay>31) {
 			newDay=newDay-31;
@@ -232,7 +238,7 @@ public class ParseDate {
 		return s;
 	}
 	
-	public Integer getElapsedDays(String d1, String d2) {
+	public Integer getElapsedDays(String dashedDay1, String dahsedDay2) {
 		Integer elapsedDays = 0;
 		Integer elapsedMonths = 0;
 		Integer elapsedYears = 0; // TODO
@@ -243,8 +249,8 @@ public class ParseDate {
 		Integer day2=0;
 		
 		try {
-			month1 = Integer.parseInt(getDashedMonth(d1));
-			month2 = Integer.parseInt(getDashedMonth(d2));
+			month1 = Integer.parseInt(getDashedMonth(dashedDay1));
+			month2 = Integer.parseInt(getDashedMonth(dahsedDay2));
 			elapsedMonths = 11-month1+month2;
 			if(month2>month1) {
 				elapsedMonths = month2-month1-1;				
@@ -256,8 +262,8 @@ public class ParseDate {
 		
 		
 		try {
-			day1 = Integer.parseInt(getDashedDay(d1));
-			day2 = Integer.parseInt(getDashedDay(d2));
+			day1 = Integer.parseInt(getDashedDay(dashedDay1));
+			day2 = Integer.parseInt(getDashedDay(dahsedDay2));
 			elapsedDays = 31-day1+day2; // assumes 31d month
 
 			if(day2>day1) { // same month
@@ -306,16 +312,18 @@ public class ParseDate {
 		if(month==10) { // oct
 			return 31;
 		}
-		if(month==11) { // jan
+		if(month==11) { // nov
 			return 30;
 		}
-		if(month==12) { // jan
+		if(month==12) { // dec
 			return 31;
 		}
 		return -1;
 	}
 	
 	// TEST
+	
+	
 	
 	// PRINT
 	

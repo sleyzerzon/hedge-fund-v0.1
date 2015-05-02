@@ -1,5 +1,6 @@
 package com.onenow.execution;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,8 +57,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	
 	/**
 	 * Get quotes after initializing overall market and my portfolio
+	 * @throws ConnectException 
 	 */
-	public BrokerInteractive() {
+	public BrokerInteractive() throws ConnectException {
 
 		// TODO: test invest in only SPX-related instruments
 		Underlying index = new Underlying("SPX");				
@@ -87,6 +89,26 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		// default Trader Work Station port: 7496
 		// default IB Gateway port: 4001
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
+		
+		// TODO: add re-tries here
+//		java.net.ConnectException: Connection refused
+//		at java.net.PlainSocketImpl.socketConnect(Native Method)
+//		at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+//		at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+//		at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+//		at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+//		at java.net.Socket.connect(Socket.java:589)
+//		at java.net.Socket.connect(Socket.java:538)
+//		at java.net.Socket.<init>(Socket.java:434)
+//		at java.net.Socket.<init>(Socket.java:211)
+//		at com.ib.client.EClientSocket.eConnect(EClientSocket.java:289)
+//		at com.ib.client.EClientSocket.eConnect(EClientSocket.java:272)
+//		at com.onenow.portfolio.BrokerController.connect(BrokerController.java:97)
+//		at com.onenow.execution.BrokerInteractive.connectToServer(BrokerInteractive.java:91)
+//		at com.onenow.execution.BrokerInteractive.<init>(BrokerInteractive.java:67)
+//		at com.onennow.main.BrokerMain.main(BrokerMain.java:19)
+//	-1 502 Couldn't connect to TWS.  Confirm that "Enable ActiveX and Socket Clients" is enabled on the TWS "Configure->API" menu.
+		
 		
 	}
 

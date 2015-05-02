@@ -16,14 +16,28 @@ import com.sforce.ws.ConnectionException;
 
 public class DatabaseSystemActivityImpl implements DatabaseSystemActivity {
 
-	private static DatabaseSystemSForce SForce = new DatabaseSystemSForce();
+	public static DatabaseSystemSForce SForce;
 
 	// CONSTRUCTOR
-	public DatabaseSystemActivityImpl() {
-		
+	public DatabaseSystemActivityImpl() {	
+		try {
+			this.SForce = new DatabaseSystemSForce();
+		} catch (Exception e) {
+			this.SForce = null;
+			System.out.println("ERROR: Could not initalize DatabaseSystemSForce");
+//			e.printStackTrace();
+		}
 	}
 	
 	// PUBLIC
+	public boolean isDBLive() {
+		boolean isLive = false;
+		if(SForce!=null) {
+			isLive = true;
+		}
+		return isLive;
+	}
+	
 	@Override
 	public List<Reduction__c> getReductions() throws ConnectionException {
 		return getSForce().getReductions();		

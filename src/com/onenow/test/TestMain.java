@@ -6,18 +6,19 @@ public class TestMain {
 
 	public static void main(String[] args) {
 
-
 		DatabaseSystemActivityImpl logDB = new DatabaseSystemActivityImpl();
 
-		TestDatabase database = new TestDatabase(logDB);
-		database.test();
-
+		if(logDB.isDBLive()) {
+			System.out.println("TESTING DATABASE");
+			TestDatabase database = new TestDatabase(logDB);
+			database.test();
+		}
+		
 		TestFinance finance = new TestFinance(logDB);
 		finance.test();
 		
 		TestBroker broker = new TestBroker(logDB);
 		broker.test();
-
 
 	}
 

@@ -106,9 +106,9 @@ public class Channel {
 		String lastResistanceDate = getLastResistanceDate();
 		String lastSupportDate = getLastSupportDate();
 		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
-			date = parser.getDatePlus(lastResistanceDate, halfSupportCycle); 
+			date = parser.getDashedDatePlus(lastResistanceDate, halfSupportCycle); 
 		} else {
-			date = parser.getDatePlus(lastSupportDate, halfSupportCycle+halfResistanceCycle);
+			date = parser.getDashedDatePlus(lastSupportDate, halfSupportCycle+halfResistanceCycle);
 		}
 
 //		System.out.println("f- " + lastDate + " " + halfCycle + " " + date);
@@ -124,9 +124,9 @@ public class Channel {
 		String lastResistanceDate = getLastResistanceDate();
 		String lastSupportDate = getLastSupportDate();
 		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
-			date = parser.getDatePlus(lastResistanceDate, halfSupportCycle+halfResistanceCycle); 
+			date = parser.getDashedDatePlus(lastResistanceDate, halfSupportCycle+halfResistanceCycle); 
 		} else {
-			date = parser.getDatePlus(lastSupportDate, halfResistanceCycle);
+			date = parser.getDashedDatePlus(lastSupportDate, halfResistanceCycle);
 		}
 
 		return date;		

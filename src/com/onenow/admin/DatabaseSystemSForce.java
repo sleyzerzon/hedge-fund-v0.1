@@ -32,14 +32,9 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	private static EnterpriseConnection entConnection;
 	private static LoginResult loginResult;
 
-	public DatabaseSystemSForce() {
-		try {
-			doLogin();
-			doConnect();
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-			System.out.println("Connected to Salesforce! OOPS");
-		}		
+	public DatabaseSystemSForce() throws ConnectionException {
+		doLogin();
+		doConnect();
 	}
 
 	// REDUCTIONS
@@ -281,7 +276,12 @@ public class DatabaseSystemSForce implements DatabaseSystem {
 	}
 
 	private QueryResult query(String query) throws ConnectionException {
-		QueryResult qResult = getEntConnection().query(query);
+		QueryResult qResult = new QueryResult();
+		try {
+			qResult = getEntConnection().query(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return qResult;
 	}
 
