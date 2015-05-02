@@ -61,7 +61,7 @@ public class BrokerEmulator implements Broker {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, String type) {
+	public Double getPrice(Investment inv, TradeType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -85,11 +85,11 @@ public class BrokerEmulator implements Broker {
 //		getMarketPrices().setPrice(put1, 9.50, 9.49);
 //		getMarketPrices().setPrice(put2, 8.33, 8.32);
 		// create trades based on market price
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(stock, TradeType.BUY.toString()));
-		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call1, TradeType.BUY.toString()));
-		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call2, TradeType.BUY.toString()));
-		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put1, TradeType.BUY.toString()));
-		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put2, TradeType.BUY.toString()));
+		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().readPrice(stock, TradeType.BUY));
+		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().readPrice(call1, TradeType.BUY));
+		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().readPrice(call2, TradeType.BUY));
+		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().readPrice(put1, TradeType.BUY));
+		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().readPrice(put2, TradeType.BUY));
 		// transact it
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
 		marketPortfolio.enterTransaction(trans);
@@ -131,21 +131,21 @@ public class BrokerEmulator implements Broker {
 //		getMarketPrices().setPrice(call0, 0.05, 0.05);
 		
 		// create trades based on market price
-		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(index, TradeType.TRADED.toString()));
-		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put0, TradeType.BUY.toString()));
-		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put1, TradeType.BUY.toString()));
-		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put2, TradeType.BUY.toString()));
-		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put3, TradeType.BUY.toString()));
-		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put4, TradeType.BUY.toString()));
-		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put5, TradeType.BUY.toString()));
-		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(put6, TradeType.BUY.toString()));
+		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().readPrice(index, TradeType.TRADED));
+		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().readPrice(put0, TradeType.BUY));
+		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().readPrice(put1, TradeType.BUY));
+		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().readPrice(put2, TradeType.BUY));
+		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().readPrice(put3, TradeType.BUY));
+		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().readPrice(put4, TradeType.BUY));
+		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().readPrice(put5, TradeType.BUY));
+		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().readPrice(put6, TradeType.BUY));
 
-		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call0, TradeType.BUY.toString()));
-		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call1, TradeType.BUY.toString()));
-		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call2, TradeType.BUY.toString()));
-		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call3, TradeType.BUY.toString()));
-		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call4, TradeType.BUY.toString()));
-		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().readPriceFromMap(call5, TradeType.BUY.toString()));
+		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().readPrice(call0, TradeType.BUY));
+		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().readPrice(call1, TradeType.BUY));
+		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().readPrice(call2, TradeType.BUY));
+		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().readPrice(call3, TradeType.BUY));
+		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().readPrice(call4, TradeType.BUY));
+		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().readPrice(call5, TradeType.BUY));
 
 		
 		// transact it
@@ -214,6 +214,12 @@ public class BrokerEmulator implements Broker {
 
 	private static void setMarketPortfolio(Portfolio marketPortfolio) {
 		BrokerEmulator.marketPortfolio = marketPortfolio;
+	}
+
+	@Override
+	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

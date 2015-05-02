@@ -8,6 +8,8 @@ import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
 import com.onenow.execution.BrokerActivityImpl;
+import com.onenow.execution.BrokerEmulator;
+import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
@@ -24,9 +26,9 @@ import com.sforce.ws.ConnectionException;
 public class TestBroker {
 
 	private DatabaseSystemActivityImpl logDB;
-	private BrokerActivityImpl broker = new BrokerActivityImpl();
-	private List<Underlying> unders = broker.getUnderlying();
-	private Portfolio market = broker.getMarketPortfolio();
+	private BrokerActivityImpl broker;
+	private List<Underlying> unders;
+	private Portfolio market;
 
 	Investment stock = new Investment();
 	Investment call1 = new Investment();
@@ -46,21 +48,38 @@ public class TestBroker {
 	
 	// CONSTRUCTOR
 	public TestBroker() {
-		
+
 	}
 	
 	public TestBroker (DatabaseSystemActivityImpl logDB) {
 		setLogDB(logDB);
-		setUnders(getBroker().getUnderlying());
-		setMarket(getBroker().getMarketPortfolio());
-		setUnders(getBroker().getUnderlying());
-		setMarket(getBroker().getMarketPortfolio());
+
+		try {
+			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
+			this.broker = new BrokerActivityImpl(new BrokerInteractive());
+			this.unders = broker.getUnderlying();
+			this.market = broker.getMarketPortfolio();
+			setUnders(getBroker().getUnderlying());
+			setMarket(getBroker().getMarketPortfolio());
+			setUnders(getBroker().getUnderlying());
+			setMarket(getBroker().getMarketPortfolio());
+
+		} catch (Exception e) {
+			System.out.println("ERROR initializing BrokerActivityImpl");
+			e.printStackTrace();
+		}
 	}
 
 	// PUBLIC
 	public boolean test() {
-		boolean result = 	testBuy() &&
-							testExocet();  // TODO: && with other tests
+		boolean result;
+		try {
+			result = 	testBuy() &&
+						testExocet();
+		} catch (Exception e) {
+			result = false;
+			e.printStackTrace();
+		}
 		handleResult(result);	
 		return result;
 	}

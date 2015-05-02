@@ -116,10 +116,11 @@ public class Cache {
 	public double readPrice(Investment inv, TradeType tradeType) {
 
 		// HIT
-		Double price = readPriceFromL0(inv, tradeType);  
+		Double price = readPriceFromL0(inv, tradeType);
 
 		// MISS: fill with the last data from chart until RT events start to hit
 		if(price==null) {
+			System.out.println("Null price from cache");
 			price = readPriceFromChart(inv, tradeType);
 		} 
 		

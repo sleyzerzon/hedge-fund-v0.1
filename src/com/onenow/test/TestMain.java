@@ -13,12 +13,14 @@ public class TestMain {
 			TestDatabase database = new TestDatabase(logDB);
 			database.test();
 		}
-		
+
+		System.out.println("TESTING FINANCE");
 		TestFinance finance = new TestFinance(logDB);
-		finance.test();
+//		finance.test();
 		
+		System.out.println("TESTING BROKER");
 		TestBroker broker = new TestBroker(logDB);
-		broker.test();
+//		broker.test();
 
 	}
 

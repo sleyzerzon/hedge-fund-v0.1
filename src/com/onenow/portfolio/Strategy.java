@@ -18,20 +18,20 @@ public class Strategy {
 		
 	// CONSTRUCTOR
 	public Strategy() {
-		setTransactions(new ArrayList<Transaction>());
+		this.transactions = new ArrayList<Transaction>();
 		setCheckpoints(new ArrayList<Integer>());		
 	}
 	
 	// PUBLIC	
 	public Transaction addTransaction() {
 		Transaction trans = new Transaction();
-		getTransactions().add(trans);
+		transactions.add(trans);
 		return trans;
 	}
 		
 	public Double getMargin() {
 		Double margin=0.0;
-		for(Transaction trans:getTransactions()) {
+		for(Transaction trans:transactions) {
 			margin+=trans.getMargin();
 		}
 		if(margin<0.0) {
@@ -46,7 +46,7 @@ public class Strategy {
 	
 	public Double getNetValue(Double marketPrice) {
 		Double net = getNetPremium();  
-		for(Transaction trans:getTransactions()) {
+		for(Transaction trans:transactions) {
 			for(Trade trade:trans.getTrades()) {
 				net += trade.getValue(marketPrice); 
 			}
@@ -57,7 +57,7 @@ public class Strategy {
 	public Double getNetPremium() {
 		Double netPremium = 0.0;
 		
-		for(Transaction trans:getTransactions()) {		
+		for(Transaction trans:transactions) {		
 			for (Trade trade:trans.getTrades()) {
 				netPremium += trade.getNetPremium();
 			}
@@ -79,7 +79,7 @@ public class Strategy {
 	
 	public Double getMaxProfit() { // profit
 		Double max=0.0;
-		for(Transaction trans:getTransactions()) {		
+		for(Transaction trans:transactions) {		
 			max+=trans.getMaxProfit();
 		}		
 		return max;
@@ -88,7 +88,7 @@ public class Strategy {
 	public Double getMaxLoss() { // loss
 		Double max=0.0;
 		setStrikes();
-		for(Transaction trans:getTransactions()) {		
+		for(Transaction trans:transactions) {		
 			max+=trans.getMaxLoss();
 		}
 		return max;
@@ -123,7 +123,7 @@ public class Strategy {
 
 	private void setStrikes() {
 		Double strike=0.0;
-		for(Transaction trans:getTransactions()) {
+		for(Transaction trans:transactions) {
 			for (Trade trade:trans.getTrades()) {
 				strike = trade.getStrike();
 				setStrikeVariants(strike);
@@ -303,14 +303,6 @@ public class Strategy {
 
 
 	// SET GET
-	public List<Transaction> getTransactions() {
-		return transactions;
-	}
-
-	private void setTransactions(ArrayList<Transaction> transactions) {
-		this.transactions = transactions;
-		}
-
 	private List<Integer> getCheckpoints() {
 		return checkpoints;
 	}
@@ -341,6 +333,14 @@ public class Strategy {
 
 	public void setPastCheckpoint(Integer pastCheckpoint) {
 		this.pastCheckpoint = pastCheckpoint;
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
 	}
 
 }

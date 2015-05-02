@@ -19,7 +19,13 @@ public class TestDatabase {
 	// PUBLIC 
 	public boolean test() {
 		
-		boolean success = testDB();
+		boolean success;
+		try {
+			success = testDB();
+		} catch (Exception e1) {
+			success = false;
+			e1.printStackTrace();
+		}
 		
 		String s="";
 		if(success==true) {

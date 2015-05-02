@@ -38,14 +38,29 @@ public class TestFinance {
 
 	public boolean test() {
 
-		boolean success = 	testIronCondor(callBuy, callSell, putBuy, putSell) &&
-							testCallSpread(callBuy, callSell) &&
-							testPutSpread(putBuy, putSell) && 
-							testMarketAnalytics();
+		boolean result;
+		try {
+			result = testIronCondor(callBuy, callSell, putBuy, putSell) &&
+								testCallSpread(callBuy, callSell) &&
+								testPutSpread(putBuy, putSell) && 
+								testMarketAnalytics();
+		} catch (Exception e) {
+			result = false;
+			e.printStackTrace();
+		}
+		handleResult(result);
+		
+//		Sequence seq = new Sequence();
+//		StrategyIronCondor condor = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
+//		seq.getStrategies().add(condor);
+		
+		return result;
+	}
+
+	private void handleResult(boolean result) {
 		String s = "";
-		if(success==true) {
+		if(result==true) {
 			s = s + "\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestFinance";
-			System.out.println("\n" + "NO ERRORS FOUND==AT-ALL==: " + "TestFinance");
 		} else {
 			s = s + "\n" + "TEST ERROR: " + "TestFinance";
 		}
@@ -60,12 +75,6 @@ public class TestFinance {
 				e.printStackTrace();
 			}
 		}
-		
-		Sequence seq = new Sequence();
-//		StrategyIronCondor condor = new StrategyIronCondor(callBuy, callSell, putBuy, putSell);
-//		seq.getStrategies().add(condor);
-		
-		return success;
 	}
 	
 	// PRIVATE

@@ -75,9 +75,7 @@ public class MarketPrice {
 	 * @param tradeType
 	 */
 	public double readPrice(Investment inv, TradeType tradeType) {
-
 		return getCache().readPrice(inv, tradeType);
-		
 	}
 	
 //	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 

@@ -18,16 +18,16 @@ import com.onenow.portfolio.Transaction;
  */
 public class BrokerActivityImpl implements BrokerActivity { 
 
-	private static BrokerEmulator brokerEmulator;
-	private static BrokerInteractive brokerInteractive;
-	private static BrokerAWS brokerAWS;
-	private static BrokerGoogle brokerGoogle;
+	private static BrokerEmulator brokerEmulator = null;
+	private static BrokerInteractive brokerInteractive = null;
+	private static BrokerAWS brokerAWS = null;
+	private static BrokerGoogle brokerGoogle = null;
 
 	/**
 	 * Default constructor creates an emulator
 	 */
-	public BrokerActivityImpl() {
-		setBrokerEmulator(new BrokerEmulator());
+	public BrokerActivityImpl(BrokerEmulator be) {
+		this.brokerEmulator = be;
 	}
 
 	/**
@@ -35,10 +35,7 @@ public class BrokerActivityImpl implements BrokerActivity {
 	 * @param ib  
 	 */
 	public BrokerActivityImpl(BrokerInteractive ib) {
-		setBrokerEmulator(null);
-		setBrokerInteractive(ib);
-		setBrokerAWS(null);
-		setBrokerGoogle(null);
+		this.brokerInteractive = ib;
 	}
 	
 	/**
@@ -47,13 +44,13 @@ public class BrokerActivityImpl implements BrokerActivity {
 	 */
 	private Broker getBroker() {
 		Broker broker = null;
-		if(getBrokerEmulator()!=null) {
+		if(brokerEmulator!=null) {
 			broker = brokerEmulator;
 		}
-		if(getBrokerInteractive()!=null) {
+		if(brokerInteractive!=null) {
 			broker = brokerInteractive;
 		}
-		if(getBrokerAWS()!=null) {
+		if(brokerAWS!=null) {
 			broker = brokerAWS;
 		}
 		return broker;
@@ -95,14 +92,6 @@ public class BrokerActivityImpl implements BrokerActivity {
 	
 
 	// SET GET
-	private static BrokerEmulator getBrokerEmulator() {
-		return brokerEmulator;
-	}
-
-	private static void setBrokerEmulator(BrokerEmulator brokerEmulator) {
-		BrokerActivityImpl.brokerEmulator = brokerEmulator;
-	}
-
 	public int hashCode() {
 		return brokerEmulator.hashCode();
 	}
@@ -111,37 +100,13 @@ public class BrokerActivityImpl implements BrokerActivity {
 		return brokerEmulator.equals(obj);
 	}
 
-	private static BrokerInteractive getBrokerInteractive() {
-		return brokerInteractive;
-	}
-
-	private static void setBrokerInteractive(BrokerInteractive brokerInteractive) {
-		BrokerActivityImpl.brokerInteractive = brokerInteractive;
-	}
-
-	private static BrokerAWS getBrokerAWS() {
-		return brokerAWS;
-	}
-
-	private static void setBrokerAWS(BrokerAWS brokerAWS) {
-		BrokerActivityImpl.brokerAWS = brokerAWS;
-	}
-
-	private static BrokerGoogle getBrokerGoogle() {
-		return brokerGoogle;
-	}
-
-	private static void setBrokerGoogle(BrokerGoogle brokerGoogle) {
-		BrokerActivityImpl.brokerGoogle = brokerGoogle;
-	}
-
 	@Override
 	public Portfolio getMarketPortfolio() {
-		return getBrokerEmulator().getMarketPortfolio();
+		return getBroker().getMarketPortfolio();
 	}
 
 	@Override
-	public Double getBestBid (String type, Investment inv, Double aggression) {
+	public Double getBestBid (TradeType type, Investment inv, Double aggression) {
 		
 		Double price = 0.0;
 		
@@ -167,12 +132,19 @@ public class BrokerActivityImpl implements BrokerActivity {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, String type) {
+	public Double getPrice(Investment inv, TradeType type) {
 		Double price = 0.0;
 		
 		price = getBroker().getPrice(inv, type);
 				
 		return price;
 	}
+
+	@Override
+	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }
