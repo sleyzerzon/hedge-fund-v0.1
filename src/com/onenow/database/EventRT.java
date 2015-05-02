@@ -2,15 +2,16 @@ package com.onenow.database;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 
 public class EventRT {
 
-	private Long time;
+	public Long time;
 	private Investment inv;
-	private String dataType; 
+	public TradeType tradeType; 
 
-	private Double price;
+	public Double price;
 	private Integer size;
 	
 	private InvDataSource source;
@@ -24,12 +25,12 @@ public class EventRT {
 	 * @param price
 	 * @param size
 	 */
-	public EventRT(	Long time, Investment inv, String dataType, Double price, int size,
+	public EventRT(	Long time, Investment inv, TradeType tradeType, Double price, int size,
 					InvDataSource source, InvDataTiming timing) {
-		setTime(time);
+		this.time = time;
 		setInv(inv);
-		setDataType(dataType);
-		setPrice(price);
+		this.tradeType = tradeType;
+		this.price = price;
 		setSize(size);
 		setSource(source);
 		setTiming(timing);
@@ -37,36 +38,12 @@ public class EventRT {
 	
 	
 	// SET GET
-	public Long getTime() {
-		return time;
-	}
-
-	public void setTime(Long time) {
-		this.time = time;
-	}
-
 	public Investment getInv() {
 		return inv;
 	}
 
 	public void setInv(Investment inv) {
 		this.inv = inv;
-	}
-
-	public String getDataType() {
-		return dataType;
-	}
-
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
 	}
 
 	public Integer getSize() {

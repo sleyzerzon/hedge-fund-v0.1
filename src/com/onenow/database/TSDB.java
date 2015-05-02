@@ -13,6 +13,7 @@ import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
+import com.onenow.constant.TradeType;
 import com.onenow.data.Sampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
@@ -55,8 +56,8 @@ private void dbCreate() {
 }
 
 // PRICE
-public void writePrice(Long time, Investment inv, String dataType, Double price, InvDataSource source, InvDataTiming timing) {
-	String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
+public void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
+	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	.values(time, price)
@@ -69,13 +70,13 @@ public void writePrice(Long time, Investment inv, String dataType, Double price,
 	}
 }
 
-public List<Candle> readPriceFromDB(	Investment inv, String dataType, String sampling,
+public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
 										String fromDate, String toDate,
 										InvDataSource source, InvDataTiming timing) {
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
+		String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
 
 		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, sampling, fromDate, toDate);
 
@@ -84,7 +85,7 @@ public List<Candle> readPriceFromDB(	Investment inv, String dataType, String sam
 		return candles;
 	}
 
-public List<Serie> queryPrice(String dbName, String serieName, String sampling, String fromDate, String toDate) {
+public List<Serie> queryPrice(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
@@ -151,8 +152,8 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 	return candles;
 }
 // SIZE
-public void writeSize(Long time, Investment inv, String dataType, Integer size, InvDataSource source, InvDataTiming timing) {
-	String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
+public void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
+	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(time, size)
@@ -165,13 +166,13 @@ public void writeSize(Long time, Investment inv, String dataType, Integer size, 
 	}
 }
 
-public List<Integer> readSizeFromDB(	Investment inv, String dataType, String sampling,
+public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
 										String fromDate, String toDate,
 										InvDataSource source, InvDataTiming timing) {
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String name = getLookup().getInvestmentKey(inv, dataType, source, timing);
+	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
 	
 	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  sampling, fromDate, toDate);
 	
@@ -180,7 +181,7 @@ public List<Integer> readSizeFromDB(	Investment inv, String dataType, String sam
 	return sizes;
 }
 
-public List<Serie> querySize(String dbName, String serieName, String sampling, String fromDate, String toDate) {
+public List<Serie> querySize(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +

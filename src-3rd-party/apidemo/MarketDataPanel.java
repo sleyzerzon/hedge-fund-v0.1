@@ -38,7 +38,6 @@ import com.ib.client.Types.DeepType;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.MktDataType;
 import com.ib.client.Types.WhatToShow;
-import com.ib.controller.Bar;
 import com.ib.controller.Instrument;
 import com.ib.controller.ScanCode;
 import com.ib.controller.ApiController.IDeepMktDataHandler;
@@ -46,6 +45,7 @@ import com.ib.controller.ApiController.IHistoricalDataHandler;
 import com.ib.controller.ApiController.IRealTimeBarHandler;
 import com.ib.controller.ApiController.IScannerHandler;
 import com.onenow.execution.Contract;
+import com.onenow.execution.QuoteRow;
 
 public class MarketDataPanel extends JPanel {
 	private final Contract m_contract = new Contract();
@@ -389,7 +389,7 @@ public class MarketDataPanel extends JPanel {
 	// Pablo made public
 	public static class BarResultsPanel extends NewTabPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
 		final BarModel m_model = new BarModel();
-		final ArrayList<Bar> m_rows = new ArrayList<Bar>();
+		final ArrayList<QuoteRow> m_rows = new ArrayList<QuoteRow>();
 		final boolean m_historical;
 		final Chart m_chart = new Chart( m_rows);
 				
@@ -426,7 +426,7 @@ public class MarketDataPanel extends JPanel {
 			}
 		}
 
-		@Override public void historicalData(Bar bar, boolean hasGaps) {
+		@Override public void historicalData(QuoteRow bar, boolean hasGaps) {
 			m_rows.add( bar);
 		}
 		
@@ -434,7 +434,7 @@ public class MarketDataPanel extends JPanel {
 			fire();
 		}
 
-		@Override public void realtimeBar(Bar bar) {
+		@Override public void realtimeBar(QuoteRow bar) {
 			m_rows.add( bar); 
 			fire();
 		}
@@ -471,7 +471,7 @@ public class MarketDataPanel extends JPanel {
 			}
 
 			@Override public Object getValueAt(int rowIn, int col) {
-				Bar row = m_rows.get( rowIn);
+				QuoteRow row = m_rows.get( rowIn);
 				switch( col) {
 					case 0: return row.formattedTime();
 					case 1: return row.open();

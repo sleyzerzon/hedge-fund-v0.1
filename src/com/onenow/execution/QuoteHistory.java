@@ -7,7 +7,6 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
-import com.ib.controller.Bar;
 import com.onenow.data.Channel;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.BrokerController;
@@ -19,26 +18,26 @@ import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
  * Handle historical data call-backs 
  *
  */
-public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
+public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	final private ArrayList<Bar> barRows = new ArrayList<Bar>();
+	public ArrayList<QuoteRow> quoteRows = new ArrayList<QuoteRow>();
 	
 //	final private BarModel m_model = new BarModel(m_rows);
 	
 	private Channel channel;
 
-	public QuoteBar (){
+	public QuoteHistory (){
 
 	}
 	
-	public QuoteBar (Channel channel) {
+	public QuoteHistory (Channel channel) {
 		this.channel = channel;
 	}
 
 	// INTERFACE: IHistoricalDataHandler
-	@Override public void historicalData(Bar bar, boolean hasGaps) {
+	@Override public void historicalData(QuoteRow bar, boolean hasGaps) {
 		
-		barRows.add(bar);
+		quoteRows.add(bar);
 		
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
@@ -47,7 +46,7 @@ public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, IT
 		handleBar(bar);
 	}
 
-	private void handleBar(Bar bar) {
+	private void handleBar(QuoteRow bar) {
 
 		System.out.println("History " + bar.toString());
 
@@ -84,9 +83,9 @@ public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, IT
 	
 	
 	// INTERFACE: IRealTimeBarHandler
-	@Override public void realtimeBar(Bar bar) {
+	@Override public void realtimeBar(QuoteRow bar) {
 		
-		barRows.add(bar); 
+		quoteRows.add(bar); 
 		
 		handleBar(bar);
 	}
@@ -122,7 +121,7 @@ public class QuoteBar implements IHistoricalDataHandler, IRealTimeBarHandler, IT
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = s + barRows.toString();
+		s = s + quoteRows.toString();
 		return s;
 	}
 

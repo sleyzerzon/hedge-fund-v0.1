@@ -8,6 +8,9 @@ public class Candle {
 	private Double openPrice;
 	private Double closePrice;
 	
+	private Long timeStart;
+	private Long timeEnd;
+	
 //	private Double highVWAP;
 //	private Double lowVWAP;
 //	private Double openVWAP;

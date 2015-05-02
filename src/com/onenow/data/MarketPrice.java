@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Cache;
 import com.onenow.database.EventRT;
@@ -40,7 +41,7 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventRT event = new EventRT(	timeStamp, inv, TradeType.TRADED.toString(), 
+			EventRT event = new EventRT(	timeStamp, inv, TradeType.TRADED, 
 											lastPrice, lastSize,
 											source, timing);
 			getCache().writeEventRT(event);
@@ -71,11 +72,11 @@ public class MarketPrice {
 	/**
 	 * Get the latest price, based on the last time-stamp
 	 * @param inv
-	 * @param dataType
+	 * @param tradeType
 	 */
-	public double readPrice(Investment inv, String dataType) {
+	public double readPrice(Investment inv, TradeType tradeType) {
 
-		return getCache().readPrice(inv, dataType);
+		return getCache().readPrice(inv, tradeType);
 		
 	}
 	
@@ -87,13 +88,13 @@ public class MarketPrice {
 
 
 	// READ CHART
-	public Chart readChart(	Investment inv, String dataType, String sampling,
+	public Chart readChart(	Investment inv, TradeType tradeType, SamplingRate sampling,
 							String fromDate, String toDate,
 							InvDataSource source, InvDataTiming timing) {
 		
 		Chart chart = new Chart();
 		
-		chart = getCache().readChart(	inv, dataType, sampling, fromDate, toDate,
+		chart = getCache().readChart(	inv, tradeType, sampling, fromDate, toDate,
 											source, timing);
 		System.out.println("READ CHART " + "\n" + chart);
 		

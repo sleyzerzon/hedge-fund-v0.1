@@ -4,17 +4,15 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.ib.controller.Bar;
-
 public class BarModel extends AbstractTableModel {
 
-	ArrayList<Bar> m_rows;
+	ArrayList<QuoteRow> m_rows;
 	
 	public BarModel() {
 		
 	}
 
-	public BarModel(ArrayList<Bar> rows) {
+	public BarModel(ArrayList<QuoteRow> rows) {
 		m_rows = rows;
 	}
 
@@ -40,7 +38,7 @@ public class BarModel extends AbstractTableModel {
 	}
 
 	@Override public Object getValueAt(int rowIn, int col) {
-		Bar row = m_rows.get( rowIn);
+		QuoteRow row = m_rows.get( rowIn);
 		switch( col) {
 			case 0: return row.formattedTime();
 			case 1: return row.open();

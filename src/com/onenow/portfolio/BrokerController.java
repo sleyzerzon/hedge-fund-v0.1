@@ -35,7 +35,6 @@ import com.ib.controller.AccountSummaryTag;
 import com.ib.controller.AdvisorUtil;
 import com.ib.controller.Alias;
 import com.ib.controller.ApiConnection;
-import com.ib.controller.Bar;
 import com.ib.controller.ConcurrentHashSet;
 import com.ib.controller.Group;
 import com.ib.controller.MarketValueTag;
@@ -43,6 +42,7 @@ import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.execution.Contract;
+import com.onenow.execution.QuoteRow;
 
 public class BrokerController implements EWrapper {
 	private ApiConnection m_client;
@@ -840,7 +840,7 @@ public class BrokerController implements EWrapper {
 
 	// ----------------------------------------- Historical data handling ----------------------------------------
 	public interface IHistoricalDataHandler {
-		void historicalData(Bar bar, boolean hasGaps);
+		void historicalData(QuoteRow bar, boolean hasGaps);
 		void historicalDataEnd();
 	}
 
@@ -880,7 +880,7 @@ public class BrokerController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				Bar bar = new Bar( longDate, high, low, open, close, wap, volume, count);
+				QuoteRow bar = new QuoteRow( longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps); // *********** HERE 
 			}
 		}
@@ -890,7 +890,7 @@ public class BrokerController implements EWrapper {
 
 	//----------------------------------------- Real-time bars --------------------------------------
 	public interface IRealTimeBarHandler {
-		void realtimeBar(Bar bar); // time is in seconds since epoch
+		void realtimeBar(QuoteRow bar); // time is in seconds since epoch
 	}
 
     public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, 
@@ -914,7 +914,7 @@ public class BrokerController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			Bar bar = new Bar( time, high, low, open, close, wap, volume, count);
+			QuoteRow bar = new QuoteRow( time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

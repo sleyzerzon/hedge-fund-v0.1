@@ -28,10 +28,10 @@ import apidemo.util.VerticalPanel.StackPanel;
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.WhatToShow;
-import com.ib.controller.Bar;
 import com.ib.controller.ApiController.IHistoricalDataHandler;
 import com.ib.controller.ApiController.IRealTimeBarHandler;
 import com.onenow.execution.Contract;
+import com.onenow.execution.QuoteRow;
 
 
 public class StratPanel extends StackPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
@@ -43,7 +43,7 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 	final private OrdersModel m_ordersModel = new OrdersModel();
 	final private TCombo<BarSize> m_barSize = new TCombo<BarSize>( BarSize.values() );
 	final private UpperField m_bars = new UpperField();
-	final private ArrayList<Bar> m_rows = new ArrayList<Bar>();
+	final private ArrayList<QuoteRow> m_rows = new ArrayList<QuoteRow>();
 	final private Chart m_chart = new Chart( m_rows);
 	private boolean m_req;
 	
@@ -115,11 +115,11 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 		ApiDemo.INSTANCE.controller().reqRealTimeBars(m_contract, WhatToShow.TRADES, false, this);
 	}
 
-	@Override public void realtimeBar(Bar bar) {
+	@Override public void realtimeBar(QuoteRow bar) {
 		if (!m_req) {
 			BarSize barSize = m_barSize.getSelectedItem();
 			QueryLength queryLength = getQueryLength( barSize);
-			String date = Bar.format( bar.time() * 1000);
+			String date = QuoteRow.format( bar.time() * 1000);
 			int duration = m_bars.getInt() * queryLength.m_units;
 			ApiDemo.INSTANCE.controller().reqHistoricalData(m_contract, date, duration, queryLength.m_unit, barSize, WhatToShow.TRADES, false, this);
 			m_req = true;
@@ -128,14 +128,14 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 		m_chart.repaint();
 	}
 	
-	TreeMap<Long,Bar> m_map = new TreeMap<Long,Bar>();
+	TreeMap<Long,QuoteRow> m_map = new TreeMap<Long,QuoteRow>();
 	
-	@Override public void historicalData(Bar bar, boolean hasGaps) {
+	@Override public void historicalData(QuoteRow bar, boolean hasGaps) {
 		System.out.println( bar);
 		addBar( bar);
 	}
 
-	private void addBar( Bar bar) {
+	private void addBar( QuoteRow bar) {
 		m_map.put( bar.time(), bar);
 		m_rows.clear();
 		m_rows.addAll( m_map.values() );

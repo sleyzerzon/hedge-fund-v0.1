@@ -34,6 +34,7 @@ import com.ib.client.Types.NewsType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.execution.Contract;
+import com.onenow.execution.QuoteRow;
 
 public class ApiController implements EWrapper {
 	private ApiConnection m_client;
@@ -825,7 +826,7 @@ public class ApiController implements EWrapper {
 
 	// ----------------------------------------- Historical data handling ----------------------------------------
 	public interface IHistoricalDataHandler {
-		void historicalData(Bar bar, boolean hasGaps);
+		void historicalData(QuoteRow bar, boolean hasGaps);
 		void historicalDataEnd();
 	}
 
@@ -864,7 +865,7 @@ public class ApiController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				Bar bar = new Bar( longDate, high, low, open, close, wap, volume, count);
+				QuoteRow bar = new QuoteRow( longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps);
 			}
 		}
@@ -874,7 +875,7 @@ public class ApiController implements EWrapper {
 
 	//----------------------------------------- Real-time bars --------------------------------------
 	public interface IRealTimeBarHandler {
-		void realtimeBar(Bar bar); // time is in seconds since epoch
+		void realtimeBar(QuoteRow bar); // time is in seconds since epoch
 	}
 
     public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, IRealTimeBarHandler handler) {
@@ -896,7 +897,7 @@ public class ApiController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			Bar bar = new Bar( time, high, low, open, close, wap, volume, count);
+			QuoteRow bar = new QuoteRow( time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

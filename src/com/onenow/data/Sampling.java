@@ -18,87 +18,87 @@ public class Sampling {
 	// list.add(parser.removeDash(date).concat(" 16:30:00"));
 	
 	
-	public String getGroupByTimeString(String samplingRate) {
+	public String getGroupByTimeString(SamplingRate sampling) {
 		String dbSamplingRate="";
-		if(samplingRate.equals("SCALPSHORT")) {		//SCALPING 5min, 15min, 60min
+		if(sampling.equals("SCALPSHORT")) {		//SCALPING 5min, 15min, 60min
 			return "5m";
 		}
-		if(samplingRate.equals("SCALPMEDIUM")) {
+		if(sampling.equals("SCALPMEDIUM")) {
 			return "15m";
 		}
-		if(samplingRate.equals("SCALPLONG")) {
+		if(sampling.equals("SCALPLONG")) {
 			return "60m";
 		}
-		if(samplingRate.equals("SWINGSHORT")) {		//SWINGING 60min, 240min, daily
+		if(sampling.equals("SWINGSHORT")) {		//SWINGING 60min, 240min, daily
 			return "60m";
 		}
-		if(samplingRate.equals("SWINGMEDIUM")) {
+		if(sampling.equals("SWINGMEDIUM")) {
 			return "4h";
 		}
-		if(samplingRate.equals("SWINGLONG")) {
+		if(sampling.equals("SWINGLONG")) {
 			return "1d";
 		}
-		if(samplingRate.equals("TRENDSHORT")) {		//TREND 4hr, daily, weekly
+		if(sampling.equals("TRENDSHORT")) {		//TREND 4hr, daily, weekly
 			return "4h";
 		}
-		if(samplingRate.equals("TRENDMEDIUM")) {
+		if(sampling.equals("TRENDMEDIUM")) {
 			return "1d";
 		}
-		if(samplingRate.equals("TRENDLONG")) {
+		if(sampling.equals("TRENDLONG")) {
 			return "1w";
 		}
 		return dbSamplingRate;
 	}
 	
 	
-	public List<String> getList(String rate) {
-		List<String> list = new ArrayList<String>();
+	public List<SamplingRate> getList(String rate) {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		if(rate.equals("default") || rate.equals("")) {
 			list.addAll(getDefaultSampling());
 		}
-		if(rate.equals(SamplingRate.SCALP.toString()) || rate.equals("all")) {
+		if(rate.equals(SamplingRate.SCALP) || rate.equals("all")) {
 			list.addAll(getScalpSampling());
 		}
-		if(rate.equals(SamplingRate.SWING.toString()) || rate.equals("all")) {
+		if(rate.equals(SamplingRate.SWING) || rate.equals("all")) {
 			list.addAll(getSwingSampling());
 		}
-		if(rate.equals(SamplingRate.TREND.toString()) || rate.equals("all")) {
+		if(rate.equals(SamplingRate.TREND) || rate.equals("all")) {
 			list.addAll(getTrendSampling());
 		}
 		return list;
 	}
 	
-	public List<String> getTradingOptions() {
-		List<String> list = new ArrayList<String>();
-		list.add(SamplingRate.SCALP.toString());
-		list.add(SamplingRate.SWING.toString());
-		list.add(SamplingRate.TREND.toString());
+	public List<SamplingRate> getTradingOptions() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.SCALP);
+		list.add(SamplingRate.SWING);
+		list.add(SamplingRate.TREND);
 		return list;
 	}
-	private List<String> getDefaultSampling() {
-		List<String> list = new ArrayList<String>();
-		list.add(SamplingRate.SCALPSHORT.toString());
+	private List<SamplingRate> getDefaultSampling() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.SCALPSHORT);
 		return list;
 	}
-	private List<String> getScalpSampling() {
-		List<String> list = new ArrayList<String>();
-		list.add(SamplingRate.SCALPSHORT.toString());
-		list.add(SamplingRate.SCALPMEDIUM.toString());
-		list.add(SamplingRate.SCALPLONG.toString());					
+	private List<SamplingRate> getScalpSampling() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.SCALPSHORT);
+		list.add(SamplingRate.SCALPMEDIUM);
+		list.add(SamplingRate.SCALPLONG);					
 		return list;
 	}
-	private List<String> getSwingSampling() {
-		List<String> list = new ArrayList<String>();
-		list.add(SamplingRate.SWINGSHORT.toString());
-		list.add(SamplingRate.SWINGMEDIUM.toString());
-		list.add(SamplingRate.SWINGLONG.toString());								
+	private List<SamplingRate> getSwingSampling() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.SWINGSHORT);
+		list.add(SamplingRate.SWINGMEDIUM);
+		list.add(SamplingRate.SWINGLONG);								
 		return list;
 	}
-	private List<String> getTrendSampling() {
-		List<String> list = new ArrayList<String>();
-		list.add(SamplingRate.TRENDSHORT.toString());
-		list.add(SamplingRate.TRENDMEDIUM.toString());
-		list.add(SamplingRate.TRENDLONG.toString());							
+	private List<SamplingRate> getTrendSampling() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.TRENDSHORT);
+		list.add(SamplingRate.TRENDMEDIUM);
+		list.add(SamplingRate.TRENDLONG);							
 		return list;
 	}
 

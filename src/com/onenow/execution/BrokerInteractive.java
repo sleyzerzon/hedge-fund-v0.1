@@ -105,11 +105,11 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		}
 	}
 
-	public QuoteBar readHistoricalQuotes(Investment inv, String end) {
+	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
 
 		System.out.println("\n> " + "getting historical quote for investment: " + inv.toString());
 		Contract contract = getContractFactory().getContract(inv);
-		QuoteBar quoteHistory = new QuoteBar();
+		QuoteHistory quoteHistory = new QuoteHistory();
 		
 		getController().reqHistoricalData(	contract, 
 											end, 1, DurationUnit.DAY, BarSize._1_hour, 
@@ -142,7 +142,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 				System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
 				
-				QuoteBar quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
+				QuoteHistory quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
 				
 			    Thread.sleep(12000);
 				System.out.println("...");
@@ -214,10 +214,10 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, String dataType) {
+	public Double getPrice(Investment inv, TradeType tradeType) {
 		Double price=0.0;
 		
-		price = getMarketPrices().readPrice(inv, dataType);
+		price = getMarketPrices().readPrice(inv, tradeType);
 	
 		if(price==null) {
 			return 0.0;
@@ -288,22 +288,22 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	Integer notDone=0;
 	for(Investment inv:invs) {
 		if(inv instanceof InvestmentIndex) { // only check the index
-			Double buyPrice = getMarketPrices().readPrice(inv, TradeType.BUY.toString());
+			Double buyPrice = getMarketPrices().readPrice(inv, TradeType.BUY);
 			if(buyPrice==null) {
 				notDone++;
 				return false;
 			}
-			Double sellPrice = getMarketPrices().readPrice(inv, TradeType.SELL.toString());
+			Double sellPrice = getMarketPrices().readPrice(inv, TradeType.SELL);
 			if(sellPrice==null) {
 				notDone++;
 				return false;
 			}
-			Double closePrice = getMarketPrices().readPrice(inv, TradeType.CLOSE.toString());
+			Double closePrice = getMarketPrices().readPrice(inv, TradeType.CLOSE);
 			if(closePrice==null) {
 				notDone++;
 				return false;
 			}
-			Double lastPrice = getMarketPrices().readPrice(inv, TradeType.TRADED.toString());
+			Double lastPrice = getMarketPrices().readPrice(inv, TradeType.TRADED);
 			if(lastPrice==null) {
 				notDone++;
 				return false;

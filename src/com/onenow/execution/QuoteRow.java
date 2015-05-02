@@ -1,19 +1,24 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-package com.ib.controller;
+package com.onenow.execution;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Bar {
+import com.ib.controller.Formats;
+
+public class QuoteRow {
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
 
+	// time
 	private final long m_time;
+	//candle
 	private final double m_high;
 	private final double m_low;
 	private final double m_open;
 	private final double m_close;
+	
 	private final double m_wap;
 	private final long m_volume;
 	private final int m_count;
@@ -27,7 +32,7 @@ public class Bar {
 	public long volume() 	{ return m_volume; }
 	public int count() 		{ return m_count; }
 
-	public Bar( long time, double high, double low, double open, double close, double wap, long volume, int count) {
+	public QuoteRow( long time, double high, double low, double open, double close, double wap, long volume, int count) {
 		m_time = time;
 		m_high = high;
 		m_low = low;
