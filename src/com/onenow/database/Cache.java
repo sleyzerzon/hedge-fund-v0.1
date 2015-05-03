@@ -27,7 +27,6 @@ public class Cache {
 	private HashMap<String, EventRT>	lastEventRT; 	// last set of price/size/etc
 	private HashMap<String, Chart>		charts;			// price history in chart format
 
-	private String		origin = "2015-05-01";	
 	private ParseDate	parseDate = new ParseDate();
 
 	
@@ -99,7 +98,7 @@ public class Cache {
 		for(SamplingRate sampling:sampling.getList(SamplingRate.SCALPSHORT)) { // TODO: what sampling?
 			// use miss function to force update of charts
 			readthroughChartFromL12(	inv, tradeType, sampling,
-										origin, parseDate.getTomorrow(), // TODO: From/To Date actual
+										parseDate.getYesterday(), parseDate.getTomorrow(), // TODO: From/To Date actual
 										source, timing);
 		}
 
@@ -246,7 +245,7 @@ public class Cache {
 			charts.put(key, chart);				
 			
 			// augment L1 with data from L2 (3rd party DB), if data not complete from origin
-			readHistoryFromL2(inv, toDate);
+			readHistoryFromL2(inv);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -274,40 +273,55 @@ public class Cache {
 	}
 
 
-	private void readHistoryFromL2(Investment inv, String toDate) {
+	private void readHistoryFromL2(Investment inv) {
 		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
 
+		TradeType tradeType = TradeType.TRADED; // TODO: traded?
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.HISTORICAL;
+		SamplingRate scalping = SamplingRate.SCALP;
 
-		// go from origin 
-		String date = origin;
-		while(true) { 
-			
-			
-			TradeType tradeType = TradeType.TRADED; // TODO: traded?
-			InvDataSource source = InvDataSource.IB;
-			InvDataTiming timing = InvDataTiming.HISTORICAL;
-
+		// go from today (by tomorrow) 
+		String date = getParser().getTomorrow();
+		String dateAtClose = getParser().getClose(date);
+		int numDays = 1; // number of days to acquire at a time
+		
+		while(true) { 		
 			// TODO: only if it is not already in L1
-				// paceHistoricalQuery();
-				QuoteHistory history = broker.readHistoricalQuotes(inv, getParser().getClose(date)); 
-	    
-			if(history.equals("")) {
-				System.out.println("WARNING: HISTORICAL DATA FARM DOWN?"); 
-			} else {
-				System.out.println("HISTORY " + history.toString());
+			String fromDate = getParser().getDashedDateMinus(date, 1);
+			Chart chart = new Chart();
+			readChartFromRTL1(	inv, tradeType,
+								scalping, getParser().getDashedDateMinus(date, 1), date,
+								source, timing, chart);
+			// check for incomplete L1 data
+			if(chart.getPrices().size()<10) {		
+				QuoteHistory history = readHistory(inv, dateAtClose);
+				// put history in L1
+				readthroughL2ToHistoricalL1(inv, history, 
+											tradeType, 
+											source, timing);					
+				numDays--;
 			}
-		
-			readthroughL2ToHistoricalL1(inv, history, 
-										tradeType, 
-										source, timing);	
-		
-			date = getParser().getDashedDatePlus(date, 1);
-			
-			// all through today
-			if(getParser().isLaterDate(date, getParser().getToday())) { 
+			// go back further in time?
+			if(numDays>0) {	
+				date = getParser().getDashedDatePlus(date, 1);
+				dateAtClose = getParser().getClose(date);
+			} else {
 				return;
 			}
 		}
+	}
+
+	private QuoteHistory readHistory(Investment inv, String dateAtClose) {
+		// paceHistoricalQuery();
+		QuoteHistory history = broker.readHistoricalQuotes(inv, dateAtClose); 
+   
+		if(history.equals("")) {
+			System.out.println("WARNING: HISTORICAL DATA FARM DOWN?"); 
+		} else {
+			System.out.println("HISTORY " + history.toString());
+		}
+		return history;
 	}
 	
 

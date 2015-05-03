@@ -39,6 +39,13 @@ public class ParseDate implements Testable {
 		return s;
 	}
 	
+	public String getYesterday() {
+		String s = "";
+		s = s + getDashedDateMinus(getToday(), 1);
+		return s;
+	}
+	
+	
 
 	/**
 	 * Removes dashes from a dashed date
@@ -395,18 +402,24 @@ public class ParseDate implements Testable {
 		boolean result = false;
 		
 		String date1 = "2015-02-28";
-		String date2 = "2015-12-31";		
+		String date2 = "2015-12-31";
+		String date3 = "2015-05-15";
 		int delta = 1;
 		
 		String dateOut1 = getDashedDatePlus(date1, delta);	
 		String dateOut2 = getDashedDatePlus(date2, delta);	
+		String dateOut3 = getDashedDatePlus(date3, delta);	
 
 		if(	dateOut1.equals("2015-03-01") &&
-			dateOut2.equals("2016-01-01")) {
+			dateOut2.equals("2016-01-01") &&
+			dateOut3.equals("2015-05-16")
+			) {
 			result = true;
 		}		
 		
-//		System.out.println("testDatePlus " + date2);
+		System.out.println("testDate1 " + dateOut1);
+		System.out.println("testDate2 " + dateOut2);
+		System.out.println("testDate3 " + dateOut3);
 		
 		return result;
 	}
@@ -417,18 +430,25 @@ public class ParseDate implements Testable {
 
 		String date1 = "2015-03-01";
 		String date2 = "2015-01-01";
+		String date3 = "2015-05-15";
+
 		int delta = 1;
 		
 		String dateOut1 = getDashedDateMinus(date1, delta);
 		String dateOut2 = getDashedDateMinus(date2, delta);
+		String dateOut3 = getDashedDateMinus(date3, delta);	
+
 		
 		if(	dateOut1.equals("2015-02-28") &&
-			dateOut2.equals("2014-12-31")) {
+			dateOut2.equals("2014-12-31") && 
+			dateOut3.equals("2015-05-14")) {
 			result = true;
 		}
 
-		System.out.println("testDateMinus " + dateOut1);
-		System.out.println("testDateMinus " + dateOut2);
+		System.out.println("testDate1 " + dateOut1);
+		System.out.println("testDate2 " + dateOut2);
+		System.out.println("testDate3 " + dateOut3);
+
 		
 		return result;
 	}
