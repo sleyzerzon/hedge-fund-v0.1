@@ -20,9 +20,7 @@ import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
  */
 public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	public ArrayList<QuoteRow> quoteRows = new ArrayList<QuoteRow>();
-	
-//	final private BarModel m_model = new BarModel(m_rows);
+	final public ArrayList<QuoteRow> quoteRows = new ArrayList<QuoteRow>();
 	
 	private Channel channel;
 
@@ -35,15 +33,16 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	}
 
 	// INTERFACE: IHistoricalDataHandler
-	@Override public void historicalData(QuoteRow bar, boolean hasGaps) {
+	@Override public void historicalData(QuoteRow row, boolean hasGaps) {
 		
-		quoteRows.add(bar);
+		System.out.println("ADDING HISTORY ROW");
+		quoteRows.add(row);
 		
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
 		}	
 		
-		handleBar(bar);
+		handleBar(row);
 	}
 
 	private void handleBar(QuoteRow bar) {

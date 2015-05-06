@@ -29,6 +29,7 @@ public class Cache {
 
 	private ParseDate	parseDate = new ParseDate();
 
+	QuoteHistory history = new QuoteHistory();
 	
 
 	public Cache() {
@@ -287,7 +288,7 @@ public class Cache {
 		// go from today (by tomorrow) 
 		String undashedDate = getParser().getUndashedTomorrow();
 		String undashedDateAtClose = getParser().getClose(undashedDate);
-		int numDays = 3; // number of days to acquire at a time
+		int numDays = 5; // number of days to acquire at a time
 		
 		while(true) { 		
 			// TODO: only if it is not already in L1
@@ -297,7 +298,9 @@ public class Cache {
 								source, timing, chart);
 			// check for incomplete L1 data
 			if(chart.getPrices().size()<10) {		
-				QuoteHistory history = readBrokerHistory(inv, undashedDateAtClose);
+//				QuoteHistory history = readBrokerHistory(inv, undashedDateAtClose);
+				readBrokerHistory(inv, undashedDateAtClose);
+
 				// put history in L1
 				readthroughL2ToHistoricalL1(inv, history, 
 											tradeType, 
@@ -314,18 +317,22 @@ public class Cache {
 		}
 	}
 
-	private QuoteHistory readBrokerHistory(Investment inv, String dateAtClose) {
+	private void readBrokerHistory(Investment inv, String dateAtClose) {
 		
+		
+//		QuoteHistory history = broker.readHistoricalQuotes(inv, dateAtClose); 
+
+		System.out.println("HIST " + history.toString());
+		broker.readHistoricalQuotes(inv, dateAtClose, history); 
+
 		paceHistoricalQuery();
-		
-		QuoteHistory history = broker.readHistoricalQuotes(inv, dateAtClose); 
-   
+
 		if(history.size() == 0) {
 			System.out.println("WARNING: HISTORICAL DATA FARM DOWN? Close at " + dateAtClose + ". Investment " + inv.toString() + "\n"); 
 		} else {
 			System.out.println("HISTORY " + history.toString() + "\n");
 		}
-		return history;
+//		return history;
 	}
 	
 

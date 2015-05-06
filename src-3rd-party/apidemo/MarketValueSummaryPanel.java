@@ -15,8 +15,8 @@ import apidemo.util.HtmlButton;
 import apidemo.util.VerticalPanel;
 import apidemo.util.NewTabbedPanel.NewTabPanel;
 
-import com.ib.controller.ApiController.IMarketValueSummaryHandler;
 import com.ib.controller.MarketValueTag;
+import com.onenow.execution.ApiController.IMarketValueSummaryHandler;
 
 public class MarketValueSummaryPanel extends NewTabPanel implements IMarketValueSummaryHandler {
 	private MktValModel m_model = new MktValModel();

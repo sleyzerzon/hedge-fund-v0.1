@@ -15,10 +15,6 @@ import java.net.Socket;
 
 import com.ib.client.ComboLeg;
 import com.ib.client.EWrapper;
-import com.ib.client.Builder;
-import com.ib.client.EClientErrors;
-import com.ib.client.EClientSocket;
-import com.ib.client.EReader;
 import com.ib.client.Order;
 import com.ib.client.OrderComboLeg;
 import com.ib.client.OrderType;
@@ -26,7 +22,11 @@ import com.ib.client.TagValue;
 import com.ib.client.Types.AlgoStrategy;
 import com.ib.client.Types.HedgeType;
 import com.ib.client.Types.SecType;
+import com.onenow.execution.EWireBuilder;
 import com.onenow.execution.Contract;
+import com.onenow.execution.EClientErrors;
+import com.onenow.execution.EClientSocket;
+import com.onenow.execution.EReader;
 
 // NOTE: TWS 936 SERVER_VERSION is 67.
 
@@ -91,7 +91,7 @@ public class ApiConnection extends EClientSocket {
             return;
 		}
 
-		Builder b = prepareBuffer();
+		EWireBuilder b = prepareBuffer();
 		b.setUseSendMax(); // Order placement relies on null valued numeric fields
 
 		int VERSION = 43;

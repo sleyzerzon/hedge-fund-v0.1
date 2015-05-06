@@ -24,9 +24,9 @@ import apidemo.util.VerticalPanel;
 
 import com.ib.client.ContractDetails;
 import com.ib.client.Types.FundamentalType;
-import com.ib.controller.ApiController.IContractDetailsHandler;
-import com.ib.controller.ApiController.IFundamentalsHandler;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ApiController.IContractDetailsHandler;
+import com.onenow.execution.ApiController.IFundamentalsHandler;
 
 public class ContractInfoPanel extends JPanel {
 	private final Contract m_contract = new Contract();

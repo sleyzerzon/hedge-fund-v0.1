@@ -39,7 +39,7 @@ public class OrderState {
     public void status(String v)             { m_status = v; }
     public void warningText(String v)        { m_warningText = v; }
 
-	OrderState() {
+	public OrderState() {
 		this (null, null, null, null, 0.0, 0.0, 0.0, null, null);
 	}
 

@@ -45,8 +45,8 @@ import com.ib.client.Types.Rule80A;
 import com.ib.client.Types.TimeInForce;
 import com.ib.client.Types.TriggerMethod;
 import com.ib.client.Types.VolatilityType;
-import com.ib.controller.ApiController.IOrderHandler;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ApiController.IOrderHandler;
 
 public class TicketDlg extends JDialog {
 	private boolean m_editContract;

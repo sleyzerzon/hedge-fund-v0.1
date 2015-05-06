@@ -38,9 +38,9 @@ import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.ib.client.Types.Action;
 import com.ib.client.Types.SecType;
-import com.ib.controller.ApiController.IContractDetailsHandler;
-import com.ib.controller.ApiController.IEfpHandler;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ApiController.IContractDetailsHandler;
+import com.onenow.execution.ApiController.IEfpHandler;
 
 
 public class ComboPanel extends JPanel implements INewTab {

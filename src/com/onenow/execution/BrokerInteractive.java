@@ -4,6 +4,8 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
+import apidemo.MarketDataPanel.BarResultsPanel;
+
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.NewsType;
@@ -23,6 +25,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.BrokerController;
+import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.PortfolioFactory;
 import com.onenow.portfolio.Trade;
@@ -127,18 +130,24 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		}
 	}
 
-	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
+	/**
+	 * Returns reference to object where history will be stored, upon asynchronous return
+	 */
+//	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
+
+	public void readHistoricalQuotes(Investment inv, String end, QuoteHistory quoteHistory) {
 
 		System.out.println("> getting historical quote for investment: " + inv.toString());
 		Contract contract = getContractFactory().getContract(inv);
-		QuoteHistory quoteHistory = new QuoteHistory();
+//		QuoteHistory quoteHistory = new QuoteHistory();
 		
 		getController().reqHistoricalData(	contract, 
 											end, 1, DurationUnit.DAY, BarSize._1_hour, 
 											WhatToShow.TRADES, false,
 											quoteHistory);
-		return quoteHistory;
+//		return quoteHistory;
 	}
+
 	
 	// CHANNELS
 	/**
@@ -164,7 +173,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 				System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
 				
-				QuoteHistory quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
+// TODO: add history argument				QuoteHistory quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
 				
 			    Thread.sleep(12000);
 				System.out.println("...");

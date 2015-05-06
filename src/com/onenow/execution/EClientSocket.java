@@ -1,7 +1,7 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-package com.ib.client;
+package com.onenow.execution;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,8 +12,17 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ib.client.ComboLeg;
+import com.ib.client.DeltaNeutralContract;
+import com.ib.client.EWrapper;
+import com.ib.client.ExecutionFilter;
+import com.ib.client.Order;
+import com.ib.client.OrderComboLeg;
+import com.ib.client.ScannerSubscription;
+import com.ib.client.TagValue;
+import com.ib.client.Util;
 import com.ib.client.Types.SecType;
-import com.onenow.execution.Contract;
+import com.onenow.execution.EClientErrors.CodeMsgPair;
 
 public class EClientSocket {
 
@@ -341,6 +350,8 @@ public class EClientSocket {
 
         // start reader thread
         m_reader = createReader(this, new DataInputStream(socket.getInputStream()));
+ 
+        
         if( m_useV100Plus ) {
             m_reader.setUseV100Plus();
         }
@@ -462,7 +473,7 @@ public class EClientSocket {
         }
     }
 
-    protected synchronized void startAPI() {
+    public synchronized void startAPI() {
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -472,7 +483,7 @@ public class EClientSocket {
         final int VERSION = 2;
 
         try {
-        	Builder b = prepareBuffer(); 
+        	EWireBuilder b = prepareBuffer(); 
         	
             b.send(START_API);
             b.send(VERSION);
@@ -507,7 +518,7 @@ public class EClientSocket {
 
         // send cancel mkt data msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_SCANNER_SUBSCRIPTION);
             b.send( VERSION);
@@ -537,7 +548,7 @@ public class EClientSocket {
         final int VERSION = 1;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send(REQ_SCANNER_PARAMETERS);
             b.send(VERSION);
@@ -567,7 +578,7 @@ public class EClientSocket {
         final int VERSION = 4;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send(REQ_SCANNER_SUBSCRIPTION);
             b.send(VERSION);
@@ -632,12 +643,12 @@ public class EClientSocket {
     public synchronized void reqMktData(int tickerId, Contract contract,
     		String genericTickList, boolean snapshot, List<TagValue> mktDataOptions) {
     	
-    	String req = "..." + "Request Market Data" + "\n";
-    	req = req + "tickerId " + tickerId + "\n";
-    	req = req + "contract " + contract.toString();
-    	req = req + "genericTickList " + genericTickList + "\n";
-    	req = req + "snapshot " + snapshot + "\n";
-    	req = req + "mktDataOptions " + mktDataOptions.toString();
+    	String req = "== " + "Request Market Data" + "\n";
+    	req = req + "- TickerId " + tickerId + "\n";
+    	req = req + "- Contract " + contract.toString();
+    	req = req + "- Generic Tick List: " + genericTickList + "\n";
+    	req = req + "- Snapshot " + snapshot + "\n";
+    	req = req + "- Mkt Data Options " + mktDataOptions.toString();
     	System.out.println(req);
     	
         if (!m_connected) {
@@ -679,7 +690,7 @@ public class EClientSocket {
 
         try {
             // send req mkt data msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send(REQ_MKT_DATA);
             b.send(VERSION);
@@ -793,7 +804,7 @@ public class EClientSocket {
 
         // send cancel mkt data msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_HISTORICAL_DATA);
             b.send( VERSION);
@@ -824,7 +835,7 @@ public class EClientSocket {
 
         // send cancel mkt data msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_REAL_TIME_BARS);
             b.send( VERSION);
@@ -845,17 +856,36 @@ public class EClientSocket {
                                                 int useRTH, int formatDate, List<TagValue> chartOptions) {
     	
     	String req = "";
-    	req = req + "..." + "Requesting Historical Data" + "\n";
-    	req = req + "tickerId " + tickerId + "\n";
-    	req = req + "contract " + contract.toString();
-    	req = req + "endDateTime " + endDateTime + "\n";
-    	req = req + "durationStr " + durationStr + "\n";
-    	req = req + "barSizeSetting " + barSizeSetting + "\n";
-    	req = req + "whatToShow " + whatToShow + "\n";
-    	req = req + "useRTH " + useRTH + "\n";
-    	req = req + "formatDate " + formatDate + "\n";
-    	req = req + "chartOptions " + chartOptions.toString();
+    	req = req + "== " + "Requesting Historical Data" + "\n";
+    	req = req + "- Ticker Id " + tickerId + "\n";
+    	req = req + "- Contract: " + "\n" + contract.toString();
+    	req = req + "- EndDate Time " + endDateTime + "\n";
+    	req = req + "- DurationStr " + durationStr + "\n";
+    	req = req + "- Bar Size Setting " + barSizeSetting + "\n";
+    	req = req + "- What To Show " + whatToShow + "\n";
+    	req = req + "- Use RTH " + useRTH + "\n";
+    	req = req + "- Format Date " + formatDate + "\n";
+    	req = req + "- Chart Options " + chartOptions.toString();
     	System.out.println(req);
+    	
+//    	EXAMPLE
+//    	...Requesting Historical Data
+//    	tickerId 10000001
+//    	contract conid	0
+//    	symbol	IBM
+//    	secType	STK
+//    	strike	0.0
+//    	exchange	SMART
+//    	currency	USD
+//    	primaryExch	ISLAND
+//    	endDateTime 20120101 12:00:00
+//    	durationStr 1 W
+//    	barSizeSetting 1 hour
+//    	whatToShow TRADES
+//    	useRTH 0
+//    	formatDate 2
+//    	chartOptions []
+//    	READ MESSAGE ID 17
     	
         // not connected?
         if( !m_connected) {
@@ -880,7 +910,8 @@ public class EClientSocket {
               }
           }
 
-          Builder b = prepareBuffer(); 
+          EWireBuilder b = prepareBuffer(); 
+          
 
           b.send(REQ_HISTORICAL_DATA);
           b.send(VERSION);
@@ -949,12 +980,18 @@ public class EClientSocket {
               }
               b.send( chartOptionsStr.toString());
           }
+          // THE WIRE
           closeAndSend(b);
+          System.out.println("HIST WIRE " + b.toString());
+          // HIST WIRE 20 6 10000035 0 BAC STK  0.0   SMART ISLAND USD   0 20150505 16:30:00 1 hour 1 D 0 TRADES 2   (MINE asking for Day on BAC)
+          // HIST WIRE 20 6 10000001 0 IBM STK  0.0   SMART ISLAND USD   0 20120101 12:00:00 1 hour 1 W 0 TRADES 2   (API asking for Week on IBM)
+
         }
         catch (Exception e) {
           error(tickerId, EClientErrors.FAIL_SEND_REQHISTDATA, "" + e);
           close();
         }
+        
     }
 
     public synchronized void reqRealTimeBars(	int tickerId, Contract contract, 
@@ -983,7 +1020,7 @@ public class EClientSocket {
 
         try {
             // send req mkt data msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send(REQ_REAL_TIME_BARS);
             b.send(VERSION);
@@ -1074,7 +1111,7 @@ public class EClientSocket {
 
         try {
             // send req mkt data msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_CONTRACT_DATA);
             b.send( VERSION);
@@ -1159,7 +1196,7 @@ public class EClientSocket {
 
         try {
             // send req mkt data msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_MKT_DEPTH);
             b.send( VERSION);
@@ -1221,7 +1258,7 @@ public class EClientSocket {
 
         // send cancel mkt data msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_MKT_DATA);
             b.send( VERSION);
@@ -1253,7 +1290,7 @@ public class EClientSocket {
 
         // send cancel mkt data msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_MKT_DEPTH);
             b.send( VERSION);
@@ -1293,7 +1330,7 @@ public class EClientSocket {
               }
           }
 
-          Builder b = prepareBuffer(); 
+          EWireBuilder b = prepareBuffer(); 
 
           b.send(EXERCISE_OPTIONS);
           b.send(VERSION);
@@ -1548,7 +1585,7 @@ public class EClientSocket {
 
         // send place order msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( PLACE_ORDER);
             b.send( VERSION);
@@ -1915,7 +1952,7 @@ public class EClientSocket {
 
         // send account data msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_ACCOUNT_DATA );
             b.send( VERSION);
@@ -1944,7 +1981,7 @@ public class EClientSocket {
 
         // send executions msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_EXECUTIONS);
             b.send( VERSION);
@@ -1984,7 +2021,7 @@ public class EClientSocket {
 
         // send cancel order msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_ORDER);
             b.send( VERSION);
@@ -2009,7 +2046,7 @@ public class EClientSocket {
 
         // send open orders msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_OPEN_ORDERS);
             b.send( VERSION);
@@ -2032,7 +2069,7 @@ public class EClientSocket {
         final int VERSION = 1;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_IDS);
             b.send( VERSION);
@@ -2056,7 +2093,7 @@ public class EClientSocket {
         final int VERSION = 1;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_NEWS_BULLETINS);
             b.send( VERSION);
@@ -2081,7 +2118,7 @@ public class EClientSocket {
 
         // send cancel news bulletins msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_NEWS_BULLETINS);
             b.send( VERSION);
@@ -2105,7 +2142,7 @@ public class EClientSocket {
 
                 // send the set server logging level message
                 try {
-                    Builder b = prepareBuffer(); 
+                    EWireBuilder b = prepareBuffer(); 
 
                     b.send( SET_SERVER_LOGLEVEL);
                     b.send( VERSION);
@@ -2130,7 +2167,7 @@ public class EClientSocket {
 
         // send req open orders msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_AUTO_OPEN_ORDERS);
             b.send( VERSION);
@@ -2155,7 +2192,7 @@ public class EClientSocket {
 
         // send req all open orders msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_ALL_OPEN_ORDERS);
             b.send( VERSION);
@@ -2179,7 +2216,7 @@ public class EClientSocket {
 
         // send req FA managed accounts msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_MANAGED_ACCTS);
             b.send( VERSION);
@@ -2209,7 +2246,7 @@ public class EClientSocket {
         final int VERSION = 1;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_FA );
             b.send( VERSION);
@@ -2240,7 +2277,7 @@ public class EClientSocket {
         final int VERSION = 1;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REPLACE_FA );
             b.send( VERSION);
@@ -2272,7 +2309,7 @@ public class EClientSocket {
         final int VERSION = 1;
 
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_CURRENT_TIME );
             b.send( VERSION);
@@ -2310,7 +2347,7 @@ public class EClientSocket {
 
         try {
             // send req fund data msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_FUNDAMENTAL_DATA);
             b.send( VERSION);
@@ -2354,7 +2391,7 @@ public class EClientSocket {
 
         try {
             // send cancel fundamental data msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_FUNDAMENTAL_DATA);
             b.send( VERSION);
@@ -2395,7 +2432,7 @@ public class EClientSocket {
 
         try {
             // send calculate implied volatility msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_CALC_IMPLIED_VOLAT);
             b.send( VERSION);
@@ -2446,7 +2483,7 @@ public class EClientSocket {
 
         try {
             // send cancel calculate implied volatility msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_CALC_IMPLIED_VOLAT);
             b.send( VERSION);
@@ -2487,7 +2524,7 @@ public class EClientSocket {
 
         try {
             // send calculate option price msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_CALC_OPTION_PRICE);
             b.send( VERSION);
@@ -2538,7 +2575,7 @@ public class EClientSocket {
 
         try {
             // send cancel calculate option price msg
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( CANCEL_CALC_OPTION_PRICE);
             b.send( VERSION);
@@ -2569,7 +2606,7 @@ public class EClientSocket {
 
         // send request global cancel msg
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_GLOBAL_CANCEL);
             b.send( VERSION);
@@ -2599,7 +2636,7 @@ public class EClientSocket {
 
         // send the reqMarketDataType message
         try {
-            Builder b = prepareBuffer(); 
+            EWireBuilder b = prepareBuffer(); 
 
             b.send( REQ_MARKET_DATA_TYPE);
             b.send( VERSION);
@@ -2628,7 +2665,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( REQ_POSITIONS);
         b.send( VERSION);
@@ -2656,7 +2693,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( CANCEL_POSITIONS);
         b.send( VERSION);
@@ -2684,7 +2721,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( REQ_ACCOUNT_SUMMARY);
         b.send( VERSION);
@@ -2715,7 +2752,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( CANCEL_ACCOUNT_SUMMARY);
         b.send( VERSION);
@@ -2749,7 +2786,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
         b.send( VERIFY_REQUEST);
         b.send( VERSION);
         b.send( apiName);
@@ -2778,7 +2815,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
         b.send( VERIFY_MESSAGE);
         b.send( VERSION);
         b.send( apiData);
@@ -2812,7 +2849,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
         b.send( VERIFY_AND_AUTH_REQUEST);
         b.send( VERSION);
         b.send( apiName);
@@ -2842,7 +2879,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
         b.send( VERIFY_AND_AUTH_MESSAGE);
         b.send( VERSION);
         b.send( apiData);
@@ -2871,7 +2908,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( QUERY_DISPLAY_GROUPS);
         b.send( VERSION);
@@ -2900,7 +2937,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( SUBSCRIBE_TO_GROUP_EVENTS);
         b.send( VERSION);
@@ -2930,7 +2967,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( UPDATE_DISPLAY_GROUP);
         b.send( VERSION);
@@ -2960,7 +2997,7 @@ public class EClientSocket {
 
         final int VERSION = 1;
 
-        Builder b = prepareBuffer();
+        EWireBuilder b = prepareBuffer();
 
         b.send( UNSUBSCRIBE_FROM_GROUP_EVENTS);
         b.send( VERSION);
@@ -2975,15 +3012,15 @@ public class EClientSocket {
     }	
 	
     /** @deprecated, never called. */
-    protected synchronized void error( String err) {
+    public synchronized void error( String err) {
         m_eWrapper.error( err);
     }
 
-    protected synchronized void error( int id, int errorCode, String errorMsg) {
+    public synchronized void error( int id, int errorCode, String errorMsg) {
         m_eWrapper.error( id, errorCode, errorMsg);
     }
 
-    protected void close() {
+    public void close() {
         eDisconnect();
         wrapper().connectionClosed();
     }
@@ -2992,15 +3029,15 @@ public class EClientSocket {
         error(id, pair.code(), pair.msg() + tail);
     }
 
-    protected Builder prepareBuffer() {
-        Builder buf = new Builder( 1024 );
+    protected EWireBuilder prepareBuffer() {
+        EWireBuilder buf = new EWireBuilder( 1024 );
         if( m_useV100Plus ) {
             buf.allocateLengthHeader();
         }
         return buf;
     }
     
-    protected void closeAndSend(Builder buf) throws IOException {
+    protected void closeAndSend(EWireBuilder buf) throws IOException {
     	if( m_useV100Plus ) {
     		buf.updateLength( 0 ); // New buffer means length header position is always zero
     	}
@@ -3010,14 +3047,14 @@ public class EClientSocket {
    // Sends String without length prefix (pre-V100 style)
    protected void send( String str) throws IOException {
         // Write string to data buffer
-    	Builder b = new Builder( 1024 );
+    	EWireBuilder b = new EWireBuilder( 1024 );
     	
     	b.send(str);
     	b.writeTo( m_dos );
     }
 
     private void sendV100APIHeader() throws IOException {
-    	Builder bos = new Builder(1024);
+    	EWireBuilder bos = new EWireBuilder(1024);
     	bos.send("API\0".getBytes());
     
     	String out = "v" + (( MIN_VERSION < MAX_VERSION ) 

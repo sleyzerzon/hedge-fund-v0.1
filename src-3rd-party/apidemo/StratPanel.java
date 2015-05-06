@@ -28,10 +28,10 @@ import apidemo.util.VerticalPanel.StackPanel;
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.WhatToShow;
-import com.ib.controller.ApiController.IHistoricalDataHandler;
-import com.ib.controller.ApiController.IRealTimeBarHandler;
 import com.onenow.execution.Contract;
 import com.onenow.execution.QuoteRow;
+import com.onenow.execution.ApiController.IHistoricalDataHandler;
+import com.onenow.execution.ApiController.IRealTimeBarHandler;
 
 
 public class StratPanel extends StackPanel implements IHistoricalDataHandler, IRealTimeBarHandler {

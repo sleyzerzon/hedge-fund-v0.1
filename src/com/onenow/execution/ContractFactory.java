@@ -239,13 +239,13 @@ public class ContractFactory {
 		double p_strike=0.0;	
 		String p_right=""; 	
 		
-		String p_multiplier="100";
+		String p_multiplier=""; 
 		String p_exchange="SMART";		
+		String p_primaryExch="ISLAND";
 		String p_currency="USD";
 		String p_localSymbol="";
 		String p_tradingClass="";
 		ArrayList<ComboLeg> p_comboLegs=new ArrayList<ComboLeg>();
-		String p_primaryExch="";
 		boolean p_includeExpired=false;
 		String p_secIdType="";
 		String p_secId="";

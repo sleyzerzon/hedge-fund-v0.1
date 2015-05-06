@@ -14,7 +14,7 @@ public  interface Broker {
 	public abstract Portfolio getMarketPortfolio();
 	public abstract Portfolio getMyPortfolio();
 	public abstract Double getPrice(Investment inv, TradeType type);
-	public abstract QuoteHistory readHistoricalQuotes(Investment inv, String end); 
 	public abstract List<Trade> getTrades();
 	public abstract void enterTransaction(Transaction trans); 
+	public abstract void readHistoricalQuotes(Investment inv, String end, QuoteHistory history); 
 }

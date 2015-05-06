@@ -1,18 +1,18 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-package com.ib.client;
+package com.onenow.execution;
 
 
 public class EClientErrors {
     public static final int NO_VALID_ID = -1;
-    static final CodeMsgPair ALREADY_CONNECTED = new CodeMsgPair(501, "Already connected.");
-    static final CodeMsgPair CONNECT_FAIL = new CodeMsgPair(502, "Couldn't connect to TWS.  Confirm that \"Enable ActiveX and Socket Clients\" is enabled on the TWS \"Configure->API\" menu.");
+    public static final CodeMsgPair ALREADY_CONNECTED = new CodeMsgPair(501, "Already connected.");
+    public static final CodeMsgPair CONNECT_FAIL = new CodeMsgPair(502, "Couldn't connect to TWS.  Confirm that \"Enable ActiveX and Socket Clients\" is enabled on the TWS \"Configure->API\" menu.");
     public static final CodeMsgPair UPDATE_TWS = new CodeMsgPair(503, "The TWS is out of date and must be upgraded.");
     public static final CodeMsgPair NOT_CONNECTED = new CodeMsgPair(504, "Not connected");
-    static final CodeMsgPair UNKNOWN_ID = new CodeMsgPair(505, "Fatal Error: Unknown message id.");
+    public static final CodeMsgPair UNKNOWN_ID = new CodeMsgPair(505, "Fatal Error: Unknown message id.");
     static final CodeMsgPair UNSUPPORTED_VERSION = new CodeMsgPair(506, "Unsupported Version");
-    static final CodeMsgPair BAD_LENGTH = new CodeMsgPair(507, "Bad Message Length");
+    public static final CodeMsgPair BAD_LENGTH = new CodeMsgPair(507, "Bad Message Length");
     static final CodeMsgPair BAD_MESSAGE = new CodeMsgPair(508, "Bad Message");
     static final CodeMsgPair FAIL_SEND = new CodeMsgPair(509, "Failed to send message - "); // generic message; all future messages should use this
     static final CodeMsgPair FAIL_SEND_REQMKT = new CodeMsgPair(510, "Request Market Data Sending Error - ");

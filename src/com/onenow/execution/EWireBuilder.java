@@ -1,15 +1,17 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-package com.ib.client;
+package com.onenow.execution;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.ib.client.IApiEnum;
+
 /** This class is used to build messages so the entire message can be
  *  sent to the socket in a single write. */
-public class Builder {
+public class EWireBuilder {
 	private static final char SEP = 0;
 	private static final int PADDING_SIZE = 1; // 1 disables padding, 4 is normal if padding is used
 	private static final byte[] EMPTY_LENGTH_HEADER = new byte[ 4 ]; 
@@ -17,7 +19,7 @@ public class Builder {
 	private final ByteBuffer m_sb;
 	private boolean m_useSendMax;
 	
-	public Builder( int size ) {
+	public EWireBuilder( int size ) {
 	    m_sb = new ByteBuffer( size );
 	}
 	
@@ -120,4 +122,11 @@ public class Builder {
             out.write( this.buf, 0, this.count );
         }
     }
+    
+    // PRINT
+    public String toString() {
+    	return m_sb.toString();
+    }
+    
+    
 }

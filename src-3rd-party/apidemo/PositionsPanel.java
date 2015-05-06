@@ -18,8 +18,8 @@ import apidemo.util.VerticalPanel;
 import apidemo.util.NewTabbedPanel.NewTabPanel;
 
 import com.ib.controller.Formats;
-import com.ib.controller.ApiController.IPositionHandler;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ApiController.IPositionHandler;
 
 
 public class PositionsPanel extends NewTabPanel {

@@ -14,9 +14,9 @@ import javax.swing.table.TableCellRenderer;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
-import com.ib.controller.ApiController.TopMktDataAdapter;
 import com.ib.controller.Formats;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ApiController.TopMktDataAdapter;
 
 public class TopModel extends AbstractTableModel {
 	private ArrayList<TopRow> m_rows = new ArrayList<TopRow>();

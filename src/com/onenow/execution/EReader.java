@@ -1,7 +1,7 @@
 /* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-package com.ib.client;
+package com.onenow.execution;
 
 import java.io.Closeable;
 import java.io.DataInputStream;
@@ -10,7 +10,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import com.onenow.execution.Contract;
+import com.ib.client.ComboLeg;
+import com.ib.client.CommissionReport;
+import com.ib.client.ContractDetails;
+import com.ib.client.DeltaNeutralContract;
+import com.ib.client.EWrapper;
+import com.ib.client.Execution;
+import com.ib.client.Order;
+import com.ib.client.OrderComboLeg;
+import com.ib.client.OrderState;
+import com.ib.client.TagValue;
+import com.ib.client.TickType;
+import com.ib.client.Util;
 
 
 /**
@@ -136,6 +147,7 @@ public class EReader extends Thread {
     	}
     	
     	int msgId = readInt();
+
 
         switch( msgId) {
             case END_CONN:
@@ -1038,6 +1050,9 @@ public class EReader extends Thread {
               break;
             }
             case HISTORICAL_DATA: {
+            	
+              System.out.println("=> READ MESSAGE " + "HISTORICAL_DATA" + " ID " + msgId);
+            	
               int version = readInt();
               int reqId = readInt();
         	  String startDateStr;
@@ -1083,6 +1098,9 @@ public class EReader extends Thread {
                 break;
             }
             case REAL_TIME_BARS: {
+            	
+                System.out.println("-> READ MESSAGE " + "REAL_TIME_BARS" + " ID " + msgId);
+
                 /*int version =*/ readInt();
                 int reqId = readInt();
                 long time = readLong();
@@ -1250,7 +1268,7 @@ public class EReader extends Thread {
     	return m_messageReader != null;
     }
     
-    protected String readStr() throws IOException {
+    public String readStr() throws IOException {
     	return m_messageReader.readStr();
     }
 
@@ -1259,7 +1277,7 @@ public class EReader extends Thread {
         return str == null ? false : (Integer.parseInt( str) != 0);
     }
 
-    protected int readInt() throws IOException {
+    public int readInt() throws IOException {
         String str = readStr();
         return str == null ? 0 : Integer.parseInt( str);
     }
