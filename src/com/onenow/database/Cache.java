@@ -321,9 +321,9 @@ public class Cache {
 		QuoteHistory history = broker.readHistoricalQuotes(inv, dateAtClose); 
    
 		if(history.size() == 0) {
-			System.out.println("WARNING: HISTORICAL DATA FARM DOWN? Close at " + dateAtClose + ". Investment " + inv.toString()); 
+			System.out.println("WARNING: HISTORICAL DATA FARM DOWN? Close at " + dateAtClose + ". Investment " + inv.toString() + "\n"); 
 		} else {
-			System.out.println("HISTORY " + history.toString());
+			System.out.println("HISTORY " + history.toString() + "\n");
 		}
 		return history;
 	}

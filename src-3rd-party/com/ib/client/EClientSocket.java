@@ -854,7 +854,7 @@ public class EClientSocket {
     	req = req + "whatToShow " + whatToShow + "\n";
     	req = req + "useRTH " + useRTH + "\n";
     	req = req + "formatDate " + formatDate + "\n";
-    	req = req + "chartOptions " + chartOptions.toString() + "\n";
+    	req = req + "chartOptions " + chartOptions.toString();
     	System.out.println(req);
     	
         // not connected?

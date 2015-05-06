@@ -120,7 +120,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	public void getLiveQuotes() {
 		List<Investment> invs = getMarketPortfolio().getInvestments();
 		for(Investment inv:invs) {		
-			System.out.println("\n> " + "getting quote for live investment: " + inv.toString());
+			System.out.println("> getting quote for live investment: " + inv.toString());
 			
 			QuoteTable quoteLive = new QuoteTable(getController(), getMarketPrices(), inv);
 			
@@ -129,7 +129,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
 
-		System.out.println("\n> " + "getting historical quote for investment: " + inv.toString());
+		System.out.println("> getting historical quote for investment: " + inv.toString());
 		Contract contract = getContractFactory().getContract(inv);
 		QuoteHistory quoteHistory = new QuoteHistory();
 		
