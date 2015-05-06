@@ -147,6 +147,7 @@ public class EReader extends Thread {
     	}
     	
     	int msgId = readInt();
+    	//    	System.out.println(", read message " + msgId);
 
 
         switch( msgId) {

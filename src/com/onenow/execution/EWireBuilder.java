@@ -22,48 +22,53 @@ public class EWireBuilder {
 	public EWireBuilder( int size ) {
 	    m_sb = new ByteBuffer( size );
 	}
-	
+
+	public EWireBuilder( String toBuffer ) {
+		m_sb = new ByteBuffer( 1024 );
+		append(toBuffer) ;
+	}
+
 	/** If a numeric value is set to the maxvalue (appropriate for the data type),
 	 *  then when it is serialized using send it is automatically replaced by a null field. */
 	public void setUseSendMax() {
 	    m_useSendMax = true;
 	}
 	
-	public void send(int a) {
+	public void append(int a) {
 	    if ( m_useSendMax ) {
-	        sendMax( a );
+	        appendMax( a );
 	    }
 	    else {
-	        send( String.valueOf(a) );
+	        append( String.valueOf(a) );
 	    }
 	}
 
-	public void sendMax(int a) {
-		send( a == Integer.MAX_VALUE ? "" : String.valueOf( a) );
+	public void appendMax(int a) {
+		append( a == Integer.MAX_VALUE ? "" : String.valueOf( a) );
 	}
 
 	public void send(double a) {
 	    if ( m_useSendMax ) {
-	        sendMax( a );
+	        appendMax( a );
 	    }
 	    else {
-	        send( String.valueOf( a) );
+	        append( String.valueOf( a) );
 	    }
 	}
 
-	public void sendMax(double a) {
-		send( a == Double.MAX_VALUE ? "" : String.valueOf( a) );
+	public void appendMax(double a) {
+		append( a == Double.MAX_VALUE ? "" : String.valueOf( a) );
 	}
 
 	public void send( boolean a) {
-		send( a ? 1 : 0);
+		append( a ? 1 : 0);
 	}
 
 	public void send( IApiEnum a) {
-		send( a == null ? (String)null : a.getApiString() );
+		append( a == null ? (String)null : a.getApiString() );
 	}
 
-	public void send( String a) {
+	public void append( String a) {
 		if (a != null) {
 		    byte[] buffer = a.getBytes();
 		    m_sb.write( buffer, 0, buffer.length );

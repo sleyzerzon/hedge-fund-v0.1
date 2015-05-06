@@ -228,7 +228,7 @@ public class EClientSocket {
     protected static final int MIN_SERVER_VER_LINKING_AUTH = 74;
     protected static final int MIN_SERVER_VER_PRIMARYEXCH = 75;
 
-    private EWrapper m_eWrapper;    // msg handler
+    private EWrapper m_eWrapper;    	// msg handler
     protected DataOutputStream m_dos;   // the socket output stream
     private boolean m_connected;        // true if we are connected
     private EReader m_reader;           // thread which reads msgs from socket
@@ -485,12 +485,12 @@ public class EClientSocket {
         try {
         	EWireBuilder b = prepareBuffer(); 
         	
-            b.send(START_API);
-            b.send(VERSION);
-            b.send(m_clientId);
+            b.append(START_API);
+            b.append(VERSION);
+            b.append(m_clientId);
             
             if (m_serverVersion >= MIN_SERVER_VER_OPTIONAL_CAPABILITIES) {
-                b.send(m_optionalCapabilities);
+                b.append(m_optionalCapabilities);
             }
             closeAndSend(b);
         }
@@ -520,9 +520,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_SCANNER_SUBSCRIPTION);
-            b.send( VERSION);
-            b.send( tickerId);
+            b.append( CANCEL_SCANNER_SUBSCRIPTION);
+            b.append( VERSION);
+            b.append( tickerId);
             
             closeAndSend(b);
         }
@@ -550,8 +550,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send(REQ_SCANNER_PARAMETERS);
-            b.send(VERSION);
+            b.append(REQ_SCANNER_PARAMETERS);
+            b.append(VERSION);
 
             closeAndSend(b);
         }
@@ -580,33 +580,33 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send(REQ_SCANNER_SUBSCRIPTION);
-            b.send(VERSION);
-            b.send(tickerId);
-            b.sendMax(subscription.numberOfRows());
-            b.send(subscription.instrument());
-            b.send(subscription.locationCode());
-            b.send(subscription.scanCode());
-            b.sendMax(subscription.abovePrice());
-            b.sendMax(subscription.belowPrice());
-            b.sendMax(subscription.aboveVolume());
-            b.sendMax(subscription.marketCapAbove());
-            b.sendMax(subscription.marketCapBelow());
-            b.send(subscription.moodyRatingAbove());
-            b.send(subscription.moodyRatingBelow());
-            b.send(subscription.spRatingAbove());
-            b.send(subscription.spRatingBelow());
-            b.send(subscription.maturityDateAbove());
-            b.send(subscription.maturityDateBelow());
-            b.sendMax(subscription.couponRateAbove());
-            b.sendMax(subscription.couponRateBelow());
-            b.send(subscription.excludeConvertible());
+            b.append(REQ_SCANNER_SUBSCRIPTION);
+            b.append(VERSION);
+            b.append(tickerId);
+            b.appendMax(subscription.numberOfRows());
+            b.append(subscription.instrument());
+            b.append(subscription.locationCode());
+            b.append(subscription.scanCode());
+            b.appendMax(subscription.abovePrice());
+            b.appendMax(subscription.belowPrice());
+            b.appendMax(subscription.aboveVolume());
+            b.appendMax(subscription.marketCapAbove());
+            b.appendMax(subscription.marketCapBelow());
+            b.append(subscription.moodyRatingAbove());
+            b.append(subscription.moodyRatingBelow());
+            b.append(subscription.spRatingAbove());
+            b.append(subscription.spRatingBelow());
+            b.append(subscription.maturityDateAbove());
+            b.append(subscription.maturityDateBelow());
+            b.appendMax(subscription.couponRateAbove());
+            b.appendMax(subscription.couponRateBelow());
+            b.append(subscription.excludeConvertible());
             if (m_serverVersion >= 25) {
-                b.sendMax(subscription.averageOptionVolumeAbove());
-                b.send(subscription.scannerSettingPairs());
+                b.appendMax(subscription.averageOptionVolumeAbove());
+                b.append(subscription.scannerSettingPairs());
             }
             if (m_serverVersion >= 27) {
-                b.send(subscription.stockTypeFilter());
+                b.append(subscription.stockTypeFilter());
             }
             
             // send scannerSubscriptionOptions parameter
@@ -622,7 +622,7 @@ public class EClientSocket {
                         scannerSubscriptionOptionsStr.append( ";");
                     }
                 }
-                b.send( scannerSubscriptionOptionsStr.toString());
+                b.append( scannerSubscriptionOptionsStr.toString());
             }
             closeAndSend(b);
         }
@@ -692,47 +692,47 @@ public class EClientSocket {
             // send req mkt data msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send(REQ_MKT_DATA);
-            b.send(VERSION);
-            b.send(tickerId);
+            b.append(REQ_MKT_DATA);
+            b.append(VERSION);
+            b.append(tickerId);
 
             // send contract fields
             if (m_serverVersion >= MIN_SERVER_VER_REQ_MKT_DATA_CONID) {
-                b.send(contract.conid());
+                b.append(contract.conid());
             }
-            b.send(contract.symbol());
-            b.send(contract.getSecType());
-            b.send(contract.expiry());
+            b.append(contract.symbol());
+            b.append(contract.getSecType());
+            b.append(contract.expiry());
             b.send(contract.strike());
-            b.send(contract.getRight());
+            b.append(contract.getRight());
             if (m_serverVersion >= 15) {
-                b.send(contract.multiplier());
+                b.append(contract.multiplier());
             }
-            b.send(contract.exchange());
+            b.append(contract.exchange());
             if (m_serverVersion >= 14) {
-                b.send(contract.primaryExch());
+                b.append(contract.primaryExch());
             }
-            b.send(contract.currency());
+            b.append(contract.currency());
             if(m_serverVersion >= 2) {
-                b.send( contract.localSymbol());
+                b.append( contract.localSymbol());
             }
             if(m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send( contract.tradingClass());
+                b.append( contract.tradingClass());
             }
             if(m_serverVersion >= 8 && SecType.BAG.name().equalsIgnoreCase(contract.getSecType())) {
                 if ( contract.comboLegs() == null ) {
-                    b.send( 0);
+                    b.append( 0);
                 }
                 else {
-                    b.send( contract.comboLegs().size());
+                    b.append( contract.comboLegs().size());
 
                     ComboLeg comboLeg;
                     for (int i=0; i < contract.comboLegs().size(); i ++) {
                         comboLeg = contract.comboLegs().get(i);
-                        b.send( comboLeg.conid());
-                        b.send( comboLeg.ratio());
-                        b.send( comboLeg.getAction());
-                        b.send( comboLeg.exchange());
+                        b.append( comboLeg.conid());
+                        b.append( comboLeg.ratio());
+                        b.append( comboLeg.getAction());
+                        b.append( comboLeg.exchange());
                     }
                 }
             }
@@ -741,7 +741,7 @@ public class EClientSocket {
          	   if (contract.underComp() != null) {
          		   DeltaNeutralContract underComp = contract.underComp();
          		   b.send( true);
-         		   b.send( underComp.conid());
+         		   b.append( underComp.conid());
          		   b.send( underComp.delta());
          		   b.send( underComp.price());
          	   }
@@ -758,7 +758,7 @@ public class EClientSocket {
             	 *
             	 *       Therefore we are relying on TWS doing validation.
             	 */
-            	b.send( genericTickList);
+            	b.append( genericTickList);
             }
             if (m_serverVersion >= MIN_SERVER_VER_SNAPSHOT_MKT_DATA) {
             	b.send (snapshot);
@@ -777,7 +777,7 @@ public class EClientSocket {
                         mktDataOptionsStr.append( ";");
                     }
                 }
-                b.send( mktDataOptionsStr.toString());
+                b.append( mktDataOptionsStr.toString());
             }
             closeAndSend(b);
         }
@@ -806,9 +806,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_HISTORICAL_DATA);
-            b.send( VERSION);
-            b.send( tickerId);
+            b.append( CANCEL_HISTORICAL_DATA);
+            b.append( VERSION);
+            b.append( tickerId);
 
             closeAndSend(b);
         }
@@ -837,9 +837,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_REAL_TIME_BARS);
-            b.send( VERSION);
-            b.send( tickerId);
+            b.append( CANCEL_REAL_TIME_BARS);
+            b.append( VERSION);
+            b.append( tickerId);
 
             closeAndSend(b);
         }
@@ -913,54 +913,54 @@ public class EClientSocket {
           EWireBuilder b = prepareBuffer(); 
           
 
-          b.send(REQ_HISTORICAL_DATA);
-          b.send(VERSION);
-          b.send(tickerId);
+          b.append(REQ_HISTORICAL_DATA);
+          b.append(VERSION);
+          b.append(tickerId);
 
           // send contract fields
           if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-              b.send(contract.conid());
+              b.append(contract.conid());
           }
-          b.send(contract.symbol());
-          b.send(contract.getSecType());
-          b.send(contract.expiry());
+          b.append(contract.symbol());
+          b.append(contract.getSecType());
+          b.append(contract.expiry());
           b.send(contract.strike());
-          b.send(contract.getRight());
-          b.send(contract.multiplier());
-          b.send(contract.exchange());
-          b.send(contract.primaryExch());
-          b.send(contract.currency());
-          b.send(contract.localSymbol());
+          b.append(contract.getRight());
+          b.append(contract.multiplier());
+          b.append(contract.exchange());
+          b.append(contract.primaryExch());
+          b.append(contract.currency());
+          b.append(contract.localSymbol());
           if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-              b.send(contract.tradingClass());
+              b.append(contract.tradingClass());
           }
           if (m_serverVersion >= 31) {
-        	  b.send(contract.includeExpired() ? 1 : 0);
+        	  b.append(contract.includeExpired() ? 1 : 0);
           }
           if (m_serverVersion >= 20) {
-              b.send(endDateTime);
-              b.send(barSizeSetting);
+              b.append(endDateTime);
+              b.append(barSizeSetting);
           }
-          b.send(durationStr);
-          b.send(useRTH);
-          b.send(whatToShow);
+          b.append(durationStr);
+          b.append(useRTH);
+          b.append(whatToShow);
           if (m_serverVersion > 16) {
-              b.send(formatDate);
+              b.append(formatDate);
           }
           if ( SecType.BAG.name().equalsIgnoreCase(contract.getSecType()) ) {
               if (contract.comboLegs() == null) {
-                  b.send(0);
+                  b.append(0);
               }
               else {
-                  b.send(contract.comboLegs().size());
+                  b.append(contract.comboLegs().size());
 
                   ComboLeg comboLeg;
                   for (int i = 0; i < contract.comboLegs().size(); i++) {
                       comboLeg = contract.comboLegs().get(i);
-                      b.send(comboLeg.conid());
-                      b.send(comboLeg.ratio());
-                      b.send(comboLeg.getAction());
-                      b.send(comboLeg.exchange());
+                      b.append(comboLeg.conid());
+                      b.append(comboLeg.ratio());
+                      b.append(comboLeg.getAction());
+                      b.append(comboLeg.exchange());
                   }
               }
           }
@@ -978,14 +978,15 @@ public class EClientSocket {
                       chartOptionsStr.append( ";");
                   }
               }
-              b.send( chartOptionsStr.toString());
+              b.append( chartOptionsStr.toString());
           }
           // THE WIRE
-          closeAndSend(b);
-          System.out.println("HIST WIRE " + b.toString());
+          
+          // System.out.println("HISTORY WIRE " + b.toString());
           // HIST WIRE 20 6 10000035 0 BAC STK  0.0   SMART ISLAND USD   0 20150505 16:30:00 1 hour 1 D 0 TRADES 2   (MINE asking for Day on BAC)
           // HIST WIRE 20 6 10000001 0 IBM STK  0.0   SMART ISLAND USD   0 20120101 12:00:00 1 hour 1 W 0 TRADES 2   (API asking for Week on IBM)
-
+          // b = new EWireBuilder("20 6 10000001 0 IBM STK  0.0   SMART ISLAND USD   0 20120101 12:00:00 1 hour 1 W 0 TRADES 2");
+          closeAndSend(b);
         }
         catch (Exception e) {
           error(tickerId, EClientErrors.FAIL_SEND_REQHISTDATA, "" + e);
@@ -1022,29 +1023,29 @@ public class EClientSocket {
             // send req mkt data msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send(REQ_REAL_TIME_BARS);
-            b.send(VERSION);
-            b.send(tickerId);
+            b.append(REQ_REAL_TIME_BARS);
+            b.append(VERSION);
+            b.append(tickerId);
 
             // send contract fields
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.conid());
+                b.append(contract.conid());
             }
-            b.send(contract.symbol());
-            b.send(contract.getSecType());
-            b.send(contract.expiry());
+            b.append(contract.symbol());
+            b.append(contract.getSecType());
+            b.append(contract.expiry());
             b.send(contract.strike());
-            b.send(contract.getRight());
-            b.send(contract.multiplier());
-            b.send(contract.exchange());
-            b.send(contract.primaryExch());
-            b.send(contract.currency());
-            b.send(contract.localSymbol());
+            b.append(contract.getRight());
+            b.append(contract.multiplier());
+            b.append(contract.exchange());
+            b.append(contract.primaryExch());
+            b.append(contract.currency());
+            b.append(contract.localSymbol());
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass());
+                b.append(contract.tradingClass());
             }
-            b.send(barSize);  // this parameter is not currently used
-            b.send(whatToShow);
+            b.append(barSize);  // this parameter is not currently used
+            b.append(whatToShow);
             b.send(useRTH);
 
             // send realTimeBarsOptions parameter
@@ -1060,9 +1061,13 @@ public class EClientSocket {
                         realTimeBarsOptionsStr.append( ";");
                     }
                 }
-                b.send( realTimeBarsOptionsStr.toString());
+                b.append( realTimeBarsOptionsStr.toString());
             }
+
+            // WIRE
             closeAndSend(b);
+//            System.out.println("REAL-TIME WIRE " + b.toString());
+
         }
         catch( Exception e) {
             error( tickerId, EClientErrors.FAIL_SEND_REQRTBARS, "" + e);
@@ -1113,54 +1118,54 @@ public class EClientSocket {
             // send req mkt data msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_CONTRACT_DATA);
-            b.send( VERSION);
+            b.append( REQ_CONTRACT_DATA);
+            b.append( VERSION);
 
             if (m_serverVersion >= MIN_SERVER_VER_CONTRACT_DATA_CHAIN) {
-            	b.send( reqId);
+            	b.append( reqId);
             }
 
             // send contract fields
             if (m_serverVersion >= MIN_SERVER_VER_CONTRACT_CONID) {
-            	b.send(contract.conid());
+            	b.append(contract.conid());
             }
-            b.send( contract.symbol());
-            b.send( contract.getSecType());
-            b.send( contract.expiry());
+            b.append( contract.symbol());
+            b.append( contract.getSecType());
+            b.append( contract.expiry());
             b.send( contract.strike());
-            b.send( contract.getRight());
+            b.append( contract.getRight());
             if (m_serverVersion >= 15) {
-                b.send(contract.multiplier());
+                b.append(contract.multiplier());
             }
             
             if (m_serverVersion >= MIN_SERVER_VER_PRIMARYEXCH)
             {
-            	b.send(contract.exchange());
-            	b.send(contract.primaryExch());
+            	b.append(contract.exchange());
+            	b.append(contract.primaryExch());
             }
             else if (m_serverVersion >= MIN_SERVER_VER_LINKING)
             {
                 if (!IsEmpty(contract.primaryExch()) && (contract.exchange() == "BEST" || contract.exchange() == "SMART"))
                 {
-                   	b.send(contract.exchange() + ":" + contract.primaryExch());
+                   	b.append(contract.exchange() + ":" + contract.primaryExch());
                 }
                 else
                 {
-                	b.send(contract.exchange());
+                	b.append(contract.exchange());
                 }
             }
             
-            b.send( contract.currency());
-            b.send( contract.localSymbol());
+            b.append( contract.currency());
+            b.append( contract.localSymbol());
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass());
+                b.append(contract.tradingClass());
             }
             if (m_serverVersion >= 31) {
                 b.send(contract.includeExpired());
             }
             if (m_serverVersion >= MIN_SERVER_VER_SEC_ID_TYPE) {
-            	b.send( contract.getSecIdType());
-            	b.send( contract.secId());
+            	b.append( contract.getSecIdType());
+            	b.append( contract.secId());
             }
             closeAndSend(b);
         }
@@ -1198,30 +1203,30 @@ public class EClientSocket {
             // send req mkt data msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_MKT_DEPTH);
-            b.send( VERSION);
-            b.send( tickerId);
+            b.append( REQ_MKT_DEPTH);
+            b.append( VERSION);
+            b.append( tickerId);
 
             // send contract fields
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.conid());
+                b.append(contract.conid());
             }
-            b.send( contract.symbol());
-            b.send( contract.getSecType());
-            b.send( contract.expiry());
+            b.append( contract.symbol());
+            b.append( contract.getSecType());
+            b.append( contract.expiry());
             b.send( contract.strike());
-            b.send( contract.getRight());
+            b.append( contract.getRight());
             if (m_serverVersion >= 15) {
-              b.send(contract.multiplier());
+              b.append(contract.multiplier());
             }
-            b.send( contract.exchange());
-            b.send( contract.currency());
-            b.send( contract.localSymbol());
+            b.append( contract.exchange());
+            b.append( contract.currency());
+            b.append( contract.localSymbol());
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass());
+                b.append(contract.tradingClass());
             }
             if (m_serverVersion >= 19) {
-                b.send( numRows);
+                b.append( numRows);
             }
             
             // send mktDepthOptions parameter
@@ -1237,7 +1242,7 @@ public class EClientSocket {
                         mktDepthOptionsStr.append( ";");
                     }
                 }
-                b.send( mktDepthOptionsStr.toString());
+                b.append( mktDepthOptionsStr.toString());
             }
             closeAndSend(b);
         }
@@ -1260,9 +1265,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_MKT_DATA);
-            b.send( VERSION);
-            b.send( tickerId);
+            b.append( CANCEL_MKT_DATA);
+            b.append( VERSION);
+            b.append( tickerId);
 
             closeAndSend(b);
         }
@@ -1292,9 +1297,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_MKT_DEPTH);
-            b.send( VERSION);
-            b.send( tickerId);
+            b.append( CANCEL_MKT_DEPTH);
+            b.append( VERSION);
+            b.append( tickerId);
 
             closeAndSend(b);
         }
@@ -1332,30 +1337,30 @@ public class EClientSocket {
 
           EWireBuilder b = prepareBuffer(); 
 
-          b.send(EXERCISE_OPTIONS);
-          b.send(VERSION);
-          b.send(tickerId);
+          b.append(EXERCISE_OPTIONS);
+          b.append(VERSION);
+          b.append(tickerId);
 
           // send contract fields
           if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-              b.send(contract.conid());
+              b.append(contract.conid());
           }
-          b.send(contract.symbol());
-          b.send(contract.getSecType());
-          b.send(contract.expiry());
+          b.append(contract.symbol());
+          b.append(contract.getSecType());
+          b.append(contract.expiry());
           b.send(contract.strike());
-          b.send(contract.getRight());
-          b.send(contract.multiplier());
-          b.send(contract.exchange());
-          b.send(contract.currency());
-          b.send(contract.localSymbol());
+          b.append(contract.getRight());
+          b.append(contract.multiplier());
+          b.append(contract.exchange());
+          b.append(contract.currency());
+          b.append(contract.localSymbol());
           if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-              b.send(contract.tradingClass());
+              b.append(contract.tradingClass());
           }
-          b.send(exerciseAction);
-          b.send(exerciseQuantity);
-          b.send(account);
-          b.send(override);
+          b.append(exerciseAction);
+          b.append(exerciseQuantity);
+          b.append(account);
+          b.append(override);
 
           closeAndSend(b);
       }
@@ -1587,72 +1592,72 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( PLACE_ORDER);
-            b.send( VERSION);
-            b.send( id);
+            b.append( PLACE_ORDER);
+            b.append( VERSION);
+            b.append( id);
 
             // send contract fields
             if( m_serverVersion >= MIN_SERVER_VER_PLACE_ORDER_CONID) {
-                b.send(contract.conid());
+                b.append(contract.conid());
             }
-            b.send( contract.symbol());
-            b.send( contract.getSecType());
-            b.send( contract.expiry());
+            b.append( contract.symbol());
+            b.append( contract.getSecType());
+            b.append( contract.expiry());
             b.send( contract.strike());
-            b.send( contract.getRight());
+            b.append( contract.getRight());
             if (m_serverVersion >= 15) {
-                b.send(contract.multiplier());
+                b.append(contract.multiplier());
             }
-            b.send( contract.exchange());
+            b.append( contract.exchange());
             if( m_serverVersion >= 14) {
-              b.send(contract.primaryExch());
+              b.append(contract.primaryExch());
             }
-            b.send( contract.currency());
+            b.append( contract.currency());
             if( m_serverVersion >= 2) {
-                b.send (contract.localSymbol());
+                b.append (contract.localSymbol());
             }
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass());
+                b.append(contract.tradingClass());
             }
             if( m_serverVersion >= MIN_SERVER_VER_SEC_ID_TYPE){
-            	b.send( contract.getSecIdType());
-            	b.send( contract.secId());
+            	b.append( contract.getSecIdType());
+            	b.append( contract.secId());
             }
 
             // send main order fields
-            b.send( order.getAction());
-            b.send( order.totalQuantity());
-            b.send( order.getOrderType());
+            b.append( order.getAction());
+            b.append( order.totalQuantity());
+            b.append( order.getOrderType());
             if (m_serverVersion < MIN_SERVER_VER_ORDER_COMBO_LEGS_PRICE) {
                 b.send( order.lmtPrice() == Double.MAX_VALUE ? 0 : order.lmtPrice());
             }
             else {
-                b.sendMax( order.lmtPrice());
+                b.appendMax( order.lmtPrice());
             }
             if (m_serverVersion < MIN_SERVER_VER_TRAILING_PERCENT) {
                 b.send( order.auxPrice() == Double.MAX_VALUE ? 0 : order.auxPrice());
             }
             else {
-                b.sendMax( order.auxPrice());
+                b.appendMax( order.auxPrice());
             }
 
             // send extended order fields
-            b.send( order.getTif());
-            b.send( order.ocaGroup());
-            b.send( order.account());
-            b.send( order.openClose());
-            b.send( order.origin());
-            b.send( order.orderRef());
+            b.append( order.getTif());
+            b.append( order.ocaGroup());
+            b.append( order.account());
+            b.append( order.openClose());
+            b.append( order.origin());
+            b.append( order.orderRef());
             b.send( order.transmit());
             if( m_serverVersion >= 4 ) {
-                b.send (order.parentId());
+                b.append (order.parentId());
             }
 
             if( m_serverVersion >= 5 ) {
                 b.send (order.blockOrder());
                 b.send (order.sweepToFill());
-                b.send (order.displaySize());
-                b.send (order.getTriggerMethod());
+                b.append (order.displaySize());
+                b.append (order.getTriggerMethod());
                 if (m_serverVersion < 38) {
                 	// will never happen
                 	b.send(/* order.m_ignoreRth */ false);
@@ -1669,26 +1674,26 @@ public class EClientSocket {
             // Send combo legs for BAG requests
             if(m_serverVersion >= 8 && SecType.BAG.name().equalsIgnoreCase(contract.getSecType())) {
                 if ( contract.comboLegs() == null ) {
-                    b.send( 0);
+                    b.append( 0);
                 }
                 else {
-                    b.send( contract.comboLegs().size());
+                    b.append( contract.comboLegs().size());
 
                     ComboLeg comboLeg;
                     for (int i=0; i < contract.comboLegs().size(); i ++) {
                         comboLeg = contract.comboLegs().get(i);
-                        b.send( comboLeg.conid());
-                        b.send( comboLeg.ratio());
-                        b.send( comboLeg.getAction());
-                        b.send( comboLeg.exchange());
-                        b.send( comboLeg.getOpenClose());
+                        b.append( comboLeg.conid());
+                        b.append( comboLeg.ratio());
+                        b.append( comboLeg.getAction());
+                        b.append( comboLeg.exchange());
+                        b.append( comboLeg.getOpenClose());
 
                         if (m_serverVersion >= MIN_SERVER_VER_SSHORT_COMBO_LEGS) {
-                        	b.send( comboLeg.shortSaleSlot());
-                        	b.send( comboLeg.designatedLocation());
+                        	b.append( comboLeg.shortSaleSlot());
+                        	b.append( comboLeg.designatedLocation());
                         }
                         if (m_serverVersion >= MIN_SERVER_VER_SSHORTX_OLD) {
-                            b.send( comboLeg.exemptCode());
+                            b.append( comboLeg.exemptCode());
                         }
                     }
                 }
@@ -1697,14 +1702,14 @@ public class EClientSocket {
             // Send order combo legs for BAG requests
             if(m_serverVersion >= MIN_SERVER_VER_ORDER_COMBO_LEGS_PRICE && SecType.BAG.name().equalsIgnoreCase(contract.getSecType())) {
                 if ( order.orderComboLegs() == null ) {
-                    b.send( 0);
+                    b.append( 0);
                 }
                 else {
-                    b.send( order.orderComboLegs().size());
+                    b.append( order.orderComboLegs().size());
 
                     for (int i = 0; i < order.orderComboLegs().size(); i++) {
                         OrderComboLeg orderComboLeg = order.orderComboLegs().get(i);
-                        b.sendMax( orderComboLeg.price());
+                        b.appendMax( orderComboLeg.price());
                     }
                 }
             }
@@ -1712,19 +1717,19 @@ public class EClientSocket {
             if(m_serverVersion >= MIN_SERVER_VER_SMART_COMBO_ROUTING_PARAMS && SecType.BAG.name().equalsIgnoreCase(contract.getSecType())) {
                 ArrayList smartComboRoutingParams = order.smartComboRoutingParams();
                 int smartComboRoutingParamsCount = smartComboRoutingParams == null ? 0 : smartComboRoutingParams.size();
-                b.send( smartComboRoutingParamsCount);
+                b.append( smartComboRoutingParamsCount);
                 if( smartComboRoutingParamsCount > 0) {
                     for( int i = 0; i < smartComboRoutingParamsCount; ++i) {
                         TagValue tagValue = (TagValue)smartComboRoutingParams.get(i);
-                        b.send( tagValue.m_tag);
-                        b.send( tagValue.m_value);
+                        b.append( tagValue.m_tag);
+                        b.append( tagValue.m_value);
                     }
                 }
             }
 
             if ( m_serverVersion >= 9 ) {
             	// send deprecated sharesAllocation field
-                b.send( "");
+                b.append( "");
             }
 
             if ( m_serverVersion >= 10 ) {
@@ -1732,44 +1737,44 @@ public class EClientSocket {
             }
 
             if ( m_serverVersion >= 11 ) {
-                b.send( order.goodAfterTime());
+                b.append( order.goodAfterTime());
             }
 
             if ( m_serverVersion >= 12 ) {
-                b.send( order.goodTillDate());
+                b.append( order.goodTillDate());
             }
 
             if ( m_serverVersion >= 13 ) {
-               b.send( order.faGroup());
-               b.send( order.getFaMethod());
-               b.send( order.faPercentage());
-               b.send( order.faProfile());
+               b.append( order.faGroup());
+               b.append( order.getFaMethod());
+               b.append( order.faPercentage());
+               b.append( order.faProfile());
            }
            if (m_serverVersion >= 18) { // institutional short sale slot fields.
-               b.send( order.shortSaleSlot());      // 0 only for retail, 1 or 2 only for institution.
-               b.send( order.designatedLocation()); // only populate when order.m_shortSaleSlot = 2.
+               b.append( order.shortSaleSlot());      // 0 only for retail, 1 or 2 only for institution.
+               b.append( order.designatedLocation()); // only populate when order.m_shortSaleSlot = 2.
            }
            if (m_serverVersion >= MIN_SERVER_VER_SSHORTX_OLD) {
-               b.send( order.exemptCode());
+               b.append( order.exemptCode());
            }
            if (m_serverVersion >= 19) {
-               b.send( order.getOcaType());
+               b.append( order.getOcaType());
                if (m_serverVersion < 38) {
             	   // will never happen
             	   b.send( /* order.m_rthOnly */ false);
                }
-               b.send( order.getRule80A());
-               b.send( order.settlingFirm());
+               b.append( order.getRule80A());
+               b.append( order.settlingFirm());
                b.send( order.allOrNone());
-               b.sendMax( order.minQty());
-               b.sendMax( order.percentOffset());
+               b.appendMax( order.minQty());
+               b.appendMax( order.percentOffset());
                b.send( order.eTradeOnly());
                b.send( order.firmQuoteOnly());
-               b.sendMax( order.nbboPriceCap());
-               b.sendMax( order.auctionStrategy());
-               b.sendMax( order.startingPrice());
-               b.sendMax( order.stockRefPrice());
-               b.sendMax( order.delta());
+               b.appendMax( order.nbboPriceCap());
+               b.appendMax( order.auctionStrategy());
+               b.appendMax( order.startingPrice());
+               b.appendMax( order.stockRefPrice());
+               b.appendMax( order.delta());
         	   // Volatility orders had specific watermark price attribs in server version 26
         	   double lower = (m_serverVersion == 26 && order.getOrderType().equals("VOL"))
         	   		? Double.MAX_VALUE
@@ -1777,8 +1782,8 @@ public class EClientSocket {
         	   double upper = (m_serverVersion == 26 && order.getOrderType().equals("VOL"))
    	   				? Double.MAX_VALUE
    	   				: order.stockRangeUpper();
-               b.sendMax( lower);
-               b.sendMax( upper);
+               b.appendMax( lower);
+               b.appendMax( upper);
            }
 
            if (m_serverVersion >= 22) {
@@ -1786,80 +1791,80 @@ public class EClientSocket {
            }
 
            if (m_serverVersion >= 26) { // Volatility orders
-               b.sendMax( order.volatility());
-               b.send(order.getVolatilityType());
+               b.appendMax( order.volatility());
+               b.append(order.getVolatilityType());
                if (m_serverVersion < 28) {
             	   b.send( order.getDeltaNeutralOrderType().equalsIgnoreCase("MKT"));
                } else {
-            	   b.send( order.getDeltaNeutralOrderType());
-            	   b.sendMax( order.deltaNeutralAuxPrice());
+            	   b.append( order.getDeltaNeutralOrderType());
+            	   b.appendMax( order.deltaNeutralAuxPrice());
 
                    if (m_serverVersion >= MIN_SERVER_VER_DELTA_NEUTRAL_CONID && !IsEmpty(order.getDeltaNeutralOrderType())){
-                       b.send( order.deltaNeutralConId());
-                       b.send( order.deltaNeutralSettlingFirm());
-                       b.send( order.deltaNeutralClearingAccount());
-                       b.send( order.deltaNeutralClearingIntent());
+                       b.append( order.deltaNeutralConId());
+                       b.append( order.deltaNeutralSettlingFirm());
+                       b.append( order.deltaNeutralClearingAccount());
+                       b.append( order.deltaNeutralClearingIntent());
                    }
 
                    if (m_serverVersion >= MIN_SERVER_VER_DELTA_NEUTRAL_OPEN_CLOSE && !IsEmpty(order.getDeltaNeutralOrderType())){
-                       b.send( order.deltaNeutralOpenClose());
+                       b.append( order.deltaNeutralOpenClose());
                        b.send( order.deltaNeutralShortSale());
-                       b.send( order.deltaNeutralShortSaleSlot());
-                       b.send( order.deltaNeutralDesignatedLocation());
+                       b.append( order.deltaNeutralShortSaleSlot());
+                       b.append( order.deltaNeutralDesignatedLocation());
                    }
                }
-               b.send( order.continuousUpdate());
+               b.append( order.continuousUpdate());
                if (m_serverVersion == 26) {
             	   // Volatility orders had specific watermark price attribs in server version 26
             	   double lower = order.getOrderType().equals("VOL") ? order.stockRangeLower() : Double.MAX_VALUE;
             	   double upper = order.getOrderType().equals("VOL") ? order.stockRangeUpper() : Double.MAX_VALUE;
-                   b.sendMax( lower);
-                   b.sendMax( upper);
+                   b.appendMax( lower);
+                   b.appendMax( upper);
                }
-               b.send(order.getReferencePriceType());
+               b.append(order.getReferencePriceType());
            }
 
            if (m_serverVersion >= 30) { // TRAIL_STOP_LIMIT stop price
-               b.sendMax( order.trailStopPrice());
+               b.appendMax( order.trailStopPrice());
            }
 
            if( m_serverVersion >= MIN_SERVER_VER_TRAILING_PERCENT){
-               b.sendMax( order.trailingPercent());
+               b.appendMax( order.trailingPercent());
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_SCALE_ORDERS) {
         	   if (m_serverVersion >= MIN_SERVER_VER_SCALE_ORDERS2) {
-        		   b.sendMax (order.scaleInitLevelSize());
-        		   b.sendMax (order.scaleSubsLevelSize());
+        		   b.appendMax (order.scaleInitLevelSize());
+        		   b.appendMax (order.scaleSubsLevelSize());
         	   }
         	   else {
-        		   b.send ("");
-        		   b.sendMax (order.scaleInitLevelSize());
+        		   b.append ("");
+        		   b.appendMax (order.scaleInitLevelSize());
 
         	   }
-        	   b.sendMax (order.scalePriceIncrement());
+        	   b.appendMax (order.scalePriceIncrement());
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_SCALE_ORDERS3 && order.scalePriceIncrement() > 0.0 && order.scalePriceIncrement() != Double.MAX_VALUE) {
-               b.sendMax (order.scalePriceAdjustValue());
-               b.sendMax (order.scalePriceAdjustInterval());
-               b.sendMax (order.scaleProfitOffset());
+               b.appendMax (order.scalePriceAdjustValue());
+               b.appendMax (order.scalePriceAdjustInterval());
+               b.appendMax (order.scaleProfitOffset());
                b.send (order.scaleAutoReset());
-               b.sendMax (order.scaleInitPosition());
-               b.sendMax (order.scaleInitFillQty());
+               b.appendMax (order.scaleInitPosition());
+               b.appendMax (order.scaleInitFillQty());
                b.send (order.scaleRandomPercent());
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_SCALE_TABLE) {
-               b.send (order.scaleTable());
-               b.send (order.activeStartTime());
-               b.send (order.activeStopTime());
+               b.append (order.scaleTable());
+               b.append (order.activeStartTime());
+               b.append (order.activeStopTime());
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_HEDGE_ORDERS) {
-        	   b.send (order.getHedgeType());
+        	   b.append (order.getHedgeType());
                if (!IsEmpty(order.getHedgeType())) {
-        		   b.send (order.hedgeParam());
+        		   b.append (order.hedgeParam());
         	   }
            }
 
@@ -1868,8 +1873,8 @@ public class EClientSocket {
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_PTA_ORDERS) {
-        	   b.send (order.clearingAccount());
-        	   b.send (order.clearingIntent());
+        	   b.append (order.clearingAccount());
+        	   b.append (order.clearingIntent());
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_NOT_HELD) {
@@ -1880,7 +1885,7 @@ public class EClientSocket {
         	   if (contract.underComp() != null) {
         		   DeltaNeutralContract underComp = contract.underComp();
         		   b.send( true);
-        		   b.send( underComp.conid());
+        		   b.append( underComp.conid());
         		   b.send( underComp.delta());
         		   b.send( underComp.price());
         	   }
@@ -1890,23 +1895,23 @@ public class EClientSocket {
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_ALGO_ORDERS) {
-        	   b.send( order.getAlgoStrategy());
+        	   b.append( order.getAlgoStrategy());
                if( !IsEmpty(order.getAlgoStrategy())) {
         		   ArrayList algoParams = order.algoParams();
         		   int algoParamsCount = algoParams == null ? 0 : algoParams.size();
-        		   b.send( algoParamsCount);
+        		   b.append( algoParamsCount);
         		   if( algoParamsCount > 0) {
         			   for( int i = 0; i < algoParamsCount; ++i) {
         				   TagValue tagValue = (TagValue)algoParams.get(i);
-        				   b.send( tagValue.m_tag);
-        				   b.send( tagValue.m_value);
+        				   b.append( tagValue.m_tag);
+        				   b.append( tagValue.m_value);
         			   }
         		   }
         	   }
            }
            
            if (m_serverVersion >= MIN_SERVER_VER_ALGO_ID) {
-        	   b.send(order.algoId());
+        	   b.append(order.algoId());
            }
 
            if (m_serverVersion >= MIN_SERVER_VER_WHAT_IF_ORDERS) {
@@ -1927,7 +1932,7 @@ public class EClientSocket {
                        orderMiscOptionsStr.append( ";");
                    }
                }
-               b.send( orderMiscOptionsStr.toString());
+               b.append( orderMiscOptionsStr.toString());
            }
            
            if (m_serverVersion >= MIN_SERVER_VER_ORDER_SOLICITED) {
@@ -1954,13 +1959,13 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_ACCOUNT_DATA );
-            b.send( VERSION);
+            b.append( REQ_ACCOUNT_DATA );
+            b.append( VERSION);
             b.send( subscribe);
 
             // Send the account code. This will only be used for FA clients
             if ( m_serverVersion >= 9 ) {
-                b.send( acctCode);
+                b.append( acctCode);
             }
             closeAndSend(b);
        }
@@ -1983,24 +1988,24 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_EXECUTIONS);
-            b.send( VERSION);
+            b.append( REQ_EXECUTIONS);
+            b.append( VERSION);
 
             if (m_serverVersion >= MIN_SERVER_VER_EXECUTION_DATA_CHAIN) {
-            	b.send( reqId);
+            	b.append( reqId);
             }
 
             // Send the execution rpt filter data
             if ( m_serverVersion >= 9 ) {
-                b.send( filter.clientId());
-                b.send( filter.acctCode());
+                b.append( filter.clientId());
+                b.append( filter.acctCode());
 
                 // Note that the valid format for m_time is "yyyymmdd-hh:mm:ss"
-                b.send( filter.time());
-                b.send( filter.symbol());
-                b.send( filter.secType());
-                b.send( filter.exchange());
-                b.send( filter.side());
+                b.append( filter.time());
+                b.append( filter.symbol());
+                b.append( filter.secType());
+                b.append( filter.exchange());
+                b.append( filter.side());
             }
             closeAndSend(b);
         }
@@ -2023,9 +2028,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_ORDER);
-            b.send( VERSION);
-            b.send( id);
+            b.append( CANCEL_ORDER);
+            b.append( VERSION);
+            b.append( id);
 
             closeAndSend(b);
         }
@@ -2048,8 +2053,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_OPEN_ORDERS);
-            b.send( VERSION);
+            b.append( REQ_OPEN_ORDERS);
+            b.append( VERSION);
 
             closeAndSend(b);
         }
@@ -2071,9 +2076,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_IDS);
-            b.send( VERSION);
-            b.send( numIds);
+            b.append( REQ_IDS);
+            b.append( VERSION);
+            b.append( numIds);
 
             closeAndSend(b);
        }
@@ -2095,8 +2100,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_NEWS_BULLETINS);
-            b.send( VERSION);
+            b.append( REQ_NEWS_BULLETINS);
+            b.append( VERSION);
             b.send( allMsgs);
 
             closeAndSend(b);
@@ -2120,8 +2125,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_NEWS_BULLETINS);
-            b.send( VERSION);
+            b.append( CANCEL_NEWS_BULLETINS);
+            b.append( VERSION);
 
             closeAndSend(b);
         }
@@ -2144,9 +2149,9 @@ public class EClientSocket {
                 try {
                     EWireBuilder b = prepareBuffer(); 
 
-                    b.send( SET_SERVER_LOGLEVEL);
-                    b.send( VERSION);
-                    b.send( logLevel);
+                    b.append( SET_SERVER_LOGLEVEL);
+                    b.append( VERSION);
+                    b.append( logLevel);
 
                     closeAndSend(b);
                }
@@ -2169,8 +2174,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_AUTO_OPEN_ORDERS);
-            b.send( VERSION);
+            b.append( REQ_AUTO_OPEN_ORDERS);
+            b.append( VERSION);
             b.send( bAutoBind);
 
             closeAndSend(b);
@@ -2194,8 +2199,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_ALL_OPEN_ORDERS);
-            b.send( VERSION);
+            b.append( REQ_ALL_OPEN_ORDERS);
+            b.append( VERSION);
 
             closeAndSend(b);
         }
@@ -2218,8 +2223,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_MANAGED_ACCTS);
-            b.send( VERSION);
+            b.append( REQ_MANAGED_ACCTS);
+            b.append( VERSION);
 
             closeAndSend(b);
         }
@@ -2248,9 +2253,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_FA );
-            b.send( VERSION);
-            b.send( faDataType);
+            b.append( REQ_FA );
+            b.append( VERSION);
+            b.append( faDataType);
 
             closeAndSend(b);
         }
@@ -2279,10 +2284,10 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REPLACE_FA );
-            b.send( VERSION);
-            b.send( faDataType);
-            b.send( xml);
+            b.append( REPLACE_FA );
+            b.append( VERSION);
+            b.append( faDataType);
+            b.append( xml);
 
             closeAndSend(b);
         }
@@ -2311,8 +2316,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_CURRENT_TIME );
-            b.send( VERSION);
+            b.append( REQ_CURRENT_TIME );
+            b.append( VERSION);
 
             closeAndSend(b);
         }
@@ -2349,22 +2354,22 @@ public class EClientSocket {
             // send req fund data msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_FUNDAMENTAL_DATA);
-            b.send( VERSION);
-            b.send( reqId);
+            b.append( REQ_FUNDAMENTAL_DATA);
+            b.append( VERSION);
+            b.append( reqId);
 
             // send contract fields
             if( m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.conid());
+                b.append(contract.conid());
             }
-            b.send( contract.symbol());
-            b.send( contract.getSecType());
-            b.send( contract.exchange());
-            b.send( contract.primaryExch());
-            b.send( contract.currency());
-            b.send( contract.localSymbol());
+            b.append( contract.symbol());
+            b.append( contract.getSecType());
+            b.append( contract.exchange());
+            b.append( contract.primaryExch());
+            b.append( contract.currency());
+            b.append( contract.localSymbol());
 
-            b.send( reportType);
+            b.append( reportType);
 
             closeAndSend(b);
         }
@@ -2393,9 +2398,9 @@ public class EClientSocket {
             // send cancel fundamental data msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_FUNDAMENTAL_DATA);
-            b.send( VERSION);
-            b.send( reqId);
+            b.append( CANCEL_FUNDAMENTAL_DATA);
+            b.append( VERSION);
+            b.append( reqId);
 
             closeAndSend(b);
        }
@@ -2434,24 +2439,24 @@ public class EClientSocket {
             // send calculate implied volatility msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_CALC_IMPLIED_VOLAT);
-            b.send( VERSION);
-            b.send( reqId);
+            b.append( REQ_CALC_IMPLIED_VOLAT);
+            b.append( VERSION);
+            b.append( reqId);
 
             // send contract fields
-            b.send( contract.conid());
-            b.send( contract.symbol());
-            b.send( contract.getSecType());
-            b.send( contract.expiry());
+            b.append( contract.conid());
+            b.append( contract.symbol());
+            b.append( contract.getSecType());
+            b.append( contract.expiry());
             b.send( contract.strike());
-            b.send( contract.getRight());
-            b.send( contract.multiplier());
-            b.send( contract.exchange());
-            b.send( contract.primaryExch());
-            b.send( contract.currency());
-            b.send( contract.localSymbol());
+            b.append( contract.getRight());
+            b.append( contract.multiplier());
+            b.append( contract.exchange());
+            b.append( contract.primaryExch());
+            b.append( contract.currency());
+            b.append( contract.localSymbol());
             if( m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass());
+                b.append(contract.tradingClass());
             }
 
             b.send( optionPrice);
@@ -2485,9 +2490,9 @@ public class EClientSocket {
             // send cancel calculate implied volatility msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_CALC_IMPLIED_VOLAT);
-            b.send( VERSION);
-            b.send( reqId);
+            b.append( CANCEL_CALC_IMPLIED_VOLAT);
+            b.append( VERSION);
+            b.append( reqId);
 
             closeAndSend(b);
         }
@@ -2526,24 +2531,24 @@ public class EClientSocket {
             // send calculate option price msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_CALC_OPTION_PRICE);
-            b.send( VERSION);
-            b.send( reqId);
+            b.append( REQ_CALC_OPTION_PRICE);
+            b.append( VERSION);
+            b.append( reqId);
 
             // send contract fields
-            b.send( contract.conid());
-            b.send( contract.symbol());
-            b.send( contract.getSecType());
-            b.send( contract.expiry());
+            b.append( contract.conid());
+            b.append( contract.symbol());
+            b.append( contract.getSecType());
+            b.append( contract.expiry());
             b.send( contract.strike());
-            b.send( contract.getRight());
-            b.send( contract.multiplier());
-            b.send( contract.exchange());
-            b.send( contract.primaryExch());
-            b.send( contract.currency());
-            b.send( contract.localSymbol());
+            b.append( contract.getRight());
+            b.append( contract.multiplier());
+            b.append( contract.exchange());
+            b.append( contract.primaryExch());
+            b.append( contract.currency());
+            b.append( contract.localSymbol());
             if( m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass());
+                b.append(contract.tradingClass());
             }
 
             b.send( volatility);
@@ -2577,9 +2582,9 @@ public class EClientSocket {
             // send cancel calculate option price msg
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( CANCEL_CALC_OPTION_PRICE);
-            b.send( VERSION);
-            b.send( reqId);
+            b.append( CANCEL_CALC_OPTION_PRICE);
+            b.append( VERSION);
+            b.append( reqId);
 
             closeAndSend(b);
         }
@@ -2608,8 +2613,8 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_GLOBAL_CANCEL);
-            b.send( VERSION);
+            b.append( REQ_GLOBAL_CANCEL);
+            b.append( VERSION);
 
             closeAndSend(b);
         }
@@ -2638,9 +2643,9 @@ public class EClientSocket {
         try {
             EWireBuilder b = prepareBuffer(); 
 
-            b.send( REQ_MARKET_DATA_TYPE);
-            b.send( VERSION);
-            b.send( marketDataType);
+            b.append( REQ_MARKET_DATA_TYPE);
+            b.append( VERSION);
+            b.append( marketDataType);
 
             closeAndSend(b);
         }
@@ -2667,8 +2672,8 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( REQ_POSITIONS);
-        b.send( VERSION);
+        b.append( REQ_POSITIONS);
+        b.append( VERSION);
 
         try {
             closeAndSend(b);
@@ -2695,8 +2700,8 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( CANCEL_POSITIONS);
-        b.send( VERSION);
+        b.append( CANCEL_POSITIONS);
+        b.append( VERSION);
 
         try {
             closeAndSend(b);
@@ -2723,11 +2728,11 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( REQ_ACCOUNT_SUMMARY);
-        b.send( VERSION);
-        b.send( reqId);
-        b.send( group);
-        b.send( tags);
+        b.append( REQ_ACCOUNT_SUMMARY);
+        b.append( VERSION);
+        b.append( reqId);
+        b.append( group);
+        b.append( tags);
 
         try {
             closeAndSend(b);
@@ -2754,9 +2759,9 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( CANCEL_ACCOUNT_SUMMARY);
-        b.send( VERSION);
-        b.send( reqId);
+        b.append( CANCEL_ACCOUNT_SUMMARY);
+        b.append( VERSION);
+        b.append( reqId);
 
         try {
             closeAndSend(b);
@@ -2787,10 +2792,10 @@ public class EClientSocket {
         final int VERSION = 1;
 
         EWireBuilder b = prepareBuffer();
-        b.send( VERIFY_REQUEST);
-        b.send( VERSION);
-        b.send( apiName);
-        b.send( apiVersion);
+        b.append( VERIFY_REQUEST);
+        b.append( VERSION);
+        b.append( apiName);
+        b.append( apiVersion);
 
         try {
             closeAndSend(b);
@@ -2816,9 +2821,9 @@ public class EClientSocket {
         final int VERSION = 1;
 
         EWireBuilder b = prepareBuffer();
-        b.send( VERIFY_MESSAGE);
-        b.send( VERSION);
-        b.send( apiData);
+        b.append( VERIFY_MESSAGE);
+        b.append( VERSION);
+        b.append( apiData);
 
         try {
             closeAndSend(b);
@@ -2850,11 +2855,11 @@ public class EClientSocket {
         final int VERSION = 1;
 
         EWireBuilder b = prepareBuffer();
-        b.send( VERIFY_AND_AUTH_REQUEST);
-        b.send( VERSION);
-        b.send( apiName);
-        b.send( apiVersion);
-        b.send( opaqueIsvKey);
+        b.append( VERIFY_AND_AUTH_REQUEST);
+        b.append( VERSION);
+        b.append( apiName);
+        b.append( apiVersion);
+        b.append( opaqueIsvKey);
 
         try {
             closeAndSend(b);
@@ -2880,10 +2885,10 @@ public class EClientSocket {
         final int VERSION = 1;
 
         EWireBuilder b = prepareBuffer();
-        b.send( VERIFY_AND_AUTH_MESSAGE);
-        b.send( VERSION);
-        b.send( apiData);
-        b.send( xyzResponse);
+        b.append( VERIFY_AND_AUTH_MESSAGE);
+        b.append( VERSION);
+        b.append( apiData);
+        b.append( xyzResponse);
 
         try {
             closeAndSend(b);
@@ -2910,9 +2915,9 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( QUERY_DISPLAY_GROUPS);
-        b.send( VERSION);
-        b.send( reqId);
+        b.append( QUERY_DISPLAY_GROUPS);
+        b.append( VERSION);
+        b.append( reqId);
 
         try {
             closeAndSend(b);
@@ -2939,10 +2944,10 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( SUBSCRIBE_TO_GROUP_EVENTS);
-        b.send( VERSION);
-        b.send( reqId);
-        b.send( groupId);
+        b.append( SUBSCRIBE_TO_GROUP_EVENTS);
+        b.append( VERSION);
+        b.append( reqId);
+        b.append( groupId);
 
         try {
             closeAndSend(b);
@@ -2969,10 +2974,10 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( UPDATE_DISPLAY_GROUP);
-        b.send( VERSION);
-        b.send( reqId);
-        b.send( contractInfo);
+        b.append( UPDATE_DISPLAY_GROUP);
+        b.append( VERSION);
+        b.append( reqId);
+        b.append( contractInfo);
 
         try {
             closeAndSend(b);
@@ -2999,9 +3004,9 @@ public class EClientSocket {
 
         EWireBuilder b = prepareBuffer();
 
-        b.send( UNSUBSCRIBE_FROM_GROUP_EVENTS);
-        b.send( VERSION);
-        b.send( reqId);
+        b.append( UNSUBSCRIBE_FROM_GROUP_EVENTS);
+        b.append( VERSION);
+        b.append( reqId);
 
         try {
             closeAndSend(b);
@@ -3038,6 +3043,8 @@ public class EClientSocket {
     }
     
     protected void closeAndSend(EWireBuilder buf) throws IOException {
+    	System.out.println("WIRED " + buf.toString());
+    	
     	if( m_useV100Plus ) {
     		buf.updateLength( 0 ); // New buffer means length header position is always zero
     	}
@@ -3049,7 +3056,7 @@ public class EClientSocket {
         // Write string to data buffer
     	EWireBuilder b = new EWireBuilder( 1024 );
     	
-    	b.send(str);
+    	b.append(str);
     	b.writeTo( m_dos );
     }
 

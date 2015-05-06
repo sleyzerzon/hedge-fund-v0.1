@@ -98,93 +98,93 @@ public class ApiConnection extends EClientSocket {
 
 		// send place order msg
 		try {
-			b.send( PLACE_ORDER);
-			b.send( VERSION);
-			b.send( order.orderId() );
-			b.send( contract.conid() );
-			b.send( contract.symbol());
+			b.append( PLACE_ORDER);
+			b.append( VERSION);
+			b.append( order.orderId() );
+			b.append( contract.conid() );
+			b.append( contract.symbol());
 			b.send( contract.secType() );
-			b.send( contract.expiry());
+			b.append( contract.expiry());
 			b.send( contract.strike());
-			b.send( contract.right().getApiString() ); // TODO: Here and below: do not need to call getApiString() - NPE is possible
-			b.send( contract.multiplier() );
-			b.send( contract.exchange() );
-			b.send( contract.primaryExch() );
-			b.send( contract.currency() );
-			b.send( contract.localSymbol() );
+			b.append( contract.right().getApiString() ); // TODO: Here and below: do not need to call getApiString() - NPE is possible
+			b.append( contract.multiplier() );
+			b.append( contract.exchange() );
+			b.append( contract.primaryExch() );
+			b.append( contract.currency() );
+			b.append( contract.localSymbol() );
             if (m_serverVersion >= MIN_SERVER_VER_TRADING_CLASS) {
-                b.send(contract.tradingClass() );
+                b.append(contract.tradingClass() );
             }
 			b.send( contract.secIdType() );
-			b.send( contract.secId() );
+			b.append( contract.secId() );
 			b.send( order.action() );
-			b.send( order.totalQuantity() );
+			b.append( order.totalQuantity() );
 			b.send( order.orderType() );
 			b.send( order.lmtPrice() );
 			b.send( order.auxPrice() );
 			b.send( order.tif() );
-			b.send( order.ocaGroup() );
-			b.send( order.account() );
-			b.send( ""); // open/close
-			b.send( ""); // origin
-			b.send( order.orderRef() );
+			b.append( order.ocaGroup() );
+			b.append( order.account() );
+			b.append( ""); // open/close
+			b.append( ""); // origin
+			b.append( order.orderRef() );
 			b.send( order.transmit() );
-			b.send( order.parentId() );
+			b.append( order.parentId() );
 			b.send( order.blockOrder() );
 			b.send( order.sweepToFill() );
-			b.send( order.displaySize() );
+			b.append( order.displaySize() );
 			b.send( order.triggerMethod() );
 			b.send( order.outsideRth() );
 			b.send( order.hidden() );
 
 			// send combo legs for BAG orders
 			if(contract.secType() == SecType.BAG) {
-				b.send( contract.comboLegs().size());
+				b.append( contract.comboLegs().size());
 
 				for (ComboLeg leg : contract.comboLegs() ) {
-					b.send( leg.conid() );
-					b.send( leg.ratio() );
-					b.send( leg.action().getApiString() );
-					b.send( leg.exchange() );
-					b.send( leg.openClose().getApiString() );
-					b.send( leg.shortSaleSlot() );
-					b.send( leg.designatedLocation() );
-					b.send( leg.exemptCode() );
+					b.append( leg.conid() );
+					b.append( leg.ratio() );
+					b.append( leg.action().getApiString() );
+					b.append( leg.exchange() );
+					b.append( leg.openClose().getApiString() );
+					b.append( leg.shortSaleSlot() );
+					b.append( leg.designatedLocation() );
+					b.append( leg.exemptCode() );
 				}
 
-				b.send( order.orderComboLegs().size());
+				b.append( order.orderComboLegs().size());
 				for (OrderComboLeg orderComboLeg : order.orderComboLegs() ) {
 					b.send( orderComboLeg.price());
 				}
 
-				b.send( order.smartComboRoutingParams().size() );
+				b.append( order.smartComboRoutingParams().size() );
 				for (TagValue tagValue : order.smartComboRoutingParams() ) {
-					b.send( tagValue.m_tag);
-					b.send( tagValue.m_value);
+					b.append( tagValue.m_tag);
+					b.append( tagValue.m_value);
 				}
 			}
 
-			b.send( ""); // obsolete field
+			b.append( ""); // obsolete field
 			b.send( order.discretionaryAmt() );
-			b.send( order.goodAfterTime() );
-			b.send( order.goodTillDate() );
-			b.send( order.faGroup());
+			b.append( order.goodAfterTime() );
+			b.append( order.goodTillDate() );
+			b.append( order.faGroup());
 			b.send( order.faMethod() );
-			b.send( order.faPercentage() );
-			b.send( order.faProfile());
-			b.send( 0); // short sale slot
-			b.send( ""); // designatedLocation
-			b.send( ""); // exemptCode
+			b.append( order.faPercentage() );
+			b.append( order.faProfile());
+			b.append( 0); // short sale slot
+			b.append( ""); // designatedLocation
+			b.append( ""); // exemptCode
 			b.send( order.ocaType() );
 			b.send( order.rule80A() );
-			b.send( ""); // settlingFirm
+			b.append( ""); // settlingFirm
 			b.send( order.allOrNone() );
-			b.send( order.minQty() );
+			b.append( order.minQty() );
 			b.send( order.percentOffset() );
 			b.send( order.eTradeOnly() );
 			b.send( order.firmQuoteOnly() );
 			b.send( order.nbboPriceCap() );
-			b.send( order.auctionStrategy() );
+			b.append( order.auctionStrategy() );
 			b.send( order.startingPrice() );
 			b.send( order.stockRefPrice() );
 			b.send( order.delta() );
@@ -197,75 +197,75 @@ public class ApiConnection extends EClientSocket {
 			b.send( order.deltaNeutralAuxPrice() );
 
 			if (order.deltaNeutralOrderType() != OrderType.None) {
-				b.send( order.deltaNeutralConId() );
-				b.send( ""); //deltaNeutralSettlingFirm
-				b.send( ""); //deltaNeutralClearingAccount
-				b.send( ""); //deltaNeutralClearingIntent
-				b.send( ""); //deltaNeutralOpenClose
-                b.send( ""); //deltaNeutralShortSale
-                b.send( ""); //deltaNeutralShortSaleSlot
-                b.send( ""); //deltaNeutralDesignatedLocation
+				b.append( order.deltaNeutralConId() );
+				b.append( ""); //deltaNeutralSettlingFirm
+				b.append( ""); //deltaNeutralClearingAccount
+				b.append( ""); //deltaNeutralClearingIntent
+				b.append( ""); //deltaNeutralOpenClose
+                b.append( ""); //deltaNeutralShortSale
+                b.append( ""); //deltaNeutralShortSaleSlot
+                b.append( ""); //deltaNeutralDesignatedLocation
 			}
 			
-			b.send( order.continuousUpdate() );
+			b.append( order.continuousUpdate() );
 			b.send( order.referencePriceType() );
 			b.send( order.trailStopPrice() );
 			b.send( order.trailingPercent() );
-			b.send( order.scaleInitLevelSize() );
-			b.send( order.scaleSubsLevelSize() );
+			b.append( order.scaleInitLevelSize() );
+			b.append( order.scaleSubsLevelSize() );
 			b.send( order.scalePriceIncrement() );
 
 			if (order.scalePriceIncrement() != 0 && order.scalePriceIncrement() != Double.MAX_VALUE) {
 				b.send( order.scalePriceAdjustValue() );
-				b.send( order.scalePriceAdjustInterval() );
+				b.append( order.scalePriceAdjustInterval() );
 				b.send( order.scaleProfitOffset() );
 				b.send( order.scaleAutoReset() );
-				b.send( order.scaleInitPosition() );
-				b.send( order.scaleInitFillQty() );
+				b.append( order.scaleInitPosition() );
+				b.append( order.scaleInitFillQty() );
 				b.send( order.scaleRandomPercent() );
 			}
 
 			if (m_serverVersion >= MIN_SERVER_VER_SCALE_TABLE) {
-				b.send( order.scaleTable() );
-				b.send( ""); // active start time
-				b.send( ""); // active stop time
+				b.append( order.scaleTable() );
+				b.append( ""); // active start time
+				b.append( ""); // active stop time
 			}
 
 	        b.send( order.hedgeType() );
 			if (order.hedgeType() != HedgeType.None) {
-				b.send( order.hedgeParam() );
+				b.append( order.hedgeParam() );
 			}
 
 			b.send( order.optOutSmartRouting() );
-			b.send( "");//clearingAccount
-			b.send( "");//clearingIntent
+			b.append( "");//clearingAccount
+			b.append( "");//clearingIntent
 			b.send( order.notHeld() );
 
 			b.send( contract.underComp() != null);
 			if (contract.underComp() != null) {
-				b.send( contract.underComp().conid() );
+				b.append( contract.underComp().conid() );
 				b.send( contract.underComp().delta() );
 				b.send( contract.underComp().price() );
 			}
 
 			b.send( order.algoStrategy() );
 			if( order.algoStrategy() != AlgoStrategy.None) {
-				b.send( order.algoParams().size() );
+				b.append( order.algoParams().size() );
 				for( TagValue tagValue : order.algoParams() ) {
-					b.send( tagValue.m_tag);
-					b.send( tagValue.m_value);
+					b.append( tagValue.m_tag);
+					b.append( tagValue.m_value);
 				}
 			}
 
 	        if (m_serverVersion >= MIN_SERVER_VER_ALGO_ID) {
-	        	b.send( order.algoId() );
+	        	b.append( order.algoId() );
 	        }
 
 			b.send( order.whatIf() );
 			
 			// send orderMiscOptions stub
 	        if(m_serverVersion >= MIN_SERVER_VER_LINKING) {	     
-	            b.send( "" );
+	            b.append( "" );
 	        }
 
 	        closeAndSend( b );
