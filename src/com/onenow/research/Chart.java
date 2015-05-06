@@ -80,7 +80,7 @@ public class Chart {
 	// PRINT
 	public String toString() {
 		String s="";
-		s = s + prices.toString() + "\n" +
+		s = s + prices.toString() + "***" +
 				sizes.toString();
 		return s;
 	}

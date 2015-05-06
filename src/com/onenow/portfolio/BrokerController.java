@@ -1,14 +1,11 @@
 package com.onenow.portfolio;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
-
-import apidemo.MarketDataPanel.BarResultsPanel;
 
 import com.ib.client.CommissionReport;
 import com.ib.client.ContractDetails;

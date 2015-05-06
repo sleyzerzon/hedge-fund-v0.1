@@ -95,10 +95,13 @@ public class Cache {
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
-		for(SamplingRate sampling:sampling.getList(SamplingRate.SCALPSHORT)) { // TODO: what sampling?
+		for(SamplingRate samplr:sampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
+			
+			System.out.println("SAMPLING " + samplr);
+			
 			// use miss function to force update of charts
-			readthroughChartFromL12(	inv, tradeType, sampling,
-										parseDate.getYesterday(), parseDate.getTomorrow(), // TODO: From/To Date actual
+			readthroughChartFromL12(	inv, tradeType, samplr,
+										parseDate.getYesterday(), parseDate.getDashedTomorrow(), // TODO: From/To Date actual
 										source, timing);
 		}
 
@@ -195,7 +198,7 @@ public class Cache {
 
 		} 
 		
-		System.out.println(s + "\n" + chart.toString());
+		System.out.println(s + chart.toString());
 
 		return chart;
 	}
@@ -210,7 +213,7 @@ public class Cache {
 												source, timing);
 		chart = charts.get(key);
 
-		System.out.println("Cache Chart READ: L0" + "\n" + chart.toString());
+		System.out.println("Cache Chart READ: L0 " + chart.toString());
 		return chart;
 	}
 
@@ -251,7 +254,7 @@ public class Cache {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Cache Chart READ-THROUGH: L12" + "\n" + chart.toString());
+		System.out.println("Cache Chart READ-THROUGH: L12 " + chart.toString());
 		return chart;
 	}
 
@@ -269,7 +272,7 @@ public class Cache {
 		
 		chart.setPrices(prices);
 		chart.setSizes(sizes);
-		System.out.println("Cache Chart READ: L1" + "\n" + fromDate + " " + toDate + " " + chart.toString());
+		System.out.println("Cache Chart READ: L1 " + fromDate + " " + toDate + " " + chart.toString());
 	}
 
 
@@ -282,20 +285,19 @@ public class Cache {
 		SamplingRate scalping = SamplingRate.SCALP;
 
 		// go from today (by tomorrow) 
-		String date = getParser().getTomorrow();
-		String dateAtClose = getParser().getClose(date);
-		int numDays = 1; // number of days to acquire at a time
+		String undashedDate = getParser().getUndashedTomorrow();
+		String undashedDateAtClose = getParser().getClose(undashedDate);
+		int numDays = 3; // number of days to acquire at a time
 		
 		while(true) { 		
 			// TODO: only if it is not already in L1
-			String fromDate = getParser().getDashedDateMinus(date, 1);
 			Chart chart = new Chart();
 			readChartFromRTL1(	inv, tradeType,
-								scalping, getParser().getDashedDateMinus(date, 1), date,
+								scalping, getParser().getUndashedDateMinus(undashedDate, 1), undashedDate,
 								source, timing, chart);
 			// check for incomplete L1 data
 			if(chart.getPrices().size()<10) {		
-				QuoteHistory history = readHistory(inv, dateAtClose);
+				QuoteHistory history = readBrokerHistory(inv, undashedDateAtClose);
 				// put history in L1
 				readthroughL2ToHistoricalL1(inv, history, 
 											tradeType, 
@@ -304,20 +306,22 @@ public class Cache {
 			}
 			// go back further in time?
 			if(numDays>0) {	
-				date = getParser().getDashedDatePlus(date, 1);
-				dateAtClose = getParser().getClose(date);
+				undashedDate = getParser().getUndashedDateMinus(undashedDate, 1);
+				undashedDateAtClose = getParser().getClose(undashedDate);
 			} else {
 				return;
 			}
 		}
 	}
 
-	private QuoteHistory readHistory(Investment inv, String dateAtClose) {
-		// paceHistoricalQuery();
+	private QuoteHistory readBrokerHistory(Investment inv, String dateAtClose) {
+		
+		paceHistoricalQuery();
+		
 		QuoteHistory history = broker.readHistoricalQuotes(inv, dateAtClose); 
    
-		if(history.equals("")) {
-			System.out.println("WARNING: HISTORICAL DATA FARM DOWN?"); 
+		if(history.size() == 0) {
+			System.out.println("WARNING: HISTORICAL DATA FARM DOWN? Close at " + dateAtClose + ". Investment " + inv.toString()); 
 		} else {
 			System.out.println("HISTORY " + history.toString());
 		}

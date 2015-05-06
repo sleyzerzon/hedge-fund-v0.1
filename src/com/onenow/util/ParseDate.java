@@ -33,12 +33,18 @@ public class ParseDate implements Testable {
 		return s;
 	}
 	
-	public String getTomorrow() {
+	public String getDashedTomorrow() {
 		String s = "";
 		s = s + getDashedDatePlus(getToday(), 1);
 		return s;
 	}
-	
+
+	public String getUndashedTomorrow() {
+		String s = "";
+		s = s + removeDash(getDashedTomorrow());
+		return s;
+	}
+
 	public String getYesterday() {
 		String s = "";
 		s = s + getDashedDateMinus(getToday(), 1);
@@ -274,6 +280,12 @@ public class ParseDate implements Testable {
 		return elapsedTotal;
 	}
 	
+	public String getUndashedDatePlus(String undashedDate, Integer plusDays) {
+		String s = "";
+		s = getDashedDatePlus(getDashedDate(undashedDate), plusDays);
+		s = getUndashedDate(s);
+		return s;
+	}
 	/**
 	 * Returns a new date from an old date plus the number of days since
 	 * @param dashedDate
@@ -326,6 +338,13 @@ public class ParseDate implements Testable {
 		s=sYear+"-"+sMonth+"-"+sDay;
 		
 //		System.out.println("Date plus is " + s + "\n");
+		return s;
+	}
+	
+	public String getUndashedDateMinus(String undashedDate, Integer minusDays) {
+		String s = "";
+		s = getDashedDateMinus(getDashedDate(undashedDate), minusDays);
+		s = getUndashedDate(s);
 		return s;
 	}
 	

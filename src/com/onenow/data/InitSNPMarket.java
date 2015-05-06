@@ -22,20 +22,20 @@ public class InitSNPMarket {
 		getSNP500().add("BBY");
 		getSNP500().add("BCR");
 		getSNP500().add("BDX");
-		getSNP500().add("BEAM");
+//		getSNP500().add("BEAM"); TODO
 		getSNP500().add("BEN");
-		getSNP500().add("BF.B");
+//		getSNP500().add("BF.B"); TODO
 		getSNP500().add("BHI");
 		getSNP500().add("BIG");
 		getSNP500().add("BIIB");
 		getSNP500().add("BK");
 		getSNP500().add("BLK");
 		getSNP500().add("BLL");
-		getSNP500().add("BMC");
+//		getSNP500().add("BMC"); TODO
 		getSNP500().add("BMS");
 		getSNP500().add("BMY");
 		getSNP500().add("BRCM");
-		getSNP500().add("BRK.B");
+//		getSNP500().add("BRK.B"); TODO
 		getSNP500().add("BSX");
 		getSNP500().add("BTU");
 		getSNP500().add("BWA");

@@ -60,6 +60,12 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 			setChannelPrices(day, highPrice, lowPrice, recentPrice);
 		}
 	}
+	
+	public int size() {
+		int size = 0;
+		size = quoteRows.size();
+		return size;
+	}
 
 	// CHANNEL
 	private void setChannelPrices(String day, Double highPrice, Double lowPrice, Double recentPrice) {
