@@ -76,11 +76,13 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+		String key = getLookup().getInvestmentKey(inv, tradeType, source, timing);
 
-		List<Serie> series = queryPrice(DBname.PRICE.toString(), name, sampling, fromDate, toDate);
+		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, sampling, fromDate, toDate);
 
 		candles = priceSeriesToCandles(series); 
+
+		System.out.println("Cache Chart READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + candles.toString());
 		
 		return candles;
 	}
@@ -103,7 +105,7 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
 					
 	try {
-//		System.out.println("QUERY " + query);
+		System.out.println("QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace();  some time series don't exist or have data
@@ -172,12 +174,14 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String key = getLookup().getInvestmentKey(inv, tradeType, source, timing);
 	
-	List<Serie> series = querySize(	DBname.SIZE.toString(), name,  sampling, fromDate, toDate);
+	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
 	
 	sizes = sizeSeriesToInts(series); 
 	
+	System.out.println("Cache Chart READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString());
+
 	return sizes;
 }
 
@@ -199,7 +203,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
 					
 	try {
-//		System.out.println("QUERY " + query);
+		System.out.println("QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data

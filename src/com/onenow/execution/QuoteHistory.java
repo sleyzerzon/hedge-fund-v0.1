@@ -35,7 +35,6 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	// INTERFACE: IHistoricalDataHandler
 	@Override public void historicalData(QuoteRow row, boolean hasGaps) {
 		
-		System.out.println("ADDING HISTORY ROW");
 		quoteRows.add(row);
 		
 		if(hasGaps) {

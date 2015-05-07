@@ -79,7 +79,7 @@ public class Lookup {
 		s = s + "-" + sampling.toString();
 		s = s + "-" + fromDate + "-" + toDate;
 		s = s + "-" + source.toString() + "-" + timing.toString();
-		System.out.println("key " + s);
+//		System.out.println("key " + s);
 		return s;
 	}
 	

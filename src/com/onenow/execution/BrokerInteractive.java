@@ -133,19 +133,15 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	/**
 	 * Returns reference to object where history will be stored, upon asynchronous return
 	 */
-//	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
-
 	public void readHistoricalQuotes(Investment inv, String end, QuoteHistory quoteHistory) {
 
 		System.out.println("> getting historical quote for investment: " + inv.toString());
 		Contract contract = getContractFactory().getContract(inv);
-//		QuoteHistory quoteHistory = new QuoteHistory();
 		
 		getController().reqHistoricalData(	contract, 
 											end, 1, DurationUnit.DAY, BarSize._1_hour, 
 											WhatToShow.TRADES, false,
 											quoteHistory);
-//		return quoteHistory;
 	}
 
 	

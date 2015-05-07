@@ -15,37 +15,45 @@ public class Sampling {
 	}
 	
 	
-	// list.add(parser.removeDash(date).concat(" 16:30:00"));
-	
-	
 	public String getGroupByTimeString(SamplingRate sampling) {
-		String dbSamplingRate="";
-		if(sampling.equals("SCALPSHORT")) {		//SCALPING 5min, 15min, 60min
-			return "5m";
+		
+		String dbSamplingRate = "15m";
+		
+		if(sampling.equals(SamplingRate.SCALP)) {		// midpoint
+			dbSamplingRate = "15m";
 		}
-		if(sampling.equals("SCALPMEDIUM")) {
-			return "15m";
+		if(sampling.equals(SamplingRate.SWING)) {		// midpoint
+			dbSamplingRate = "4h";
 		}
-		if(sampling.equals("SCALPLONG")) {
-			return "60m";
+		if(sampling.equals(SamplingRate.TREND)) {		// midpoint
+			dbSamplingRate = "1d";
 		}
-		if(sampling.equals("SWINGSHORT")) {		//SWINGING 60min, 240min, daily
-			return "60m";
+		if(sampling.equals(SamplingRate.SCALPSHORT)) {		//SCALPING 5min, 15min, 60min
+			dbSamplingRate = "5m";
 		}
-		if(sampling.equals("SWINGMEDIUM")) {
-			return "4h";
+		if(sampling.equals(SamplingRate.SCALPMEDIUM)) {
+			dbSamplingRate = "15m";
 		}
-		if(sampling.equals("SWINGLONG")) {
-			return "1d";
+		if(sampling.equals(SamplingRate.SCALPLONG)) {
+			dbSamplingRate = "60m";
 		}
-		if(sampling.equals("TRENDSHORT")) {		//TREND 4hr, daily, weekly
-			return "4h";
+		if(sampling.equals(SamplingRate.SWINGSHORT)) {		//SWINGING 60min, 240min, daily
+			dbSamplingRate = "60m";
 		}
-		if(sampling.equals("TRENDMEDIUM")) {
-			return "1d";
+		if(sampling.equals(SamplingRate.SWINGMEDIUM)) {
+			dbSamplingRate = "4h";
 		}
-		if(sampling.equals("TRENDLONG")) {
-			return "1w";
+		if(sampling.equals(SamplingRate.SWINGLONG)) {
+			dbSamplingRate = "1d";
+		}
+		if(sampling.equals(SamplingRate.TRENDSHORT)) {		//TREND 4hr, daily, weekly
+			dbSamplingRate = "4h";
+		}
+		if(sampling.equals(SamplingRate.TRENDMEDIUM)) {
+			dbSamplingRate = "1d";
+		}
+		if(sampling.equals(SamplingRate.TRENDLONG)) {
+			dbSamplingRate = "1w";
 		}
 		return dbSamplingRate;
 	}
