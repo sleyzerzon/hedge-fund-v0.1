@@ -20,18 +20,23 @@ import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
  */
 public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	final public ArrayList<QuoteRow> quoteRows = new ArrayList<QuoteRow>();
+	public ArrayList<QuoteRow> quoteRows;
 	
 	private Channel channel;
 
 	public QuoteHistory (){
-
+		init();
 	}
 	
 	public QuoteHistory (Channel channel) {
+		init();
 		this.channel = channel;
 	}
 
+	public void init() {
+		quoteRows = new ArrayList<QuoteRow>(); 
+	}
+	
 	// INTERFACE: IHistoricalDataHandler
 	@Override public void historicalData(QuoteRow row, boolean hasGaps) {
 		
@@ -44,14 +49,14 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		handleBar(row);
 	}
 
-	private void handleBar(QuoteRow bar) {
+	private void handleBar(QuoteRow row) {
 
-		System.out.println("History " + bar.toString());
+		System.out.println("History " + row.toString());
 
-		String day = bar.formattedTime().substring(0, 10);
-		Double highPrice = bar.high(); // bar.getM_high();
-		Double lowPrice = bar.low(); // getM_low();
-		Double recentPrice = bar.close();
+		String day = row.formattedTime().substring(0, 10);
+		Double highPrice = row.high(); // bar.getM_high();
+		Double lowPrice = row.low(); // getM_low();
+		Double recentPrice = row.close();
 //		System.out.println("Day " + day + " " + highPrice + " " + lowPrice);
 
 		if(getChannel()!=null) { // if constructed that way

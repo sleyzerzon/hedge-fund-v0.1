@@ -18,17 +18,16 @@ import com.onenow.util.ParseDate;
 
 public class Cache {
 	
-	private Broker 	broker;
-	private TSDB 	TSDB;			// database
-	
-	private Sampling 	sampling;
-	private Lookup 	lookup;			// key
-	
+	private Broker 								broker;
 	private HashMap<String, EventRT>			lastEventRT; 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts;			// price history in chart format from L1
-	private HashMap<String, QuoteHistory>		history;		// price history from L2
+
+	private TSDB 								TSDB = new TSDB();			// database	
+	private Sampling 							sampling = new Sampling();
+	private Lookup 								lookup = new Lookup();			// key
+	private ParseDate							parseDate = new ParseDate();
 	
-	private ParseDate	parseDate = new ParseDate();
+	
 
 //	QuoteHistory history = new QuoteHistory();
 	
@@ -39,12 +38,8 @@ public class Cache {
 	
 	public Cache(Broker broker) {
 		this.broker = broker;
-		this.lookup = new Lookup();
 		this.lastEventRT = new HashMap<String, EventRT>();
 		this.charts = new HashMap<String, Chart>();
-		this.history = new HashMap<String, QuoteHistory>();
-		this.TSDB = new TSDB();
-		this.sampling = new Sampling();
 	}
 	
 	
@@ -76,6 +71,10 @@ public class Cache {
 		writeEventToRing(event);
 	}
 		
+	/** Upon writing every event to the ring, asynchronous update all charts in L0 from RTL1
+	 * 
+	 * @param event
+	 */
 	public void writeEventToRing(EventRT event) {
 
 		Long time = event.time; 
@@ -89,25 +88,30 @@ public class Cache {
 		int size = event.getSize();
 
 		// TODO: INSERT RING
-		// write
-		TSDB.writePrice(	time, inv, tradeType, price,
-								source, timing);				
-		TSDB.writeSize(	time, inv, tradeType, size,			
-								source, timing);		
+		// write RT to L1RT
+		writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
 		
 		// TODO: SQS/SNS ORCHESTRATION
 		
 		// update the charts
-		for(SamplingRate samplr:sampling.getList(SamplingRate.TREND)) { // TODO: what sampling?
+		for(SamplingRate samplr:sampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			
-			System.out.println("SAMPLING " + samplr);
-			
+			System.out.println("\n" + "***** PRE-FETCH SAMPLING ***** " + samplr);
 			// use miss function to force update of charts
-			readthroughChartFromL12(	inv, tradeType, samplr,
-										parseDate.getYesterday(), parseDate.getDashedTomorrow(), // TODO: From/To Date actual
+			String today = parseDate.getDashedToday();
+			readChartToL0FromRTL1(	inv, tradeType, samplr,
+										parseDate.getDashedDateMinus(today, 1), today, // TODO: From/To Date actual
 										source, timing);
-		}
+			System.out.println("\n");
+		}		
+	}
 
+	private void writeRTtoL1(Long time, Investment inv, TradeType tradeType,
+			InvDataSource source, InvDataTiming timing, Double price, int size) {
+		TSDB.writePrice(	time, inv, tradeType, price,
+								source, timing);				
+		TSDB.writeSize(	time, inv, tradeType, size,			
+								source, timing);
 	}
 
 	
@@ -150,7 +154,7 @@ public class Cache {
 		
 		Double price;
 		SamplingRate scalping = SamplingRate.TREND;
-		String today = getParser().getToday();
+		String today = getParser().getDashedToday();
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
@@ -195,14 +199,12 @@ public class Cache {
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
 			s = "Cache Chart MISS: L0";
-			chart = readthroughChartFromL12(	inv, tradeType, sampling, 
+			chart = readChartToL0FromRTL1(	inv, tradeType, sampling, 
 												fromDate, toDate,
 												source, timing);
-
 		} 
 		
 		System.out.println(s + chart.toString());
-
 		return chart;
 	}
 
@@ -222,168 +224,47 @@ public class Cache {
 
 
 	/**
-	 * Called periodically to update charts from L1, and on L0 misses, 
+	 * Called periodically (and on L0 misses) to update charts in L0 from L1, 
 	 * this method also progressively builds out the L1 from the L2
 	 * @param inv
 	 * @param tradeType
-	 * @param sampling
+	 * @param samplingRate
 	 * @param fromDate
 	 * @param toDate
 	 * @param source
 	 * @param timing
 	 * @return
 	 */
-	private Chart readthroughChartFromL12(	Investment inv, TradeType tradeType, SamplingRate sampling, 
+	private Chart readChartToL0FromRTL1(	Investment inv, TradeType tradeType, SamplingRate samplingRate, 
 											String fromDate, String toDate,
 											InvDataSource source, InvDataTiming timing) {		
 		Chart chart = new Chart();
 		
-		try{	// needed because TSDB can't throw exceptions: some time series just don't exist or have data 			
-			readChartFromRTL1(	inv, tradeType, sampling, 
-								fromDate, toDate, 
-								source, timing, 
-								chart);
+		try{	// some time series just don't exist or have data 			
+			
+			List<Candle> prices = TSDB.readPriceFromDB(		inv, tradeType, samplingRate, 
+															fromDate, toDate,
+															source, timing);
+			List<Integer> sizes = TSDB.readSizeFromDB(		inv, tradeType, samplingRate, 
+															fromDate, toDate,
+															source, timing);
+
+			chart.setPrices(prices);
+			chart.setSizes(sizes);
 			
 			// keep last chart in L0 memory (with data)
-			String key = lookup.getChartKey(	inv, tradeType, sampling, 
-												fromDate, toDate,
-												source, timing);
-			charts.put(key, chart);				
-			
-			// augment L1 with data from L2 (3rd party DB), if data not complete from origin
-//			 readHistoryFromL2(inv);
+			String key = lookup.getChartKey(	inv, tradeType, samplingRate, 
+					fromDate, toDate,
+					source, timing);
 
+			charts.put(key, chart);				
+						
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return chart;
 	}
-
-
-	private void readChartFromRTL1(	Investment inv, TradeType tradeType,
-									SamplingRate sampling, String fromDate, String toDate,
-									InvDataSource source, InvDataTiming timing, Chart chart) {
-		
-		List<Candle> prices = TSDB.readPriceFromDB(		inv, tradeType, sampling, 
-														fromDate, toDate,
-														source, timing);
-		List<Integer> sizes = TSDB.readSizeFromDB(		inv, tradeType, sampling, 
-														fromDate, toDate,
-														source, timing);
-		
-		chart.setPrices(prices);
-		chart.setSizes(sizes);
-	}
-
-
-	private void readHistoryFromL2(Investment inv) {
-		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
-
-		TradeType tradeType = TradeType.TRADED; // TODO: traded?
-		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.HISTORICAL;
-		SamplingRate scalping = SamplingRate.SCALP;
-
-		// go from today (by tomorrow) 
-		String undashedDate = getParser().getUndashedTomorrow();
-		String undashedDateAtClose = getParser().getClose(undashedDate);
-		int numDays = 5; // number of days to acquire at a time
-		
-		while(true) { 		
-			// TODO: only if it is not already in L1
-			Chart chart = new Chart();
-			readChartFromRTL1(	inv, tradeType,
-								scalping, getParser().getUndashedDateMinus(undashedDate, 1), undashedDate,
-								source, timing, chart);
-			
-			// check for incomplete L1 data
-			if(chart.getPrices().size()<10) {
-
-				QuoteHistory invHist = getInvHistory(	inv, 
-														tradeType, 
-														source, timing);
-				
-				readHistoryL2ToL0(inv, undashedDateAtClose, invHist);
-
-				// put history in L1				
-				writeHistoryL0ToL1(	inv,  
-									tradeType, 
-									source, timing,
-									invHist);					
-				numDays--;
-			}
-			// go back further in time?
-			if(numDays>0) {	
-				undashedDate = getParser().getUndashedDateMinus(undashedDate, 1);
-				undashedDateAtClose = getParser().getClose(undashedDate);
-			} else {
-				return;
-			}
-		}
-	}
-
-	private QuoteHistory getInvHistory(Investment inv, TradeType tradeType,
-			InvDataSource source, InvDataTiming timing) {
-		
-		String key = lookup.getInvestmentKey(	inv, tradeType,
-												source, timing);
-
-		QuoteHistory invHist = history.get(key);
-		if(invHist==null) {
-			invHist = new QuoteHistory();
-			history.put(key, invHist);			
-		}
-		return invHist;
-	}
-
-	private void readHistoryL2ToL0(	Investment inv, String dateAtClose,
-									QuoteHistory invHist) {
-		
-		
-		// System.out.println("HIST " + history.toString());
-		broker.readHistoricalQuotes(inv, dateAtClose, invHist); 
-
-		paceHistoricalQuery();
-
-//		if(history.size() == 0) {
-//			System.out.println("WARNING: HISTORICAL DATA FARM DOWN? Close at " + dateAtClose + ". Investment " + inv.toString() + "\n"); 
-//		} else {
-//			System.out.println("HISTORY " + history.toString());
-//		}
-		
-	}	
-
-	private void writeHistoryL0ToL1(Investment inv,  
-											TradeType dataType,
-											InvDataSource source, InvDataTiming timing,
-											QuoteHistory invHistory) {
-		
-		for(int i=0; i<invHistory.quoteRows.size(); i++) {
-			QuoteRow row = invHistory.quoteRows.get(i);
-			
-			Long time = row.getM_time();
-			Double price = row.getM_open(); 
-
-			// read through to L1
-			System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
-			TSDB.writePrice(	time, inv, dataType, price,
-								source, timing);				
-
-			// TODO: delete from history items already written to L1
-			
-			// TODO: read-through of charts to L0 happens at caller?
-		}
-	}
-
-	private void paceHistoricalQuery() {
-		System.out.println("...pacing historical query");
-	    try {
-			Thread.sleep(12000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}				
 
 	
 	// TEST

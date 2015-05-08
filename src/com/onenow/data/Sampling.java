@@ -23,10 +23,10 @@ public class Sampling {
 			dbSamplingRate = "15m";
 		}
 		if(sampling.equals(SamplingRate.SWING)) {		// midpoint
-			dbSamplingRate = "4h";
+			dbSamplingRate = "60m";
 		}
 		if(sampling.equals(SamplingRate.TREND)) {		// midpoint
-			dbSamplingRate = "1d";
+			dbSamplingRate = "4h";
 		}
 		if(sampling.equals(SamplingRate.SCALPSHORT)) {		//SCALPING 5min, 15min, 60min
 			dbSamplingRate = "5m";

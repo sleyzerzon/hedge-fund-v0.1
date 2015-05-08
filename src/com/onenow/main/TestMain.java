@@ -23,8 +23,8 @@ public class TestMain {
 //		financeTester.test();
 		
 		System.out.println("TESTING BROKER");
-//		TestBroker brokerTester = new TestBroker(logDB);
-//		brokerTester.test();
+		TestBroker brokerTester = new TestBroker(logDB);
+		brokerTester.test();
 		
 		System.out.println("TESTING UTIL");
 		TestUtil utilTester = new TestUtil(logDB);

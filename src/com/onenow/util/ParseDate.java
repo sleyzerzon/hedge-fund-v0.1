@@ -15,7 +15,7 @@ public class ParseDate implements Testable {
 	 * Returns today's date in dashed format without time
 	 * @return
 	 */
-	public String getToday() {
+	public String getDashedToday() {
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // "yyyy-MM-dd HH:mm"
 		return sdf.format(today);
@@ -23,31 +23,14 @@ public class ParseDate implements Testable {
 	
 	public String getClose(String date) {
 		String s = "";
-		s = date + " 16:30:00";
+		// s = date + " 16:30:00";
+		s = date + " 15:00:00"; // TODO: Computer time
 		return s;
 	}
 	
-	public String getCloseToday() {
+	public String getDashedCloseToday() {
 		String s = "";
-		s = getClose(getToday());
-		return s;
-	}
-	
-	public String getDashedTomorrow() {
-		String s = "";
-		s = s + getDashedDatePlus(getToday(), 1);
-		return s;
-	}
-
-	public String getUndashedTomorrow() {
-		String s = "";
-		s = s + removeDash(getDashedTomorrow());
-		return s;
-	}
-
-	public String getYesterday() {
-		String s = "";
-		s = s + getDashedDateMinus(getToday(), 1);
+		s = getClose(getDashedToday());
 		return s;
 	}
 	
@@ -147,7 +130,7 @@ public class ParseDate implements Testable {
 	 * @return
 	 */
 	public int getWeeksToPresent(String dashedDate) {
-		String dashedToday = getToday();
+		String dashedToday = getDashedToday();
 		int weeksToPresent = 0;
 		while(true) {
 			if(isLaterDate(dashedDate, dashedToday)) {

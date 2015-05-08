@@ -872,7 +872,7 @@ public class ApiController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				QuoteRow bar = new QuoteRow( longDate, high, low, open, close, wap, volume, count);
+				QuoteRow bar = new QuoteRow( reqId, longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps);
 			}
 		}

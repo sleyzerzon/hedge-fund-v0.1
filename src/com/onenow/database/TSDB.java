@@ -82,7 +82,7 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
 
 		candles = priceSeriesToCandles(series); 
 
-		System.out.println("Cache Chart READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + candles.toString());
+		System.out.println("Cache Chart/Price READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Prices: " + candles.toString());
 		
 		return candles;
 	}
@@ -105,7 +105,7 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
 					
 	try {
-		System.out.println("QUERY " + query);
+		System.out.println("#PRICE# QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace();  some time series don't exist or have data
@@ -180,7 +180,7 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 	sizes = sizeSeriesToInts(series); 
 	
-	System.out.println("Cache Chart READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString());
+	System.out.println("Cache Chart/Size READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString());
 
 	return sizes;
 }
@@ -203,7 +203,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
 					
 	try {
-		System.out.println("QUERY " + query);
+		System.out.println("#SIZE# QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data

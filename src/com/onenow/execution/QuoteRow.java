@@ -11,6 +11,8 @@ import com.ib.controller.Formats;
 public class QuoteRow {
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
 
+	// meta
+	private int reqId=0;
 	// time
 	private final long m_time;
 	//candle
@@ -32,6 +34,20 @@ public class QuoteRow {
 	public long volume() 	{ return m_volume; }
 	public int count() 		{ return m_count; }
 
+	public QuoteRow( int reqId, long time, double high, double low, double open, double close, double wap, long volume, int count) {
+		
+		this.reqId = reqId;
+		
+		m_time = time;
+		m_high = high;
+		m_low = low;
+		m_open = open;
+		m_close = close;
+		m_wap = wap;
+		m_volume = volume;
+		m_count = count;
+	}
+	
 	public QuoteRow( long time, double high, double low, double open, double close, double wap, long volume, int count) {
 		m_time = time;
 		m_high = high;
@@ -53,7 +69,7 @@ public class QuoteRow {
 	}
 
 	@Override public String toString() {
-		return String.format( "%s %s %s %s %s", formattedTime(), m_open, m_high, m_low, m_close);
+		return String.format( reqId + " " + "%s %s %s %s %s", formattedTime(), m_open, m_high, m_low, m_close);
 	}
 	
 	
