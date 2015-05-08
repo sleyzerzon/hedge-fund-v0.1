@@ -9,8 +9,6 @@ import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Sampling;
 import com.onenow.execution.Broker;
-import com.onenow.execution.QuoteHistory;
-import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -28,10 +26,6 @@ public class Cache {
 	private ParseDate							parseDate = new ParseDate();
 	
 	
-
-//	QuoteHistory history = new QuoteHistory();
-	
-
 	public Cache() {
 		
 	}
@@ -154,7 +148,7 @@ public class Cache {
 		
 		Double price;
 		SamplingRate scalping = SamplingRate.TREND;
-		String today = getParser().getDashedToday();
+		String today = parseDate.getDashedToday();
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
@@ -280,11 +274,5 @@ public class Cache {
 	
 	
 	// SET GET
-	public ParseDate getParser() {
-		return parseDate;
-	}
-	public void setParser(ParseDate parser) {
-		this.parseDate = parser;
-	}
 
 }

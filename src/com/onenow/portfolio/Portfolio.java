@@ -18,7 +18,7 @@ import com.onenow.instrument.Underlying;
 
 public class Portfolio {
 
-	private List<Investment> investments = new ArrayList<Investment>();
+	public List<Investment> investments = new ArrayList<Investment>();
 	private Hashtable<Investment, Integer> quantity = new Hashtable<Investment, Integer>();
 
 	// CONSTRUCT
@@ -27,11 +27,11 @@ public class Portfolio {
 	}
 
 	public Portfolio(List<Investment> invs) { // investments with no quantity
-		setInvestments(invs); 
+		this.investments = invs; 
 	}
 
 	public Portfolio(List<Investment> invs, Hashtable<Investment, Integer> quantity) {
-		setInvestments(invs); 
+		this.investments = invs; 
 		setQuantity(quantity);
 	}
 
@@ -47,7 +47,7 @@ public class Portfolio {
 		Integer quantity = trade.getQuantity();
 
 		if(getQuantity().get(invToEnter) == null) { // not there
-			getInvestments().add(invToEnter);
+			investments.add(invToEnter);
 			getQuantity().put(invToEnter, quantity);
 		} else { // increment
 				Integer init = getQuantity().get(invToEnter);
@@ -61,7 +61,7 @@ public class Portfolio {
 	
 	public Integer getAbsQuantity() {
 		Integer sum = 0;
-			for(Investment inv:getInvestments()) {
+			for(Investment inv:investments) {
 				sum += Math.abs(getQuantity().get(inv));
 			}
 		return sum;
@@ -70,7 +70,7 @@ public class Portfolio {
 	// SEARCH
 	public List<Investment> getInvestments(InvType type) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
-		for (Investment investment : getInvestments()) {
+		for (Investment investment : investments) {
 			if (investment.getInvType().equals(type)) {
 				foundInvs.add(investment);
 			}
@@ -80,7 +80,7 @@ public class Portfolio {
 
 	public List<Investment> getInvestments(Underlying under) {
 		List<Investment> foundInvs = new ArrayList<Investment>();
-		for (Investment investment : getInvestments()) {
+		for (Investment investment : investments) {
 			if (investment.getUnder().equals(under)) {
 				foundInvs.add(investment);
 			}
@@ -168,8 +168,8 @@ public class Portfolio {
 	public String toString() {
 		String s = "";
 		Integer i = 0;
-		for(Investment inv:getInvestments()) {
-			s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+		for(Investment inv:investments) {
+			s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
 			i++;
 		}
 		return s;
@@ -178,9 +178,9 @@ public class Portfolio {
 		String s = "";
 		Integer i = 0;
 		System.out.println("\n" + "INITIALIZED INDICES");
-		for(Investment inv:getInvestments()) {
+		for(Investment inv:investments) {
 			if(inv instanceof InvestmentIndex) {
-				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
 			}
 			i++;
 		}
@@ -190,9 +190,9 @@ public class Portfolio {
 		String s = "";
 		Integer i = 0;
 		System.out.println("\n" + "INITIALIZED OPTIONS");
-		for(Investment inv:getInvestments()) {
+		for(Investment inv:investments) {
 			if(inv instanceof InvestmentOption) {
-				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
 			}
 			i++;
 		}
@@ -202,9 +202,9 @@ public class Portfolio {
 		String s = "";
 		Integer i = 0;
 		System.out.println("\n" + "INITIALIZED STOCKS");
-		for(Investment inv:getInvestments()) {
+		for(Investment inv:investments) {
 			if(inv instanceof InvestmentStock) {
-				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
 			}
 			i++;
 		}
@@ -214,9 +214,9 @@ public class Portfolio {
 		String s = "";
 		Integer i = 0;
 		System.out.println("\n" + "INITIALIZED FUTURES");
-		for(Investment inv:getInvestments()) {
+		for(Investment inv:investments) {
 			if(inv instanceof InvestmentFuture) {
-				s = s + getQuantity().get(inv) + " " + getInvestments().get(i) + "\n";
+				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
 			}
 			i++;
 		}
@@ -227,14 +227,6 @@ public class Portfolio {
 	// TEST
 
 	// GET SET
-	public List<Investment> getInvestments() {
-		return investments;
-	}
-
-	public void setInvestments(List<Investment> investments) {
-		this.investments = investments;
-	}
-
 	public Hashtable<Investment, Integer> getQuantity() {
 		return quantity;
 	}

@@ -13,6 +13,7 @@ import com.onenow.execution.Broker;
 import com.onenow.execution.QuoteHistory;
 import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;
+import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.util.ParseDate;
 
@@ -25,6 +26,11 @@ public class Historian {
 	private Lookup 								lookup = new Lookup();			// key
 	private ParseDate							parseDate = new ParseDate();
 
+	private SamplingRate scalping = SamplingRate.SWING;
+	private TradeType tradeType = TradeType.TRADED; 
+	private InvDataSource source = InvDataSource.IB;
+	private InvDataTiming timing = InvDataTiming.HISTORICAL;
+
 	
 	public Historian(Broker broker) {
 		
@@ -33,66 +39,56 @@ public class Historian {
 	}
 
 	public void updateHistory() {
-		Investment inv = new Investment();
 		
-		// TODO: which investments
-		updateL1HistoryFromL2(inv);
+		Portfolio portfolio = broker.getMarketPortfolio();
+		
+		String dashedToDate = parseDate.getDashedToday();
+		
+		while(true) {	
+			
+			for(Investment inv:portfolio.investments) {
+				updateL1HistoryFromL2(inv, dashedToDate);
+			}
+			
+			// go back further in time? or restart from the beginning
+			dashedToDate = parseDate.getDashedDateMinus(dashedToDate, 1);
+		}
 	}
 	
 /**
  * Continually augment L1 with data from L2 (3rd party DB)
  * @param inv
  */
-	private void updateL1HistoryFromL2(Investment inv) {
+	private void updateL1HistoryFromL2(Investment inv, String dashedToDate) {
 		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
-
-		// go from...
-		String dashedDate = parseDate.getDashedToday();
-		String undashedDateClosing = parseDate.getClose(parseDate.getUndashedDate(dashedDate));
-		int numDays = 2; // number of days to acquire at a time
 		
-		while(true) { 
 			
-			TradeType tradeType = TradeType.TRADED; 
-			SamplingRate scalping = SamplingRate.SWING;
-			InvDataSource source = InvDataSource.IB;
-			InvDataTiming timing = InvDataTiming.HISTORICAL;
+		// See if data already in L1
+		List<Candle> prices = TSDB.readPriceFromDB(		inv, tradeType, scalping, 
+														parseDate.getDashedDateMinus(dashedToDate, 1), dashedToDate,
+														source, timing);
 
-			// See if data already in L1
-			List<Candle> prices = TSDB.readPriceFromDB(		inv, tradeType, scalping, 
-															parseDate.getDashedDateMinus(dashedDate, 1), dashedDate,
-															source, timing);
-
-			if (prices.size()<10) {		
-				// get the history reference for the specific investment 
-				QuoteHistory invHist = lookupInvHistory(	inv, tradeType, 
-															source, timing);
-				
-				broker.readHistoricalQuotes(inv, undashedDateClosing, invHist); 
-
-				// put history in L1				
-				writeHistoryL0ToL1(	inv, tradeType, 
-									source, timing,
-									invHist);					
-//				numDays--;
-			} else {
-				System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& SUCCESS");
-			}
+		if (prices.size()<10) {		
+			// get the history reference for the specific investment 
+			QuoteHistory invHist = lookupInvHistory(	inv, tradeType, 
+														source, timing);
 			
-			numDays--;
-			
-			// go back further in time?
-			if(numDays>0) {	
-				dashedDate = parseDate.getDashedDateMinus(dashedDate, 1);
-				undashedDateClosing = parseDate.getClose(parseDate.getUndashedDate(dashedDate));;
-			} else {
-				return;
-			}
+			paceHistoricalQuery(); // TODO: fewer seconds where possible
+
+			broker.readHistoricalQuotes(inv, parseDate.getClose(parseDate.getUndashedDate(dashedToDate)), invHist); 
+
+			// put history in L1				
+			writeHistoryL0ToL1(	inv, tradeType, 
+								source, timing,
+								invHist);					
+		} else {
+			System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& SUCCESS");
 		}
+						
 	}
 
 	/**
-	 * Every investment has it's own L2 history
+	 * Every investment has it's own history from L2
 	 * @param inv
 	 * @param tradeType
 	 * @param source
@@ -121,15 +117,16 @@ public class Historian {
 		for(int i=0; i<invHistory.quoteRows.size(); i++) {
 			QuoteRow row = invHistory.quoteRows.get(i);
 			
-			Long time = row.getM_time()*1000; // RT 143,104,098,2011 // Hist 143,096,400,0???
+			Long time = row.getM_time()*1000; // processed RT 143,104,098,2011 vs. native History 143,096,400,0xxx
 			Double price = row.getM_open(); 
 
-//			System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
+			// System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
 			TSDB.writePrice(	time, inv, dataType, price,
 								source, timing);				
 
 		}
-		invHistory.init(); // reset to avoid writing same twice
+		// reset to avoid writing same twice
+		invHistory.init(); // TODO: synchronize access
 	}
 
 	private void paceHistoricalQuery() {

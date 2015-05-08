@@ -121,7 +121,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	 * Quotes are in response to specific request, or real-time notifications
 	 */
 	public void getLiveQuotes() {
-		List<Investment> invs = getMarketPortfolio().getInvestments();
+		List<Investment> invs = getMarketPortfolio().investments;
 		for(Investment inv:invs) {		
 			System.out.println("> getting quote for live investment: " + inv.toString());
 			
@@ -207,7 +207,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	 * No market depth for index/options
 	 */
 	private void getMarketDepth() {
-		List<Investment> invs = getMarketPortfolio().getInvestments();
+		List<Investment> invs = getMarketPortfolio().investments;
 		for(Investment inv:invs) { 
 			QuoteDepth resultPanel = new QuoteDepth(this, getController(), inv);
 		}
@@ -311,7 +311,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 	//TODO: use it for testing
 	private boolean allQuotesSet() {
 	boolean allSet=true;
-	List<Investment> invs = getMarketPortfolio().getInvestments();
+	List<Investment> invs = getMarketPortfolio().investments;
 	Integer notDone=0;
 	for(Investment inv:invs) {
 		if(inv instanceof InvestmentIndex) { // only check the index
