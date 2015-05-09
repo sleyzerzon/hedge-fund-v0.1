@@ -49,7 +49,13 @@ public class QuoteRow {
 	}
 	
 	public QuoteRow( long time, double high, double low, double open, double close, double wap, long volume, int count) {
-		m_time = time;
+		
+
+		// TODO: translate to UTZ
+		
+		m_time = time; // TODO: what time zone is this time?
+
+		
 		m_high = high;
 		m_low = low;
 		m_open = open;

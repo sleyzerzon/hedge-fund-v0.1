@@ -32,17 +32,32 @@ public class TSDB {
 	public TSDB() {
 		setLookup(new Lookup());
 		dbConnect();
-//		dbCreate();
+		dbCreate();
 		
 		setParseDate(new ParseDate());
 		setSampling(new Sampling());
 	}
 
+	
+// INFLUX HOSTING
+//	Hostname: calvinklein-fluxcapacitor-1.c.influxdb.com (45.55.169.140)
+//	API Ports: 8086 (HTTP) and 8087 (HTTPS)
+//	Admin User: root
+//	Admin Password: b45547741dd1709b
+//	Admin Interface: http://calvinklein-fluxcapacitor-1.c.influxdb.com:8083
+//
+//	And if you need some pointers on how to get started, check out our documentation:
+//	http://influxdb.com/docs/v0.8/introduction/getting_started.html
+
+	
 // INIT
+//	setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
+//	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
 private void dbConnect() { 
 	try {
 		System.out.println("CONNECTING TO DB");
-		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
+		setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
 	} catch (Exception e) {
 		System.out.println("COULD NOT CONNECT TO DB\n");
 		e.printStackTrace();
@@ -51,8 +66,13 @@ private void dbConnect() {
 }
 
 private void dbCreate() {
-	getDB().createDatabase(DBname.PRICE.toString());
-	getDB().createDatabase(DBname.SIZE.toString());
+	try {
+		getDB().createDatabase(DBname.PRICE.toString());
+		getDB().createDatabase(DBname.SIZE.toString());
+	} catch (Exception e) {
+		// Throws exception if the DB already exists
+		// e.printStackTrace();
+	}
 }
 
 // PRICE

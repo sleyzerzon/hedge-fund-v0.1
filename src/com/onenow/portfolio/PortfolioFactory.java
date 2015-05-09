@@ -96,7 +96,7 @@ public class PortfolioFactory {
 		String fromDate = "2015-02-21"; 	// TODO: configurable date
 		String toDate = "2015-02-28";
 		for(SamplingRate sampling:getSampling().getList(SamplingRate.SCALPSHORT)) { // TODO: what rates?
-			for(Investment inv:getMarketPortfolio().getInvestments()) {
+			for(Investment inv:getMarketPortfolio().investments) {
 				getInvestmentChart(inv, sampling, fromDate, toDate);
 			}
 		}
@@ -124,7 +124,7 @@ public class PortfolioFactory {
 	// ANALYSIS
 	private void analyzeUptodateInvestmentCharts() {
 		System.out.println("\n\n" + "ANALYZING CHARTS");
-		for(Investment inv:getMarketPortfolio().getInvestments()) {
+		for(Investment inv:getMarketPortfolio().investments) {
 			for(SamplingRate trading:getSampling().getTradingOptions()) {
 				String analysis = "";
 				analysis = analysis + "=====" + inv.toString() + "=====" + "\n";

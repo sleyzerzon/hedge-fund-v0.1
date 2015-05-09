@@ -30,27 +30,39 @@ public class Historian {
 	private TradeType tradeType = TradeType.TRADED; 
 	private InvDataSource source = InvDataSource.IB;
 	private InvDataTiming timing = InvDataTiming.HISTORICAL;
-
 	
+	private long lastHistQuery;
+
 	public Historian(Broker broker) {
 		
 		this.broker = broker;
 		this.history = new HashMap<String, QuoteHistory>();
+		
+		updateHistory();
 	}
 
 	public void updateHistory() {
 		
 		Portfolio portfolio = broker.getMarketPortfolio();
-		
-		String dashedToDate = parseDate.getDashedToday();
+
+		// init
+		String startDate = parseDate.getDashedToday();
+		String dashedToDate = startDate;
 		
 		while(true) {	
 			
+			// when date changes, start over from that today
+			String today = parseDate.getDashedToday();
+			if(!today.equals(startDate)) {
+				dashedToDate = today;
+			}
+			
+			// iterate through investments
 			for(Investment inv:portfolio.investments) {
 				updateL1HistoryFromL2(inv, dashedToDate);
 			}
 			
-			// go back further in time? or restart from the beginning
+			// go back further in time
 			dashedToDate = parseDate.getDashedDateMinus(dashedToDate, 1);
 		}
 	}
@@ -68,15 +80,16 @@ public class Historian {
 														parseDate.getDashedDateMinus(dashedToDate, 1), dashedToDate,
 														source, timing);
 
+		// query L2 only if L1 data is incomplete
 		if (prices.size()<10) {		
 			// get the history reference for the specific investment 
 			QuoteHistory invHist = lookupInvHistory(	inv, tradeType, 
 														source, timing);
 			
-			paceHistoricalQuery(); // TODO: fewer seconds where possible
-
+			paceHistoricalQuery(); 
 			broker.readHistoricalQuotes(inv, parseDate.getClose(parseDate.getUndashedDate(dashedToDate)), invHist); 
-
+			lastHistQuery = parseDate.getNow();
+			
 			// put history in L1				
 			writeHistoryL0ToL1(	inv, tradeType, 
 								source, timing,
@@ -130,13 +143,25 @@ public class Historian {
 	}
 
 	private void paceHistoricalQuery() {
-		System.out.println("...pacing historical query");
+		System.out.println("...pacing historical query: " + getSleepTime()/1000);
 	    try {
-			Thread.sleep(12000);
+			Thread.sleep(getSleepTime());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}				
+	}	
+	
+	private long getSleepTime() {
+		long sleepTime = 0;
+
+		long elapsed = parseDate.getElapsedStamps(lastHistQuery);
+		sleepTime = 12000-elapsed; // 12s target
+		if(sleepTime<0) {
+			sleepTime = 0;
+		}
+		
+		return sleepTime;
+	}
 
 	
 	// TEST

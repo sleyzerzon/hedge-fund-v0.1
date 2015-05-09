@@ -1,7 +1,11 @@
 package com.onenow.util;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import com.onenow.test.Testable;
 
@@ -21,13 +25,78 @@ public class ParseDate implements Testable {
 		return sdf.format(today);
 	}
 	
+	public long getNow() {
+
+		long timeStamp=0;
+		
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		timeStamp = calendar.getTimeInMillis(); ;
+
+		return timeStamp;
+	}
+	
+	public long getElapsedStamps(long oldStamp) {
+		long elapsed = 0;
+		elapsed = getNow() - oldStamp;
+		return elapsed;
+	}
+	
+	/**
+	 * Defines closing date, by midnight of UTZ
+	 * @param date
+	 * @return
+	 */
+	// The NYSE and NYSE MKT are open from Monday through Friday 9:30 a.m. to 4:00 p.m. ET.
+	// Closing is 1pm PT, 4pm AR, 9PM UTZ
 	public String getClose(String date) {
 		String s = "";
+		int endOfDay = 24;
+		int offset = getOffsetInMillis();
+		int endDayLocal = endOfDay + getTimezoneOffsetSign(offset)*getTimezoneHourOffset(offset); // TODO: Minute offset 
 		// s = date + " 16:30:00";
-		s = date + " 15:00:00"; // TODO: Computer time
+		// s = date + " 15:00:00"; // TODO: Computer time		
+		s = date + " " + endDayLocal + ":00:00";
 		return s;
 	}
 	
+	public String getCurrentTimezoneOffset() {
+
+	    int offsetInMillis = getOffsetInMillis();
+
+	    String offset = String.format("%02d:%02d", getTimezoneHourOffset(offsetInMillis), getTimezoneMinuteOffset(offsetInMillis));
+	    offset = (offsetInMillis >= 0 ? "+" : "-") + offset;
+
+	    return offset;
+	} 
+	
+	private int getOffsetInMillis() {
+		int offsetInMillis = 0;
+		
+	    TimeZone tz = TimeZone.getDefault();  
+	    Calendar cal = GregorianCalendar.getInstance(tz);
+	    offsetInMillis = tz.getOffset(cal.getTimeInMillis());
+
+		return offsetInMillis;
+	}
+	
+	private int getTimezoneOffsetSign(int offsetInMillis) {
+		int sign = 0;
+		sign = (offsetInMillis >= 0 ? +1 : -1);
+		return sign;
+	}
+	
+	private int getTimezoneHourOffset(int offsetInMillis) {
+		int hours = 0;
+		hours = Math.abs(offsetInMillis / 3600000);
+		return hours;
+	}
+
+	private int getTimezoneMinuteOffset(int offsetInMillis) {
+		int minutes  = 0;
+		minutes = Math.abs((offsetInMillis / 60000) % 60);
+		return minutes;
+	}
+
 	public String getDashedCloseToday() {
 		String s = "";
 		s = getClose(getDashedToday());

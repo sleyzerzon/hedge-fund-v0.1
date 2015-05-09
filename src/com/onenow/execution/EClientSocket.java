@@ -308,6 +308,7 @@ public class EClientSocket {
     }
 
     protected void connectionError() {
+    	System.out.println ("CONNECTION ERROR WITH GATEWAY / TWS");
         m_eWrapper.error( EClientErrors.NO_VALID_ID, EClientErrors.CONNECT_FAIL.code(),
                 EClientErrors.CONNECT_FAIL.msg());
         m_reader = null;

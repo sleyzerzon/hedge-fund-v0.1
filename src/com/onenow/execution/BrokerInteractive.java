@@ -93,7 +93,12 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 		// default IB Gateway port: 4001
 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496	
 		
+		
+		
 		// TODO: add re-tries here
+		
+		// 504 Not connected
+		
 //		java.net.ConnectException: Connection refused
 //		at java.net.PlainSocketImpl.socketConnect(Native Method)
 //		at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)

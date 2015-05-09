@@ -19,31 +19,22 @@ import com.onenow.util.ParseDate;
 public class HistorianMain {
 
 	private static BrokerInteractive IB;
-	private Historian historian;
 
 	public static void main(String[] args) {
 		
-		// get a controller for interactive brokers
 		try {
 			
-			IB = new BrokerInteractive(); // create Interactive Brokers broker & get quotes
+			// updates real-time L1 from real=time events
+			IB = new BrokerInteractive(); 
 			
+			// updates historical L1 from L2
 			Historian hist = new Historian(IB);
-			hist.updateHistory();
 			
 		} catch (Exception e) {
-			System.out.println("COULD NOT CREATE INTERACTIVE BROKER\n");
+			System.out.println("COULD NOT CREATE INTERACTIVE BROKER / HISTORIAN" + "\n");
 			e.printStackTrace();
 		}
-
 		
-//		// get channel price history
-//		try {
-//			IB.getChannelPrices();
-//		} catch (InterruptedException e1) {
-//			System.out.println("COULD NOT CREATE GET PRICE HISTORY\n");
-//			e1.printStackTrace();
-//		}	
 	}
 	
 }
