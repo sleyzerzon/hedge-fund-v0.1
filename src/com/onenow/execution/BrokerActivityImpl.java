@@ -141,9 +141,10 @@ public class BrokerActivityImpl implements BrokerActivity {
 	}
 
 	@Override
-	public QuoteHistory readHistoricalQuotes(Investment inv, String end) {
+	public void readHistoricalQuotes(Investment inv, String end,
+			QuoteHistory history) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	

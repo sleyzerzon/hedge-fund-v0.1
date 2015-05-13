@@ -130,8 +130,8 @@ public class Historian {
 		for(int i=0; i<invHistory.quoteRows.size(); i++) {
 			QuoteRow row = invHistory.quoteRows.get(i);
 			
-			Long time = row.getM_time()*1000; // processed RT 143,104,098,2011 vs. native History 143,096,400,0xxx
-			Double price = row.getM_open(); 
+			Long time = row.time()*1000; // processed RT 143,104,098,2011 vs. native History 143,096,400,0xxx
+			Double price = row.open(); 
 
 			// System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
 			TSDB.writePrice(	time, inv, dataType, price,
@@ -143,7 +143,7 @@ public class Historian {
 	}
 
 	private void paceHistoricalQuery() {
-		System.out.println("...pacing historical query: " + getSleepTime()/1000);
+		System.out.println("...pacing historical query: " + getSleepTime()/1000 + "s");
 	    try {
 			Thread.sleep(getSleepTime());
 		} catch (InterruptedException e) {

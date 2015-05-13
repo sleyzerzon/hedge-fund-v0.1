@@ -25,15 +25,6 @@ public class QuoteRow {
 	private final long m_volume;
 	private final int m_count;
 
-	public long time()		{ return m_time; }
-	public double high() 	{ return m_high; }
-	public double low() 	{ return m_low; }
-	public double open() 	{ return m_open; }
-	public double close() 	{ return m_close; }
-	public double wap() 	{ return m_wap; }
-	public long volume() 	{ return m_volume; }
-	public int count() 		{ return m_count; }
-
 	public QuoteRow( int reqId, long time, double high, double low, double open, double close, double wap, long volume, int count) {
 		
 		this.reqId = reqId;
@@ -75,26 +66,36 @@ public class QuoteRow {
 	}
 
 	@Override public String toString() {
-		return String.format( reqId + " " + "%s %s %s %s %s", formattedTime(), m_open, m_high, m_low, m_close);
+		return String.format( reqId + " " + "open %s, high %s, %s, low %s, close %s, AT", formattedTime() + "TIME ZONE?", m_open, m_high, m_low, m_close);
 	}
 	
 	
 	// SET GET
-	public long getM_time() {
-		return m_time;
-	}
-	public double getM_high() {
-		return m_high;
-	}
-	public double getM_low() {
-		return m_low;
-	}
-	public double getM_open() {
-		return m_open;
-	}
-	public double getM_close() {
-		return m_close;
-	}
+	
+	public long time()		{ return m_time; }
+	public double high() 	{ return m_high; }
+	public double low() 	{ return m_low; }
+	public double open() 	{ return m_open; }
+	public double close() 	{ return m_close; }
+	public double wap() 	{ return m_wap; }
+	public long volume() 	{ return m_volume; }
+	public int count() 		{ return m_count; }
+
+//	public long getM_time() {
+//		return m_time;
+//	}
+//	public double getM_high() {
+//		return m_high;
+//	}
+//	public double getM_low() {
+//		return m_low;
+//	}
+//	public double getM_open() {
+//		return m_open;
+//	}
+//	public double getM_close() {
+//		return m_close;
+//	}
 	
 	
 }

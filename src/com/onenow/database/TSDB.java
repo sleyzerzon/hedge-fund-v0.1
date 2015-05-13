@@ -52,8 +52,7 @@ public class TSDB {
 	
 // INIT
 //	setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
-//	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
-// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
+//	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));	
 private void dbConnect() { 
 	try {
 		System.out.println("CONNECTING TO DB");
@@ -65,6 +64,9 @@ private void dbConnect() {
 	}
 }
 
+// list series
+// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
+// count(), min(), max(), mean(), mode(), median(), distinct(), percentile(), histogram(), derivative(), sum(), stddev(), first(), last()
 private void dbCreate() {
 	try {
 		getDB().createDatabase(DBname.PRICE.toString());

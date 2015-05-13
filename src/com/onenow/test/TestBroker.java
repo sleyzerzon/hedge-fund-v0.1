@@ -94,11 +94,11 @@ public class TestBroker implements Testable {
 		System.out.println(s);
 		// save to database
 		if(logDB.isDBLive()) {
-			try {
-				logDB.newLog("TestBroker", s);
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				logDB.newLog("TestBroker", s);
+//			} catch (ConnectionException e) {
+//				e.printStackTrace();
+//			}
 		}
 	}
 	

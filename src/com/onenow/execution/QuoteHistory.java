@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+
+
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.data.Channel;
@@ -56,11 +58,12 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		String day = row.formattedTime().substring(0, 10);
 		Double highPrice = row.high(); // bar.getM_high();
 		Double lowPrice = row.low(); // getM_low();
-		Double recentPrice = row.close();
+		Double openPrice = row.open();
+		Double closePrice = row.close();
 //		System.out.println("Day " + day + " " + highPrice + " " + lowPrice);
 
 		if(getChannel()!=null) { // if constructed that way
-			setChannelPrices(day, highPrice, lowPrice, recentPrice);
+			setChannelPrices(day, highPrice, lowPrice, closePrice);
 		}
 	}
 	
