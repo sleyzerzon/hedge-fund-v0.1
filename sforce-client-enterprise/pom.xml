@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.onenow</groupId>
+        <artifactId>hedge-fund-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>sforce-client-enterprise</artifactId>
+
+    <properties>
+        <wsdl.path>${project.basedir}/src/main/resources/enterprise.wsdl.xml</wsdl.path>
+        <generatedOutputDir>target/generated-sources/soap</generatedOutputDir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.force.api</groupId>
+            <artifactId>force-wsc</artifactId>
+            <version>34.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generatedOutputDir}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.sforce.ws.tools.wsdlc</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>standalone-jar</key>
+                                    <value>true</value>
+                                </systemProperty>
+                                <systemProperty>
+                                    <key>compileTarget</key>
+                                    <value>1.6</value>
+                                </systemProperty>
+                            </systemProperties>
+                            <arguments>
+                                <argument>-nc</argument>
+                                <argument>${wsdl.path}</argument>
+                                <argument>
+                                    ${generatedOutputDir}/${project.artifactId}-${project.version}.jar
+                                </argument>
+                                <argument>${generatedOutputDir}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
