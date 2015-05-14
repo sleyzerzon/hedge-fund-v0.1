@@ -10,13 +10,7 @@
 
     <modules>
         <module>sforce-client-enterprise</module>
-        <!--
-        <module>hedge-fund-deps</module>
-        -->
         <module>hedge-fund-core</module>
-        <!--
-        <module>hedge-fund-demo</module>
-        -->
     </modules>
 
     <repositories>

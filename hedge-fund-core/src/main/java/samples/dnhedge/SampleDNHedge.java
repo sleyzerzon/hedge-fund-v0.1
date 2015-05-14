@@ -4,12 +4,12 @@
 package samples.dnhedge;
 
 
-import samples.rfq.SimpleWrapper;
-
 import com.ib.client.ContractDetails;
 import com.ib.contracts.OptContract;
 import com.ib.contracts.StkContract;
 import com.onenow.execution.Contract;
+
+import samples.rfq.SimpleWrapper;
 
 
 public class SampleDNHedge extends SimpleWrapper {
