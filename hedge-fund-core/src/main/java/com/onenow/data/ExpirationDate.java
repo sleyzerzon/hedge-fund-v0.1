@@ -12,7 +12,7 @@ public class ExpirationDate {
 	List<String> futuresExpList = new ArrayList<String>();
 	List<String> futuresCompleteExpList = new ArrayList<String>();
 	
-	ParseDate parser = new ParseDate();
+	ParseDate parseDate = new ParseDate();
 	
 	public ExpirationDate() {
 
@@ -35,16 +35,16 @@ public class ExpirationDate {
 	
 	public void initCompleteOptionExpList() {
 //		String unDashedStartDate = "20150402";
-//		String dashedStartDate = getParser().getDashedDate(unDashedStartDate);
+//		String dashedStartDate = parseDate.getDashedDate(unDashedStartDate);
 //		
-//		int weeksToPresent = getParser().getWeeksToPresent(dashedStartDate);
+//		int weeksToPresent = parseDate.getWeeksToPresent(dashedStartDate);
 ////		System.out.println("weeks to present " + weeksToPresent);
 //		
 //		int numExpDates = 3; 		
 //		for(int i=weeksToPresent; i<(weeksToPresent+numExpDates); i++) {
 ////			System.out.println("i " + i);
-//			String dashedDate = getParser().getDatePlus(dashedStartDate, 7*i); // a number of weeks later
-//			String unDashedDate = getParser().getUndashedDate(dashedDate);
+//			String dashedDate = parseDate.getDatePlus(dashedStartDate, 7*i); // a number of weeks later
+//			String unDashedDate = parseDate.getUndashedDate(dashedDate);
 //			getIndexExpList().add(unDashedDate);
 //			System.out.println("+ Added index option expiration " + unDashedDate);			
 //		}
@@ -67,19 +67,55 @@ public class ExpirationDate {
 	public void initCompleteFuturesExpList() {
 //		String unDashedStartMonth = "201506";
 //		
-//		int monthsToPresent = getParser().getMonthsToPresent(unDashedStartMonth);
+//		int monthsToPresent = parseDate.getMonthsToPresent(unDashedStartMonth);
 //		System.out.println("months to present " + monthsToPresent);
 //		
 //		int numExpDates = 3;
 //		for(int i=monthsToPresent; i<(monthsToPresent+numExpDates); i++) {
 ////			System.out.println("i " + i);
-//			String undashedYearMonth = getParser().getMonthPlus(unDashedStartMonth, i);
+//			String undashedYearMonth = parseDate.getMonthPlus(unDashedStartMonth, i);
 //			getFuturesExpList().add(undashedYearMonth);
 //		}
 
 	}
 
-	// PUBLIC
+	// VALID SET
+	/**
+	 * Return the only valid expiration dates, occurring within x months, to a basis date
+	 * @param undashedBasis
+	 * @return
+	 */
+	public List<String> getValidIndexExpList(String undashedBasis) {
+		List<String> validIndexExp = new ArrayList<String>();
+		
+		
+		for(String date:indexExpList) {
+			if(	parseDate.getMonthDelta(date, undashedBasis)<3 && 
+				parseDate.getMonthDelta(date, undashedBasis)>3
+				) {
+				validIndexExp.add(date);
+			}
+		}
+		
+		return validIndexExp;
+	}
+	
+	public List<String> getValidFuturesExpList(String undashedBasis) {
+		List<String> validExp = new ArrayList<String>();
+		
+		for(String date:futuresExpList) {
+			if(	parseDate.getMonthDelta(date, undashedBasis)<3 && 
+				parseDate.getMonthDelta(date, undashedBasis)>3
+				) {
+				validExp.add(date);
+			}
+		}
+
+		return validExp;
+	}
+	
+	
+	// TYPICAL TIMELINES
 	public String getNextIndexExp() {
 		String s = "";
 		s = getIndexExpList().get(0);
@@ -131,14 +167,6 @@ public class ExpirationDate {
 
 	private void setFuturesExpList(List<String> futuresExpList) {
 		this.futuresExpList = futuresExpList;
-	}
-
-	public ParseDate getParser() {
-		return parser;
-	}
-
-	public void setParser(ParseDate parser) {
-		this.parser = parser;
 	}
 
 	public List<String> getIndexCompleteExpList() {

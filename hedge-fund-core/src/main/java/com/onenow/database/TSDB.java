@@ -54,14 +54,24 @@ public class TSDB {
 //	setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
 //	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));	
 private void dbConnect() { 
-	try {
-		System.out.println("CONNECTING TO DB");
-		setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
-	} catch (Exception e) {
-		System.out.println("COULD NOT CONNECT TO DB\n");
-		e.printStackTrace();
-		return;
-	}
+	boolean tryToConnect = true;
+	
+	while(tryToConnect) {
+		try {
+			tryToConnect = false;
+			System.out.println("\n" + "CONNECTING TO DB...");
+			setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
+		} catch (Exception e) {
+//			tryToConnect = true;
+			System.out.println("\n" + "...COULD NOT CONNECT TO DB: ");
+			e.printStackTrace();
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e1) {
+				// nothing to do
+			}
+		}
+	} 
 }
 
 // list series

@@ -393,6 +393,32 @@ public class ParseDate implements Testable {
 		return s;
 	}
 	
+	public int getMonthDelta(String undashedDate, String undashedBasisDate) {
+		int delta = 0;
+		
+		int month = 0;
+		int year = 0;
+		int monthBasis = 0;
+		int yearBasis = 0;
+		
+		try {
+			month = Integer.parseInt(getUnDashedMonth(undashedDate));
+		} catch (NumberFormatException e) { } // nothing to do	
+		try {
+			year = Integer.parseInt(getUnDashedYear(undashedDate));
+		} catch (NumberFormatException e) { } // nothing to do	
+		try {
+			monthBasis = Integer.parseInt(getUnDashedMonth(undashedBasisDate));
+		} catch (NumberFormatException e) { } // nothing to do	
+		try {
+			yearBasis = Integer.parseInt(getUnDashedYear(undashedBasisDate));
+		} catch (NumberFormatException e) { } // nothing to do	
+		
+		delta =  yearBasis * 12 + monthBasis - year * 12 - month;
+		
+		return delta;
+	}
+	
 	public String getUndashedDateMinus(String undashedDate, Integer minusDays) {
 		String s = "";
 		s = getDashedDateMinus(getDashedDate(undashedDate), minusDays);
@@ -461,7 +487,8 @@ public class ParseDate implements Testable {
 	public boolean test() {
 		
 		boolean result = 	testDatePlus() && 
-							testDateMinus();
+							testDateMinus() && 
+							testMonthDelta();
 		
 		
 		return result;
@@ -521,6 +548,35 @@ public class ParseDate implements Testable {
 		System.out.println("testDate3 " + dateOut3);
 
 		
+		return result;
+	}
+	
+	private boolean testMonthDelta() {
+		
+		boolean result = false;
+
+		String date1 = "20141201";
+		String date2 = "201512";
+		String date3 = "201412";
+
+		String dateBasis1 = "20150301";
+		String dateBasis2 = "201403";
+		String dateBasis3 = "201505";
+
+		Integer deltaOut1 = getMonthDelta(date1, dateBasis1);
+		Integer deltaOut2 = getMonthDelta(date2, dateBasis2);
+		Integer deltaOut3 = getMonthDelta(date3, dateBasis3);
+		
+		if(		deltaOut1.equals(3) &&
+				deltaOut2.equals(-21) && 
+				deltaOut3.equals(5)) {
+				result = true;
+			}
+		
+		System.out.println("deltaOut1 " + deltaOut1);
+		System.out.println("deltaOut2 " + deltaOut2);
+		System.out.println("deltaOut3 " + deltaOut3);
+
 		return result;
 	}
 	

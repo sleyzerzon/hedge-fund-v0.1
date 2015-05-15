@@ -268,6 +268,7 @@ public class EClientSocket {
     
     // iServer rails are used for Connection if connectOptions != null
     public void setUseV100Plus(String connectOptions) { 
+    	System.out.println ("CONNECTION setUseV100Plus");
     	if( m_connected ) {
             m_eWrapper.error(EClientErrors.NO_VALID_ID, EClientErrors.ALREADY_CONNECTED.code(),
                     EClientErrors.ALREADY_CONNECTED.msg());
@@ -294,27 +295,39 @@ public class EClientSocket {
         }
 
         Socket socket = new Socket();
-        try{
-            socket = new Socket( m_host, port);
-            eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
-        }
-        catch( Exception e) {
-        	System.out.println ("COULD NOT CONNECT TO GATEWAY / TWS");
-        	e.printStackTrace();
-        	eDisconnect();
-            connectionError(); 
-        }
         
+        boolean tryToConnect = true;
+        while(tryToConnect) {
+	        try{
+	        	tryToConnect = false;
+	        	System.out.println("\n" + "TRYING TO CONNECT TO GATEWAY / TWS...");
+	            socket = new Socket( m_host, port);
+	            eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
+	        }
+	        catch( Exception e) {
+	        	tryToConnect = true;
+	        	System.out.println ("\n" + "COULD NOT CONNECT TO GATEWAY / TWS: ");
+	            connectionError(); 
+	        	e.printStackTrace();
+	        	eDisconnect();
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e1) {
+					// nothing to do
+				}
+	        }
+        }        
     }
 
     protected void connectionError() {
-    	System.out.println ("CONNECTION ERROR WITH GATEWAY / TWS");
+    	System.out.println ("\n" + "CONNECTION ERROR WITH GATEWAY / TWS");
         m_eWrapper.error( EClientErrors.NO_VALID_ID, EClientErrors.CONNECT_FAIL.code(),
                 EClientErrors.CONNECT_FAIL.msg());
         m_reader = null;
     }
 
     protected String checkConnected(String host) {
+    	System.out.println ("CHECKING IF CONNECTED WITH GATEWAY / TWS");
         if( m_connected) {
             m_eWrapper.error(EClientErrors.NO_VALID_ID, EClientErrors.ALREADY_CONNECTED.code(),
                     EClientErrors.ALREADY_CONNECTED.msg());
@@ -377,7 +390,7 @@ public class EClientSocket {
             performRedirect( newAddress, defaultPort );
         	return;
         }
-
+    	System.out.println ("CHECKING IF UNSUPORTED VERSION");
         System.out.println("Server Version:" + m_serverVersion);
         
         if ( m_serverVersion >= 20 ){
@@ -423,7 +436,7 @@ public class EClientSocket {
         try {
             newPort = ( array.length > 1 ) ? Integer.parseInt(array[1]) : defaultPort;
         }
-        catch ( NumberFormatException e ) {
+        catch ( NumberFormatException e ) {      	
             System.out.println( "Warning: redirect port is invalid, using default port");
             newPort = defaultPort;
         }
@@ -475,6 +488,7 @@ public class EClientSocket {
     }
 
     public synchronized void startAPI() {
+    	System.out.println("~ startAPI");
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -496,6 +510,7 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+        	System.out.println ("FAILED TO START API");
             error( EClientErrors.NO_VALID_ID,
                    EClientErrors.FAIL_SEND_STARTAPI, "" + e);
             close();
@@ -503,6 +518,7 @@ public class EClientSocket {
     }
 
     public synchronized void cancelScannerSubscription( int tickerId) {
+    	System.out.println("~ cancelScannerSubscription");
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -510,9 +526,10 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-          error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
-                "  It does not support API scanner subscription.");
-          return;
+        	System.out.println ("API SCANNER UNSUPPORTED");
+        	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
+        		"  It does not support API scanner subscription.");
+        	return;
         }
 
         final int VERSION = 1;
@@ -534,6 +551,8 @@ public class EClientSocket {
     }
 
     public synchronized void reqScannerParameters() {
+    	System.out.println("~ reqScannerParameters");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -541,8 +560,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-          error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
-                "  It does not support API scanner subscription.");
+        	System.out.println ("API SCANNER UNSUPPORTED");
+        	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
+        			"  It does not support API scanner subscription.");
           return;
         }
 
@@ -557,6 +577,7 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+        	System.out.println ("API SCANNER PARAMETER ERROR");
             error( EClientErrors.NO_VALID_ID,
                    EClientErrors.FAIL_SEND_REQSCANNERPARAMETERS, "" + e);
             close();
@@ -564,15 +585,18 @@ public class EClientSocket {
     }
 
     public synchronized void reqScannerSubscription( int tickerId, ScannerSubscription subscription, ArrayList<TagValue> scannerSubscriptionOptions) {
-        // not connected?
+    	System.out.println("~ reqScannerSubscription");
+
+    	// not connected?
         if( !m_connected) {
             notConnected();
             return;
         }
 
         if (m_serverVersion < 24) {
-          error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
-                "  It does not support API scanner subscription.");
+        	System.out.println ("API SCANNER UNSUPPORTED");
+        	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
+        			"  It does not support API scanner subscription.");
           return;
         }
 
@@ -644,6 +668,8 @@ public class EClientSocket {
     public synchronized void reqMktData(int tickerId, Contract contract,
     		String genericTickList, boolean snapshot, List<TagValue> mktDataOptions) {
     	
+    	System.out.println("~ reqMktData");
+    	
     	String req = "== " + "Request Market Data" + "\n";
     	req = req + "- TickerId " + tickerId + "\n";
     	req = req + "- Contract " + contract.toString();
@@ -653,6 +679,7 @@ public class EClientSocket {
     	System.out.println(req);
     	
         if (!m_connected) {
+        	System.out.println ("COULD NOT CONNECT: reqMktData");
             error(EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
             return;
         }
@@ -789,6 +816,8 @@ public class EClientSocket {
     }
 
     public synchronized void cancelHistoricalData( int tickerId ) {
+    	System.out.println("~ cancelHistoricalData");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -796,8 +825,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-          error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
-                "  It does not support historical data query cancellation.");
+        	System.out.println ("COULD NOT CANCEL: HistoricalData");
+        	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
+        			"  It does not support historical data query cancellation.");
           return;
         }
 
@@ -820,6 +850,8 @@ public class EClientSocket {
     }
 
     public void cancelRealTimeBars(int tickerId) {
+    	System.out.println("~ cancelRealTimeBars");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -827,6 +859,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REAL_TIME_BARS) {
+        	System.out.println ("COULD NOT CANCEL: RealTime");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support realtime bar data query cancellation.");
             return;
@@ -856,6 +889,8 @@ public class EClientSocket {
                                                 String barSizeSetting, String whatToShow,
                                                 int useRTH, int formatDate, List<TagValue> chartOptions) {
     	
+    	System.out.println("~ reqHistoricalData");
+
     	String req = "";
     	req = req + "== " + "Requesting Historical Data" + "\n";
     	req = req + "- Ticker Id " + tickerId + "\n";
@@ -898,6 +933,7 @@ public class EClientSocket {
 
         try {
           if (m_serverVersion < 16) {
+          	System.out.println ("COULD NOT BACKFILL: HistoricalData");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support historical data backfill.");
             return;
@@ -999,6 +1035,9 @@ public class EClientSocket {
     public synchronized void reqRealTimeBars(	int tickerId, Contract contract, 
     											int barSize, String whatToShow, boolean useRTH, 
     											ArrayList<TagValue> realTimeBarsOptions) {
+    	
+    	System.out.println("~ reqRealTimeBars");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1006,6 +1045,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REAL_TIME_BARS) {
+          	System.out.println ("UNSUPPORTED: RealTime");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support real time bars.");
             return;
@@ -1077,6 +1117,9 @@ public class EClientSocket {
     }
 
     public synchronized void reqContractDetails(int reqId, Contract contract) {
+
+    	System.out.println("~ reqContractDetails");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1085,6 +1128,7 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >=4
         if( m_serverVersion < 4) {
+          	System.out.println ("UNSUPPORTED: TWS version");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                             EClientErrors.UPDATE_TWS.msg());
             return;
@@ -1171,13 +1215,17 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("CLIENT ERROR: REQUEST CONTRACT DETAILS");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQCONTRACT, "" + e);
             close();
         }
     }
 
     public synchronized void reqMktDepth( int tickerId, Contract contract, int numRows, ArrayList<TagValue> mktDepthOptions) {
-        // not connected?
+        
+    	System.out.println("~ reqMktDepth");
+    	
+    	// not connected?
         if( !m_connected) {
             notConnected();
             return;
@@ -1185,6 +1233,7 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >=6
         if( m_serverVersion < 6) {
+          	System.out.println ("UNSUPPORTED: TWS >=6");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -1254,6 +1303,9 @@ public class EClientSocket {
     }
 
     public synchronized void cancelMktData( int tickerId) {
+    	
+    	System.out.println("~ cancelMktData");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1279,6 +1331,9 @@ public class EClientSocket {
     }
 
     public synchronized void cancelMktDepth( int tickerId) {
+    	
+    	System.out.println("~ cancelMktDepth");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1287,6 +1342,7 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >=6
         if( m_serverVersion < 6) {
+          	System.out.println ("UNSUPPORTED: TWS >=6");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -1313,6 +1369,9 @@ public class EClientSocket {
     public synchronized void exerciseOptions( int tickerId, Contract contract,
                                               int exerciseAction, int exerciseQuantity,
                                               String account, int override) {
+    	
+    	System.out.println("~ exerciseOptions");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1323,8 +1382,9 @@ public class EClientSocket {
 
         try {
           if (m_serverVersion < 21) {
-            error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
-                  "  It does not support options exercise from the API.");
+            	System.out.println ("UNSUPPORTED: OPTIONS EXERCISE");
+            	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
+            			"  It does not support options exercise from the API.");
             return;
           }
 
@@ -1372,6 +1432,9 @@ public class EClientSocket {
     }
 
     public synchronized void placeOrder( int id, Contract contract, Order order) {
+    	
+    	System.out.println("~ placeOrder");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1948,6 +2011,9 @@ public class EClientSocket {
     }
 
     public synchronized void reqAccountUpdates(boolean subscribe, String acctCode) {
+    	
+    	System.out.println("~ reqAccountUpdates");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -1971,12 +2037,16 @@ public class EClientSocket {
             closeAndSend(b);
        }
         catch( Exception e) {
+          	System.out.println ("ERROR: REQUEST ACCOUNT UPDATES");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_ACCT, "" + e);
             close();
         }
     }
 
     public synchronized void reqExecutions(int reqId, ExecutionFilter filter) {
+    	
+    	System.out.println("~ reqExecutions");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2011,12 +2081,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: EXECUTIONS");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_EXEC, "" + e);
             close();
         }
     }
 
     public synchronized void cancelOrder( int id) {
+    	
+    	System.out.println("~ cancelOrder");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2042,6 +2116,9 @@ public class EClientSocket {
     }
 
     public synchronized void reqOpenOrders() {
+    	
+    	System.out.println("~ reqOpenOrders");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2060,12 +2137,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: OPEN ORDER");
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
     }
 
     public synchronized void reqIds( int numIds) {
+    	
+    	System.out.println("~ reqIds");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2084,12 +2165,16 @@ public class EClientSocket {
             closeAndSend(b);
        }
         catch( Exception e) {
+          	System.out.println ("ERROR: REQUEST IDS");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CORDER, "" + e);
             close();
         }
     }
 
     public synchronized void reqNewsBulletins( boolean allMsgs) {
+    	
+    	System.out.println("~ reqNewsBulletins");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2108,12 +2193,16 @@ public class EClientSocket {
             closeAndSend(b);
        }
         catch( Exception e) {
+          	System.out.println ("ERROR: NEWS BULLETIN");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CORDER, "" + e);
             close();
         }
     }
 
     public synchronized void cancelNewsBulletins() {
+    	
+    	System.out.println("~ cancelNewsBulletins");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2132,12 +2221,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: CANCEL NEWS BULLETIN");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CORDER, "" + e);
             close();
         }
     }
 
     public synchronized void setServerLogLevel(int logLevel) {
+    	
+    	System.out.println("~ setServerLogLevel");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2157,12 +2250,16 @@ public class EClientSocket {
                     closeAndSend(b);
                }
         catch( Exception e) {
+          	System.out.println ("ERROR: SET LOG LEVEL");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_SERVER_LOG_LEVEL, "" + e);
             close();
         }
     }
 
     public synchronized void reqAutoOpenOrders(boolean bAutoBind) {
+    	
+    	System.out.println("~ reqAutoOpenOrders");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2182,12 +2279,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: OPEN ORDERS");
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
     }
 
     public synchronized void reqAllOpenOrders() {
+    	
+    	System.out.println("~ reqAllOpenOrders");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2206,12 +2307,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: ALL OPEN ORDERS");
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
     }
 
     public synchronized void reqManagedAccts() {
+    	
+    	System.out.println("~ reqManagedAccts");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2230,12 +2335,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: MANAGED ACCOUNTS");
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
     }
 
     public synchronized void requestFA( int faDataType ) {
+    	
+    	System.out.println("~ requestFA");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2244,6 +2353,7 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >= 13
         if( m_serverVersion < 13) {
+          	System.out.println ("ERROR: FAC");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -2267,6 +2377,9 @@ public class EClientSocket {
     }
 
     public synchronized void replaceFA( int faDataType, String xml ) {
+    	
+    	System.out.println("~ replaceFA");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2275,6 +2388,7 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >= 13
         if( m_serverVersion < 13) {
+          	System.out.println ("ERROR: REPLACE FAC");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -2299,6 +2413,9 @@ public class EClientSocket {
     }
 
     public synchronized void reqCurrentTime() {
+    	
+    	System.out.println("~ reqCurrentTime");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2307,6 +2424,7 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >= 33
         if( m_serverVersion < 33) {
+          	System.out.println ("UNSUPPORTED: CURRENT TIME");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support current time requests.");
             return;
@@ -2323,12 +2441,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("CLIENT ERROR: CURRENT TIME");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQCURRTIME, "" + e);
             close();
         }
     }
 
     public synchronized void reqFundamentalData(int reqId, Contract contract, String reportType) {
+    	
+    	System.out.println("~ reqFundamentalData");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2381,6 +2503,9 @@ public class EClientSocket {
     }
 
     public synchronized void cancelFundamentalData(int reqId) {
+    	
+    	System.out.println("~ cancelFundamentalData");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2413,6 +2538,8 @@ public class EClientSocket {
 
     public synchronized void calculateImpliedVolatility(int reqId, Contract contract,
             double optionPrice, double underPrice) {
+    	
+    	System.out.println("~ calculateImpliedVolatility");
 
         // not connected?
         if( !m_connected) {
@@ -2472,6 +2599,8 @@ public class EClientSocket {
     }
 
     public synchronized void cancelCalculateImpliedVolatility(int reqId) {
+    	
+    	System.out.println("~ cancelCalculateImpliedVolatility");
 
         // not connected?
         if( !m_connected) {
@@ -2505,6 +2634,8 @@ public class EClientSocket {
 
     public synchronized void calculateOptionPrice(int reqId, Contract contract,
             double volatility, double underPrice) {
+
+    	System.out.println("~ calculateOptionPrice");
 
         // not connected?
         if( !m_connected) {
@@ -2565,6 +2696,8 @@ public class EClientSocket {
 
     public synchronized void cancelCalculateOptionPrice(int reqId) {
 
+    	System.out.println("~ cancelCalculateOptionPrice");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2596,6 +2729,9 @@ public class EClientSocket {
     }
 
     public synchronized void reqGlobalCancel() {
+    	
+    	System.out.println("~ reqGlobalCancel");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2603,6 +2739,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REQ_GLOBAL_CANCEL) {
+          	System.out.println ("ERROR: SERVER VERSION IN GLOBAL CANCEL");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                     "  It does not support globalCancel requests.");
             return;
@@ -2620,12 +2757,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: SEND GLOBAL CANCEL");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQGLOBALCANCEL, "" + e);
             close();
         }
     }
 
     public synchronized void reqMarketDataType(int marketDataType) {
+    	
+    	System.out.println("~ reqMarketDataType");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2633,6 +2774,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REQ_MARKET_DATA_TYPE) {
+          	System.out.println ("ERROR: MarketData Type");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                     "  It does not support marketDataType requests.");
             return;
@@ -2651,12 +2793,16 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
+          	System.out.println ("ERROR: SEND MARKET DATA TYPE");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQMARKETDATATYPE, "" + e);
             close();
         }
     }
 
     public synchronized void reqPositions() {
+    	
+    	System.out.println("~ reqPositions");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2664,6 +2810,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
+          	System.out.println ("ERROR: REQUEST POSITIONS SERVER VERSION");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support position requests.");
             return;
@@ -2680,11 +2827,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: REQUEST POSITIONS");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQPOSITIONS, "" + e);
         }
     }
 
     public synchronized void cancelPositions() {
+    	
+    	System.out.println("~ cancelPositions");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2692,6 +2843,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
+          	System.out.println ("ERROR: SERVER VERSION IN ACCOUNT SUMMARY");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support position cancellation.");
             return;
@@ -2708,11 +2860,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SEND ACCOUNT SUMMARY");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CANPOSITIONS, "" + e);
         }
     }
 
     public synchronized void reqAccountSummary( int reqId, String group, String tags) {
+    	
+    	System.out.println("~ reqAccountSummary");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2720,6 +2876,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
+          	System.out.println ("ERROR: SERVER VERSION IN REQUEST ACCOUNT SUMMARY");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support account summary requests.");
             return;
@@ -2739,11 +2896,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SERVER VERSION IN SEND ACCOUNT SUMMARY");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQACCOUNTDATA, "" + e);
         }
     }
 
 	public synchronized void cancelAccountSummary( int reqId) {
+		
+    	System.out.println("~ cancelAccountSummary");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2751,6 +2912,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
+          	System.out.println ("ERROR: SERVER VERSION IN CANCEL ACCOUNT SUMMARY");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support account summary cancellation.");
             return;
@@ -2768,10 +2930,14 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SERVER VERSION IN SEND CANCEL ACCOUNT SUMMARY");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CANACCOUNTDATA, "" + e);
         }
     }
     public synchronized void verifyRequest( String apiName, String apiVersion) {
+    	
+    	System.out.println("~ verifyRequest");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2779,12 +2945,14 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_LINKING) {
+          	System.out.println ("ERROR: SERVER VERSION IN VERIFY REQUEST");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support verification request.");
             return;
         }
 
         if (!m_extraAuth) {
+          	System.out.println ("ERROR: SERVER VERSION IN SEND VERIFY MESSAGE");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_VERIFYMESSAGE,
             "  Intent to authenticate needs to be expressed during initial connect request.");
             return;
@@ -2802,11 +2970,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: FAIL VERIFY REQUEST");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_VERIFYREQUEST, "" + e);
         }
     }
 
     public synchronized void verifyMessage( String apiData) {
+    	
+    	System.out.println("~ verifyMessage");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2814,6 +2986,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_LINKING) {
+          	System.out.println ("ERROR: SERVER VERSION IN VERIFY MESSAGE");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support verification message sending.");
             return;
@@ -2830,11 +3003,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SEND ERROR IN VERIFY MESSAGE");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_VERIFYMESSAGE, "" + e);
         }
     }
 
     public synchronized void verifyAndAuthRequest( String apiName, String apiVersion, String opaqueIsvKey) {
+    	
+    	System.out.println("~ verifyAndAuthRequest");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2842,12 +3019,14 @@ public class EClientSocket {
         }
 
         if( m_serverVersion < MIN_SERVER_VER_LINKING_AUTH) {
+          	System.out.println ("ERROR: SERVER VERSION IN AUTH REQUEST");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support verification request.");
             return;
         }
 
         if( !m_extraAuth) {
+          	System.out.println ("ERROR: INITIAL CONNECT AUTH REQUEST");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_VERIFYANDAUTHREQUEST,
             "  Intent to authenticate needs to be expressed during initial connect request.");
             return;
@@ -2866,11 +3045,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: VERIFY AUTH REQUEST");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_VERIFYANDAUTHREQUEST, "" + e);
         }
     }
 
     public synchronized void verifyAndAuthMessage( String apiData, String xyzResponse) {
+    	
+    	System.out.println("~ verifyAndAuthMessage");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2878,6 +3061,7 @@ public class EClientSocket {
         }
 
         if( m_serverVersion < MIN_SERVER_VER_LINKING_AUTH) {
+          	System.out.println ("ERROR: SERVER VERSION FOR VERIFY AUTH");
             error( EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support verification message sending.");
             return;
@@ -2895,11 +3079,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SEND SERVER VERSION FOR VERIFY AUTH");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_VERIFYANDAUTHMESSAGE, "" + e);
         }
     }
 
 	public synchronized void queryDisplayGroups( int reqId) {
+		
+    	System.out.println("~ queryDisplayGroups");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2907,6 +3095,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_LINKING) {
+          	System.out.println ("ERROR: SERVER IN DISPLAY GROUPS");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support queryDisplayGroups request.");
             return;
@@ -2924,11 +3113,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SEND DISPLAY GROUPS");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_QUERYDISPLAYGROUPS, "" + e);
         }
     }
 	
 	public synchronized void subscribeToGroupEvents( int reqId, int groupId) {
+		
+    	System.out.println("~ subscribeToGroupEvents");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2936,6 +3129,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_LINKING) {
+          	System.out.println ("ERROR: SERVER IN GROUP EVENTS");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support subscribeToGroupEvents request.");
             return;
@@ -2954,11 +3148,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SERVER IN SEND GROUP EVENTS");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_SUBSCRIBETOGROUPEVENTS, "" + e);
         }
     }	
 
 	public synchronized void updateDisplayGroup( int reqId, String contractInfo) {
+		
+    	System.out.println("~ updateDisplayGroup");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2966,6 +3164,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_LINKING) {
+          	System.out.println ("ERROR: SERVER IN UPDATE GROUP");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support updateDisplayGroup request.");
             return;
@@ -2984,11 +3183,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SEND UPDATE GROUP");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_UPDATEDISPLAYGROUP, "" + e);
         }
     }	
 
 	public synchronized void unsubscribeFromGroupEvents( int reqId) {
+		
+    	System.out.println("~ unsubscribeFromGroupEvents");
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -2996,6 +3199,7 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_LINKING) {
+          	System.out.println ("ERROR: SERVER IN UNSUBSCRIBE GROUP");
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support unsubscribeFromGroupEvents request.");
             return;
@@ -3013,29 +3217,45 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
+          	System.out.println ("ERROR: SERVER IN SEND UNSUBSCRIBE GROUP");
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_UNSUBSCRIBEFROMGROUPEVENTS, "" + e);
         }
     }	
 	
     /** @deprecated, never called. */
     public synchronized void error( String err) {
+
+    	System.out.println("~ error( String err)");
+
         m_eWrapper.error( err);
     }
 
     public synchronized void error( int id, int errorCode, String errorMsg) {
+    	
+    	System.out.println("~ error( int id, int errorCode, String errorMsg)");
+
         m_eWrapper.error( id, errorCode, errorMsg);
     }
 
-    public void close() {
-        eDisconnect();
-        wrapper().connectionClosed();
-    }
-
     protected void error(int id, EClientErrors.CodeMsgPair pair, String tail) {
+    	
+    	System.out.println("~ error(int id, EClientErrors.CodeMsgPair pair, String tail)");
+
         error(id, pair.code(), pair.msg() + tail);
     }
 
+    public void close() {
+    	
+    	System.out.println("~ close");
+
+        eDisconnect();
+        wrapper().connectionClosed();
+    }
+    
     protected EWireBuilder prepareBuffer() {
+    	
+    	System.out.println("~ prepareBuffer");
+
         EWireBuilder buf = new EWireBuilder( 1024 );
         if( m_useV100Plus ) {
             buf.allocateLengthHeader();
@@ -3044,6 +3264,9 @@ public class EClientSocket {
     }
     
     protected void closeAndSend(EWireBuilder buf) throws IOException {
+    	
+    	System.out.println("~ closeAndSend");
+
     	System.out.println("WIRED " + buf.toString());
     	
     	if( m_useV100Plus ) {
@@ -3054,6 +3277,9 @@ public class EClientSocket {
     
    // Sends String without length prefix (pre-V100 style)
    protected void send( String str) throws IOException {
+	   
+   		System.out.println("~ send");
+
         // Write string to data buffer
     	EWireBuilder b = new EWireBuilder( 1024 );
     	
@@ -3062,6 +3288,9 @@ public class EClientSocket {
     }
 
     private void sendV100APIHeader() throws IOException {
+    	
+   		System.out.println("~ sendV100APIHeader");
+
     	EWireBuilder bos = new EWireBuilder(1024);
     	bos.send("API\0".getBytes());
     
@@ -3080,14 +3309,24 @@ public class EClientSocket {
     }
 
     protected void send( int val) throws IOException {
+    	
+   		System.out.println("~ send");
+
         send( String.valueOf( val) );
     }
 
     private static boolean IsEmpty(String str) {
+    	
+   		System.out.println("~ IsEmpty");
+
     	return Util.StringIsEmpty(str);
     }
 
     protected void notConnected() {
+    	
+   		System.out.println("~ notConnected");
+
+      	System.out.println ("ERROR: NOT CONNECTED");
         error(EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
     }
 }

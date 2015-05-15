@@ -122,6 +122,7 @@ public class EReader extends Thread {
         			System.out.println( "End of stream");
         		}
         		else if( ex instanceof EOFException ) {
+        			System.out.println("RUN ERROR");
             		eWrapper().error(EClientErrors.NO_VALID_ID, EClientErrors.BAD_LENGTH.code(),
             				EClientErrors.BAD_LENGTH.msg() + " " + ex.getMessage());
         		}
@@ -1243,6 +1244,7 @@ public class EReader extends Thread {
             }
 
             default: {
+    			System.out.println("ERROR: CLIENT ERROR IN PROCESS MESSAGE");
                 m_parent.error( EClientErrors.NO_VALID_ID, EClientErrors.UNKNOWN_ID.code(), EClientErrors.UNKNOWN_ID.msg());
                 return false;
             }
@@ -1258,6 +1260,7 @@ public class EReader extends Thread {
 	    		m_messageReader = new LengthPrefixedMessageReader( m_dis );
 	    	}
 	    	catch ( InvalidMessageLengthException ex ) {
+    			System.out.println("ERROR: PROCESS MESSAGE");
 	    		eWrapper().error(EClientErrors.NO_VALID_ID, EClientErrors.BAD_LENGTH.code(),
 	    				EClientErrors.BAD_LENGTH.msg() + " " + ex.getMessage() );
 	    		m_messageReader = null;
