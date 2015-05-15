@@ -62,7 +62,7 @@ private void dbConnect() {
 			System.out.println("\n" + "CONNECTING TO DB...");
 			setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
 		} catch (Exception e) {
-//			tryToConnect = true;
+			tryToConnect = true;
 			System.out.println("\n" + "...COULD NOT CONNECT TO DB: ");
 			e.printStackTrace();
 			try {
