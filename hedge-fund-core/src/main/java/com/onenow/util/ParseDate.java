@@ -25,6 +25,12 @@ public class ParseDate implements Testable {
 		return sdf.format(today);
 	}
 	
+	public String getUndashedToday() {
+		String date = "";
+		date = getUndashedDate(getDashedToday());
+		return date;
+	}
+	
 	public long getNow() {
 
 		long timeStamp=0;

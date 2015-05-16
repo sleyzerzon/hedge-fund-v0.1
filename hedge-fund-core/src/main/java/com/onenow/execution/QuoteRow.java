@@ -66,7 +66,9 @@ public class QuoteRow {
 	}
 
 	@Override public String toString() {
-		return String.format( reqId + " " + "open %s, high %s, %s, low %s, close %s, AT", formattedTime() + "TIME ZONE?", m_open, m_high, m_low, m_close);
+		return String.format(	"id " + reqId + 
+								". open " + m_open + ". high " +  m_high + ". low " + m_low + ". close " + m_close +
+								". AT " + formattedTime() + " TIME ZONE?");
 	}
 	
 	

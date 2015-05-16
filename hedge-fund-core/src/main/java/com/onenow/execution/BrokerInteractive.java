@@ -50,22 +50,22 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   private ParseDate parser = new ParseDate();
 
 
+  public BrokerInteractive() {
+	  
+  }
+
   /**
    * Get quotes after initializing overall market and my portfolio
    * @throws ConnectException
    */
-  public BrokerInteractive() throws ConnectException {
+  public BrokerInteractive(Portfolio marketPortfolio) throws ConnectException {
 
-    // TODO: test invest in only SPX-related instruments
-    Underlying index = new Underlying("SPX");
-
+	setMarketPortfolio(marketPortfolio);  
+	  
     connectToServer();
 
     // create new underlying list, portfolio, then initialize the market
-    setUnderList(new ArrayList<Underlying>());
-    setMarketPortfolio(new Portfolio());
-
-    InitMarket initMarket = new InitMarket(index, getMarketPortfolio());
+    setUnderList(new ArrayList<Underlying>()); // TODO: get from portfolio?
 
     // my porfolio, prices, and trades
     setMyPortfolio(new Portfolio());

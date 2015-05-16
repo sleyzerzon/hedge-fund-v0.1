@@ -1,7 +1,10 @@
 package com.onenow.main;
 
+import com.onenow.data.InitMarket;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
+import com.onenow.instrument.Underlying;
+import com.onenow.portfolio.Portfolio;
 
 public class BrokerMain {
 
@@ -14,9 +17,20 @@ public class BrokerMain {
 	 */
 	public static void main(String[] args) {
 
+		// choose investments
+		Portfolio marketPortfolio = new Portfolio();
+	    Underlying index = new Underlying("SPX");
+	    Underlying stocks = new Underlying("SPX");
+	    Underlying options = new Underlying("SPX");
+	    Underlying futures = new Underlying("ES");
+
+	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
+	    										index, stocks,
+	    										options, futures);
+
 		// create Interactive Brokers broker & start getting quotes
 		try {
-			setIB(new BrokerInteractive()); 
+			setIB(new BrokerInteractive(marketPortfolio)); 
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INTERACTIVE BROKER\n");
 			e.printStackTrace();

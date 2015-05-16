@@ -5,6 +5,7 @@ import java.util.List;
 import com.onenow.admin.DatabaseSystemActivityImpl;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
+import com.onenow.data.InitMarket;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
@@ -51,9 +52,20 @@ public class TestBroker implements Testable {
 		
 		this.logDB = logDB;
 
+		// choose investments
+		Portfolio marketPortfolio = new Portfolio();
+	    Underlying index = new Underlying("SPX");
+	    Underlying stocks = new Underlying("SPX");
+	    Underlying options = new Underlying("SPX");
+	    Underlying futures = new Underlying("ES");
+
+	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
+	    										index, stocks,
+	    										options, futures);
+
 		try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
-			this.broker = new BrokerActivityImpl(new BrokerInteractive());
+			this.broker = new BrokerActivityImpl(new BrokerInteractive(marketPortfolio));
 			this.unders = broker.getUnderlying();
 			this.market = broker.getMarketPortfolio();
 			setUnders(getBroker().getUnderlying());

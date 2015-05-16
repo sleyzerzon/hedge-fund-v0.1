@@ -40,11 +40,9 @@ public class PortfolioFactory {
 		
 	}
 	
-	public PortfolioFactory(Underlying index) throws InterruptedException {
+	public PortfolioFactory(Portfolio marketPortfolio) throws InterruptedException {
 		
-		setMarketPortfolio(new Portfolio());
-		setIndex(index);
-		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
+		this.marketPortfolio = marketPortfolio;
 		setMarketPrice(new MarketPrice(getMarketPortfolio(), broker));
 		
 		setSampling(new Sampling());
