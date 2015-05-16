@@ -25,6 +25,7 @@ public class QuoteRow {
 	private final long m_volume;
 	private final int m_count;
 
+	// TODO: what time zone is this time?
 	public QuoteRow( int reqId, long time, double high, double low, double open, double close, double wap, long volume, int count) {
 		
 		this.reqId = reqId;
@@ -39,23 +40,6 @@ public class QuoteRow {
 		m_count = count;
 	}
 	
-	public QuoteRow( long time, double high, double low, double open, double close, double wap, long volume, int count) {
-		
-
-		// TODO: translate to UTZ
-		
-		m_time = time; // TODO: what time zone is this time?
-
-		
-		m_high = high;
-		m_low = low;
-		m_open = open;
-		m_close = close;
-		m_wap = wap;
-		m_volume = volume;
-		m_count = count;
-	}
-
 	public String formattedTime() {
 		return Formats.fmtDate( m_time * 1000);
 	}
@@ -67,8 +51,8 @@ public class QuoteRow {
 
 	@Override public String toString() {
 		return String.format(	"id " + reqId + 
-								". open " + m_open + ". high " +  m_high + ". low " + m_low + ". close " + m_close +
-								". AT " + formattedTime() + " TIME ZONE?");
+								"\t open " + m_open + "\t high " +  m_high + "\t low " + m_low + "\t close " + m_close +
+								"\t AT " + formattedTime() + "\t TIME ZONE?");
 	}
 	
 	

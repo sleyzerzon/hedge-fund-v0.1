@@ -56,11 +56,10 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		System.out.println("History " + row.toString());
 
 		String day = row.formattedTime().substring(0, 10);
-		Double highPrice = row.high(); // bar.getM_high();
-		Double lowPrice = row.low(); // getM_low();
+		Double highPrice = row.high(); 
+		Double lowPrice = row.low(); 
 		Double openPrice = row.open();
 		Double closePrice = row.close();
-//		System.out.println("Day " + day + " " + highPrice + " " + lowPrice);
 
 		if(getChannel()!=null) { // if constructed that way
 			setChannelPrices(day, highPrice, lowPrice, closePrice);
