@@ -14,7 +14,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.Sampling;
+import com.onenow.data.DataSampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.util.ParseDate;
@@ -22,20 +22,16 @@ import com.onenow.util.ParseDate;
 public class TSDB {
 	
 	private InfluxDB DB;
-	private Lookup lookup;
-	private ParseDate parseDate;
-	private Sampling sampling;
+	private Lookup dbLookup = new Lookup();
+	private ParseDate parseDate = new ParseDate();
+	private DataSampling dataSampling = new DataSampling();
 	
 	/**
 	 * Default constructor connects to database
 	 */
 	public TSDB() {
-		setLookup(new Lookup());
 		dbConnect();
 		dbCreate();
-		
-		setParseDate(new ParseDate());
-		setSampling(new Sampling());
 	}
 
 	
@@ -89,7 +85,7 @@ private void dbCreate() {
 
 // PRICE
 public void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
-	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	.values(time, price)
@@ -108,7 +104,7 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String key = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+		String key = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 
 		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, sampling, fromDate, toDate);
 
@@ -134,7 +130,7 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 						"AND " +
 						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
+						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ")";
 					
 	try {
 		System.out.println("#PRICE# QUERY " + query);
@@ -187,7 +183,7 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 }
 // SIZE
 public void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
-	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(time, size)
@@ -206,7 +202,7 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String key = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String key = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	
 	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
 	
@@ -232,7 +228,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 						"AND " +
 						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
+						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ")";
 					
 	try {
 		System.out.println("#SIZE# QUERY " + query);
@@ -303,30 +299,4 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 		DB = dB;
 	}	
 	
-	private Lookup getLookup() {
-		return lookup;
-	}
-	
-	
-	private void setLookup(Lookup lookup) {
-		this.lookup = lookup;
-	}
-
-	public ParseDate getParseDate() {
-		return parseDate;
-	}
-
-	public void setParseDate(ParseDate parseDate) {
-		this.parseDate = parseDate;
-	}
-
-	public Sampling getSampling() {
-		return sampling;
-	}
-
-	public void setSampling(Sampling sampling) {
-		this.sampling = sampling;
-	}
-	
-
 }

@@ -1,11 +1,13 @@
 package com.onenow.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.admin.DatabaseSystemActivityImpl;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.data.InitMarket;
+import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
@@ -18,6 +20,7 @@ import com.onenow.portfolio.StrategyPutSpread;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.TradeRatio;
 import com.onenow.portfolio.Transaction;
+import com.onenow.util.ParseDate;
 import com.sforce.ws.ConnectionException;
 
 public class TestBroker implements Testable {
@@ -43,6 +46,9 @@ public class TestBroker implements Testable {
 	private Trade tradePut1; 
 	private Trade tradePut2;
 	
+	private static InvestmentList invList = new InvestmentList();
+	private static ParseDate parseDate = new ParseDate();
+
 	// CONSTRUCTOR
 	public TestBroker() {
 
@@ -54,16 +60,20 @@ public class TestBroker implements Testable {
 
 		// choose investments
 		Portfolio marketPortfolio = new Portfolio();
-	    Underlying index = new Underlying("SPX");
-	    Underlying stocks = new Underlying("SPX");
-	    Underlying options = new Underlying("SPX");
-	    Underlying futures = new Underlying("ES");
+	    List<Underlying> stocks = invList.getUnderlying(invList.someStocks);
+	    List<Underlying> indices = invList.getUnderlying(invList.someIndices);
+	    List<Underlying> futures = invList.getUnderlying(invList.futures);
+	    List<Underlying> options = invList.getUnderlying(invList.options);
+	    String fromDate = parseDate.getDashedToday();
+	    String toDate = parseDate.getDashedToday();
 
+	    // fill the market portfolio
 	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
-	    										index, stocks,
-	    										options, futures);
+	    										stocks, indices,
+	    										futures, options,
+	    										fromDate, toDate);
 
-		try {
+	    try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
 			this.broker = new BrokerActivityImpl(new BrokerInteractive(marketPortfolio));
 			this.unders = broker.getUnderlying();

@@ -7,7 +7,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.Sampling;
+import com.onenow.data.DataSampling;
 import com.onenow.execution.Broker;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
@@ -21,7 +21,7 @@ public class Cache {
 	private HashMap<String, Chart>				charts;			// price history in chart format from L1
 
 	private TSDB 								TSDB = new TSDB();			// database	
-	private Sampling 							sampling = new Sampling();
+	private DataSampling 							sampling = new DataSampling();
 	private Lookup 								lookup = new Lookup();			// key
 	private ParseDate							parseDate = new ParseDate();
 	

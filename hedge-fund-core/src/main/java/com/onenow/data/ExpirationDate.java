@@ -19,7 +19,7 @@ public class ExpirationDate {
 	}
 	
 	// PRIVATE
-	public void initOptionExpList() {
+	public void initIndexOptionExpList() {
 		getIndexExpList().add("20150402");
 		getIndexExpList().add("20150409");
 		getIndexExpList().add("20150416");
@@ -30,7 +30,6 @@ public class ExpirationDate {
 		getIndexExpList().add("20150514");
 		getIndexExpList().add("20150522");
 		getIndexExpList().add("20150529");
-
 	}	
 	
 	public void initFuturesExpList() {
@@ -53,34 +52,30 @@ public class ExpirationDate {
 	 * @param date
 	 * @return
 	 */
-	public List<String> getValidIndexExpList(String date) {
-		List<String> validIndexExp = new ArrayList<String>();
-		
+	public List<String> getValidOptionExpList(String date) {
+		List<String> validIndexExp = new ArrayList<String>();		
 		// TODO: rule out current month dates with days in the past
 		for(String basisDate:indexExpList) {
 			// System.out.println("date " + date + " basis " + basisDate + " delta " + parseDate.getMonthDelta(date, basisDate));
-			if(	parseDate.getMonthDelta(date, basisDate)<3 && 
-				parseDate.getMonthDelta(date, basisDate)>=0
+			if(	parseDate.getElapsedUndashedDays(date, basisDate)<90 && 
+				parseDate.getElapsedUndashedDays(date, basisDate)>=0
 				) {
 				validIndexExp.add(basisDate);
 			}
 		}
-		
 		return validIndexExp;
 	}
 	
 	public List<String> getValidFuturesExpList(String date) {
 		List<String> validExp = new ArrayList<String>();
-		
 		for(String basisDate:futuresExpList) {
 			// System.out.println("date " + date + " basis " + basisDate + " delta " + parseDate.getMonthDelta(date, basisDate));
-			if(	parseDate.getMonthDelta(date, basisDate)<3 && 
-				parseDate.getMonthDelta(date, basisDate)>=0
+			if(	parseDate.getElapsedUndashedDays(date, basisDate)<90 && 
+				parseDate.getElapsedUndashedDays(date, basisDate)>=0
 				) {
 				validExp.add(basisDate);
 			}
 		}
-
 		return validExp;
 	}
 	

@@ -5,20 +5,21 @@ import java.util.List;
 
 import com.onenow.constant.SamplingRate;
 
-public class Sampling {
-
+public class DataSampling {	
 	
-	
-	public Sampling() {
-		
-		
-	}
-	
+	public DataSampling() {
+	}	
 	
 	public String getGroupByTimeString(SamplingRate sampling) {
 		
 		String dbSamplingRate = "15m";
-		
+
+		if(sampling.equals(SamplingRate.UHFREQ)) {		// midpoint
+			dbSamplingRate = "5s";
+		}
+		if(sampling.equals(SamplingRate.HIFREQ)) {		// midpoint
+			dbSamplingRate = "2m";
+		}
 		if(sampling.equals(SamplingRate.SCALP)) {		// midpoint
 			dbSamplingRate = "15m";
 		}
@@ -27,6 +28,15 @@ public class Sampling {
 		}
 		if(sampling.equals(SamplingRate.TREND)) {		// midpoint
 			dbSamplingRate = "4h";
+		}
+		if(sampling.equals(SamplingRate.UHFSHORT)) {		//UHF 1min, 2min, 5min
+			dbSamplingRate = "1m";
+		}
+		if(sampling.equals(SamplingRate.UHFMEDIUM)) {
+			dbSamplingRate = "2m";
+		}
+		if(sampling.equals(SamplingRate.UHFLONG)) {
+			dbSamplingRate = "5m";
 		}
 		if(sampling.equals(SamplingRate.SCALPSHORT)) {		//SCALPING 5min, 15min, 60min
 			dbSamplingRate = "5m";
@@ -62,6 +72,12 @@ public class Sampling {
 	// call multiple times to get all
 	public List<SamplingRate> getList(SamplingRate rate) { 
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		if(rate.equals(SamplingRate.UHFREQ)) {
+			list.addAll(getUHFSampling());
+		}
+		if(rate.equals(SamplingRate.HIFREQ)) {
+			list.addAll(getHIFREQSampling());
+		}
 		if(rate.equals(SamplingRate.SCALP)) {
 			list.addAll(getScalpSampling());
 		}
@@ -76,9 +92,25 @@ public class Sampling {
 	
 	public List<SamplingRate> getTradingOptions() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.UHFREQ);
+		list.add(SamplingRate.HIFREQ);
 		list.add(SamplingRate.SCALP);
 		list.add(SamplingRate.SWING);
 		list.add(SamplingRate.TREND);
+		return list;
+	}
+	private List<SamplingRate> getUHFSampling() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.UHFSHORT);
+		list.add(SamplingRate.UHFMEDIUM);
+		list.add(SamplingRate.UHFLONG);					
+		return list;
+	}
+	private List<SamplingRate> getHIFREQSampling() {
+		List<SamplingRate> list = new ArrayList<SamplingRate>();
+		list.add(SamplingRate.HFSHORT);
+		list.add(SamplingRate.HFMEDIUM);
+		list.add(SamplingRate.HFLONG);					
 		return list;
 	}
 	private List<SamplingRate> getScalpSampling() {

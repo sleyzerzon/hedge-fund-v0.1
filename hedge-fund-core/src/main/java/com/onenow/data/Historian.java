@@ -139,7 +139,8 @@ public class Historian {
 
 		}
 		// reset to avoid writing same twice
-		invHistory.init(); // TODO: synchronize access
+		// TODO: synchronize access rather than nullifying?
+		invHistory = null; 
 	}
 
 	private void paceHistoricalQuery() {

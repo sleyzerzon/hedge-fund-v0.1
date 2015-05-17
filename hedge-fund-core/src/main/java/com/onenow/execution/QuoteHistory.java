@@ -1,17 +1,10 @@
 package com.onenow.execution;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
-
-
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.data.Channel;
-import com.onenow.instrument.Underlying;
-import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.BrokerController.IRealTimeBarHandler;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
@@ -22,47 +15,35 @@ import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
  */
 public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	public ArrayList<QuoteRow> quoteRows;
+	public ArrayList<QuoteRow> quoteRows = new ArrayList<QuoteRow>();
 	
 	private Channel channel;
 
 	public QuoteHistory (){
-		init();
 	}
 	
 	public QuoteHistory (Channel channel) {
-		init();
 		this.channel = channel;
-	}
-
-	public void init() {
-		quoteRows = new ArrayList<QuoteRow>(); 
 	}
 	
 	// INTERFACE: IHistoricalDataHandler
 	@Override public void historicalData(QuoteRow row, boolean hasGaps) {
 		
 		quoteRows.add(row);
+		handleBar(row);
 		
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
-		}	
-		
-		handleBar(row);
+		}		
 	}
 
 	private void handleBar(QuoteRow row) {
 
 		System.out.println("History " + row.toString());
 
-		String day = row.formattedTime().substring(0, 10);
-		Double highPrice = row.high(); 
-		Double lowPrice = row.low(); 
-		Double openPrice = row.open();
-		Double closePrice = row.close();
-
 		if(getChannel()!=null) { // if constructed that way
-			setChannelPrices(day, highPrice, lowPrice, closePrice);
+			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 
+										row.high(), row.low(), row.close());
 		}
 	}
 	
@@ -70,41 +51,16 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		int size = 0;
 		size = quoteRows.size();
 		return size;
-	}
-
-	// CHANNEL
-	private void setChannelPrices(String day, Double highPrice, Double lowPrice, Double recentPrice) {
-		if(getChannel().getResistanceDayMap().containsKey(day)) { // day resistance
-			if( highPrice > (Double)getChannel().getResistanceDayMap().get(day)) { // price
-				getChannel().addResistance(day, highPrice);
-//					System.out.println("high " + highPrice);
-			}
-		}
-		if(getChannel().getSupportDayMap().containsKey(day)) { // day support
-			if( lowPrice < (Double)getChannel().getSupportDayMap().get(day)) { // price
-				getChannel().addSupport(day, lowPrice);
-//					System.out.println("low " + lowPrice);
-			}
-		}
-		if(getChannel().getRecentDayMap().containsKey(day)) { // day support
-//			System.out.println("RECENT " + channel.getContract().secType() + " " + day + " " + recentPrice);
-			getChannel().addRecent(day, recentPrice); // last
-		} 
-	}
-	
+	}	
 	
 	// INTERFACE: IRealTimeBarHandler
-	@Override public void realtimeBar(QuoteRow bar) {
-		
+	@Override public void realtimeBar(QuoteRow bar) {		
 		quoteRows.add(bar); 
-		
 		handleBar(bar);
 	}
-
 	
 	@Override public void historicalDataEnd() {
 	}
-
 
 	// INTERFACE: ITopMktDataHandler 
 	@Override
@@ -125,9 +81,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 
 	@Override
 	public void marketDataType(MktDataType marketDataType) {
-	}
-
-	
+	}	
 	
 	// PRINT
 	public String toString() {
@@ -144,6 +98,5 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	public void setChannel(Channel channel) {
 		this.channel = channel;
 	}
-
 
 }

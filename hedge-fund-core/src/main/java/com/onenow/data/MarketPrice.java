@@ -18,7 +18,7 @@ public class MarketPrice {
 
 	private Cache cache; 		// just storage	
 	private Portfolio portfolio;
-	private Sampling sampling;
+	private DataSampling sampling;
 	private Broker broker;
 	
 	
@@ -30,7 +30,7 @@ public class MarketPrice {
 		setPortfolio(marketPortfolio);
 		setBroker(broker);
 		setCache(new Cache(getBroker()));
-		setSampling(new Sampling());
+		setSampling(new DataSampling());
 	}
 	
 	
@@ -128,11 +128,11 @@ public class MarketPrice {
 		this.portfolio = portfolio;
 	}
 
-	public Sampling getSampling() {
+	public DataSampling getSampling() {
 		return sampling;
 	}
 
-	public void setSampling(Sampling sampling) {
+	public void setSampling(DataSampling sampling) {
 		this.sampling = sampling;
 	}
 
