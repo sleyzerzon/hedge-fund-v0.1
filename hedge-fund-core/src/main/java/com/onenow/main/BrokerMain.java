@@ -13,7 +13,7 @@ import com.onenow.util.ParseDate;
 
 public class BrokerMain {
 
-	private static BrokerInteractive IB;
+	private static BrokerInteractive brokerInteractive;
 	private static BrokerActivityImpl broker;
 
 	private static InvestmentList invList = new InvestmentList();
@@ -31,18 +31,20 @@ public class BrokerMain {
 	    List<Underlying> indices = invList.getUnderlying(invList.someIndices);
 	    List<Underlying> futures = invList.getUnderlying(invList.futures);
 	    List<Underlying> options = invList.getUnderlying(invList.options);
-	    String fromDate = parseDate.getDashedToday();
-	    String toDate = parseDate.getDashedToday();
+	    
+	    // choose relevant timeframe
+	    String toDashedDate = parseDate.getDashedToday();
 
 	    // fill the market portfolio
 	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
 	    										stocks, indices,
 	    										futures, options,
-	    										fromDate, toDate);
+	    										toDashedDate);
 
 		// create Interactive Brokers broker & start getting quotes
 		try {
-			setIB(new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio)); 
+			brokerInteractive = new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio);
+			brokerInteractive.getLiveQuotes();
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INTERACTIVE BROKER\n");
 			e.printStackTrace();
@@ -51,7 +53,7 @@ public class BrokerMain {
 		
 		// set the overall broker: for when there are multiple brokers
 		try {
-			setBroker(new BrokerActivityImpl(getIB()));  
+			setBroker(new BrokerActivityImpl(brokerInteractive));  
 		} catch (Exception e) {
 			System.out.println("COULD NOT SET MASTER BROKER\n");
 			e.printStackTrace();
@@ -60,13 +62,13 @@ public class BrokerMain {
 	}
 
 	// SET GET
-	private static BrokerInteractive getIB() {
-		return IB;
-	}
-
-	private static void setIB(BrokerInteractive iB) {
-		IB = iB;
-	}
+//	private static BrokerInteractive getIB() {
+//		return brokerInteractive;
+//	}
+//
+//	private static void setIB(BrokerInteractive iB) {
+//		brokerInteractive = iB;
+//	}
 
 	private static BrokerActivityImpl getBroker() {
 		return broker;

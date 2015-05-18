@@ -40,24 +40,21 @@ public class InitMarket {
 	public InitMarket(	Portfolio portfolio,
 						List<Underlying> stocks, List<Underlying> indices,
 						List<Underlying> futures, List<Underlying> options,
-						String fromDashedDate, String toDashedDate) {
+						String toDashedDate) {
 		
 		setMarketPortfolio(portfolio);
 
 		initStocks(stocks);		
 		System.out.println(getMarketPortfolio().toStocksString());		
 
-		addIndicesToPortfolio(indices);
-		System.out.println(getMarketPortfolio().toIndicesString());				
-
-		initOptions(options, fromDashedDate, toDashedDate);
-		System.out.println(getMarketPortfolio().toOptionsString());		
-
-		initFutures(futures);
-		System.out.println(getMarketPortfolio().toFuturesString());	
-		
-		// TODO: futures options
-		
+//		addIndicesToPortfolio(indices);
+//		System.out.println(getMarketPortfolio().toIndicesString());				
+//
+//		initOptions(options, toDashedDate);
+//		System.out.println(getMarketPortfolio().toOptionsString());		
+//
+//		initFutures(futures);
+//		System.out.println(getMarketPortfolio().toFuturesString());			
 	}
 	
 		
@@ -106,9 +103,12 @@ public class InitMarket {
 	 * Initialize options
 	 * @param unders
 	 */
-	private void initOptions(List<Underlying> unders, String fromDashedDate, String toDashedDate) { 
+	private void initOptions(List<Underlying> unders, String toDashedDate) { 
 		ExpirationDate exps = new ExpirationDate();
 		exps.initIndexOptionExpList(); 
+		
+		// look at high/low price basis in the last 30 days
+		String fromDashedDate = parseDate.getDashedDateMinus(toDashedDate, 30);
 
 		for(Underlying under:unders) {
 			for(String expDate:exps.getValidOptionExpList(parseDate.getUndashedToday())) { 			

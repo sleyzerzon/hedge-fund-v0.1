@@ -27,7 +27,6 @@ public class Historian {
 	private ParseDate							parseDate = new ParseDate();
 
 	private HistorianConfig config;
-	private String toDashedDate;
 	
 	private long lastHistQuery;
 
@@ -35,37 +34,21 @@ public class Historian {
 		
 	}
 	
-	public Historian(Broker broker, HistorianConfig config, String toDashedDate) {
+	public Historian(Broker broker, HistorianConfig config) {
 		
 		this.broker = broker;
 		this.history = new HashMap<String, QuoteHistory>();
-		this.config = config;
-		this.toDashedDate = toDashedDate;
-		
-		updateHistory();
+		this.config = config;		
 	}
 
-	public void updateHistory() {
+	public void run(String toDashedDate) {
 		
 		Portfolio portfolio = broker.getMarketPortfolio();
 
-		String startDate = toDashedDate;		
-		while(true) {	
-			
-			// when date changes, start over from that today
-			String today = parseDate.getDashedToday();
-			if(!today.equals(startDate)) {
-				toDashedDate = today;
-			}
-			
 			// iterate through investments
 			for(Investment inv:portfolio.investments) {
 				updateL1HistoryFromL2(inv, toDashedDate);
 			}
-			
-			// go back further in time
-			toDashedDate = parseDate.getDashedDateMinus(toDashedDate, 1);
-		}
 	}
 	
 /**
@@ -88,7 +71,8 @@ public class Historian {
 														config.source, config.timing);
 			
 			paceHistoricalQuery(); 
-			broker.readHistoricalQuotes(inv, parseDate.getClose(parseDate.getUndashedDate(toDashedDate)), invHist); 
+			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(toDashedDate)), 
+											config, invHist); 
 			lastHistQuery = parseDate.getNow();
 			
 			// put history in L1				

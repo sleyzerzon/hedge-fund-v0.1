@@ -72,7 +72,7 @@ public class TestBroker implements Testable {
 	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
 	    										stocks, indices,
 	    										futures, options,
-	    										fromDate, toDate);
+	    										toDate);
 
 	    try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 

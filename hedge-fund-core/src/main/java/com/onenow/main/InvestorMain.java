@@ -28,14 +28,15 @@ public class InvestorMain {
 	    List<Underlying> indices = invList.getUnderlying(invList.someIndices);
 	    List<Underlying> futures = invList.getUnderlying(invList.futures);
 	    List<Underlying> options = invList.getUnderlying(invList.options);
-	    String fromDate = parseDate.getDashedToday();
-	    String toDate = parseDate.getDashedToday();
+	    
+	    // choose relevant timeframe
+	    String toDashedDate = parseDate.getDashedToday();
 
 	    // fill the market portfolio
 	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
 	    										stocks, indices,
 	    										futures, options,
-	    										fromDate, toDate);
+	    										toDashedDate);
 
 		PortfolioFactory portfolioFactory;
 		

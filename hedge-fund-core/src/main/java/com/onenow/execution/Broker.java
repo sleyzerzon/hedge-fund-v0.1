@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.TradeType;
+import com.onenow.data.HistorianConfig;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
@@ -18,5 +19,5 @@ public  interface Broker {
 	public abstract Double getPrice(Investment inv, TradeType type);
 	public abstract List<Trade> getTrades();
 	public abstract void enterTransaction(Transaction trans); 
-	public abstract void readHistoricalQuotes(Investment inv, String end, QuoteHistory history); 
+	public abstract void readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory history); 
 }

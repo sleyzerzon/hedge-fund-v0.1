@@ -46,9 +46,9 @@ public class Lookup {
 		String s = ""; 
 		s = s + under.getTicker() + "-" + inv.getInvType();		
 		if (inv instanceof InvestmentOption) {
-			Double strike = ((InvestmentOption) inv).getStrikePrice();
 			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-			s = s + "-" + strike + "-" + exp; 
+			Double strike = ((InvestmentOption) inv).getStrikePrice();
+			s = s + "-" + exp + "-" + strike; 
 		}
 		s = s + "-" + tradeType.toString();
 		s = s + "-" + source.toString() + "-" + timing.toString();

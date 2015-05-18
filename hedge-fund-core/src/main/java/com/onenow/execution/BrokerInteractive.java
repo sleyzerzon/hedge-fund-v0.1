@@ -14,6 +14,7 @@ import com.onenow.constant.BrokerMode;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
+import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
@@ -74,8 +75,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     setMyPortfolio(new Portfolio());
     setMarketPrices(new MarketPrice(getMarketPortfolio(), this));
     setTrades(new ArrayList<Trade>());
-
-    getLiveQuotes(); // run the broker
   }
 
 
@@ -115,7 +114,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 
   }
-
+  
   // GET QUOTES
   /**
    * For every currently-traded investment: request quotes
@@ -134,15 +133,14 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   /**
    * Returns reference to object where history will be stored, upon asynchronous return
    */
-  public void readHistoricalQuotes(Investment inv, String end, QuoteHistory quoteHistory) {
+  public void readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory quoteHistory) {
 
     System.out.println("> getting historical quote for investment: " + inv.toString());
     Contract contract = getContractFactory().getContract(inv);
 
-    getController().reqHistoricalData(	contract,
-                                              end, 1, DurationUnit.DAY, BarSize._1_hour,
-                                              WhatToShow.TRADES, false,
-                                              quoteHistory);
+    getController().reqHistoricalData(	contract, end, 
+    									1, config.durationUnit, config.barSize, config.whatToShow, 
+    									false, quoteHistory);
   }
 
 
