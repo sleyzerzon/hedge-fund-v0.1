@@ -64,25 +64,26 @@ public class Historian {
 														parseDate.getDashedDateMinus(toDashedDate, 1), toDashedDate,
 														config.source, config.timing);
 
+		// get the history reference for the specific investment 
+		QuoteHistory invHist = lookupInvHistory(	inv, config.tradeType, 
+													config.source, config.timing);
+
+		// put any already-received history in L1
+		// TODO: synchronize access rather than nullifying
+		writeHistoryL0ToL1(	inv, config.tradeType, 
+							config.source, config.timing,
+							invHist);					
+
 		// query L2 only if L1 data is incomplete
-		if (prices.size()<10) {		
-			// get the history reference for the specific investment 
-			QuoteHistory invHist = lookupInvHistory(	inv, config.tradeType, 
-														config.source, config.timing);
-			
+		if (prices.size()<10) {					
 			paceHistoricalQuery(); 
 			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(toDashedDate)), 
 											config, invHist); 
 			lastHistQuery = parseDate.getNow();
 			
-			// put history in L1				
-			writeHistoryL0ToL1(	inv, config.tradeType, 
-								config.source, config.timing,
-								invHist);					
 		} else {
-			System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& SUCCESS");
+			System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L1 HIT \n\n");
 		}
-						
 	}
 
 	/**
@@ -124,11 +125,10 @@ public class Historian {
 
 		}
 		// reset to avoid writing same twice
-		// TODO: synchronize access rather than nullifying?
 		invHistory = null; 
 	}
 
-	private void paceHistoricalQuery() {
+	private void paceHistoricalQuery() {		
 		System.out.println("...pacing historical query: " + getSleepTime()/1000 + "s");
 	    try {
 			Thread.sleep(getSleepTime());

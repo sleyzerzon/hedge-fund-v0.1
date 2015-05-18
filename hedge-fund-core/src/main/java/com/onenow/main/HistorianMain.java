@@ -47,31 +47,58 @@ public class HistorianMain {
 				1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
 				TradeType.TRADED, SamplingRate.SWING);   	    	
 	    
-	    while(true) {	    	
-	    	// fill the market portfolio
-		    InitMarket initMarket = new InitMarket(	marketPortfolio, 
-		    										stocks, indices,
-		    										futures, options,
-		    										toDashedDate);
-	    	
-			try {			
-				// updates real-time L1 from real=time events
-				brokerInteractive = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio); 
-				
-				// get live quotes
-				// brokerInteractive.getLiveQuotes(); 
-				
-				// updates historical L1 from L2
-				Historian hist = new Historian(brokerInteractive, config);
-				hist.run(toDashedDate);
+	    
+	    // get ready to loop
+		boolean tryToConnect = true;
+	    brokerInteractive = new BrokerInteractive();
+	    Historian hist = new Historian();
+	    int count=0;
+	    
+		while(true) {
 
-				// go back further in time
-				toDashedDate = parseDate.getDashedDateMinus(toDashedDate, 1);
+		    while(tryToConnect) {
+				// TODO : 10000068 322 Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.
+	
+		    	// update the market portfolio, broker, and historian every month
+		    	if(count==0) {
+		    		
+					try {	
+						
+						tryToConnect = false;
+						System.out.println("\n" + "CONNECTING TO BROKER IN HISTORIAN...");
 
-			} catch (Exception e) {
-				System.out.println("COULD NOT CREATE INTERACTIVE BROKER INSIDE HISTORIAN" + "\n");
-				e.printStackTrace();
-			}
-	    }
+						InitMarket initMarket = new InitMarket(	marketPortfolio, 
+				    											stocks, indices,
+				    											futures, options,
+				    											toDashedDate);
+						
+						brokerInteractive = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio); 
+						brokerInteractive.getLiveQuotes(); 
+						hist = new Historian(brokerInteractive, config);
+
+					} catch (Exception e) {
+						tryToConnect = true;
+						System.out.println("...COULD NOT CREATE INTERACTIVE BROKER INSIDE HISTORIAN" + "\n");
+						e.printStackTrace();
+						try {
+							Thread.sleep(10000);
+						} catch (InterruptedException e1) {}
+					}			
+		    	}
+		    } // end try to connect
+		    
+			System.out.println("CONNECTED TO HISTORIAN BROKER!");
+
+			// updates historical L1 from L2
+			hist.run(toDashedDate);
+
+			// go back further in time
+			toDashedDate = parseDate.getDashedDateMinus(toDashedDate, 1);
+			count++;
+	    	// re-evaluate the marketplace every 30 days
+			if(count>30) {
+				count = 0;
+			}		    
+		}
 	}
 }

@@ -85,7 +85,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
    */
   private void connectToServer() {
     setController(new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger()));
-    getController().connect(	brokerService.URL, brokerService.port, 
+    getController().connect(	brokerService.URI, brokerService.port, 
     							0, null);  
 
 

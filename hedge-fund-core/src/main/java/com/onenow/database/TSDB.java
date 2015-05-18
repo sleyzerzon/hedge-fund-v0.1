@@ -44,12 +44,12 @@ private void dbConnect() {
 	while(tryToConnect) {
 		try {
 			tryToConnect = false;
-			System.out.println("\n" + "CONNECTING TO DB...");
-			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URL+":"+tsdbService.port.toString(), 
+			System.out.println("\n" + "CONNECTING TO TSDB...");
+			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port.toString(), 
 											tsdbService.user, tsdbService.pass));
 		} catch (Exception e) {
 			tryToConnect = true;
-			System.out.println("\n" + "...COULD NOT CONNECT TO DB: ");
+			System.out.println("\n" + "...COULD NOT CONNECT TO TSDB: ");
 			e.printStackTrace();
 			try {
 				Thread.sleep(10000);
@@ -58,6 +58,7 @@ private void dbConnect() {
 			}
 		}
 	} 
+	System.out.println("CONNECTED TO TSDB!");
 }
 
 private void dbCreate() {

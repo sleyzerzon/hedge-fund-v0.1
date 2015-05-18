@@ -16,7 +16,7 @@ public class RelationalDB {
 			
 			Class.forName("com.mysql.jdbc.Driver");
 			
-			Connection myCon = DriverManager.getConnection(	rdbmsService.protocol+"://"+rdbmsService.URL+":"+rdbmsService.port.toString()+"/"+rdbmsService.endPoint, 
+			Connection myCon = DriverManager.getConnection(	rdbmsService.protocol+"://"+rdbmsService.URI+":"+rdbmsService.port.toString()+"/"+rdbmsService.endPoint, 
 															rdbmsService.user, rdbmsService.pass);
 			
 			Statement myStat = myCon.createStatement();
@@ -31,6 +31,8 @@ public class RelationalDB {
 			System.out.println("COULD NOT CONNECT TO RELATIONAL DATABASE");
 			e.printStackTrace();
 		}
+		
+		// TODO: while loop trying... ends in System.out.println("CONNECTED TO DB!");
 	}
 
 }

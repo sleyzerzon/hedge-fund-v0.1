@@ -6,7 +6,7 @@ public class NetworkService {
 	public String pass;
 
 	public String protocol;
-	public String URL;
+	public String URI;
 	public Integer port;
 
 	public String endPoint;
@@ -15,12 +15,12 @@ public class NetworkService {
 	}
 	
 	public NetworkService(	String user, String pass,
-							String protocol, String url, Integer port,
+							String protocol, String uri, Integer port,
 							String endpoint) {
 		this.user = user;
 		this.pass = pass;
 		this.protocol = protocol;
-		this.URL = url;
+		this.URI = uri;
 		this.port = port;
 		this.endPoint = endpoint;
 	}
