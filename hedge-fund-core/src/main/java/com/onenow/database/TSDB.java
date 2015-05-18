@@ -15,7 +15,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.execution.NetworkConnection;
+import com.onenow.execution.NetworkConfig;
 import com.onenow.execution.NetworkService;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
@@ -27,7 +27,7 @@ public class TSDB {
 	private Lookup dbLookup = new Lookup();
 	private DataSampling dataSampling = new DataSampling();
 	
-	private NetworkService tsdbService = new NetworkConnection().tsdb;
+	private NetworkService tsdbService = new NetworkConfig().tsdb;
 	
 	/**
 	 * Default constructor connects to database
@@ -36,9 +36,6 @@ public class TSDB {
 		dbConnect();
 		dbCreate();
 	}
-
-	
-
 	
 // INIT
 private void dbConnect() { 
@@ -63,9 +60,6 @@ private void dbConnect() {
 	} 
 }
 
-// list series
-// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
-// count(), min(), max(), mean(), mode(), median(), distinct(), percentile(), histogram(), derivative(), sum(), stddev(), first(), last()
 private void dbCreate() {
 	try {
 		getDB().createDatabase(DBname.PRICE.toString());

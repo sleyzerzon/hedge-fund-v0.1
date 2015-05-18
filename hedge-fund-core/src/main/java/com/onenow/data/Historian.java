@@ -26,17 +26,21 @@ public class Historian {
 	private Lookup 								lookup = new Lookup();			// key
 	private ParseDate							parseDate = new ParseDate();
 
-	private SamplingRate scalping = SamplingRate.SWING;
-	private TradeType tradeType = TradeType.TRADED; 
-	private InvDataSource source = InvDataSource.IB;
-	private InvDataTiming timing = InvDataTiming.HISTORICAL;
+	private HistorianConfig config;
+	private String toDashedDate;
 	
 	private long lastHistQuery;
 
-	public Historian(Broker broker) {
+	public Historian() {
+		
+	}
+	
+	public Historian(Broker broker, HistorianConfig config, String toDashedDate) {
 		
 		this.broker = broker;
 		this.history = new HashMap<String, QuoteHistory>();
+		this.config = config;
+		this.toDashedDate = toDashedDate;
 		
 		updateHistory();
 	}
@@ -45,25 +49,22 @@ public class Historian {
 		
 		Portfolio portfolio = broker.getMarketPortfolio();
 
-		// init
-		String startDate = parseDate.getDashedToday();
-		String dashedToDate = startDate;
-		
+		String startDate = toDashedDate;		
 		while(true) {	
 			
 			// when date changes, start over from that today
 			String today = parseDate.getDashedToday();
 			if(!today.equals(startDate)) {
-				dashedToDate = today;
+				toDashedDate = today;
 			}
 			
 			// iterate through investments
 			for(Investment inv:portfolio.investments) {
-				updateL1HistoryFromL2(inv, dashedToDate);
+				updateL1HistoryFromL2(inv, toDashedDate);
 			}
 			
 			// go back further in time
-			dashedToDate = parseDate.getDashedDateMinus(dashedToDate, 1);
+			toDashedDate = parseDate.getDashedDateMinus(toDashedDate, 1);
 		}
 	}
 	
@@ -71,28 +72,28 @@ public class Historian {
  * Continually augment L1 with data from L2 (3rd party DB)
  * @param inv
  */
-	private void updateL1HistoryFromL2(Investment inv, String dashedToDate) {
+	private void updateL1HistoryFromL2(Investment inv, String toDashedDate) {
 		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
 		
 			
 		// See if data already in L1
-		List<Candle> prices = TSDB.readPriceFromDB(		inv, tradeType, scalping, 
-														parseDate.getDashedDateMinus(dashedToDate, 1), dashedToDate,
-														source, timing);
+		List<Candle> prices = TSDB.readPriceFromDB(		inv, config.tradeType, config.sampling, 
+														parseDate.getDashedDateMinus(toDashedDate, 1), toDashedDate,
+														config.source, config.timing);
 
 		// query L2 only if L1 data is incomplete
 		if (prices.size()<10) {		
 			// get the history reference for the specific investment 
-			QuoteHistory invHist = lookupInvHistory(	inv, tradeType, 
-														source, timing);
+			QuoteHistory invHist = lookupInvHistory(	inv, config.tradeType, 
+														config.source, config.timing);
 			
 			paceHistoricalQuery(); 
-			broker.readHistoricalQuotes(inv, parseDate.getClose(parseDate.getUndashedDate(dashedToDate)), invHist); 
+			broker.readHistoricalQuotes(inv, parseDate.getClose(parseDate.getUndashedDate(toDashedDate)), invHist); 
 			lastHistQuery = parseDate.getNow();
 			
 			// put history in L1				
-			writeHistoryL0ToL1(	inv, tradeType, 
-								source, timing,
+			writeHistoryL0ToL1(	inv, config.tradeType, 
+								config.source, config.timing,
 								invHist);					
 		} else {
 			System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& SUCCESS");
@@ -108,8 +109,8 @@ public class Historian {
 	 * @param timing
 	 * @return
 	 */
-	private QuoteHistory lookupInvHistory(Investment inv, TradeType tradeType,
-			InvDataSource source, InvDataTiming timing) {
+	private QuoteHistory lookupInvHistory(	Investment inv, TradeType tradeType,
+											InvDataSource source, InvDataTiming timing) {
 		
 		String key = lookup.getInvestmentKey(	inv, tradeType,
 												source, timing);
@@ -122,10 +123,10 @@ public class Historian {
 		return invHist;
 	}
 
-	private void writeHistoryL0ToL1(Investment inv,  
-											TradeType dataType,
-											InvDataSource source, InvDataTiming timing,
-											QuoteHistory invHistory) {
+	private void writeHistoryL0ToL1(	Investment inv,  
+										TradeType dataType,
+										InvDataSource source, InvDataTiming timing,
+										QuoteHistory invHistory) {
 		
 		for(int i=0; i<invHistory.quoteRows.size(); i++) {
 			QuoteRow row = invHistory.quoteRows.get(i);

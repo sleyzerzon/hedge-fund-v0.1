@@ -49,7 +49,7 @@ public class InvestmentList {
 	}
 
 	private void setOptions() {
-		options.add("ES");
+//		options.add("ES");
 		options.add("SPX");
 	}
 

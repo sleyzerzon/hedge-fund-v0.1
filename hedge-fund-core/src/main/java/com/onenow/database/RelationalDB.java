@@ -2,13 +2,13 @@ package com.onenow.database;
 
 import java.sql.*;
 
-import com.onenow.execution.NetworkConnection;
+import com.onenow.execution.NetworkConfig;
 import com.onenow.execution.NetworkService;
 
 public class RelationalDB {
 // https://www.youtube.com/watch?v=2i4t-SL1VsU
 	
-	private static NetworkService rdbmsService = new NetworkConnection().rdbms;
+	private static NetworkService rdbmsService = new NetworkConfig().rdbms;
 
 	public static void main(String[] args) throws ClassNotFoundException {
 				

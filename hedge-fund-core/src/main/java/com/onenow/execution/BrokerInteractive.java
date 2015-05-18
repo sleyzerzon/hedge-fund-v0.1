@@ -50,7 +50,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   private List<Channel> channels = new ArrayList<Channel>();
 
   private ParseDate parser = new ParseDate();
-  private NetworkService brokerService = new NetworkConnection().broker;
+  private NetworkService brokerService = new NetworkConfig().broker;
 
   public BrokerInteractive() {
 	  

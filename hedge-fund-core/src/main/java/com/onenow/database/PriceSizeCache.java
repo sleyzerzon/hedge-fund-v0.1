@@ -87,7 +87,7 @@ public class PriceSizeCache {
 		writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
 		
 		if(	broker.getMode().equals(BrokerMode.PRIMARY) ||
-			broker.getMode().equals(BrokerMode.SECONDARY)) {
+			broker.getMode().equals(BrokerMode.STANDBY)) {
 						
 			// TODO: SQS/SNS ORCHESTRATION
 			

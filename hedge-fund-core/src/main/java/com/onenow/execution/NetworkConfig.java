@@ -1,12 +1,12 @@
 package com.onenow.execution;
 
-public class NetworkConnection {
+public class NetworkConfig {
 	
 	public NetworkService tsdb;
 	public NetworkService broker;
 	public NetworkService rdbms;
 	
-	public NetworkConnection() {
+	public NetworkConfig() {
 		this.tsdb = getTSDB();
 		this.broker = getBroker();
 		this.rdbms = getRDBMS();
@@ -24,6 +24,10 @@ public class NetworkConnection {
 		//		setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
 		//		setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));
 		
+		// ADMIN http://calvinklein-fluxcapacitor-1.c.influxdb.com:8083
+		// list series
+		// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
+		// count(), min(), max(), mean(), mode(), median(), distinct(), percentile(), histogram(), derivative(), sum(), stddev(), first(), last()
 		NetworkService net = new NetworkService(	"root", "b45547741dd1709b",
 													"http", "calvinklein-fluxcapacitor-1.c.influxdb.com", 8086,
 													"");
