@@ -2,6 +2,7 @@ package com.onenow.execution;
 
 import java.util.List;
 
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
@@ -10,6 +11,7 @@ import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 
 public  interface Broker {
+	public abstract BrokerMode getMode();
 	public abstract List<Underlying> getUnderlying();
 	public abstract Portfolio getMarketPortfolio();
 	public abstract Portfolio getMyPortfolio();

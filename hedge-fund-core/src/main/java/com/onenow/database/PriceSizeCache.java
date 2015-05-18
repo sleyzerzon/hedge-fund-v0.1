@@ -3,6 +3,7 @@ package com.onenow.database;
 import java.util.HashMap;
 import java.util.List;
 
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -14,7 +15,7 @@ import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.ParseDate;
 
-public class Cache {
+public class PriceSizeCache {
 	
 	private Broker 								broker;
 	private HashMap<String, EventRT>			lastEventRT; 	// last set of price/size/etc
@@ -26,11 +27,11 @@ public class Cache {
 	private ParseDate							parseDate = new ParseDate();
 	
 	
-	public Cache() {
+	public PriceSizeCache() {
 		
 	}
 	
-	public Cache(Broker broker) {
+	public PriceSizeCache(Broker broker) {
 		this.broker = broker;
 		this.lastEventRT = new HashMap<String, EventRT>();
 		this.charts = new HashMap<String, Chart>();
@@ -85,19 +86,23 @@ public class Cache {
 		// write RT to L1RT
 		writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
 		
-		// TODO: SQS/SNS ORCHESTRATION
-		
-		// update the charts
-		for(SamplingRate samplr:sampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
+		if(	broker.getMode().equals(BrokerMode.PRIMARY) ||
+			broker.getMode().equals(BrokerMode.SECONDARY)) {
+						
+			// TODO: SQS/SNS ORCHESTRATION
 			
-			System.out.println("\n" + "***** PRE-FETCH SAMPLING ***** " + samplr);
-			// use miss function to force update of charts
-			String today = parseDate.getDashedToday();
-			readChartToL0FromRTL1(	inv, tradeType, samplr,
-										parseDate.getDashedDateMinus(today, 1), today, // TODO: From/To Date actual
-										source, timing);
-			System.out.println("\n");
-		}		
+			// update the charts
+			for(SamplingRate samplr:sampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
+				
+				System.out.println("\n" + "***** PRE-FETCH SAMPLING ***** " + samplr);
+				// use miss function to force update of charts
+				String today = parseDate.getDashedToday();
+				readChartToL0FromRTL1(	inv, tradeType, samplr,
+											parseDate.getDashedDateMinus(today, 1), today, // TODO: From/To Date actual
+											source, timing);
+				System.out.println("\n");
+			}		
+		}
 	}
 
 	private void writeRTtoL1(Long time, Investment inv, TradeType tradeType,

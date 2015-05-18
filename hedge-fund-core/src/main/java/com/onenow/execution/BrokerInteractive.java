@@ -10,6 +10,7 @@ import com.ib.client.Types.NewsType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiConnection.ILogger;
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
@@ -30,6 +31,7 @@ import com.onenow.util.ParseDate;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
+  private BrokerMode brokerMode;	
   private List<Underlying> underList;
   private Portfolio marketPortfolio;
   private List<Trade> trades;
@@ -48,7 +50,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   private List<Channel> channels = new ArrayList<Channel>();
 
   private ParseDate parser = new ParseDate();
-
+  private NetworkService brokerService = new NetworkConnection().broker;
 
   public BrokerInteractive() {
 	  
@@ -58,8 +60,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
    * Get quotes after initializing overall market and my portfolio
    * @throws ConnectException
    */
-  public BrokerInteractive(Portfolio marketPortfolio) throws ConnectException {
+  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio) throws ConnectException {
 
+	setBrokerMode(mode);
 	setMarketPortfolio(marketPortfolio);  
 	  
     connectToServer();
@@ -75,15 +78,16 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     getLiveQuotes(); // run the broker
   }
 
-  // INIT
+
+
+// INIT
   /**
    * Connect to gateway at set IP and port
    */
   private void connectToServer() {
     setController(new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger()));
-    // default Trader Work Station port: 7496
-    // default IB Gateway port: 4001
-    getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496
+    getController().connect(	brokerService.URL, brokerService.port, 
+    							0, null);  
 
 
 
@@ -454,4 +458,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   private void setParser(ParseDate parser) {
     this.parser = parser;
   }
+
+	@Override
+	public BrokerMode getMode() {
+		return brokerMode;
+	}
+
+	public void setBrokerMode(BrokerMode brokerMode) {
+		this.brokerMode = brokerMode;
+	}
 }

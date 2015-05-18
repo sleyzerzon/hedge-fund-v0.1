@@ -15,6 +15,8 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
+import com.onenow.execution.NetworkConnection;
+import com.onenow.execution.NetworkService;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.util.ParseDate;
@@ -23,8 +25,9 @@ public class TSDB {
 	
 	private InfluxDB DB;
 	private Lookup dbLookup = new Lookup();
-	private ParseDate parseDate = new ParseDate();
 	private DataSampling dataSampling = new DataSampling();
+	
+	private NetworkService tsdbService = new NetworkConnection().tsdb;
 	
 	/**
 	 * Default constructor connects to database
@@ -35,20 +38,9 @@ public class TSDB {
 	}
 
 	
-// INFLUX HOSTING
-//	Hostname: calvinklein-fluxcapacitor-1.c.influxdb.com (45.55.169.140)
-//	API Ports: 8086 (HTTP) and 8087 (HTTPS)
-//	Admin User: root
-//	Admin Password: b45547741dd1709b
-//	Admin Interface: http://calvinklein-fluxcapacitor-1.c.influxdb.com:8083
-//
-//	And if you need some pointers on how to get started, check out our documentation:
-//	http://influxdb.com/docs/v0.8/introduction/getting_started.html
 
 	
 // INIT
-//	setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
-//	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));	
 private void dbConnect() { 
 	boolean tryToConnect = true;
 	
@@ -56,7 +48,8 @@ private void dbConnect() {
 		try {
 			tryToConnect = false;
 			System.out.println("\n" + "CONNECTING TO DB...");
-			setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
+			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URL+":"+tsdbService.port.toString(), 
+											tsdbService.user, tsdbService.pass));
 		} catch (Exception e) {
 			tryToConnect = true;
 			System.out.println("\n" + "...COULD NOT CONNECT TO DB: ");

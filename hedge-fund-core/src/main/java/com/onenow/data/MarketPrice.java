@@ -6,7 +6,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.database.Cache;
+import com.onenow.database.PriceSizeCache;
 import com.onenow.database.EventRT;
 import com.onenow.execution.Broker;
 import com.onenow.instrument.Investment;
@@ -16,7 +16,7 @@ import com.onenow.research.Chart;
 
 public class MarketPrice {
 
-	private Cache cache; 		// just storage	
+	private PriceSizeCache cache; 		// just storage	
 	private Portfolio portfolio;
 	private DataSampling sampling;
 	private Broker broker;
@@ -29,7 +29,7 @@ public class MarketPrice {
 	public MarketPrice(Portfolio marketPortfolio, Broker broker) {
 		setPortfolio(marketPortfolio);
 		setBroker(broker);
-		setCache(new Cache(getBroker()));
+		setCache(new PriceSizeCache(getBroker()));
 		setSampling(new DataSampling());
 	}
 	
@@ -112,11 +112,11 @@ public class MarketPrice {
 	
 	
 	// SET GET
-	public Cache getCache() {
+	public PriceSizeCache getCache() {
 		return cache;
 	}
 
-	public void setCache(Cache cache) {
+	public void setCache(PriceSizeCache cache) {
 		this.cache = cache;
 	}
 

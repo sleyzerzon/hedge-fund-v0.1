@@ -2,6 +2,7 @@ package com.onenow.execution;
 
 import java.util.List;
 
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
@@ -52,6 +53,12 @@ public class BrokerGoogle implements Broker {
 			QuoteHistory history) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public BrokerMode getMode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

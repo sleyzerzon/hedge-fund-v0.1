@@ -2,6 +2,7 @@ package com.onenow.main;
 
 import java.util.List;
 
+import com.onenow.constant.BrokerMode;
 import com.onenow.data.Historian;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
@@ -41,7 +42,7 @@ public class HistorianMain {
 
 		try {			
 			// updates real-time L1 from real=time events
-			IB = new BrokerInteractive(marketPortfolio); 
+			IB = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio); 
 			
 			// updates historical L1 from L2
 			Historian hist = new Historian(IB);

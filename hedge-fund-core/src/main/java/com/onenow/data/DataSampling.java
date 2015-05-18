@@ -29,14 +29,23 @@ public class DataSampling {
 		if(sampling.equals(SamplingRate.TREND)) {		// midpoint
 			dbSamplingRate = "4h";
 		}
-		if(sampling.equals(SamplingRate.UHFSHORT)) {		//UHF 1min, 2min, 5min
-			dbSamplingRate = "1m";
+		if(sampling.equals(SamplingRate.UHFSHORT)) {	// UHF 1sec, 5sec, 20sec
+			dbSamplingRate = "1s";
 		}
 		if(sampling.equals(SamplingRate.UHFMEDIUM)) {
-			dbSamplingRate = "2m";
+			dbSamplingRate = "5s";
 		}
 		if(sampling.equals(SamplingRate.UHFLONG)) {
-			dbSamplingRate = "5m";
+			dbSamplingRate = "20s";
+		}
+		if(sampling.equals(SamplingRate.HFSHORT)) {		//HF 1min, 3min, 15min
+			dbSamplingRate = "1m";
+		}
+		if(sampling.equals(SamplingRate.HFMEDIUM)) {
+			dbSamplingRate = "3m";
+		}
+		if(sampling.equals(SamplingRate.HFLONG)) {
+			dbSamplingRate = "15m";
 		}
 		if(sampling.equals(SamplingRate.SCALPSHORT)) {		//SCALPING 5min, 15min, 60min
 			dbSamplingRate = "5m";

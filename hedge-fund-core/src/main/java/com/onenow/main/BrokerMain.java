@@ -2,6 +2,7 @@ package com.onenow.main;
 
 import java.util.List;
 
+import com.onenow.constant.BrokerMode;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerActivityImpl;
@@ -41,7 +42,7 @@ public class BrokerMain {
 
 		// create Interactive Brokers broker & start getting quotes
 		try {
-			setIB(new BrokerInteractive(marketPortfolio)); 
+			setIB(new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio)); 
 		} catch (Exception e) {
 			System.out.println("COULD NOT CREATE INTERACTIVE BROKER\n");
 			e.printStackTrace();
