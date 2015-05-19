@@ -4,16 +4,14 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ib.client.Types.BarSize;
-import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.NewsType;
-import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiConnection.ILogger;
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
-import com.onenow.data.InitMarket;
+import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
@@ -30,6 +28,7 @@ import com.onenow.util.ParseDate;
 
 public class BrokerInteractive implements Broker, ConnectionHandler  {
 
+  private BrokerMode brokerMode;	
   private List<Underlying> underList;
   private Portfolio marketPortfolio;
   private List<Trade> trades;
@@ -47,71 +46,60 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   private ContractFactory contractFactory = new ContractFactory();
   private List<Channel> channels = new ArrayList<Channel>();
 
-  private ParseDate parser = new ParseDate();
+  private ParseDate parseDate = new ParseDate();
+  private NetworkService brokerService = new NetworkConfig().broker;
 
+  public BrokerInteractive() {
+	  
+  }
 
   /**
    * Get quotes after initializing overall market and my portfolio
    * @throws ConnectException
    */
-  public BrokerInteractive() throws ConnectException {
-
-    // TODO: test invest in only SPX-related instruments
-    Underlying index = new Underlying("SPX");
-
+  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio) { 
+	  
+	this.brokerMode = mode;
+    this.marketPortfolio = marketPortfolio;
+	  
     connectToServer();
 
     // create new underlying list, portfolio, then initialize the market
-    setUnderList(new ArrayList<Underlying>());
-    setMarketPortfolio(new Portfolio());
-
-    InitMarket initMarket = new InitMarket(index, getMarketPortfolio());
+    setUnderList(new ArrayList<Underlying>()); // TODO: get from portfolio?
 
     // my porfolio, prices, and trades
     setMyPortfolio(new Portfolio());
     setMarketPrices(new MarketPrice(getMarketPortfolio(), this));
     setTrades(new ArrayList<Trade>());
-
-    getLiveQuotes(); // run the broker
   }
 
-  // INIT
+
+
+// INIT
   /**
    * Connect to gateway at set IP and port
    */
   private void connectToServer() {
-    setController(new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger()));
-    // default Trader Work Station port: 7496
-    // default IB Gateway port: 4001
-    getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496
-
-
-
-    // TODO: add re-tries here
-
-    // 504 Not connected
-
-//		java.net.ConnectException: Connection refused
-//		at java.net.PlainSocketImpl.socketConnect(Native Method)
-//		at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
-//		at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
-//		at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
-//		at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
-//		at java.net.Socket.connect(Socket.java:589)
-//		at java.net.Socket.connect(Socket.java:538)
-//		at java.net.Socket.<init>(Socket.java:434)
-//		at java.net.Socket.<init>(Socket.java:211)
-//		at com.ib.client.EClientSocket.eConnect(EClientSocket.java:289)
-//		at com.ib.client.EClientSocket.eConnect(EClientSocket.java:272)
-//		at com.onenow.portfolio.BrokerController.connect(BrokerController.java:97)
-//		at com.onenow.execution.BrokerInteractive.connectToServer(BrokerInteractive.java:91)
-//		at com.onenow.execution.BrokerInteractive.<init>(BrokerInteractive.java:67)
-//		at com.onennow.main.BrokerMain.main(BrokerMain.java:19)
-//	-1 502 Couldn't connect to TWS.  Confirm that "Enable ActiveX and Socket Clients" is enabled on the TWS "Configure->API" menu.
-
-
+	boolean tryToConnect = true;
+    while(tryToConnect) {		    		
+		try {				
+			tryToConnect = false;
+			System.out.println("\n" + "CONNECTING TO BROKER IN HISTORIAN...");				
+		    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger());
+		    controller.connect(	brokerService.URI, brokerService.port, 
+		    							0, null);  
+		} catch (Exception e) {
+			tryToConnect = true;
+			System.out.println("...COULD NOT CREATE INTERACTIVE BROKER INSIDE HISTORIAN" + "\n");
+			e.printStackTrace();
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e1) {}
+		}			
+	} // end try to connect
+	System.out.println("CONNECTED TO HISTORIAN BROKER!");
   }
-
+  
   // GET QUOTES
   /**
    * For every currently-traded investment: request quotes
@@ -120,25 +108,22 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   public void getLiveQuotes() {
     List<Investment> invs = getMarketPortfolio().investments;
     for(Investment inv:invs) {
-      System.out.println("> getting quote for live investment: " + inv.toString());
-
-      QuoteTable quoteLive = new QuoteTable(getController(), getMarketPrices(), inv);
-
+      System.out.println("#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
+      QuoteTable quoteLive = new QuoteTable(controller, getMarketPrices(), inv);
     }
   }
 
   /**
    * Returns reference to object where history will be stored, upon asynchronous return
    */
-  public void readHistoricalQuotes(Investment inv, String end, QuoteHistory quoteHistory) {
+  public void readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory quoteHistory) {
 
-    System.out.println("> getting historical quote for investment: " + inv.toString());
     Contract contract = getContractFactory().getContract(inv);
 
-    getController().reqHistoricalData(	contract,
-                                              end, 1, DurationUnit.DAY, BarSize._1_hour,
-                                              WhatToShow.TRADES, false,
-                                              quoteHistory);
+    int reqId = controller.reqHistoricalData(	contract, end, 
+    												1, config.durationUnit, config.barSize, config.whatToShow, 
+    												false, quoteHistory);
+    System.out.println("#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId);
   }
 
 
@@ -147,32 +132,31 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
    * Get price channel price history
    */
   public void getChannelPrices() throws InterruptedException {
-
-    InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
-    Contract index = getContractFactory().getContract(indexInv);
-    getContractFactory().addChannel(getChannels(), index);
-
-//		Contract index = contractFactory.getIndexToQuote("RUT");
-//		getContractFactory().addChannel(getChannels(), index);
-//		Contract option = contractFactory.getOptionToQuote(indexInv);
-//		getContractFactory().addChannel(getChannels(), option);
-
-    for(int i=0; i<getChannels().size(); i++) {
-      Channel channel = getChannels().get(i);
-      List<String> endList = getEndList(channel);
-
-      for(int j=0; j<endList.size(); j++) {
-        String end = endList.get(j);
-
-        System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
-
-// TODO: add history argument				QuoteHistory quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
-
-        Thread.sleep(12000);
-        System.out.println("...");
-      }
-      System.out.println(channel.toString());
-    }
+//    InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
+//    Contract index = getContractFactory().getContract(indexInv);
+//    getContractFactory().addChannel(getChannels(), index);
+//
+////		Contract index = contractFactory.getIndexToQuote("RUT");
+////		getContractFactory().addChannel(getChannels(), index);
+////		Contract option = contractFactory.getOptionToQuote(indexInv);
+////		getContractFactory().addChannel(getChannels(), option);
+//
+//    for(int i=0; i<getChannels().size(); i++) {
+//      Channel channel = getChannels().get(i);
+//      List<String> endList = getEndList(channel);
+//
+//      for(int j=0; j<endList.size(); j++) {
+//        String end = endList.get(j);
+//
+//        System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
+//
+//// TODO: add history argument				QuoteHistory quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
+//
+//        Thread.sleep(12000);
+//        System.out.println("...");
+//      }
+//      System.out.println(channel.toString());
+//    }
   }
 
   private List<String> getEndList(Channel channel) {
@@ -181,19 +165,19 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
       try {
         date = channel.getResDayList().get(i);
-        list.add(parser.removeDash(date).concat(" 16:30:00"));
+        list.add(parseDate.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
       try {
         date = channel.getSupDayList().get(j);
-        list.add(parser.removeDash(date).concat(" 16:30:00"));
+        list.add(parseDate.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent
       try {
         date = channel.getRecentDayList().get(k); // Recent
-        list.add(parser.removeDash(date).concat(" 16:30:00"));
+        list.add(parseDate.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     return list;
@@ -204,10 +188,10 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
    * No market depth for index/options
    */
   private void getMarketDepth() {
-    List<Investment> invs = getMarketPortfolio().investments;
-    for(Investment inv:invs) {
-      QuoteDepth resultPanel = new QuoteDepth(this, getController(), inv);
-    }
+//    List<Investment> invs = getMarketPortfolio().investments;
+//    for(Investment inv:invs) {
+//      QuoteDepth resultPanel = new QuoteDepth(this, controller, inv);
+//    }
   }
 
   ///// BROKER
@@ -256,13 +240,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   public void connected() {
     show(ConnectionStatus.CONNECTED.toString());
 
-    getController().reqCurrentTime( new ITimeHandler() {
+    controller.reqCurrentTime( new ITimeHandler() {
       @Override public void currentTime(long time) {
         show( "Server date/time is " + Formats.fmtDate(time * 1000) );
       }
     });
 
-    getController().reqBulletins( true, new IBulletinHandler() {
+    controller.reqBulletins( true, new IBulletinHandler() {
       @Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
         String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
         show( str);
@@ -374,14 +358,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     this.outLogger = outLogger;
   }
 
-  public BrokerController getController() {
-    return controller;
-  }
-
-  private void setController(BrokerController controller) {
-    this.controller = controller;
-  }
-
   private ArrayList<String> getAccountList() {
     return accountList;
   }
@@ -404,11 +380,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
   private void setMarketAnalytics(MarketAnalytics marketAnalytics) {
     this.marketAnalytics = marketAnalytics;
-  }
-
-
-  private void setMarketPortfolio(Portfolio marketPortfolio) {
-    this.marketPortfolio = marketPortfolio;
   }
 
 
@@ -448,11 +419,8 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     this.channels = channels;
   }
 
-  private ParseDate getParser() {
-    return parser;
-  }
-
-  private void setParser(ParseDate parser) {
-    this.parser = parser;
-  }
+	@Override
+	public BrokerMode getMode() {
+		return brokerMode;
+	}
 }

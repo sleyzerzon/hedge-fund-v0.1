@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
+import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
@@ -217,8 +219,14 @@ public class BrokerEmulator implements Broker {
 	}
 
 	@Override
+	public BrokerMode getMode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public void readHistoricalQuotes(Investment inv, String end,
-			QuoteHistory history) {
+			HistorianConfig config, QuoteHistory history) {
 		// TODO Auto-generated method stub
 		
 	}

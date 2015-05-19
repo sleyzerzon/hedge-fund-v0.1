@@ -221,7 +221,7 @@ public class Channel {
 		String oldDate = getResistanceDayList().get(0);
 		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
 		
-		Double range = parser.getElapsedDays(oldDate, newDate)*1.0;	
+		Double range = parser.getElapsedDashedDays(oldDate, newDate)*1.0;	
 		Double slope = (newPrice-oldPrice)/range; 		
 //		System.out.println("RES SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
 
@@ -237,13 +237,74 @@ public class Channel {
 		String oldDate = getSupportDayList().get(0);
 		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
 		
-		Double range = parser.getElapsedDays(oldDate, newDate)*1.0;	
+		Double range = parser.getElapsedDashedDays(oldDate, newDate)*1.0;	
 		Double slope = (newPrice-oldPrice)/range;	
 //		System.out.println("SUP SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
 		
 		return slope;
 	}
 	
+	public void addChannel(List<Channel> channels, Contract contract) {
+//
+//		String today = new ParseDate().getToday();
+//
+//		if(contract.symbol().equals("SPX")) { 	// for SecType.IND and SecType.OPT
+//			
+//			Channel spx = new Channel(contract);
+//			channels.add(spx);
+//			
+//			
+//			// LOOKING FOR OVER-REACTION of 30% of range within 3 days
+//			// AFTER HI/LO that subsides next day, with lower closing		
+//			// SPX
+//
+//			// RECENT
+//			spx.addRecent(today);  
+//			spx.addRecent("2015-02-12");  
+//			
+//			// SLOW CHANNEL
+//			spx.addResistance("2015-02-06"); 
+//			spx.addSupport("2015-02-02");
+//			spx.addResistance("2015-01-22");
+//			spx.addSupport("2015-01-15");
+//			spx.addResistance("2015-01-08");
+//			spx.addSupport("2015-01-06");
+//			// *** 30-day trend change
+//			spx.addResistance("2014-12-29");  
+//			spx.addSupport("2014-12-16"); // fundamentals t2 low 
+//			spx.addResistance("2014-12-05"); 
+//			// November: mild market 
+//			spx.addSupport("2014-10-15"); // CRASH
+//			spx.addResistance("2014-09-18"); 
+//			spx.addSupport("2014-08-07"); // fundamentals t1 low
+//			spx.addResistance("2014-07-24");				
+//		}
+//		
+//		if(contract.symbol().equals("RUT")) { 	// for SecType.IND and SecType.OPT
+//			
+//			Channel rut = new Channel(contract);
+//			channels.add(rut);
+//
+//			// RECENT
+//			rut.addRecent(today);  
+//			rut.addRecent("2015-02-12");  
+//
+//			// MIDDLEPATH CHANNEL
+//			// repeated confrontation resistance/support over 3 months
+//			rut.addSupport("2015-02-09"); 				// determines channel 
+//			rut.addResistance("2015-02-06"); 			// determines channel  			
+//			rut.addSupport("2015-02-02"); 				// determines channel 
+//			rut.addResistance("2015-01-28"); 			
+//			rut.addSupport("2015-01-15"); 			
+//			rut.addSupport("2015-01-06"); 
+//			rut.addResistance("2014-12-31"); 			
+//			rut.addSupport("2014-12-15"); 			
+//			rut.addResistance("2014-11-28"); 			// determines channel 
+//			rut.addResistance("2014-09-02"); 			// determines channel 
+//
+//		}
+//		
+	}
 	
 	// PRINT
 	public String toString() {
@@ -353,7 +414,7 @@ public class Channel {
 		Double prevSubprice = (Double) getSupportDayMap().get(prevDate);
 		Double range = resPrice-prevSubprice;
 		widthToResistance.add(range);
-		Integer elapsed = parser.getElapsedDays(prevDate, date);
+		Integer elapsed = parser.getElapsedDashedDays(prevDate, date);
 		halfCycleToResistance.add(elapsed*1.0);
 		
 		if(resPrice>0 && resPrice<9999) {
@@ -375,7 +436,7 @@ public class Channel {
 		Double prevResprice = (Double) getResistanceDayMap().get(prevDate);
 		Double range = prevResprice-supPrice;
 		widthToSupport.add(range);
-		Integer elapsed = parser.getElapsedDays(prevDate, date);
+		Integer elapsed = parser.getElapsedDashedDays(prevDate, date);
 		halfCycleToSupport.add(elapsed*1.0);
 
 		if(supPrice>0 && supPrice<9999) {
@@ -390,6 +451,26 @@ public class Channel {
 		return s;
 	}
 	
+	
+	// CHANNEL
+	public void setChannelPrices(String day, Double highPrice, Double lowPrice, Double recentPrice) {
+		if(getResistanceDayMap().containsKey(day)) { // day resistance
+			if( highPrice > (Double)getResistanceDayMap().get(day)) { // price
+				addResistance(day, highPrice);
+//					System.out.println("high " + highPrice);
+			}
+		}
+		if(getSupportDayMap().containsKey(day)) { // day support
+			if( lowPrice < (Double)getSupportDayMap().get(day)) { // price
+				addSupport(day, lowPrice);
+//					System.out.println("low " + lowPrice);
+			}
+		}
+		if(getRecentDayMap().containsKey(day)) { // day support
+//			System.out.println("RECENT " + channel.getContract().secType() + " " + day + " " + recentPrice);
+			addRecent(day, recentPrice); // last
+		} 
+	}
 
 	// TEST
 	public void test() {

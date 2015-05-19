@@ -14,7 +14,9 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.Sampling;
+import com.onenow.data.DataSampling;
+import com.onenow.execution.NetworkConfig;
+import com.onenow.execution.NetworkService;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.util.ParseDate;
@@ -22,51 +24,43 @@ import com.onenow.util.ParseDate;
 public class TSDB {
 	
 	private InfluxDB DB;
-	private Lookup lookup;
-	private ParseDate parseDate;
-	private Sampling sampling;
+	private Lookup dbLookup = new Lookup();
+	private DataSampling dataSampling = new DataSampling();
+	
+	private NetworkService tsdbService = new NetworkConfig().tsdb;
 	
 	/**
 	 * Default constructor connects to database
 	 */
 	public TSDB() {
-		setLookup(new Lookup());
 		dbConnect();
 		dbCreate();
-		
-		setParseDate(new ParseDate());
-		setSampling(new Sampling());
 	}
-
-	
-// INFLUX HOSTING
-//	Hostname: calvinklein-fluxcapacitor-1.c.influxdb.com (45.55.169.140)
-//	API Ports: 8086 (HTTP) and 8087 (HTTPS)
-//	Admin User: root
-//	Admin Password: b45547741dd1709b
-//	Admin Interface: http://calvinklein-fluxcapacitor-1.c.influxdb.com:8083
-//
-//	And if you need some pointers on how to get started, check out our documentation:
-//	http://influxdb.com/docs/v0.8/introduction/getting_started.html
-
 	
 // INIT
-//	setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
-//	setDB(InfluxDBFactory.connect("http://tsdb.enremmeta.com:8086", "root", "root"));	
 private void dbConnect() { 
-	try {
-		System.out.println("CONNECTING TO DB");
-		setDB(InfluxDBFactory.connect("http://calvinklein-fluxcapacitor-1.c.influxdb.com:8086", "root", "b45547741dd1709b"));
-	} catch (Exception e) {
-		System.out.println("COULD NOT CONNECT TO DB\n");
-		e.printStackTrace();
-		return;
-	}
+	boolean tryToConnect = true;
+	
+	while(tryToConnect) {
+		try {
+			tryToConnect = false;
+			System.out.println("\n" + "CONNECTING TO TSDB...");
+			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port.toString(), 
+											tsdbService.user, tsdbService.pass));
+		} catch (Exception e) {
+			tryToConnect = true;
+			System.out.println("\n" + "...COULD NOT CONNECT TO TSDB: ");
+			e.printStackTrace();
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e1) {
+				// nothing to do
+			}
+		}
+	} 
+	System.out.println("CONNECTED TO TSDB!");
 }
 
-// list series
-// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
-// count(), min(), max(), mean(), mode(), median(), distinct(), percentile(), histogram(), derivative(), sum(), stddev(), first(), last()
 private void dbCreate() {
 	try {
 		getDB().createDatabase(DBname.PRICE.toString());
@@ -79,7 +73,7 @@ private void dbCreate() {
 
 // PRICE
 public void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
-	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	.values(time, price)
@@ -98,7 +92,7 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String key = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+		String key = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 
 		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, sampling, fromDate, toDate);
 
@@ -119,12 +113,13 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 						"MAX(price)" + ", " + 
 						"SUM(price) " +  
 					"FROM " + "\"" + serieName + "\" " +
-					"WHERE " +
-						"time > " + "'" + fromDate + "' " + 
-						"AND " +
-						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
+						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " + 
+					// "FILL(0) " +
+					"WHERE " +
+					"time > " + "'" + fromDate + "' " + 
+					"AND " +
+					"time < " + "'" + toDate + "' "; 
 					
 	try {
 		System.out.println("#PRICE# QUERY " + query);
@@ -177,7 +172,7 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 }
 // SIZE
 public void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
-	String name = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(time, size)
@@ -196,7 +191,7 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String key = getLookup().getInvestmentKey(inv, tradeType, source, timing);
+	String key = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	
 	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
 	
@@ -217,12 +212,13 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 						"MAX(size)" + ", " + 
 						"SUM(size) " +  
 					"FROM " + "\"" + serieName + "\" " +
-					"WHERE " +
-						"time > " + "'" + fromDate + "' " + 
-						"AND " +
-						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + getSampling().getGroupByTimeString(sampling) + ")";
+						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " +
+					// "FILL(0) " +
+					"WHERE " +
+					"time > " + "'" + fromDate + "' " + 
+					"AND " +
+					"time < " + "'" + toDate + "' ";
 					
 	try {
 		System.out.println("#SIZE# QUERY " + query);
@@ -293,30 +289,4 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 		DB = dB;
 	}	
 	
-	private Lookup getLookup() {
-		return lookup;
-	}
-	
-	
-	private void setLookup(Lookup lookup) {
-		this.lookup = lookup;
-	}
-
-	public ParseDate getParseDate() {
-		return parseDate;
-	}
-
-	public void setParseDate(ParseDate parseDate) {
-		this.parseDate = parseDate;
-	}
-
-	public Sampling getSampling() {
-		return sampling;
-	}
-
-	public void setSampling(Sampling sampling) {
-		this.sampling = sampling;
-	}
-	
-
 }

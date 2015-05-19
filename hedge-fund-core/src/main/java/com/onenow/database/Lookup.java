@@ -6,7 +6,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.Sampling;
+import com.onenow.data.DataSampling;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
@@ -46,9 +46,9 @@ public class Lookup {
 		String s = ""; 
 		s = s + under.getTicker() + "-" + inv.getInvType();		
 		if (inv instanceof InvestmentOption) {
-			Double strike = ((InvestmentOption) inv).getStrikePrice();
 			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-			s = s + "-" + strike + "-" + exp; 
+			Double strike = ((InvestmentOption) inv).getStrikePrice();
+			s = s + "-" + exp + "-" + strike; 
 		}
 		s = s + "-" + tradeType.toString();
 		s = s + "-" + source.toString() + "-" + timing.toString();

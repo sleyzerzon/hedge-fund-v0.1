@@ -905,7 +905,7 @@ public class ApiController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			QuoteRow bar = new QuoteRow( time, high, low, open, close, wap, volume, count);
+			QuoteRow bar = new QuoteRow(reqId, time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

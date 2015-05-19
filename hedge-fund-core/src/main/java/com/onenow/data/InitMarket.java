@@ -14,7 +14,7 @@ import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
-
+import com.onenow.util.ParseDate;
 
 /**
  * Initialize the market
@@ -26,108 +26,142 @@ public class InitMarket {
 	
 	List<String> indices = new ArrayList<String>();
 	
+	ParseDate parseDate = new ParseDate();
 	
-	public InitMarket() {
-		
+	public InitMarket() {	
 	}
 
-
 	/**
-	 * Init market instruments relevant to an index
+	 * Initialize market instruments: indices, stocks, futures
 	 * @param index
 	 * @param portfolio
 	 */
-	public InitMarket(Underlying index, Portfolio portfolio) {
-		setMarketPortfolio(portfolio);
-		initMarketInstruments(index);
-	}
-
-	/** 
-	 * Initialize indices, stocks, and futures
-	 * @param index
-	 */
-	private void initMarketInstruments(Underlying index) { // create the investments
-		addIndexToPortfolio(index);
-		System.out.println(getMarketPortfolio().toIndicesString());		
+	
+	public InitMarket(	Portfolio portfolio,
+						List<Underlying> stocks, List<Underlying> indices,
+						List<Underlying> futures, List<Underlying> options,
+						String toDashedDate) {
 		
-		initOptions(index);
-		System.out.println(getMarketPortfolio().toOptionsString());		
+		this.marketPortfolio = portfolio;
 
-		initStocks(index);		
-		System.out.println(getMarketPortfolio().toStocksString());		
+		initStocks(stocks);		
+		System.out.println(marketPortfolio.toStocksString());		
 
-		initFutures();
-		System.out.println(getMarketPortfolio().toFuturesString());		
+//		addIndicesToPortfolio(indices);
+//		System.out.println(marketPortfolio.toIndicesString());				
+//
+//		initOptions(options, toDashedDate);
+//		System.out.println(marketPortfolio.toOptionsString());		
+//
+//		initFutures(futures);
+//		System.out.println(marketPortfolio.toFuturesString());			
 	}
+	
+		
+//	public InitMarket(	Portfolio portfolio,	
+//						Underlying stocks, Underlying stockOptions,
+//						Underlying index,  Underlying indexOptions, 
+//						Underlying futures, Underlying futuresOptions,
+//						String fromDate, String toDate) {
+//		
+//		marketPortfolioportfolio);
+//
+//		initStocks(stocks);		
+//		System.out.println(marketPortfolio.toStocksString());		
+//
+//		// TODO: stock options
+//
+//		addIndexToPortfolio(index);
+//		System.out.println(marketPortfolio.toIndicesString());				
+//
+//		initIndexOptions(indexOptions, fromDate, toDate);
+//		System.out.println(marketPortfolio.toOptionsString());		
+//
+//		initFutures(futures);
+//		System.out.println(marketPortfolio.toFuturesString());	
+//		
+//		// TODO: futures options
+//
+//	}
 	 
 	// INDEX 
 	/**
 	 * Initialize indices
 	 * @param under
 	 */
-	private void addIndexToPortfolio(Underlying under) {
-		InvestmentIndex index = new InvestmentIndex(under);
-		Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
-		Transaction indexTrans = new Transaction(indexTrade);
-		getMarketPortfolio().enterTransaction(indexTrans);
+	private void addIndicesToPortfolio(List<Underlying> unders) {
+		for(Underlying under:unders) {
+			InvestmentIndex index = new InvestmentIndex(under);
+			Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
+			Transaction indexTrans = new Transaction(indexTrade);
+			marketPortfolio.enterTransaction(indexTrans);
+		}
 	}	
 	
 	// OPTIONS
 	/**
 	 * Initialize options
-	 * @param index
+	 * @param unders
 	 */
-	private void initOptions(Underlying index) { 
+	private void initOptions(List<Underlying> unders, String toDashedDate) { 
 		ExpirationDate exps = new ExpirationDate();
-		exps.initOptionExpList(); 
-
-		for(String expDate:exps.getIndexExpList()) { // for every option expiration expiration
-			seedAndAddOptionsToPortoflio(index, expDate);
-		}
-	}
-	
-
-	// TODO: seed amount automatically from real-time market value
-	private void seedAndAddOptionsToPortoflio(Underlying index, String expDate) {
-		Integer seed=0;
+		exps.initIndexOptionExpList(); 
 		
-		if(index.getTicker().equals("SPX")) { 	
-			seed=2100;		
-			addOptionsToPortfolio(index, expDate, seed);
-		}
+		// look at high/low price basis in the last 30 days
+		String fromDashedDate = parseDate.getDashedDateMinus(toDashedDate, 30);
 
-		if(index.getTicker().equals("NDX")) { 	
-			seed=4450;		
-			addOptionsToPortfolio(index, expDate, seed);
-		}
-
-		if(index.getTicker().equals("RUT")) { 	
-			seed=1350;		
-			addOptionsToPortfolio(index, expDate, seed);
+		for(Underlying under:unders) {
+			for(String expDate:exps.getValidOptionExpList(parseDate.getUndashedToday())) { 			
+				// TODO: seed lowprice and highprice automatically from market value range in the time window of interest
+				addOptionsToPortfolio(	under, expDate, 
+										lowPrice(under, fromDashedDate, toDashedDate), 
+										highPrice(under, fromDashedDate, toDashedDate));	
+			}
 		}
 	}
 	
-//	private void addIndexAndOptionsToPortfolio(String name, String expDate, Integer seed) {
-//		Underlying under = new Underlying(name);
-////		addIndexToPortfolio(under);		
-//		addOptionsToPortfolio(under, expDate, seed);
-//	}
+	private double lowPrice(Underlying index, String fromDate, String toDate) {
+		Double price=0.0;		
+		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
+			price = 2090.0;	
+		}
+		if(index.getTicker().equals("NDX")) {
+			price = 4450.0;
+		}
+		if(index.getTicker().equals("RUT")) {
+			price = 1350.0;
+		}		
+		return price;
+	}
+	
+	private double highPrice(Underlying index, String fromDate, String toDate) {
+		Double price=0.0;	
+		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
+			price = 2110.0;	
+		}
+		if(index.getTicker().equals("NDX")) {
+			price = 4450.0;
+		}
+		if(index.getTicker().equals("RUT")) {
+			price = 1350.0;
+		}
+		return price;		
+	}
+	
 	/**
-	 * Generates all options that may be trading right now
+	 * Generates all possible options that may have traded in history
 	 * @param under
 	 * @param expDate
-	 * @param seed
 	 */
-	private void addOptionsToPortfolio(Underlying under, String expDate, Integer seed) {
-		Double range = 10.0; // 100.0; 	// options range up-down
-		Integer interval = 5;	// options interval
-		for (Double strike=(double) (seed-range); strike<(seed+range); strike=strike+interval) {
+	private void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
+		Integer interval = 5;			// options interval
+		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+interval) {
 			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
 			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
 			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
 			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
 			Transaction trans = new Transaction(callTrade, putTrade); 
-			getMarketPortfolio().enterTransaction(trans);
+			marketPortfolio.enterTransaction(trans);
 		}
 	}
 
@@ -135,46 +169,40 @@ public class InitMarket {
 	/**
 	 * Initialize all futures
 	 */
-	private void initFutures() {
+	private void initFutures(List<Underlying> unders) {
 		ExpirationDate exps = new ExpirationDate();
 		exps.initFuturesExpList(); 
-
-		for(String expDate:exps.getFuturesExpList()) {
-			initExpFutures(expDate);
+		
+		for(Underlying under:unders) {
+			for(String expDate:exps.getValidFuturesExpList(parseDate.getUndashedToday())) {
+				initExpFutures(under, expDate);
+			}
 		}
 	}
-	private void initExpFutures(String expDate) {
-		Underlying under = new Underlying("ES");
+	private void initExpFutures(Underlying under, String expDate) {
 		InvestmentFuture future = new InvestmentFuture(under, expDate);
 		Trade trade = new Trade(future, TradeType.BUY, 1, 0.0);
 		Transaction trans = new Transaction(trade);
-		getMarketPortfolio().enterTransaction(trans);		
+		marketPortfolio.enterTransaction(trans);		
 
 	}
 
 	// STOCKS
 	/**
 	 * Initialize all stocks
-	 * @param index
+	 * @param stocks
 	 */
-	private void initStocks(Underlying index) {
-		if(index.getTicker().equals("SPX")) {
-			
-	// 1 100 Max rate of messages per second has been exceeded:max=50 rec=138 (1)
-			List<String> stocks = new InitSNPMarket().getSNP500();
-			for (String stock:stocks) {
-				// TODO: remove comment to run at scale 
-				setStock(stock);
-			}
+	private void initStocks(List<Underlying> stocks) {
+		for (Underlying stock:stocks) {
+			setStock(stock);
 		}
 	}
 
-	private void setStock(String name) {
-		Underlying under = new Underlying(name);
+	private void setStock(Underlying under) {
 		InvestmentStock stock = new InvestmentStock(under);
 		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);
-		getMarketPortfolio().enterTransaction(stockTrans);		
+		marketPortfolio.enterTransaction(stockTrans);		
 	}
 
 
@@ -185,14 +213,6 @@ public class InitMarket {
 
 	private void setIndices(List<String> indices) {
 		this.indices = indices;
-	}
-
-	public Portfolio getMarketPortfolio() {
-		return marketPortfolio;
-	}
-
-	private void setMarketPortfolio(Portfolio marketPortfolio) {
-		this.marketPortfolio = marketPortfolio;
 	}
 
 	private InvestmentIndex getIndex() {

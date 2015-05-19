@@ -87,6 +87,7 @@ public class ApiConnection extends EClientSocket {
 
 		// ApiController requires TWS 932 or higher; this limitation could be removed if needed
 		if (serverVersion() < 66) {
+			System.out.println("ERROR: PLACE ORDER BUILD");
             error( EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS, "ApiController requires TWS build 932 or higher to place orders.");
             return;
 		}

@@ -11,7 +11,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
-import com.onenow.data.Sampling;
+import com.onenow.data.DataSampling;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;
@@ -29,7 +29,7 @@ public class PortfolioFactory {
 	private static MarketPrice marketPrice;
 	private static Underlying index;
 
-	private Sampling sampling;
+	private DataSampling sampling;
 	static List<String> samplingRate = new ArrayList<String>();
 
 	private static BrokerInteractive IB;
@@ -40,14 +40,12 @@ public class PortfolioFactory {
 		
 	}
 	
-	public PortfolioFactory(Underlying index) throws InterruptedException {
+	public PortfolioFactory(Portfolio marketPortfolio) throws InterruptedException {
 		
-		setMarketPortfolio(new Portfolio());
-		setIndex(index);
-		InitMarket init = new InitMarket(index, getMarketPortfolio()); 		
+		this.marketPortfolio = marketPortfolio;
 		setMarketPrice(new MarketPrice(getMarketPortfolio(), broker));
 		
-		setSampling(new Sampling());
+		setSampling(new DataSampling());
 	}	
 	
 	public void launch() throws InterruptedException {
@@ -207,11 +205,11 @@ public class PortfolioFactory {
 		PortfolioFactory.index = index;
 	}
 
-	public Sampling getSampling() {
+	public DataSampling getSampling() {
 		return sampling;
 	}
 
-	public void setSampling(Sampling sampling) {
+	public void setSampling(DataSampling sampling) {
 		this.sampling = sampling;
 	}
 

@@ -844,13 +844,14 @@ public class BrokerController implements EWrapper {
 
 	/** @param endDateTime format is YYYYMMDD HH:MM:SS [TMZ]
 	 *  @param duration is number of durationUnits */
-    public void reqHistoricalData( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, 
+    public int reqHistoricalData( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, 
     		BarSize barSize, WhatToShow whatToShow, boolean rthOnly, IHistoricalDataHandler handler) {
     	int reqId = m_reqId++;
     	m_historicalDataMap.put( reqId, handler);
     	String durationStr = duration + " " + durationUnit.toString().charAt( 0);
     	m_client.reqHistoricalData(reqId, contract, endDateTime, durationStr, barSize.toString(), whatToShow.toString(), rthOnly ? 1 : 0, 2, Collections.<TagValue>emptyList() );
 		sendEOM();
+		return reqId;
     }
 
     public void cancelHistoricalData( IHistoricalDataHandler handler) {
@@ -879,7 +880,7 @@ public class BrokerController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				QuoteRow bar = new QuoteRow( longDate, high, low, open, close, wap, volume, count);
+				QuoteRow bar = new QuoteRow(reqId, longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps); // *********** HERE 
 			}
 		}
@@ -913,7 +914,7 @@ public class BrokerController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			QuoteRow bar = new QuoteRow( time, high, low, open, close, wap, volume, count);
+			QuoteRow bar = new QuoteRow(reqId, time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();
