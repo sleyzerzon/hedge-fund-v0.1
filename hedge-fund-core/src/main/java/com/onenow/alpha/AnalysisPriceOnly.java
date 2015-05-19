@@ -100,7 +100,7 @@ public class AnalysisPriceOnly {
 		// TODO DOJI by small % rather than exactly equal
 		
 		Candle current = getPrices().get(which);
-		Double range = Math.abs(current.getClosePrice()-current.getOpenPrice());
+		Double range = Math.abs(current.closePrice-current.openPrice);
 		if(range<5) {
 			narrowRange = true;
 			System.out.println("\t\t"  + "narrow range at " + which);
@@ -222,8 +222,8 @@ public class AnalysisPriceOnly {
 				System.out.println("\t\t"  + "ignore: not lower low");
 			}
 			if(isHigherHighAndLowerLowCurrentToPreviousCandle(previous, current)) {
-				if( !(current.getHighPrice()==current.getClosePrice()) ||
-					 !(current.getLowPrice()==current.getClosePrice()) ) {
+				if( !(current.highPrice==current.closePrice) ||
+					 !(current.lowPrice==current.closePrice) ) {
 					ignore=true;
 					System.out.println("\t\t"  + "ignore: higher high and lower low, but not closing high/low");
 				}
@@ -254,7 +254,7 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			if(isHigherHighPriceCurrentToPreviousIndex(which)) {
 				Candle current = getPrices().get(which);
-				if(current.getClosePrice()<current.getHighPrice()) {
+				if(current.closePrice < current.highPrice) {
 					isolatedHigh=true;
 					System.out.println("\t\t"  + "isolated high at " + which);
 				}
@@ -267,7 +267,7 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			if(isLowerLowPriceCurrentToPreviousIndex(which)) {
 				Candle current = getPrices().get(which);
-				if(current.getClosePrice()>current.getLowPrice()) {
+				if(current.closePrice > current.lowPrice) {
 					isolatedLow=true;
 					System.out.println("\t\t"  + "isolated low at " + which);
 				}
@@ -324,7 +324,7 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle current = getPrices().get(which);
 			Candle previous = getPrices().get(which-1);
-			if(current.getOpenPrice()> (previous.getClosePrice()+benchmarkGap) ) {
+			if(current.openPrice > (previous.closePrice+benchmarkGap) ) {
 				openUp = true;
 				System.out.println("\t\t"  + "opening up by " + benchmarkGap + " at " + which);
 			}
@@ -340,7 +340,7 @@ public class AnalysisPriceOnly {
 		if(which>0) {
 			Candle current = getPrices().get(which);
 			Candle previous = getPrices().get(which-1);
-			if(current.getOpenPrice()<previous.getClosePrice()) {
+			if(current.openPrice < previous.closePrice) {
 				openDown = true;
 				System.out.println("\t\t"  + "opening down at " + which);
 			}
@@ -355,7 +355,7 @@ public class AnalysisPriceOnly {
 		}
 		if(which>0) {
 			Candle current = getPrices().get(which);
-			if(current.getClosePrice()>current.getOpenPrice()) {
+			if(current.closePrice > current.openPrice) {
 				closeUp = true;
 				System.out.println("\t\t"  + "close up at " + which);
 			}
@@ -370,7 +370,7 @@ public class AnalysisPriceOnly {
 		}
 		if(which>0) {
 			Candle current = getPrices().get(which);
-			if(current.getClosePrice()<current.getOpenPrice()) {
+			if(current.closePrice < current.openPrice) {
 				closeDown = true;
 				System.out.println("\t\t"  + "close down at " + which);
 			}
@@ -456,7 +456,7 @@ public class AnalysisPriceOnly {
 	// CANDLE COMPARISON: CURRENT TO PREVIOUS
 	public boolean isHigherHighPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean higher = false;
-		if(current.getHighPrice()>previous.getHighPrice()) {
+		if(current.highPrice > previous.highPrice) {
 			higher = true;
 			System.out.println("\t\t"  + "higher high at current to prevous candle");
 		}
@@ -465,7 +465,7 @@ public class AnalysisPriceOnly {
 	
 	private boolean isLowerHighPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean higher = false;
-		if(current.getHighPrice()<previous.getHighPrice()) {
+		if(current.highPrice < previous.highPrice) {
 			higher = true;
 			System.out.println("\t\t"  + "lower high at current to prevous candle");
 		}
@@ -474,7 +474,7 @@ public class AnalysisPriceOnly {
 
 	public boolean isLowerLowPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean lower = false;
-		if(current.getLowPrice()<previous.getLowPrice()) {
+		if(current.lowPrice < previous.lowPrice) {
 			lower = true;
 			System.out.println("\t\t"  + "lower low at current to prevous candle");
 		}		
@@ -483,7 +483,7 @@ public class AnalysisPriceOnly {
 
 	private boolean isHigherLowPriceCurrentToPreviousCandle(Candle previous, Candle current) {
 		boolean lower = false;
-		if(current.getLowPrice()>previous.getLowPrice()) {
+		if(current.lowPrice > previous.lowPrice) {
 			lower = true;
 			System.out.println("\t\t"  + "higher low at current to prevous candle");
 		}		

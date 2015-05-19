@@ -99,15 +99,32 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
 		return candles;
 	}
 
+/**
+ * Price queries per http://influxdb.com/docs/v0.7/api/aggregate_functions.html
+ * @param dbName
+ * @param serieName
+ * @param sampling
+ * @param fromDate
+ * @param toDate
+ * @return
+ */
 public List<Serie> queryPrice(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
-	
+	 
 	String query = 	"SELECT " +
-						"FIRST(price)" + ", " +
-						"LAST(price)" + ", " +
-						"MIN(price)" + ", " +
-						"MAX(price)" + ", " + 
-						"SUM(price) " +  
+						"FIRST(price)" + ", " +			
+						"LAST(price)" + ", " +			
+						"DIFFERENCE(price)" + ", " +							
+						"MIN(price)" + ", " +			
+						"MAX(price)" + ", " +			
+						"MEAN(price)" + ", " +			
+						"MODE(price)" + ", " +			
+						"MEDIAN(price)" + ", " +						
+						"STDDEV(price)" + ", " +						
+						"DISTINCT(price)" + ", " +					
+						"COUNT(price)" + ", " +			
+						"SUM(price) " + ", " + 
+						"DERIVATIVE(price)" + 						
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
 						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " + 
@@ -117,6 +134,11 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 					"AND " +
 					"time < " + "'" + toDate + "' "; 
 					
+	// TODO: SELECT PERCENTILE(column_name, N) FROM series_name group by time(10m) ...
+	// TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
+	// TODO: SELECT TOP(column_name, N) FROM series_name ...
+	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
+	
 	try {
 		System.out.println("#PRICE# QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
@@ -143,20 +165,58 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 				s = s + row.get(col) + "\t";
 //				System.out.println("row " + row + " " + row.get(col)); full row
 				if(i.equals(1)) {
-					candle.setOpenPrice(new Double(row.get(col).toString()));
+					candle.openPrice = new Double(row.get(col).toString());
 				}
 				if(i.equals(2)) {
-					candle.setClosePrice(new Double(row.get(col).toString()));
+					candle.closePrice = new Double(row.get(col).toString());
 				}
 				if(i.equals(3)) {
-					candle.setLowPrice(new Double(row.get(col).toString()));
-				}
+					candle.difference = new Double(row.get(col).toString());
+				}				
+				//				"FIRST(price)" + ", " +			
+				//				"LAST(price)" + ", " +			
+				//				"DIFFERENCE(price)" + ", " +							
 				if(i.equals(4)) {
-					candle.setHighPrice(new Double(row.get(col).toString()));
+					candle.lowPrice = new Double(row.get(col).toString());
 				}
 				if(i.equals(5)) {
-					//	sum
+					candle.highPrice = new Double(row.get(col).toString());
 				}
+				//				"MIN(price)" + ", " +			
+				//				"MAX(price)" + ", " +			
+				if(i.equals(6)) {
+					candle.meanPrice = new Double(row.get(col).toString());
+				}
+				if(i.equals(7)) {
+					candle.modePrice = new Double(row.get(col).toString());
+				}
+				if(i.equals(8)) {
+					candle.medianPrice = new Double(row.get(col).toString());
+				}
+				if(i.equals(9)) {
+					candle.stddevPrice = new Double(row.get(col).toString());
+				}
+				//				"MEAN(price)" + ", " +			
+				//				"MODE(price)" + ", " +			
+				//				"MEDIAN(price)" + ", " +						
+				//				"STDDEV(price)" + ", " +						
+				if(i.equals(10)) {
+					candle.distinctPrice = new Double(row.get(col).toString());
+				}
+				if(i.equals(11)) {
+					candle.countPrice = new Double(row.get(col).toString());
+				}
+				if(i.equals(12)) {
+					candle.sumPrice = new Double(row.get(col).toString());
+				}
+				if(i.equals(13)) {
+					candle.derivativePrice = new Double(row.get(col).toString());
+				}
+				//				"DISTINCT(price)" + ", " +					
+				//				"COUNT(price)" + ", " +			
+				//				"SUM(price) " + ", " + 
+				//				"DERIVATIVE(price)" + 						
+
 				i++;
 			}
 			s = s + "\n";
@@ -194,14 +254,31 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	return sizes;
 }
 
+/**
+ * Size/volume queries per http://influxdb.com/docs/v0.7/api/aggregate_functions.html
+ * @param dbName
+ * @param serieName
+ * @param sampling
+ * @param fromDate
+ * @param toDate
+ * @return
+ */
 public List<Serie> querySize(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
-						"FIRST(size)" + ", " +
-						"LAST(size)" + ", " +
-						"MIN(size)" + ", " +
-						"MAX(size)" + ", " + 
+						"FIRST(size)" + ", " +			
+						"LAST(size)" + ", " +			
+						"DIFFERENCE(size)" + ", " +							
+						"MIN(size)" + ", " +			
+						"MAX(size)" + ", " +			
+						"MEAN(size)" + ", " +			
+						"MODE(size)" + ", " +			
+						"MEDIAN(size)" + ", " +						
+						"DISTINCT(size)" + ", " +					
+						"STDDEV(size)" + ", " +						
+						"DERIVATIVE(size)" + ", " +						
+						"COUNT(size)" + ", " +			
 						"SUM(size) " +  
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
@@ -239,21 +316,46 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 				s = s + row.get(col) + "\t";
 //				System.out.println("row " + row + " " + row.get(col)); full row
 				if(i.equals(1)) {
-					// open 
 				}
 				if(i.equals(2)) {
-					// close
 				}
 				if(i.equals(3)) {
-					// low
 				}
+				//				"FIRST(price)" + ", " +			
+				//				"LAST(price)" + ", " +			
+				//				"DIFFERENCE(price)" + ", " +							
 				if(i.equals(4)) {
-					// high
 				}
 				if(i.equals(5)) {
+				}
+				//				"MIN(price)" + ", " +			
+				//				"MAX(price)" + ", " +	
+				if(i.equals(6)) {
+				}
+				if(i.equals(7)) {
+				}
+				if(i.equals(8)) {
+				}
+				if(i.equals(9)) {
+				}
+				//				"MEAN(price)" + ", " +			
+				//				"MODE(price)" + ", " +			
+				//				"MEDIAN(price)" + ", " +						
+				//				"STDDEV(price)" + ", " +						
+				if(i.equals(10)) {
+				}
+				if(i.equals(11)) {
+				}
+				if(i.equals(12)) {
 					Double num = new Double(row.get(col).toString());
 					sizes.add((int) Math.round(num));
 				}
+				if(i.equals(13)) {
+				}
+				//				"DISTINCT(price)" + ", " +					
+				//				"COUNT(price)" + ", " +			
+				//				"SUM(price) " + ", " + 
+				//				"DERIVATIVE(price)" + 	
 				i++;
 			}
 			s = s + "\n";

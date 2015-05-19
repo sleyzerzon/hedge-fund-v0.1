@@ -36,12 +36,6 @@ public class HistorianMain {
 
 	public static void main(String[] args) {
 		
-		// choose investments
-	    List<Underlying> stocks = invList.getUnderlying(invList.someStocks);
-	    List<Underlying> indices = invList.getUnderlying(invList.someIndices);
-	    List<Underlying> futures = invList.getUnderlying(invList.futures);
-	    List<Underlying> options = invList.getUnderlying(invList.options);
-	    
 	    // choose relevant timeframe
 	    String toDashedDate = parseDate.getDashedDatePlus(parseDate.getDashedToday(), 1);
 
@@ -56,8 +50,8 @@ public class HistorianMain {
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 
-			    											stocks, indices,
-			    											futures, options,
+															invList.getUnderlying(invList.someStocks), invList.getUnderlying(invList.someIndices),
+															invList.getUnderlying(invList.futures), invList.getUnderlying(invList.options),
 			    											toDashedDate);						
 			    	// register once: get all real-time quotes
 					brokerInteractive.getLiveQuotes(); 

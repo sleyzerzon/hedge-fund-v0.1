@@ -119,14 +119,14 @@ public class PriceSizeCache {
 										source, timing);
 			} catch (Exception e) {
 				success = false;
-				System.out.println("ERROR: TSDB TRANSACTION FAILED: " + time + " " + inv.toString());
+				System.out.println("ERROR: TSDB RT TRANSACTION WRIT FAILED: " + time + " " + inv.toString());
 				// e.printStackTrace();
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {}
 			}
 		}
-		System.out.println("> TSDB TRANSACTION SUCCEEDED: " + time + " " + inv.toString());		
+		System.out.println("> TSDB RT TRANSACTION WRITE SUCCEEDED: " + time + " " + inv.toString());		
 	}
 
 	
@@ -180,7 +180,7 @@ public class PriceSizeCache {
 		List<Candle> candles = chart.getPrices(); 
 		
 		Candle last = candles.get(candles.size()-1);
-		price = last.getClosePrice();
+		price = last.closePrice;
 		
 		System.out.println("Cache PRICE from Chart READ " + price);
 

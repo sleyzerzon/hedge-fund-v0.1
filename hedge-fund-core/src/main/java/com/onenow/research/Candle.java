@@ -3,23 +3,29 @@ package com.onenow.research;
 
 public class Candle {
 	
-	private Double highPrice;
-	private Double lowPrice;
-	private Double openPrice;
-	private Double closePrice;
+	public Double openPrice;
+	public Double closePrice;
+	public Double difference;
 	
-	private Long timeStart;
-	private Long timeEnd;
-	
-//	private Double highVWAP;
-//	private Double lowVWAP;
-//	private Double openVWAP;
-//	private Double closeVWAP;
-	
-//	private Integer sizeTotal;
-	
-	private Integer volumeOpen;
-	private Integer volumeClose;
+	public Double lowPrice;
+	public Double highPrice;
+
+	public Double meanPrice;
+	public Double modePrice;
+	public Double medianPrice;
+	public Double stddevPrice;
+
+	public Double distinctPrice;
+	public Double countPrice;
+	public Double sumPrice;
+	public Double derivativePrice;
+
+
+//	private Long timeStart;
+//	private Long timeEnd;
+//		
+//	private Integer volumeOpen;
+//	private Integer volumeClose;
 	
 	
 	public Candle() {
@@ -38,72 +44,26 @@ public class Candle {
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = s + "high=" + getHighPrice() + " " +
-				"low=" + getLowPrice() + " " +
-				"open=" + getOpenPrice() + " " +
-				"close=" + getClosePrice() + "\n"; // +
-//				"size=" + getSizeTotal() + "\n";
+		s = s + "open=" + openPrice + " ";
+		s = s + "close=" + closePrice + " ";
+		s = s + "difference=" + difference + " ";
+				
+		s = s + "low=" + lowPrice + " ";
+		s = s + "high=" + highPrice + " ";
+		
+		s = s + "mean=" + meanPrice + " ";
+		s = s + "mode=" + modePrice + " ";
+		s = s + "median=" + medianPrice + " ";		
+		s = s + "stddev" + stddevPrice + " ";
+
+		s = s + "distinct" + distinctPrice + " ";
+		s = s + "count=" + countPrice + " ";
+		s = s + "sum=" + sumPrice + " ";
+		s = s + "derivative=" + derivativePrice + " ";		
+		
+		s = s + "\n";
 
 		return s;
 	}
-	
-	// SET GET
-	public Double getHighPrice() {
-		return highPrice;
-	}
-
-	public void setHighPrice(Double highPrice) {
-		this.highPrice = highPrice;
-	}
-
-	public Double getLowPrice() {
-		return lowPrice;
-	}
-
-	public void setLowPrice(Double lowPrice) {
-		this.lowPrice = lowPrice;
-	}
-
-	public Double getOpenPrice() {
-		return openPrice;
-	}
-
-	public void setOpenPrice(Double openPrice) {
-		this.openPrice = openPrice;
-	}
-
-	public Double getClosePrice() {
-		return closePrice;
-	}
-
-	public void setClosePrice(Double closePrice) {
-		this.closePrice = closePrice;
-	}
-
-//	public Integer getSizeTotal() {
-//		return sizeTotal;
-//	}
-//
-//	public void setSizeTotal(Integer sizeTotal) {
-//		this.sizeTotal = sizeTotal;
-//	}
-
-	public Integer getVolumeOpen() {
-		return volumeOpen;
-	}
-
-	private void setVolumeOpen(Integer volumeOpen) {
-		this.volumeOpen = volumeOpen;
-	}
-
-	public Integer getVolumeClose() {
-		return volumeClose;
-	}
-
-	private void setVolumeClose(Integer volumeClose) {
-		this.volumeClose = volumeClose;
-	}
-
-
 
 }

@@ -67,7 +67,7 @@ public class Chart {
 		
 		List<Candle> candles = getPrices();
 		Candle last = candles.get(candles.size()-1);
-		price = last.getClosePrice();
+		price = last.closePrice;
 		
 		return price;
 	}
