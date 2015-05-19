@@ -79,11 +79,7 @@ public void writePrice(Long time, Investment inv, TradeType tradeType, Double pr
 	.values(time, price)
 	.build();
 	System.out.println("WRITE " + DBname.PRICE.toString() + " " + serie);
-	try {
-		getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
+	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
 public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
@@ -178,11 +174,7 @@ public void writeSize(Long time, Investment inv, TradeType tradeType, Integer si
 	.values(time, size)
 	.build();
 	System.out.println("WRITE " + DBname.SIZE.toString() + " " + serie);
-	try {
-		getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
+	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
 public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,

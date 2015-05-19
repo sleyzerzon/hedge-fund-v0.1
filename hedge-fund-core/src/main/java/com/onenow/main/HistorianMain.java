@@ -32,6 +32,7 @@ public class HistorianMain {
 
 	private static InvestmentList invList = new InvestmentList();
 	private static ParseDate parseDate = new ParseDate();
+	private static HistorianService service = new HistorianService();
 
 	public static void main(String[] args) {
 		
@@ -44,13 +45,8 @@ public class HistorianMain {
 	    // choose relevant timeframe
 	    String toDashedDate = parseDate.getDashedDatePlus(parseDate.getDashedToday(), 1);
 
-	    HistorianConfig config = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
-//														1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
-														1, DurationUnit.DAY, BarSize._30_secs, WhatToShow.TRADES,
-														TradeType.TRADED, SamplingRate.HFMEDIUM);   	    	
-
 		brokerInteractive = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio); 
-		historian = new Historian(brokerInteractive, config);		
+		historian = new Historian(brokerInteractive, service.size30sec);		
 			    
 	    // get ready to loop
 		int count=0;

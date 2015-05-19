@@ -107,10 +107,26 @@ public class PriceSizeCache {
 
 	private void writeRTtoL1(Long time, Investment inv, TradeType tradeType,
 			InvDataSource source, InvDataTiming timing, Double price, int size) {
-		TSDB.writePrice(	time, inv, tradeType, price,
-								source, timing);				
-		TSDB.writeSize(	time, inv, tradeType, size,			
-								source, timing);
+		
+		boolean success = false;
+		// TODO: handle as a transaction, both price+size write or nothing
+		while(!success) {
+			try {
+				success = true;
+				TSDB.writePrice(	time, inv, tradeType, price,
+										source, timing);				
+				TSDB.writeSize(	time, inv, tradeType, size,			
+										source, timing);
+			} catch (Exception e) {
+				success = false;
+				System.out.println("ERROR: TSDB TRANSACTION FAILED: " + time + " " + inv.toString());
+				// e.printStackTrace();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {}
+			}
+		}
+		System.out.println("> TSDB TRANSACTION SUCCEEDED: " + time + " " + inv.toString());		
 	}
 
 	

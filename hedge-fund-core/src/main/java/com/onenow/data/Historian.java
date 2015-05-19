@@ -121,9 +121,22 @@ public class Historian {
 			Double price = row.open(); 
 
 			// System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
-			TSDB.writePrice(	time, inv, dataType, price,
-								source, timing);				
-
+			boolean success = false;
+			while (!success) {
+				try {
+					success = true;
+					TSDB.writePrice(	time, inv, dataType, price,
+										source, timing);
+				} catch (Exception e) {
+					success = false;
+					System.out.println("> TSDB HISTORY WRITE ERROR: " + inv.toString());
+					// e.printStackTrace();
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {}
+				}				
+			}
+			System.out.println("> TSDB HISTORY WRITE SUCCESS: " + inv.toString());
 		}
 		// reset to avoid writing same twice
 		invHistory = null; 
