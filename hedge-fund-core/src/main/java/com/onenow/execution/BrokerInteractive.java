@@ -135,12 +135,12 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
    */
   public void readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory quoteHistory) {
 
-    System.out.println("> getting historical quote for investment: " + inv.toString());
     Contract contract = getContractFactory().getContract(inv);
 
-    getController().reqHistoricalData(	contract, end, 
-    									1, config.durationUnit, config.barSize, config.whatToShow, 
-    									false, quoteHistory);
+    int reqId = getController().reqHistoricalData(	contract, end, 
+    												1, config.durationUnit, config.barSize, config.whatToShow, 
+    												false, quoteHistory);
+    System.out.println("#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId);
   }
 
 

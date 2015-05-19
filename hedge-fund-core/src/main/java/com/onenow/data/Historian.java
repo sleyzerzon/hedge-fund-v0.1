@@ -75,14 +75,13 @@ public class Historian {
 							invHist);					
 
 		// query L2 only if L1 data is incomplete
-		if (prices.size()<10) {					
+		if (prices.size()<5) {					
 			paceHistoricalQuery(); 
 			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(toDashedDate)), 
 											config, invHist); 
-			lastHistQuery = parseDate.getNow();
-			
+			lastHistQuery = parseDate.getNow();	
 		} else {
-			System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L1 HIT \n\n");
+			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L1 HIT:" + inv.toString() + "\n\n");
 		}
 	}
 

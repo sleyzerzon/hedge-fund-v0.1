@@ -55,13 +55,11 @@ public class HistorianMain {
 	    int count=0;
 	    
 		while(true) {
+			// TODO : 10000068 322 Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.
 
-		    while(tryToConnect) {
-				// TODO : 10000068 322 Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.
-	
-		    	// update the market portfolio, broker, and historian every month
-		    	if(count==0) {
-		    		
+	    	// update the market portfolio, broker, and historian every month
+	    	if(count==0) {
+			    while(tryToConnect) {		    		
 					try {	
 						
 						tryToConnect = false;
@@ -84,10 +82,9 @@ public class HistorianMain {
 							Thread.sleep(10000);
 						} catch (InterruptedException e1) {}
 					}			
-		    	}
-		    } // end try to connect
-		    
-			System.out.println("CONNECTED TO HISTORIAN BROKER!");
+		    	} // end try to connect
+				System.out.println("CONNECTED TO HISTORIAN BROKER!");
+		    } 	    
 
 			// updates historical L1 from L2
 			hist.run(toDashedDate);
