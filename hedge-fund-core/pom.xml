@@ -372,7 +372,7 @@
         <profile>
             <id>dist</id>
             <build>
-                <finalName>${project.artifactId}</finalName>
+                <finalName>${project.artifactId}-${env.CI_COMMIT_ID}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
