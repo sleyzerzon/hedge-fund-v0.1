@@ -60,8 +60,9 @@ public class Historian {
 		
 			
 		// See if data already in L1
+		// readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> prices = TSDB.readPriceFromDB(		inv, config.tradeType, config.sampling, 
-														parseDate.getDashedDateMinus(toDashedDate, 1), toDashedDate,
+														parseDate.getDashedDateMinus(toDashedDate, 1), toDashedDate, 
 														config.source, config.timing);
 
 		// get the history reference for the specific investment 
@@ -75,9 +76,10 @@ public class Historian {
 							invHist);					
 
 		// query L2 only if L1 data is incomplete
+		// readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if (prices.size()<5) {					
 			paceHistoricalQuery(); 
-			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(toDashedDate)), 
+			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(parseDate.getDashedDateMinus(toDashedDate, 1))), 
 											config, invHist); 
 			lastHistQuery = parseDate.getNow();	
 		} else {

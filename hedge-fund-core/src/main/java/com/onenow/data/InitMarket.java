@@ -42,19 +42,19 @@ public class InitMarket {
 						List<Underlying> futures, List<Underlying> options,
 						String toDashedDate) {
 		
-		setMarketPortfolio(portfolio);
+		this.marketPortfolio = portfolio;
 
 		initStocks(stocks);		
-		System.out.println(getMarketPortfolio().toStocksString());		
+		System.out.println(marketPortfolio.toStocksString());		
 
 //		addIndicesToPortfolio(indices);
-//		System.out.println(getMarketPortfolio().toIndicesString());				
+//		System.out.println(marketPortfolio.toIndicesString());				
 //
 //		initOptions(options, toDashedDate);
-//		System.out.println(getMarketPortfolio().toOptionsString());		
+//		System.out.println(marketPortfolio.toOptionsString());		
 //
 //		initFutures(futures);
-//		System.out.println(getMarketPortfolio().toFuturesString());			
+//		System.out.println(marketPortfolio.toFuturesString());			
 	}
 	
 		
@@ -64,21 +64,21 @@ public class InitMarket {
 //						Underlying futures, Underlying futuresOptions,
 //						String fromDate, String toDate) {
 //		
-//		setMarketPortfolio(portfolio);
+//		marketPortfolioportfolio);
 //
 //		initStocks(stocks);		
-//		System.out.println(getMarketPortfolio().toStocksString());		
+//		System.out.println(marketPortfolio.toStocksString());		
 //
 //		// TODO: stock options
 //
 //		addIndexToPortfolio(index);
-//		System.out.println(getMarketPortfolio().toIndicesString());				
+//		System.out.println(marketPortfolio.toIndicesString());				
 //
 //		initIndexOptions(indexOptions, fromDate, toDate);
-//		System.out.println(getMarketPortfolio().toOptionsString());		
+//		System.out.println(marketPortfolio.toOptionsString());		
 //
 //		initFutures(futures);
-//		System.out.println(getMarketPortfolio().toFuturesString());	
+//		System.out.println(marketPortfolio.toFuturesString());	
 //		
 //		// TODO: futures options
 //
@@ -94,7 +94,7 @@ public class InitMarket {
 			InvestmentIndex index = new InvestmentIndex(under);
 			Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
 			Transaction indexTrans = new Transaction(indexTrade);
-			getMarketPortfolio().enterTransaction(indexTrans);
+			marketPortfolio.enterTransaction(indexTrans);
 		}
 	}	
 	
@@ -161,7 +161,7 @@ public class InitMarket {
 			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
 			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
 			Transaction trans = new Transaction(callTrade, putTrade); 
-			getMarketPortfolio().enterTransaction(trans);
+			marketPortfolio.enterTransaction(trans);
 		}
 	}
 
@@ -183,7 +183,7 @@ public class InitMarket {
 		InvestmentFuture future = new InvestmentFuture(under, expDate);
 		Trade trade = new Trade(future, TradeType.BUY, 1, 0.0);
 		Transaction trans = new Transaction(trade);
-		getMarketPortfolio().enterTransaction(trans);		
+		marketPortfolio.enterTransaction(trans);		
 
 	}
 
@@ -202,7 +202,7 @@ public class InitMarket {
 		InvestmentStock stock = new InvestmentStock(under);
 		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);
-		getMarketPortfolio().enterTransaction(stockTrans);		
+		marketPortfolio.enterTransaction(stockTrans);		
 	}
 
 
@@ -213,14 +213,6 @@ public class InitMarket {
 
 	private void setIndices(List<String> indices) {
 		this.indices = indices;
-	}
-
-	public Portfolio getMarketPortfolio() {
-		return marketPortfolio;
-	}
-
-	private void setMarketPortfolio(Portfolio marketPortfolio) {
-		this.marketPortfolio = marketPortfolio;
 	}
 
 	private InvestmentIndex getIndex() {
