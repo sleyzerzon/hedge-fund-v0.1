@@ -77,7 +77,7 @@ public class Historian {
 
 		// query L2 only if L1 data is incomplete
 		// readHistoricalQuotes gets today's data by requesting 'by end of today'
-		if (prices.size()<5) {					
+		if (prices.size()<50) {					
 			paceHistoricalQuery(); 
 			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(parseDate.getDashedDateMinus(toDashedDate, 1))), 
 											config, invHist); 

@@ -113,12 +113,13 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 						"MAX(price)" + ", " + 
 						"SUM(price) " +  
 					"FROM " + "\"" + serieName + "\" " +
-					"WHERE " +
-						"time > " + "'" + fromDate + "' " + 
-						"AND " +
-						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ")";
+						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " + 
+					// "FILL(0) " +
+					"WHERE " +
+					"time > " + "'" + fromDate + "' " + 
+					"AND " +
+					"time < " + "'" + toDate + "' "; 
 					
 	try {
 		System.out.println("#PRICE# QUERY " + query);
@@ -211,12 +212,13 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 						"MAX(size)" + ", " + 
 						"SUM(size) " +  
 					"FROM " + "\"" + serieName + "\" " +
-					"WHERE " +
-						"time > " + "'" + fromDate + "' " + 
-						"AND " +
-						"time < " + "'" + toDate + "' " + 
 					"GROUP BY " +
-						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ")";
+						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " +
+					// "FILL(0) " +
+					"WHERE " +
+					"time > " + "'" + fromDate + "' " + 
+					"AND " +
+					"time < " + "'" + toDate + "' ";
 					
 	try {
 		System.out.println("#SIZE# QUERY " + query);

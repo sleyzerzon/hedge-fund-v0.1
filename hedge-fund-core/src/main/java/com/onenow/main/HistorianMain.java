@@ -27,8 +27,8 @@ import com.onenow.util.ParseDate;
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BrokerInteractive brokerInteractive = new BrokerInteractive();
-	private static Historian historian = new Historian();
+	private static BrokerInteractive brokerInteractive;
+	private static Historian historian;
 
 	private static InvestmentList invList = new InvestmentList();
 	private static ParseDate parseDate = new ParseDate();
@@ -45,9 +45,9 @@ public class HistorianMain {
 	    String toDashedDate = parseDate.getDashedDatePlus(parseDate.getDashedToday(), 1);
 
 	    HistorianConfig config = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
-				1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
-				TradeType.TRADED, SamplingRate.SWING);   	    	
-	    
+//														1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
+														1, DurationUnit.DAY, BarSize._30_secs, WhatToShow.TRADES,
+														TradeType.TRADED, SamplingRate.HFMEDIUM);   	    	
 
 		brokerInteractive = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio); 
 		historian = new Historian(brokerInteractive, config);		
