@@ -1,16 +1,14 @@
 package com.onenow.util;
 
-import java.sql.Timestamp;
+import com.onenow.test.Testable;
+
+import org.testng.Assert;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.onenow.test.Testable;
 
 public class ParseDate implements Testable {
 
@@ -22,13 +20,13 @@ public class ParseDate implements Testable {
 	 * Returns today's date in dashed format without time
 	 * @return
 	 */
-	public String getDashedToday() {
+	public static String getDashedToday() {
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // "yyyy-MM-dd HH:mm"
 		return sdf.format(today);
 	}
 	
-	public String getUndashedToday() {
+	public static String getUndashedToday() {
 		String date = "";
 		date = getUndashedDate(getDashedToday());
 		return date;
@@ -57,7 +55,7 @@ public class ParseDate implements Testable {
 	 */
 	// The NYSE and NYSE MKT are open from Monday through Friday 9:30 a.m. to 4:00 p.m. ET.
 	// Closing is 1pm PT, 4pm AR, 9PM UTZ
-	public String getClose(String date) {
+	public static String getClose(String date) {
 		String s = "";
 		int endOfDay = 24;
 		int offset = getOffsetInMillis();
@@ -68,7 +66,7 @@ public class ParseDate implements Testable {
 		return s;
 	}
 	
-	public String getCurrentTimezoneOffset() {
+	public static String getCurrentTimezoneOffset() {
 
 	    int offsetInMillis = getOffsetInMillis();
 
@@ -78,7 +76,7 @@ public class ParseDate implements Testable {
 	    return offset;
 	} 
 	
-	private int getOffsetInMillis() {
+	private static int getOffsetInMillis() {
 		int offsetInMillis = 0;
 		
 	    TimeZone tz = TimeZone.getDefault();  
@@ -88,25 +86,25 @@ public class ParseDate implements Testable {
 		return offsetInMillis;
 	}
 	
-	private int getTimezoneOffsetSign(int offsetInMillis) {
+	private static int getTimezoneOffsetSign(int offsetInMillis) {
 		int sign = 0;
 		sign = (offsetInMillis >= 0 ? +1 : -1);
 		return sign;
 	}
 	
-	private int getTimezoneHourOffset(int offsetInMillis) {
+	private static int getTimezoneHourOffset(int offsetInMillis) {
 		int hours = 0;
 		hours = Math.abs(offsetInMillis / 3600000);
 		return hours;
 	}
 
-	private int getTimezoneMinuteOffset(int offsetInMillis) {
+	private static int getTimezoneMinuteOffset(int offsetInMillis) {
 		int minutes  = 0;
 		minutes = Math.abs((offsetInMillis / 60000) % 60);
 		return minutes;
 	}
 
-	public String getDashedCloseToday() {
+	public static String getDashedCloseToday() {
 		String s = "";
 		s = getClose(getDashedToday());
 		return s;
@@ -119,7 +117,7 @@ public class ParseDate implements Testable {
 	 * @param dashedDate
 	 * @return
 	 */
-	public String removeDash(String dashedDate) {
+	public static String removeDash(String dashedDate) {
 		String date = "";
 		String year = "";
 		String month = "";
@@ -132,7 +130,7 @@ public class ParseDate implements Testable {
 		return date;
 	}
 	
-	public String addDash(String undashedDate) {
+	public static String addDash(String undashedDate) {
 		String date = "";
 		String year = "";
 		String month = "";
@@ -153,7 +151,7 @@ public class ParseDate implements Testable {
 	 * @param dashed
 	 * @return
 	 */
-	public String getDashedYear(String dashed) {
+	public static String getDashedYear(String dashed) {
 		String s = "";
 		try {
 			s = dashed.substring(0, 4);
@@ -165,21 +163,21 @@ public class ParseDate implements Testable {
 	 * @param unDashed
 	 * @return
 	 */
-	public String getUndashedYear(String unDashed) {
+	public static String getUndashedYear(String unDashed) {
 		String s = "";
 		try {
 			s = unDashed.substring(0, 4);
 		} catch (Exception e) { } 
 		return s;
 	}
-	public String getDashedMonth(String dashed) {
+	public static String getDashedMonth(String dashed) {
 		String s = "";
 		try {
 			s= dashed.substring(5, 7);
 		} catch (Exception e) { } 
 		return s;
 	}
-	public String getUndashedMonth(String unDashed) {
+	public static String getUndashedMonth(String unDashed) {
 		String s = "";
 		try {
 			s= unDashed.substring(4, 6);
@@ -187,14 +185,14 @@ public class ParseDate implements Testable {
 		return s;
 	}
 
-	public String getDashedDay(String dashed) {
+	public static String getDashedDay(String dashed) {
 		String s = "";
 		try {
 			s = dashed.substring(8, 10);
 		} catch (Exception e) { } 
 		return s;
 	}
-	public String getUndashedDay(String unDashed) {
+	public static String getUndashedDay(String unDashed) {
 		String s = "";
 		try {
 			s = unDashed.substring(6, 8);
@@ -207,7 +205,7 @@ public class ParseDate implements Testable {
 	 * @param dashedDate
 	 * @return
 	 */
-	public String getUndashedDate(String dashedDate) {
+	public static String getUndashedDate(String dashedDate) {
 		String year = getDashedYear(dashedDate);
 		String month = getDashedMonth(dashedDate);
 		String day = getDashedDay(dashedDate);
@@ -219,7 +217,7 @@ public class ParseDate implements Testable {
 	 * @param unDashedDate
 	 * @return
 	 */
-	public String getDashedDate(String unDashedDate) {
+	public static String getDashedDate(String unDashedDate) {
 		String year = getUndashedYear(unDashedDate);
 		String month = getUndashedMonth(unDashedDate);
 		String day = getUndashedDay(unDashedDate);
@@ -279,7 +277,7 @@ public class ParseDate implements Testable {
 	}
 	
 	
-	public String getMonthPlus(String yearMonth, Integer num) {
+	public static String getMonthPlus(String yearMonth, Integer num) {
 		String s="";
 		
 		return s;
@@ -287,7 +285,7 @@ public class ParseDate implements Testable {
 	
 
 	
-	private int getMonthLength(int month) {
+	private static int getMonthLength(int month) {
 		if(month==1) { // jan
 			return 31;
 		}
@@ -368,7 +366,7 @@ public class ParseDate implements Testable {
 		return elapsedTotal;
 	}
 	
-	public String getUndashedDatePlus(String undashedDate, Integer plusDays) {
+	public static String getUndashedDatePlus(String undashedDate, Integer plusDays) {
 		String s = "";
 		s = getDashedDatePlus(getDashedDate(undashedDate), plusDays);
 		s = getUndashedDate(s);
@@ -380,7 +378,7 @@ public class ParseDate implements Testable {
 	 * @param plusDays
 	 * @return
 	 */
-	public String getDashedDatePlus(String dashedDate, Integer plusDays){
+	public static String getDashedDatePlus(String dashedDate, Integer plusDays){
 //		System.out.println("Dashed date " + dashedDate + ". Num " + num);
 		
 		String s= "";
@@ -430,14 +428,14 @@ public class ParseDate implements Testable {
 	}
 	
 
-	public String getUndashedDateMinus(String undashedDate, Integer minusDays) {
+	public static String getUndashedDateMinus(String undashedDate, Integer minusDays) {
 		String s = "";
 		s = getDashedDateMinus(getDashedDate(undashedDate), minusDays);
 		s = getUndashedDate(s);
 		return s;
 	}
 	
-	public String getDashedDateMinus(String dashedDate, Integer minusDays){
+	public static String getDashedDateMinus(String dashedDate, Integer minusDays){
 //		System.out.println("Dashed date " + dashedDate + ". Num " + num);
 		
 		String s= "";
@@ -485,7 +483,7 @@ public class ParseDate implements Testable {
 		return s;
 	}
 
-	private String getTwoDigitString(Integer newDay) {
+	private static String getTwoDigitString(Integer newDay) {
 		String sDay;
 		sDay=newDay.toString();
 		if(newDay<10){

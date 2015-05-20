@@ -4,4 +4,6 @@ echo $*
 
 printenv
 
+initctl reload
+
 exit 0
