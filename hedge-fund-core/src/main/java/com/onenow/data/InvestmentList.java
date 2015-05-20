@@ -7,13 +7,13 @@ import com.onenow.instrument.Underlying;
 
 public class InvestmentList {
 	
-	public List<String> SNP500 = new ArrayList<String>();
-	public List<String> mainIndices = new ArrayList<String>();
-	public List<String> futures = new ArrayList<String>();
-	public List<String> options = new ArrayList<String>();	
+	public static List<String> SNP500 = new ArrayList<String>();
+	public static List<String> mainIndices = new ArrayList<String>();
+	public static List<String> futures = new ArrayList<String>();
+	public static List<String> options = new ArrayList<String>();	
 
-	public List<String> someStocks = new ArrayList<String>();
-	public List<String> someIndices = new ArrayList<String>();
+	public static List<String> someStocks = new ArrayList<String>();
+	public static List<String> someIndices = new ArrayList<String>();
 
 	public InvestmentList() {
 		// official
@@ -26,7 +26,7 @@ public class InvestmentList {
 		setSomeIndices();		
 	}
 	
-	public List<Underlying> getUnderlying(List<String> names) {
+	public static List<Underlying> getUnderlying(List<String> names) {
 		
 		List<Underlying> unders = new ArrayList<Underlying>();
 		
@@ -38,26 +38,26 @@ public class InvestmentList {
 		return unders;
 	}
 	
-	private void setMainIndices() {
+	private static void setMainIndices() {
 		mainIndices.add("SPX");
 		mainIndices.add("NDX");
 		mainIndices.add("RUT");
 	}
 	
-	private void setFutures() {
+	private static void setFutures() {
 		futures.add("ES");
 	}
 
-	private void setOptions() {
+	private static void setOptions() {
 //		options.add("ES");
 		options.add("SPX");
 	}
 
-	private void setSomeIndices() {
+	private static void setSomeIndices() {
 		someIndices.add("SPX");
 	}
 
-	private void setSomeStocks() {
+	private static void setSomeStocks() {
 		int count = 0;
 		for(String stock:SNP500){
 			someStocks.add(stock);
@@ -69,7 +69,7 @@ public class InvestmentList {
 	}
 		
 
-	private void setSNP500() {
+	private static void setSNP500() {
 
 		SNP500.add("A");
 		SNP500.add("AA");

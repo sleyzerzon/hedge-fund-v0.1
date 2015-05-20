@@ -20,13 +20,6 @@ public class ParseDateTest {
 		Assert.assertEquals(actualDateOut2, "2016-01-01");
 		Assert.assertEquals(actualDateOut3, "2015-05-16");
 		
-//		if(	actualDateOut1.equals("2015-03-01") &&
-//			actualDateOut2.equals("2016-01-01") &&
-//			actualDateOut3.equals("2015-05-16")
-//			) {
-//			result = true;
-//		}		
-		
 //		System.out.println("testDate1 " + actualDateOut1);
 //		System.out.println("testDate2 " + actualDateOut2);
 //		System.out.println("testDate3 " + actualDateOut3);

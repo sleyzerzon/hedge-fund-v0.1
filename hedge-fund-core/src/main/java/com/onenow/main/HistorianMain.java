@@ -2,21 +2,13 @@ package com.onenow.main;
 
 import java.util.List;
 
-import com.ib.client.Types.BarSize;
-import com.ib.client.Types.DurationUnit;
-import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.BrokerMode;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
 import com.onenow.data.Historian;
-import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
+import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
-import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.ParseDate;
 
@@ -28,20 +20,20 @@ import com.onenow.util.ParseDate;
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BrokerInteractive brokerInteractive;
+	private static BusWallSt bus;
+	private static BrokerInteractive broker;
 	private static Historian historian;
 
-	private static InvestmentList invList = new InvestmentList();
-	private static ParseDate parseDate = new ParseDate();
 	private static HistorianService service = new HistorianService();
 
 	public static void main(String[] args) {
 		
 	    // choose relevant timeframe
-	    String toDashedDate = parseDate.getDashedDatePlus(parseDate.getDashedToday(), 1);
+	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-		brokerInteractive = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio); 
-		historian = new Historian(brokerInteractive, service.size30sec);		
+	    bus = new BusWallSt();
+		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, bus); 
+		historian = new Historian(broker, service.size30sec);		
 			    
 	    // get ready to loop
 		int count=0;
@@ -51,15 +43,17 @@ public class HistorianMain {
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 
-															invList.getUnderlying(invList.someStocks), invList.getUnderlying(invList.someIndices),
-															invList.getUnderlying(invList.futures), invList.getUnderlying(invList.options),
+															InvestmentList.getUnderlying(InvestmentList.someStocks), 
+															InvestmentList.getUnderlying(InvestmentList.someIndices),
+															InvestmentList.getUnderlying(InvestmentList.futures), 
+															InvestmentList.getUnderlying(InvestmentList.options),
 			    											toDashedDate);						
 		    } 	    
 
 			// updates historical L1 from L2
 			historian.run(toDashedDate);
 			// go back further in time
-			toDashedDate = parseDate.getDashedDateMinus(toDashedDate, 1);
+			toDashedDate = ParseDate.getDashedDateMinus(toDashedDate, 1);
 			count++;
 		}
 	}

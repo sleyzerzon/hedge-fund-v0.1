@@ -4,11 +4,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ib.client.Types.NewsType;
-import com.ib.controller.Formats;
-import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.constant.BrokerMode;
-import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
 import com.onenow.data.HistorianConfig;
@@ -16,17 +12,13 @@ import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
-import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
-import com.onenow.portfolio.BrokerController.ConnectionHandler;
-import com.onenow.portfolio.BrokerController.IBulletinHandler;
-import com.onenow.portfolio.BrokerController.ITimeHandler;
 import com.onenow.risk.MarketAnalytics;
 import com.onenow.util.ParseDate;
 
-public class BrokerInteractive implements Broker, ConnectionHandler  {
+public class BrokerInteractive implements Broker  {
 
   private BrokerMode brokerMode;	
   private List<Underlying> underList;
@@ -36,18 +28,10 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   private MarketPrice marketPrices;
   private MarketAnalytics marketAnalytics;
 
-
-  private ILogger inLogger = new SummitLogger();
-  private ILogger outLogger = new SummitLogger();
-  private BrokerController controller = new BrokerController(this, getInLogger(), getOutLogger());
-
-  private final ArrayList<String> accountList = new ArrayList<String>();
-
   private ContractFactory contractFactory = new ContractFactory();
-  private List<Channel> channels = new ArrayList<Channel>();
+//  private List<Channel> channels = new ArrayList<Channel>();
 
-  private ParseDate parseDate = new ParseDate();
-  private NetworkService brokerService = new NetworkConfig().broker;
+  BusWallSt bus;
 
   public BrokerInteractive() {
 	  
@@ -57,12 +41,13 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
    * Get quotes after initializing overall market and my portfolio
    * @throws ConnectException
    */
-  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio) { 
+  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio, BusWallSt bus) { 
 	  
 	this.brokerMode = mode;
     this.marketPortfolio = marketPortfolio;
-	  
-    connectToServer();
+	this.bus = bus;
+	
+    bus.connectToServer();
 
     // create new underlying list, portfolio, then initialize the market
     setUnderList(new ArrayList<Underlying>()); // TODO: get from portfolio?
@@ -74,31 +59,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
   }
 
 
-
-// INIT
-  /**
-   * Connect to gateway at set IP and port
-   */
-  private void connectToServer() {
-	boolean tryToConnect = true;
-    while(tryToConnect) {		    		
-		try {				
-			tryToConnect = false;
-			System.out.println("\n" + "CONNECTING TO BROKER IN HISTORIAN...");				
-		    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, getInLogger(), getOutLogger());
-		    controller.connect(	brokerService.URI, brokerService.port, 
-		    							0, null);  
-		} catch (Exception e) {
-			tryToConnect = true;
-			System.out.println("...COULD NOT CREATE INTERACTIVE BROKER INSIDE HISTORIAN" + "\n");
-			e.printStackTrace();
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e1) {}
-		}			
-	} // end try to connect
-	System.out.println("CONNECTED TO HISTORIAN BROKER!");
-  }
   
   // GET QUOTES
   /**
@@ -109,10 +69,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     List<Investment> invs = getMarketPortfolio().investments;
     for(Investment inv:invs) {
       System.out.println("#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
-      QuoteTable quoteLive = new QuoteTable(controller, getMarketPrices(), inv);
-      if(true){
-    	  
-      }
+      QuoteTable quoteLive = new QuoteTable(bus.controller, getMarketPrices(), inv);
     }
   }
 
@@ -123,7 +80,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
     Contract contract = getContractFactory().getContract(inv);
 
-    int reqId = controller.reqHistoricalData(	contract, end, 
+    int reqId = bus.controller.reqHistoricalData(	contract, end, 
     												1, config.durationUnit, config.barSize, config.whatToShow, 
     												false, quoteHistory);
     System.out.println("#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId);
@@ -168,19 +125,19 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
       try {
         date = channel.getResDayList().get(i);
-        list.add(parseDate.removeDash(date).concat(" 16:30:00"));
+        list.add(ParseDate.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
       try {
         date = channel.getSupDayList().get(j);
-        list.add(parseDate.removeDash(date).concat(" 16:30:00"));
+        list.add(ParseDate.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent
       try {
         date = channel.getRecentDayList().get(k); // Recent
-        list.add(parseDate.removeDash(date).concat(" 16:30:00"));
+        list.add(ParseDate.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     return list;
@@ -238,54 +195,7 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
   }
 
-  ///// CONNECTION HANDLER
-  @Override
-  public void connected() {
-    show(ConnectionStatus.CONNECTED.toString());
-
-    controller.reqCurrentTime( new ITimeHandler() {
-      @Override public void currentTime(long time) {
-        show( "Server date/time is " + Formats.fmtDate(time * 1000) );
-      }
-    });
-
-    controller.reqBulletins( true, new IBulletinHandler() {
-      @Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
-        String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
-        show( str);
-        show( message);
-      }
-    });
-  }
-
-  @Override
-  public void disconnected() {
-    show(ConnectionStatus.DISCONNECTED.toString());
-
-  }
-
-  @Override
-  public void accountList(ArrayList<String> list) {
-    show( "Received account list");
-    getAccountList().clear();
-    getAccountList().addAll( list);
-  }
-
-  @Override
-  public void error(Exception e) {
-    show( e.toString() );
-  }
-
-  @Override
-  public void message(int id, int errorCode, String errorMsg) {
-    show( id + " " + errorCode + " " + errorMsg);
-  }
-
-  @Override
-  public void show(String string) {
-    System.out.println(string);
-  }
-
+  
 
   // TEST
   /**
@@ -345,27 +255,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
 
   // SET GET
-  private ILogger getInLogger() {
-    return inLogger;
-  }
-
-  private void setInLogger(ILogger inLogger) {
-    this.inLogger = inLogger;
-  }
-
-  private ILogger getOutLogger() {
-    return outLogger;
-  }
-
-  private void setOutLogger(ILogger outLogger) {
-    this.outLogger = outLogger;
-  }
-
-  private ArrayList<String> getAccountList() {
-    return accountList;
-  }
-
-
   private MarketPrice getMarketPrices() {
     return marketPrices;
   }
@@ -412,14 +301,6 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
 
   public void setContractFactory(ContractFactory contractFactory) {
     this.contractFactory = contractFactory;
-  }
-
-  public List<Channel> getChannels() {
-    return channels;
-  }
-
-  public void setChannels(List<Channel> channels) {
-    this.channels = channels;
   }
 
 	@Override

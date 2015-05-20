@@ -2,17 +2,17 @@ package com.onenow.execution;
 
 public class NetworkConfig {
 	
-	public NetworkService tsdb;
-	public NetworkService broker;
-	public NetworkService rdbms;
+	public static NetworkService tsdb;
+	public static NetworkService broker;
+	public static NetworkService rdbms;
 	
 	public NetworkConfig() {
-		this.tsdb = getTSDB();
-		this.broker = getBroker();
-		this.rdbms = getRDBMS();
+		NetworkConfig.tsdb = getTSDB();
+		NetworkConfig.broker = getBroker();
+		NetworkConfig.rdbms = getRDBMS();
 	}
 	
-	private NetworkService getTSDB() {
+	private static NetworkService getTSDB() {
 		// INFLUX HOSTING
 		//		Hostname: calvinklein-fluxcapacitor-1.c.influxdb.com (45.55.169.140)
 		//		API Ports: 8086 (HTTP) and 8087 (HTTPS)
@@ -34,7 +34,7 @@ public class NetworkConfig {
 		return net;
 	}
 
-	private NetworkService getBroker() {
+	private static NetworkService getBroker() {
 	    // 		default Trader Work Station port: 7496 
 	    // 		default IB Gateway port: 4001
 		// 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496
@@ -54,7 +54,7 @@ public class NetworkConfig {
 		return net;
 	}
 	
-	private NetworkService getRDBMS() {
+	private static NetworkService getRDBMS() {
 		// 		hedge-fund-dev-free.c38uxrs0s2gx.us-east-1.rds.amazonaws.com
 		// 		CREATE TABLE urler(id INT UNSIGNED NOT NULL AUTO_INCREMENT,author VARCHAR(63) NOT NULL,message TEXT,PRIMARY KEY (id))
 		//		String driver = "jdbc:mysql://";

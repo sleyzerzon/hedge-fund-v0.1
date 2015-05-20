@@ -1,6 +1,5 @@
 package com.onenow.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.admin.DatabaseSystemActivityImpl;
@@ -11,6 +10,7 @@ import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
+import com.onenow.execution.BusWallSt;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
@@ -22,12 +22,12 @@ import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.TradeRatio;
 import com.onenow.portfolio.Transaction;
 import com.onenow.util.ParseDate;
-import com.sforce.ws.ConnectionException;
 
 public class TestBroker implements Testable {
 
 	private DatabaseSystemActivityImpl logDB;
 	private BrokerActivityImpl broker;
+	private BusWallSt bus;
 	private List<Underlying> unders;
 	private Portfolio market;
 
@@ -47,8 +47,6 @@ public class TestBroker implements Testable {
 	private Trade tradePut1; 
 	private Trade tradePut2;
 	
-	private static InvestmentList invList = new InvestmentList();
-	private static ParseDate parseDate = new ParseDate();
 
 	// CONSTRUCTOR
 	public TestBroker() {
@@ -61,12 +59,11 @@ public class TestBroker implements Testable {
 
 		// choose investments
 		Portfolio marketPortfolio = new Portfolio();
-	    List<Underlying> stocks = invList.getUnderlying(invList.someStocks);
-	    List<Underlying> indices = invList.getUnderlying(invList.someIndices);
-	    List<Underlying> futures = invList.getUnderlying(invList.futures);
-	    List<Underlying> options = invList.getUnderlying(invList.options);
-	    String fromDate = parseDate.getDashedToday();
-	    String toDate = parseDate.getDashedToday();
+	    List<Underlying> stocks = InvestmentList.getUnderlying(InvestmentList.someStocks);
+	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.someIndices);
+	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.futures);
+	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.options);
+	    String toDate = ParseDate.getDashedToday();
 
 	    // fill the market portfolio
 	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
@@ -74,9 +71,11 @@ public class TestBroker implements Testable {
 	    										futures, options,
 	    										toDate);
 
+    	bus = new BusWallSt();
+
 	    try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
-			this.broker = new BrokerActivityImpl(new BrokerInteractive(BrokerMode.STANDBY, marketPortfolio));
+			this.broker = new BrokerActivityImpl(new BrokerInteractive(BrokerMode.STANDBY, marketPortfolio, bus));
 			this.unders = broker.getUnderlying();
 			this.market = broker.getMarketPortfolio();
 			setUnders(getBroker().getUnderlying());

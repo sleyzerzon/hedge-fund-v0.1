@@ -15,6 +15,7 @@ import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
+import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
@@ -28,23 +29,24 @@ import com.onenow.util.ParseDate;
 public class HistorianRTMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BrokerInteractive brokerInteractive;
-
-	private static InvestmentList invList = new InvestmentList();
-	private static ParseDate parseDate = new ParseDate();
+	private static BusWallSt bus;
+	private static BrokerInteractive broker;
 
 	public static void main(String[] args) {
 		
 	    // choose relevant timeframe
-	    String toDashedDate = parseDate.getDashedDatePlus(parseDate.getDashedToday(), 1);
+	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-		brokerInteractive = new BrokerInteractive(BrokerMode.REALTIME, marketPortfolio); 
+	    bus = new BusWallSt();
+		broker = new BrokerInteractive(BrokerMode.REALTIME, marketPortfolio, bus); 
 			    
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
-												invList.getUnderlying(invList.someStocks), invList.getUnderlying(invList.someIndices),
-												invList.getUnderlying(invList.futures), invList.getUnderlying(invList.options),
+												InvestmentList.getUnderlying(InvestmentList.someStocks), 
+												InvestmentList.getUnderlying(InvestmentList.someIndices),
+												InvestmentList.getUnderlying(InvestmentList.futures), 
+												InvestmentList.getUnderlying(InvestmentList.options),
     											toDashedDate);						
 		// register once: get all real-time quotes
-		brokerInteractive.getLiveQuotes(); 
+		broker.getLiveQuotes(); 
 	}
 }
