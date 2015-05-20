@@ -1,4 +1,4 @@
-version: ${env.CI_COMMIT_ID}
+version: 0.0
 
 os: linux
 
