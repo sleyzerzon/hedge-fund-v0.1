@@ -33,7 +33,7 @@
             <directory>${project.build.directory}</directory>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>*-shaded.jar</include>
+                <include>hedge-fund-core-*.jar</include>
             </includes>
         </fileSet>
     </fileSets>
