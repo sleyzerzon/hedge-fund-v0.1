@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="54" started-at="2015-05-20T20:53:35Z" finished-at="2015-05-20T20:53:35Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="54" started-at="2015-05-20T20:53:35Z" finished-at="2015-05-20T20:53:35Z">
+      <class name="com.onenow.util.ParseDateTest">
+        <test-method status="PASS" signature="getDashedDatePlusTest()[pri:0, instance:com.onenow.util.ParseDateTest@32d992b2]" name="getDashedDatePlusTest" duration-ms="17" started-at="2015-05-20T13:53:35Z" finished-at="2015-05-20T13:53:35Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getDashedDatePlusTest -->
+      </class> <!-- com.onenow.util.ParseDateTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
