@@ -71,3 +71,19 @@ When booting your EC2 Machines, ensure that they have the Agent installed. e.g.,
     ./install auto
 
 Other than that, ensure the EC2 Machine also belongs to a role able to access AWS.
+
+# Services
+
+Services are easy to maintain. Simply created hedge-*.conf files under hedge-fund-core/src/main/resources/upstart pointing to the right class.
+
+    start on started networking
+    
+    respawn
+    
+    script
+       VERSION=${env.CI_COMMIT_ID}
+       java -cp /opt/hedge-fund/$VERSION/lib/hedge-fund-$VERSION.jar com.onenow.main.HistorianMain
+    end script
+
+Notice the appspec.yaml-referenced scripts look for hedge-fund-* in order to manage the job lifecycle.
+
