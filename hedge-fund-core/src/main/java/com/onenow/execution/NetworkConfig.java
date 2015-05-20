@@ -42,7 +42,8 @@ public class NetworkConfig {
 		NetworkService net = new NetworkService(	"", "",
 													"", "127.0.0.1", 4001,
 													"");
-		
+
+		//		Note that you do not need an IB account to try out IBController, as you can use the IB demo account (username edemo, password demouser).
 		return net;
 	}
 	

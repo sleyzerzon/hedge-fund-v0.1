@@ -163,54 +163,54 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 			Integer i=0;
 			for (String col : ser.getColumns()) {	// iterate columns to create candle
 				s = s + row.get(col) + "\t";
-//				System.out.println("row " + row + " " + row.get(col)); full row
+				// System.out.println("row " + row + " " + row.get(col)); // full row
 				if(i.equals(1)) {
-					candle.openPrice = new Double(row.get(col).toString());
+					candle.openPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(2)) {
-					candle.closePrice = new Double(row.get(col).toString());
+					candle.closePrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(3)) {
-					candle.difference = new Double(row.get(col).toString());
+					candle.difference = new Double(extractQueryString(row, col));
 				}				
 				//				"FIRST(price)" + ", " +			
 				//				"LAST(price)" + ", " +			
 				//				"DIFFERENCE(price)" + ", " +							
 				if(i.equals(4)) {
-					candle.lowPrice = new Double(row.get(col).toString());
+					candle.lowPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(5)) {
-					candle.highPrice = new Double(row.get(col).toString());
+					candle.highPrice = new Double(extractQueryString(row, col));
 				}
 				//				"MIN(price)" + ", " +			
 				//				"MAX(price)" + ", " +			
 				if(i.equals(6)) {
-					candle.meanPrice = new Double(row.get(col).toString());
+					candle.meanPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(7)) {
-					candle.modePrice = new Double(row.get(col).toString());
+					candle.modePrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(8)) {
-					candle.medianPrice = new Double(row.get(col).toString());
+					candle.medianPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(9)) {
-					candle.stddevPrice = new Double(row.get(col).toString());
+					candle.stddevPrice = new Double(extractQueryString(row, col));
 				}
 				//				"MEAN(price)" + ", " +			
 				//				"MODE(price)" + ", " +			
 				//				"MEDIAN(price)" + ", " +						
 				//				"STDDEV(price)" + ", " +						
 				if(i.equals(10)) {
-					candle.distinctPrice = new Double(row.get(col).toString());
+					candle.distinctPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(11)) {
-					candle.countPrice = new Double(row.get(col).toString());
+					candle.countPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(12)) {
-					candle.sumPrice = new Double(row.get(col).toString());
+					candle.sumPrice = new Double(extractQueryString(row, col));
 				}
 				if(i.equals(13)) {
-					candle.derivativePrice = new Double(row.get(col).toString());
+					candle.derivativePrice = new Double(extractQueryString(row, col));
 				}
 				//				"DISTINCT(price)" + ", " +					
 				//				"COUNT(price)" + ", " +			
@@ -226,6 +226,21 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 //	System.out.println("CANDLE: " + s + "\n");	full candle
 	return candles;
 }
+
+private String extractQueryString(Map<String, Object> row, String col) {
+	String s = "";
+	try {
+		s = row.get(col).toString();
+	} catch (Exception e) {
+		s = "0.0";
+		System.out.println("WARNING: NULL query result: extractQueryString" + "row " + row + " " + row.get(col));
+		// TODO: something to do for defaults?
+		// e.printStackTrace();
+	}
+	return s;
+}
+
+
 // SIZE
 public void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
 	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
@@ -314,7 +329,7 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 			Integer i=0;
 			for (String col : ser.getColumns()) {	// iterate columsn to get ints
 				s = s + row.get(col) + "\t";
-//				System.out.println("row " + row + " " + row.get(col)); full row
+				// System.out.println("row " + row + " " + row.get(col)); full row
 				if(i.equals(1)) {
 				}
 				if(i.equals(2)) {
@@ -347,7 +362,7 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 				if(i.equals(11)) {
 				}
 				if(i.equals(12)) {
-					Double num = new Double(row.get(col).toString());
+					Double num = new Double(extractQueryString(row, col));
 					sizes.add((int) Math.round(num));
 				}
 				if(i.equals(13)) {
