@@ -4,6 +4,4 @@ echo $*
 
 printenv
 
-yum -y --enablerepo=epel install supervisor
-
 exit 0
