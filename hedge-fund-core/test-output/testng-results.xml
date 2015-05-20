@@ -2,15 +2,15 @@
 <testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="54" started-at="2015-05-20T20:53:35Z" finished-at="2015-05-20T20:53:35Z">
+  <suite name="Default suite" duration-ms="41" started-at="2015-05-20T21:25:36Z" finished-at="2015-05-20T21:25:36Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="54" started-at="2015-05-20T20:53:35Z" finished-at="2015-05-20T20:53:35Z">
+    <test name="Default test" duration-ms="41" started-at="2015-05-20T21:25:36Z" finished-at="2015-05-20T21:25:36Z">
       <class name="com.onenow.util.ParseDateTest">
-        <test-method status="PASS" signature="getDashedDatePlusTest()[pri:0, instance:com.onenow.util.ParseDateTest@32d992b2]" name="getDashedDatePlusTest" duration-ms="17" started-at="2015-05-20T13:53:35Z" finished-at="2015-05-20T13:53:35Z">
+        <test-method status="PASS" signature="getDashedDatePlus()[pri:0, instance:com.onenow.util.ParseDateTest@1810399e]" name="getDashedDatePlus" duration-ms="20" started-at="2015-05-20T14:25:36Z" finished-at="2015-05-20T14:25:36Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- getDashedDatePlusTest -->
+        </test-method> <!-- getDashedDatePlus -->
       </class> <!-- com.onenow.util.ParseDateTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
