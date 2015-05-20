@@ -15,7 +15,7 @@
             <outputDirectory></outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${project.build.directory}</directory>
+            <directory>${project.build.outputDirectory}</directory>
             <outputDirectory></outputDirectory>
             <includes>
                 <include>appspec.yml</include>
