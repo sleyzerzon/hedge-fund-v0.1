@@ -39,8 +39,15 @@ public class NetworkConfig {
 	    // 		default IB Gateway port: 4001
 		// 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496
 
+//		NetworkService net = new NetworkService(	"", "",
+//				"", "127.0.0.1", 4001,
+//				"");
+
+		// ec2-52-4-110-54.compute-1.amazonaws.com
+		// 7462
+		
 		NetworkService net = new NetworkService(	"", "",
-													"", "127.0.0.1", 4001,
+													"", "ec2-52-4-110-54.compute-1.amazonaws.com", 7462,
 													"");
 
 		//		Note that you do not need an IB account to try out IBController, as you can use the IB demo account (username edemo, password demouser).

@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import com.onenow.test.Testable;
 
 public class ParseDate implements Testable {
@@ -512,20 +515,22 @@ public class ParseDate implements Testable {
 		String date3 = "2015-05-15";
 		int delta = 1;
 		
-		String dateOut1 = getDashedDatePlus(date1, delta);	
-		String dateOut2 = getDashedDatePlus(date2, delta);	
-		String dateOut3 = getDashedDatePlus(date3, delta);	
+		String actualDateOut1 = getDashedDatePlus(date1, delta);	
+		String actualDateOut2 = getDashedDatePlus(date2, delta);	
+		String actualDateOut3 = getDashedDatePlus(date3, delta);	
 
-		if(	dateOut1.equals("2015-03-01") &&
-			dateOut2.equals("2016-01-01") &&
-			dateOut3.equals("2015-05-16")
+		Assert.assertEquals(actualDateOut1, "2015-03-01");
+		
+		if(	actualDateOut1.equals("2015-03-01") &&
+			actualDateOut2.equals("2016-01-01") &&
+			actualDateOut3.equals("2015-05-16")
 			) {
 			result = true;
 		}		
 		
-		System.out.println("testDate1 " + dateOut1);
-		System.out.println("testDate2 " + dateOut2);
-		System.out.println("testDate3 " + dateOut3);
+		System.out.println("testDate1 " + actualDateOut1);
+		System.out.println("testDate2 " + actualDateOut2);
+		System.out.println("testDate3 " + actualDateOut3);
 		
 		return result;
 	}

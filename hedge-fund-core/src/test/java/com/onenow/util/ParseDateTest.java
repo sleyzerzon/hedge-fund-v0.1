@@ -1,0 +1,36 @@
+package com.onenow.util;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import com.onenow.util.*;
+
+public class ParseDateTest {
+
+  @Test
+  public void getDashedDatePlus() {
+		boolean result = false;
+		
+		String date1 = "2015-02-28";
+		String date2 = "2015-12-31";
+		String date3 = "2015-05-15";
+		int delta = 1;
+		
+		String actualDateOut1 = getDashedDatePlus(date1, delta);	
+		String actualDateOut2 = getDashedDatePlus(date2, delta);	
+		String actualDateOut3 = getDashedDatePlus(date3, delta);	
+
+		Assert.assertEquals(actualDateOut1, "2015-03-01");
+		
+		if(	actualDateOut1.equals("2015-03-01") &&
+			actualDateOut2.equals("2016-01-01") &&
+			actualDateOut3.equals("2015-05-16")
+			) {
+			result = true;
+		}		
+		
+		System.out.println("testDate1 " + actualDateOut1);
+		System.out.println("testDate2 " + actualDateOut2);
+		System.out.println("testDate3 " + actualDateOut3);
+  }
+}
