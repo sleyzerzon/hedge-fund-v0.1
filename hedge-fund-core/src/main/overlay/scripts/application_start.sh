@@ -4,4 +4,4 @@ echo $*
 
 printenv
 
-service supervisord start
+# service supervisord start

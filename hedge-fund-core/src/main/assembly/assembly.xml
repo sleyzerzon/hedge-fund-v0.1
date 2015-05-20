@@ -19,6 +19,14 @@
             <outputDirectory></outputDirectory>
             <includes>
                 <include>appspec.yml</include>
+                <include>VERSION</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.outputDirectory}/upstart</directory>
+            <outputDirectory>upstart</outputDirectory>
+            <includes>
+                <include>*.conf</include>
             </includes>
         </fileSet>
         <fileSet>

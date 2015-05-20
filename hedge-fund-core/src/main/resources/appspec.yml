@@ -5,6 +5,8 @@ os: linux
 files:
   - source: /
     destination: /opt/hedge-fund/${env.CI_COMMIT_ID}
+  - source: /upstart
+    destination: /etc/init
 
 hooks:
   ApplicationStop:
@@ -15,7 +17,7 @@ hooks:
     - location: scripts/before_install.sh
       timeout: 300
       runas: root
-  BeforeInstall:
+  Install:
     - location: scripts/install.sh
       timeout: 300
       runas: root

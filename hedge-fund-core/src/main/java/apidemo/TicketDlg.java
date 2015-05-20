@@ -606,7 +606,7 @@ public class TicketDlg extends JDialog {
 			add( "Auto-reset", m_autoReset);
 			add( Box.createVerticalStrut( 10) );
 			add( "Initial position", m_initPosition);
-			add( "Filled init comp size", m_initFillQty);
+			add( "Filled upstart.init comp size", m_initFillQty);
 			add( Box.createVerticalStrut( 10) );
 			add( "Increase price by", m_priceAdjustValue, new JLabel( "every"), m_priceAdjustInterval, new JLabel( "seconds") );
 			add( Box.createVerticalStrut( 10) );

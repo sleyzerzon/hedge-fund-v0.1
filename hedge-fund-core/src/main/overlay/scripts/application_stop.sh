@@ -4,4 +4,4 @@ echo $*
 
 printenv
 
-service supervisord stop
+# service supervisord stop
