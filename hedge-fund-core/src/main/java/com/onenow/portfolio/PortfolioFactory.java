@@ -12,6 +12,7 @@ import com.onenow.data.Channel;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.DataSampling;
+import com.onenow.execution.Broker;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;
@@ -25,30 +26,25 @@ import com.onenow.util.ParseDate;
 
 public class PortfolioFactory {
 	
-	private static Portfolio marketPortfolio;
-	private static MarketPrice marketPrice;
-	private static Underlying index;
+	private Broker 			broker;
+	private Portfolio 		marketPortfolio;
+	private MarketPrice 	marketPrice;
+	private Underlying 		index;
 
-	private DataSampling sampling;
+	private DataSampling sampling = new DataSampling();
 	static List<String> samplingRate = new ArrayList<String>();
-
-	private static BrokerInteractive IB;
-	private static BrokerActivityImpl broker;
-
 	
 	public PortfolioFactory() {
 		
 	}
 	
-	public PortfolioFactory(Portfolio marketPortfolio) throws InterruptedException {
-		
+	public PortfolioFactory(Broker broker, Portfolio marketPortfolio) {
+		this.broker = broker;
 		this.marketPortfolio = marketPortfolio;
-		setMarketPrice(new MarketPrice(getMarketPortfolio(), broker));
-		
-		setSampling(new DataSampling());
+		this.marketPrice = new MarketPrice(getMarketPortfolio(), broker);		
 	}	
 	
-	public void launch() throws InterruptedException {
+	public void launch() {
 
 		while(true) {							// In Real-Time Constantly		
 			getUptodateInvestmentCharts();
@@ -75,14 +71,14 @@ public class PortfolioFactory {
 	// LONG AND SHORT
 	public void goLong(Underlying under) {
 		String expDate = "20150319"; // TODO: generate dynamically
-		PortfolioAction spxExocet = new PortfolioAction(100, under, expDate, getBroker());
+		PortfolioAction spxExocet = new PortfolioAction(100, under, expDate, broker);
 		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
 		System.out.println(swingCall.toString());
 	}
 
 	public void goShort(Underlying index) {
 		String expDate = "20150319"; // TODO: generate dynamically
-		PortfolioAction spxExocet = new PortfolioAction(100, index, expDate, getBroker());
+		PortfolioAction spxExocet = new PortfolioAction(100, index, expDate, broker);
 		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
 		System.out.println(swingCall.toString());
 	}
@@ -107,9 +103,9 @@ public class PortfolioFactory {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 		
-		chart = getMarketPrice().readChart(	inv, TradeType.TRADED, sampling, 
-											fromDate, toDate,
-											source, timing);
+		chart = marketPrice.readChart(	inv, TradeType.TRADED, sampling, 
+										fromDate, toDate,
+										source, timing);
 		
 		if(!chart.getSizes().isEmpty()) {
 			inv.getCharts().put(sampling, chart); // sampling is key	
@@ -165,23 +161,8 @@ public class PortfolioFactory {
 	// PRINT
 	
 	// SET / GET
-	private static BrokerActivityImpl getBroker() {
-		return broker;
-	}
 
-	private void setBroker(BrokerActivityImpl broker) {
-		this.broker = broker;
-	}
-
-	private static BrokerInteractive getIB() {
-		return IB;
-	}
-
-	private static void setIB(BrokerInteractive iB) {
-		IB = iB;
-	}
-
-	private static Portfolio getMarketPortfolio() {
+	private Portfolio getMarketPortfolio() {
 		return marketPortfolio;
 	}
 
@@ -189,20 +170,12 @@ public class PortfolioFactory {
 		this.marketPortfolio = marketPortfolio;
 	}
 
-	private static MarketPrice getMarketPrice() {
-		return marketPrice;
-	}
-
-	private static void setMarketPrice(MarketPrice marketPrice) {
-		PortfolioFactory.marketPrice = marketPrice;
-	}
-
-	private static Underlying getIndex() {
+	private Underlying getIndex() {
 		return index;
 	}
 
-	private static void setIndex(Underlying index) {
-		PortfolioFactory.index = index;
+	private void setIndex(Underlying index) {
+		this.index = index;
 	}
 
 	public DataSampling getSampling() {

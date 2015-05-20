@@ -3,6 +3,7 @@ package com.onenow.portfolio;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
+import com.onenow.execution.Broker;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentIndex;
@@ -20,7 +21,7 @@ public class PortfolioAction {
 	
 	private Contract contract;
 	
-	private BrokerActivityImpl broker;
+	private Broker broker;
 	private Double agression;
 	private Double spread=5.0; // TODO: generalize
 	
@@ -31,7 +32,7 @@ public class PortfolioAction {
 		
 	}
 	
-	public PortfolioAction(Integer quant, Underlying under, String exp, BrokerActivityImpl broker) {
+	public PortfolioAction(Integer quant, Underlying under, String exp, Broker broker) {
 		setQuant(quant);
 		setUnder(under);
 		setExp(exp);	
@@ -100,7 +101,7 @@ public class PortfolioAction {
 	// PRIVATE
 	private void lookupIndexPrice() {
 		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = getBroker().getPrice(index, TradeType.TRADED);
+		Double price = broker.getPrice(index, TradeType.TRADED);
 		setUnderPrice(price);
 	}
 
@@ -157,7 +158,7 @@ public class PortfolioAction {
 //			} 
 //		} 
 		
-		Trade trade = new Trade(inv, tradeType, mQuant, getBroker().getBestBid(tradeType, inv, getAgression()));
+		Trade trade = new Trade(inv, tradeType, mQuant, ((BrokerActivityImpl) broker).getBestBid(tradeType, inv, getAgression()));
 		return trade;
 	}
 	
@@ -345,10 +346,10 @@ public class PortfolioAction {
 		Double putStrike =  callStrike + 2*separation;
 		// look at extremes
 		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
-		Double putMid = getBroker().getBestBid(TradeType.BUY, putExt, 0.50);
+		Double putMid = ((BrokerActivityImpl) broker).getBestBid(TradeType.BUY, putExt, 0.50);
 		Double estClosingPut = putStrike-putMid;
 		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
-		Double callMid = getBroker().getBestBid(TradeType.BUY, callExt, 0.50);	
+		Double callMid = ((BrokerActivityImpl) broker).getBestBid(TradeType.BUY, callExt, 0.50);	
 		Double estClosingCall = callStrike+callMid;
 		
 		Double estClosing = (estClosingPut+estClosingCall)/2;
@@ -419,11 +420,11 @@ public class PortfolioAction {
 		this.agression = agression;
 	}
 
-	private BrokerActivityImpl getBroker() {
+	private Broker getBroker() {
 		return broker;
 	}
 
-	private void setBroker(BrokerActivityImpl broker) {
+	private void setBroker(Broker broker) {
 		this.broker = broker;
 	}
 

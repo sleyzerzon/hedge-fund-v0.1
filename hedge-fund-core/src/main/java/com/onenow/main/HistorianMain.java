@@ -15,6 +15,7 @@ import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
+import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.ParseDate;
@@ -53,8 +54,6 @@ public class HistorianMain {
 															invList.getUnderlying(invList.someStocks), invList.getUnderlying(invList.someIndices),
 															invList.getUnderlying(invList.futures), invList.getUnderlying(invList.options),
 			    											toDashedDate);						
-			    	// register once: get all real-time quotes
-					brokerInteractive.getLiveQuotes(); 
 		    } 	    
 
 			// updates historical L1 from L2
