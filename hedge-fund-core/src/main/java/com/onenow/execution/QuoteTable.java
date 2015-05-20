@@ -28,15 +28,15 @@ public class QuoteTable extends AbstractTableModel {
 
 	/**
 	 * Constructor that requests market data, specifying the different data tick types requested
-	 * @param cont
+	 * @param controller
 	 * @param mPrice
 	 * @param inv
 	 */
-	public QuoteTable(BrokerController cont, MarketPrice mPrice, Investment inv) {
+	public QuoteTable(BrokerController controller, MarketPrice mPrice, Investment inv) {
 		
 		setContractFactory(new ContractFactory());
 
-		setController(cont);
+		setController(controller);
 		setMarketPrice(mPrice);
 		
 		setInvestment(inv);

@@ -110,6 +110,9 @@ public class BrokerInteractive implements Broker, ConnectionHandler  {
     for(Investment inv:invs) {
       System.out.println("#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
       QuoteTable quoteLive = new QuoteTable(controller, getMarketPrices(), inv);
+      if(true){
+    	  
+      }
     }
   }
 
