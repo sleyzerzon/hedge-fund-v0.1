@@ -16,9 +16,9 @@ public class ParseDateTest {
 		String date3 = "2015-05-15";
 		int delta = 1;
 		
-		String actualDateOut1 = getDashedDatePlus(date1, delta);	
-		String actualDateOut2 = getDashedDatePlus(date2, delta);	
-		String actualDateOut3 = getDashedDatePlus(date3, delta);	
+		String actualDateOut1 = ParseDate.getDashedDatePlus(date1, delta);
+		String actualDateOut2 = ParseDate.getDashedDatePlus(date2, delta);
+		String actualDateOut3 = ParseDate.getDashedDatePlus(date3, delta);
 
 		Assert.assertEquals(actualDateOut1, "2015-03-01");
 		
