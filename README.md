@@ -3,24 +3,30 @@
 
 ## Setup Commands
 
-    pip install --upgrade awscli
-    (cd hedge-fund-core/lib/aws-swf-tools && bash -x cmds.sh)
-    mvn -N clean install
-    (cd sforce-client-enterprise; mvn clean install)
+```
+pip install --upgrade awscli
+(cd hedge-fund-core/lib/aws-swf-tools && bash -x cmds.sh)
+mvn -N clean install
+(cd sforce-client-enterprise; mvn clean install)
+```
 
 ## Test Commands
 
-    mvn -Pdist -f hedge-fund-core/pom.xml clean package
+```
+mvn -Pdist -f hedge-fund-core/pom.xml clean package
+```
 
 ## Deployment Commands
 
   * Deployment Method: Custom Script
 
-    VERSION=`date +%Y%m%d%H%M`-${CI_COMMIT_ID}
-    KEY=releases/hedge-fund-core/$VERSION/hedge-fund-core-dist-${CI_COMMIT_ID}.zip
-    TARGET=s3://onenow-releases/$KEY
-    aws s3 cp hedge-fund-core/target/hedge-fund-core-${CI_COMMIT_ID}-dist.zip $TARGET
-    aws deploy create-deployment --application-name hedge-fund --description $VERSION --s3-location bundleType=zip,bucket=onenow-releases,key=$KEY --deployment-group-name hedge-fund-deployment-group
+```
+VERSION=`date +%Y%m%d%H%M`-${CI_COMMIT_ID}
+KEY=releases/hedge-fund-core/$VERSION/hedge-fund-core-dist-${CI_COMMIT_ID}.zip
+TARGET=s3://onenow-releases/$KEY
+aws s3 cp hedge-fund-core/target/hedge-fund-core-${CI_COMMIT_ID}-dist.zip $TARGET
+aws deploy create-deployment --application-name hedge-fund --description $VERSION --s3-location bundleType=zip,bucket=onenow-releases,key=$KEY --deployment-group-name hedge-fund-deployment-group
+```
 
 ## Environment Variables
 
@@ -32,29 +38,31 @@ Declare those:
 
 Ensure that the user has both S3 Put Access (s3:PutObject) as well as codedeploy access (codedeploy:*) on its policy.
 
-    {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "Stmt1432064877000",
-                "Effect": "Allow",
-                "Action": [
-                    "s3:PutObject"
-                ],
-                "Resource": [
-                    "arn:aws:s3:::onenow-releases/*"
-                ]
-            },
-            {
-                "Sid": "codedeploy",
-                "Effect": "Allow",
-                "Action": [
-                    "codedeploy:*"
-                ],
-                "Resource": [ "*" ]
-            }
-        ]
-    }
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1432064877000",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::onenow-releases/*"
+            ]
+        },
+        {
+            "Sid": "codedeploy",
+            "Effect": "Allow",
+            "Action": [
+                "codedeploy:*"
+            ],
+            "Resource": [ "*" ]
+        }
+    ]
+}
+```
 
 # AWS Code Deploy Setup
 
