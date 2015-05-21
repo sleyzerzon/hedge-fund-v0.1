@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="1" passed="1">
+<testng-results skipped="0" failed="0" total="3" passed="3">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="41" started-at="2015-05-20T21:25:36Z" finished-at="2015-05-20T21:25:36Z">
+  <suite name="Default suite" duration-ms="59" started-at="2015-05-21T16:02:19Z" finished-at="2015-05-21T16:02:19Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="41" started-at="2015-05-20T21:25:36Z" finished-at="2015-05-20T21:25:36Z">
-      <class name="com.onenow.util.ParseDateTest">
-        <test-method status="PASS" signature="getDashedDatePlus()[pri:0, instance:com.onenow.util.ParseDateTest@1810399e]" name="getDashedDatePlus" duration-ms="20" started-at="2015-05-20T14:25:36Z" finished-at="2015-05-20T14:25:36Z">
+    <test name="Default test" duration-ms="59" started-at="2015-05-21T16:02:19Z" finished-at="2015-05-21T16:02:19Z">
+      <class name="com.onenow.execution.NetworkConfigTest">
+        <test-method status="PASS" signature="getGateway()[pri:0, instance:com.onenow.execution.NetworkConfigTest@1810399e]" name="getGateway" duration-ms="21" started-at="2015-05-21T09:02:19Z" finished-at="2015-05-21T09:02:19Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- getDashedDatePlus -->
-      </class> <!-- com.onenow.util.ParseDateTest -->
+        </test-method> <!-- getGateway -->
+        <test-method status="PASS" signature="getRDBMS()[pri:0, instance:com.onenow.execution.NetworkConfigTest@1810399e]" name="getRDBMS" duration-ms="0" started-at="2015-05-21T09:02:19Z" finished-at="2015-05-21T09:02:19Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getRDBMS -->
+        <test-method status="PASS" signature="getTSDB()[pri:0, instance:com.onenow.execution.NetworkConfigTest@1810399e]" name="getTSDB" duration-ms="0" started-at="2015-05-21T09:02:19Z" finished-at="2015-05-21T09:02:19Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getTSDB -->
+      </class> <!-- com.onenow.execution.NetworkConfigTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>

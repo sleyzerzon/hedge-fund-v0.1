@@ -31,7 +31,7 @@ public class BrokerInteractive implements Broker  {
   private ContractFactory contractFactory = new ContractFactory();
 //  private List<Channel> channels = new ArrayList<Channel>();
 
-  BusWallSt bus;
+  private BusWallSt bus;
 
   public BrokerInteractive() {
 	  

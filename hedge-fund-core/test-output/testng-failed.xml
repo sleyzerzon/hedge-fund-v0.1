@@ -3,11 +3,12 @@
 <suite name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="com.onenow.util.ParseDateTest">
+      <class name="com.onenow.execution.NetworkConfigTest">
         <methods>
-          <include name="getDashedDatePlus"/>
+          <include name="getGateway"/>
+          <include name="getRDBMS"/>
         </methods>
-      </class> <!-- com.onenow.util.ParseDateTest -->
+      </class> <!-- com.onenow.execution.NetworkConfigTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

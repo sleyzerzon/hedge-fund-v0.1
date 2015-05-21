@@ -2,17 +2,17 @@ package com.onenow.execution;
 
 public class NetworkConfig {
 	
-	public static NetworkService tsdb;
-	public static NetworkService broker;
-	public static NetworkService rdbms;
+	public static NetworkService tsdb = getTSDB();
+	public static NetworkService IBgatewayAWS = getGateway();
+	public static NetworkService IBgatewayLocal = new NetworkService(	"", "",
+																		"", "127.0.0.1", 4001,	
+																		"");
+	public static NetworkService rdbms = getRDBMS();
 	
 	public NetworkConfig() {
-		NetworkConfig.tsdb = getTSDB();
-		NetworkConfig.broker = getBroker();
-		NetworkConfig.rdbms = getRDBMS();
 	}
 	
-	private static NetworkService getTSDB() {
+	public static NetworkService getTSDB() {
 		// INFLUX HOSTING
 		//		Hostname: calvinklein-fluxcapacitor-1.c.influxdb.com (45.55.169.140)
 		//		API Ports: 8086 (HTTP) and 8087 (HTTPS)
@@ -34,7 +34,7 @@ public class NetworkConfig {
 		return net;
 	}
 
-	private static NetworkService getBroker() {
+	public static NetworkService getGateway() {
 	    // 		default Trader Work Station port: 7496 
 	    // 		default IB Gateway port: 4001
 		// 		getController().connect("127.0.0.1", 4001, 0, null);  // app port 7496
@@ -47,14 +47,14 @@ public class NetworkConfig {
 		// 7462
 		
 		NetworkService net = new NetworkService(	"", "",
-													"", "ec2-52-4-110-54.compute-1.amazonaws.com", 7462,
+													"", "ec2-52-4-110-54.compute-1.amazonaws.com", 4001,
 													"");
 
 		//		Note that you do not need an IB account to try out IBController, as you can use the IB demo account (username edemo, password demouser).
 		return net;
 	}
 	
-	private static NetworkService getRDBMS() {
+	public static NetworkService getRDBMS() {
 		// 		hedge-fund-dev-free.c38uxrs0s2gx.us-east-1.rds.amazonaws.com
 		// 		CREATE TABLE urler(id INT UNSIGNED NOT NULL AUTO_INCREMENT,author VARCHAR(63) NOT NULL,message TEXT,PRIMARY KEY (id))
 		//		String driver = "jdbc:mysql://";

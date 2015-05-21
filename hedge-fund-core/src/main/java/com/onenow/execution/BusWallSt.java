@@ -19,8 +19,14 @@ public class BusWallSt implements ConnectionHandler {
 	public BrokerController controller = new BrokerController(this, inLogger, outLogger);
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
+	private NetworkService gwService;
+	
 	public BusWallSt() {
 		
+	}
+	
+	public BusWallSt(NetworkService service) {
+		this.gwService = service;
 	}
 
 	  /**
@@ -31,20 +37,20 @@ public class BusWallSt implements ConnectionHandler {
 	    while(tryToConnect) {		    		
 			try {				
 				tryToConnect = false;
-				System.out.println("\n" + "CONNECTING TO BROKER IN HISTORIAN...");				
+				System.out.println("\n" + "CONNECTING TO BUS..." + gwService.URI + ":" + gwService.port);				
 			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, inLogger, outLogger);
-			    controller.connect(	NetworkConfig.broker.URI, NetworkConfig.broker.port, 
+			    controller.connect(	gwService.URI, gwService.port, 
 			    							0, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
-				System.out.println("...COULD NOT CREATE INTERACTIVE BROKER INSIDE HISTORIAN" + "\n");
+				System.out.println("...COULD CONNECT TO BUS..." + "\n");
 				e.printStackTrace();
 				try {
 					Thread.sleep(10000);
 				} catch (InterruptedException e1) {}
 			}			
 		} // end try to connect
-		System.out.println("CONNECTED TO HISTORIAN BROKER!");
+		System.out.println("CONNECTED TO BUS!");
 	  }
 
 	

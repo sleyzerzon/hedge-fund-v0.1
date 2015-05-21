@@ -1,7 +1,5 @@
 package com.onenow.main;
 
-import java.util.List;
-
 import com.onenow.constant.BrokerMode;
 import com.onenow.data.Historian;
 import com.onenow.data.InitMarket;
@@ -9,6 +7,7 @@ import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
+import com.onenow.execution.NetworkConfig;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.ParseDate;
 
@@ -30,14 +29,14 @@ public class HistorianMain {
 	    // choose relevant timeframe
 	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt()); 
+		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt(NetworkConfig.IBgatewayLocal)); 
 		historian = new Historian(broker, service.size30sec);		
 			    
 	    // get ready to loop
 		int count=0;
 		while(true) {
 			// TODO : 10000068 322 Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.
-
+			System.out.println("^^ HISTORIAN MAIN: " + toDashedDate);
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 

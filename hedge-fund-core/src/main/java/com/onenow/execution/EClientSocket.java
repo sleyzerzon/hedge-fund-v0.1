@@ -300,13 +300,13 @@ public class EClientSocket {
         while(tryToConnect) {
 	        try{
 	        	tryToConnect = false;
-	        	System.out.println("\n" + "TRYING TO CONNECT TO GATEWAY / TWS...");
+	        	System.out.println("\n" + "TRYING TO CONNECT TO GATEWAY / TWS: " + m_host + " " + port);
 	            socket = new Socket( m_host, port);
 	            eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
 	        }
 	        catch( Exception e) {
 	        	tryToConnect = true;
-	        	System.out.println ("\n" + "COULD NOT CONNECT TO GATEWAY / TWS: ");
+	        	System.out.println ("\n" + "... COULD NOT CONNECT TO GATEWAY / TWS: ");
 	            connectionError(); 
 	        	e.printStackTrace();
 	        	eDisconnect();

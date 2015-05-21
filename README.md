@@ -14,6 +14,7 @@ mvn -N clean install
 
 ```
 mvn -Pdist -f hedge-fund-core/pom.xml clean package
+mvn test
 ```
 
 ## Deployment Commands
