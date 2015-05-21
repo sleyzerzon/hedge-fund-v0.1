@@ -232,8 +232,8 @@ private String extractQueryString(Map<String, Object> row, String col) {
 	try {
 		s = row.get(col).toString();
 	} catch (Exception e) {
-		s = "0.0";
-		System.out.println("WARNING: NULL query result: extractQueryString" + "row " + row + " " + row.get(col));
+		s = "-1.0";
+		System.out.println("ERROR: NULL query result: extractQueryString" + "row " + row + " " + row.get(col));
 		// TODO: something to do for defaults?
 		// e.printStackTrace();
 	}

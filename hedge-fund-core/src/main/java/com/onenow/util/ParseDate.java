@@ -22,7 +22,7 @@ public class ParseDate implements Testable {
 	 */
 	public static String getDashedToday() {
 		Date today = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // "yyyy-MM-dd HH:mm"
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
 		return sdf.format(today);
 	}
 	
@@ -31,8 +31,14 @@ public class ParseDate implements Testable {
 		date = getUndashedDate(getDashedToday());
 		return date;
 	}
-	
-	public long getNow() {
+
+	public static String getDashedNow() {
+		Date today = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
+		return sdf.format(today);
+	}
+
+	public long getTimestampNow() {
 
 		long timeStamp=0;
 		
@@ -44,7 +50,7 @@ public class ParseDate implements Testable {
 	
 	public long getElapsedStamps(long oldStamp) {
 		long elapsed = 0;
-		elapsed = getNow() - oldStamp;
+		elapsed = getTimestampNow() - oldStamp;
 		return elapsed;
 	}
 	

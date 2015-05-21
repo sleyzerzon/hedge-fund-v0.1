@@ -29,7 +29,7 @@ public class HistorianMain {
 	    // choose relevant timeframe
 	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt(NetworkConfig.IBgatewayLocal)); 
+		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt(NetworkConfig.IBgatewayAWS)); 
 		historian = new Historian(broker, service.size30sec);		
 			    
 	    // get ready to loop

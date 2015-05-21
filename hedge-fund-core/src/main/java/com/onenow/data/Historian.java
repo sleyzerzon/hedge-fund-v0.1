@@ -81,7 +81,7 @@ public class Historian {
 			paceHistoricalQuery(); 
 			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(parseDate.getDashedDateMinus(toDashedDate, 1))), 
 											config, invHist); 
-			lastHistQuery = parseDate.getNow();	
+			lastHistQuery = parseDate.getTimestampNow();	
 		} else {
 			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L1 HIT:" + inv.toString() + "\n\n");
 		}
