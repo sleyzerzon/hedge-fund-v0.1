@@ -29,7 +29,6 @@ import com.onenow.util.ParseDate;
 public class HistorianRTMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BusWallSt bus;
 	private static BrokerInteractive broker;
 
 	public static void main(String[] args) {
@@ -37,8 +36,7 @@ public class HistorianRTMain {
 	    // choose relevant timeframe
 	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-	    bus = new BusWallSt();
-		broker = new BrokerInteractive(BrokerMode.REALTIME, marketPortfolio, bus); 
+		broker = new BrokerInteractive(BrokerMode.REALTIME, marketPortfolio, new BusWallSt()); 
 			    
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
 												InvestmentList.getUnderlying(InvestmentList.someStocks), 

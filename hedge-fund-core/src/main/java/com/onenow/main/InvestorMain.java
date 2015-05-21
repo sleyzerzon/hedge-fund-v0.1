@@ -20,7 +20,6 @@ import com.onenow.util.ParseDate;
 public class InvestorMain {
 		
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BusWallSt bus;
 	private static BrokerInteractive broker;
 
 	public static void main(String[] args) throws ParseException, InterruptedException {
@@ -28,8 +27,7 @@ public class InvestorMain {
 	    // choose relevant timeframe
 	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-	    bus = new BusWallSt();
-		broker = new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio, bus); 
+		broker = new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio, new BusWallSt()); 
 
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
 												InvestmentList.getUnderlying(InvestmentList.someStocks), 

@@ -109,6 +109,7 @@ public class PriceSizeCache {
 			InvDataSource source, InvDataTiming timing, Double price, int size) {
 		
 		boolean success = false;
+		boolean retry = false;
 		// TODO: handle as a transaction, both price+size write or nothing
 		while(!success) {
 			try {
@@ -119,6 +120,7 @@ public class PriceSizeCache {
 										source, timing);
 			} catch (Exception e) {
 				success = false;
+				retry = true;
 				System.out.println("ERROR: TSDB RT TRANSACTION WRIT FAILED: " + time + " " + inv.toString());
 				// e.printStackTrace();
 				try {
@@ -126,7 +128,9 @@ public class PriceSizeCache {
 				} catch (InterruptedException e1) {}
 			}
 		}
-		System.out.println("> TSDB RT TRANSACTION WRITE SUCCEEDED: " + time + " " + inv.toString());		
+		if(retry) {
+			System.out.println("> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + time + " " + inv.toString());
+		}
 	}
 
 	

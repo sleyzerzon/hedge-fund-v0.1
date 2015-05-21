@@ -20,7 +20,6 @@ import com.onenow.util.ParseDate;
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BusWallSt bus;
 	private static BrokerInteractive broker;
 	private static Historian historian;
 
@@ -31,8 +30,7 @@ public class HistorianMain {
 	    // choose relevant timeframe
 	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
 
-	    bus = new BusWallSt();
-		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, bus); 
+		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt()); 
 		historian = new Historian(broker, service.size30sec);		
 			    
 	    // get ready to loop

@@ -122,6 +122,7 @@ public class Historian {
 
 			// System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
 			boolean success = false;
+			boolean retry = false;
 			while (!success) {
 				try {
 					success = true;
@@ -129,6 +130,7 @@ public class Historian {
 										source, timing);
 				} catch (Exception e) {
 					success = false;
+					retry = true;
 					System.out.println("> TSDB HISTORY WRITE ERROR: " + inv.toString());
 					// e.printStackTrace();
 					try {
@@ -136,7 +138,9 @@ public class Historian {
 					} catch (InterruptedException e1) {}
 				}				
 			}
-			System.out.println("> TSDB HISTORY WRITE SUCCESS: " + inv.toString());
+			if(retry) {
+				System.out.println("> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + inv.toString());
+			}
 		}
 		// reset to avoid writing same twice
 		invHistory = null; 
