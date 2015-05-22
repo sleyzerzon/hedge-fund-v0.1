@@ -47,7 +47,7 @@ public class NetworkConfig {
 		// 7462
 		
 		NetworkService net = new NetworkService(	"", "",
-													"", "ec2-52-4-110-54.compute-1.amazonaws.com", 4001,
+													"", "ec2-54-86-144-36.compute-1.amazonaws.com", 4001,
 													"");
 
 		//		Note that you do not need an IB account to try out IBController, as you can use the IB demo account (username edemo, password demouser).

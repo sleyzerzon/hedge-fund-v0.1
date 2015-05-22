@@ -13,7 +13,9 @@ import com.onenow.execution.Broker;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
+import com.onenow.util.LogType;
 import com.onenow.util.ParseTime;
+import com.onenow.util.WatchLog;
 
 public class PriceSizeCache {
 	
@@ -121,7 +123,9 @@ public class PriceSizeCache {
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				System.out.println("ERROR: TSDB RT TRANSACTION WRIT FAILED: " + time + " " + inv.toString());
+				String log = "TSDB RT TRANSACTION WRITE FAILED: " + time + " " + inv.toString();
+				WatchLog.addToLog(LogType.ERR, log);
+
 				// e.printStackTrace();
 				try {
 					Thread.sleep(1000);
@@ -129,7 +133,8 @@ public class PriceSizeCache {
 			}
 		}
 		if(retry) {
-			System.out.println("> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + time + " " + inv.toString());
+			String log = "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + time + " " + inv.toString();
+			WatchLog.addToLog(LogType.INFO, log);
 		}
 	}
 

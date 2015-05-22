@@ -37,8 +37,8 @@ public class HistorianMain {
 	    // get ready to loop
 		int count=0;
 		while(true) {
-			String s = "^^ HISTORIAN MAIN: " + toDashedDate;
-			WatchLog.addToLog(LogType.INFO, s);
+			String log = "^^ HISTORIAN MAIN: " + toDashedDate;
+			WatchLog.addToLog(LogType.INFO, log);
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 

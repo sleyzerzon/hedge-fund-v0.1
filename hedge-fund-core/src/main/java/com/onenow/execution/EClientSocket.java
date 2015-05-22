@@ -304,8 +304,8 @@ public class EClientSocket {
 	        try{
 	        	tryToConnect = false;
 
-	        	String s = "TRYING TO CONNECT TO GATEWAY / TWS: " + m_host + " " + port;
-				WatchLog.addToLog(LogType.INFO, s, "\n", "");
+	        	String log = "TRYING TO CONNECT TO GATEWAY/TWS: " + m_host + " " + port;
+				WatchLog.addToLog(LogType.INFO, log, "\n", "");
 
 	            socket = new Socket( m_host, port);
 	            eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
@@ -313,8 +313,8 @@ public class EClientSocket {
 	        catch( Exception e) {
 	        	tryToConnect = true;
 	        	
-	        	String s = "... COULD NOT CONNECT TO GATEWAY / TWS: ";
-				WatchLog.addToLog(LogType.ERR, s, "\n", "");
+	        	String log = "... COULD NOT CONNECT TO GATEWAY/TWS: ";
+				WatchLog.addToLog(LogType.ERR, log, "\n", "");
 
 	            connectionError(); 
 	        	e.printStackTrace();
@@ -325,8 +325,8 @@ public class EClientSocket {
     }
 
     protected void connectionError() {
-    	String s = "CONNECTION ERROR WITH GATEWAY / TWS";
-		WatchLog.addToLog(LogType.ERR, s, "", "");
+    	String log = "CONNECTION ERROR WITH GATEWAY/TWS";
+		WatchLog.addToLog(LogType.ERR, log, "", "");
 
         m_eWrapper.error( EClientErrors.NO_VALID_ID, EClientErrors.CONNECT_FAIL.code(),
                 EClientErrors.CONNECT_FAIL.msg());
@@ -334,7 +334,7 @@ public class EClientSocket {
     }
 
     protected String checkConnected(String host) {
-    	String s = "CHECKING IF CONNECTED WITH GATEWAY / TWS";
+    	String s = "CHECKING IF CONNECTED WITH GATEWAY/TWS";
 		WatchLog.addToLog(LogType.ERR, s, "", "");
 
         if( m_connected) {

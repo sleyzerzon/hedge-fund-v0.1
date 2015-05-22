@@ -19,7 +19,9 @@ import com.onenow.execution.NetworkConfig;
 import com.onenow.execution.NetworkService;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
+import com.onenow.util.LogType;
 import com.onenow.util.ParseTime;
+import com.onenow.util.WatchLog;
 
 public class TSDB {
 	
@@ -233,7 +235,8 @@ private String extractQueryString(Map<String, Object> row, String col) {
 		s = row.get(col).toString();
 	} catch (Exception e) {
 		s = "-1.0";
-		System.out.println("ERROR: NULL query result: extractQueryString" + "row " + row + " " + row.get(col));
+		String log = "NULL query result: extractQueryString" + "row " + row + " " + row.get(col);
+		WatchLog.addToLog(LogType.ERR, log);
 		// TODO: something to do for defaults?
 		// e.printStackTrace();
 	}

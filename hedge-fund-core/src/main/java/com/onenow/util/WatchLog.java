@@ -13,17 +13,22 @@ public class WatchLog {
 
 		String s = "";
 
-		String ip = "";
+		String timeLog = "[" + ParseTime.getDashedNow() + "]";
+		
+		String ipLog = "";
 		try {
-			ip = InetAddress.getLocalHost().toString();
+			ipLog = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} 	
+		ipLog = "[" + ipLog + "]";
+		
+		String typeLog = "[" + type + "]";
 		
 		String caller = new Exception().getStackTrace()[1].getClassName();
 		// String calleeClassName = new Exception().getStackTrace()[0].getClassName();
 		
-		s = prepend + ParseTime.getDashedNow() + " " + ip + " " + type + "\t" + caller + "          "+ message + postpend;
+		s = prepend + timeLog + " " + ipLog + " " + typeLog + "\t" + caller + "          "+ message + postpend;
 		
 		// TODO: add to CloudWatch Logs here
 		System.out.println(s);

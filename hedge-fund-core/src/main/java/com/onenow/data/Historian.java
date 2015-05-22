@@ -15,7 +15,9 @@ import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
+import com.onenow.util.LogType;
 import com.onenow.util.ParseTime;
+import com.onenow.util.WatchLog;
 
 public class Historian {
 	
@@ -131,7 +133,8 @@ public class Historian {
 				} catch (Exception e) {
 					success = false;
 					retry = true;
-					System.out.println("> TSDB HISTORY WRITE ERROR: " + inv.toString());
+					String log = "TSDB HISTORY WRITE FAILED: " + inv.toString();
+					WatchLog.addToLog(LogType.ERR, log);
 					// e.printStackTrace();
 					try {
 						Thread.sleep(1000);
@@ -139,7 +142,8 @@ public class Historian {
 				}				
 			}
 			if(retry) {
-				System.out.println("> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + inv.toString());
+				String log = "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + inv.toString();
+				WatchLog.addToLog(LogType.INFO, log);
 			}
 		}
 		// reset to avoid writing same twice

@@ -40,8 +40,8 @@ public class BusWallSt implements ConnectionHandler {
 	    while(tryToConnect) {		    		
 			try {				
 				tryToConnect = false;
-				String s = "CONNECTING TO BUS..." + gwService.URI + ":" + gwService.port;
-				WatchLog.addToLog(LogType.INFO, s, "\n", "");
+				String log = "CONNECTING TO BUS..." + gwService.URI + ":" + gwService.port;
+				WatchLog.addToLog(LogType.INFO, log, "\n", "");
 			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, inLogger, outLogger);
 			    controller.connect(	gwService.URI, gwService.port, 
 			    							0, null);  

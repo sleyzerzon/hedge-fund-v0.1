@@ -42,6 +42,7 @@ public class ParseTime implements Testable {
 
 	public static String getDashedNow() {
 		Date today = new Date();
+		// TODO: it uses local time zone, what should it use?
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
 		return sdf.format(today);
 	}
