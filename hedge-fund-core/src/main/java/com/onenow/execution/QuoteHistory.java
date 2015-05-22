@@ -8,6 +8,8 @@ import com.onenow.data.Channel;
 import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.BrokerController.IRealTimeBarHandler;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
+import com.onenow.util.LogType;
+import com.onenow.util.WatchLog;
 
 /**
  * Handle historical data call-backs 
@@ -39,7 +41,8 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 
 	private void handleBar(QuoteRow row) {
 
-		System.out.println("History " + row.toString());
+		String log = "History " + row.toString();
+		WatchLog.addToLog(LogType.INFO, log);
 
 		if(getChannel()!=null) { // if constructed that way
 			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 

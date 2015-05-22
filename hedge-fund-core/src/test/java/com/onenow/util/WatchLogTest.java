@@ -8,6 +8,6 @@ public class WatchLogTest {
   @Test
   public void addToLog() {
 	  
-	Assert.assertTrue(!WatchLog.addToLog(null, null, null, null).isEmpty());
+	Assert.assertTrue(!WatchLog.add(null, null, null, null).isEmpty());
   }
 }

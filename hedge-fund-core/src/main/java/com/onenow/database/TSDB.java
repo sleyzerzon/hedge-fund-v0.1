@@ -81,7 +81,7 @@ public void writePrice(Long time, Investment inv, TradeType tradeType, Double pr
 	.values(time, price)
 	.build();
 	String log = "TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + serie;
-	WatchLog.addToLog(LogType.INFO, log, "\n", "");
+	WatchLog.add(LogType.INFO, log, "\n", "");
 
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
@@ -97,9 +97,10 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
 		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, sampling, fromDate, toDate);
 
 		candles = priceSeriesToCandles(series); 
-
-		System.out.println("Cache Chart/Price READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Prices: " + candles.toString());
 		
+		String log = "TSDB Cache Chart/Price READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Prices: " + candles.toString();
+		WatchLog.add(LogType.INFO, log, "\n", "");
+
 		return candles;
 	}
 
@@ -237,7 +238,7 @@ private String extractQueryString(Map<String, Object> row, String col) {
 		s = row.get(col).toString();
 	} catch (Exception e) {
 		s = "-1.0";
-		String log = "NULL query result" + "row " + row + " " + row.get(col);
+		String log = "TSDB NULL query result" + "row " + row + " " + row.get(col);
 		WatchLog.addToLog(LogType.ERR, log);
 		// TODO: something to do for defaults?
 		// e.printStackTrace();
@@ -253,7 +254,9 @@ public void writeSize(Long time, Investment inv, TradeType tradeType, Integer si
 	.columns("time", "size")
 	.values(time, size)
 	.build();
-	System.out.println("TSDB WRITE SIZE: " + DBname.SIZE.toString() + " " + serie);
+	String log = "TSDB WRITE SIZE: " + DBname.SIZE.toString() + " " + serie;
+	WatchLog.add(LogType.INFO, log, "\n", "");
+
 	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
@@ -269,7 +272,8 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	
 	sizes = sizeSeriesToInts(series); 
 	
-	System.out.println("Cache Chart/Size READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString());
+	String log = "TSDB Cache Chart/Size READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString();
+	WatchLog.add(LogType.INFO, log, "\n", "");
 
 	return sizes;
 }

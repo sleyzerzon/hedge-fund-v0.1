@@ -13,7 +13,7 @@ public class WatchLog {
 		
 	}
 
-	public static String addToLog(LogType type, String message, String prepend, String postpend) {
+	public static String add(LogType type, String message, String prepend, String postpend) {
 
 		String s = "";
 
@@ -45,7 +45,7 @@ public class WatchLog {
 	
 	public static String addToLog(LogType type, String message) {
 
-		return addToLog(type, message, "", "");
+		return add(type, message, "", "");
 
 	}
 	
@@ -57,8 +57,10 @@ public class WatchLog {
 
 	    try {  
 
-	        // This block configure the logger with handler and formatter  
+	        // This block configure the logger with handler and formatter
+	    	// /Users/pablo/Downloads
 	        fh = new FileHandler("/var/log/HedgeFundLogFile.log");  
+//	         fh = new FileHandler("/Users/shared");  
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);  
