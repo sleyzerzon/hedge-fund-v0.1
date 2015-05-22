@@ -8,3 +8,5 @@ for i in /etc/init/hedge-*.conf ; do
 
     start $SERVICE_NAME || true
 done
+
+exit 0
