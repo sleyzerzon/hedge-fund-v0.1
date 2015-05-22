@@ -80,7 +80,9 @@ public void writePrice(Long time, Investment inv, TradeType tradeType, Double pr
 	.columns("time", "price")
 	.values(time, price)
 	.build();
-	System.out.println("WRITE " + DBname.PRICE.toString() + " " + serie);
+	String log = "TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + serie;
+	WatchLog.addToLog(LogType.INFO, log, "\n", "");
+
 	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
@@ -251,7 +253,7 @@ public void writeSize(Long time, Investment inv, TradeType tradeType, Integer si
 	.columns("time", "size")
 	.values(time, size)
 	.build();
-	System.out.println("WRITE " + DBname.SIZE.toString() + " " + serie);
+	System.out.println("TSDB WRITE SIZE: " + DBname.SIZE.toString() + " " + serie);
 	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 

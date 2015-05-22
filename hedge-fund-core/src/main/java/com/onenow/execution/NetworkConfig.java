@@ -28,6 +28,7 @@ public class NetworkConfig {
 		// list series
 		// SELECT FIRST(price), LAST(price), MIN(price), MAX(price), SUM(price) FROM "BBY-STOCK-TRADED-IB-HISTORICAL" WHERE time > '2015-05-08' AND time < '2015-05-09' GROUP BY time(60m)
 		// count(), min(), max(), mean(), mode(), median(), distinct(), percentile(), histogram(), derivative(), sum(), stddev(), first(), last()
+		// telnet ec2-52-4-110-54.compute-1.amazonaws.com 4001
 		NetworkService net = new NetworkService(	"root", "b45547741dd1709b",
 													"http", "calvinklein-fluxcapacitor-1.c.influxdb.com", 8086,
 													"");

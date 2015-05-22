@@ -1,7 +1,11 @@
 package com.onenow.util;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class WatchLog {
 
@@ -33,6 +37,8 @@ public class WatchLog {
 		// TODO: add to CloudWatch Logs here
 		System.out.println(s);
 		
+		getLogger().info(s);  
+	
 		return s;
 				
 	}
@@ -41,5 +47,31 @@ public class WatchLog {
 
 		return addToLog(type, message, "", "");
 
+	}
+	
+
+	public static Logger getLogger() {
+		
+	    Logger logger = Logger.getLogger("MyLog");  
+	    FileHandler fh;  
+
+	    try {  
+
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler("/var/log/HedgeFundLogFile.log");  
+	        logger.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+
+	        // the following statement is used to log any messages  
+	        logger.info("My first log");  
+
+	    } catch (SecurityException e) {  
+	        e.printStackTrace();  
+	    } catch (IOException e) {  
+	        e.printStackTrace();  
+	    }  
+	    
+	    return logger;
 	}
 }
