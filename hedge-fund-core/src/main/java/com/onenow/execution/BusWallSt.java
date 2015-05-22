@@ -10,6 +10,9 @@ import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ConnectionHandler;
 import com.onenow.portfolio.BrokerController.IBulletinHandler;
 import com.onenow.portfolio.BrokerController.ITimeHandler;
+import com.onenow.util.LogType;
+import com.onenow.util.ParseTime;
+import com.onenow.util.WatchLog;
 
 public class BusWallSt implements ConnectionHandler {
 
@@ -37,7 +40,8 @@ public class BusWallSt implements ConnectionHandler {
 	    while(tryToConnect) {		    		
 			try {				
 				tryToConnect = false;
-				System.out.println("\n" + "CONNECTING TO BUS..." + gwService.URI + ":" + gwService.port);				
+				String s = "CONNECTING TO BUS..." + gwService.URI + ":" + gwService.port;
+				WatchLog.addToLog(LogType.INFO, s, "\n", "");
 			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, inLogger, outLogger);
 			    controller.connect(	gwService.URI, gwService.port, 
 			    							0, null);  
@@ -45,9 +49,7 @@ public class BusWallSt implements ConnectionHandler {
 				tryToConnect = true;
 				System.out.println("...COULD CONNECT TO BUS..." + "\n");
 				e.printStackTrace();
-				try {
-					Thread.sleep(10000);
-				} catch (InterruptedException e1) {}
+				ParseTime.wait(10);
 			}			
 		} // end try to connect
 		System.out.println("CONNECTED TO BUS!");

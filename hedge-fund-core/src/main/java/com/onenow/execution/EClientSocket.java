@@ -23,6 +23,9 @@ import com.ib.client.TagValue;
 import com.ib.client.Util;
 import com.ib.client.Types.SecType;
 import com.onenow.execution.EClientErrors.CodeMsgPair;
+import com.onenow.util.LogType;
+import com.onenow.util.ParseTime;
+import com.onenow.util.WatchLog;
 
 public class EClientSocket {
 
@@ -300,34 +303,40 @@ public class EClientSocket {
         while(tryToConnect) {
 	        try{
 	        	tryToConnect = false;
-	        	System.out.println("\n" + "TRYING TO CONNECT TO GATEWAY / TWS: " + m_host + " " + port);
+
+	        	String s = "TRYING TO CONNECT TO GATEWAY / TWS: " + m_host + " " + port;
+				WatchLog.addToLog(LogType.INFO, s, "\n", "");
+
 	            socket = new Socket( m_host, port);
 	            eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
 	        }
 	        catch( Exception e) {
 	        	tryToConnect = true;
-	        	System.out.println ("\n" + "... COULD NOT CONNECT TO GATEWAY / TWS: ");
+	        	
+	        	String s = "... COULD NOT CONNECT TO GATEWAY / TWS: ";
+				WatchLog.addToLog(LogType.ERR, s, "\n", "");
+
 	            connectionError(); 
 	        	e.printStackTrace();
 	        	eDisconnect();
-				try {
-					Thread.sleep(10000);
-				} catch (InterruptedException e1) {
-					// nothing to do
-				}
+	        	ParseTime.wait(10);
 	        }
         }        
     }
 
     protected void connectionError() {
-    	System.out.println ("\n" + "CONNECTION ERROR WITH GATEWAY / TWS");
+    	String s = "CONNECTION ERROR WITH GATEWAY / TWS";
+		WatchLog.addToLog(LogType.ERR, s, "", "");
+
         m_eWrapper.error( EClientErrors.NO_VALID_ID, EClientErrors.CONNECT_FAIL.code(),
                 EClientErrors.CONNECT_FAIL.msg());
         m_reader = null;
     }
 
     protected String checkConnected(String host) {
-    	System.out.println ("CHECKING IF CONNECTED WITH GATEWAY / TWS");
+    	String s = "CHECKING IF CONNECTED WITH GATEWAY / TWS";
+		WatchLog.addToLog(LogType.ERR, s, "", "");
+
         if( m_connected) {
             m_eWrapper.error(EClientErrors.NO_VALID_ID, EClientErrors.ALREADY_CONNECTED.code(),
                     EClientErrors.ALREADY_CONNECTED.msg());

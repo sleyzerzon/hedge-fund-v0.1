@@ -15,7 +15,7 @@ import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
-import com.onenow.util.ParseDate;
+import com.onenow.util.ParseTime;
 
 public class Historian {
 	
@@ -24,7 +24,7 @@ public class Historian {
 
 	private TSDB 								TSDB = new TSDB();			// database
 	private Lookup 								lookup = new Lookup();			// key
-	private ParseDate							parseDate = new ParseDate();
+	private ParseTime							parseDate = new ParseTime();
 
 	private HistorianConfig config;
 	

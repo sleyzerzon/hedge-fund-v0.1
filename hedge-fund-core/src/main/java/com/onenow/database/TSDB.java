@@ -19,7 +19,7 @@ import com.onenow.execution.NetworkConfig;
 import com.onenow.execution.NetworkService;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
-import com.onenow.util.ParseDate;
+import com.onenow.util.ParseTime;
 
 public class TSDB {
 	

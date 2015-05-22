@@ -13,7 +13,7 @@ import com.onenow.execution.Broker;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
-import com.onenow.util.ParseDate;
+import com.onenow.util.ParseTime;
 
 public class PriceSizeCache {
 	
@@ -24,7 +24,7 @@ public class PriceSizeCache {
 	private TSDB 								TSDB = new TSDB();			// database	
 	private DataSampling 							sampling = new DataSampling();
 	private Lookup 								lookup = new Lookup();			// key
-	private ParseDate							parseDate = new ParseDate();
+	private ParseTime							parseDate = new ParseTime();
 	
 	
 	public PriceSizeCache() {

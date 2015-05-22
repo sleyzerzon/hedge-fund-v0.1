@@ -9,7 +9,9 @@ import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
 import com.onenow.execution.NetworkConfig;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.util.ParseDate;
+import com.onenow.util.LogType;
+import com.onenow.util.ParseTime;
+import com.onenow.util.WatchLog;
 
 /** 
  * Gather complete accurate historical market data
@@ -27,7 +29,7 @@ public class HistorianMain {
 	public static void main(String[] args) {
 		
 	    // choose relevant timeframe
-	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
+	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
 		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt(NetworkConfig.IBgatewayAWS)); 
 		historian = new Historian(broker, service.size30sec);		
@@ -35,8 +37,8 @@ public class HistorianMain {
 	    // get ready to loop
 		int count=0;
 		while(true) {
-			// TODO : 10000068 322 Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.
-			System.out.println("^^ HISTORIAN MAIN: " + toDashedDate);
+			String s = "^^ HISTORIAN MAIN: " + toDashedDate;
+			WatchLog.addToLog(LogType.INFO, s);
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 
@@ -44,13 +46,14 @@ public class HistorianMain {
 															InvestmentList.getUnderlying(InvestmentList.someIndices),
 															InvestmentList.getUnderlying(InvestmentList.futures), 
 															InvestmentList.getUnderlying(InvestmentList.options),
-			    											toDashedDate);						
-		    } 	    
+			    											toDashedDate);
+		    }	// TODO : 10000068 322 Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.
+
 
 			// updates historical L1 from L2
 			historian.run(toDashedDate);
 			// go back further in time
-			toDashedDate = ParseDate.getDashedDateMinus(toDashedDate, 1);
+			toDashedDate = ParseTime.getDashedDateMinus(toDashedDate, 1);
 			count++;
 		}
 	}

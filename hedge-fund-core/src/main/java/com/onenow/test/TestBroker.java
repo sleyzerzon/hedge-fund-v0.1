@@ -21,7 +21,7 @@ import com.onenow.portfolio.StrategyPutSpread;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.TradeRatio;
 import com.onenow.portfolio.Transaction;
-import com.onenow.util.ParseDate;
+import com.onenow.util.ParseTime;
 
 public class TestBroker implements Testable {
 
@@ -63,7 +63,7 @@ public class TestBroker implements Testable {
 	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.someIndices);
 	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.futures);
 	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.options);
-	    String toDate = ParseDate.getDashedToday();
+	    String toDate = ParseTime.getDashedToday();
 
 	    // fill the market portfolio
 	    InitMarket initMarket = new InitMarket(	marketPortfolio, 

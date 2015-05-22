@@ -15,7 +15,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.PortfolioFactory;
-import com.onenow.util.ParseDate;
+import com.onenow.util.ParseTime;
 
 public class InvestorMain {
 		
@@ -25,7 +25,7 @@ public class InvestorMain {
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
 	    // choose relevant timeframe
-	    String toDashedDate = ParseDate.getDashedDatePlus(ParseDate.getDashedToday(), 1);
+	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
 		broker = new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio, new BusWallSt()); 
 

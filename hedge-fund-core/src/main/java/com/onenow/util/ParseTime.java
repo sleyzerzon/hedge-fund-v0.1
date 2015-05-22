@@ -10,11 +10,19 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-public class ParseDate implements Testable {
+public class ParseTime implements Testable {
 
-	public ParseDate() {
+	public ParseTime() {
 		
 	}	
+	
+	public static void wait(int seconds) {
+		try {
+			Thread.sleep(seconds*1000);
+		} catch (InterruptedException e1) { 
+			// nothing to do 
+		}
+	}
 	
 	/**
 	 * Returns today's date in dashed format without time
