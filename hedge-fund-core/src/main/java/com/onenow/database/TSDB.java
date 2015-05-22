@@ -235,7 +235,7 @@ private String extractQueryString(Map<String, Object> row, String col) {
 		s = row.get(col).toString();
 	} catch (Exception e) {
 		s = "-1.0";
-		String log = "NULL query result: extractQueryString" + "row " + row + " " + row.get(col);
+		String log = "NULL query result" + "row " + row + " " + row.get(col);
 		WatchLog.addToLog(LogType.ERR, log);
 		// TODO: something to do for defaults?
 		// e.printStackTrace();
