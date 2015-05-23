@@ -6,7 +6,6 @@ import java.util.List;
 import com.onenow.alpha.Broker;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Lookup;
 import com.onenow.database.TSDB;
@@ -15,7 +14,7 @@ import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
-import com.onenow.util.LogType;
+import java.util.logging.Level;
 import com.onenow.util.ParseTime;
 import com.onenow.util.WatchLog;
 
@@ -134,7 +133,7 @@ public class Historian {
 					success = false;
 					retry = true;
 					String log = "TSDB HISTORY WRITE FAILED: " + inv.toString();
-					WatchLog.addToLog(LogType.ERR, log);
+					WatchLog.addToLog(Level.SEVERE, log);
 					// e.printStackTrace();
 					try {
 						Thread.sleep(1000);
@@ -143,7 +142,7 @@ public class Historian {
 			}
 			if(retry) {
 				String log = "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + inv.toString();
-				WatchLog.addToLog(LogType.INFO, log);
+				WatchLog.addToLog(Level.INFO, log);
 			}
 		}
 		// reset to avoid writing same twice

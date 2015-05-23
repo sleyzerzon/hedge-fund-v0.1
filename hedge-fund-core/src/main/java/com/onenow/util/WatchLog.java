@@ -1,23 +1,34 @@
 package com.onenow.util;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import com.onenow.admin.NetworkConfig;
 
 public class WatchLog {
 
-	public WatchLog() {		
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
+	public WatchLog() {	
 	}
-
-	public static String add(LogType type, String message, String prepend, String postpend) {
+	
+	public static String add(Level level, String message, String prepend, String postpend) {
 
 		String s = "";
 
+		s = textLogFormatter(level, message, prepend, postpend);
+		
+		fanout(level, s);
+	
+		return s;
+				
+	}
+
+	private static String textLogFormatter(Level level, String message, String prepend, String postpend) {
+		
+		String s;
 		String timeLog = "[" + ParseTime.getDashedNow() + "]";
 		
 		String ipLog = "";
@@ -27,59 +38,48 @@ public class WatchLog {
 			e.printStackTrace();
 		} 	
 		ipLog = "[" + ipLog + "]";
-		
-		String typeLog = "[" + type + "]";
-		
+				
 		String caller = new Exception().getStackTrace()[1].getClassName();
 		// String calleeClassName = new Exception().getStackTrace()[0].getClassName();
 		
-		s = prepend + timeLog + " " + ipLog + " " + typeLog + "\t" + caller + "          "+ message + postpend;
-		
+		s = prepend + timeLog + " " + ipLog + "\t" + caller + "          "+ message + postpend;
+		return s;
+	}
+	
+	public static String addToLog(Level level, String message) {
+
+		return add(level, message, "", "");
+
+	}
+	
+	private static void fanout(Level level, String s) {
+
 		// TODO: add to CloudWatch Logs here
+		
+		// print to console
 		System.out.println(s);
 		
-		getLogger().info(s);  
-	
-		return s;
-				
+		// print to files, not to console
+		if(level.equals(Level.SEVERE)) {
+			LOGGER.severe(s);
+		}
+		if(level.equals(Level.WARNING)) {
+			LOGGER.warning(s);
+		}
+		if(level.equals(Level.INFO)) {
+			LOGGER.info(s);
+		}
+		if(level.equals(Level.FINEST)) {
+			LOGGER.finest(s);
+		}
 	}
-	
-	public static String addToLog(LogType type, String message) {
-
-		return add(type, message, "", "");
-
-	}
-	
-
-	private static Logger getLogger() {
 		
-	    Logger logger = Logger.getLogger("MyLog");  
-	    FileHandler fh;  
-
-	    try {  
-
-	        // This block configure the logger with handler and formatter
-	    	// /Users/pablo/Downloads
-	        fh = new FileHandler(getLogFile());  
-	        logger.addHandler(fh);
-	        SimpleFormatter formatter = new SimpleFormatter();  
-	        fh.setFormatter(formatter);  
-
-	    } catch (SecurityException e) {  
-	        e.printStackTrace();  
-	    } catch (IOException e) {  
-	        e.printStackTrace();  
-	    }  
-	    
-	    return logger;
-	}
-	
-	private static String getLogFile() {
+	public static String getLogPath() {
 		
-		String s = "/var/log/HedgeFund.log";
+		String s = "/var/log/";
 		
 		if(NetworkConfig.isMac()) {
-			s = "/users/Shared/HedgeFund.log";
+			s = "/users/Shared/";
 		}
 		
 		return s;

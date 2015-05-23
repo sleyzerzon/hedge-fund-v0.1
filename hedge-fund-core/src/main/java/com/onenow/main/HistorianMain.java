@@ -1,6 +1,7 @@
 package com.onenow.main;
 
-import com.onenow.admin.NetworkConfig;
+import java.util.logging.Level;
+
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.Topology;
 import com.onenow.data.Historian;
@@ -10,7 +11,7 @@ import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.util.LogType;
+import com.onenow.util.FlexibleLogger;
 import com.onenow.util.ParseTime;
 import com.onenow.util.WatchLog;
 
@@ -25,6 +26,8 @@ public class HistorianMain {
 
 	public static void main(String[] args) {
 		
+		FlexibleLogger.setup(Level.INFO);
+
 	    // choose relevant timeframe
 	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
@@ -37,7 +40,7 @@ public class HistorianMain {
 		int count=0;
 		while(true) {
 			String log = "^^ HISTORIAN MAIN: " + toDashedDate;
-			WatchLog.addToLog(LogType.INFO, log);
+			WatchLog.addToLog(Level.INFO, log);
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 
@@ -56,4 +59,5 @@ public class HistorianMain {
 			count++;
 		}
 	}
+	
 }

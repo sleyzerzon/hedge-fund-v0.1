@@ -2,16 +2,16 @@
 <testng-results skipped="0" failed="0" total="2" passed="2">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="114" started-at="2015-05-23T13:45:06Z" finished-at="2015-05-23T13:45:06Z">
+  <suite name="Default suite" duration-ms="111" started-at="2015-05-23T15:05:41Z" finished-at="2015-05-23T15:05:41Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="114" started-at="2015-05-23T13:45:06Z" finished-at="2015-05-23T13:45:06Z">
+    <test name="Default test" duration-ms="111" started-at="2015-05-23T15:05:41Z" finished-at="2015-05-23T15:05:41Z">
       <class name="com.onenow.execution.BusWallStTest">
-        <test-method status="PASS" signature="BusWallSt()[pri:0, instance:com.onenow.execution.BusWallStTest@1810399e]" name="BusWallSt" duration-ms="75" started-at="2015-05-23T06:45:06Z" finished-at="2015-05-23T06:45:06Z">
+        <test-method status="PASS" signature="BusWallSt()[pri:0, instance:com.onenow.execution.BusWallStTest@1810399e]" name="BusWallSt" duration-ms="73" started-at="2015-05-23T08:05:41Z" finished-at="2015-05-23T08:05:41Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- BusWallSt -->
-        <test-method status="PASS" signature="BusWallStTopology()[pri:0, instance:com.onenow.execution.BusWallStTest@1810399e]" name="BusWallStTopology" duration-ms="1" started-at="2015-05-23T06:45:06Z" finished-at="2015-05-23T06:45:06Z">
+        <test-method status="PASS" signature="BusWallStTopology()[pri:0, instance:com.onenow.execution.BusWallStTest@1810399e]" name="BusWallStTopology" duration-ms="0" started-at="2015-05-23T08:05:41Z" finished-at="2015-05-23T08:05:41Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- BusWallStTopology -->
