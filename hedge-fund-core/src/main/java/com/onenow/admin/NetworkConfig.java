@@ -1,6 +1,6 @@
 package com.onenow.admin;
 
-import com.onenow.constant.Environment;
+import com.onenow.constant.Topology;
 
 
 public class NetworkConfig {
@@ -57,11 +57,11 @@ public class NetworkConfig {
 		return net;
 	}
 
-	public static NetworkService getGateway(Environment env) {
+	public static NetworkService getGateway(Topology env) {
 
 		NetworkService net = gatewayAWSIB;
 		
-		if(env.equals(Environment.LOCAL)) {
+		if(env.equals(Topology.LOCAL)) {
 			 net = gatewayLocalIB;
 		}
 			

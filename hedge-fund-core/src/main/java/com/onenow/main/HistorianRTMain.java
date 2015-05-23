@@ -6,7 +6,7 @@ import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.BrokerMode;
-import com.onenow.constant.Environment;
+import com.onenow.constant.Topology;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;

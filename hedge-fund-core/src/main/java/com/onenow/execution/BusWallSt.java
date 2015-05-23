@@ -8,7 +8,7 @@ import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 import com.onenow.constant.ConnectionStatus;
-import com.onenow.constant.Environment;
+import com.onenow.constant.Topology;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ConnectionHandler;
 import com.onenow.portfolio.BrokerController.IBulletinHandler;
@@ -25,14 +25,20 @@ public class BusWallSt implements ConnectionHandler {
 	public BrokerController controller = new BrokerController(this, inLogger, outLogger);
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
-	private NetworkService gateway;
+	public NetworkService gateway;
 	
 	public BusWallSt() {
-		this.gateway = NetworkConfig.getGateway(Environment.AWSLOCAL);		
+		this.gateway = NetworkConfig.getGateway(Topology.AWSLOCAL);		
 	}
 	
-	public BusWallSt(Environment env) {
-		this.gateway = NetworkConfig.getGateway(env);
+	// configurable topology for testing
+	public BusWallSt(Topology topo) {
+		this.gateway = NetworkConfig.getGateway(topo);
+		
+		// fixed for production
+		if(!NetworkConfig.isMac()) {
+			this.gateway = NetworkConfig.getGateway(Topology.AWSLOCAL);
+		}
 	}
 	
 	  /**

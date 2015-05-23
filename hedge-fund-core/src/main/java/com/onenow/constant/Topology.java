@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
-public enum Environment {
+public enum Topology {
 	AWSLOCAL, AWSREMOTE, LOCAL
 }

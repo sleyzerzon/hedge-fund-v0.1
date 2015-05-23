@@ -11,8 +11,7 @@ import com.onenow.admin.NetworkConfig;
 
 public class WatchLog {
 
-	public WatchLog() {
-		
+	public WatchLog() {		
 	}
 
 	public static String add(LogType type, String message, String prepend, String postpend) {
@@ -62,7 +61,6 @@ public class WatchLog {
 	        // This block configure the logger with handler and formatter
 	    	// /Users/pablo/Downloads
 	        fh = new FileHandler(getLogFile());  
-//	         fh = new FileHandler("/Users/shared");  
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);  

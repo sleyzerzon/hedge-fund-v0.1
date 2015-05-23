@@ -2,7 +2,7 @@ package com.onenow.main;
 
 import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.BrokerMode;
-import com.onenow.constant.Environment;
+import com.onenow.constant.Topology;
 import com.onenow.data.Historian;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
@@ -30,7 +30,7 @@ public class HistorianMain {
 
 	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.HISTORIAN, 
 	    													marketPortfolio, 
-	    													new BusWallSt(Environment.LOCAL)); 
+	    													new BusWallSt(Topology.LOCAL)); 
 	    Historian historian = new Historian(broker, new HistorianService().size30sec);		
 			    
 	    // get ready to loop

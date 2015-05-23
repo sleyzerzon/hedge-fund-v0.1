@@ -4,16 +4,16 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.onenow.admin.NetworkConfig;
-import com.onenow.constant.Environment;
+import com.onenow.constant.Topology;
 import com.onenow.data.InvestmentList;
 
 public class NetworkConfigTest {
 
   @Test
   public void getGateway() {
-	  Assert.assertTrue(NetworkConfig.getGateway(Environment.LOCAL).port.equals("4001"));
-	  Assert.assertTrue(NetworkConfig.getGateway(Environment.AWSREMOTE).port.equals("4001"));
-	  Assert.assertTrue(NetworkConfig.getGateway(Environment.AWSLOCAL).port.equals("4001"));
+	  Assert.assertTrue(NetworkConfig.getGateway(Topology.LOCAL).port.equals("4001"));
+	  Assert.assertTrue(NetworkConfig.getGateway(Topology.AWSREMOTE).port.equals("4001"));
+	  Assert.assertTrue(NetworkConfig.getGateway(Topology.AWSLOCAL).port.equals("4001"));
   }
 
   @Test
