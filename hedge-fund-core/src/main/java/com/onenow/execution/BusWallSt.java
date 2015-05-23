@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
 import com.ib.controller.ApiConnection.ILogger;
+import com.onenow.admin.NetworkConfig;
+import com.onenow.admin.NetworkService;
 import com.onenow.constant.ConnectionStatus;
+import com.onenow.constant.Environment;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ConnectionHandler;
 import com.onenow.portfolio.BrokerController.IBulletinHandler;
@@ -22,16 +25,16 @@ public class BusWallSt implements ConnectionHandler {
 	public BrokerController controller = new BrokerController(this, inLogger, outLogger);
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
-	private NetworkService gwService;
+	private NetworkService gateway;
 	
 	public BusWallSt() {
-		
+		this.gateway = NetworkConfig.getGateway(Environment.AWSLOCAL);		
 	}
 	
-	public BusWallSt(NetworkService service) {
-		this.gwService = service;
+	public BusWallSt(Environment env) {
+		this.gateway = NetworkConfig.getGateway(env);
 	}
-
+	
 	  /**
 	   * Connect to gateway at set IP and port
 	   */
@@ -40,19 +43,21 @@ public class BusWallSt implements ConnectionHandler {
 	    while(tryToConnect) {		    		
 			try {				
 				tryToConnect = false;
-				String log = "CONNECTING TO BUS..." + gwService.URI + ":" + gwService.port;
+				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				WatchLog.add(LogType.INFO, log, "\n", "");
 			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, inLogger, outLogger);
-			    controller.connect(	gwService.URI, gwService.port, 
-			    							0, null);  
+			    controller.connect(		gateway.URI, Integer.parseInt(gateway.port), 
+			    						0, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
-				System.out.println("...COULD CONNECT TO BUS..." + "\n");
+				String log = "...COULD CONNECT TO BUS...";
+				WatchLog.add(LogType.INFO, log, "", "\n");
 				e.printStackTrace();
 				ParseTime.wait(10);
 			}			
 		} // end try to connect
-		System.out.println("CONNECTED TO BUS!");
+		String log = "CONNECTED TO BUS!";
+		WatchLog.add(LogType.INFO, log, "", "");
 	  }
 
 	

@@ -11,13 +11,13 @@ import com.onenow.data.HistorianConfig;
 
 public class HistorianService {
 
-    public HistorianConfig size30sec = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
-															1, DurationUnit.DAY, BarSize._30_secs, WhatToShow.TRADES,
-															TradeType.TRADED, SamplingRate.HFMEDIUM);   	    	
+    public static HistorianConfig size30sec = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
+																	1, DurationUnit.DAY, BarSize._30_secs, WhatToShow.TRADES,
+																	TradeType.TRADED, SamplingRate.HFMEDIUM);   	    	
 
-    public HistorianConfig size1hr = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
-															1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
-															TradeType.TRADED, SamplingRate.HFMEDIUM);   	    	
+    public static HistorianConfig size1hr = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
+																	1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
+																	TradeType.TRADED, SamplingRate.HFMEDIUM);   	    	
 
 	public HistorianService() {
 		

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.constant.BrokerMode;
+import com.onenow.constant.Environment;
 import com.onenow.constant.InvApproach;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
@@ -20,14 +21,15 @@ import com.onenow.util.ParseTime;
 public class InvestorMain {
 		
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BrokerInteractive broker;
 
 	public static void main(String[] args) throws ParseException, InterruptedException {
 
 	    // choose relevant timeframe
 	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
-		broker = new BrokerInteractive(BrokerMode.PRIMARY, marketPortfolio, new BusWallSt()); 
+	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.PRIMARY, 
+	    													marketPortfolio, 
+	    													new BusWallSt()); 
 
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
 												InvestmentList.getUnderlying(InvestmentList.someStocks), 

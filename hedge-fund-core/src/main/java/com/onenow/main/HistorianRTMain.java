@@ -6,6 +6,7 @@ import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.BrokerMode;
+import com.onenow.constant.Environment;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -29,14 +30,15 @@ import com.onenow.util.ParseTime;
 public class HistorianRTMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BrokerInteractive broker;
 
 	public static void main(String[] args) {
 		
 	    // choose relevant timeframe
 	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
-		broker = new BrokerInteractive(BrokerMode.REALTIME, marketPortfolio, new BusWallSt()); 
+	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.REALTIME, 
+	    													marketPortfolio, 
+	    													new BusWallSt()); 
 			    
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
 												InvestmentList.getUnderlying(InvestmentList.someStocks), 

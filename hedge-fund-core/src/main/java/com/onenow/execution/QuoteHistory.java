@@ -42,7 +42,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	private void handleBar(QuoteRow row) {
 
 		String log = "History " + row.toString();
-		WatchLog.addToLog(LogType.INFO, log);
+		WatchLog.add(LogType.INFO, log, "", "");
 
 		if(getChannel()!=null) { // if constructed that way
 			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 

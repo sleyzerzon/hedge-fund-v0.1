@@ -3,6 +3,7 @@ package com.onenow.portfolio;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.onenow.alpha.Broker;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
@@ -12,7 +13,6 @@ import com.onenow.data.Channel;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.DataSampling;
-import com.onenow.execution.Broker;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;

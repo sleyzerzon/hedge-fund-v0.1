@@ -3,13 +3,13 @@ package com.onenow.data;
 import java.util.HashMap;
 import java.util.List;
 
+import com.onenow.alpha.Broker;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.database.Lookup;
 import com.onenow.database.TSDB;
-import com.onenow.execution.Broker;
 import com.onenow.execution.QuoteHistory;
 import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;

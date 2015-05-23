@@ -1,10 +1,11 @@
-package com.onenow.execution;
+package com.onenow.alpha;
 
 import java.util.List;
 
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
+import com.onenow.execution.QuoteHistory;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;

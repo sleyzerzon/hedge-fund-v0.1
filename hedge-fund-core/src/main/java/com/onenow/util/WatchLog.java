@@ -7,6 +7,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import com.onenow.admin.NetworkConfig;
+
 public class WatchLog {
 
 	public WatchLog() {
@@ -50,7 +52,7 @@ public class WatchLog {
 	}
 	
 
-	public static Logger getLogger() {
+	private static Logger getLogger() {
 		
 	    Logger logger = Logger.getLogger("MyLog");  
 	    FileHandler fh;  
@@ -59,14 +61,11 @@ public class WatchLog {
 
 	        // This block configure the logger with handler and formatter
 	    	// /Users/pablo/Downloads
-	        fh = new FileHandler("/var/log/HedgeFundLogFile.log");  
+	        fh = new FileHandler(getLogFile());  
 //	         fh = new FileHandler("/Users/shared");  
 	        logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
 	        fh.setFormatter(formatter);  
-
-	        // the following statement is used to log any messages  
-	        logger.info("My first log");  
 
 	    } catch (SecurityException e) {  
 	        e.printStackTrace();  
@@ -75,5 +74,16 @@ public class WatchLog {
 	    }  
 	    
 	    return logger;
+	}
+	
+	private static String getLogFile() {
+		
+		String s = "/var/log/HedgeFund.log";
+		
+		if(NetworkConfig.isMac()) {
+			s = "/users/Shared/HedgeFund.log";
+		}
+		
+		return s;
 	}
 }

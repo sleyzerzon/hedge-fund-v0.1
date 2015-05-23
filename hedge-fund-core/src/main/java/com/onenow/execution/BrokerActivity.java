@@ -6,6 +6,7 @@ import java.util.List;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activities;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activity;
 import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrationOptions;
+import com.onenow.alpha.Broker;
 import com.onenow.constant.ConstantsWorkflow;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;

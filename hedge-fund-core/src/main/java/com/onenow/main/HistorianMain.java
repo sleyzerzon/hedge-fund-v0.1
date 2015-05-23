@@ -1,13 +1,14 @@
 package com.onenow.main;
 
+import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.BrokerMode;
+import com.onenow.constant.Environment;
 import com.onenow.data.Historian;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
-import com.onenow.execution.NetworkConfig;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.LogType;
 import com.onenow.util.ParseTime;
@@ -21,18 +22,16 @@ import com.onenow.util.WatchLog;
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-	private static BrokerInteractive broker;
-	private static Historian historian;
-
-	private static HistorianService service = new HistorianService();
 
 	public static void main(String[] args) {
 		
 	    // choose relevant timeframe
 	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
-		broker = new BrokerInteractive(BrokerMode.HISTORIAN, marketPortfolio, new BusWallSt(NetworkConfig.IBgatewayAWS)); 
-		historian = new Historian(broker, service.size30sec);		
+	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.HISTORIAN, 
+	    													marketPortfolio, 
+	    													new BusWallSt(Environment.LOCAL)); 
+	    Historian historian = new Historian(broker, new HistorianService().size30sec);		
 			    
 	    // get ready to loop
 		int count=0;

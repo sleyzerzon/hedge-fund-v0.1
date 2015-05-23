@@ -2,21 +2,21 @@ package com.onenow.database;
 
 import java.sql.*;
 
-import com.onenow.execution.NetworkConfig;
-import com.onenow.execution.NetworkService;
+import com.onenow.admin.NetworkConfig;
+import com.onenow.admin.NetworkService;
 
 public class RelationalDB {
 // https://www.youtube.com/watch?v=2i4t-SL1VsU
 	
-	private static NetworkService rdbmsService = new NetworkConfig().rdbms;
-
 	public static void main(String[] args) throws ClassNotFoundException {
 				
 		try {
 			
 			Class.forName("com.mysql.jdbc.Driver");
 			
-			Connection myCon = DriverManager.getConnection(	rdbmsService.protocol+"://"+rdbmsService.URI+":"+rdbmsService.port.toString()+"/"+rdbmsService.endPoint, 
+			NetworkService rdbmsService = NetworkConfig.getRDBMS();
+			
+			Connection myCon = DriverManager.getConnection(	rdbmsService.protocol+"://"+rdbmsService.URI+":"+rdbmsService.port+"/"+rdbmsService.endPoint, 
 															rdbmsService.user, rdbmsService.pass);
 			
 			Statement myStat = myCon.createStatement();

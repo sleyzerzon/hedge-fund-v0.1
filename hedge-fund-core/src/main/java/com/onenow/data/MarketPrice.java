@@ -2,13 +2,13 @@ package com.onenow.data;
 
 import java.util.List;
 
+import com.onenow.alpha.Broker;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.database.PriceSizeCache;
 import com.onenow.database.EventRT;
-import com.onenow.execution.Broker;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;

@@ -1,9 +1,9 @@
 package com.onenow.portfolio;
 
+import com.onenow.alpha.Broker;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
-import com.onenow.execution.Broker;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentIndex;

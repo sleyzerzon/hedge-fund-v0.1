@@ -9,14 +9,14 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Serie;
 
+import com.onenow.admin.NetworkConfig;
+import com.onenow.admin.NetworkService;
 import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.execution.NetworkConfig;
-import com.onenow.execution.NetworkService;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.util.LogType;
@@ -28,8 +28,6 @@ public class TSDB {
 	private InfluxDB DB;
 	private Lookup dbLookup = new Lookup();
 	private DataSampling dataSampling = new DataSampling();
-	
-	private NetworkService tsdbService = new NetworkConfig().tsdb;
 	
 	/**
 	 * Default constructor connects to database
@@ -47,7 +45,8 @@ private void dbConnect() {
 		try {
 			tryToConnect = false;
 			System.out.println("\n" + "CONNECTING TO TSDB...");
-			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port.toString(), 
+			NetworkService tsdbService = NetworkConfig.getTSDB();
+			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
 											tsdbService.user, tsdbService.pass));
 		} catch (Exception e) {
 			tryToConnect = true;

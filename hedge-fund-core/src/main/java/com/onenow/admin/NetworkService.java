@@ -1,4 +1,4 @@
-package com.onenow.execution;
+package com.onenow.admin;
 
 public class NetworkService {
 
@@ -7,7 +7,7 @@ public class NetworkService {
 
 	public String protocol;
 	public String URI;
-	public Integer port;
+	public String port;
 
 	public String endPoint;
 	
@@ -15,7 +15,7 @@ public class NetworkService {
 	}
 	
 	public NetworkService(	String user, String pass,
-							String protocol, String uri, Integer port,
+							String protocol, String uri, String port,
 							String endpoint) {
 		this.user = user;
 		this.pass = pass;

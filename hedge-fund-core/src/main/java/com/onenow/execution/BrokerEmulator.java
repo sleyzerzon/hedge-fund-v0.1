@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.onenow.alpha.Broker;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
