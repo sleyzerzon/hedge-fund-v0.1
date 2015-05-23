@@ -35,7 +35,7 @@ public class BusWallSt implements ConnectionHandler {
 	public BusWallSt(Topology topo) {
 		this.gateway = NetworkConfig.getGateway(topo);
 		
-		// fixed for production
+		// fixed gateway for production
 		if(!NetworkConfig.isMac()) {
 			this.gateway = NetworkConfig.getGateway(Topology.AWSLOCAL);
 		}
