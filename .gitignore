@@ -2,4 +2,5 @@
 .*
 **/target/**
 dependency-reduced-pom.xml
-**/test-output/**
+*/test-output/*
+*log*

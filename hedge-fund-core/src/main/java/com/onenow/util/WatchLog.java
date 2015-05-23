@@ -16,20 +16,23 @@ public class WatchLog {
 	
 	public static String add(Level level, String message, String prepend, String postpend) {
 
-		String s = "";
+		String formattedMessage = machineTextLogFormatter(level, message);
 
-		s = textLogFormatter(level, message, prepend, postpend);
-		
-		fanout(level, s);
+		fanoutLog(level, prepend+message+postpend, formattedMessage);
 	
-		return s;
+		return message;
 				
 	}
+	
+	public static String addToLog(Level level, String message) {
 
-	private static String textLogFormatter(Level level, String message, String prepend, String postpend) {
+		return add(level, message, "", "");
+
+	}
+
+	private static String machineTextLogFormatter(Level level, String message) {
 		
-		String s;
-		String timeLog = "[" + ParseTime.getDashedNow() + "]";
+		String s = "";
 		
 		String ipLog = "";
 		try {
@@ -42,35 +45,30 @@ public class WatchLog {
 		String caller = new Exception().getStackTrace()[1].getClassName();
 		// String calleeClassName = new Exception().getStackTrace()[0].getClassName();
 		
-		s = prepend + timeLog + " " + ipLog + "\t" + caller + "          "+ message + postpend;
+		s = " " + ipLog + "\t" + caller + "          "+ message;
+
 		return s;
 	}
-	
-	public static String addToLog(Level level, String message) {
 
-		return add(level, message, "", "");
-
-	}
-	
-	private static void fanout(Level level, String s) {
+	private static void fanoutLog(Level level, String message, String formattedMessage) {
 
 		// TODO: add to CloudWatch Logs here
 		
 		// print to console
-		System.out.println(s);
+		System.out.println(message);
 		
 		// print to files, not to console
 		if(level.equals(Level.SEVERE)) {
-			LOGGER.severe(s);
+			LOGGER.severe(formattedMessage);
 		}
 		if(level.equals(Level.WARNING)) {
-			LOGGER.warning(s);
+			LOGGER.warning(formattedMessage);
 		}
 		if(level.equals(Level.INFO)) {
-			LOGGER.info(s);
+			LOGGER.info(formattedMessage);
 		}
 		if(level.equals(Level.FINEST)) {
-			LOGGER.finest(s);
+			LOGGER.finest(formattedMessage);
 		}
 	}
 		
