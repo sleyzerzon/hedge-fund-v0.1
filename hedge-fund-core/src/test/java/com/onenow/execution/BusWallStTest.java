@@ -26,12 +26,15 @@ public class BusWallStTest {
 	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.AWSREMOTE)));
 	  
 	  if(!NetworkConfig.isMac()) {
+		  System.out.println("TOPOLOGY is not Mac");
 		  bus = new BusWallSt(Topology.LOCAL);
 		  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.AWSLOCAL)));
 		  bus = new BusWallSt(Topology.AWSLOCAL);
 		  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.AWSLOCAL)));
 		  bus = new BusWallSt(Topology.AWSREMOTE);
 		  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.AWSLOCAL)));		  
+	  } else {
+		  System.out.println("TOPOLOGY is Mac");		  
 	  }
   }
 }

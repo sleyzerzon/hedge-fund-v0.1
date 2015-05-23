@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="3" passed="3">
+<testng-results skipped="0" failed="0" total="2" passed="2">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="62" started-at="2015-05-23T00:29:23Z" finished-at="2015-05-23T00:29:23Z">
+  <suite name="Default suite" duration-ms="114" started-at="2015-05-23T13:45:06Z" finished-at="2015-05-23T13:45:06Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="62" started-at="2015-05-23T00:29:23Z" finished-at="2015-05-23T00:29:23Z">
-      <class name="com.onenow.execution.NetworkConfigTest">
-        <test-method status="PASS" signature="getGateway()[pri:0, instance:com.onenow.execution.NetworkConfigTest@1810399e]" name="getGateway" duration-ms="23" started-at="2015-05-22T17:29:23Z" finished-at="2015-05-22T17:29:23Z">
+    <test name="Default test" duration-ms="114" started-at="2015-05-23T13:45:06Z" finished-at="2015-05-23T13:45:06Z">
+      <class name="com.onenow.execution.BusWallStTest">
+        <test-method status="PASS" signature="BusWallSt()[pri:0, instance:com.onenow.execution.BusWallStTest@1810399e]" name="BusWallSt" duration-ms="75" started-at="2015-05-23T06:45:06Z" finished-at="2015-05-23T06:45:06Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- getGateway -->
-        <test-method status="PASS" signature="getRDBMS()[pri:0, instance:com.onenow.execution.NetworkConfigTest@1810399e]" name="getRDBMS" duration-ms="0" started-at="2015-05-22T17:29:23Z" finished-at="2015-05-22T17:29:23Z">
+        </test-method> <!-- BusWallSt -->
+        <test-method status="PASS" signature="BusWallStTopology()[pri:0, instance:com.onenow.execution.BusWallStTest@1810399e]" name="BusWallStTopology" duration-ms="1" started-at="2015-05-23T06:45:06Z" finished-at="2015-05-23T06:45:06Z">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- getRDBMS -->
-        <test-method status="PASS" signature="getTSDB()[pri:0, instance:com.onenow.execution.NetworkConfigTest@1810399e]" name="getTSDB" duration-ms="1" started-at="2015-05-22T17:29:23Z" finished-at="2015-05-22T17:29:23Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- getTSDB -->
-      </class> <!-- com.onenow.execution.NetworkConfigTest -->
+        </test-method> <!-- BusWallStTopology -->
+      </class> <!-- com.onenow.execution.BusWallStTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>

@@ -3,12 +3,11 @@
 <suite name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="com.onenow.execution.NetworkConfigTest">
+      <class name="com.onenow.execution.BusWallStTest">
         <methods>
-          <include name="getGateway"/>
-          <include name="getRDBMS"/>
+          <include name="BusWallStTopology"/>
         </methods>
-      </class> <!-- com.onenow.execution.NetworkConfigTest -->
+      </class> <!-- com.onenow.execution.BusWallStTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
