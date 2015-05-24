@@ -75,7 +75,8 @@ public class WatchLog {
 		
 	public static String getLogPath() {
 		
-		String s = "/var/log/";
+		// String s = "/var/log/";
+		String s = "/tmp/";
 		
 		if(NetworkConfig.isMac()) {
 			s = "/users/Shared/";
