@@ -10,6 +10,6 @@ public class FlexibleLoggerTest {
   @Test
   public void setup() {
 	  // java.io.IOException: Couldn't get lock for /var/log/HedgeFundLog.txt
-	  // Assert.assertTrue(FlexibleLogger.setup());
+	   Assert.assertTrue(FlexibleLogger.setup());
   }
 }
