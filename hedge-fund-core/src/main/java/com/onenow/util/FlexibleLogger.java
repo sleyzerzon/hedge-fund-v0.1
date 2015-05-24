@@ -16,8 +16,14 @@ public class FlexibleLogger {
   static private FileHandler fileHTML;
   static private Formatter formatterHTML;
 
-  static public void setup(Level level) {
+  static public boolean setup() {
+	  return setup(Level.INFO);
+  }
 
+  static public boolean setup(Level level) {
+	  
+	  boolean success = true;
+	  
 	  try {
 	    // get the global logger to configure it
 	    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -47,9 +53,12 @@ public class FlexibleLogger {
 	    logger.addHandler(fileHTML);    
 	  }
     catch (IOException e) {
+    	success = false;
         e.printStackTrace();
         throw new RuntimeException("Problems with creating the log files");
       }
+	  
+	  return success;
   }
 }
  

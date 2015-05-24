@@ -9,6 +9,7 @@ import com.onenow.admin.NetworkConfig;
 
 public class WatchLog {
 
+	// http://www.vogella.com/tutorials/Logging/article.html
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	public WatchLog() {	
@@ -16,11 +17,11 @@ public class WatchLog {
 	
 	public static String add(Level level, String message, String prepend, String postpend) {
 
-		String formattedMessage = machineTextLogFormatter(level, message);
+		String machineMessage = machineTextLogFormatter(message);
 
-		fanoutLog(level, prepend+message+postpend, formattedMessage);
+		fanoutLog(level, prepend+message+postpend, machineMessage);
 	
-		return message;
+		return machineMessage;
 				
 	}
 	
@@ -30,7 +31,7 @@ public class WatchLog {
 
 	}
 
-	private static String machineTextLogFormatter(Level level, String message) {
+	private static String machineTextLogFormatter(String message) {
 		
 		String s = "";
 		
@@ -45,7 +46,7 @@ public class WatchLog {
 		String caller = new Exception().getStackTrace()[1].getClassName();
 		// String calleeClassName = new Exception().getStackTrace()[0].getClassName();
 		
-		s = " " + ipLog + "\t" + caller + "          "+ message;
+		s = " " + ipLog + "\t" + caller + "     "+ message;
 
 		return s;
 	}

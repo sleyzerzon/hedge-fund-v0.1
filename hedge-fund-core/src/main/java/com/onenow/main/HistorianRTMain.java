@@ -1,6 +1,7 @@
 package com.onenow.main;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
@@ -20,6 +21,7 @@ import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
+import com.onenow.util.FlexibleLogger;
 import com.onenow.util.ParseTime;
 
 /** 
@@ -33,6 +35,8 @@ public class HistorianRTMain {
 
 	public static void main(String[] args) {
 		
+		FlexibleLogger.setup();
+
 	    // choose relevant timeframe
 	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
 
