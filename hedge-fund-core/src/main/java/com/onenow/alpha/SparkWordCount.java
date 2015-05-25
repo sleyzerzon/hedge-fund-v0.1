@@ -12,18 +12,16 @@ import scala.Tuple2;
 
 public class SparkWordCount {
 
+	public static InitSpark spark;
+	
+	public SparkWordCount() {
+	}
 
-	public static void main(String[] args) throws Exception {
+	public static JavaRDD<String> loadInputData(String file) {
+		return spark.sc.textFile(file);
+	}
 
-		String master = args[0];
-		InitSpark spark = new InitSpark(master, "wordCount");
-
-		String inputFile = null;
-		
-		// load input data
-		JavaRDD<String> inputRDD = spark.sc.textFile(args[1]);
-		
-		// split into words
+	public static JavaRDD<String> splitIntoWords(JavaRDD<String> inputRDD) {
 		JavaRDD<String> wordsRDD = inputRDD.flatMap(	
 				new FlatMapFunction<String, String>() {
 					@Override
@@ -31,8 +29,11 @@ public class SparkWordCount {
 						return Arrays.asList(x.split(" "));
 					}
 				});
-		
-		// transform into pairs and count
+		return wordsRDD;
+	}
+	
+	public static JavaPairRDD<String, Integer> countWords(
+			JavaRDD<String> wordsRDD) {
 		JavaPairRDD<String, Integer> countsRDD = wordsRDD.mapToPair(	
 				new PairFunction<String, String, Integer>() {
 					@Override
@@ -45,9 +46,7 @@ public class SparkWordCount {
 								return x+y;
 							}
 				});
-		
-		String outputFile = args[2];
-		// save teh word count back out to a text file, causing evaluation
-		countsRDD.saveAsTextFile(outputFile);
+		return countsRDD;
 	}
+	
 }
