@@ -13,8 +13,8 @@ public class AnalystMain {
 	public static void main(String[] args) throws Exception {
 		
 		// load input data
-		// String inputFile = args[0];
-		String inputFile = "/users/Shared/HedgeFundLog.txt";
+		String inputFile = args[0];
+		// String inputFile = "/users/Shared/HedgeFundLog.txt";
 		JavaRDD<String> inputRDD = counter.loadInputData(inputFile);
 		
 		// split into words
@@ -24,8 +24,8 @@ public class AnalystMain {
 		JavaPairRDD<String, Integer> countsRDD = counter.countWords(wordsRDD);
 		
 		// save the word count back out to a text file, causing evaluation
-		// String outputFile = args[1];
-		String outputFile = "";
+		String outputFile = args[1];
+		// String outputFile = "";
 		countsRDD.saveAsTextFile(outputFile);
 		
 		System.out.println("WORDS: " + outputFile);
