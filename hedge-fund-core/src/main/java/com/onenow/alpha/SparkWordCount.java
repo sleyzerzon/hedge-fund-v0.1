@@ -15,6 +15,11 @@ public class SparkWordCount {
 	public static InitSpark spark;
 	
 	public SparkWordCount() {
+		spark = new InitSpark("local", "wordCount");
+	}
+	
+	public SparkWordCount(String master) {
+		spark = new InitSpark(master, "wordCount");
 	}
 
 	public static JavaRDD<String> loadInputData(String file) {
@@ -22,7 +27,8 @@ public class SparkWordCount {
 	}
 
 	public static JavaRDD<String> splitIntoWords(JavaRDD<String> inputRDD) {
-		JavaRDD<String> wordsRDD = inputRDD.flatMap(	
+		
+		JavaRDD<String> wordsRDD = inputRDD.flatMap(
 				new FlatMapFunction<String, String>() {
 					@Override
 					public Iterable<String> call(String x) throws Exception {
@@ -34,7 +40,8 @@ public class SparkWordCount {
 	
 	public static JavaPairRDD<String, Integer> countWords(
 			JavaRDD<String> wordsRDD) {
-		JavaPairRDD<String, Integer> countsRDD = wordsRDD.mapToPair(	
+		
+		JavaPairRDD<String, Integer> countsRDD = wordsRDD.mapToPair(			
 				new PairFunction<String, String, Integer>() {
 					@Override
 					public Tuple2<String, Integer> call(String t) throws Exception {

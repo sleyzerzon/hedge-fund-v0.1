@@ -13,12 +13,12 @@ public class InitSpark {
 	
 	public InitSpark(String master, String name) {
 				
-		// SparkConf conf = new SparkConf().setMaster(master).setAppName(name);
-		// this.sc = new JavaSparkContext(conf);
+		 SparkConf conf = new SparkConf().setMaster(master).setAppName(name);
+		 this.sc = new JavaSparkContext(conf);
 		
-		JavaSparkContext sc = new JavaSparkContext(	master, 
-													name, 
-													System.getenv("SPARK_HOME"), System.getenv("JARS"));
+//		this.sc = new JavaSparkContext(	master, 
+//										name, 
+//										System.getenv("SPARK_HOME"), System.getenv("JARS"));
 		
 	}
 }

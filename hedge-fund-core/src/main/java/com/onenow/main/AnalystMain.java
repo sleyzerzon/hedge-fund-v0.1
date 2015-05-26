@@ -12,12 +12,9 @@ public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 		
-		String master = args[0];
-		counter.spark = new InitSpark(master, "wordCount");
-
-		String inputFile = args[1];
-		
 		// load input data
+		// String inputFile = args[0];
+		String inputFile = "/users/Shared/HedgeFundLog.txt";
 		JavaRDD<String> inputRDD = counter.loadInputData(inputFile);
 		
 		// split into words
@@ -26,9 +23,12 @@ public class AnalystMain {
 		// transform into pairs and count
 		JavaPairRDD<String, Integer> countsRDD = counter.countWords(wordsRDD);
 		
-		String outputFile = args[2];
 		// save the word count back out to a text file, causing evaluation
+		// String outputFile = args[1];
+		String outputFile = "";
 		countsRDD.saveAsTextFile(outputFile);
+		
+		System.out.println("WORDS: " + outputFile);
 
 	}
 }

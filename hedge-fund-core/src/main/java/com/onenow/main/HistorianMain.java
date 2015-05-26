@@ -58,6 +58,5 @@ public class HistorianMain {
 			toDashedDate = ParseTime.getDashedDateMinus(toDashedDate, 1);
 			count++;
 		}
-	}
-	
+	}	
 }
