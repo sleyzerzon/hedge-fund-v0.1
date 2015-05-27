@@ -11,10 +11,10 @@ import org.influxdb.impl.InfluxDBImpl;
 
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
-import com.onenow.database.TsdbEvent;
-import com.onenow.database.TsdbEventFactory;
-import com.onenow.database.TsdbWriterFrontend;
-import com.onenow.database.TsdbWriterHandler;
+import com.onenow.storage.TsdbEvent;
+import com.onenow.storage.TsdbEventFactory;
+import com.onenow.storage.TsdbWriterFrontend;
+import com.onenow.storage.TsdbWriterHandler;
 
 public class TsdbDisruptorExample {
 

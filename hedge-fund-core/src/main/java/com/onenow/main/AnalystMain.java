@@ -12,6 +12,11 @@ public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 		
+		countWordsInFile(args);
+		
+	}
+
+	private static void countWordsInFile(String[] args) {
 		// load input data
 		String inputFile = args[0];
 		// String inputFile = "/users/Shared/HedgeFundLog.txt";
@@ -27,8 +32,5 @@ public class AnalystMain {
 		String outputFile = args[1];
 		// String outputFile = "";
 		countsRDD.saveAsTextFile(outputFile);
-		
-		System.out.println("WORDS: " + outputFile);
-
 	}
 }

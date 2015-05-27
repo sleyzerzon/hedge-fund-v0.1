@@ -1,4 +1,4 @@
-package com.onenow.database;
+package com.onenow.storage;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
