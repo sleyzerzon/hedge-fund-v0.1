@@ -5,18 +5,22 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.onenow.alpha.InitSpark;
 import com.onenow.alpha.WordCount;
+import com.onenow.storage.S3;
+import com.onenow.util.JSON;
 
 public class AnalystMain {
 	
-	private static WordCount counter = new WordCount();
-	
 	public static void main(String[] args) throws Exception {
+
 		
-		countWordsInFile(args);
+		// countWordsInFile(args);
 		
 	}
 
 	private static void countWordsInFile(String[] args) {
+		
+		WordCount counter = new WordCount();
+		
 		// load input data
 		String inputFile = args[0];
 		// String inputFile = "/users/Shared/HedgeFundLog.txt";

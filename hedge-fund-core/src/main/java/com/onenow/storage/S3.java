@@ -24,10 +24,10 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 public class S3 {
 
-	String accessKey = "insert your access key here!";
-	String secretKey = "insert your secret key here!";
+	private static String accessKey = "insert your access key here!";
+	private static String secretKey = "insert your secret key here!";
 
-	AmazonS3 connection = getConnection();
+	private static AmazonS3 connection = getConnection();
 	
 	public S3 () {
 
@@ -36,7 +36,7 @@ public class S3 {
 		List<Bucket> buckets = listBuckets();
 	}
 	
-	private AmazonS3 getConnection() {
+	private static AmazonS3 getConnection() {
 	
 		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
@@ -49,7 +49,7 @@ public class S3 {
 		return conn;
 	}
 
-	private void setEndpoint() {
+	private static void setEndpoint() {
 		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 		AmazonS3 conn = new AmazonS3Client(credentials);
 		connection.setEndpoint("objects.dreamhost.com");
@@ -62,7 +62,7 @@ public class S3 {
 	 * 		mahbuckat3   2011-04-21T18:07:18.000Z
 	 * @return
 	 */
-	private List<Bucket> listBuckets() {
+	private static List<Bucket> listBuckets() {
 		List<Bucket> buckets = connection.listBuckets();
 		for (Bucket bucket : buckets) {
 		        System.out.println(bucket.getName() + "\t" +
@@ -71,7 +71,7 @@ public class S3 {
 		return buckets;
 	}
 	
-	private void createBucket(String name) {
+	private static void createBucket(String name) {
 		Bucket bucket = connection.createBucket(name);
 	}
 	
@@ -81,7 +81,7 @@ public class S3 {
 	 * 		myphoto2.jpg 262518  2011-08-08T21:38:01.000Z
 	 * @param bucket
 	 */
-	private void listObjects(Bucket bucket) {
+	private static void listObjects(Bucket bucket) {
 		ObjectListing objects = connection.listObjects(bucket.getName());
 		do {
 		        for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
@@ -93,7 +93,7 @@ public class S3 {
 		} while (objects.isTruncated());
 	}
 	
-	private void deleteBucket(Bucket bucket) {
+	private static void deleteBucket(Bucket bucket) {
 		connection.deleteBucket(bucket.getName());
 	}
 	
@@ -103,23 +103,23 @@ public class S3 {
 	 * @param content
 	 * @param objectName
 	 */
-	private void createObject(Bucket bucket, String content, String objectName) {
+	private static void createObject(Bucket bucket, String content, String objectName) {
 		ByteArrayInputStream input = new ByteArrayInputStream(content.getBytes());
 		connection.putObject(bucket.getName(), objectName, input, new ObjectMetadata());
 	}	
 	
-	private void chmodPrivate(Bucket bucket, String objectName) {
+	private static void chmodPrivate(Bucket bucket, String objectName) {
 		connection.setObjectAcl(bucket.getName(), objectName, CannedAccessControlList.Private);
 	}
 	
-	private void chmodPublic(Bucket bucket, String objectName) {
+	private static void chmodPublic(Bucket bucket, String objectName) {
 		connection.setObjectAcl(bucket.getName(), objectName, CannedAccessControlList.PublicRead);		
 	}
 	
 	/**
 	 * This downloads the object (i.e. "perl_poetry.pdf") and saves it in the file (i.e. "/home/larry/documents/perl_poetry.pdf")
 	 */
-	private void object2File(Bucket bucket, String objectName, String fileName) {
+	private static void object2File(Bucket bucket, String objectName, String fileName) {
 		connection.getObject(
 		        				new GetObjectRequest(bucket.getName(), objectName),
 		        				new File(fileName)
@@ -131,7 +131,7 @@ public class S3 {
 	 * @param bucket
 	 * @param objectName
 	 */
-	private void deleteObject(Bucket bucket, String objectName) {
+	private static void deleteObject(Bucket bucket, String objectName) {
 		connection.deleteObject(bucket.getName(), objectName);
 	}
 
@@ -143,7 +143,7 @@ public class S3 {
 	 * @param fileName
 	 * @return
 	 */
-	private URL getDownloadURL(Bucket bucket, String fileName) {
+	private static URL getDownloadURL(Bucket bucket, String fileName) {
 		GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket.getName(), fileName);
 		URL url;
 		try {
@@ -155,4 +155,5 @@ public class S3 {
 		System.out.println(url);
 		return url;
 	}
+
 }
