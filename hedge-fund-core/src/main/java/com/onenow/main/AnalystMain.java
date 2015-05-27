@@ -3,6 +3,7 @@ package com.onenow.main;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
+import com.onenow.admin.Accounts;
 import com.onenow.alpha.InitSpark;
 import com.onenow.alpha.WordCount;
 import com.onenow.storage.S3;
@@ -12,6 +13,7 @@ public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 
+		Accounts accounts = new Accounts();
 		
 		// countWordsInFile(args);
 		

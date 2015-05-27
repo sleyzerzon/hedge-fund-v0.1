@@ -20,12 +20,10 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.onenow.admin.Accounts;
 
 
 public class S3 {
-
-	private static String accessKey = "insert your access key here!";
-	private static String secretKey = "insert your secret key here!";
 
 	private static AmazonS3 connection = getConnection();
 	
@@ -38,7 +36,7 @@ public class S3 {
 	
 	private static AmazonS3 getConnection() {
 	
-		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+		AWSCredentials credentials = new BasicAWSCredentials(Accounts.accessKey, Accounts.secretKey);
 
 		ClientConfiguration clientConfig = new ClientConfiguration();
 		clientConfig.setProtocol(Protocol.HTTP);
@@ -50,7 +48,7 @@ public class S3 {
 	}
 
 	private static void setEndpoint() {
-		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+		AWSCredentials credentials = new BasicAWSCredentials(Accounts.accessKey, Accounts.secretKey);
 		AmazonS3 conn = new AmazonS3Client(credentials);
 		connection.setEndpoint("objects.dreamhost.com");
 	}

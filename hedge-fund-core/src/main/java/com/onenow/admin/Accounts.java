@@ -9,76 +9,90 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import com.onenow.constant.AWSAccount;
 import com.onenow.util.JSON;
 
 public class Accounts {
 
-	private static String accessKey;
-	private static String secretKey;
+	public static String accessKey;
+	public static String secretKey;
+	public static String keyPath;	
 
-
-	public Accounts() {
+	public Accounts() throws IOException {
 		
-		// String test = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/config/secret/test.txt";
-		// JSON.writeJsonAccountFile(test);
-		
-		String accounts = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/config/secret/accounts.txt";
 		try {
-			readAccounts(accounts);
+			// printSecretFile("AWS", "abc", "cde", "efg");
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
+		
+		String accounts = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/config/secret/accounts.txt";
+		readAccounts(accounts);
+		
 	}
 	
-	public static void writeSecretFile(String fileName,
-										String access, String secret, String key) throws IOException {
+	/**
+	 * Creates AWS credentials
+	 * Sample output: 
+	 * {		
+		"accounts" : [ { 	"name" : "abcd", 		
+							"aws" : { "access" :  "xyz",		
+  			               	"secret" :  "jlkjl",		
+  			               	"keyPath" : "/Users/admin/yiuy.pem"		
+  			              }		
+  			      }		
+  			   ]		
+		}
+	 * @param accessKey
+	 * @param secretKey
+	 * @param keyPath
+	 * @throws IOException
+	 */
+	public static void printSecretFile(String name, String accessKey, String secretKey, String keyPath) throws IOException {
 		
-	       JSONObject obj = new JSONObject();
-	        obj.put("Name", "AWS");
-	 
+	        JSONObject whole = new JSONObject();
+
+	        // set of credentials
 	        JSONArray credentials = new JSONArray();
-	        credentials.add("Access: " + access);
-	        credentials.add("Secret: " + secret);
-	        credentials.add("Key: " + key);
-	        obj.put("Credentials", credentials);
-	 
-	        FileWriter file = new FileWriter(fileName);
-	        try {
-	            file.write(obj.toJSONString());
-	            System.out.println("WROTE: " + obj);
-	 
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	 
-	        } finally {
-	            file.flush();
-	            file.close();
-	        }
+	        
+	        String accessString = AWSAccount.ACCESSKEY.toString() + ":" + accessKey;
+	        credentials.add(accessString);
+	        
+	        String secretString = AWSAccount.SECRETKEY.toString() + ":" + secretKey;
+	        credentials.add(AWSAccount.KEYPATH + ":" + secretKey);
+	        
+	        String keyPathString = "Key:" + keyPath;
+	        credentials.add(keyPathString);
+	        
+	        whole.put(name, credentials);
+		   	
+		    System.out.println(whole);		    
 	}
-	
-	public static void getAccessKey() {
 		
-	}
-	
-	public static void getSecretKey() {
-		
-	}
-	
 	public static void readAccounts(String fileName) {
 		
 		try {
 	        JSONObject jsonObject = JSON.getJsonFileObject(fileName);
 	 
-	        String name = "Name";
-	        String acc = (String) jsonObject.get(name);
-	        System.out.println(name + acc);
-	        
-	        String creds = "Credentials"; 
-	        JSONArray itemList = (JSONArray) jsonObject.get(creds);
-	 
-	        Iterator<String> iterator = itemList.iterator();
+	        String name = "AWS";
+	        JSONArray credentials = (JSONArray) jsonObject.get(name);
+	        // System.out.println(credentials);
+
+	        Iterator<String> iterator = credentials.iterator();
 	        while (iterator.hasNext()) {
-	            System.out.println(iterator.next());
+	        	String next = iterator.next();
+	        	
+	        	String[] pair = next.split(":", 2); 
+	        	
+	        	if(pair[0].equals(AWSAccount.ACCESSKEY.toString())) {
+	        		accessKey = pair[1];
+	        	}
+	        	if(pair[0].equals(AWSAccount.SECRETKEY.toString())) {
+	        		secretKey = pair[1];	        		
+	        	}
+	        	if(pair[0].equals(AWSAccount.KEYPATH.toString())) {
+	        		keyPath = pair[1];
+	        	}
 	        }
 	      
 	    } catch (Exception e) {

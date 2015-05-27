@@ -66,22 +66,5 @@ public class QuoteRow {
 	public double wap() 	{ return m_wap; }
 	public long volume() 	{ return m_volume; }
 	public int count() 		{ return m_count; }
-
-//	public long getM_time() {
-//		return m_time;
-//	}
-//	public double getM_high() {
-//		return m_high;
-//	}
-//	public double getM_low() {
-//		return m_low;
-//	}
-//	public double getM_open() {
-//		return m_open;
-//	}
-//	public double getM_close() {
-//		return m_close;
-//	}
-	
 	
 }

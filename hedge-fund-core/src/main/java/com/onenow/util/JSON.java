@@ -26,6 +26,11 @@ public class JSON {
 		return jsonObject;
 	}
 
+	/**
+	 * Sample output: {"Name":"crunchify.com","Author":"App Shah","Company List":["Compnay: eBay","Compnay: Paypal","Compnay: Google"]}
+	 * @param fileName
+	 * @throws IOException
+	 */
 	public static void writeJsonFile(String fileName) throws IOException {
 	       JSONObject obj = new JSONObject();
 	        obj.put("Name", "crunchify.com");
