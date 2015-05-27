@@ -147,19 +147,21 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 		System.out.println("#PRICE# QUERY " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
-//		e.printStackTrace();  some time series don't exist or have data
+		//		e.printStackTrace();  some time series don't exist or have data
 	}
 	return series;
 }
 
 private List<Candle> priceSeriesToCandles(List<Serie> series) {
 	List<Candle> candles = new ArrayList<Candle>();
+	
+	System.out.println("SERIES: " + series.toString());
 			
 	String s="";
 	for (Serie ser : series) {
 		for (String col : ser.getColumns()) {
 			s = s + col + "\t";
-//			System.out.println("column " + col); column names
+			// System.out.println("column " + col); column names
 		}
 		s = s + "\n";
 		for (Map<String, Object> row : ser.getRows()) {

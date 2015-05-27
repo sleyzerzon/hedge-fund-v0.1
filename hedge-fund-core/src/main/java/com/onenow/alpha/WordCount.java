@@ -10,15 +10,15 @@ import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
 
-public class SparkWordCount {
+public class WordCount {
 
 	public static InitSpark spark;
 	
-	public SparkWordCount() {
+	public WordCount() {
 		spark = new InitSpark("local", "wordCount");
 	}
 	
-	public SparkWordCount(String master) {
+	public WordCount(String master) {
 		spark = new InitSpark(master, "wordCount");
 	}
 

@@ -4,11 +4,11 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
 import com.onenow.alpha.InitSpark;
-import com.onenow.alpha.SparkWordCount;
+import com.onenow.alpha.WordCount;
 
 public class AnalystMain {
 	
-	private static SparkWordCount counter = new SparkWordCount();
+	private static WordCount counter = new WordCount();
 	
 	public static void main(String[] args) throws Exception {
 		
