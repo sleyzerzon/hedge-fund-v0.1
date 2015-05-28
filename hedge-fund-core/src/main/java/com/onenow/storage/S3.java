@@ -51,10 +51,10 @@ public class S3 {
 		clientConfig.setProtocol(Protocol.HTTP);
 		
 		//		DefaultAWSCredentialsProviderChain looks for credentials in this order:
-		//			Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
-		//			Java System Properties - aws.accessKeyId and aws.secretKey
-		//			Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
-		//			Instance profile credentials delivered through the Amazon EC2 metadata service
+		//			1. Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
+		//			2. Java System Properties - aws.accessKeyId and aws.secretKey
+		//			3. Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
+		//			4. Instance profile credentials delivered through the Amazon EC2 metadata service
 		AmazonS3 s3Client = new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
 		
 		s3Client.setEndpoint(endpoint);

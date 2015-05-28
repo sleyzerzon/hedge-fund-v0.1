@@ -1,3 +1,12 @@
+### SSH
+# http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
+# https://www.youtube.com/watch?v=SwMh5lSh_JM
+alias sshCD="ssh -i ~/Documents/hedge-codedeploy.pem ec2-user@54.165.133.136"                
+alias sshGW="ssh -i ~/Documents/hedge.pem ubuntu@54.86.144.36"                  
+
+### AWS 
+export AWS_CREDENTIAL_FILE=~/.aws/credentials
+
 ### JAVA
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home
 echo $JAVA_HOME
@@ -7,7 +16,7 @@ javac -version
 
 ### PROJECT
 alias project="cd /Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/"
-project   
+project
 export JARS=/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/target/
 alias jhistorian="java -cp $JARS/hedge-fund-core-null.jar com.onenow.main.HistorianMain"
 # jar tf hedge-fund-core-null.jar

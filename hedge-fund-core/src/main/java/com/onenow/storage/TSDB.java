@@ -144,7 +144,7 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		System.out.println("#PRICE# QUERY " + query);
+		System.out.println("#PRICE# QUERY: " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 		//		e.printStackTrace();  some time series don't exist or have data
@@ -315,7 +315,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 					"time < " + "'" + toDate + "' ";
 					
 	try {
-		System.out.println("#SIZE# QUERY " + query);
+		System.out.println("#SIZE# QUERY: " + query);
 		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data

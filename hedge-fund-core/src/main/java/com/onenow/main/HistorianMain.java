@@ -33,7 +33,7 @@ public class HistorianMain {
 
 	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.HISTORIAN, 
 	    													marketPortfolio, 
-	    													new BusWallSt(Topology.LOCAL)); 
+	    													new BusWallSt(Topology.LOCAL)); // Topology.LOCAL
 	    Historian historian = new Historian(broker, new HistorianService().size30sec);		
 			    
 	    // get ready to loop
