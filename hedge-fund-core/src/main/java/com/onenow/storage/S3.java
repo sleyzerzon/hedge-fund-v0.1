@@ -21,19 +21,20 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.onenow.admin.CloudAccounts;
 
 
 public class S3 {
-
-//	Set credentials in the AWS credentials profile file on your local system, located at:
-//	~/.aws/credentials on Linux, OS X, or Unix
-//	This file should contain lines in the following format:
-//	[default]
-//	aws_access_key_id = your_access_key_id
-//	aws_secret_access_key = your_secret_access_key
-//	More at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/java-dg-setup.html#java-dg-using-maven
-//  And at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
+	
+	private static String endpoint = "http://s3.amazonaws.com/";
+	
+	//	Set credentials in the AWS credentials profile file on your local system, located at:
+	//	~/.aws/credentials on Linux, OS X, or Unix
+	//	This file should contain lines in the following format:
+	//	[default]
+	//	aws_access_key_id = your_access_key_id
+	//	aws_secret_access_key = your_secret_access_key
+	//	More at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/java-dg-setup.html#java-dg-using-maven
+	//  And at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
 	private static AmazonS3 connection = getConnection();
 	
 	public S3 () {
@@ -49,9 +50,14 @@ public class S3 {
 		ClientConfiguration clientConfig = new ClientConfiguration();
 		clientConfig.setProtocol(Protocol.HTTP);
 		
+		//		DefaultAWSCredentialsProviderChain looks for credentials in this order:
+		//			Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
+		//			Java System Properties - aws.accessKeyId and aws.secretKey
+		//			Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
+		//			Instance profile credentials delivered through the Amazon EC2 metadata service
 		AmazonS3 s3Client = new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
 		
-		s3Client.setEndpoint("objects.dreamhost.com");
+		s3Client.setEndpoint(endpoint);
 		
 		return s3Client;
 	}
