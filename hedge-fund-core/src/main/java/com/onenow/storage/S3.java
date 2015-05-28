@@ -10,6 +10,7 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.util.StringUtils;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -25,11 +26,17 @@ import com.onenow.admin.CloudAccounts;
 
 public class S3 {
 
+//	Set credentials in the AWS credentials profile file on your local system, located at:
+//	~/.aws/credentials on Linux, OS X, or Unix
+//	This file should contain lines in the following format:
+//	[default]
+//	aws_access_key_id = your_access_key_id
+//	aws_secret_access_key = your_secret_access_key
+//	More at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/java-dg-setup.html#java-dg-using-maven
+//  And at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
 	private static AmazonS3 connection = getConnection();
 	
 	public S3 () {
-
-		setEndpoint();
 
 		List<Bucket> buckets = listBuckets();
 		
@@ -38,22 +45,17 @@ public class S3 {
 	
 	private static AmazonS3 getConnection() {
 	
-		AWSCredentials credentials = new BasicAWSCredentials(CloudAccounts.accessKey, CloudAccounts.secretKey);
 
 		ClientConfiguration clientConfig = new ClientConfiguration();
 		clientConfig.setProtocol(Protocol.HTTP);
-
-		AmazonS3 conn = new AmazonS3Client(credentials, clientConfig);
-		conn.setEndpoint("endpoint.com");
 		
-		return conn;
+		AmazonS3 s3Client = new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
+		
+		s3Client.setEndpoint("objects.dreamhost.com");
+		
+		return s3Client;
 	}
 
-	private static void setEndpoint() {
-		AWSCredentials credentials = new BasicAWSCredentials(CloudAccounts.accessKey, CloudAccounts.secretKey);
-		AmazonS3 conn = new AmazonS3Client(credentials);
-		connection.setEndpoint("objects.dreamhost.com");
-	}
 
 	/** 
 	 * Output example:
