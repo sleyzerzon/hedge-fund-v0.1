@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
-public enum AWSAccount {
+public enum AccountSchema {
 	ACCESSKEY, SECRETKEY, KEYPATH 
 }
