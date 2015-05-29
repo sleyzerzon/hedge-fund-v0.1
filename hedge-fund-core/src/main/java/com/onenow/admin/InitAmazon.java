@@ -1,13 +1,18 @@
 package com.onenow.admin;
 
+import kinesis.SampleUtils;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.kinesis.AmazonKinesis;
+import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.sqs.AmazonSQS;
@@ -55,6 +60,12 @@ public class InitAmazon {
 		return credentials;
 	}
 	
+	private static AWSCredentialsProvider getAWSCredentialProvider() {
+		AWSCredentialsProvider credentialsProvider = new DefaultAWSCredentialsProviderChain();
+		return credentialsProvider;
+	}
+
+	
 	public static AmazonS3 getS3Connection() {
 		
 		ClientConfiguration clientConfig = new ClientConfiguration();
@@ -74,6 +85,14 @@ public class InitAmazon {
 		
 		return sqs;
 	}
-
+	
+	public static AmazonKinesis getKinesis(Region region) {
+        AWSCredentialsProvider credentialsProvider = getAWSCredentialProvider();
+        ClientConfiguration clientConfig = SampleUtils.configureUserAgentForSample(new ClientConfiguration());
+        AmazonKinesis kinesis = new AmazonKinesisClient(credentialsProvider, clientConfig);
+        kinesis.setRegion(region);
+        
+        return kinesis;
+	}
 
 }

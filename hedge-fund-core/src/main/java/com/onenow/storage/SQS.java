@@ -29,13 +29,17 @@ import com.onenow.admin.InitAmazon;
 public class SQS {
 	
 	public SQS() {
+		
+	}
+	
+	public SQS(Regions regions) {
 		/*
          * The ProfileCredentialsProvider will return your [default]
          * credential profile by reading from the credentials file located at
          * (~/.aws/credentials).
          */
 	
-	AmazonSQS sqs = InitAmazon.getSQS(Region.getRegion(Regions.US_EAST_1));
+	AmazonSQS sqs = InitAmazon.getSQS(Region.getRegion(regions));
 	
 	try {
 		String myQueueUrl = createQueue(sqs);

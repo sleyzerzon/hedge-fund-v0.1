@@ -13,13 +13,19 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
+package com.onenow.execution;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import kinesis.HttpReferrerKinesisPutter;
+import kinesis.HttpReferrerPair;
+import kinesis.HttpReferrerPairFactory;
+import kinesis.SampleUtils;
+import kinesis.StreamUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,8 +40,8 @@ import com.amazonaws.services.kinesis.AmazonKinesisClient;
 /**
  * A command-line tool that sends records to Kinesis.
  */
-public class HttpReferrerStreamWriter {
-    private static final Log LOG = LogFactory.getLog(HttpReferrerStreamWriter.class);
+public class BusHttpReferrerStreamWriter {
+    private static final Log LOG = LogFactory.getLog(BusHttpReferrerStreamWriter.class);
 
     /**
      * The amount of time to wait between records.
@@ -56,7 +62,7 @@ public class HttpReferrerStreamWriter {
      */
     public static void main(String[] args) throws InterruptedException {
         if (args.length != 3) {
-            System.err.println("Usage: " + HttpReferrerStreamWriter.class.getSimpleName()
+            System.err.println("Usage: " + BusHttpReferrerStreamWriter.class.getSimpleName()
                     + " <number of threads> <stream name> <region>");
             System.exit(1);
         }
