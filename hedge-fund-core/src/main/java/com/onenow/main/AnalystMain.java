@@ -5,12 +5,15 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.onenow.alpha.WordCount;
 import com.onenow.storage.S3;
+import com.onenow.storage.SQS;
 
 public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 		
-		S3 storage = new S3();
+		// S3 storage = new S3();
+		
+		SQS q = new SQS();
 		
 		// countWordsInFile(args);
 		

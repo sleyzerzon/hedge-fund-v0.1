@@ -8,6 +8,8 @@ import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 
+import com.onenow.admin.InitSpark;
+
 import scala.Tuple2;
 
 public class WordCount {

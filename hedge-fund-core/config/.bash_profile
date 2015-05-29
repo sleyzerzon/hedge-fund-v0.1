@@ -4,6 +4,12 @@
 alias sshCD="ssh -i ~/Documents/hedge-codedeploy.pem ec2-user@54.165.133.136"                
 alias sshGW="ssh -i ~/Documents/hedge.pem ubuntu@54.86.144.36"                  
 
+### CODEDEPLOY
+# http://docs.aws.amazon.com/codedeploy/latest/userguide/writing-app-spec.html
+# http://docs.aws.amazon.com/codedeploy/latest/userguide/how-to-add-appspec-file.html
+# sudo su
+service codedeploy-agent status
+
 ### AWS 
 export AWS_CREDENTIAL_FILE=~/.aws/credentials
 

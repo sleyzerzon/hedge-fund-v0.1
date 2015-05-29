@@ -6,14 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.util.StringUtils;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
@@ -22,20 +16,12 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
+import com.onenow.admin.InitAmazon;;
+
 
 public class S3 {
 	
-	private static String endpoint = "http://s3.amazonaws.com/";
-	
-	//	Set credentials in the AWS credentials profile file on your local system, located at:
-	//	~/.aws/credentials on Linux, OS X, or Unix
-	//	This file should contain lines in the following format:
-	//	[default]
-	//	aws_access_key_id = your_access_key_id
-	//	aws_secret_access_key = your_secret_access_key
-	//	More at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/java-dg-setup.html#java-dg-using-maven
-	//  And at: http://docs.aws.amazon.com/AWSSdkDocsJava/latest/DeveloperGuide/credentials.html
-	private static AmazonS3 connection = getConnection();
+	private static AmazonS3 connection = InitAmazon.getS3Connection();
 	
 	public S3 () {
 
@@ -43,25 +29,6 @@ public class S3 {
 		
 		System.out.println(buckets.toString());
 	}
-	
-	private static AmazonS3 getConnection() {
-	
-
-		ClientConfiguration clientConfig = new ClientConfiguration();
-		clientConfig.setProtocol(Protocol.HTTP);
-		
-		//		DefaultAWSCredentialsProviderChain looks for credentials in this order:
-		//			1. Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
-		//			2. Java System Properties - aws.accessKeyId and aws.secretKey
-		//			3. Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
-		//			4. Instance profile credentials delivered through the Amazon EC2 metadata service
-		AmazonS3 s3Client = new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
-		
-		s3Client.setEndpoint(endpoint);
-		
-		return s3Client;
-	}
-
 
 	/** 
 	 * Output example:
