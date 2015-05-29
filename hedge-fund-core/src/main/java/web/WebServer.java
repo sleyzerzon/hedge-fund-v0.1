@@ -31,9 +31,6 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.DynamoDBUtils;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.SampleUtils;
-//import com.amazonaws.services.kinesis.samples.datavis.webserver.GetCountsServlet;
 
 /**
  * Create an embedded HTTP server that responds with counts on the provided port.

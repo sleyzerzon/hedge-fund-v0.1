@@ -17,7 +17,6 @@ package kinesis;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
-//import com.amazonaws.services.kinesis.samples.datavis.kcl.persistence.CountPersister;
 
 /**
  * Generates {@link CountingRecordProcessor}s for counting occurrences of unique values over a given range.

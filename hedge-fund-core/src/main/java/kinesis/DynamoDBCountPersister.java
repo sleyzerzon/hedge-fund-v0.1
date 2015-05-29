@@ -34,10 +34,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper.FailedBatch;
-//import com.amazonaws.services.kinesis.samples.datavis.kcl.persistence.CountPersister;
-//import com.amazonaws.services.kinesis.samples.datavis.model.HttpReferrerPair;
-//import com.amazonaws.services.kinesis.samples.datavis.model.HttpReferrerPairsCount;
-//import com.amazonaws.services.kinesis.samples.datavis.model.ReferrerCount;
 
 /**
  * Persists counts to DynamoDB. This uses a separate thread to send counts to DynamoDB to decouple any network latency

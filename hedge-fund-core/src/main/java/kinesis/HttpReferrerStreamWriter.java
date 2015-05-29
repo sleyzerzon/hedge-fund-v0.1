@@ -30,11 +30,6 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
-//import com.amazonaws.services.kinesis.samples.datavis.model.HttpReferrerPair;
-//import com.amazonaws.services.kinesis.samples.datavis.producer.HttpReferrerKinesisPutter;
-//import com.amazonaws.services.kinesis.samples.datavis.producer.HttpReferrerPairFactory;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.SampleUtils;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.StreamUtils;
 
 /**
  * A command-line tool that sends records to Kinesis.

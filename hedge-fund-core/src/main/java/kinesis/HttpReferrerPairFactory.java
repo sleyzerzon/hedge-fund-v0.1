@@ -18,8 +18,6 @@ package kinesis;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-//import com.amazonaws.services.kinesis.samples.datavis.model.HttpReferrerPair;
-
 /**
  * Generates random {@link HttpReferrerPair}s based on an internal sample set. This class is thread safe.
  */

@@ -20,7 +20,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-// import com.amazonaws.services.kinesis.samples.datavis.model.HttpReferrerPairsCount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eclipse.jetty.util.MultiMap;

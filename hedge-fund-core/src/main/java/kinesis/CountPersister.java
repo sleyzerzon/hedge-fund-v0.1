@@ -15,8 +15,6 @@
 
 package kinesis;
 
-//import com.amazonaws.services.kinesis.samples.datavis.kcl.CountingRecordProcessor;
-
 import java.util.Map;
 
 /**

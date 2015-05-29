@@ -17,7 +17,6 @@ package kinesis;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.JsonMarshaller;
-//import com.amazonaws.services.kinesis.samples.datavis.model.ReferrerCount;
 
 /**
  * Marshall {@link ReferrerCount}s as JSON strings when using the {@link DynamoDBMapper}.

@@ -33,13 +33,6 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorF
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
-//import com.amazonaws.services.kinesis.samples.datavis.kcl.CountingRecordProcessorFactory;
-//import com.amazonaws.services.kinesis.samples.datavis.kcl.persistence.CountPersister;
-//import com.amazonaws.services.kinesis.samples.datavis.kcl.persistence.ddb.DynamoDBCountPersister;
-//import com.amazonaws.services.kinesis.samples.datavis.model.HttpReferrerPair;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.DynamoDBUtils;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.SampleUtils;
-//import com.amazonaws.services.kinesis.samples.datavis.utils.StreamUtils;
 
 /**
  * Amazon Kinesis application to count distinct {@link HttpReferrerPair}s over a sliding window. Counts are persisted
