@@ -1,25 +1,3 @@
-### SSH
-# http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
-# https://www.youtube.com/watch?v=SwMh5lSh_JM
-alias sshCD="ssh -i ~/Documents/hedge-codedeploy.pem ec2-user@54.165.133.136"                
-alias sshGW="ssh -i ~/Documents/hedge.pem ubuntu@54.86.144.36"                  
-
-### CODEDEPLOY
-# http://docs.aws.amazon.com/codedeploy/latest/userguide/writing-app-spec.html
-# http://docs.aws.amazon.com/codedeploy/latest/userguide/how-to-add-appspec-file.html
-# sudo su
-service codedeploy-agent status
-
-### AWS 
-export AWS_CREDENTIAL_FILE=~/.aws/credentials
-
-### JAVA
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home
-echo $JAVA_HOME
-java -version
-javac -version
-
-
 ### PROJECT
 alias project="cd /Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/"
 project
@@ -41,3 +19,14 @@ export SPARK_HOME=/Users/pablo/spark-1.3.1-bin-hadoop2.4
 export PATH=$PATH:$SPARK_HOME/bin
 alias sanalyst="spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar"
 # pyspark
+
+### GIT
+# git rm --cached .folder/* -r
+# git add --all
+# git commit -m "fixed gitignore"
+# git push origin master
+
+
+
+".bash_profile" 56L, 1656C written
+
