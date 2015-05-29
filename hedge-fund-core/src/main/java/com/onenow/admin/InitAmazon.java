@@ -6,8 +6,12 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClient;
 
 public class InitAmazon {
 
@@ -61,5 +65,15 @@ public class InitAmazon {
 		
 		return s3Client;
 	}
+	
+	public static AmazonSQS getSQS(Region region) {
+		AWSCredentials credentials = InitAmazon.getCredentials();
+		AmazonSQS sqs = new AmazonSQSClient(credentials);
+		
+		sqs.setRegion(region);
+		
+		return sqs;
+	}
+
 
 }
