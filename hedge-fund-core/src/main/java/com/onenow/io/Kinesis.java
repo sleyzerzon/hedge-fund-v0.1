@@ -3,14 +3,20 @@ package com.onenow.io;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import kinesis.CountingRecordProcessorFactory;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.kinesis.AmazonKinesis;
+import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.model.ProvisionedThroughputExceededException;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.onenow.admin.InitAmazon;
+import com.onenow.data.DynamoDBCountPersister;
+import com.onenow.data.HttpReferrerPair;
 import com.onenow.util.StreamUtils;
 
 public class Kinesis {
@@ -68,5 +74,37 @@ public class Kinesis {
         	System.out.println("Error sending record to Amazon Kinesis: " + ex);
         }
     }
+    
+    public KinesisClientLibConfiguration configureClient(	String applicationName, String streamName, 
+    														String workerId, Region region) {
+    	
+        KinesisClientLibConfiguration kclConfig =
+                new KinesisClientLibConfiguration(applicationName, streamName, InitAmazon.getAWSCredentialProvider(), workerId);
+        kclConfig.withCommonClientConfig(InitAmazon.getClientConfig());
+        kclConfig.withRegionName(region.getName());
+        kclConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
+
+        return kclConfig;
+    }
+    
+    // Persist counts to DynamoDB
+    // Count occurrences of HTTP referrer pairs over a range of 10 seconds
+    private static final int COMPUTE_RANGE_FOR_COUNTS_IN_MILLIS = 10000;
+    // Update the counts every 1 second
+    private static final int COMPUTE_INTERVAL_IN_MILLIS = 1000;
+
+	public static IRecordProcessorFactory dynamoRecordProcessor(String tableName, DynamoDBCountPersister persister) {
+		
+        IRecordProcessorFactory recordProcessor =
+                new CountingRecordProcessorFactory<HttpReferrerPair>(HttpReferrerPair.class,
+                        persister,
+                        COMPUTE_RANGE_FOR_COUNTS_IN_MILLIS,
+                        COMPUTE_INTERVAL_IN_MILLIS);
+
+
+        return recordProcessor;
+	}
+
+
 
 }

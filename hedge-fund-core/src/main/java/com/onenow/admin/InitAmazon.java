@@ -21,7 +21,7 @@ import com.onenow.util.SampleUtils;
 
 public class InitAmazon {
 
-	private static String endpoint = "http://s3.amazonaws.com/";
+	private static String s3Endpoint = "http://s3.amazonaws.com/";
 	
 	//	Set credentials in the AWS credentials profile file on your local system, located at:
 	//	~/.aws/credentials on Linux, OS X, or Unix
@@ -62,7 +62,7 @@ public class InitAmazon {
 		return credentials;
 	}
 	
-	private static AWSCredentialsProvider getAWSCredentialProvider() {
+	public static AWSCredentialsProvider getAWSCredentialProvider() {
 		AWSCredentialsProvider credentialsProvider = new DefaultAWSCredentialsProviderChain();
 		return credentialsProvider;
 	}
@@ -75,7 +75,7 @@ public class InitAmazon {
 		clientConfig.setProtocol(Protocol.HTTP);
 		
 		AmazonS3 s3Client = new AmazonS3Client();		
-		s3Client.setEndpoint(endpoint);
+		s3Client.setEndpoint(s3Endpoint);
 		
 		return s3Client;
 	}
@@ -91,7 +91,7 @@ public class InitAmazon {
 	}
 
 	// CLIENT 
-	private static ClientConfiguration getClientConfig() {
+	public static ClientConfiguration getClientConfig() {
 		return SampleUtils.configureUserAgentForSample(new ClientConfiguration());
 	}
 	
@@ -106,8 +106,14 @@ public class InitAmazon {
 	// DYNAMO DB
 	public static AmazonDynamoDB getDynamo(Region region) {
 		
-        AmazonDynamoDB dynamoDB = new AmazonDynamoDBClient(getAWSCredentialProvider(), getClientConfig());
-        dynamoDB.setRegion(region);
+        AmazonDynamoDB dynamoDB = null;
+		try {
+			dynamoDB = new AmazonDynamoDBClient(getAWSCredentialProvider(), getClientConfig());
+			dynamoDB.setRegion(region);
+		} catch (IllegalArgumentException e) {
+			System.out.println("COULD NOT CREATE DYNAMODB CLIENT");
+			e.printStackTrace();
+		}
         
         return dynamoDB;
 	}
