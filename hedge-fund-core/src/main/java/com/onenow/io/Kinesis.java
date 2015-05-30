@@ -34,6 +34,8 @@ public class Kinesis {
 	
 	public void createStream(String streamName, int numShards) {
 		
+		System.out.println("&&&&&&&&&&&&& CREATED STREAM: " + streamName);
+
         // Creates a stream to write to with N shards if it doesn't exist
         StreamUtils streamUtils = new StreamUtils(kinesis);
         streamUtils.createStreamIfNotExists(streamName, numShards);
@@ -41,7 +43,7 @@ public class Kinesis {
         System.out.println(streamName + " is ready for use");
 	}
 	
-    public void sendPair(Object objectToSend, String streamName) {
+    public void sendObject(Object objectToSend, String streamName) {
 		
         byte[] bytes;
         try {
@@ -87,7 +89,22 @@ public class Kinesis {
         return kclConfig;
     }
     
+    
+	public static IRecordProcessorFactory ibRecordProcessor() {
+		
+        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<String>(String.class);
+
+        return recordProcessor;
+	}
+
+    
     // Persist counts to DynamoDB
+	/**
+	 * Use:
+	 * String tableName = "tableName";
+	 * DynamoDBCountPersister persister = dynamo.getCountPersister(tableName);
+	 * Worker kinesysWorker = new Worker(kinesis.dynamoRecordProcessor(tableName, persister), clientConfig);
+	 */	
     // Count occurrences of HTTP referrer pairs over a range of 10 seconds
     private static final int COMPUTE_RANGE_FOR_COUNTS_IN_MILLIS = 10000;
     // Update the counts every 1 second

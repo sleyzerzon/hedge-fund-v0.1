@@ -1,59 +1,58 @@
-package com.onenow.main;
+package com.onenow.io;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.data.DynamoDB;
-import com.onenow.data.DynamoDBCountPersister;
-import com.onenow.io.Kinesis;
+import com.onenow.util.TimeParser;
 
+public class BusSystem {
 
-public class BusMain {
-
-	private static String streamName = "Bus";
-	private static Integer numShards = 2;	
+	private static String streamName = "BusXYZ";
+	private static Integer numShards = 1;	
 	private static Region region = Region.getRegion(Regions.US_EAST_1); 
 	
 	private static Kinesis kinesis = new Kinesis(streamName, region);	
 	private static DynamoDB dynamo = new DynamoDB(region);
 
+	public BusSystem() {
+		
+	}
 	
-	public static void main(String[] args) throws Exception {
+	public static boolean writeToBus() {	
+		
+		while(true) {
+			//		kinesis.createStream(streamName, numShards);
+			Object objToSend = (Object) "Hola World!";
+			kinesis.sendObject(objToSend, streamName);
+			System.out.println("&&&&&&&&&&&&& WROTE: " + objToSend.toString());
 
-		writeToBus();
+			TimeParser.wait(1);
+		}
 		
-		readFromBus();
-				
+//		return true;
 	}
 	
-	private static boolean writeToBus() {			
-		kinesis.createStream(streamName, numShards);
-		Object objToSend = (Object) "Hola World!";
-		kinesis.sendPair(objToSend, streamName);
-		
-		return true;
-	}
-	
-	private static boolean readFromBus() {
+	public static boolean readFromBus() {
 
 		String applicationName = "appName";
 		String workerId = "fulano";
 		KinesisClientLibConfiguration clientConfig = kinesis.configureClient(applicationName, streamName, workerId, region);
 		
-		String tableName = "tableName";
+		Worker kinesysWorker = new Worker(kinesis.ibRecordProcessor(), clientConfig);
 		
-		DynamoDBCountPersister persister = dynamo.getCountPersister(tableName);
-		
-        Worker kinesysWorker = new Worker(kinesis.dynamoRecordProcessor(tableName, persister), clientConfig);
+        return runProcessor(kinesysWorker);
 
-        try {
+	}
+
+	private static boolean runProcessor(Worker kinesysWorker) {
+		try {
             kinesysWorker.run();
         } catch (Throwable t) {
         	System.out.println("Caught throwable while processing data." + t);
             return false;
-        }
-        
+        }        
 		return true;
 	}
 }
