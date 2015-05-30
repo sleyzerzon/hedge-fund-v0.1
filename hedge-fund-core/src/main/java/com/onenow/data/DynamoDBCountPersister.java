@@ -1,19 +1,4 @@
-/*
- * Copyright 2014 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Amazon Software License (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- * http://aws.amazon.com/asl/
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-
-package kinesis;
+package com.onenow.data;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -28,6 +13,8 @@ import java.util.TimeZone;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import kinesis.CountPersister;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -140,13 +127,13 @@ public class DynamoDBCountPersister implements CountPersister<HttpReferrerPair> 
                 pairCount = new HttpReferrerPairsCount();
                 pairCount.setResource(pair.getResource());
                 pairCount.setTimestamp(Calendar.getInstance(UTC).getTime());
-                pairCount.setReferrerCounts(new ArrayList<ReferrerCount>());
+                pairCount.setReferrerCounts(new ArrayList<HttpReferrerCount>());
                 pairCount.setHost(hostname);
                 countMap.put(pair.getResource(), pairCount);
             }
 
             // Add referrer to list of refcounts for this resource and time
-            ReferrerCount refCount = new ReferrerCount();
+            HttpReferrerCount refCount = new HttpReferrerCount();
             refCount.setReferrer(pair.getReferrer());
             refCount.setCount(count.getValue());
             pairCount.getReferrerCounts().add(refCount);
@@ -156,9 +143,9 @@ public class DynamoDBCountPersister implements CountPersister<HttpReferrerPair> 
         // By sorting the referrer counts list in descending order the consumer of the count data can choose their own
         // N.
         for (HttpReferrerPairsCount count : countMap.values()) {
-            Collections.sort(count.getReferrerCounts(), new Comparator<ReferrerCount>() {
+            Collections.sort(count.getReferrerCounts(), new Comparator<HttpReferrerCount>() {
                 @Override
-                public int compare(ReferrerCount c1, ReferrerCount c2) {
+                public int compare(HttpReferrerCount c1, HttpReferrerCount c2) {
                     if (c2.getCount() > c1.getCount()) {
                         return 1;
                     } else if (c1.getCount() == c2.getCount()) {

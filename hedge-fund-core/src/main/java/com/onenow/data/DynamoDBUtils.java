@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
+package com.onenow.data;
 
 import java.util.ArrayList;
 import java.util.List;

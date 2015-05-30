@@ -15,7 +15,6 @@
 
 package web;
 
-import kinesis.DynamoDBUtils;
 import kinesis.SampleUtils;
 
 import org.eclipse.jetty.server.Server;
@@ -31,6 +30,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.onenow.data.DynamoDBUtils;
 
 /**
  * Create an embedded HTTP server that responds with counts on the provided port.

@@ -13,13 +13,29 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
-
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.JsonMarshaller;
+package com.onenow.data;
 
 /**
- * Marshall {@link ReferrerCount}s as JSON strings when using the {@link DynamoDBMapper}.
+ * Represents an HTTP referrer and the number of times it's been it's been seen for a given resource.
  */
-public class ReferrerCountMarshaller extends JsonMarshaller<ReferrerCount> {
+public class HttpReferrerCount {
+    private String referrer;
+    private long count;
+
+    public String getReferrer() {
+        return referrer;
+    }
+
+    public void setReferrer(String referrer) {
+        this.referrer = referrer;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
 }

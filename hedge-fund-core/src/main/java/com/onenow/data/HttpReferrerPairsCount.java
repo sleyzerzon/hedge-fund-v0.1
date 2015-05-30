@@ -1,19 +1,4 @@
-/*
- * Copyright 2014 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Amazon Software License (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- * http://aws.amazon.com/asl/
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-
-package kinesis;
+package com.onenow.data;
 
 import java.util.Date;
 import java.util.List;
@@ -36,7 +21,7 @@ public class HttpReferrerPairsCount {
     private String host;
     // Ordered list of referrer counts in descending order. Top N can be simply obtained by inspecting the first N
     // counts.
-    private List<ReferrerCount> referrerCounts;
+    private List<HttpReferrerCount> referrerCounts;
 
     @DynamoDBHashKey
     public String getResource() {
@@ -66,12 +51,12 @@ public class HttpReferrerPairsCount {
     }
 
     @DynamoDBAttribute
-    @DynamoDBMarshalling(marshallerClass = ReferrerCountMarshaller.class)
-    public List<ReferrerCount> getReferrerCounts() {
+    @DynamoDBMarshalling(marshallerClass = HttpReferrerCountMarshaller.class)
+    public List<HttpReferrerCount> getReferrerCounts() {
         return referrerCounts;
     }
 
-    public void setReferrerCounts(List<ReferrerCount> referrerCounts) {
+    public void setReferrerCounts(List<HttpReferrerCount> referrerCounts) {
         this.referrerCounts = referrerCounts;
     }
 }
