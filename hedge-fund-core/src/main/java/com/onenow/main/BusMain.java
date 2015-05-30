@@ -2,6 +2,7 @@ package com.onenow.main;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.onenow.data.DynamoDB;
 import com.onenow.io.Kinesis;
 
 
@@ -17,6 +18,8 @@ public class BusMain {
 
 		Object objToSend = (Object) "Hola World!";
 		kinesis.sendPair(objToSend, streamName);
+		
+		DynamoDB dynamo = new DynamoDB(region);
 		
 	}
 	

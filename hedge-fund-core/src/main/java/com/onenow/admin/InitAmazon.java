@@ -9,6 +9,8 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.amazonaws.services.s3.AmazonS3;
@@ -87,15 +89,29 @@ public class InitAmazon {
 		
 		return sqs;
 	}
+
+	// CLIENT 
+	private static ClientConfiguration getClientConfig() {
+		return SampleUtils.configureUserAgentForSample(new ClientConfiguration());
+	}
 	
 	// KINESIS
 	public static AmazonKinesis getKinesis(Region region) {
-        AWSCredentialsProvider credentialsProvider = getAWSCredentialProvider();
-        ClientConfiguration clientConfig = SampleUtils.configureUserAgentForSample(new ClientConfiguration());
-        AmazonKinesis kinesis = new AmazonKinesisClient(credentialsProvider, clientConfig);
+        AmazonKinesis kinesis = new AmazonKinesisClient(getAWSCredentialProvider(), getClientConfig());
         kinesis.setRegion(region);
         
         return kinesis;
 	}
+	
+	// DYNAMO DB
+	public static AmazonDynamoDB getDynamo(Region region) {
+		
+        AmazonDynamoDB dynamoDB = new AmazonDynamoDBClient(getAWSCredentialProvider(), getClientConfig());
+        dynamoDB.setRegion(region);
+        
+        return dynamoDB;
+	}
+	
+
 
 }
