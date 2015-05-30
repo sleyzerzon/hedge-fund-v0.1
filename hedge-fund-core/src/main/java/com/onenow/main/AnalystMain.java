@@ -5,8 +5,8 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.amazonaws.regions.Regions;
 import com.onenow.alpha.WordCount;
-import com.onenow.storage.S3;
-import com.onenow.storage.SQS;
+import com.onenow.io.S3;
+import com.onenow.io.SQS;
 
 public class AnalystMain {
 	
@@ -14,7 +14,7 @@ public class AnalystMain {
 		
 		// S3 storage = new S3();
 		
-		SQS q = new SQS(Regions.US_EAST_1);
+		// SQS q = new SQS(Regions.US_EAST_1);
 		
 		// countWordsInFile(args);
 		

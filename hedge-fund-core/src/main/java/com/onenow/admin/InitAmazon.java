@@ -35,6 +35,7 @@ public class InitAmazon {
 		
 	}
 	
+	// CREDENTIALS
 	public static DefaultAWSCredentialsProviderChain getProviderChain() {
 		
 		//		DefaultAWSCredentialsProviderChain looks for credentials in this order:
@@ -66,6 +67,7 @@ public class InitAmazon {
 	}
 
 	
+	// S3
 	public static AmazonS3 getS3Connection() {
 		
 		ClientConfiguration clientConfig = new ClientConfiguration();
@@ -77,6 +79,7 @@ public class InitAmazon {
 		return s3Client;
 	}
 	
+	// SQS
 	public static AmazonSQS getSQS(Region region) {
 		AWSCredentials credentials = InitAmazon.getCredentials();
 		AmazonSQS sqs = new AmazonSQSClient(credentials);
@@ -86,6 +89,7 @@ public class InitAmazon {
 		return sqs;
 	}
 	
+	// KINESIS
 	public static AmazonKinesis getKinesis(Region region) {
         AWSCredentialsProvider credentialsProvider = getAWSCredentialProvider();
         ClientConfiguration clientConfig = SampleUtils.configureUserAgentForSample(new ClientConfiguration());

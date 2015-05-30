@@ -1,4 +1,4 @@
-package com.onenow.storage;
+package com.onenow.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
