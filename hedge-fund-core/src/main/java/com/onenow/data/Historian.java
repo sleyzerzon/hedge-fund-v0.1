@@ -17,7 +17,7 @@ import com.onenow.research.Candle;
 
 import java.util.logging.Level;
 
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
 public class Historian {
@@ -27,7 +27,7 @@ public class Historian {
 
 	private TSDB 								TSDB = new TSDB();			// database
 	private Lookup 								lookup = new Lookup();			// key
-	private ParseTime							parseDate = new ParseTime();
+	private TimeParser							parseDate = new TimeParser();
 
 	private HistorianConfig config;
 	

@@ -15,7 +15,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 /**
  * Translate investment objects into contract in the format of the specific Wall Street Broker 

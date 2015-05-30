@@ -24,7 +24,7 @@ import com.ib.client.Util;
 import com.ib.client.Types.SecType;
 import com.onenow.execution.EClientErrors.CodeMsgPair;
 import java.util.logging.Level;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
 public class EClientSocket {
@@ -319,7 +319,7 @@ public class EClientSocket {
 	            connectionError(); 
 	        	e.printStackTrace();
 	        	eDisconnect();
-	        	ParseTime.wait(10);
+	        	TimeParser.wait(10);
 	        }
         }        
     }

@@ -1,19 +1,4 @@
-/*
- * Copyright 2014 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Amazon Software License (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- * http://aws.amazon.com/asl/
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-
-package web;
+package com.onenow.web;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
@@ -37,7 +22,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import kinesis.HttpReferrerPairsCount;
+import com.onenow.data.HttpReferrerPairsCount;
+
 
 /**
  * A servlet to serve requests for counts. This is a simple test and as such, its not really serializable.
@@ -46,6 +32,8 @@ import kinesis.HttpReferrerPairsCount;
 public class GetCountsServlet extends HttpServlet {
 
     private static final Log LOG = LogFactory.getLog(GetCountsServlet.class);
+    private static final String PARAMETER_RESOURCE = "resource";
+    private static final String PARAMETER_RANGE_IN_SECONDS = "range_in_seconds";
 
     private static final ThreadLocal<DateFormat> DATE_FORMATTER = new ThreadLocal<DateFormat>() {
         @Override
@@ -60,14 +48,12 @@ public class GetCountsServlet extends HttpServlet {
 
     // This is not serializable and we're not implementing safeguards to support it. Jetty is highly unlikely to
     // serialize this servlet anyway.
-    private transient ObjectMapper JSON = new ObjectMapper();
+    private transient ObjectMapper jsonMapper = new ObjectMapper();
 
     // This is not serializable and we're not implementing safeguards to support it. Jetty is highly unlikely to
     // serialize this servlet anyway.
     private transient DynamoDBMapper mapper;
 
-    private static final String PARAMETER_RESOURCE = "resource";
-    private static final String PARAMETER_RANGE_IN_SECONDS = "range_in_seconds";
 
     public GetCountsServlet(DynamoDBMapper mapper) {
         if (mapper == null) {
@@ -91,16 +77,33 @@ public class GetCountsServlet extends HttpServlet {
 
         // Parse query string as a single integer - the number of seconds since "now" to query for new counts
         String resource = params.getString(PARAMETER_RESOURCE);
+        
         int rangeInSeconds = Integer.parseInt(params.getString(PARAMETER_RANGE_IN_SECONDS));
+        Date startTime = getStartTime(resource, rangeInSeconds);
 
-        Calendar c = Calendar.getInstance();
+        DynamoDBQueryExpression<HttpReferrerPairsCount> query = getDynamoQuery(resource, startTime);
+
+        List<HttpReferrerPairsCount> counts = mapper.query(HttpReferrerPairsCount.class, query);
+
+        // Return the counts as JSON
+        resp.setContentType("application/json");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        jsonMapper.writeValue(resp.getWriter(), counts);
+    }
+
+	private Date getStartTime(String resource, int rangeInSeconds) {
+		Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, -1 * rangeInSeconds);
         Date startTime = c.getTime();
         if (LOG.isDebugEnabled()) {
             LOG.debug(String.format("Querying for counts of resource %s since %s", resource, DATE_FORMATTER.get().format(startTime)));
         }
+		return startTime;
+	}
 
-        DynamoDBQueryExpression<HttpReferrerPairsCount> query = new DynamoDBQueryExpression<>();
+	private DynamoDBQueryExpression<HttpReferrerPairsCount> getDynamoQuery(String resource, Date startTime) {
+		
+		DynamoDBQueryExpression<HttpReferrerPairsCount> query = new DynamoDBQueryExpression<>();
         HttpReferrerPairsCount hashKey = new HttpReferrerPairsCount();
         hashKey.setResource(resource);
         query.setHashKeyValues(hashKey);
@@ -109,12 +112,7 @@ public class GetCountsServlet extends HttpServlet {
                 new Condition().withComparisonOperator(ComparisonOperator.GT)
                         .withAttributeValueList(new AttributeValue().withS(DATE_FORMATTER.get().format(startTime)));
         query.setRangeKeyConditions(Collections.singletonMap("timestamp", recentUpdates));
-
-        List<HttpReferrerPairsCount> counts = mapper.query(HttpReferrerPairsCount.class, query);
-
-        // Return the counts as JSON
-        resp.setContentType("application/json");
-        resp.setStatus(HttpServletResponse.SC_OK);
-        JSON.writeValue(resp.getWriter(), counts);
-    }
+        
+		return query;
+	}
 }

@@ -4,7 +4,7 @@ import com.ib.client.Types.SecType;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Stats;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Channel {
 	private List<String> supportDayList = new ArrayList<String>();
 	private List<String> recentDayList = new ArrayList<String>();
 	
-	ParseTime parser = new ParseTime();
+	TimeParser parser = new TimeParser();
 //	Stats stats = new Stats();
 	
 	List<Double> rangeToResistance = new ArrayList<Double>();

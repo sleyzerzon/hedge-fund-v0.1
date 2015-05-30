@@ -14,7 +14,7 @@ import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import java.util.logging.Level;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
 public class PriceSizeCache {
@@ -26,7 +26,7 @@ public class PriceSizeCache {
 	private TSDB 								TSDB = new TSDB();			// database	
 	private DataSampling 							sampling = new DataSampling();
 	private Lookup 								lookup = new Lookup();			// key
-	private ParseTime							parseDate = new ParseTime();
+	private TimeParser							parseDate = new TimeParser();
 	
 	
 	public PriceSizeCache() {

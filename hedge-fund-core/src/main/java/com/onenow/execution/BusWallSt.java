@@ -15,7 +15,7 @@ import com.onenow.portfolio.BrokerController.ConnectionHandler;
 import com.onenow.portfolio.BrokerController.IBulletinHandler;
 import com.onenow.portfolio.BrokerController.ITimeHandler;
 import java.util.logging.Level;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
 public class BusWallSt implements ConnectionHandler {
@@ -60,7 +60,7 @@ public class BusWallSt implements ConnectionHandler {
 				String log = "...COULD CONNECT TO BUS...";
 				WatchLog.add(Level.INFO, log, "", "\n");
 				e.printStackTrace();
-				ParseTime.wait(10);
+				TimeParser.wait(10);
 			}			
 		} // end try to connect
 		String log = "CONNECTED TO BUS!";

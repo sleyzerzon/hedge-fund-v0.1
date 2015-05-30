@@ -10,9 +10,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-public class ParseTime implements Testable {
+public class TimeParser implements Testable {
 
-	public ParseTime() {
+	public TimeParser() {
 		
 	}	
 	
@@ -29,8 +29,13 @@ public class ParseTime implements Testable {
 	 * @return
 	 */
 	public static String getDashedToday() {
+		
 		Date today = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		TimeZone UTC = TimeZone.getTimeZone("UTC");
+		sdf.setTimeZone(UTC);
+		
 		return sdf.format(today);
 	}
 	

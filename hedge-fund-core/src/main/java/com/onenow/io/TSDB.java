@@ -20,7 +20,7 @@ import com.onenow.data.DataSampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import java.util.logging.Level;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
 public class TSDB {

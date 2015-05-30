@@ -14,7 +14,7 @@ import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 /**
  * Initialize the market
@@ -26,7 +26,7 @@ public class InitMarket {
 	
 	List<String> indices = new ArrayList<String>();
 	
-	ParseTime parseDate = new ParseTime();
+	TimeParser parseDate = new TimeParser();
 	
 	public InitMarket() {	
 	}

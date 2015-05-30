@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-package web;
+package com.onenow.main;
 
 import kinesis.SampleUtils;
 
@@ -31,11 +31,12 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.onenow.data.DynamoDBUtils;
+import com.onenow.web.GetCountsServlet;
 
 /**
  * Create an embedded HTTP server that responds with counts on the provided port.
  */
-public class WebServer {
+public class WebServerMain {
     /**
      * Start an embedded web server.
      * 
@@ -46,7 +47,7 @@ public class WebServer {
      */
     public static void main(String[] args) throws Exception {
         if (args.length != 4) {
-            System.err.println("Usage: " + WebServer.class
+            System.err.println("Usage: " + WebServerMain.class
                     + " <port number> <directory for static content> <DynamoDB table name> <region>");
             System.exit(1);
         }

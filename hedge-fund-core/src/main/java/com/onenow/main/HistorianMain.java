@@ -12,7 +12,7 @@ import com.onenow.execution.BusWallSt;
 import com.onenow.execution.HistorianService;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
 /** 
@@ -29,7 +29,7 @@ public class HistorianMain {
 		FlexibleLogger.setup(Level.INFO);
 
 	    // choose relevant timeframe
-	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
+	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
 
 	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.HISTORIAN, 
 	    													marketPortfolio, 
@@ -55,7 +55,7 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			historian.run(toDashedDate);
 			// go back further in time
-			toDashedDate = ParseTime.getDashedDateMinus(toDashedDate, 1);
+			toDashedDate = TimeParser.getDashedDateMinus(toDashedDate, 1);
 			count++;
 		}
 	}	

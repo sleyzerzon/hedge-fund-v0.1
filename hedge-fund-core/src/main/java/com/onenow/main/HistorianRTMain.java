@@ -22,7 +22,7 @@ import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 /** 
  * Gather complete accurate historical market data
@@ -38,7 +38,7 @@ public class HistorianRTMain {
 		FlexibleLogger.setup();
 
 	    // choose relevant timeframe
-	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
+	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
 
 	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.REALTIME, 
 	    													marketPortfolio, 

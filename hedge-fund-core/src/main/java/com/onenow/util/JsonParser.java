@@ -11,11 +11,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class JSON {
+public class JsonParser {
 
 	static JSONParser parser = new JSONParser();
 	
-	public JSON () {
+	public JsonParser () {
 	}
 	
 

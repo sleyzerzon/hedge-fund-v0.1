@@ -17,7 +17,7 @@ import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.PortfolioFactory;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 public class InvestorMain {
 		
@@ -28,7 +28,7 @@ public class InvestorMain {
 		FlexibleLogger.setup();
 
 	    // choose relevant timeframe
-	    String toDashedDate = ParseTime.getDashedDatePlus(ParseTime.getDashedToday(), 1);
+	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
 
 	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.PRIMARY, 
 	    													marketPortfolio, 

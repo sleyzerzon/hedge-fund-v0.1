@@ -22,7 +22,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 public class PortfolioFactory {
 	

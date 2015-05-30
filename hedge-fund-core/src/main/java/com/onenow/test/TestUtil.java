@@ -1,14 +1,14 @@
 package com.onenow.test;
 
 import com.onenow.admin.DatabaseSystemActivityImpl;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 import com.sforce.ws.ConnectionException;
 
 public class TestUtil {
 	
 	private DatabaseSystemActivityImpl logDB;
 	
-	private ParseTime parseDate;
+	private TimeParser parseDate;
 
 	public TestUtil() {
 		
@@ -16,7 +16,7 @@ public class TestUtil {
 	
 	public TestUtil(DatabaseSystemActivityImpl logDB) {
 		this.logDB = logDB;
-		this.parseDate = new ParseTime();
+		this.parseDate = new TimeParser();
 	}
 	
 	

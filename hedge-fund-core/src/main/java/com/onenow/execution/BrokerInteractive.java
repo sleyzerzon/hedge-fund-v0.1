@@ -17,7 +17,7 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 public class BrokerInteractive implements Broker  {
 
@@ -126,19 +126,19 @@ public class BrokerInteractive implements Broker  {
     for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
       try {
         date = channel.getResDayList().get(i);
-        list.add(ParseTime.removeDash(date).concat(" 16:30:00"));
+        list.add(TimeParser.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
       try {
         date = channel.getSupDayList().get(j);
-        list.add(ParseTime.removeDash(date).concat(" 16:30:00"));
+        list.add(TimeParser.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent
       try {
         date = channel.getRecentDayList().get(k); // Recent
-        list.add(ParseTime.removeDash(date).concat(" 16:30:00"));
+        list.add(TimeParser.removeDash(date).concat(" 16:30:00"));
       } catch (Exception e) { } // nothing to do
     }
     return list;

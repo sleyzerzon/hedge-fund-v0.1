@@ -3,7 +3,7 @@ package com.onenow.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.onenow.util.ParseTime;
+import com.onenow.util.TimeParser;
 
 public class ExpirationDate {
 	
@@ -12,7 +12,7 @@ public class ExpirationDate {
 	List<String> futuresExpList = new ArrayList<String>();
 	List<String> futuresCompleteExpList = new ArrayList<String>();
 	
-	ParseTime parseDate = new ParseTime();
+	TimeParser parseDate = new TimeParser();
 	
 	public ExpirationDate() {
 
