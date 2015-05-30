@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
+package com.onenow.util;
 
 import java.util.concurrent.TimeUnit;
 

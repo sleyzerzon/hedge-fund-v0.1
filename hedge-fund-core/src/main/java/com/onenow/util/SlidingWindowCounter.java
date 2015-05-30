@@ -13,9 +13,11 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
+package com.onenow.util;
 
 import java.util.Map;
+
+import kinesis.BucketBasedCounter;
 
 /**
  * Computes a total count of occurrences over a moving window. All calls to increment will be added to the current

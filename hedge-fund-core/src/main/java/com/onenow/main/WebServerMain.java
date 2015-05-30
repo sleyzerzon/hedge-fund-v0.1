@@ -15,8 +15,6 @@
 
 package com.onenow.main;
 
-import kinesis.SampleUtils;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -31,6 +29,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.onenow.data.DynamoDBUtils;
+import com.onenow.util.SampleUtils;
 import com.onenow.web.GetCountsServlet;
 
 /**

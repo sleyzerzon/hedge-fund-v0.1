@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
+package com.onenow.util;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.regions.Region;

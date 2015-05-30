@@ -27,6 +27,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.onenow.data.DynamoDBUtils;
+import com.onenow.util.SampleUtils;
+import com.onenow.util.StreamUtils;
 
 /**
  * Delete all resources used by the sample application.

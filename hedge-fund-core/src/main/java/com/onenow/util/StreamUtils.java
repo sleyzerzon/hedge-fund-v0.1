@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-package kinesis;
+package com.onenow.util;
 
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +35,7 @@ import com.amazonaws.services.kinesis.model.StreamDescription;
  * A collection of functions to manipulate Amazon Kinesis streams.
  */
 public class StreamUtils {
+	
     private static final Log LOG = LogFactory.getLog(StreamUtils.class);
 
     private AmazonKinesis kinesis;

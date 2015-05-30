@@ -3,8 +3,6 @@ package com.onenow.io;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import kinesis.StreamUtils;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.kinesis.AmazonKinesis;
@@ -12,6 +10,7 @@ import com.amazonaws.services.kinesis.model.ProvisionedThroughputExceededExcepti
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onenow.admin.InitAmazon;
+import com.onenow.util.StreamUtils;
 
 public class Kinesis {
 

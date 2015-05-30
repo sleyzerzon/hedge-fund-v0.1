@@ -1,7 +1,5 @@
 package com.onenow.admin;
 
-import kinesis.SampleUtils;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
@@ -17,6 +15,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.onenow.util.SampleUtils;
 
 public class InitAmazon {
 
