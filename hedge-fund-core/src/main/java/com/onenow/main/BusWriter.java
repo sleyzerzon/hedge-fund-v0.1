@@ -12,9 +12,18 @@ import com.onenow.io.Kinesis;
 
 public class BusWriter {
 	
+	private static String streamName = "BusXYZ";
+	private static Integer numShards = 1;		
+	private static Region region = Region.getRegion(Regions.US_EAST_1); 
+
 	public static void main(String[] args) throws Exception {
 
-		BusSystem.writeToBus();
+	
+		Kinesis kinesis = BusSystem.getKinesis(streamName, region);
+		
+		// kinesis.createStream(streamName, numShards); 
+		
+		BusSystem.writeToBus(kinesis, streamName);
 						
 	}
 	

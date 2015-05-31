@@ -2,6 +2,7 @@ package com.onenow.io;
 
 import javax.sql.DataSource;
 
+import com.amazonaws.regions.Region;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -83,6 +84,13 @@ public class Lookup {
 		return s;
 	}
 	
+	
+	public static String getKinesisKey(String streamName, Region region) {
+		String s = "";
+		s = streamName;
+		s = s + "-" + region.toString();
+		return s;
+	}
 }
 
 
