@@ -1,5 +1,8 @@
+# HEDGE 
+## Open source hedge fund platform
+Contact: Pablo R. Bertorello (pablo.bertorello@gmail.com or Skype: pmrbertorello)
 
-# CI Setup (codeship)
+# CI Setup (CodeShip)
 
 ## Setup Commands
 
