@@ -21,7 +21,7 @@ public class BusWriter {
 	
 		Kinesis kinesis = BusSystem.getKinesis(streamName, region);
 		
-		// kinesis.createStream(streamName, numShards); 
+		kinesis.createStream(streamName, numShards); 
 		
 		BusSystem.writeToBus(kinesis, streamName);
 						
