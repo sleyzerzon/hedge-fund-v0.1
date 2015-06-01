@@ -20,7 +20,7 @@ import com.onenow.util.WatchLog;
 public class PriceSizeCache {
 	
 	private Broker 								broker;
-	private HashMap<String, EventRT>			lastEventRT; 	// last set of price/size/etc
+	private HashMap<String, EventHistoryRT>			lastEventRT; 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts;			// price history in chart format from L1
 
 	private TSDB 								TSDB = new TSDB();			// database	
@@ -35,7 +35,7 @@ public class PriceSizeCache {
 	
 	public PriceSizeCache(Broker broker) {
 		this.broker = broker;
-		this.lastEventRT = new HashMap<String, EventRT>();
+		this.lastEventRT = new HashMap<String, EventHistoryRT>();
 		this.charts = new HashMap<String, Chart>();
 	}
 	
@@ -44,12 +44,12 @@ public class PriceSizeCache {
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 	
 	// REAL-TIME from broker
-	public void writeEventRT(EventRT event) {
+	public void writeEventRT(EventHistoryRT event) {
 
 		boolean writeToMem = false;
 		
-		String key = lookup.getInvestmentKey(	event.getInv(), event.tradeType,
-												event.getSource(), event.getTiming());
+		String key = lookup.getInvestmentKey(	event.inv, event.tradeType,
+												event.source, event.timing);
 		
 		// keep last in memory
 		if(lastEventRT.get(key) == null) { 	// never written before
@@ -72,17 +72,17 @@ public class PriceSizeCache {
 	 * 
 	 * @param event
 	 */
-	public void writeEventToRing(EventRT event) {
+	public void writeEventToRing(EventHistoryRT event) {
 
 		Long time = event.time; 
-		Investment inv = event.getInv(); 
+		Investment inv = event.inv; 
 		TradeType tradeType = event.tradeType; 
 		
-		InvDataSource source = event.getSource();
-		InvDataTiming timing = event.getTiming();
+		InvDataSource source = event.source;
+		InvDataTiming timing = event.timing;
 
 		Double price = event.price;
-		int size = event.getSize();
+		int size = event.size;
 
 		// TODO: INSERT RING
 		// write RT to L1RT

@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
 public enum StreamName {
-	ANALYST, HISTORIAN, HISTORIANRT
+	TSDB, ANALYST, HISTORIAN, HISTORIANRT
 }

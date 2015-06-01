@@ -68,8 +68,7 @@ public class BusSystem {
 //		return true;
 	}
 
-	public static void write(Kinesis kinesis, StreamName streamName, String s) {
-		Object objToSend = (Object) s;
+	public static void write(Kinesis kinesis, StreamName streamName, Object objToSend) {
 		kinesis.sendObject(objToSend, streamName);
 		System.out.println("&&&&&&&&&&&&& WROTE: " + objToSend.toString());
 	}

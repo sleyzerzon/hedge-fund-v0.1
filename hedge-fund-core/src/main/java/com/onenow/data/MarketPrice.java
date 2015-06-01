@@ -8,7 +8,8 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.io.EventRT;
+import com.onenow.io.BrokerBusHistorianRT;
+import com.onenow.io.EventHistoryRT;
 import com.onenow.io.PriceSizeCache;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
@@ -41,11 +42,14 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventRT event = new EventRT(	timeStamp, inv, TradeType.TRADED, 
+			EventHistoryRT event = new EventHistoryRT(	timeStamp, inv, TradeType.TRADED, 
 											lastPrice, lastSize,
 											source, timing);
 			getCache().writeEventRT(event);
 			
+			
+			BrokerBusHistorianRT rtBroker = new BrokerBusHistorianRT();
+			rtBroker.write(event.toString());
 			
 //			// TODO: ignore busts with negative size
 //			// TODO: IMPORTANT write both size and price or none
