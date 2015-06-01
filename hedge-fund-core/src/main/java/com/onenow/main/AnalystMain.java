@@ -5,6 +5,8 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.amazonaws.regions.Regions;
 import com.onenow.alpha.WordCount;
+import com.onenow.io.BusSystem;
+import com.onenow.io.Kinesis;
 import com.onenow.io.S3;
 import com.onenow.io.SQS;
 
@@ -12,6 +14,10 @@ public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 		
+		Kinesis kinesis = BusSystem.getKinesis();
+		
+		BusSystem.readFromIBBus(kinesis);
+
 		// S3 storage = new S3();
 		
 		// SQS q = new SQS(Regions.US_EAST_1);

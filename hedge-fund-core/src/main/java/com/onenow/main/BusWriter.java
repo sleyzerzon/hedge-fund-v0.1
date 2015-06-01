@@ -19,9 +19,9 @@ public class BusWriter {
 	
 		Kinesis kinesis = BusSystem.getKinesis();
 		
-		kinesis.createStream(StreamName.IB, numShards); 
+		kinesis.createStreamIfNotExists(StreamName.IBROKER, numShards); 
 		
-		BusSystem.writeToBus(kinesis, StreamName.IB);
+		BusSystem.writeToBus(kinesis, StreamName.IBROKER);
 						
 	}
 	

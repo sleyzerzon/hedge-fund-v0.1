@@ -23,6 +23,7 @@ public class BusSystem {
 	// KINESIS
 	public static Kinesis getKinesis() {
 		
+		// default to east region
 		Region region = Region.getRegion(Regions.US_EAST_1);
 		
 		return getKinesis(region);
@@ -49,7 +50,7 @@ public class BusSystem {
 	
 	public static boolean createStream(Kinesis kinesis, StreamName streamName, Integer numShards) {
 
-		kinesis.createStream(streamName, numShards);
+		kinesis.createStreamIfNotExists(streamName, numShards);
 		
 		return true;
 	}
@@ -71,8 +72,8 @@ public class BusSystem {
 	public static boolean readFromIBBus(Kinesis kinesis) {
 		
 		// defaults to read interactive brokers
-		StreamName streamName = StreamName.IB;
-		IRecordProcessorFactory recordProcessorFactory = kinesis.ibRecordProcessor();
+		StreamName streamName = StreamName.IBROKER;
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.ibRecordProcessor();
 		
 		return readFromBus(kinesis, streamName, recordProcessorFactory);
 		

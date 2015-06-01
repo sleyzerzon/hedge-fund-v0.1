@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
 public enum StreamName {
-	IB
+	IBROKER
 }

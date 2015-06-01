@@ -33,12 +33,13 @@ public class Kinesis {
 		this.kinesis = InitAmazon.getKinesis(region);
 	}
 	
-	public void createStream(StreamName streamName, int numShards) {
+	public void createStreamIfNotExists(StreamName streamName, int numShards) {
 		
 		System.out.println("&&&&&&&&&&&&& CREATED STREAM: " + streamName);
 
         // Creates a stream to write to with N shards if it doesn't exist
         StreamUtils streamUtils = new StreamUtils(kinesis);
+        
         streamUtils.createStreamIfNotExists(streamName.toString(), numShards);
         
         System.out.println(streamName + " is ready for use");
@@ -89,40 +90,5 @@ public class Kinesis {
 
         return kclConfig;
     }
-    
-    
-	public static IRecordProcessorFactory ibRecordProcessor() {
-		
-        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<String>(String.class);
-
-        return recordProcessor;
-	}
-
-    
-    // Persist counts to DynamoDB
-	/**
-	 * Use:
-	 * String tableName = "tableName";
-	 * DynamoDBCountPersister persister = dynamo.getCountPersister(tableName);
-	 * Worker kinesysWorker = new Worker(kinesis.dynamoRecordProcessor(tableName, persister), clientConfig);
-	 */	
-    // Count occurrences of HTTP referrer pairs over a range of 10 seconds
-    private static final int COMPUTE_RANGE_FOR_COUNTS_IN_MILLIS = 10000;
-    // Update the counts every 1 second
-    private static final int COMPUTE_INTERVAL_IN_MILLIS = 1000;
-
-	public static IRecordProcessorFactory dynamoRecordProcessor(String tableName, DynamoDBCountPersister persister) {
-		
-        IRecordProcessorFactory recordProcessor =
-                new CountingRecordProcessorFactory<HttpReferrerPair>(HttpReferrerPair.class,
-                        persister,
-                        COMPUTE_RANGE_FOR_COUNTS_IN_MILLIS,
-                        COMPUTE_INTERVAL_IN_MILLIS);
-
-
-        return recordProcessor;
-	}
-
-
 
 }

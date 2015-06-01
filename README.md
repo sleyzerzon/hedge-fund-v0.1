@@ -1,5 +1,6 @@
 # HEDGE 
 ## Open Source Hedge Fund Platform
+Best starting point: com.onenow.main  
 Contact: Pablo R. Bertorello (pablo.bertorello@gmail.com or Skype: pmrbertorello)
 
 # CI Setup (CodeShip)

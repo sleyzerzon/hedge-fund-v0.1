@@ -23,9 +23,9 @@ import com.onenow.util.WatchLog;
 public class Historian {
 	
 	private Broker 								broker;
-	private HashMap<String, QuoteHistory>		history;							// price history from L2
+	private HashMap<String, QuoteHistory>		history;						// price history from L3
 
-	private TSDB 								TSDB = new TSDB();			// database
+	private TSDB 								TSDB = new TSDB();				// database
 	private Lookup 								lookup = new Lookup();			// key
 	private TimeParser							parseDate = new TimeParser();
 
@@ -33,6 +33,12 @@ public class Historian {
 	
 	private long lastHistQuery;
 
+/**
+ * L0: investor application memory
+ * L1: ElastiCache
+ * L2: Time Series Database
+ * L3: 3rd party database via API
+ */
 	public Historian() {
 		
 	}
@@ -50,19 +56,19 @@ public class Historian {
 
 			// iterate through investments
 			for(Investment inv:portfolio.investments) {
-				updateL1HistoryFromL2(inv, toDashedDate);
+				updateL2HistoryFromL3(inv, toDashedDate);
 			}
 	}
 	
 /**
- * Continually augment L1 with data from L2 (3rd party DB)
+ * Continually augment L2 (TSDB) with data from L3 (3rd party DB)
  * @param inv
  */
-	private void updateL1HistoryFromL2(Investment inv, String toDashedDate) {
-		System.out.println("Cache Chart READ: L2 (augment data) "  + inv.toString());
+	private void updateL2HistoryFromL3(Investment inv, String toDashedDate) {
+		System.out.println("Cache Chart READ: L3 (augment data) "  + inv.toString());
 		
 			
-		// See if data already in L1
+		// See if data already in L2
 		// readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> prices = TSDB.readPriceFromDB(		inv, config.tradeType, config.sampling, 
 														parseDate.getDashedDateMinus(toDashedDate, 1), toDashedDate, 
@@ -72,13 +78,13 @@ public class Historian {
 		QuoteHistory invHist = lookupInvHistory(	inv, config.tradeType, 
 													config.source, config.timing);
 
-		// put any already-received history in L1
+		// put any already-received history in L2
 		// TODO: synchronize access rather than nullifying
-		writeHistoryL0ToL1(	inv, config.tradeType, 
+		writeHistoryL0ToL2(	inv, config.tradeType, 
 							config.source, config.timing,
 							invHist);					
 
-		// query L2 only if L1 data is incomplete
+		// query L3 only if L2 data is incomplete
 		// readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if (prices.size()<50) {					
 			paceHistoricalQuery(); 
@@ -86,12 +92,12 @@ public class Historian {
 											config, invHist); 
 			lastHistQuery = parseDate.getTimestampNow();	
 		} else {
-			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L1 HIT:" + inv.toString() + "\n\n");
+			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L2 HIT:" + inv.toString() + "\n\n");
 		}
 	}
 
 	/**
-	 * Every investment has it's own history from L2
+	 * Every investment has it's own history from L3
 	 * @param inv
 	 * @param tradeType
 	 * @param source
@@ -112,7 +118,7 @@ public class Historian {
 		return invHist;
 	}
 
-	private void writeHistoryL0ToL1(	Investment inv,  
+	private void writeHistoryL0ToL2(	Investment inv,  
 										TradeType dataType,
 										InvDataSource source, InvDataTiming timing,
 										QuoteHistory invHistory) {
@@ -123,7 +129,7 @@ public class Historian {
 			Long time = row.time()*1000; // processed RT 143,104,098,2011 vs. native History 143,096,400,0xxx
 			Double price = row.open(); 
 
-			// System.out.println("Cache History WRITE: L1 (from L2 via L0) "  + inv.toString() + " " + invHistory.toString());
+			// System.out.println("Cache History WRITE: L2 (from L3 via L0) "  + inv.toString() + " " + invHistory.toString());
 			boolean success = false;
 			boolean retry = false;
 			while (!success) {
