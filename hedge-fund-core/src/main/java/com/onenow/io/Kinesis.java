@@ -15,6 +15,7 @@ import com.amazonaws.services.kinesis.model.ProvisionedThroughputExceededExcepti
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onenow.admin.InitAmazon;
+import com.onenow.constant.StreamName;
 import com.onenow.data.DynamoDBCountPersister;
 import com.onenow.data.HttpReferrerPair;
 import com.onenow.util.StreamUtils;
@@ -28,22 +29,22 @@ public class Kinesis {
 	public Kinesis() {
 	}
 	
-	public Kinesis(String streamName, Region region) {
+	public Kinesis(Region region) {
 		this.kinesis = InitAmazon.getKinesis(region);
 	}
 	
-	public void createStream(String streamName, int numShards) {
+	public void createStream(StreamName streamName, int numShards) {
 		
 		System.out.println("&&&&&&&&&&&&& CREATED STREAM: " + streamName);
 
         // Creates a stream to write to with N shards if it doesn't exist
         StreamUtils streamUtils = new StreamUtils(kinesis);
-        streamUtils.createStreamIfNotExists(streamName, numShards);
+        streamUtils.createStreamIfNotExists(streamName.toString(), numShards);
         
         System.out.println(streamName + " is ready for use");
 	}
 	
-    public void sendObject(Object objectToSend, String streamName) {
+    public void sendObject(Object objectToSend, StreamName streamName) {
 		
         byte[] bytes;
         try {
@@ -54,7 +55,7 @@ public class Kinesis {
         }
 
         PutRecordRequest putRecord = new PutRecordRequest();
-        putRecord.setStreamName(streamName);
+        putRecord.setStreamName(streamName.toString());
         
         // We use the resource as the partition key so we can accurately calculate totals for a given resource
         putRecord.setPartitionKey(objectToSend.toString());
