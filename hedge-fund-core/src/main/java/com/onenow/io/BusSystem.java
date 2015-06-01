@@ -55,31 +55,37 @@ public class BusSystem {
 		return true;
 	}
 	
-	public static boolean writeToBus(Kinesis kinesis, StreamName streamName) {	
+	public static boolean writeToBusIndefnitely(Kinesis kinesis, StreamName streamName) {
+		String s = "Hola World! ";
 		Integer i=0;
 		while(true) {
-			Object objToSend = (Object) "Hola World!" + i.toString();
-			kinesis.sendObject(objToSend, streamName);
-			System.out.println("&&&&&&&&&&&&& WROTE: " + objToSend.toString());
+			s = s + i;
+			write(kinesis, streamName, s);
 			TimeParser.wait(1);
 			i++;
 		}
 		
 //		return true;
 	}
+
+	public static void write(Kinesis kinesis, StreamName streamName, String s) {
+		Object objToSend = (Object) s;
+		kinesis.sendObject(objToSend, streamName);
+		System.out.println("&&&&&&&&&&&&& WROTE: " + objToSend.toString());
+	}
 	
 	
-	public static boolean readFromIBBus(Kinesis kinesis) {
+	public static boolean readFromAnalystBus(Kinesis kinesis) {
 		
 		// defaults to read interactive brokers
-		StreamName streamName = StreamName.IBROKER;
+		StreamName streamName = StreamName.ANALYST;
 		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.ibRecordProcessor();
 		
-		return readFromBus(kinesis, streamName, recordProcessorFactory);
+		return read(kinesis, streamName, recordProcessorFactory);
 		
 	}
 
-	public static boolean readFromBus(Kinesis kinesis, StreamName streamName, IRecordProcessorFactory recordProcessor) {
+	public static boolean read(Kinesis kinesis, StreamName streamName, IRecordProcessorFactory recordProcessor) {
 
 		KinesisClientLibConfiguration clientConfig = configureReadingClient(kinesis, streamName);
 		

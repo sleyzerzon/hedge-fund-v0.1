@@ -16,7 +16,7 @@ public class AnalystMain {
 		
 		Kinesis kinesis = BusSystem.getKinesis();
 		
-		BusSystem.readFromIBBus(kinesis);
+		BusSystem.readFromAnalystBus(kinesis);
 
 		// S3 storage = new S3();
 		

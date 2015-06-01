@@ -11,7 +11,7 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
 
 
-public class BusWriter {
+public class AnalystBroker {
 	
 	private static Integer numShards = 1;		
 
@@ -19,10 +19,12 @@ public class BusWriter {
 	
 		Kinesis kinesis = BusSystem.getKinesis();
 		
-		kinesis.createStreamIfNotExists(StreamName.IBROKER, numShards); 
+		kinesis.createStreamIfNotExists(StreamName.ANALYST, numShards); 
+
+		String s = "WRITE ";
 		
-		BusSystem.writeToBus(kinesis, StreamName.IBROKER);
-						
+		BusSystem.write(kinesis, StreamName.ANALYST, s);
+
 	}
 	
 }
