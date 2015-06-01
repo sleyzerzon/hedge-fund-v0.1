@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
@@ -66,8 +67,28 @@ public class BusSystem {
 //		return true;
 	}
 	
-	public static boolean readFromBus(Kinesis kinesis, StreamName streamName) {
+	
+	public static boolean readFromIBBus(Kinesis kinesis) {
+		
+		// defaults to read interactive brokers
+		StreamName streamName = StreamName.IB;
+		IRecordProcessorFactory recordProcessorFactory = kinesis.ibRecordProcessor();
+		
+		return readFromBus(kinesis, streamName, recordProcessorFactory);
+		
+	}
 
+	public static boolean readFromBus(Kinesis kinesis, StreamName streamName, IRecordProcessorFactory recordProcessor) {
+
+		KinesisClientLibConfiguration clientConfig = configureReadingClient(kinesis, streamName);
+		
+		Worker kinesysWorker = new Worker(recordProcessor, clientConfig);
+		
+        return runProcessor(kinesysWorker);
+
+	}
+	private static KinesisClientLibConfiguration configureReadingClient(Kinesis kinesis, StreamName streamName) {
+		
 		String applicationName = "appName";
 		String workerId = "fulano";
 		
@@ -75,11 +96,7 @@ public class BusSystem {
 																				streamName.toString(), 
 																				workerId, 
 																				kinesisRegion.get(kinesis));
-		
-		Worker kinesysWorker = new Worker(kinesis.ibRecordProcessor(), clientConfig);
-		
-        return runProcessor(kinesysWorker);
-
+		return clientConfig;
 	}
 
 	private static boolean runProcessor(Worker kinesysWorker) {

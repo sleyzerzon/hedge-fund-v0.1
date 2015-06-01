@@ -10,7 +10,7 @@ public class BusReader {
 		
 		Kinesis kinesis = BusSystem.getKinesis();
 				
-		BusSystem.readFromBus(kinesis, StreamName.IB);
+		BusSystem.readFromIBBus(kinesis);
 
 	}
 
