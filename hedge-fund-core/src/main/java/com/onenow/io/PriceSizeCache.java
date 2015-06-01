@@ -13,7 +13,9 @@ import com.onenow.data.DataSampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
+
 import java.util.logging.Level;
+
 import com.onenow.util.TimeParser;
 import com.onenow.util.WatchLog;
 
@@ -63,37 +65,41 @@ public class PriceSizeCache {
 		if(writeToMem) {
 			lastEventRT.put(key, event);
 		}
+			
+		// CRITICAL PATH
+		// TODO: FAST WRITE TO RING 
+		writeEventThroughRing(event);
 		
-		// CRITICAL PATH: fast write to ring
-		writeEventToRing(event);
 	}
 		
 	/** Upon writing every event to the ring, asynchronous update all charts in L0 from RTL1
 	 * 
 	 * @param event
 	 */
-	public void writeEventToRing(EventHistoryRT event) {
+	public void writeEventThroughRing(EventHistoryRT event) {
 
-		Long time = event.time; 
-		Investment inv = event.inv; 
-		TradeType tradeType = event.tradeType; 
-		
-		InvDataSource source = event.source;
-		InvDataTiming timing = event.timing;
-
-		Double price = event.price;
-		int size = event.size;
-
-		// TODO: INSERT RING
-		// write RT to L1RT
-		writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
+		// TODO: INSERT RING		
 		
 		if(	broker.getMode().equals(BrokerMode.PRIMARY) ||
 			broker.getMode().equals(BrokerMode.STANDBY)) {
 						
 			// TODO: SQS/SNS ORCHESTRATION
+
+			// Write to RT datastream
+			BrokerBusHistorianRT rtBroker = new BrokerBusHistorianRT();
+			rtBroker.write(event.toString());
 			
-			// update the charts
+			// TODO: move direct invocation to write RT to L1RT to back-end service
+			Long time = event.time; 
+			Investment inv = event.inv; 
+			TradeType tradeType = event.tradeType; 		
+			InvDataSource source = event.source;
+			InvDataTiming timing = event.timing;
+			Double price = event.price;
+			int size = event.size;
+			writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
+
+			// TODO: move update the charts to back-end service
 			for(SamplingRate samplr:sampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 				
 				System.out.println("\n" + "***** PRE-FETCH SAMPLING ***** " + samplr);

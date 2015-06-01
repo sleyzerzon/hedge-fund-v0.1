@@ -35,4 +35,16 @@ public class EventHistoryRT {
 		this.source = source;
 		this.timing = timing;
 	}
+	
+	public String toString() {
+		String s = "";
+		s = "- time: " + time + "\n";
+		s = "- inv: " + inv.toString() + "\n";
+		s = "- tradeType: " + tradeType.toString() + "\n";
+		s = "- price: " + price + "\n";
+		s = "- size: " + size + "\n";
+		s = "- source: " + source.toString() + "\n";
+		s = "- timing: " + timing.toString() + "\n";
+		return s;
+	}
 }

@@ -19,6 +19,13 @@ public class BusProcessingFactory {
         return recordProcessor;
 	}
 
+	public static IRecordProcessorFactory rtEventProcessor() {
+		
+        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory(EventHistoryRT.class);
+
+        return recordProcessor;
+	}
+
     
     // Persist counts to DynamoDB
 	/**

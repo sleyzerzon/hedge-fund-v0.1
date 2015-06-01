@@ -44,6 +44,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 	}
 
+	// TODO: handle NON-STRING records (i.e. EventHistory)
 	@Override
 	public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
 		
@@ -55,7 +56,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
             try {
                 
             	record = JSON.readValue(r.getData().array(), recordType);
-            	System.out.println("******************************** RECORD: " + (String) record);
+            	System.out.println("******************************** RECORD: " + record.toString());
                 
             } catch (IOException e) {
             	String s = "Skipping record. Unable to parse record into HttpReferrerPair. Partition Key: "

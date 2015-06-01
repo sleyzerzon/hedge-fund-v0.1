@@ -28,10 +28,10 @@ public class MarketPrice {
 	}
 	
 	public MarketPrice(Portfolio marketPortfolio, Broker broker) {
-		setPortfolio(marketPortfolio);
-		setBroker(broker);
-		setCache(new PriceSizeCache(getBroker()));
-		setSampling(new DataSampling());
+		this.portfolio = marketPortfolio;
+		this.broker = broker;
+		this.cache = new PriceSizeCache(broker);
+		this.sampling = new DataSampling();
 	}
 	
 	
@@ -45,22 +45,19 @@ public class MarketPrice {
 			EventHistoryRT event = new EventHistoryRT(	timeStamp, inv, TradeType.TRADED, 
 											lastPrice, lastSize,
 											source, timing);
-			getCache().writeEventRT(event);
+			cache.writeEventRT(event);
 			
-			
-			BrokerBusHistorianRT rtBroker = new BrokerBusHistorianRT();
-			rtBroker.write(event.toString());
 			
 //			// TODO: ignore busts with negative size
 //			// TODO: IMPORTANT write both size and price or none
-//			getCache().writeSize(timeStamp, inv, TradeType.TRADED.toString(), lastSize);		
-//			getCache().writePrice(timeStamp, inv, TradeType.TRADED.toString(), lastPrice);
+//			cache.writeSize(timeStamp, inv, TradeType.TRADED.toString(), lastSize);		
+//			cache.writePrice(timeStamp, inv, TradeType.TRADED.toString(), lastPrice);
 //			
 //			// TODO: create these time series: VWAP & VOLUME
 //			// writeSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
 //			// writePriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 //			
-//			 getCache().writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);			
+//			 cache.writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);			
 		}
 	}
 	
@@ -79,13 +76,13 @@ public class MarketPrice {
 	 * @param tradeType
 	 */
 	public double readPrice(Investment inv, TradeType tradeType) {
-		return getCache().readPrice(inv, tradeType);
+		return cache.readPrice(inv, tradeType);
 	}
 	
 //	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
 //									String fromDate, String toDate) {
 //		
-//		return getCache().readPrice(inv, dataType, sampling, fromDate, toDate);
+//		return cache.readPrice(inv, dataType, sampling, fromDate, toDate);
 //	}
 
 
@@ -96,7 +93,7 @@ public class MarketPrice {
 		
 		Chart chart = new Chart();
 		
-		chart = getCache().readChart(	inv, tradeType, sampling, fromDate, toDate,
+		chart = cache.readChart(	inv, tradeType, sampling, fromDate, toDate,
 											source, timing);
 		System.out.println("READ CHART " + "\n" + chart);
 		
@@ -107,45 +104,8 @@ public class MarketPrice {
 	// PRINT
 	public String toString() {
 		String s="";
-		s = getCache().toString();
+		s = cache.toString();
 		return s;
 	}
 
-	
-	// TEST
-	
-	
-	// SET GET
-	public PriceSizeCache getCache() {
-		return cache;
-	}
-
-	public void setCache(PriceSizeCache cache) {
-		this.cache = cache;
-	}
-
-	public Portfolio getPortfolio() {
-		return portfolio;
-	}
-
-	public void setPortfolio(Portfolio portfolio) {
-		this.portfolio = portfolio;
-	}
-
-	public DataSampling getSampling() {
-		return sampling;
-	}
-
-	public void setSampling(DataSampling sampling) {
-		this.sampling = sampling;
-	}
-
-	public Broker getBroker() {
-		return broker;
-	}
-
-	public void setBroker(Broker broker) {
-		this.broker = broker;
-	}
-	
 }
