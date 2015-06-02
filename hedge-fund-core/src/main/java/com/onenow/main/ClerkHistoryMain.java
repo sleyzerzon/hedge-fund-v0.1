@@ -28,6 +28,10 @@ public class ClerkHistoryMain {
 	}
 
 
+	/**
+	 * Write one row of quote history to TSDB, upon receiving it from a data stream
+	 * @param event
+	 */
 	public static void writeHistoryToL2(EventHistory event) {
 
 		// System.out.println("Cache History WRITE: L2 (from L3 via L0) "  + inv.toString() + " " + invHistory.toString());
