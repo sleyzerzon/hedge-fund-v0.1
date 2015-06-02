@@ -1,6 +1,7 @@
 package com.onenow.io;
 
 import com.onenow.constant.StreamName;
+import com.onenow.data.EventHistoryRT;
 
 public class BrokerBusHistorianRT {
 

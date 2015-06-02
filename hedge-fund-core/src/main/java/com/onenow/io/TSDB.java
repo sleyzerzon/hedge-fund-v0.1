@@ -85,7 +85,7 @@ public static void writePrice(Long time, Investment inv, TradeType tradeType, Do
 	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
+public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
 										String fromDate, String toDate,
 										InvDataSource source, InvDataTiming timing) {
 	
@@ -112,7 +112,7 @@ public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, Sampli
  * @param toDate
  * @return
  */
-public List<Serie> queryPrice(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
+public static List<Serie> queryPrice(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	 
 	String query = 	"SELECT " +
@@ -152,7 +152,7 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 	return series;
 }
 
-private List<Candle> priceSeriesToCandles(List<Serie> series) {
+private static List<Candle> priceSeriesToCandles(List<Serie> series) {
 	List<Candle> candles = new ArrayList<Candle>();
 	
 	System.out.println("SERIES: " + series.toString());
@@ -233,7 +233,7 @@ private List<Candle> priceSeriesToCandles(List<Serie> series) {
 	return candles;
 }
 
-private String extractQueryString(Map<String, Object> row, String col) {
+private static String extractQueryString(Map<String, Object> row, String col) {
 	String s = "";
 	try {
 		s = row.get(col).toString();

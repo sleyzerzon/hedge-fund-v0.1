@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
-import com.onenow.io.EventHistory;
+import com.onenow.data.EventHistory;
 
 public class Chart extends JComponent {
 	private static final int width = 5;

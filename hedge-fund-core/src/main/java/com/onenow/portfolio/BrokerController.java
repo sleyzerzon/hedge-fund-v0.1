@@ -32,8 +32,8 @@ import com.ib.controller.Group;
 import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
+import com.onenow.data.EventHistory;
 import com.onenow.execution.Contract;
-import com.onenow.io.EventHistory;
 
 import java.util.ArrayList;
 import java.util.Collections;

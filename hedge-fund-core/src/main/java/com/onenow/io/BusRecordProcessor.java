@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
+import com.onenow.data.EventHistory;
+import com.onenow.data.EventHistoryRT;
 import com.onenow.instrument.Investment;
 import com.onenow.main.ChartistMain;
 import com.onenow.main.ClerkHistoryMain;

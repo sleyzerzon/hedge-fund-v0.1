@@ -8,7 +8,6 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.io.EventHistoryRT;
 import com.onenow.io.PriceSizeCache;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Chart;
@@ -59,13 +58,6 @@ public class MarketPrice {
 		}
 	}
 	
-	// WRITE NOT REAL-TIME
-	public void writeSizeNotRealTime(Investment inv, int size, String tupe) {
-		// TODO: ignore
-	}
-	public void writePriceNotRealTime(Investment inv, double price, String tupe) {
-		// TODO: ignore
-	}
 	
 	// READ PRICE READ
 	/**
@@ -77,12 +69,6 @@ public class MarketPrice {
 		return cache.readPrice(inv, tradeType);
 	}
 	
-//	public List<Candle> readPrice(	Investment inv, String dataType, String sampling, 
-//									String fromDate, String toDate) {
-//		
-//		return cache.readPrice(inv, dataType, sampling, fromDate, toDate);
-//	}
-
 
 	// READ CHART
 	public Chart readChart(	Investment inv, TradeType tradeType, SamplingRate sampling,

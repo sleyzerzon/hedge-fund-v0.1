@@ -4,9 +4,9 @@ import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.StreamName;
+import com.onenow.data.EventHistory;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
-import com.onenow.io.EventHistory;
 import com.onenow.io.Kinesis;
 import com.onenow.io.TSDB;
 import com.onenow.util.FlexibleLogger;

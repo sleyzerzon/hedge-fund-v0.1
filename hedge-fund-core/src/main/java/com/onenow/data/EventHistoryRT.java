@@ -1,4 +1,4 @@
-package com.onenow.io;
+package com.onenow.data;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;

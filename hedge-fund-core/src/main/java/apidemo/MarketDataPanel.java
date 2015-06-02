@@ -40,12 +40,12 @@ import com.ib.client.Types.MktDataType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Instrument;
 import com.ib.controller.ScanCode;
+import com.onenow.data.EventHistory;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ApiController.IDeepMktDataHandler;
 import com.onenow.execution.ApiController.IHistoricalDataHandler;
 import com.onenow.execution.ApiController.IRealTimeBarHandler;
 import com.onenow.execution.ApiController.IScannerHandler;
-import com.onenow.io.EventHistory;
 
 public class MarketDataPanel extends JPanel {
 	private final Contract m_contract = new Contract();

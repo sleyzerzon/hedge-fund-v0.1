@@ -42,7 +42,7 @@ public class QuoteRealTime extends AbstractTableModel {
 		System.out.println("Contract " + contract.toString());
 		
 		// set quote on table to receive callbacks later
-		QuoteSingle quote = new QuoteSingle(this, contract.description(), investment, marketPrice);
+		QuoteRTSingle quote = new QuoteRTSingle(this, contract.description(), investment, marketPrice);
 		m_rows.add(quote);
 		
 		String volumeTicks = 	"233, " + //  TickType.RT_VOLUME
@@ -75,16 +75,16 @@ public class QuoteRealTime extends AbstractTableModel {
 	} 
 
 	
-	private ArrayList<QuoteSingle> m_rows = new ArrayList<QuoteSingle>(); // TODO: why here?
+	private ArrayList<QuoteRTSingle> m_rows = new ArrayList<QuoteRTSingle>(); // TODO: why here?
 
-	void addRow( QuoteSingle row) { // callback
+	void addRow( QuoteRTSingle row) { // callback
 		m_rows.add( row);
 		// System.out.println("Quote " + toString(0));
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 	
 	public void desubscribe() {
-		for (QuoteSingle row : m_rows) {
+		for (QuoteRTSingle row : m_rows) {
 			controller.cancelMktData( row);
 		}
 	}		
@@ -119,7 +119,7 @@ public class QuoteRealTime extends AbstractTableModel {
 	}
 	
 	@Override public Object getValueAt(int rowIn, int col) {
-		QuoteSingle row = m_rows.get( rowIn);
+		QuoteRTSingle row = m_rows.get( rowIn);
 		switch( col) {
 			case 0: return row.m_description;
 			case 1: return row.m_bidSize;
@@ -137,7 +137,7 @@ public class QuoteRealTime extends AbstractTableModel {
 	// PUBLIC
 	public Double getLastAsk() {
 		Integer size = m_rows.size();
-		QuoteSingle quote = m_rows.get(size-1);
+		QuoteRTSingle quote = m_rows.get(size-1);
 		Double price = quote.m_ask;
 		if(price.equals(0.0)) {
 			return getLastClose();
@@ -146,7 +146,7 @@ public class QuoteRealTime extends AbstractTableModel {
 	}
 	public Double getLastBid() {
 		Integer size = m_rows.size();
-		QuoteSingle quote = m_rows.get(size-1);
+		QuoteRTSingle quote = m_rows.get(size-1);
 		Double price = quote.m_bid;
 		if(price.equals(0.0)) {
 			return getLastClose();
@@ -155,7 +155,7 @@ public class QuoteRealTime extends AbstractTableModel {
 	}
 	public Double getLastClose() {
 		Integer size = m_rows.size();
-		QuoteSingle quote = m_rows.get(size-1);
+		QuoteRTSingle quote = m_rows.get(size-1);
 		Double price = quote.m_close;
 		
 		// System.out.println("QUOTES " + price + " " + size);
@@ -165,7 +165,7 @@ public class QuoteRealTime extends AbstractTableModel {
 
 	// PRINT
 	public String toString(int which) {
-		QuoteSingle row = m_rows.get(which);
+		QuoteRTSingle row = m_rows.get(which);
 		String s="\n";
 		s = s + "-\n";
 		s = s + "Description " + row.m_description + "\n";

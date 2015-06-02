@@ -512,6 +512,29 @@ public class TimeParser implements Testable {
 		return sDay;
 	}
 	
+	// HISTORICAL QUERY
+	public static void paceHistoricalQuery(long lastHistQuery) {		
+		System.out.println("...pacing historical query: " + getSleepTime(lastHistQuery)/1000 + "s");
+	    try {
+			Thread.sleep(getSleepTime(lastHistQuery));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	private static long getSleepTime(long lastHistQuery) {
+		long sleepTime = 0;
+
+		long elapsed = TimeParser.getElapsedStamps(lastHistQuery);
+		sleepTime = 12000-elapsed; // 12s target
+		if(sleepTime<0) {
+			sleepTime = 0;
+		}
+		
+		return sleepTime;
+	}
+
+	
 	// TEST
 	public boolean test() {
 		

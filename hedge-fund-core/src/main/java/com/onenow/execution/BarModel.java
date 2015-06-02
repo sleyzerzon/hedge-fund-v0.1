@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.onenow.io.EventHistory;
+import com.onenow.data.EventHistory;
 
 public class BarModel extends AbstractTableModel {
 

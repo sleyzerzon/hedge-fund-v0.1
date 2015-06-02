@@ -1,4 +1,4 @@
-package com.onenow.io;
+package com.onenow.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +7,6 @@ import com.ib.controller.Formats;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
-import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 
 public class EventHistory {
