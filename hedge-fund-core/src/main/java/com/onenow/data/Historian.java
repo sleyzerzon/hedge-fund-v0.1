@@ -8,9 +8,9 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.execution.QuoteHistory;
-import com.onenow.execution.QuoteRow;
 import com.onenow.instrument.Investment;
 import com.onenow.io.Lookup;
+import com.onenow.io.EventHistory;
 import com.onenow.io.TSDB;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
@@ -124,10 +124,10 @@ public class Historian {
 										QuoteHistory invHistory) {
 		
 		for(int i=0; i<invHistory.quoteRows.size(); i++) {
-			QuoteRow row = invHistory.quoteRows.get(i);
+			EventHistory row = invHistory.quoteRows.get(i);
 			
-			Long time = row.time()*1000; // processed RT 143,104,098,2011 vs. native History 143,096,400,0xxx
-			Double price = row.open(); 
+			Long time = row.time*1000; // processed RT 143,104,098,2011 vs. native History 143,096,400,0xxx
+			Double price = row.open; 
 
 			// System.out.println("Cache History WRITE: L2 (from L3 via L0) "  + inv.toString() + " " + invHistory.toString());
 			boolean success = false;

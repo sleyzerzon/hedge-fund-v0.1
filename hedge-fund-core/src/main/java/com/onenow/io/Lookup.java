@@ -30,7 +30,7 @@ public class Lookup {
 	 * @param tradeType
 	 * @return
 	 */
-	public String getInvestmentTimedKey(Long time, Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
+	public static String getInvestmentTimedKey(Long time, Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
 		String s = "";
 		s = s + time.toString();
 		s = s + "-" + getInvestmentKey(inv, tradeType, source, timing);
@@ -43,7 +43,7 @@ public class Lookup {
 	 * @param tradeType
 	 * @return
 	 */
-	public String getInvestmentKey(Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
+	public static String getInvestmentKey(Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
 		Underlying under = inv.getUnder();
 		String s = ""; 
 		s = s + under.getTicker() + "-" + inv.getInvType();		
@@ -64,7 +64,7 @@ public class Lookup {
 	 * @param timeStamp
 	 * @return
 	 */
-	public String getTimestampKey(Investment inv, TradeType tradeType, Long timeStamp) {
+	public static String getTimestampKey(Investment inv, TradeType tradeType, Long timeStamp) {
 		String s = "";
 		s = inv.toString();
 		s = s + "-" + tradeType.toString();
@@ -72,7 +72,7 @@ public class Lookup {
 	}
 
 	
-	public String getChartKey(	Investment inv, TradeType tradeType, SamplingRate sampling, 
+	public static String getChartKey(	Investment inv, TradeType tradeType, SamplingRate sampling, 
 								String fromDate, String toDate,
 								InvDataSource source, InvDataTiming timing) {
 		String s = "";

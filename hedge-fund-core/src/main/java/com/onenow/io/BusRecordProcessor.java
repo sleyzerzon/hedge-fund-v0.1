@@ -14,7 +14,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.main.TSDBMain;
+import com.onenow.main.TSDBWriteMain;
 import com.onenow.util.WatchLog;
 
 public class BusRecordProcessor<T> implements IRecordProcessor {
@@ -91,13 +91,15 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		}
 		
 		if(recordType.equals(EventHistory.class)) {
+			EventHistory event = (EventHistory) record;
+			TSDBWriteMain.writeRTtoL2(event);
 			
 		}
 
 		if(recordType.equals(EventHistoryRT.class)) {
 			
 			EventHistoryRT event = (EventHistoryRT) record;
-			TSDBMain.writeRTtoL2(event);
+			TSDBWriteMain.writeRTtoL2(event);
 		}
 
 	}

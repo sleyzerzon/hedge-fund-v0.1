@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.data.Channel;
+import com.onenow.io.BrokerBusHistorian;
+import com.onenow.io.BrokerBusHistorianRT;
+import com.onenow.io.EventHistory;
 import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.BrokerController.IRealTimeBarHandler;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
+
 import java.util.logging.Level;
+
 import com.onenow.util.WatchLog;
 
 /**
@@ -17,7 +22,7 @@ import com.onenow.util.WatchLog;
  */
 public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	public ArrayList<QuoteRow> quoteRows = new ArrayList<QuoteRow>();
+	public ArrayList<EventHistory> quoteRows = new ArrayList<EventHistory>();
 	
 	private Channel channel;
 
@@ -29,25 +34,14 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	}
 	
 	// INTERFACE: IHistoricalDataHandler
-	@Override public void historicalData(QuoteRow row, boolean hasGaps) {
+	@Override public void historicalData(EventHistory row, boolean hasGaps) {
 		
 		quoteRows.add(row);
-		handleBar(row);
+		handleRow(row);
 		
 		if(hasGaps) {
 			System.out.println("Historic data has gaps!");
 		}		
-	}
-
-	private void handleBar(QuoteRow row) {
-
-		String log = "History " + row.toString();
-		WatchLog.add(Level.INFO, log, "", "");
-
-		if(getChannel()!=null) { // if constructed that way
-			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 
-										row.high(), row.low(), row.close());
-		}
 	}
 	
 	public int size() {
@@ -57,11 +51,29 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	}	
 	
 	// INTERFACE: IRealTimeBarHandler
-	@Override public void realtimeBar(QuoteRow bar) {		
-		quoteRows.add(bar); 
-		handleBar(bar);
+	@Override public void realtimeBar(EventHistory row) {		
+
+		quoteRows.add(row); 
+		
+		// Write to Real-Time datastream
+		BrokerBusHistorian histroyBroker = new BrokerBusHistorian();
+		histroyBroker.write(row);
+
+		handleRow(row);
 	}
-	
+
+	private void handleRow(EventHistory row) {
+
+		String log = "History " + row.toString();
+		WatchLog.add(Level.INFO, log, "", "");
+
+		// Channel handling
+		if(channel!=null) { // if constructed that way
+			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 
+										row.high, row.low, row.close);
+		}
+	}
+
 	@Override public void historicalDataEnd() {
 	}
 
@@ -91,15 +103,6 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		String s = "";
 		s = s + quoteRows.toString();
 		return s;
-	}
-
-	// SET GET
-	public Channel getChannel() {
-		return channel;
-	}
-
-	public void setChannel(Channel channel) {
-		this.channel = channel;
 	}
 
 }

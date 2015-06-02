@@ -10,19 +10,19 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
-import com.onenow.execution.QuoteRow;
+import com.onenow.io.EventHistory;
 
 public class Chart extends JComponent {
 	private static final int width = 5;
 	private int height;
 	private double min;
 	private double max;
-	private final ArrayList<QuoteRow> m_rows;
+	private final ArrayList<EventHistory> m_rows;
 	private double m_current = 118;
 	
 	public void current( double v) { m_current = v; }
 	
-	public Chart(ArrayList<QuoteRow> rows) {
+	public Chart(ArrayList<EventHistory> rows) {
 		m_rows = rows;
 	}
 	
@@ -32,17 +32,17 @@ public class Chart extends JComponent {
 		max = getMax();
 	
 		int x = 1;
-		for (QuoteRow bar : m_rows) {
-			int high = getY( bar.high() );
-			int low = getY( bar.low() ); 
-			int open = getY( bar.open() );
-			int close = getY( bar.close() );
+		for (EventHistory bar : m_rows) {
+			int high = getY( bar.high );
+			int low = getY( bar.low ); 
+			int open = getY( bar.open );
+			int close = getY( bar.close );
 
 			// draw high/low line
 			g.setColor( Color.black);
 			g.drawLine(x + 1, high, x + 1, low);
 			
-			if (bar.close() > bar.open() ) {
+			if (bar.close > bar.open ) {
 				g.setColor( Color.green);
 				g.fillRect(x, close, 3, open - close);
 			}
@@ -74,16 +74,16 @@ public class Chart extends JComponent {
 	
 	private double getMin() {
 		double min = Double.MAX_VALUE;
-		for( QuoteRow bar : m_rows) {
-			min = Math.min( min, bar.low() );
+		for( EventHistory bar : m_rows) {
+			min = Math.min( min, bar.low );
 		}
 		return min;
 	}
 	
 	private double getMax() {
 		double max = 0;
-		for( QuoteRow bar : m_rows) {
-			max = Math.max( max, bar.high() );
+		for( EventHistory bar : m_rows) {
+			max = Math.max( max, bar.high );
 		}
 		return max;
 	}

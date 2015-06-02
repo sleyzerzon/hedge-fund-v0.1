@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.onenow.io.EventHistory;
+
 public class BarModel extends AbstractTableModel {
 
-	ArrayList<QuoteRow> m_rows;
+	ArrayList<EventHistory> m_rows;
 	
 	public BarModel() {
 		
 	}
 
-	public BarModel(ArrayList<QuoteRow> rows) {
+	public BarModel(ArrayList<EventHistory> rows) {
 		m_rows = rows;
 	}
 
@@ -38,15 +40,15 @@ public class BarModel extends AbstractTableModel {
 	}
 
 	@Override public Object getValueAt(int rowIn, int col) {
-		QuoteRow row = m_rows.get( rowIn);
+		EventHistory row = m_rows.get( rowIn);
 		switch( col) {
 			case 0: return row.formattedTime();
-			case 1: return row.open();
-			case 2: return row.high();
-			case 3: return row.low();
-			case 4: return row.close();
-			case 5: return row.volume();
-			case 6: return row.wap();
+			case 1: return row.open;
+			case 2: return row.high;
+			case 3: return row.low;
+			case 4: return row.close;
+			case 5: return row.volume;
+			case 6: return row.wap;
 			default: return null;
 		}
 	}

@@ -41,11 +41,11 @@ import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Instrument;
 import com.ib.controller.ScanCode;
 import com.onenow.execution.Contract;
-import com.onenow.execution.QuoteRow;
 import com.onenow.execution.ApiController.IDeepMktDataHandler;
 import com.onenow.execution.ApiController.IHistoricalDataHandler;
 import com.onenow.execution.ApiController.IRealTimeBarHandler;
 import com.onenow.execution.ApiController.IScannerHandler;
+import com.onenow.io.EventHistory;
 
 public class MarketDataPanel extends JPanel {
 	private final Contract m_contract = new Contract();
@@ -389,7 +389,7 @@ public class MarketDataPanel extends JPanel {
 	// Pablo made public
 	public static class BarResultsPanel extends NewTabPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
 		final BarModel m_model = new BarModel();
-		final ArrayList<QuoteRow> m_rows = new ArrayList<QuoteRow>();
+		final ArrayList<EventHistory> m_rows = new ArrayList<EventHistory>();
 		final boolean m_historical;
 		final Chart m_chart = new Chart( m_rows);
 				
@@ -426,7 +426,7 @@ public class MarketDataPanel extends JPanel {
 			}
 		}
 
-		@Override public void historicalData(QuoteRow bar, boolean hasGaps) {
+		@Override public void historicalData(EventHistory bar, boolean hasGaps) {
 			m_rows.add( bar);
 		}
 		
@@ -434,7 +434,7 @@ public class MarketDataPanel extends JPanel {
 			fire();
 		}
 
-		@Override public void realtimeBar(QuoteRow bar) {
+		@Override public void realtimeBar(EventHistory bar) {
 			m_rows.add( bar); 
 			fire();
 		}
@@ -471,15 +471,15 @@ public class MarketDataPanel extends JPanel {
 			}
 
 			@Override public Object getValueAt(int rowIn, int col) {
-				QuoteRow row = m_rows.get( rowIn);
+				EventHistory row = m_rows.get( rowIn);
 				switch( col) {
 					case 0: return row.formattedTime();
-					case 1: return row.open();
-					case 2: return row.high();
-					case 3: return row.low();
-					case 4: return row.close();
-					case 5: return row.volume();
-					case 6: return row.wap();
+					case 1: return row.open;
+					case 2: return row.high;
+					case 3: return row.low;
+					case 4: return row.close;
+					case 5: return row.volume;
+					case 6: return row.wap;
 					default: return null;
 				}
 			}

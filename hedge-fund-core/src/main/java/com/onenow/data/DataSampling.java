@@ -10,7 +10,7 @@ public class DataSampling {
 	public DataSampling() {
 	}	
 	
-	public String getGroupByTimeString(SamplingRate sampling) {
+	public static String getGroupByTimeString(SamplingRate sampling) {
 		
 		String dbSamplingRate = "15m";
 
@@ -79,7 +79,7 @@ public class DataSampling {
 	
 	
 	// call multiple times to get all
-	public List<SamplingRate> getList(SamplingRate rate) { 
+	public static List<SamplingRate> getList(SamplingRate rate) { 
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		if(rate.equals(SamplingRate.UHFREQ)) {
 			list.addAll(getUHFSampling());
@@ -99,7 +99,7 @@ public class DataSampling {
 		return list;
 	}
 	
-	public List<SamplingRate> getTradingOptions() {
+	public static List<SamplingRate> getTradingOptions() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		list.add(SamplingRate.UHFREQ);
 		list.add(SamplingRate.HIFREQ);
@@ -108,35 +108,35 @@ public class DataSampling {
 		list.add(SamplingRate.TREND);
 		return list;
 	}
-	private List<SamplingRate> getUHFSampling() {
+	private static List<SamplingRate> getUHFSampling() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		list.add(SamplingRate.UHFSHORT);
 		list.add(SamplingRate.UHFMEDIUM);
 		list.add(SamplingRate.UHFLONG);					
 		return list;
 	}
-	private List<SamplingRate> getHIFREQSampling() {
+	private static List<SamplingRate> getHIFREQSampling() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		list.add(SamplingRate.HFSHORT);
 		list.add(SamplingRate.HFMEDIUM);
 		list.add(SamplingRate.HFLONG);					
 		return list;
 	}
-	private List<SamplingRate> getScalpSampling() {
+	private static List<SamplingRate> getScalpSampling() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		list.add(SamplingRate.SCALPSHORT);
 		list.add(SamplingRate.SCALPMEDIUM);
 		list.add(SamplingRate.SCALPLONG);					
 		return list;
 	}
-	private List<SamplingRate> getSwingSampling() {
+	private static List<SamplingRate> getSwingSampling() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		list.add(SamplingRate.SWINGSHORT);
 		list.add(SamplingRate.SWINGMEDIUM);
 		list.add(SamplingRate.SWINGLONG);								
 		return list;
 	}
-	private List<SamplingRate> getTrendSampling() {
+	private static List<SamplingRate> getTrendSampling() {
 		List<SamplingRate> list = new ArrayList<SamplingRate>();
 		list.add(SamplingRate.TRENDSHORT);
 		list.add(SamplingRate.TRENDMEDIUM);

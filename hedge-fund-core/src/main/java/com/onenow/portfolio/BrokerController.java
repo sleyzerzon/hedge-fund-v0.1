@@ -33,7 +33,7 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.execution.Contract;
-import com.onenow.execution.QuoteRow;
+import com.onenow.io.EventHistory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -838,7 +838,7 @@ public class BrokerController implements EWrapper {
 
 	// ----------------------------------------- Historical data handling ----------------------------------------
 	public interface IHistoricalDataHandler {
-		void historicalData(QuoteRow bar, boolean hasGaps);
+		void historicalData(EventHistory bar, boolean hasGaps);
 		void historicalDataEnd();
 	}
 
@@ -880,7 +880,7 @@ public class BrokerController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				QuoteRow bar = new QuoteRow(reqId, longDate, high, low, open, close, wap, volume, count);
+				EventHistory bar = new EventHistory(reqId, longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps); // *********** HERE 
 			}
 		}
@@ -890,7 +890,7 @@ public class BrokerController implements EWrapper {
 
 	//----------------------------------------- Real-time bars --------------------------------------
 	public interface IRealTimeBarHandler {
-		void realtimeBar(QuoteRow bar); // time is in seconds since epoch
+		void realtimeBar(EventHistory bar); // time is in seconds since epoch
 	}
 
     public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, 
@@ -914,7 +914,7 @@ public class BrokerController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			QuoteRow bar = new QuoteRow(reqId, time, high, low, open, close, wap, volume, count);
+			EventHistory bar = new EventHistory(reqId, time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

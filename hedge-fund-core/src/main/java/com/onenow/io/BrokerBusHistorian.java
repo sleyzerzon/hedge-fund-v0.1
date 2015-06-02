@@ -25,7 +25,7 @@ public class BrokerBusHistorian {
 	 * @param obj
 	 */
 	// TODO: use specific object type
-	private void write(EventHistory obj) {
+	public void write(EventHistory obj) {
 		BusSystem.write(kinesis, StreamName.HISTORIAN, obj);
 	}
 }
