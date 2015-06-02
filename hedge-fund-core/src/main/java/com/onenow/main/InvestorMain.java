@@ -6,11 +6,13 @@ import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallSt;
 import com.onenow.portfolio.Portfolio;
+import com.onenow.portfolio.PortfolioFactory;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
 
 /** 
- * Gather complete accurate historical market data
+ * Makes investment choices in real-time
+ * Also provides real-time and historical data as a service to the back-end
  * @param args
  */
 
@@ -25,7 +27,7 @@ public class InvestorMain {
 	    // choose relevant timeframe
 	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
 
-	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.REALTIME, 
+	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.PRIMARY, 
 	    													marketPortfolio, 
 	    													new BusWallSt()); 
 			    
@@ -37,5 +39,9 @@ public class InvestorMain {
     											toDashedDate);						
 		// register once: get all real-time quotes
 		broker.getLiveQuotes(); 
+		
+//		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
+//		portfolioFactory.launch();							
+
 	}
 }

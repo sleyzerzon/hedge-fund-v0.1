@@ -29,6 +29,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.onenow.data.DynamoDBUtils;
+import com.onenow.util.FlexibleLogger;
 import com.onenow.util.SampleUtils;
 import com.onenow.web.GetCountsServlet;
 
@@ -45,6 +46,9 @@ public class WebServerMain {
      * @throws Exception Error starting the web server.
      */
     public static void main(String[] args) throws Exception {
+    	
+		FlexibleLogger.setup();
+    	
         if (args.length != 4) {
             System.err.println("Usage: " + WebServerMain.class
                     + " <port number> <directory for static content> <DynamoDB table name> <region>");

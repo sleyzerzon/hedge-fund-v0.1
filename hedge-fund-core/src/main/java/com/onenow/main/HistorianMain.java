@@ -17,6 +17,10 @@ import com.onenow.util.WatchLog;
 
 /** 
  * Gather complete accurate historical market data
+ * L0: investor application memory
+ * L1: ElastiCache
+ * L2: Time Series Database
+ * L3: 3rd party database via API
  * @param args
  */
 

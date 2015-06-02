@@ -19,7 +19,7 @@ public class BusProcessingFactory {
         return recordProcessor;
 	}
 
-	public static IRecordProcessorFactory recordProcessorEventRT() {
+	public static IRecordProcessorFactory eventProcessorFactory() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventHistoryRT>(EventHistoryRT.class);
 

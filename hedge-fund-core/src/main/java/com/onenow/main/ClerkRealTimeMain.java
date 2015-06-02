@@ -14,16 +14,19 @@ import com.onenow.io.EventHistory;
 import com.onenow.io.EventHistoryRT;
 import com.onenow.io.Kinesis;
 import com.onenow.io.TSDB;
+import com.onenow.util.FlexibleLogger;
 import com.onenow.util.WatchLog;
 
 public class ClerkRealTimeMain {
 
 	public static void main(String[] args) {
 
+		FlexibleLogger.setup();
+
 		Kinesis kinesis = BusSystem.getKinesis();
 		
 		StreamName streamName = StreamName.REALTIME;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.recordProcessorEventRT();
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.eventProcessorFactory();
 
 		BusSystem.read(kinesis, streamName, recordProcessorFactory);
 		

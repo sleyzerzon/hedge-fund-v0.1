@@ -19,6 +19,7 @@ import com.onenow.io.Lookup;
 import com.onenow.io.TSDB;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
+import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
 
 public class ChartistMain {
@@ -33,10 +34,12 @@ public class ChartistMain {
 	 */
 	public static void main(String[] args) {
 
+		FlexibleLogger.setup();
+
 		Kinesis kinesis = BusSystem.getKinesis();
 		
 		StreamName streamName = StreamName.REALTIME;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.recordProcessorEventRT();
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.eventProcessorFactory();
 
 		BusSystem.read(kinesis, streamName, recordProcessorFactory);
 		

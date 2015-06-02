@@ -1,5 +1,7 @@
 package com.onenow.main;
 
+import java.util.logging.Level;
+
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
@@ -9,11 +11,17 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
 import com.onenow.io.S3;
 import com.onenow.io.SQS;
+import com.onenow.util.FlexibleLogger;
+import com.onenow.util.WatchLog;
 
 public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 
+		FlexibleLogger.setup();
+		
+		WatchLog.addToLog(Level.INFO, "checking");
+		
 		// S3 storage = new S3();
 		
 		// SQS q = new SQS(Regions.US_EAST_1);

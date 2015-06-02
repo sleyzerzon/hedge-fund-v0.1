@@ -44,7 +44,6 @@ public class WatchLog {
 		ipLog = "[" + ipLog + "]";
 				
 		String caller = new Exception().getStackTrace()[1].getClassName();
-		// String calleeClassName = new Exception().getStackTrace()[0].getClassName();
 		
 		s = " " + ipLog + "\t" + caller + "     "+ message;
 

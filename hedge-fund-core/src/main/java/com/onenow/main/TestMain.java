@@ -5,10 +5,13 @@ import com.onenow.test.TestBroker;
 import com.onenow.test.TestDatabase;
 import com.onenow.test.TestFinance;
 import com.onenow.test.TestUtil;
+import com.onenow.util.FlexibleLogger;
 
 public class TestMain {
 
 	public static void main(String[] args) {
+
+		FlexibleLogger.setup();
 
 		DatabaseSystemActivityImpl logDB = new DatabaseSystemActivityImpl();
 

@@ -39,8 +39,11 @@ public class FlexibleLogger {
 		// set the LogLevel to Info, severe, warning and info will be written
 	    // set the LogLevel to Severe, only severe Messages will be written
 	    logger.setLevel(level);
-	    fileTxt = new FileHandler(WatchLog.getLogPath()+"HedgeFundLog.txt");
-	    fileHTML = new FileHandler(WatchLog.getLogPath()+"HedgeFundLog.html");
+	    
+	    String base = WatchLog.getLogPath() + new Exception().getStackTrace()[2].getClassName()+"Log.";
+	    System.out.println("Will log to: " + base + "*");
+	    fileTxt = new FileHandler(base+"txt");
+	    fileHTML = new FileHandler(base+"html");
 	
 	    // create a TXT formatter
 	    formatterTxt = new SimpleFormatter();

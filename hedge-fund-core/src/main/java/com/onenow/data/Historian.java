@@ -26,8 +26,6 @@ public class Historian {
 	private HashMap<String, QuoteHistory>		history;						// price history from L3
 
 	private TSDB 								TSDB = new TSDB();				// database
-	private Lookup 								lookup = new Lookup();			// key
-	private TimeParser							parseDate = new TimeParser();
 
 	private HistorianConfig config;
 	
@@ -71,7 +69,7 @@ public class Historian {
 		// See if data already in L2
 		// readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> prices = TSDB.readPriceFromDB(		inv, config.tradeType, config.sampling, 
-														parseDate.getDashedDateMinus(toDashedDate, 1), toDashedDate, 
+														TimeParser.getDashedDateMinus(toDashedDate, 1), toDashedDate, 
 														config.source, config.timing);
 
 		// get the history reference for the specific investment 
@@ -88,9 +86,9 @@ public class Historian {
 		// readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if (prices.size()<50) {					
 			paceHistoricalQuery(); 
-			broker.readHistoricalQuotes(	inv, parseDate.getClose(parseDate.getUndashedDate(parseDate.getDashedDateMinus(toDashedDate, 1))), 
+			broker.readHistoricalQuotes(	inv, TimeParser.getClose(TimeParser.getUndashedDate(TimeParser.getDashedDateMinus(toDashedDate, 1))), 
 											config, invHist); 
-			lastHistQuery = parseDate.getTimestampNow();	
+			lastHistQuery = TimeParser.getTimestampNow();	
 		} else {
 			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L2 HIT:" + inv.toString() + "\n\n");
 		}
@@ -107,7 +105,7 @@ public class Historian {
 	private QuoteHistory lookupInvHistory(	Investment inv, TradeType tradeType,
 											InvDataSource source, InvDataTiming timing) {
 		
-		String key = lookup.getInvestmentKey(	inv, tradeType,
+		String key = Lookup.getInvestmentKey(	inv, tradeType,
 												source, timing);
 
 		QuoteHistory invHist = history.get(key);
@@ -169,7 +167,7 @@ public class Historian {
 	private long getSleepTime() {
 		long sleepTime = 0;
 
-		long elapsed = parseDate.getElapsedStamps(lastHistQuery);
+		long elapsed = TimeParser.getElapsedStamps(lastHistQuery);
 		sleepTime = 12000-elapsed; // 12s target
 		if(sleepTime<0) {
 			sleepTime = 0;
@@ -178,8 +176,5 @@ public class Historian {
 		return sleepTime;
 	}
 
-	
-	// TEST
-	
-	// PRINT
+
 }
