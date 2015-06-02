@@ -2,6 +2,7 @@ package com.onenow.io;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
@@ -9,6 +10,12 @@ import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.model.Record;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.TradeType;
+import com.onenow.instrument.Investment;
+import com.onenow.main.TSDBMain;
+import com.onenow.util.WatchLog;
 
 public class BusRecordProcessor<T> implements IRecordProcessor {
 
@@ -44,6 +51,12 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 	}
 
+	@Override
+	public void shutdown(IRecordProcessorCheckpointer checkpointer, ShutdownReason reason) {
+
+		System.out.println("Shutting down record processor for shard: " + kinesisShardId);
+	}
+
 	// TODO: handle NON-STRING records (i.e. EventHistory)
 	@Override
 	public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
@@ -56,7 +69,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
             try {
                 
             	record = JSON.readValue(r.getData().array(), recordType);
-            	System.out.println("******************************** RECORD: " + record.toString());
+            	handleByRecordType(record);
                 
             } catch (IOException e) {
             	String s = "Skipping record. Unable to parse record into HttpReferrerPair. Partition Key: "
@@ -69,10 +82,24 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
                 
 	}
 
-	@Override
-	public void shutdown(IRecordProcessorCheckpointer checkpointer, ShutdownReason reason) {
+	private void handleByRecordType(T record) {
+		
+		System.out.println("******************************** RECORD: " + record.toString());
+		
+		if(recordType.equals(String.class)) {
+			
+		}
+		
+		if(recordType.equals(EventHistory.class)) {
+			
+		}
 
-		System.out.println("Shutting down record processor for shard: " + kinesisShardId);
+		if(recordType.equals(EventHistoryRT.class)) {
+			
+			EventHistoryRT event = (EventHistoryRT) record;
+			TSDBMain.writeRTtoL2(event);
+		}
+
 	}
-
+	
 }

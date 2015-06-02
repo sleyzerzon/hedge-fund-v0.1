@@ -96,8 +96,8 @@ public class PriceSizeCache {
 			InvDataSource source = event.source;
 			InvDataTiming timing = event.timing;
 			Double price = event.price;
-			int size = event.size;
-			writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
+//			int size = event.size;
+//			writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
 
 			// TODO: move update the charts to back-end service
 			for(SamplingRate samplr:sampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
@@ -113,36 +113,6 @@ public class PriceSizeCache {
 		}
 	}
 
-	private void writeRTtoL1(Long time, Investment inv, TradeType tradeType,
-			InvDataSource source, InvDataTiming timing, Double price, int size) {
-		
-		boolean success = false;
-		boolean retry = false;
-		// TODO: handle as a transaction, both price+size write or nothing
-		while(!success) {
-			try {
-				success = true;
-				TSDB.writePrice(	time, inv, tradeType, price,
-										source, timing);				
-				TSDB.writeSize(	time, inv, tradeType, size,			
-										source, timing);
-			} catch (Exception e) {
-				success = false;
-				retry = true;
-				String log = "TSDB RT TRANSACTION WRITE FAILED: " + time + " " + inv.toString();
-				WatchLog.addToLog(Level.SEVERE, log);
-
-				// e.printStackTrace();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {}
-			}
-		}
-		if(retry) {
-			String log = "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + time + " " + inv.toString();
-			WatchLog.addToLog(Level.INFO, log);
-		}
-	}
 
 	
 	// READ PRICE

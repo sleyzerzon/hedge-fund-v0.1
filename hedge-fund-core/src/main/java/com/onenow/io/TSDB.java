@@ -25,9 +25,9 @@ import com.onenow.util.WatchLog;
 
 public class TSDB {
 	
-	private InfluxDB DB;
-	private Lookup dbLookup = new Lookup();
-	private DataSampling dataSampling = new DataSampling();
+	private static InfluxDB influxDB;
+	private static Lookup dbLookup = new Lookup();
+	private static DataSampling dataSampling = new DataSampling();
 	
 	/**
 	 * Default constructor connects to database
@@ -46,8 +46,8 @@ private void dbConnect() {
 			tryToConnect = false;
 			System.out.println("\n" + "CONNECTING TO TSDB...");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
-			setDB(InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
-											tsdbService.user, tsdbService.pass));
+			influxDB = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
+													tsdbService.user, tsdbService.pass);
 		} catch (Exception e) {
 			tryToConnect = true;
 			System.out.println("\n" + "...COULD NOT CONNECT TO TSDB: ");
@@ -64,8 +64,8 @@ private void dbConnect() {
 
 private void dbCreate() {
 	try {
-		getDB().createDatabase(DBname.PRICE.toString());
-		getDB().createDatabase(DBname.SIZE.toString());
+		influxDB.createDatabase(DBname.PRICE.toString());
+		influxDB.createDatabase(DBname.SIZE.toString());
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
 		// e.printStackTrace();
@@ -73,7 +73,7 @@ private void dbCreate() {
 }
 
 // PRICE
-public void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
+public static void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
 	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
@@ -82,7 +82,7 @@ public void writePrice(Long time, Investment inv, TradeType tradeType, Double pr
 	String log = "TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + serie;
 	WatchLog.add(Level.INFO, log, "\n", "");
 
-	getDB().write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
 public List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
@@ -145,7 +145,7 @@ public List<Serie> queryPrice(String dbName, String serieName, SamplingRate samp
 	
 	try {
 		System.out.println("#PRICE# QUERY: " + query);
-		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 		//		e.printStackTrace();  some time series don't exist or have data
 	}
@@ -249,7 +249,7 @@ private String extractQueryString(Map<String, Object> row, String col) {
 
 
 // SIZE
-public void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
+public static void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
 	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
@@ -258,7 +258,7 @@ public void writeSize(Long time, Investment inv, TradeType tradeType, Integer si
 	String log = "TSDB WRITE SIZE: " + DBname.SIZE.toString() + " " + serie;
 	WatchLog.add(Level.INFO, log, "\n", "");
 
-	getDB().write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+	influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
 public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
@@ -316,7 +316,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 					
 	try {
 		System.out.println("#SIZE# QUERY: " + query);
-		series = getDB().query(	dbName, query, TimeUnit.MILLISECONDS);
+		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data
 	}
@@ -390,22 +390,5 @@ private List<Integer> sizeSeriesToInts(List<Serie> series) {
 	return sizes;
 }
 
-
-	// PRIVATE
-
-
-	// TEST
-	
-	
-	// PRINT
-	
-	// SET GET
-	private InfluxDB getDB() {
-		return DB;
-	}
-	
-	private void setDB(InfluxDB dB) {
-		DB = dB;
-	}	
 	
 }

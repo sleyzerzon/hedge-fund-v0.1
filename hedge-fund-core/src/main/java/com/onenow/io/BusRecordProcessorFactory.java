@@ -20,6 +20,6 @@ public class BusRecordProcessorFactory<T> implements IRecordProcessorFactory {
 	@Override
 	public IRecordProcessor createProcessor() {
 		
-		return new BusRecordProcessor(recordType);
+		return new BusRecordProcessor<>(recordType);
 	}
 }

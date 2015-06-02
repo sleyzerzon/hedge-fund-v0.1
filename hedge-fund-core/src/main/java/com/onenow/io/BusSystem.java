@@ -78,7 +78,7 @@ public class BusSystem {
 		
 		// defaults to read interactive brokers
 		StreamName streamName = StreamName.ANALYST;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.ibRecordProcessor();
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.recordProcessorString();
 		
 		return read(kinesis, streamName, recordProcessorFactory);
 		

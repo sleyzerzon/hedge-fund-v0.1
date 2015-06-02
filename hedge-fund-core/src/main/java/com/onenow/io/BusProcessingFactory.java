@@ -12,16 +12,16 @@ public class BusProcessingFactory {
 		
 	}
 	
-	public static IRecordProcessorFactory ibRecordProcessor() {
+	public static IRecordProcessorFactory recordProcessorString() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<String>(String.class);
 
         return recordProcessor;
 	}
 
-	public static IRecordProcessorFactory rtEventProcessor() {
+	public static IRecordProcessorFactory recordProcessorEventRT() {
 		
-        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory(EventHistoryRT.class);
+        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventHistoryRT>(EventHistoryRT.class);
 
         return recordProcessor;
 	}
@@ -39,7 +39,7 @@ public class BusProcessingFactory {
     // Update the counts every 1 second
     private static final int COMPUTE_INTERVAL_IN_MILLIS = 1000;
 
-	public static IRecordProcessorFactory dynamoRecordProcessor(String tableName, DynamoDBCountPersister persister) {
+	public static IRecordProcessorFactory recordProcessorDynamo(String tableName, DynamoDBCountPersister persister) {
 		
         IRecordProcessorFactory recordProcessor =
                 new CountingRecordProcessorFactory<HttpReferrerPair>(HttpReferrerPair.class,
