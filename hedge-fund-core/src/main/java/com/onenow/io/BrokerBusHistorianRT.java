@@ -9,7 +9,7 @@ public class BrokerBusHistorianRT {
 	private static Integer numShards = 1;
 	
 	public BrokerBusHistorianRT() {
-		kinesis.createStreamIfNotExists(StreamName.HISTORIANRT, numShards); 
+		kinesis.createStreamIfNotExists(StreamName.REALTIME, numShards); 
 	}
 
 	/** Writes string
@@ -17,7 +17,7 @@ public class BrokerBusHistorianRT {
 	 * @param s
 	 */
 	static public void write(String s) {
-		BusSystem.write(kinesis, StreamName.HISTORIANRT, s);		
+		BusSystem.write(kinesis, StreamName.REALTIME, s);		
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class BrokerBusHistorianRT {
 	 * @param event
 	 */
 	static public void write(EventHistoryRT event) {
-		BusSystem.write(kinesis, StreamName.HISTORIANRT, event);		
+		BusSystem.write(kinesis, StreamName.REALTIME, event);		
 	}
 
 }

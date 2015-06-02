@@ -9,7 +9,7 @@ public class BrokerBusHistorian {
 	private static Integer numShards = 1;
 	
 	public BrokerBusHistorian() {
-		kinesis.createStreamIfNotExists(StreamName.HISTORIAN, numShards); 
+		kinesis.createStreamIfNotExists(StreamName.HISTORY, numShards); 
 	}
 
 	/** 
@@ -17,7 +17,7 @@ public class BrokerBusHistorian {
 	 * @param s
 	 */
 	private void write(String s) {
-		BusSystem.write(kinesis, StreamName.HISTORIAN, s);
+		BusSystem.write(kinesis, StreamName.HISTORY, s);
 	}
 
 	/**
@@ -26,6 +26,6 @@ public class BrokerBusHistorian {
 	 */
 	// TODO: use specific object type
 	public void write(EventHistory obj) {
-		BusSystem.write(kinesis, StreamName.HISTORIAN, obj);
+		BusSystem.write(kinesis, StreamName.HISTORY, obj);
 	}
 }

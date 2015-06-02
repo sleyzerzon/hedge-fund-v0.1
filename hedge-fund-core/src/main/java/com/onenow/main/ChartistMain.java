@@ -13,6 +13,7 @@ import com.onenow.data.DataSampling;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
+import com.onenow.io.EventHistoryRT;
 import com.onenow.io.Kinesis;
 import com.onenow.io.Lookup;
 import com.onenow.io.TSDB;
@@ -22,9 +23,9 @@ import com.onenow.util.TimeParser;
 
 public class ChartistMain {
 
-	private HashMap<String, Chart>		charts = new HashMap<String, Chart>();			// price history in chart format from L1
+	private static HashMap<String, Chart>		charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
-	private TSDB 						TSDB = new TSDB();								// database		
+	private static TSDB 						TSDB = new TSDB();								// database		
 	
 	/**
 	 * Pre-fetches to L1 cache the chart analysis, based on the latest Real-Time data 
@@ -42,19 +43,16 @@ public class ChartistMain {
 		// TODO: look at chart L0 misses by the Investor?
 
 	}
-
 	
-	private void prefetchCharts(Investment inv, TradeType tradeType,
-			InvDataSource source, InvDataTiming timing) {
-		// TODO: move update the charts to back-end service
+	public static void prefetchCharts(EventHistoryRT event) {
+		
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			
 			System.out.println("\n" + "***** PRE-FETCH SAMPLING ***** " + samplr);
-			// use miss function to force update of charts
 			String today = TimeParser.getDashedToday();
-			readChartToL0FromRTL1(	inv, tradeType, samplr,
+			readChartToL1FromRTL2(	event.inv, event.tradeType, samplr,
 									TimeParser.getDashedDateMinus(today, 1), today, // TODO: From/To Date actual
-									source, timing);
+									event.source, event.timing);
 			System.out.println("\n");
 		}
 	}
@@ -71,7 +69,7 @@ public class ChartistMain {
 	 * @param timing
 	 * @return
 	 */
-	private Chart readChartToL0FromRTL1(	Investment inv, TradeType tradeType, SamplingRate samplingRate, 
+	private static Chart readChartToL1FromRTL2(	Investment inv, TradeType tradeType, SamplingRate samplingRate, 
 											String fromDate, String toDate,
 											InvDataSource source, InvDataTiming timing) {		
 		Chart chart = new Chart();
@@ -93,7 +91,9 @@ public class ChartistMain {
 					fromDate, toDate,
 					source, timing);
 
-			charts.put(key, chart);				
+			charts.put(key, chart);		
+			
+			// TODO: Write to ElastiCache
 						
 		} catch (Exception e) {
 			e.printStackTrace();

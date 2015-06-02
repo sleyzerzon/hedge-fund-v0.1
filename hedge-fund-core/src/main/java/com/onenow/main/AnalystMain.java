@@ -13,10 +13,6 @@ import com.onenow.io.SQS;
 public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
-		
-		Kinesis kinesis = BusSystem.getKinesis();
-		
-		BusSystem.readFromAnalystBus(kinesis);
 
 		// S3 storage = new S3();
 		

@@ -11,11 +11,11 @@ public class BrokerBusAnalyst {
 		
 		Kinesis kinesis = BusSystem.getKinesis();
 		
-		kinesis.createStreamIfNotExists(StreamName.ANALYST, numShards); 
+		kinesis.createStreamIfNotExists(StreamName.REALTIME, numShards); 
 
 		String s = "WRITE ";
 		
-		BusSystem.write(kinesis, StreamName.ANALYST, s);
+		BusSystem.write(kinesis, StreamName.REALTIME, s);
 
 	}
 	

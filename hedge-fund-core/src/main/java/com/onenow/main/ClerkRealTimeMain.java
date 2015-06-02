@@ -16,7 +16,7 @@ import com.onenow.io.Kinesis;
 import com.onenow.io.TSDB;
 import com.onenow.util.WatchLog;
 
-public class TSDBWriteMain {
+public class ClerkRealTimeMain {
 
 	public static void main(String[] args) {
 
@@ -30,12 +30,13 @@ public class TSDBWriteMain {
 	}
 
 
-	public static void writeRTtoL2(EventHistory event) {
+	public static void writeHistoryToL2(EventHistory event) {
 
+		
 		
 	}
 	
-	public static void writeRTtoL2(EventHistoryRT event) {
+	public static void writeHistoryRTtoL2(EventHistoryRT event) {
 	
 		boolean success = false;
 		boolean retry = false;

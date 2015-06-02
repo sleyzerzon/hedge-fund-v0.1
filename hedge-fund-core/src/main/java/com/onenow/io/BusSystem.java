@@ -73,16 +73,6 @@ public class BusSystem {
 		System.out.println("&&&&&&&&&&&&& WROTE: " + objToSend.toString());
 	}
 	
-	
-	public static boolean readFromAnalystBus(Kinesis kinesis) {
-		
-		// defaults to read interactive brokers
-		StreamName streamName = StreamName.ANALYST;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.recordProcessorString();
-		
-		return read(kinesis, streamName, recordProcessorFactory);
-		
-	}
 
 	public static boolean read(Kinesis kinesis, StreamName streamName, IRecordProcessorFactory recordProcessor) {
 

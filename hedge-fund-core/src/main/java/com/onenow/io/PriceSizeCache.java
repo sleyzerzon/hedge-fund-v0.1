@@ -79,20 +79,13 @@ public class PriceSizeCache {
 		if(	broker.getMode().equals(BrokerMode.PRIMARY) ||
 			broker.getMode().equals(BrokerMode.STANDBY)) {
 						
-			// TODO: SQS/SNS ORCHESTRATION
+			// TODO: SQS/SNS/ELASTICACHE ORCHESTRATION
 
 			// Write to Real-Time datastream
 			BrokerBusHistorianRT historyRTBroker = new BrokerBusHistorianRT();
 			historyRTBroker.write(event);
 			
-			// TODO: move direct invocation to write RT to L1RT to back-end service
-			Long time = event.time; 
-			Investment inv = event.inv; 
-			TradeType tradeType = event.tradeType; 		
-			InvDataSource source = event.source;
-			InvDataTiming timing = event.timing;
-			Double price = event.price;
-//			int size = event.size;
+			// moved to Chartist
 //			writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
 
 			// moved to Chartist

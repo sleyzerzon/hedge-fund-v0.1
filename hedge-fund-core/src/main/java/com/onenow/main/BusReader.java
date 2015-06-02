@@ -8,9 +8,6 @@ public class BusReader {
 
 	public static void main(String[] args) {
 		
-		Kinesis kinesis = BusSystem.getKinesis();
-				
-		BusSystem.readFromAnalystBus(kinesis);
 
 	}
 

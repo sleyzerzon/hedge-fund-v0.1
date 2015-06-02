@@ -55,7 +55,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 
 		quoteRows.add(row); 
 		
-		// Write to Real-Time datastream
+		// Write to history data stream
 		BrokerBusHistorian histroyBroker = new BrokerBusHistorian();
 		histroyBroker.write(row);
 

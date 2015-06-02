@@ -14,7 +14,8 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.main.TSDBWriteMain;
+import com.onenow.main.ChartistMain;
+import com.onenow.main.ClerkRealTimeMain;
 import com.onenow.util.WatchLog;
 
 public class BusRecordProcessor<T> implements IRecordProcessor {
@@ -82,6 +83,10 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
                 
 	}
 
+	/** 
+	 * Handle records in Kinesis, in some cases with multiple consumers
+	 * @param record
+	 */
 	private void handleByRecordType(T record) {
 		
 		System.out.println("******************************** RECORD: " + record.toString());
@@ -92,14 +97,13 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 		if(recordType.equals(EventHistory.class)) {
 			EventHistory event = (EventHistory) record;
-			TSDBWriteMain.writeRTtoL2(event);
-			
+			ClerkRealTimeMain.writeHistoryToL2(event);
 		}
 
-		if(recordType.equals(EventHistoryRT.class)) {
-			
+		if(recordType.equals(EventHistoryRT.class)) {			
 			EventHistoryRT event = (EventHistoryRT) record;
-			TSDBWriteMain.writeRTtoL2(event);
+			ChartistMain.prefetchCharts(event);
+			ClerkRealTimeMain.writeHistoryRTtoL2(event);
 		}
 
 	}
