@@ -4,7 +4,12 @@ import java.util.ArrayList;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
+import com.onenow.data.MarketPrice;
+import com.onenow.instrument.Investment;
 import com.onenow.io.BrokerBusHistorian;
 import com.onenow.io.BrokerBusHistorianRT;
 import com.onenow.io.EventHistory;
@@ -24,9 +29,21 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 
 	public ArrayList<EventHistory> quoteRows = new ArrayList<EventHistory>();
 	
+	private Investment investment;
+	private TradeType tradeType;
+	private InvDataSource source;
+	private InvDataTiming timing;
+	
 	private Channel channel;
 
 	public QuoteHistory (){
+	}
+	
+	public QuoteHistory(Investment inv, TradeType tradeType, InvDataSource source, InvDataTiming timing) {
+		this.investment = inv;
+		this.tradeType = tradeType;
+		this.source = source;
+		this.timing = timing;
 	}
 	
 	public QuoteHistory (Channel channel) {
@@ -55,14 +72,20 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 
 		quoteRows.add(row); 
 		
-		// Write to history data stream
-		BrokerBusHistorian histroyBroker = new BrokerBusHistorian();
-		histroyBroker.write(row);
-
 		handleRow(row);
 	}
 
 	private void handleRow(EventHistory row) {
+		
+		// Clarify provenance
+		row.investment = investment;
+		row.tradeType = tradeType;
+		row.source = source;
+		row.timing = timing;
+				
+		// Write to history data stream
+		BrokerBusHistorian histroyBroker = new BrokerBusHistorian();
+		histroyBroker.write(row);
 
 		String log = "History " + row.toString();
 		WatchLog.add(Level.INFO, log, "", "");

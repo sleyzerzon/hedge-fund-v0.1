@@ -19,6 +19,7 @@ import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
  *
  */
 public class QuoteSingle extends TopMktDataAdapter {
+	
 	AbstractTableModel m_model;
 	String m_description;
 	double m_bid;
@@ -30,7 +31,7 @@ public class QuoteSingle extends TopMktDataAdapter {
 	double m_close;
 	int m_volume;
 	boolean m_frozen;
-	
+	// added:
 	Investment investment;
 	MarketPrice marketPrice;
 	
@@ -42,8 +43,8 @@ public class QuoteSingle extends TopMktDataAdapter {
 		m_model = model;
 		m_description = description;
 		
-		setInvestment(inv);
-		setMarketPrice(marketPrice);
+		this.investment = inv;
+		this.marketPrice = marketPrice;
 	}
 	
 	public String change() {
@@ -55,23 +56,23 @@ public class QuoteSingle extends TopMktDataAdapter {
 		switch( tickType) {
 			case BID:
 				m_bid = price;
-//				System.out.println("Bid " + m_bid);
-				getMarketPrice().writePriceNotRealTime(getInvestment(), m_bid, TradeType.SELL.toString());
+				// System.out.println("Bid " + m_bid);
+				marketPrice.writePriceNotRealTime(investment, m_bid, TradeType.SELL.toString());
 				break;
 			case ASK:
 				m_ask = price;
-//				System.out.println("Ask " + m_ask);
-				getMarketPrice().writePriceNotRealTime(getInvestment(), m_ask, TradeType.BUY.toString());
+				// System.out.println("Ask " + m_ask);
+				marketPrice.writePriceNotRealTime(investment, m_ask, TradeType.BUY.toString());
 				break;
 			case LAST:
 				m_last = price;
-//				System.out.println("Last " + m_last);
-				getMarketPrice().writePriceNotRealTime(getInvestment(), m_last, TradeType.TRADED.toString());
+				// System.out.println("Last " + m_last);
+				marketPrice.writePriceNotRealTime(investment, m_last, TradeType.TRADED.toString());
 				break;
 			case CLOSE:
 				m_close = price;
-//				System.out.println("Close " + m_close);
-				getMarketPrice().writePriceNotRealTime(getInvestment(), m_close, TradeType.CLOSE.toString());
+				// System.out.println("Close " + m_close);
+				marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
 				break;
 			default: break;	
 		}
@@ -82,18 +83,18 @@ public class QuoteSingle extends TopMktDataAdapter {
 		switch( tickType) {
 			case BID_SIZE:
 				m_bidSize = size;
-				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_bidSize, InvDataType.BIDSIZE.toString());
-//				System.out.println("Bid size " + m_bidSize);
+				marketPrice.writeSizeNotRealTime(investment, m_bidSize, InvDataType.BIDSIZE.toString());
+				// System.out.println("Bid size " + m_bidSize);
 				break;
 			case ASK_SIZE:
 				m_askSize = size;
-				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_askSize, InvDataType.ASKSIZE.toString());
-//				System.out.println("Ask size " + m_askSize);
+				marketPrice.writeSizeNotRealTime(investment, m_askSize, InvDataType.ASKSIZE.toString());
+				// System.out.println("Ask size " + m_askSize);
 				break;
 			case VOLUME:
 				m_volume = size;
-				getMarketPrice().writeSizeNotRealTime(getInvestment(), m_volume, InvDataType.VOLUME.toString());
-//				System.out.println("Volume size " + m_volume);
+				marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
+				// System.out.println("Volume size " + m_volume);
 				break;
             default: break; 
 		}
@@ -109,8 +110,7 @@ public class QuoteSingle extends TopMktDataAdapter {
 		switch( tickType) {
 			case LAST_TIMESTAMP:
 				m_lastTime = Long.parseLong( value) * 1000;
-//				getMarketPrice().setLastTime(getInvestment(), m_lastTime);
-//				System.out.println("Last time " + m_lastTime);
+				// System.out.println("Last time " + m_lastTime);
 				break;
 			case AVG_VOLUME:
 				System.out.println("AVG_VOLUME " + value); // not for indices
@@ -127,9 +127,8 @@ public class QuoteSingle extends TopMktDataAdapter {
 			case RT_VOLUME:
 				// the time-stamp is in UTC time zone
 				System.out.println("\n" + "RT_VOLUME " + value); 
-				parseAndWriteRealTime(getInvestment(), value);
-				// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
-				// InvestmentStock inv=new InvestmentStock(new Underlying("SPX"));
+				parseAndWriteRealTime(investment, value);
+				// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
 				break;
 			case VOLUME_RATE:
 				System.out.println("VOLUME_RATE " + value); // not for indices
@@ -201,9 +200,9 @@ public class QuoteSingle extends TopMktDataAdapter {
 		
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
-		getMarketPrice().writeRealTime(time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
-					Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
-					source, timing);
+		marketPrice.writeRealTime(	time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
+									Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
+									source, timing);
 		return;
 	}
 
@@ -223,24 +222,6 @@ public class QuoteSingle extends TopMktDataAdapter {
 		s = s + "Close " + m_close + "\n";
 		s = s + "Frozen " + m_frozen + "\n";
 		return s;
-	}
-
-	
-	// SET GET
-	public MarketPrice getMarketPrice() {
-		return marketPrice;
-	}
-
-	public void setMarketPrice(MarketPrice marketPrice) {
-		this.marketPrice = marketPrice;
-	}
-
-	public Investment getInvestment() {
-		return investment;
-	}
-
-	public void setInvestment(Investment investment) {
-		this.investment = investment;
 	}
 
 }

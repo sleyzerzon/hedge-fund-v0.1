@@ -8,21 +8,21 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.controller.Formats;
 import com.onenow.data.MarketPrice;
-import com.onenow.execution.QuoteTable;
+import com.onenow.execution.QuoteRealTime;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 
 
-public class QuoteTable extends AbstractTableModel {
+public class QuoteRealTime extends AbstractTableModel {
 
 	private BrokerController controller;
 	private MarketPrice marketPrice;
 	
-	private ContractFactory contractFactory;
+	private ContractFactory contractFactory = new ContractFactory();
 	private Investment investment;
 
-	public QuoteTable() {
+	public QuoteRealTime() {
 
 	}
 
@@ -32,19 +32,17 @@ public class QuoteTable extends AbstractTableModel {
 	 * @param mPrice
 	 * @param inv
 	 */
-	public QuoteTable(BrokerController controller, MarketPrice mPrice, Investment inv) {
+	public QuoteRealTime(BrokerController controller, MarketPrice mPrice, Investment inv) {
 		
-		setContractFactory(new ContractFactory());
-
-		setController(controller);
-		setMarketPrice(mPrice);
+		this.controller = controller;
+		this.marketPrice = mPrice;
+		this.investment = inv;
 		
-		setInvestment(inv);
-		Contract contract = getContractFactory().getContract(getInvestment());
+		Contract contract = ContractFactory.getContract(investment);
 		System.out.println("Contract " + contract.toString());
 		
 		// set quote on table to receive callbacks later
-		QuoteSingle quote = new QuoteSingle(this, contract.description(), getInvestment(), getMarketPrice());
+		QuoteSingle quote = new QuoteSingle(this, contract.description(), investment, marketPrice);
 		m_rows.add(quote);
 		
 		String volumeTicks = 	"233, " + //  TickType.RT_VOLUME
@@ -71,7 +69,7 @@ public class QuoteTable extends AbstractTableModel {
 								// ? TickType.OPEN_INTEREST -> 22
 								// ? TickType.VOLUME -> 8
 		
-		getController().reqMktData(contract, volumeTicks, false, (ITopMktDataHandler) quote);
+		controller.reqMktData(contract, volumeTicks, false, (ITopMktDataHandler) quote);
 		
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	} 
@@ -81,18 +79,18 @@ public class QuoteTable extends AbstractTableModel {
 
 	void addRow( QuoteSingle row) { // callback
 		m_rows.add( row);
-//		System.out.println("Quote " + toString(0));
+		// System.out.println("Quote " + toString(0));
 		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 	
 	public void desubscribe() {
 		for (QuoteSingle row : m_rows) {
-			getController().cancelMktData( row);
+			controller.cancelMktData( row);
 		}
 	}		
 
 	public void cancel(int i) {
-		getController().cancelMktData( m_rows.get( i) );
+		controller.cancelMktData( m_rows.get( i) );
 	}
 
 
@@ -160,15 +158,11 @@ public class QuoteTable extends AbstractTableModel {
 		QuoteSingle quote = m_rows.get(size-1);
 		Double price = quote.m_close;
 		
-//		System.out.println("QUOTES " + price + " " + size);
-//		System.out.println(quote.toString());
+		// System.out.println("QUOTES " + price + " " + size);
+		// System.out.println(quote.toString());
 		return price;
 	}
 
-	// PRIVATE
-
-	// TEST
-	
 	// PRINT
 	public String toString(int which) {
 		QuoteSingle row = m_rows.get(which);
@@ -186,38 +180,4 @@ public class QuoteTable extends AbstractTableModel {
 		s = s + "-\n";
 		return s;
 	}				
-
-	// SET GET
-	private BrokerController getController() {
-		return controller;
-	}
-
-	private void setController(BrokerController controller) {
-		this.controller = controller;
-	}
-
-	private ContractFactory getContractFactory() {
-		return contractFactory;
-	}
-
-	private void setContractFactory(ContractFactory contractFactory) {
-		this.contractFactory = contractFactory;
-	}
-
-	private Investment getInvestment() {
-		return investment;
-	}
-
-	private void setInvestment(Investment investment) {
-		this.investment = investment;
-	}
-
-	private MarketPrice getMarketPrice() {
-		return marketPrice;
-	}
-
-	private void setMarketPrice(MarketPrice marketPrice) {
-		this.marketPrice = marketPrice;
-	}
-
 }

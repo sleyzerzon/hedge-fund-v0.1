@@ -4,27 +4,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.ib.controller.Formats;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.TradeType;
+import com.onenow.data.MarketPrice;
+import com.onenow.instrument.Investment;
 
 public class EventHistory {
 	
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
 
 	// meta
-	private int reqId=0;
+	private int reqId = 0;
 	// time
 	public final long time;
-	//candle
+	// candle
 	public final double high;
 	public final double low;
 	public final double open;
 	public final double close;
-	
+	// other
 	public final double wap;
 	public final long volume;
 	public final int count;
+	// added
+	public Investment investment;
+	public TradeType tradeType;
+	public InvDataSource source;
+	public InvDataTiming timing;
+	
+//	public EventHistory() {
+//	
+//	}
 
 	// TODO: what time zone is this time?
-	public EventHistory( int reqId, long time, double high, double low, double open, double close, double wap, long volume, int count) {
+	public EventHistory( 	int reqId, 
+							long time, double high, double low, double open, double close, double wap, long volume, int count) {
 		
 		this.reqId = reqId;
 		this.time = time;

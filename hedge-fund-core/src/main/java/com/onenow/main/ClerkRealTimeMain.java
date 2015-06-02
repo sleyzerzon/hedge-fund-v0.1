@@ -31,13 +31,6 @@ public class ClerkRealTimeMain {
 		BusSystem.read(kinesis, streamName, recordProcessorFactory);
 		
 	}
-
-
-	public static void writeHistoryToL2(EventHistory event) {
-
-		
-		
-	}
 	
 	public static void writeHistoryRTtoL2(EventHistoryRT event) {
 	

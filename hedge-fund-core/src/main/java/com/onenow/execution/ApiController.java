@@ -35,6 +35,8 @@ import com.ib.controller.Group;
 import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
+import com.onenow.data.MarketPrice;
+import com.onenow.instrument.Investment;
 import com.onenow.io.EventHistory;
 
 import java.util.ArrayList;
@@ -857,7 +859,9 @@ public class ApiController implements EWrapper {
     }
 
 	@SuppressWarnings("deprecation")
-        @Override public void historicalData(int reqId, String date, double open, double high, double low, double close, int volume, int count, double wap, boolean hasGaps) {
+        @Override 
+        public void historicalData(	int reqId, 
+        							String date, double open, double high, double low, double close, int volume, int count, double wap, boolean hasGaps) {
 		IHistoricalDataHandler handler = m_historicalDataMap.get( reqId);
 		if (handler != null) {
 			if (date.startsWith( "finished")) {
@@ -874,7 +878,8 @@ public class ApiController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				EventHistory bar = new EventHistory( reqId, longDate, high, low, open, close, wap, volume, count);
+				EventHistory bar = new EventHistory( 	reqId, 
+														longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps);
 			}
 		}

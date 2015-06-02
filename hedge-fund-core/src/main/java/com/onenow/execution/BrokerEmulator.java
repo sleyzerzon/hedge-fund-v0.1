@@ -226,10 +226,10 @@ public class BrokerEmulator implements Broker {
 	}
 
 	@Override
-	public void readHistoricalQuotes(Investment inv, String end,
+	public Integer readHistoricalQuotes(Investment inv, String end,
 			HistorianConfig config, QuoteHistory history) {
 		// TODO Auto-generated method stub
-		
+		return 1;
 	}
 
 

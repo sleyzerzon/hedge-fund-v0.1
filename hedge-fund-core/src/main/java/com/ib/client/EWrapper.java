@@ -3,7 +3,9 @@
 
 package com.ib.client;
 
+import com.onenow.data.MarketPrice;
 import com.onenow.execution.Contract;
+import com.onenow.instrument.Investment;
 
 
 public interface EWrapper {

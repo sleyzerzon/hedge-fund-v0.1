@@ -28,7 +28,7 @@ public class ContractFactory {
 	}
 	
 	
-	public Contract getContract(Investment inv) {
+	public static Contract getContract(Investment inv) {
 		
 		System.out.println("GET CONTRACT FROM " + inv.toString());
 		
@@ -53,7 +53,7 @@ public class ContractFactory {
 		return contract;
 	}
 	
-	private Contract getOptionToQuote(Investment inv) {
+	private static Contract getOptionToQuote(Investment inv) {
 		String p_secType=SecType.OPT.toString();	
 
 		String p_symbol=inv.getUnder().getTicker();
@@ -89,7 +89,7 @@ public class ContractFactory {
 		return cont;	
 	}
 
-	private Contract getFutureToQuote(Investment inv) {
+	private static Contract getFutureToQuote(Investment inv) {
 		String p_secType=SecType.FUT.toString();	
 
 
@@ -123,7 +123,7 @@ public class ContractFactory {
 	}
 
 	
-	private Contract getIndexToQuote(Investment inv) {
+	private static Contract getIndexToQuote(Investment inv) {
 		String p_secType=SecType.IND.toString();	
 
 		String p_symbol="";
@@ -166,7 +166,7 @@ public class ContractFactory {
 		return cont;	
 	}
 	
-	private Contract getStockToQuote(Investment inv) {	
+	private static Contract getStockToQuote(Investment inv) {	
 		String p_secType=SecType.STK.toString();	
 		String p_symbol=inv.getUnder().getTicker();
 

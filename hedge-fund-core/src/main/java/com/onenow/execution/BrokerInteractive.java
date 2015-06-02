@@ -31,7 +31,7 @@ public class BrokerInteractive implements Broker  {
 
   private ContractFactory contractFactory = new ContractFactory();
 //  private List<Channel> channels = new ArrayList<Channel>();
-
+  
   private BusWallSt bus;
 
   public BrokerInteractive() {
@@ -51,12 +51,12 @@ public class BrokerInteractive implements Broker  {
     bus.connectToServer();
 
     // create new underlying list, portfolio, then initialize the market
-    setUnderList(new ArrayList<Underlying>()); // TODO: get from portfolio?
+    this.underList = new ArrayList<Underlying>(); // TODO: get from portfolio?
 
     // my porfolio, prices, and trades
-    setMyPortfolio(new Portfolio());
-    setMarketPrices(new MarketPrice(getMarketPortfolio(), this));
-    setTrades(new ArrayList<Trade>());
+    this.myPortfolio = new Portfolio();
+    this.marketPrices = new MarketPrice(getMarketPortfolio(), this);
+    this.trades = new ArrayList<Trade>();
   }
 
 
@@ -70,21 +70,23 @@ public class BrokerInteractive implements Broker  {
     List<Investment> invs = getMarketPortfolio().investments;
     for(Investment inv:invs) {
       System.out.println("#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
-      QuoteTable quoteLive = new QuoteTable(bus.controller, getMarketPrices(), inv);
+      QuoteRealTime quoteLive = new QuoteRealTime(bus.controller, marketPrices, inv);
     }
   }
 
   /**
    * Returns reference to object where history will be stored, upon asynchronous return
    */
-  public void readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory quoteHistory) {
+  public Integer readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory quoteHistory) {
 
-    Contract contract = getContractFactory().getContract(inv);
+    Contract contract = ContractFactory.getContract(inv);
 
-    int reqId = bus.controller.reqHistoricalData(	contract, end, 
-    												1, config.durationUnit, config.barSize, config.whatToShow, 
-    												false, quoteHistory);
+    Integer reqId = bus.controller.reqHistoricalData(	contract, end, 
+    													1, config.durationUnit, config.barSize, config.whatToShow, 
+    													false, quoteHistory);
     System.out.println("#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId);
+    
+    return reqId;
   }
 
 
@@ -158,7 +160,7 @@ public class BrokerInteractive implements Broker  {
   ///// BROKER
   @Override
   public List<Underlying> getUnderlying() {
-    return getUnderList();
+    return underList;
   }
 
   @Override
@@ -186,7 +188,7 @@ public class BrokerInteractive implements Broker  {
   public Double getPrice(Investment inv, TradeType tradeType) {
     Double price=0.0;
 
-    price = getMarketPrices().readPrice(inv, tradeType);
+    price = marketPrices.readPrice(inv, tradeType);
 
     if(price==null) {
       return 0.0;
@@ -210,22 +212,22 @@ public class BrokerInteractive implements Broker  {
     Integer notDone=0;
     for(Investment inv:invs) {
       if(inv instanceof InvestmentIndex) { // only check the index
-        Double buyPrice = getMarketPrices().readPrice(inv, TradeType.BUY);
+        Double buyPrice = marketPrices.readPrice(inv, TradeType.BUY);
         if(buyPrice==null) {
           notDone++;
           return false;
         }
-        Double sellPrice = getMarketPrices().readPrice(inv, TradeType.SELL);
+        Double sellPrice = marketPrices.readPrice(inv, TradeType.SELL);
         if(sellPrice==null) {
           notDone++;
           return false;
         }
-        Double closePrice = getMarketPrices().readPrice(inv, TradeType.CLOSE);
+        Double closePrice = marketPrices.readPrice(inv, TradeType.CLOSE);
         if(closePrice==null) {
           notDone++;
           return false;
         }
-        Double lastPrice = getMarketPrices().readPrice(inv, TradeType.TRADED);
+        Double lastPrice = marketPrices.readPrice(inv, TradeType.TRADED);
         if(lastPrice==null) {
           notDone++;
           return false;
@@ -243,7 +245,7 @@ public class BrokerInteractive implements Broker  {
   // PRINT
   public String toString() {
     String s = "";
-    s = s + "UNDERLYING: " + "\n" + getUnderList().toString() + "\n";
+    s = s + "UNDERLYING: " + "\n" + underList.toString() + "\n";
     s = s + "MARKET PORTFOLIO: " + "\n" + getMarketPortfolio().toString() + "\n";
     s = s + "PRICES" + "\n" + marketPrices.toString() + "\n";
     s = s + "TRADES: " + "\n";
@@ -256,54 +258,6 @@ public class BrokerInteractive implements Broker  {
 
 
   // SET GET
-  private MarketPrice getMarketPrices() {
-    return marketPrices;
-  }
-
-
-  private void setMarketPrices(MarketPrice marketPrices) {
-    this.marketPrices = marketPrices;
-  }
-
-
-  private MarketAnalytics getMarketAnalytics() {
-    return marketAnalytics;
-  }
-
-
-  private void setMarketAnalytics(MarketAnalytics marketAnalytics) {
-    this.marketAnalytics = marketAnalytics;
-  }
-
-
-  private void setMyPortfolio(Portfolio myPortfolio) {
-    this.myPortfolio = myPortfolio;
-  }
-
-
-  private List<Underlying> getUnderList() {
-    return underList;
-  }
-
-
-  private void setUnderList(List<Underlying> underList) {
-    this.underList = underList;
-  }
-
-
-  private void setTrades(List<Trade> trades) {
-    this.trades = trades;
-  }
-
-
-  public ContractFactory getContractFactory() {
-    return contractFactory;
-  }
-
-  public void setContractFactory(ContractFactory contractFactory) {
-    this.contractFactory = contractFactory;
-  }
-
 	@Override
 	public BrokerMode getMode() {
 		return brokerMode;

@@ -86,8 +86,10 @@ public class Historian {
 		// readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if (prices.size()<50) {					
 			paceHistoricalQuery(); 
-			broker.readHistoricalQuotes(	inv, TimeParser.getClose(TimeParser.getUndashedDate(TimeParser.getDashedDateMinus(toDashedDate, 1))), 
-											config, invHist); 
+			
+			Integer reqId = broker.readHistoricalQuotes(	inv, TimeParser.getClose(TimeParser.getUndashedDate(TimeParser.getDashedDateMinus(toDashedDate, 1))), 
+															config, invHist);
+			
 			lastHistQuery = TimeParser.getTimestampNow();	
 		} else {
 			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L2 HIT:" + inv.toString() + "\n\n");
@@ -110,7 +112,7 @@ public class Historian {
 
 		QuoteHistory invHist = history.get(key);
 		if(invHist==null) {
-			invHist = new QuoteHistory();
+			invHist = new QuoteHistory(inv, tradeType, source, timing);
 			history.put(key, invHist);			
 		}
 		return invHist;

@@ -8,11 +8,9 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.io.BrokerBusHistorianRT;
 import com.onenow.io.EventHistoryRT;
 import com.onenow.io.PriceSizeCache;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 
 public class MarketPrice {
@@ -43,8 +41,8 @@ public class MarketPrice {
 		if(lastSize>0) { 
 			
 			EventHistoryRT event = new EventHistoryRT(	timeStamp, inv, TradeType.TRADED, 
-											lastPrice, lastSize,
-											source, timing);
+														lastPrice, lastSize,
+														source, timing);
 			cache.writeEventRT(event);
 			
 			

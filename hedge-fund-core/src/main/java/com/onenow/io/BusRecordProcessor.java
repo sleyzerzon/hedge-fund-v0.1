@@ -15,6 +15,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.main.ChartistMain;
+import com.onenow.main.ClerkHistoryMain;
 import com.onenow.main.ClerkRealTimeMain;
 import com.onenow.util.WatchLog;
 
@@ -97,7 +98,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 		if(recordType.equals(EventHistory.class)) {
 			EventHistory event = (EventHistory) record;
-			ClerkRealTimeMain.writeHistoryToL2(event);
+			ClerkHistoryMain.writeHistoryToL2(event);
 		}
 
 		if(recordType.equals(EventHistoryRT.class)) {			
