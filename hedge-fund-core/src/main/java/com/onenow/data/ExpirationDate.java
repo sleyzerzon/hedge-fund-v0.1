@@ -35,11 +35,11 @@ public class ExpirationDate {
 		getFuturesExpList().add("201504");
 		getFuturesExpList().add("201505");
 		getFuturesExpList().add("201506");
-		getFuturesExpList().add("201507");
-		getFuturesExpList().add("201508");
+		// getFuturesExpList().add("201507");
+		// getFuturesExpList().add("201508");
 		getFuturesExpList().add("201509");
-		getFuturesExpList().add("201510");
-		getFuturesExpList().add("201511");
+		// getFuturesExpList().add("201510");
+		// getFuturesExpList().add("201511");
 		getFuturesExpList().add("201512");
 	}
 	
@@ -69,7 +69,7 @@ public class ExpirationDate {
 		for(String basisDate:futuresExpList) {
 			// System.out.println("FUTURES " + "date " + date + " basis " + basisDate + " delta " + TimeParser.getElapsedUndashedDays(date, basisDate));
 			// future expire at end of the month designated
-			if(	TimeParser.getElapsedUndashedDays(date, basisDate)<60 && 
+			if(	TimeParser.getElapsedUndashedDays(date, basisDate)<120 && 
 				TimeParser.getElapsedUndashedDays(date, basisDate)>=-30
 				) {
 				validExp.add(basisDate);
