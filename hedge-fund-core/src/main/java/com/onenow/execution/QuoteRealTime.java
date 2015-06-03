@@ -19,7 +19,6 @@ public class QuoteRealTime extends AbstractTableModel {
 	private BrokerController controller;
 	private MarketPrice marketPrice;
 	
-	private ContractFactory contractFactory = new ContractFactory();
 	private Investment investment;
 
 	public QuoteRealTime() {
@@ -39,7 +38,7 @@ public class QuoteRealTime extends AbstractTableModel {
 		this.investment = inv;
 		
 		Contract contract = ContractFactory.getContract(investment);
-		System.out.println("Contract " + contract.toString());
+		// System.out.println("Contract " + contract.toString());
 		
 		// set quote on table to receive callbacks later
 		QuoteRTSingle quote = new QuoteRTSingle(this, contract.description(), investment, marketPrice);

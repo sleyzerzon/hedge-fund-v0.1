@@ -1,7 +1,6 @@
 package com.onenow.execution;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
@@ -46,6 +45,9 @@ public class BusWallSt implements ConnectionHandler {
 	   * Connect to gateway at set IP and port
 	   */
 	  void connectToServer() {
+		 
+		int clientID = 0;
+		  
 		boolean tryToConnect = true;
 	    while(tryToConnect) {		    		
 			try {				
@@ -53,11 +55,12 @@ public class BusWallSt implements ConnectionHandler {
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				WatchLog.add(Level.INFO, log, "\n", "");
 			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, inLogger, outLogger);
+			    //controller.disconnect(); 
 			    controller.connect(		gateway.URI, Integer.parseInt(gateway.port), 
-			    						0, null);  
+			    						clientID, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
-				String log = "...COULD CONNECT TO BUS...";
+				String log = "...COULD NOT CONNECT TO BUS";
 				WatchLog.add(Level.INFO, log, "", "\n");
 				e.printStackTrace();
 				TimeParser.wait(10);

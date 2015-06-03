@@ -30,7 +30,7 @@ public class ContractFactory {
 	
 	public static Contract getContract(Investment inv) {
 		
-		System.out.println("GET CONTRACT FROM " + inv.toString());
+		// System.out.println("GET CONTRACT FROM " + inv.toString());
 		
 		Contract contract = new Contract();
 		

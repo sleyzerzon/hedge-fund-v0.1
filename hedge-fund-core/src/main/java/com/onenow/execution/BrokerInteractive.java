@@ -50,9 +50,9 @@ public class BrokerInteractive implements Broker  {
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
 	   */
-	  public BrokerInteractive(String mode, Portfolio marketPortfolio, BusWallSt bus) { 
+	  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio, BusWallSt bus) { 
 		  
-		this.brokerMode = getBrokerMode(mode);
+		this.brokerMode = mode;
 	    this.marketPortfolio = marketPortfolio;
 		this.bus = bus;
 		
@@ -66,18 +66,7 @@ public class BrokerInteractive implements Broker  {
 	    this.marketPrices = new MarketPrice(getMarketPortfolio(), this);
 	    this.trades = new ArrayList<Trade>();
 	  }
-	
-	 private static BrokerMode getBrokerMode(String arg) {
-		BrokerMode mode = BrokerMode.PRIMARY;
-		if(mode.equals("STANDBY")) {
-			mode = BrokerMode.STANDBY;
-		}
-		if(mode.equals("HISTORIAN")) {
-			mode = BrokerMode.HISTORIAN;
-		}
-		return mode;
-	}
-	  
+		  
 	  // GET REAL TIME QUOTES
 	  /**
 	   * For every currently-traded investment: request quotes
@@ -86,7 +75,7 @@ public class BrokerInteractive implements Broker  {
 	  public void getLiveQuotes() {
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
-			  System.out.println("#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
+			  System.out.println("\n\n" + "#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
 			  QuoteRealTime quoteLive = new QuoteRealTime(bus.controller, marketPrices, inv);
 		  }
 	  }	

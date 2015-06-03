@@ -75,7 +75,7 @@ public class TestBroker implements Testable {
 
 	    try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
-			this.broker = new BrokerActivityImpl(new BrokerInteractive(BrokerMode.STANDBY.toString(), marketPortfolio, bus));
+			this.broker = new BrokerActivityImpl(new BrokerInteractive(BrokerMode.STANDBY, marketPortfolio, bus));
 			this.unders = broker.getUnderlying();
 			this.market = broker.getMarketPortfolio();
 			setUnders(getBroker().getUnderlying());

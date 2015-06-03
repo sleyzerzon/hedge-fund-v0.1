@@ -346,13 +346,13 @@ public class TimeParser implements Testable {
 	}
 	
 
-	public Integer getElapsedUndashedDays(String undashedDay1, String undahsedBasisDay2) {
+	public static Integer getElapsedUndashedDays(String undashedDay1, String undahsedBasisDay2) {
 		int elapsed = 0;
 		elapsed = getElapsedDashedDays(addDash(undashedDay1), addDash(undahsedBasisDay2));
 		return elapsed;
 	}
 	
-	public Integer getElapsedDashedDays(String dashedDay1, String dahsedBasisDay2) {
+	public static Integer getElapsedDashedDays(String dashedDay1, String dahsedBasisDay2) {
 		
 		Integer year1=0;
 		Integer year2=0;

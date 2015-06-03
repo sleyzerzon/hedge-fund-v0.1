@@ -47,42 +47,19 @@ public class InitMarket {
 		initStocks(stocks);		
 		System.out.println(marketPortfolio.toStocksString());		
 
-//		addIndicesToPortfolio(indices);
-//		System.out.println(marketPortfolio.toIndicesString());				
-//
-//		initOptions(options, toDashedDate);
-//		System.out.println(marketPortfolio.toOptionsString());		
-//
-//		initFutures(futures);
-//		System.out.println(marketPortfolio.toFuturesString());			
+		addIndicesToPortfolio(indices);
+		System.out.println(marketPortfolio.toIndicesString());				
+
+		initOptions(options, toDashedDate);
+		System.out.println(marketPortfolio.toOptionsString());		
+
+		initFutures(futures);
+		System.out.println(marketPortfolio.toFuturesString());			
+
+		// TODO: futures options
+		
 	}
 	
-		
-//	public InitMarket(	Portfolio portfolio,	
-//						Underlying stocks, Underlying stockOptions,
-//						Underlying index,  Underlying indexOptions, 
-//						Underlying futures, Underlying futuresOptions,
-//						String fromDate, String toDate) {
-//		
-//		marketPortfolioportfolio);
-//
-//		initStocks(stocks);		
-//		System.out.println(marketPortfolio.toStocksString());		
-//
-//		// TODO: stock options
-//
-//		addIndexToPortfolio(index);
-//		System.out.println(marketPortfolio.toIndicesString());				
-//
-//		initIndexOptions(indexOptions, fromDate, toDate);
-//		System.out.println(marketPortfolio.toOptionsString());		
-//
-//		initFutures(futures);
-//		System.out.println(marketPortfolio.toFuturesString());	
-//		
-//		// TODO: futures options
-//
-//	}
 	 
 	// INDEX 
 	/**

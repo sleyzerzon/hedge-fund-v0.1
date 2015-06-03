@@ -22,8 +22,8 @@ public class InvestorMain {
 
 	public static void main(String[] args) {
 		
-		String mode = getModeArgument(args);
-		FlexibleLogger.setup(mode);
+		BrokerMode mode = getModeArgument(args);
+		FlexibleLogger.setup(mode.toString());
 
 	    // choose relevant time frame
 	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
@@ -43,19 +43,27 @@ public class InvestorMain {
 		// register once: get all market real-time quotes
 		broker.getLiveQuotes(); 
 
-		// Do historical queries from SQS
-		broker.procesHistoricalQuotesRequests();
+		if(mode.equals(BrokerMode.HISTORIAN)) {
+			// Do historical queries from SQS
+			broker.procesHistoricalQuotesRequests();
+		}
 		
 //		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
 //		portfolioFactory.launch();							
 
 	}
 	
-	private static String getModeArgument(String[] args) {
-		String mode = "STANDBY";
+	private static BrokerMode getModeArgument(String[] args) {
+		BrokerMode mode = BrokerMode.STANDBY;
 		if(args.length>0) {
 			if(args[0]!=null) {
-				mode = args[0];
+				String s0 = args[0];
+				if(s0.equals("PRIMARY")) {
+					mode = BrokerMode.PRIMARY;
+				}
+				if(s0.equals("HISTORIAN")) {
+					mode = BrokerMode.HISTORIAN;
+				}
 			} else {
 				System.out.println("ERROR: mode is a required argument");
 			}

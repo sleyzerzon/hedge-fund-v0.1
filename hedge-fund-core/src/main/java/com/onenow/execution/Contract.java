@@ -261,7 +261,9 @@ public class Contract implements Cloneable {
     }
 
     public static void add(StringBuilder sb, String tag, Object val) {
-        if (val == null || val instanceof String && ((String)val).length() == 0) {
+        if (	val == null || 
+        		val.equals(0.0)  ||
+        		val instanceof String && ((String)val).length() == 0) {
             return;
         }
 

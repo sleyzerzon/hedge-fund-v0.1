@@ -273,7 +273,7 @@ public class ApiConnection extends EClientSocket {
 		}
 		catch( Exception e) {
 			e.printStackTrace();
-			error( order.orderId(), 512, "Order sending error - " + e);
+			message( order.orderId(), 512, "Order sending error - " + e);
 			close();
 		}
 	}

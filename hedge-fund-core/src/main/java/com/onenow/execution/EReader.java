@@ -455,7 +455,7 @@ public class EReader extends Thread {
                     int id = readInt();
                     int errorCode    = readInt();
                     String errorMsg = readStr();
-                    m_parent.error(id, errorCode, errorMsg);
+                    m_parent.message(id, errorCode, errorMsg);
                 }
                 break;
             }
@@ -1245,7 +1245,7 @@ public class EReader extends Thread {
 
             default: {
     			System.out.println("ERROR: CLIENT ERROR IN PROCESS MESSAGE");
-                m_parent.error( EClientErrors.NO_VALID_ID, EClientErrors.UNKNOWN_ID.code(), EClientErrors.UNKNOWN_ID.msg());
+                m_parent.message( EClientErrors.NO_VALID_ID, EClientErrors.UNKNOWN_ID.code(), EClientErrors.UNKNOWN_ID.msg());
                 return false;
             }
         }

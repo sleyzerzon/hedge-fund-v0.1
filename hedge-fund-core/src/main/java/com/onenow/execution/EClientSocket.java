@@ -1138,7 +1138,7 @@ public class EClientSocket {
         // This feature is only available for versions of TWS >=4
         if( m_serverVersion < 4) {
           	System.out.println ("UNSUPPORTED: TWS version");
-            error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
+            message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                             EClientErrors.UPDATE_TWS.msg());
             return;
         }
@@ -1243,7 +1243,7 @@ public class EClientSocket {
         // This feature is only available for versions of TWS >=6
         if( m_serverVersion < 6) {
           	System.out.println ("UNSUPPORTED: TWS >=6");
-            error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
+            message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
         }
@@ -1352,7 +1352,7 @@ public class EClientSocket {
         // This feature is only available for versions of TWS >=6
         if( m_serverVersion < 6) {
           	System.out.println ("UNSUPPORTED: TWS >=6");
-            error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
+            message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
         }
@@ -2363,7 +2363,7 @@ public class EClientSocket {
         // This feature is only available for versions of TWS >= 13
         if( m_serverVersion < 13) {
           	System.out.println ("ERROR: FAC");
-            error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
+            message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
         }
@@ -2398,7 +2398,7 @@ public class EClientSocket {
         // This feature is only available for versions of TWS >= 13
         if( m_serverVersion < 13) {
           	System.out.println ("ERROR: REPLACE FAC");
-            error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
+            message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
         }
@@ -3239,9 +3239,9 @@ public class EClientSocket {
         m_eWrapper.error( err);
     }
 
-    public synchronized void error( int id, int errorCode, String errorMsg) {
+    public synchronized void message( int id, int errorCode, String errorMsg) {
     	
-    	System.out.println("~ error( int id, int errorCode, String errorMsg)");
+    	System.out.println("\n" + "~ message( int id, int errorCode, String errorMsg)");
 
         m_eWrapper.error( id, errorCode, errorMsg);
     }
@@ -3250,7 +3250,7 @@ public class EClientSocket {
     	
     	System.out.println("~ error(int id, EClientErrors.CodeMsgPair pair, String tail)");
 
-        error(id, pair.code(), pair.msg() + tail);
+        message(id, pair.code(), pair.msg() + tail);
     }
 
     public void close() {
