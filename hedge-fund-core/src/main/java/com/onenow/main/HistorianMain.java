@@ -24,7 +24,6 @@ import com.onenow.util.WatchLog;
  * L3: 3rd party database via API
  * @param args
  */
-
 public class HistorianMain {
 
 	private static TSDB TSDB = new TSDB();				// database

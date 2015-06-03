@@ -13,6 +13,9 @@ import com.onenow.util.TimeParser;
 /** 
  * Makes investment choices in real-time
  * Also provides real-time and historical data as a service to the back-end
+ * It operates in several different BrokerMode
+ * - In PRIMARY / STANDBY modes, the application works as a database, only the master effecting investment decisions
+ * - In HISTORIAN / HISTORIANRT modes, the application only provides data-gathering services to the back-end 
  * @param args
  */
 
@@ -54,12 +57,15 @@ public class InvestorMain {
 	}
 	
 	private static BrokerMode getModeArgument(String[] args) {
-		BrokerMode mode = BrokerMode.STANDBY;
+		BrokerMode mode = BrokerMode.HISTORIANRT;
 		if(args.length>0) {
 			if(args[0]!=null) {
 				String s0 = args[0];
 				if(s0.equals("PRIMARY")) {
 					mode = BrokerMode.PRIMARY;
+				}
+				if(s0.equals("STANDBY")) {
+					mode = BrokerMode.STANDBY;
 				}
 				if(s0.equals("HISTORIAN")) {
 					mode = BrokerMode.HISTORIAN;

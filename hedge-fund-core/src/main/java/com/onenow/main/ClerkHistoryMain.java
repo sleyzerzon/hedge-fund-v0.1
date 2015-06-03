@@ -14,6 +14,10 @@ import com.onenow.util.WatchLog;
 
 public class ClerkHistoryMain {
 
+	/**
+	 * Processes historical data gathered from 3rd party sources
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		FlexibleLogger.setup();
