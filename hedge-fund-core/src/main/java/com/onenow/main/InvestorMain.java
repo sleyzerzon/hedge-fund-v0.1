@@ -1,23 +1,12 @@
 package com.onenow.main;
 
-import java.util.HashMap;
-
 import com.onenow.constant.BrokerMode;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.Topology;
-import com.onenow.constant.TradeType;
-import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallSt;
-import com.onenow.execution.HistorianService;
-import com.onenow.execution.QuoteHistory;
-import com.onenow.instrument.Investment;
-import com.onenow.io.Lookup;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.portfolio.PortfolioFactory;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
 
@@ -33,12 +22,13 @@ public class InvestorMain {
 
 	public static void main(String[] args) {
 		
-		FlexibleLogger.setup();
+		String mode = getModeArgument(args);
+		FlexibleLogger.setup(mode);
 
-	    // choose relevant timeframe
+	    // choose relevant time frame
 	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
 
-	    BrokerInteractive broker = new BrokerInteractive(	BrokerMode.PRIMARY, 
+	    BrokerInteractive broker = new BrokerInteractive(	mode, 
 	    													marketPortfolio, 
 	    													new BusWallSt(Topology.LOCAL)); 
 	   
@@ -61,6 +51,16 @@ public class InvestorMain {
 
 	}
 	
+	private static String getModeArgument(String[] args) {
+		String mode = "STANDBY";
+		if(args.length>0) {
+			if(args[0]!=null) {
+				mode = args[0];
+			} else {
+				System.out.println("ERROR: mode is a required argument");
+			}
+		}
+		return mode;
+	}
 	
-
 }

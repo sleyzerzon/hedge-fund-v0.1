@@ -39,7 +39,7 @@ public class HistorianMain {
 	
 	public static void main(String[] args) {
 		
-		FlexibleLogger.setup(Level.INFO);
+		FlexibleLogger.setup();
 
 	    // get ready to loop
 		int count=0;

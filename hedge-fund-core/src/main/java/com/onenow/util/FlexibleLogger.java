@@ -17,10 +17,15 @@ public class FlexibleLogger {
   static private Formatter formatterHTML;
 
   static public boolean setup() {
-	  return setup(Level.INFO);
+	  String mode = "";
+	  return setup(Level.INFO, mode);
   }
 
-  static public boolean setup(Level level) {
+  static public boolean setup(String mode) {
+	  return setup(Level.INFO, mode);
+  }
+  
+  static public boolean setup(Level level, String mode) {
 	  
 	  boolean success = true;
 	  
@@ -40,7 +45,7 @@ public class FlexibleLogger {
 	    // set the LogLevel to Severe, only severe Messages will be written
 	    logger.setLevel(level);
 	    
-	    String base = WatchLog.getLogPath() + new Exception().getStackTrace()[2].getClassName()+"Log.";
+	    String base = WatchLog.getLogPath() + new Exception().getStackTrace()[2].getClassName()+mode+"Log.";
 	    System.out.println("Will log to: " + base + "*");
 	    fileTxt = new FileHandler(base+"txt");
 	    fileHTML = new FileHandler(base+"html");
