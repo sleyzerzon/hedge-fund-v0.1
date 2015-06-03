@@ -92,10 +92,10 @@ public class HistorianMain {
 		if (prices.size()<50) {	
 
 			EventHistoryRequest req = new EventHistoryRequest(inv, toDashedDate, config);
-
-			// TODO: should it pace itself?
 			
 			// TODO: SQS instead of call to broker
+
+			TimeParser.wait(5);
 			
 		} else {
 			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L2 HIT:" + inv.toString() + "\n\n");

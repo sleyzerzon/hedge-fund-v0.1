@@ -84,7 +84,7 @@ public class BrokerInteractive implements Broker  {
 	  
 	  // GET HISTORICAL QUOTES
 	  // TODO: pool of threads so main flow is not blocked
-	  public void getHistoricalQuotes() {
+	  public void procesHistoricalQuotesRequests() {
 
 		  while(true) {
 			  

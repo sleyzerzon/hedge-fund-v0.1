@@ -4,9 +4,9 @@ import com.onenow.instrument.Investment;
 
 public class EventHistoryRequest {
 
-	public static HistorianConfig config;
 	public static Investment investment;
 	public static String toDashedDate;
+	public static HistorianConfig config;
 	
 	public EventHistoryRequest() {
 		

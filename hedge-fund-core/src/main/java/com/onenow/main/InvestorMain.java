@@ -54,7 +54,7 @@ public class InvestorMain {
 		broker.getLiveQuotes(); 
 
 		// Do historical queries from SQS
-		broker.getHistoricalQuotes();
+		broker.procesHistoricalQuotesRequests();
 		
 //		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
 //		portfolioFactory.launch();							
