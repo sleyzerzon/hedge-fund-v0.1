@@ -6,14 +6,14 @@ import com.onenow.constant.RewardAlgo;
 
 public class Reward {
 
-	private Hashtable<Enum, Double> reward;
+	// private Hashtable<Enum, Double> reward;
 	
 	public Reward() {
 		
 	}
 	
 	public Reward(Double probOfProfit, Double maxROI) {
-		setReward(new Hashtable<Enum, Double>());
+//		setReward(new Hashtable<Enum, Double>());
 		calculateReward(probOfProfit, maxROI);
 	}
 	
@@ -25,15 +25,15 @@ public class Reward {
 	
 	public Double getAlgoOrder(Enum rewardAlgo) {
 		Double order = 0.0;
-		order = getReward().get(rewardAlgo);
+//		order = getReward().get(rewardAlgo);
 		return order;
 	}
 	
 	// PRIVATE
 	private void calculateReward(Double probOfProfit, Double maxROI) {
-		getReward().put(RewardAlgo.Linear, linearBiasAlgo(probOfProfit, maxROI));
-		getReward().put(RewardAlgo.Success, successBiasAlgo(probOfProfit, maxROI));
-		getReward().put(RewardAlgo.ROI, ROIBiasAlgo(probOfProfit, maxROI));
+//		getReward().put(RewardAlgo.Linear, linearBiasAlgo(probOfProfit, maxROI));
+//		getReward().put(RewardAlgo.Success, successBiasAlgo(probOfProfit, maxROI));
+//		getReward().put(RewardAlgo.ROI, ROIBiasAlgo(probOfProfit, maxROI));
 	}
 
 	public Double linearBiasAlgo(Double probOfProfit, Double maxROI) {
@@ -52,16 +52,6 @@ public class Reward {
 	}
 
 	
-	// PRINT
-	
-	// SET GET
-	private Hashtable<Enum, Double> getReward() {
-		return reward;
-	}
-
-	private void setReward(Hashtable<Enum, Double> reward) {
-		this.reward = reward;
-	}
 
 	// APPROACH: Iron Condor
 	// 1) LOOK FOR THE STRIKE SPREAD TO BE SMALLER THAN THE PRICING GAP

@@ -14,6 +14,7 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.model.ProvisionedThroughputExceededException;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.StreamName;
 import com.onenow.data.DynamoDBCountPersister;
@@ -24,7 +25,7 @@ public class Kinesis {
 
 	private static AmazonKinesis kinesis;
 	
-	private final ObjectMapper JsonMapper = new ObjectMapper();
+	private final ObjectMapper jsonMapper = new ObjectMapper();
 
 	public Kinesis() {
 	}
@@ -47,9 +48,15 @@ public class Kinesis {
 	
     public void sendObject(Object objectToSend, StreamName streamName) {
 		
+		// System.out.println("&&&&&&&&&&&&& TRYING TO WRITE: " + objectToSend.toString() + " INTO " + streamName);
+
+		boolean success = true;
+		
+    	jsonMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    	
         byte[] bytes;
         try {
-            bytes = JsonMapper.writeValueAsBytes(objectToSend);
+            bytes = jsonMapper.writeValueAsBytes(objectToSend);
         } catch (IOException e) {
         	System.out.println("Skipping pair. Unable to serialize: " + e);
             return;
@@ -68,6 +75,7 @@ public class Kinesis {
         try {
             kinesis.putRecord(putRecord);
         } catch (ProvisionedThroughputExceededException ex) {
+        	success = false;
         	System.out.println("Throughput exceeded");
             try {
                 Thread.sleep(10);
@@ -76,6 +84,10 @@ public class Kinesis {
             }
         } catch (AmazonClientException ex) {
         	System.out.println("Error sending record to Amazon Kinesis: " + ex);
+        }
+        
+        if(success) {
+    		System.out.println("&&&&&&&&&&&&& WROTE: " + objectToSend.toString() + " INTO STREAM: " + streamName);
         }
     }
     

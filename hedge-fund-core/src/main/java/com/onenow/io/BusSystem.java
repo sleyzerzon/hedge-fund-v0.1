@@ -70,7 +70,6 @@ public class BusSystem {
 
 	public static void write(Kinesis kinesis, StreamName streamName, Object objToSend) {
 		kinesis.sendObject(objToSend, streamName);
-		System.out.println("&&&&&&&&&&&&& WROTE: " + objToSend.toString());
 	}
 	
 

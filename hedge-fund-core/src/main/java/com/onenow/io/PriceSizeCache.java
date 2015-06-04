@@ -83,8 +83,9 @@ public class PriceSizeCache {
 			// TODO: SQS/SNS/ELASTICACHE ORCHESTRATION
 
 			// Write to Real-Time datastream
+			// System.out.println("PriceSizeCache WRITE " + event.toString());
 			BrokerBusHistorianRT historyRTBroker = new BrokerBusHistorianRT();
-			historyRTBroker.write(event);
+			BrokerBusHistorianRT.write(event);
 			
 			// moved to Chartist
 //			writeRTtoL1(time, inv, tradeType, source, timing, price, size);		

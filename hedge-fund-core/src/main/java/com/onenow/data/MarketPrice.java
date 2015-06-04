@@ -42,6 +42,7 @@ public class MarketPrice {
 			EventHistoryRT event = new EventHistoryRT(	timeStamp, inv, TradeType.TRADED, 
 														lastPrice, lastSize,
 														source, timing);
+			// System.out.println("MarketPrice WRITE " + event.toString());
 			cache.writeEventRT(event);
 			
 			

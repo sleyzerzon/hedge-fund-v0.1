@@ -17,6 +17,10 @@ public class EventHistoryRT {
 	public InvDataSource source;
 	public InvDataTiming timing;
 
+	public EventHistoryRT() {
+		
+	}
+	
 	/** Set real-time price/size/etc 
 	 * 
 	 * @param time
@@ -37,14 +41,14 @@ public class EventHistoryRT {
 	}
 	
 	public String toString() {
-		String s = "";
-		s = "- time: " + time + "\n";
-		s = "- inv: " + inv.toString() + "\n";
-		s = "- tradeType: " + tradeType.toString() + "\n";
-		s = "- price: " + price + "\n";
-		s = "- size: " + size + "\n";
-		s = "- source: " + source.toString() + "\n";
-		s = "- timing: " + timing.toString() + "\n";
+		String s = "\n";
+		s = s + "- time: " + time + "\n";
+		s = s + "- inv: " + inv.toString() + "\n";
+		s = s + "- tradeType: " + tradeType.toString() + "\n";
+		s = s + "- price: " + price + "\n";
+		s = s + "- size: " + size + "\n";
+		s = s + "- source: " + source.toString() + "\n";
+		s = s + "- timing: " + timing.toString() + "\n";
 		return s;
 	}
 }

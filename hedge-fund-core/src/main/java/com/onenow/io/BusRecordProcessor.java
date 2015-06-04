@@ -26,30 +26,32 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	Class<T> recordType;
 	
     // Our JSON object mapper for deserializing records
-    private final ObjectMapper JSON = new ObjectMapper();
+    private final ObjectMapper jsonMapper = new ObjectMapper();
     
     // The shard this processor is processing
     private String kinesisShardId;
 
 
-	public BusRecordProcessor() {	
+	public BusRecordProcessor() {
 	}
 	
 	public BusRecordProcessor(Class<T> recordType) {
 		
-		System.out.println("&&&&&&&&&&&&& CREATED PROCESSOR");
+		// System.out.println("&&&&&&&&&&&&& CREATED PROCESSOR");
 
 		this.recordType = recordType;
 		
         // Create an object mapper to deserialize records that ignores unknown properties
-        JSON.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
+        // jsonMapper.registerModule( new ExampleJacksonModule() );
 	}
+
 
 	@Override
 	public void initialize(String shardId) {
 
-		System.out.println("&&&&&&&&&&&&& INITIALIZED PROCESSOR");
+		// System.out.println("&&&&&&&&&&&&& INITIALIZED PROCESSOR");
 
 		this.kinesisShardId = shardId;
 		
@@ -65,19 +67,23 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	@Override
 	public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
 		
-		System.out.println("&&&&&&&&&&&&& PROCESSING RECORDS");
+		// System.out.println("&&&&&&&&&&&&& PROCESSING RECORDS");
 		
         for (Record r : records) {
             // Deserialize each record as an UTF-8 encoded JSON String of the type provided
             T record;
             try {
-                
-            	record = JSON.readValue(r.getData().array(), recordType);
+                String json = new String(r.getData().array());
+                // System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^" + json);
+                // System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^" + recordType);
+            	record = jsonMapper.readValue(json, recordType);
             	handleByRecordType(record);
                 
             } catch (IOException e) {
-            	String s = "Skipping record. Unable to parse record into HttpReferrerPair. Partition Key: "
-                        + r.getPartitionKey() + ". Sequence Number: " + r.getSequenceNumber() + e;
+            	String s = 	"Skipping record. Unable to parse record into: " + recordType + 
+            				". Partition Key: " + r.getPartitionKey() + 
+            				". Sequence Number: " + r.getSequenceNumber() + 
+            				e;
             	System.out.println(s);
                 continue;
             }
@@ -92,7 +98,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 */
 	private void handleByRecordType(T record) {
 		
-		System.out.println("******************************** RECORD: " + record.toString());
+		System.out.println("******************************** GOT RECORD: " + record.toString());
 		
 		if(recordType.equals(String.class)) {
 			

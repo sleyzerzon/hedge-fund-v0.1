@@ -25,7 +25,7 @@ public class ClerkHistoryMain {
 		Kinesis kinesis = BusSystem.getKinesis();
 		
 		StreamName streamName = StreamName.HISTORY;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.eventProcessorFactory();
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.processorFactoryEventHistoryRT();
 
 		BusSystem.read(kinesis, streamName, recordProcessorFactory);
 		

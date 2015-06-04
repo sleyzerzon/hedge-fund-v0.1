@@ -39,7 +39,7 @@ public class ChartistMain {
 		Kinesis kinesis = BusSystem.getKinesis();
 		
 		StreamName streamName = StreamName.REALTIME;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.eventProcessorFactory();
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.processorFactoryEventHistoryRT();
 
 		BusSystem.read(kinesis, streamName, recordProcessorFactory);
 		
