@@ -37,30 +37,19 @@ public class PriceSizeCache {
 	}
 	
 	
-	// PUBLIC
-	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
-	
 	// REAL-TIME from broker
 	public void writeEventRT(EventHistoryRT event) {
 
-		boolean writeToMem = false;
-		
 		String key = Lookup.getInvestmentKey(	event.inv, event.tradeType,
 												event.source, event.timing);
 		
 		// keep last in memory
-		if(lastEventRT.get(key) == null) { 	// never written before
-			writeToMem = true;
-		} else {		
-			if( event.time > lastEventRT.get(key).time ) {
-				writeToMem = true;
-			}
-		}
-		
-		if(writeToMem) {
-			lastEventRT.put(key, event);
-		}
+		if(		event.time > lastEventRT.get(key).time || 
+				lastEventRT.get(key) == null) {
 			
+					lastEventRT.put(key, event);
+		} 
+					
 		// CRITICAL PATH
 		// TODO: FAST WRITE TO RING 
 		writeEventThroughRing(event);
@@ -87,11 +76,6 @@ public class PriceSizeCache {
 			BrokerBusHistorianRT historyRTBroker = new BrokerBusHistorianRT();
 			BrokerBusHistorianRT.write(event);
 			
-			// moved to Chartist
-//			writeRTtoL1(time, inv, tradeType, source, timing, price, size);		
-
-			// moved to Chartist
-			// prefetchCharts(inv, tradeType, source, timing);		
 		}
 	}
 

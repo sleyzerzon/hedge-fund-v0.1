@@ -47,6 +47,7 @@ public class ChartistMain {
 
 	}
 	
+	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 	public static void prefetchCharts(EventHistoryRT event) {
 		
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
