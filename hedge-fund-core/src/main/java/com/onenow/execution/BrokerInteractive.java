@@ -43,7 +43,7 @@ public class BrokerInteractive implements Broker  {
 	  private static long lastQueryTime;
 
 	  public BrokerInteractive() {
-		  
+		  this.brokerMode = BrokerMode.REALTIME;
 	  }
 	
 	  /**

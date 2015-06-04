@@ -1,7 +1,7 @@
 package com.onenow.io;
 
 import com.onenow.constant.StreamName;
-import com.onenow.data.EventHistoryRT;
+import com.onenow.data.EventRealTime;
 
 public class BrokerBusHistorianRT {
 
@@ -25,7 +25,7 @@ public class BrokerBusHistorianRT {
 	 * Writes Real Time object
 	 * @param event
 	 */
-	static public void write(EventHistoryRT event) {
+	static public void write(EventRealTime event) {
 		BusSystem.write(kinesis, StreamName.REALTIME, event);		
 	}
 

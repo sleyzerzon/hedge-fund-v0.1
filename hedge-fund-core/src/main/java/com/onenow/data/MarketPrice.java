@@ -39,7 +39,7 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventHistoryRT event = new EventHistoryRT(	timeStamp, inv, TradeType.TRADED, 
+			EventRealTime event = new EventRealTime(	timeStamp, inv, TradeType.TRADED, 
 														lastPrice, lastSize,
 														source, timing);
 			// System.out.println("MarketPrice WRITE " + event.toString());

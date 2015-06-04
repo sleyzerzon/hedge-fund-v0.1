@@ -5,7 +5,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 
-public class EventHistoryRT {
+public class EventRealTime {
 
 	public Long time;
 	public Investment inv;
@@ -17,7 +17,7 @@ public class EventHistoryRT {
 	public InvDataSource source;
 	public InvDataTiming timing;
 
-	public EventHistoryRT() {
+	public EventRealTime() {
 		
 	}
 	
@@ -29,7 +29,7 @@ public class EventHistoryRT {
 	 * @param price
 	 * @param size
 	 */
-	public EventHistoryRT(	Long time, Investment inv, TradeType tradeType, Double price, int size,
+	public EventRealTime(	Long time, Investment inv, TradeType tradeType, Double price, int size,
 					InvDataSource source, InvDataTiming timing) {
 		this.time = time;
 		this.inv = inv;

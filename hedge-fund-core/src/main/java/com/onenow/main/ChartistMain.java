@@ -10,7 +10,7 @@ import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.data.EventHistoryRT;
+import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
@@ -49,7 +49,7 @@ public class ChartistMain {
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
-	public static void prefetchCharts(EventHistoryRT event) {
+	public static void prefetchCharts(EventRealTime event) {
 		
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			

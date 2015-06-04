@@ -10,7 +10,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.data.EventHistoryRT;
+import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -23,7 +23,7 @@ import com.onenow.util.WatchLog;
 public class PriceSizeCache {
 	
 	private Broker 								broker;
-	private HashMap<String, EventHistoryRT>		lastEventRT = new HashMap<String, EventHistoryRT>(); 	// last set of price/size/etc
+	private HashMap<String, EventRealTime>		lastEventRT = new HashMap<String, EventRealTime>(); 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
 	private TSDB 								TSDB = new TSDB();				// database		
@@ -38,7 +38,7 @@ public class PriceSizeCache {
 	
 	
 	// REAL-TIME from broker
-	public boolean writeEventRT(EventHistoryRT event) {
+	public boolean writeEventRT(EventRealTime event) {
 
 		String key = Lookup.getInvestmentKey(	event.inv, event.tradeType,
 												event.source, event.timing);
@@ -71,7 +71,7 @@ public class PriceSizeCache {
 	 * 
 	 * @param event
 	 */
-	public void writeEventThroughRing(EventHistoryRT event) {
+	public void writeEventThroughRing(EventRealTime event) {
 
 		// TODO: INSERT RING		
 		
