@@ -59,7 +59,9 @@ public class NetworkConfig {
 
 	public static NetworkService getGateway(Topology env) {
 
-		NetworkService net = gatewayAWSIB;
+		// NetworkService net = gatewayAWSIB;
+		
+		NetworkService net = gatewayLocalIB;
 		
 		if(env.equals(Topology.LOCAL)) {
 			 net = gatewayLocalIB;

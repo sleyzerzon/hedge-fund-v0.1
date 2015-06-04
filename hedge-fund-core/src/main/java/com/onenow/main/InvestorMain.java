@@ -33,7 +33,7 @@ public class InvestorMain {
 
 	    BrokerInteractive broker = new BrokerInteractive(	mode, 
 	    													marketPortfolio, 
-	    													new BusWallSt(Topology.LOCAL)); 
+	    													new BusWallSt()); 
 	   
 	    // choose what to hedge on
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 

@@ -38,10 +38,12 @@ public class PriceSizeCache {
 	
 	
 	// REAL-TIME from broker
-	public void writeEventRT(EventHistoryRT event) {
+	public boolean writeEventRT(EventHistoryRT event) {
 
 		String key = Lookup.getInvestmentKey(	event.inv, event.tradeType,
 												event.source, event.timing);
+		
+		boolean success = false;
 		
 		Boolean writeToMem=false;
 		// keep last in memory
@@ -55,14 +57,14 @@ public class PriceSizeCache {
 		
 		if(writeToMem) {
 			lastEventRT.put(key, event);
+			success = true;
 		}
 		
 		// CRITICAL PATH
 		// TODO: FAST WRITE TO RING 
 		writeEventThroughRing(event);
-		
-		
-		// NOTE: ALSO PRE-FETCH CHARTS FROM L1 ELASTICACHE
+
+		return success;
 	}
 		
 	/** Upon writing every event to the ring, asynchronous update all charts in L0 from RTL1

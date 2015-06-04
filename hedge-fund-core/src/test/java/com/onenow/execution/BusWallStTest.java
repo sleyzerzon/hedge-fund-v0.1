@@ -11,7 +11,7 @@ public class BusWallStTest {
   @Test
   public void BusWallSt() {
 	  BusWallSt bus = new BusWallSt();
-	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.AWSLOCAL)));
+	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.LOCAL)));
   }
 
   @Test

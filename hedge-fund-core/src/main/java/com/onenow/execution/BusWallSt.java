@@ -28,17 +28,20 @@ public class BusWallSt implements ConnectionHandler {
 	public NetworkService gateway;
 	
 	public BusWallSt() {
-		this.gateway = NetworkConfig.getGateway(Topology.AWSLOCAL);		
+		// always local for now
+		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);		
 	}
 	
 	// configurable topology for testing
 	public BusWallSt(Topology topo) {
+		
 		this.gateway = NetworkConfig.getGateway(topo);
 		
 		// fixed gateway for production
 //		if(!NetworkConfig.isMac()) {
 //			this.gateway = NetworkConfig.getGateway(Topology.AWSLOCAL);
 //		}
+		
 	}
 	
 	  /**

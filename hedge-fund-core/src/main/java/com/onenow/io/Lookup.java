@@ -44,16 +44,22 @@ public class Lookup {
 	 * @return
 	 */
 	public static String getInvestmentKey(Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
-		Underlying under = inv.getUnder();
 		String s = ""; 
-		s = s + under.getTicker() + "-" + inv.getInvType();		
-		if (inv instanceof InvestmentOption) {
-			String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-			Double strike = ((InvestmentOption) inv).getStrikePrice();
-			s = s + "-" + exp + "-" + strike; 
+	
+		try {
+			Underlying under = inv.getUnder();
+			s = s + under.getTicker() + "-" + inv.getInvType();		
+			if (inv instanceof InvestmentOption) {
+				String exp = (String) ((InvestmentOption) inv).getExpirationDate();
+				Double strike = ((InvestmentOption) inv).getStrikePrice();
+				s = s + "-" + exp + "-" + strike; 
+			}
+			s = s + "-" + tradeType.toString();
+			s = s + "-" + source.toString() + "-" + timing.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		s = s + "-" + tradeType.toString();
-		s = s + "-" + source.toString() + "-" + timing.toString();
+	
 		return (s);
 	}
 	
