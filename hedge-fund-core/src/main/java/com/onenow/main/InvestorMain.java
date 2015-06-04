@@ -44,7 +44,7 @@ public class InvestorMain {
     											toDashedDate);						
 		
 		// register once: get all market real-time quotes
-		broker.getLiveQuotes(); 
+		 broker.getLiveQuotes(); 
 
 		if(mode.equals(BrokerMode.HISTORIAN)) {
 			// Do historical queries from SQS
@@ -57,7 +57,7 @@ public class InvestorMain {
 	}
 	
 	private static BrokerMode getModeArgument(String[] args) {
-		BrokerMode mode = BrokerMode.HISTORIANRT;
+		BrokerMode mode = BrokerMode.REALTIME;
 		if(args.length>0) {
 			if(args[0]!=null) {
 				String s0 = args[0];
@@ -69,6 +69,9 @@ public class InvestorMain {
 				}
 				if(s0.equals("HISTORIAN")) {
 					mode = BrokerMode.HISTORIAN;
+				}
+				if(s0.equals("STREAMING")) {
+					mode = BrokerMode.STREAMING;
 				}
 			} else {
 				System.out.println("ERROR: mode is a required argument");

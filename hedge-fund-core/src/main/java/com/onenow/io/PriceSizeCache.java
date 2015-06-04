@@ -43,13 +43,20 @@ public class PriceSizeCache {
 		String key = Lookup.getInvestmentKey(	event.inv, event.tradeType,
 												event.source, event.timing);
 		
+		Boolean writeToMem=false;
 		// keep last in memory
-		if(		event.time > lastEventRT.get(key).time || 
-				lastEventRT.get(key) == null) {
-			
-					lastEventRT.put(key, event);
-		} 
-					
+		if(lastEventRT.get(key) == null) { 	// never written before
+			writeToMem = true;
+		} else {
+			if( event.time > lastEventRT.get(key).time ) {
+				writeToMem = true;
+			}
+		}
+		
+		if(writeToMem) {
+			lastEventRT.put(key, event);
+		}
+		
 		// CRITICAL PATH
 		// TODO: FAST WRITE TO RING 
 		writeEventThroughRing(event);

@@ -14,6 +14,7 @@ import com.onenow.data.EventHistoryRT;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
+import com.onenow.io.ElastiCache;
 import com.onenow.io.Kinesis;
 import com.onenow.io.Lookup;
 import com.onenow.io.TSDB;
@@ -26,7 +27,8 @@ public class ChartistMain {
 
 	private static HashMap<String, Chart>		charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
-	private static TSDB 						TSDB = new TSDB();								// database		
+	private static TSDB 		TSDB = new TSDB();								// database		
+	private static ElastiCache	cache = new ElastiCache();
 	
 	/**
 	 * Pre-fetches to L1 cache the chart analysis, based on the latest Real-Time data 
@@ -43,8 +45,7 @@ public class ChartistMain {
 
 		BusSystem.read(kinesis, streamName, recordProcessorFactory);
 		
-		// TODO: look at chart L0 misses by the Investor?
-
+				
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
@@ -95,9 +96,13 @@ public class ChartistMain {
 					fromDate, toDate,
 					source, timing);
 
-			charts.put(key, chart);		
-			
-			// TODO: Write to ElastiCache
+			// store in process memory
+			charts.put(key, chart);			
+			// Write to ElastiCache
+			cache.write(key, (Object) chart);
+				
+			cache.read(key);
+
 						
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
 public enum BrokerMode {
-	PRIMARY, STANDBY, HISTORIAN, HISTORIANRT
+	PRIMARY, STANDBY, HISTORIAN, REALTIME, STREAMING
 }

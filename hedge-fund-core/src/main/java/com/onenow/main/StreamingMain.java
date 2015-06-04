@@ -1,9 +1,9 @@
 package com.onenow.main;
 
-public class HistorianRTMain {
+public class StreamingMain {
 
-	/**
-	 * Gather complete accurate real-time market data
+	/** 
+	 * Handles VWAP and other ticks streamed down that are not real-time or historical
 	 * @param args
 	 */
 	public static void main(String[] args) {
