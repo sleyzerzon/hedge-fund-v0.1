@@ -62,7 +62,7 @@ public class FlexibleLogger {
 	  }
     catch (IOException e) {
     	success = false;
-        e.printStackTrace();
+		Watchr.log(Level.SEVERE, e.getMessage());
         throw new RuntimeException("Problems with creating the log files");
       }
 	  

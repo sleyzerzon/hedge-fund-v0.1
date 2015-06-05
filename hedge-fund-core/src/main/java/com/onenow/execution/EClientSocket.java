@@ -313,7 +313,7 @@ public class EClientSocket {
 	        catch( Exception e) {
 	        	tryToConnect = true;
 	        	
-	        	String log = "... COULD NOT CONNECT TO GATEWAY/TWS: ";
+	        	String log = "... COULD NOT CONNECT TO GATEWAY/TWS: " + e.getMessage();
 				Watchr.log(Level.SEVERE, log, "\n", "");
 
 	            connectionError(); 
@@ -405,7 +405,9 @@ public class EClientSocket {
         if ( m_serverVersion >= 20 ){
         	// currently with Unified both server version and time sent in one message
             m_TwsTime = m_reader.readStr();
-            System.out.println("TWS Time at connection:" + m_TwsTime);
+            String log "TWS Time at connection:" + m_TwsTime);
+			Watchr.log(Level.INFO, log);
+
         }
     	if( m_useV100Plus && (m_serverVersion < MIN_VERSION || m_serverVersion > MAX_VERSION) ) {
     		eDisconnect();
@@ -436,8 +438,9 @@ public class EClientSocket {
     }
 
     private void performRedirect( String address, int defaultPort ) throws IOException {
-        System.out.println("Server Redirect: " + address);
-        
+        String log = "Server Redirect: " + address;
+		Watchr.log(Level.INFO, log);
+
         // Get host:port from address string and reconnect (note: port is optional)
         String[] array = address.split(":");
         m_host = array[0]; // reset connected host
@@ -446,7 +449,7 @@ public class EClientSocket {
             newPort = ( array.length > 1 ) ? Integer.parseInt(array[1]) : defaultPort;
         }
         catch ( NumberFormatException e ) {      	
-            System.out.println( "Warning: redirect port is invalid, using default port");
+            log = "Warning: redirect port is invalid, using default port..." + e.getMessage();
             newPort = defaultPort;
         }
         eConnect( new Socket( m_host, newPort ) );
@@ -497,7 +500,9 @@ public class EClientSocket {
     }
 
     public synchronized void startAPI() {
-    	System.out.println("~ startAPI");
+    	String log = "~ startAPI";
+		Watchr.log(Level.INFO, log);
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -519,7 +524,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-        	System.out.println ("FAILED TO START API");
+        	log = "FAILED TO START API: " + e.getMessage();
+			Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID,
                    EClientErrors.FAIL_SEND_STARTAPI, "" + e);
             close();
@@ -527,7 +534,9 @@ public class EClientSocket {
     }
 
     public synchronized void cancelScannerSubscription( int tickerId) {
-    	System.out.println("~ cancelScannerSubscription");
+    	String log = "~ cancelScannerSubscription";
+		Watchr.log(Level.INFO, log);
+
         // not connected?
         if( !m_connected) {
             notConnected();
@@ -535,7 +544,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-        	System.out.println ("API SCANNER UNSUPPORTED");
+        	log = "API SCANNER UNSUPPORTED";
+			Watchr.log(Level.WARNING, log);
+
         	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
         		"  It does not support API scanner subscription.");
         	return;
@@ -560,7 +571,8 @@ public class EClientSocket {
     }
 
     public synchronized void reqScannerParameters() {
-    	System.out.println("~ reqScannerParameters");
+    	String log = "~ reqScannerParameters";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -569,7 +581,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-        	System.out.println ("API SCANNER UNSUPPORTED");
+        	log = "API SCANNER UNSUPPORTED";
+			Watchr.log(Level.INFO, log);
+
         	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
         			"  It does not support API scanner subscription.");
           return;
@@ -586,7 +600,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-        	System.out.println ("API SCANNER PARAMETER ERROR");
+        	log = "API SCANNER PARAMETER ERROR: " + e.getMessage();
+			Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID,
                    EClientErrors.FAIL_SEND_REQSCANNERPARAMETERS, "" + e);
             close();
@@ -594,7 +610,8 @@ public class EClientSocket {
     }
 
     public synchronized void reqScannerSubscription( int tickerId, ScannerSubscription subscription, ArrayList<TagValue> scannerSubscriptionOptions) {
-    	System.out.println("~ reqScannerSubscription");
+    	String log = "~ reqScannerSubscription";
+		Watchr.log(Level.INFO, log);
 
     	// not connected?
         if( !m_connected) {
@@ -603,7 +620,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-        	System.out.println ("API SCANNER UNSUPPORTED");
+        	log = "API SCANNER UNSUPPORTED";
+			Watchr.log(Level.INFO, log);
+
         	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
         			"  It does not support API scanner subscription.");
           return;
@@ -677,18 +696,21 @@ public class EClientSocket {
     public synchronized void reqMktData(int tickerId, Contract contract,
     		String genericTickList, boolean snapshot, List<TagValue> mktDataOptions) {
     	
-    	System.out.println("~ reqMktData");
-    	
+    	String log = "~ reqMktData";
+		Watchr.log(Level.INFO, log);
+
     	String req = "== " + "Request Market Data" + "\n";
     	req = req + "- TickerId " + tickerId + "\n";
     	req = req + "- Contract " + contract.toString();
     	req = req + "- Generic Tick List: " + genericTickList + "\n";
     	req = req + "- Snapshot " + snapshot + "\n";
     	req = req + "- Mkt Data Options " + mktDataOptions.toString();
-    	System.out.println(req);
+		Watchr.log(Level.INFO, req);
     	
         if (!m_connected) {
-        	System.out.println ("COULD NOT CONNECT: reqMktData");
+        	log = "COULD NOT CONNECT: reqMktData";
+			Watchr.log(Level.WARNING, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
             return;
         }
@@ -825,7 +847,8 @@ public class EClientSocket {
     }
 
     public synchronized void cancelHistoricalData( int tickerId ) {
-    	System.out.println("~ cancelHistoricalData");
+    	String log = "~ cancelHistoricalData";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -834,7 +857,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < 24) {
-        	System.out.println ("COULD NOT CANCEL: HistoricalData");
+        	log = "COULD NOT CANCEL: HistoricalData";
+			Watchr.log(Level.WARNING, log);
+
         	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
         			"  It does not support historical data query cancellation.");
           return;
@@ -859,7 +884,8 @@ public class EClientSocket {
     }
 
     public void cancelRealTimeBars(int tickerId) {
-    	System.out.println("~ cancelRealTimeBars");
+    	String log = "~ cancelRealTimeBars";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -868,7 +894,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REAL_TIME_BARS) {
-        	System.out.println ("COULD NOT CANCEL: RealTime");
+        	log = "COULD NOT CANCEL: RealTime";
+			Watchr.log(Level.WARNING, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support realtime bar data query cancellation.");
             return;
@@ -898,7 +926,8 @@ public class EClientSocket {
                                                 String barSizeSetting, String whatToShow,
                                                 int useRTH, int formatDate, List<TagValue> chartOptions) {
     	
-    	System.out.println("~ reqHistoricalData");
+    	String log = "~ reqHistoricalData";
+		Watchr.log(Level.INFO, log);
 
     	String req = "";
     	req = req + "== " + "Requesting Historical Data" + "\n";
@@ -911,7 +940,8 @@ public class EClientSocket {
     	req = req + "- Use RTH " + useRTH + "\n";
     	req = req + "- Format Date " + formatDate + "\n";
     	req = req + "- Chart Options " + chartOptions.toString();
-    	System.out.println(req);
+		Watchr.log(Level.INFO, req);
+
     	
 //    	EXAMPLE
 //    	...Requesting Historical Data
@@ -942,7 +972,9 @@ public class EClientSocket {
 
         try {
           if (m_serverVersion < 16) {
-          	System.out.println ("COULD NOT BACKFILL: HistoricalData");
+          	log = "COULD NOT BACKFILL: HistoricalData";
+			Watchr.log(Level.INFO, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support historical data backfill.");
             return;
@@ -1045,7 +1077,8 @@ public class EClientSocket {
     											int barSize, String whatToShow, boolean useRTH, 
     											ArrayList<TagValue> realTimeBarsOptions) {
     	
-    	System.out.println("~ reqRealTimeBars");
+    	String log = "~ reqRealTimeBars";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -1054,7 +1087,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REAL_TIME_BARS) {
-          	System.out.println ("UNSUPPORTED: RealTime");
+          	log = "UNSUPPORTED: RealTime";
+			Watchr.log(Level.INFO, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support real time bars.");
             return;
@@ -1116,7 +1151,8 @@ public class EClientSocket {
 
             // WIRE
             closeAndSend(b);
-//            System.out.println("REAL-TIME WIRE " + b.toString());
+            log = "REAL-TIME WIRE " + b.toString();
+			Watchr.log(Level.FINEST, log);
 
         }
         catch( Exception e) {
@@ -1127,7 +1163,8 @@ public class EClientSocket {
 
     public synchronized void reqContractDetails(int reqId, Contract contract) {
 
-    	System.out.println("~ reqContractDetails");
+    	String log = "~ reqContractDetails";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -1137,7 +1174,9 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >=4
         if( m_serverVersion < 4) {
-          	System.out.println ("UNSUPPORTED: TWS version");
+          	log = "UNSUPPORTED: TWS version";
+			Watchr.log(Level.WARNING, log);
+
             message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                             EClientErrors.UPDATE_TWS.msg());
             return;
@@ -1224,7 +1263,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("CLIENT ERROR: REQUEST CONTRACT DETAILS");
+          	log = "CLIENT ERROR: REQUEST CONTRACT DETAILS.." + e.getMessage();
+			Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQCONTRACT, "" + e);
             close();
         }
@@ -1232,7 +1273,8 @@ public class EClientSocket {
 
     public synchronized void reqMktDepth( int tickerId, Contract contract, int numRows, ArrayList<TagValue> mktDepthOptions) {
         
-    	System.out.println("~ reqMktDepth");
+    	String log = "~ reqMktDepth";
+		Watchr.log(Level.INFO, log);
     	
     	// not connected?
         if( !m_connected) {
@@ -1242,7 +1284,9 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >=6
         if( m_serverVersion < 6) {
-          	System.out.println ("UNSUPPORTED: TWS >=6");
+          	log = "UNSUPPORTED: TWS >=6";
+			Watchr.log(Level.INFO, log);
+
             message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -1313,7 +1357,8 @@ public class EClientSocket {
 
     public synchronized void cancelMktData( int tickerId) {
     	
-    	System.out.println("~ cancelMktData");
+    	String log = "~ cancelMktData";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -1341,7 +1386,9 @@ public class EClientSocket {
 
     public synchronized void cancelMktDepth( int tickerId) {
     	
-    	System.out.println("~ cancelMktDepth");
+    	String log = "~ cancelMktDepth";
+		Watchr.log(Level.INFO, log);
+
 
         // not connected?
         if( !m_connected) {
@@ -1351,7 +1398,9 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >=6
         if( m_serverVersion < 6) {
-          	System.out.println ("UNSUPPORTED: TWS >=6");
+          	log = "UNSUPPORTED: TWS >=6";
+			Watchr.log(Level.WARNING, log);
+
             message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -1379,7 +1428,8 @@ public class EClientSocket {
                                               int exerciseAction, int exerciseQuantity,
                                               String account, int override) {
     	
-    	System.out.println("~ exerciseOptions");
+    	String log = "~ exerciseOptions";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -1391,7 +1441,9 @@ public class EClientSocket {
 
         try {
           if (m_serverVersion < 21) {
-            	System.out.println ("UNSUPPORTED: OPTIONS EXERCISE");
+            	log = "UNSUPPORTED: OPTIONS EXERCISE";
+    			Watchr.log(Level.WARNING, log);
+
             	error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             			"  It does not support options exercise from the API.");
             return;
@@ -1442,7 +1494,8 @@ public class EClientSocket {
 
     public synchronized void placeOrder( int id, Contract contract, Order order) {
     	
-    	System.out.println("~ placeOrder");
+    	String log = "~ placeOrder";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2021,7 +2074,8 @@ public class EClientSocket {
 
     public synchronized void reqAccountUpdates(boolean subscribe, String acctCode) {
     	
-    	System.out.println("~ reqAccountUpdates");
+    	String log = "~ reqAccountUpdates";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2046,7 +2100,9 @@ public class EClientSocket {
             closeAndSend(b);
        }
         catch( Exception e) {
-          	System.out.println ("ERROR: REQUEST ACCOUNT UPDATES");
+          	log = "ERROR: REQUEST ACCOUNT UPDATES: " + e.getMessage();
+			Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_ACCT, "" + e);
             close();
         }
@@ -2054,7 +2110,8 @@ public class EClientSocket {
 
     public synchronized void reqExecutions(int reqId, ExecutionFilter filter) {
     	
-    	System.out.println("~ reqExecutions");
+    	String log = "~ reqExecutions";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2090,7 +2147,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: EXECUTIONS");
+          	log = "ERROR: EXECUTIONS: " + e.getMessage();
+			Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_EXEC, "" + e);
             close();
         }
@@ -2098,7 +2157,8 @@ public class EClientSocket {
 
     public synchronized void cancelOrder( int id) {
     	
-    	System.out.println("~ cancelOrder");
+    	String log = "~ cancelOrder";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2126,7 +2186,8 @@ public class EClientSocket {
 
     public synchronized void reqOpenOrders() {
     	
-    	System.out.println("~ reqOpenOrders");
+    	String log = "~ reqOpenOrders";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2146,7 +2207,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: OPEN ORDER");
+          	log = "ERROR: OPEN ORDER: " + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
@@ -2154,7 +2217,8 @@ public class EClientSocket {
 
     public synchronized void reqIds( int numIds) {
     	
-    	System.out.println("~ reqIds");
+    	String log = "~ reqIds";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2174,7 +2238,9 @@ public class EClientSocket {
             closeAndSend(b);
        }
         catch( Exception e) {
-          	System.out.println ("ERROR: REQUEST IDS");
+          	log = "ERROR: REQUEST IDS: " + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CORDER, "" + e);
             close();
         }
@@ -2182,7 +2248,8 @@ public class EClientSocket {
 
     public synchronized void reqNewsBulletins( boolean allMsgs) {
     	
-    	System.out.println("~ reqNewsBulletins");
+    	String log = "~ reqNewsBulletins";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2202,7 +2269,9 @@ public class EClientSocket {
             closeAndSend(b);
        }
         catch( Exception e) {
-          	System.out.println ("ERROR: NEWS BULLETIN");
+          	log = "ERROR: NEWS BULLETIN: " + e.getMessage();
+    		Watchr.log(Level.INFO, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CORDER, "" + e);
             close();
         }
@@ -2210,7 +2279,8 @@ public class EClientSocket {
 
     public synchronized void cancelNewsBulletins() {
     	
-    	System.out.println("~ cancelNewsBulletins");
+    	String log = "~ cancelNewsBulletins";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2230,7 +2300,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: CANCEL NEWS BULLETIN");
+          	log = "ERROR: CANCEL NEWS BULLETIN " + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_CORDER, "" + e);
             close();
         }
@@ -2238,7 +2310,8 @@ public class EClientSocket {
 
     public synchronized void setServerLogLevel(int logLevel) {
     	
-    	System.out.println("~ setServerLogLevel");
+    	String log = "~ setServerLogLevel";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2259,7 +2332,9 @@ public class EClientSocket {
                     closeAndSend(b);
                }
         catch( Exception e) {
-          	System.out.println ("ERROR: SET LOG LEVEL");
+          	log = "ERROR: SET LOG LEVEL: " + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_SERVER_LOG_LEVEL, "" + e);
             close();
         }
@@ -2267,7 +2342,8 @@ public class EClientSocket {
 
     public synchronized void reqAutoOpenOrders(boolean bAutoBind) {
     	
-    	System.out.println("~ reqAutoOpenOrders");
+    	String log = "~ reqAutoOpenOrders";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2288,7 +2364,7 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: OPEN ORDERS");
+          	log = "ERROR: OPEN ORDERS: " + e.getMessage();
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
@@ -2296,7 +2372,8 @@ public class EClientSocket {
 
     public synchronized void reqAllOpenOrders() {
     	
-    	System.out.println("~ reqAllOpenOrders");
+    	String log = "~ reqAllOpenOrders";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2316,7 +2393,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: ALL OPEN ORDERS");
+          	log = "ERROR: ALL OPEN ORDERS: " + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
@@ -2324,7 +2403,8 @@ public class EClientSocket {
 
     public synchronized void reqManagedAccts() {
     	
-    	System.out.println("~ reqManagedAccts");
+    	String log = "~ reqManagedAccts";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2344,7 +2424,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: MANAGED ACCOUNTS");
+          	log = "ERROR: MANAGED ACCOUNTS: " + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_OORDER, "" + e);
             close();
         }
@@ -2352,7 +2434,8 @@ public class EClientSocket {
 
     public synchronized void requestFA( int faDataType ) {
     	
-    	System.out.println("~ requestFA");
+    	String log = "~ requestFA";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2362,7 +2445,9 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >= 13
         if( m_serverVersion < 13) {
-          	System.out.println ("ERROR: FAC");
+          	log = "ERROR: FAC";
+    		Watchr.log(Level.WARNING, log);
+
             message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -2387,7 +2472,8 @@ public class EClientSocket {
 
     public synchronized void replaceFA( int faDataType, String xml ) {
     	
-    	System.out.println("~ replaceFA");
+    	String log = "~ replaceFA";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2397,7 +2483,9 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >= 13
         if( m_serverVersion < 13) {
-          	System.out.println ("ERROR: REPLACE FAC");
+          	log = "ERROR: REPLACE FAC";
+    		Watchr.log(Level.WARNING, log);
+
             message(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS.code(),
                     EClientErrors.UPDATE_TWS.msg());
             return;
@@ -2423,7 +2511,8 @@ public class EClientSocket {
 
     public synchronized void reqCurrentTime() {
     	
-    	System.out.println("~ reqCurrentTime");
+    	String log = "~ reqCurrentTime";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2433,7 +2522,9 @@ public class EClientSocket {
 
         // This feature is only available for versions of TWS >= 33
         if( m_serverVersion < 33) {
-          	System.out.println ("UNSUPPORTED: CURRENT TIME");
+          	log = "UNSUPPORTED: CURRENT TIME";
+    		Watchr.log(Level.WARNING, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                   "  It does not support current time requests.");
             return;
@@ -2450,7 +2541,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("CLIENT ERROR: CURRENT TIME");
+          	log = "CLIENT ERROR: CURRENT TIME..." + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQCURRTIME, "" + e);
             close();
         }
@@ -2458,7 +2551,9 @@ public class EClientSocket {
 
     public synchronized void reqFundamentalData(int reqId, Contract contract, String reportType) {
     	
-    	System.out.println("~ reqFundamentalData");
+    	String log = "~ reqFundamentalData";
+		Watchr.log(Level.INFO, log);
+
 
         // not connected?
         if( !m_connected) {
@@ -2513,7 +2608,8 @@ public class EClientSocket {
 
     public synchronized void cancelFundamentalData(int reqId) {
     	
-    	System.out.println("~ cancelFundamentalData");
+    	String log = "~ cancelFundamentalData";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2548,7 +2644,9 @@ public class EClientSocket {
     public synchronized void calculateImpliedVolatility(int reqId, Contract contract,
             double optionPrice, double underPrice) {
     	
-    	System.out.println("~ calculateImpliedVolatility");
+    	String log = "~ calculateImpliedVolatility";
+		Watchr.log(Level.INFO, log);
+
 
         // not connected?
         if( !m_connected) {
@@ -2609,7 +2707,8 @@ public class EClientSocket {
 
     public synchronized void cancelCalculateImpliedVolatility(int reqId) {
     	
-    	System.out.println("~ cancelCalculateImpliedVolatility");
+    	String log = "~ cancelCalculateImpliedVolatility";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2644,7 +2743,8 @@ public class EClientSocket {
     public synchronized void calculateOptionPrice(int reqId, Contract contract,
             double volatility, double underPrice) {
 
-    	System.out.println("~ calculateOptionPrice");
+    	String log = "~ calculateOptionPrice";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2705,7 +2805,8 @@ public class EClientSocket {
 
     public synchronized void cancelCalculateOptionPrice(int reqId) {
 
-    	System.out.println("~ cancelCalculateOptionPrice");
+    	String log = "~ cancelCalculateOptionPrice";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2739,7 +2840,8 @@ public class EClientSocket {
 
     public synchronized void reqGlobalCancel() {
     	
-    	System.out.println("~ reqGlobalCancel");
+    	String log = "~ reqGlobalCancel";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2748,7 +2850,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REQ_GLOBAL_CANCEL) {
-          	System.out.println ("ERROR: SERVER VERSION IN GLOBAL CANCEL");
+          	log = "ERROR: SERVER VERSION IN GLOBAL CANCEL";
+    		Watchr.log(Level.WARNING, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                     "  It does not support globalCancel requests.");
             return;
@@ -2766,7 +2870,9 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: SEND GLOBAL CANCEL");
+          	log = "ERROR: SEND GLOBAL CANCEL..." + e.getMessage();
+    		Watchr.log(Level.SEVERE, log);
+
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQGLOBALCANCEL, "" + e);
             close();
         }
@@ -2774,7 +2880,8 @@ public class EClientSocket {
 
     public synchronized void reqMarketDataType(int marketDataType) {
     	
-    	System.out.println("~ reqMarketDataType");
+    	String log = "~ reqMarketDataType";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2783,7 +2890,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REQ_MARKET_DATA_TYPE) {
-          	System.out.println ("ERROR: MarketData Type");
+          	log = "ERROR: MarketData Type";
+    		Watchr.log(Level.WARNING, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
                     "  It does not support marketDataType requests.");
             return;
@@ -2802,7 +2911,7 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch( Exception e) {
-          	System.out.println ("ERROR: SEND MARKET DATA TYPE");
+          	log = "ERROR: SEND MARKET DATA TYPE..." + e.getMessage();
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQMARKETDATATYPE, "" + e);
             close();
         }
@@ -2810,7 +2919,8 @@ public class EClientSocket {
 
     public synchronized void reqPositions() {
     	
-    	System.out.println("~ reqPositions");
+    	String log = "~ reqPositions";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {
@@ -2819,7 +2929,9 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_ACCT_SUMMARY) {
-          	System.out.println ("ERROR: REQUEST POSITIONS SERVER VERSION");
+          	log = "ERROR: REQUEST POSITIONS SERVER VERSION";
+    		Watchr.log(Level.WARNING, log);
+
             error(EClientErrors.NO_VALID_ID, EClientErrors.UPDATE_TWS,
             "  It does not support position requests.");
             return;
@@ -2836,14 +2948,15 @@ public class EClientSocket {
             closeAndSend(b);
         }
         catch (IOException e) {
-          	System.out.println ("ERROR: REQUEST POSITIONS");
+          	log = "ERROR: REQUEST POSITIONS..." + e.getMessage();
             error( EClientErrors.NO_VALID_ID, EClientErrors.FAIL_SEND_REQPOSITIONS, "" + e);
         }
     }
 
     public synchronized void cancelPositions() {
     	
-    	System.out.println("~ cancelPositions");
+    	String log = "~ cancelPositions";
+		Watchr.log(Level.INFO, log);
 
         // not connected?
         if( !m_connected) {

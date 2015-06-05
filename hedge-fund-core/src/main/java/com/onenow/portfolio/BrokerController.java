@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.StringTokenizer;
 
 import com.onenow.util.Watchr;
@@ -593,7 +594,8 @@ public class BrokerController implements EWrapper {
 			handler.tickOptionComputation( TickType.get( tickType), impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 		}
 		else {
-			// ***** TODO: WHY NOT HANDLED System.out.println( String.format( "not handled %s %s %s %s %s %s %s %s %s", tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice) );
+			String log = String.format( "not handled %s %s %s %s %s %s %s %s %s", tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+			Watchr.log(Level.WARNING, log);
 		}
 		recEOM();
 	}

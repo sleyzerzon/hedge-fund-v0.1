@@ -24,7 +24,7 @@ public class ElastiCache {
 		try {
 			c = new MemcachedClient(new InetSocketAddress(host, portNum));
 		} catch (Exception e) {
-			e.printStackTrace();
+			Watchr.log(Level.SEVERE, e.getMessage());
 		}
 		return c;
 	}
@@ -35,7 +35,7 @@ public class ElastiCache {
 		try {
 			myObject = client.get(key);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Watchr.log(Level.SEVERE, e.getMessage());
 		}
 		String log = "GOT FROM CACHE: " + myObject.toString();
     	Watchr.log(Level.INFO, log);
@@ -45,11 +45,11 @@ public class ElastiCache {
 	public void write(String key, Object someObject) {
 		// Store a value (async) for one hour
 		try {
+			String log = "WROTE TO CACHE: " + someObject.toString();
+	    	Watchr.log(Level.INFO, log);
 			client.set(key, 3600, someObject);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Watchr.log(Level.SEVERE, e.getMessage());
 		}
-		String log = "WROTE TO CACHE: " + someObject.toString();
-    	Watchr.log(Level.INFO, log);
 	}
 }

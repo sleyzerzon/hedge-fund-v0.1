@@ -108,7 +108,7 @@ public class ChartistMain {
 
 						
 		} catch (Exception e) {
-			e.printStackTrace();
+			Watchr.log(Level.SEVERE, e.getMessage());
 		}
 		
 		return chart;

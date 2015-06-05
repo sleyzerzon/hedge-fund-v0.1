@@ -29,7 +29,9 @@ public class InvestorMain {
 	public static void main(String[] args) {
 		
 		BrokerMode mode = getModeArgument(args);
-		
+		String log = "Starting in MODE: " + mode;
+		Watchr.log(Level.INFO, log);
+
 		FlexibleLogger.setup(mode.toString());
 
 	    BrokerInteractive broker = new BrokerInteractive(	mode, 

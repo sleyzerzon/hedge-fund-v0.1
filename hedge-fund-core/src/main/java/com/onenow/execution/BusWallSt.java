@@ -22,10 +22,6 @@ import com.onenow.util.Watchr;
 
 public class BusWallSt implements ConnectionHandler {
 
-//	private ILogger inLogger = new SummitLogger();
-//	private ILogger outLogger = new SummitLogger();
-
-//	public BrokerController controller = new BrokerController(this, inLogger, outLogger);
 	public BrokerController controller = new BrokerController(this);
 	
 	private final ArrayList<String> accountList = new ArrayList<String>();
@@ -67,8 +63,6 @@ public class BusWallSt implements ConnectionHandler {
 				tryToConnect = false;
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				Watchr.log(Level.INFO, log, "\n", "");
-//			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, 
-//			    									inLogger, outLogger);
 			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this);
 
 			    // controller.disconnect(); 
@@ -76,8 +70,8 @@ public class BusWallSt implements ConnectionHandler {
 			    						clientID, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
-				String log = "...COULD NOT CONNECT TO BUS";
-				Watchr.log(Level.INFO, log, "", "\n");
+				String log = "...COULD NOT CONNECT TO BUS: " + e.getMessage();
+				Watchr.log(Level.SEVERE, log, "", "\n");
 				e.printStackTrace();
 				TimeParser.wait(10);
 			}			

@@ -65,31 +65,26 @@ public class Watchr {
 		try {
 			caller8 = new Exception().getStackTrace()[8].getClassName();
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 		
 		try {
 			caller7 = new Exception().getStackTrace()[7].getClassName();
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 		
 		try {
 			caller6 = new Exception().getStackTrace()[6].getClassName();
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 
 		try {
 			caller5 = new Exception().getStackTrace()[5].getClassName();
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 		
 		try {
 			caller4 = new Exception().getStackTrace()[4].getClassName();
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 		
 
