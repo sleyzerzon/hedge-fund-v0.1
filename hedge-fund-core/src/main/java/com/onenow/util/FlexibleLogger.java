@@ -15,9 +15,6 @@ public class FlexibleLogger {
 
   static private FileHandler fileHTML;
   static private Formatter formatterHTML;
-
-  static private String logMode1=null;
-  static private String logMode2=null;
   
   static public boolean setup() {
 	  String mode = "";
@@ -25,16 +22,7 @@ public class FlexibleLogger {
   }
 
   static public boolean setup(String mode) {
-	  logMode1 = mode;
-	  return setup(Level.INFO, logMode1);
-  }
-
-  static public boolean setup(String mode1, String mode2) {
-	  logMode1 = mode1;
-	  logMode2 = mode2;
-	  setup(Level.INFO, logMode1);
-	  setup(Level.INFO, logMode2);
-	  return true;
+	  return setup(Level.INFO, mode);
   }
 
   static public boolean setup(Level level, String appMode) {
