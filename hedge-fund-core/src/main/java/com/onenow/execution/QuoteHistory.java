@@ -19,7 +19,7 @@ import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 
 import java.util.logging.Level;
 
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 /**
  * Handle historical data call-backs 
@@ -88,7 +88,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		histroyBroker.write(row);
 
 		String log = "History " + row.toString();
-		WatchLog.add(Level.INFO, log, "", "");
+		Watchr.log(Level.INFO, log, "", "");
 
 		// Channel handling
 		if(channel!=null) { // if constructed that way

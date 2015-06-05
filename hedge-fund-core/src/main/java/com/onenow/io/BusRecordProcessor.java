@@ -19,7 +19,7 @@ import com.onenow.instrument.Investment;
 import com.onenow.main.ChartistMain;
 import com.onenow.main.ClerkHistoryMain;
 import com.onenow.main.ClerkRealTimeMain;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class BusRecordProcessor<T> implements IRecordProcessor {
 
@@ -56,7 +56,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	public void shutdown(IRecordProcessorCheckpointer checkpointer, ShutdownReason reason) {
 
 		String log = "Shutting down record processor for shard: " + kinesisShardId;
-    	WatchLog.addToLog(Level.INFO, log);
+    	Watchr.log(Level.INFO, log);
 
 	}
 
@@ -77,7 +77,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
             				". Partition Key: " + r.getPartitionKey() + 
             				". Sequence Number: " + r.getSequenceNumber() + 
             				e;
-            	WatchLog.addToLog(Level.INFO, log);
+            	Watchr.log(Level.INFO, log);
                 continue;
             }
             
@@ -92,7 +92,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	private void handleByRecordType(T record) {
 		
 		String log = "******************************** GOT RECORD: " + record.toString();
-    	WatchLog.addToLog(Level.INFO, log);
+    	Watchr.log(Level.INFO, log);
 		
 		if(recordType.equals(String.class)) {
 			

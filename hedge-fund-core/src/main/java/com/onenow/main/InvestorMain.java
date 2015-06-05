@@ -11,7 +11,7 @@ import com.onenow.execution.BusWallSt;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 /** 
  * Makes investment choices in real-time
@@ -36,7 +36,7 @@ public class InvestorMain {
 
 	    BrokerInteractive broker = new BrokerInteractive(	mode, 
 	    													marketPortfolio, 
-	    													new BusWallSt()); 
+	    													new BusWallSt(mode, Topology.LOCAL)); 
 	   
 	    // choose what to hedge on
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
@@ -78,7 +78,7 @@ public class InvestorMain {
 				}
 			} else {
 				String log = "ERROR: mode is a required argument";
-		    	WatchLog.addToLog(Level.SEVERE, log);
+		    	Watchr.log(Level.SEVERE, log);
 			}
 		}
 		return mode;

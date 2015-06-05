@@ -27,7 +27,7 @@ import apidemo.util.NewTabbedPanel;
 import apidemo.util.VerticalPanel;
 
 import com.ib.client.Types.NewsType;
-import com.ib.controller.ApiConnection.ILogger;
+//import com.ib.controller.ApiConnection.ILogger;
 import com.ib.controller.Formats;
 import com.onenow.execution.ApiController;
 import com.onenow.execution.ApiController.IBulletinHandler;
@@ -41,8 +41,8 @@ public class ApiDemo implements IConnectionHandler {
 	private final IConnectionConfiguration m_connectionConfiguration;
 	private final JTextArea m_inLog = new JTextArea();
 	private final JTextArea m_outLog = new JTextArea();
-	private final Logger m_inLogger = new Logger( m_inLog);
-	private final Logger m_outLogger = new Logger( m_outLog);
+//	private final Logger m_inLogger = new Logger( m_inLog);
+//	private final Logger m_outLogger = new Logger( m_outLog);
 	private ApiController m_controller;
 	private final ArrayList<String> m_acctList = new ArrayList<String>();
 	private final JFrame m_frame = new JFrame();
@@ -61,8 +61,8 @@ public class ApiDemo implements IConnectionHandler {
 	// getter methods
 	public ArrayList<String> accountList() 	{ return m_acctList; }
 	public JFrame frame() 					{ return m_frame; }
-	public ILogger getInLogger()            { return m_inLogger; }
-	public ILogger getOutLogger()           { return m_outLogger; }
+//	public ILogger getInLogger()            { return m_inLogger; }
+//	public ILogger getOutLogger()           { return m_outLogger; }
 	
 	public static void main(String[] args) {
 		start( new ApiDemo( new DefaultConnectionConfiguration() ) );
@@ -80,7 +80,8 @@ public class ApiDemo implements IConnectionHandler {
 	
     public ApiController controller() {
         if ( m_controller == null ) {
-            m_controller = new ApiController( this, getInLogger(), getOutLogger() );
+//            m_controller = new ApiController( this, getInLogger(), getOutLogger() );
+            m_controller = new ApiController( this );
         }
         return m_controller;
     }
@@ -231,24 +232,26 @@ public class ApiDemo implements IConnectionHandler {
 			controller().connect( m_host.getText(), port, clientId, m_connectOptionsTF.getText());
 		}
 	}
-	public static class Logger implements ILogger {
-		final private JTextArea m_area;
 
-		Logger( JTextArea area) {
-			m_area = area;
-		}
+//    public static class Logger implements ILogger {
+//		final private JTextArea m_area;
+//
+//		Logger( JTextArea area) {
+//			m_area = area;
+//		}
+//
+//		@Override public void log(final String str) {
+//			SwingUtilities.invokeLater( new Runnable() {
+//				@Override public void run() {
+////					m_area.append(str);
+////					
+////					Dimension d = m_area.getSize();
+////					m_area.scrollRectToVisible( new Rectangle( 0, d.height, 1, 1) );
+//				}
+//			});
+//		}
+//	}
 
-		@Override public void log(final String str) {
-			SwingUtilities.invokeLater( new Runnable() {
-				@Override public void run() {
-//					m_area.append(str);
-//					
-//					Dimension d = m_area.getSize();
-//					m_area.scrollRectToVisible( new Rectangle( 0, d.height, 1, 1) );
-				}
-			});
-		}
-	}
 }
 
 // do clearing support

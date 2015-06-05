@@ -16,16 +16,28 @@ public class FlexibleLogger {
   static private FileHandler fileHTML;
   static private Formatter formatterHTML;
 
+  static private String logMode1=null;
+  static private String logMode2=null;
+  
   static public boolean setup() {
 	  String mode = "";
 	  return setup(Level.INFO, mode);
   }
 
   static public boolean setup(String mode) {
-	  return setup(Level.INFO, mode);
+	  logMode1 = mode;
+	  return setup(Level.INFO, logMode1);
   }
-  
-  static public boolean setup(Level level, String mode) {
+
+  static public boolean setup(String mode1, String mode2) {
+	  logMode1 = mode1;
+	  logMode2 = mode2;
+	  setup(Level.INFO, logMode1);
+	  setup(Level.INFO, logMode2);
+	  return true;
+  }
+
+  static public boolean setup(Level level, String appMode) {
 	  
 	  boolean success = true;
 	  
@@ -45,7 +57,7 @@ public class FlexibleLogger {
 	    // set the LogLevel to Severe, only severe Messages will be written
 	    logger.setLevel(level);
 	    
-	    String base = WatchLog.getLogPath() + new Exception().getStackTrace()[2].getClassName()+mode+"Log.";
+	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[2].getClassName()+appMode+"Log.";
 	    System.out.println("Will log to: " + base + "*");
 	    fileTxt = new FileHandler(base+"txt");
 	    fileHTML = new FileHandler(base+"html");

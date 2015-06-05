@@ -4,37 +4,47 @@ import java.util.ArrayList;
 
 import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
-import com.ib.controller.ApiConnection.ILogger;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
+import com.onenow.alpha.Broker;
+import com.onenow.constant.BrokerMode;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.Topology;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ConnectionHandler;
 import com.onenow.portfolio.BrokerController.IBulletinHandler;
 import com.onenow.portfolio.BrokerController.ITimeHandler;
+
 import java.util.logging.Level;
+
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class BusWallSt implements ConnectionHandler {
 
-	private ILogger inLogger = new SummitLogger();
-	private ILogger outLogger = new SummitLogger();
+//	private ILogger inLogger = new SummitLogger();
+//	private ILogger outLogger = new SummitLogger();
 
-	public BrokerController controller = new BrokerController(this, inLogger, outLogger);
+//	public BrokerController controller = new BrokerController(this, inLogger, outLogger);
+	public BrokerController controller = new BrokerController(this);
+	
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
 	public NetworkService gateway;
 	
+	private BrokerMode mode;
+	
+	
 	public BusWallSt() {
 		// always local for now
-		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);		
+		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
+		this.mode = BrokerMode.STREAMING;
 	}
 	
 	// configurable topology for testing
-	public BusWallSt(Topology topo) {
+	public BusWallSt(BrokerMode mode, Topology topo) {
 		
+		this.mode = mode;
 		this.gateway = NetworkConfig.getGateway(topo);
 		
 		// fixed gateway for production
@@ -49,30 +59,55 @@ public class BusWallSt implements ConnectionHandler {
 	   */
 	  void connectToServer() {
 		 
-		int clientID = 0;
+		int clientID = getClientID();
 		  
 		boolean tryToConnect = true;
 	    while(tryToConnect) {		    		
 			try {				
 				tryToConnect = false;
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
-				WatchLog.add(Level.INFO, log, "\n", "");
-			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, inLogger, outLogger);
-			    //controller.disconnect(); 
+				Watchr.log(Level.INFO, log, "\n", "");
+//			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this, 
+//			    									inLogger, outLogger);
+			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this);
+
+			    // controller.disconnect(); 
 			    controller.connect(		gateway.URI, Integer.parseInt(gateway.port), 
 			    						clientID, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
 				String log = "...COULD NOT CONNECT TO BUS";
-				WatchLog.add(Level.INFO, log, "", "\n");
+				Watchr.log(Level.INFO, log, "", "\n");
 				e.printStackTrace();
 				TimeParser.wait(10);
 			}			
 		} // end try to connect
 		String log = "CONNECTED TO BUS!";
-		WatchLog.add(Level.INFO, log, "", "");
+		Watchr.log(Level.INFO, log, "", "");
 	  }
 
+	  private Integer getClientID() {
+		  
+		  Integer id = 0;
+		  
+		  if(mode.equals(BrokerMode.PRIMARY)) {
+			  id = 0;
+		  }
+		  if(mode.equals(BrokerMode.STANDBY)) {
+			  id = 1;
+		  }
+		  if(mode.equals(BrokerMode.REALTIME)) {
+			  id = 2;
+		  }
+		  if(mode.equals(BrokerMode.HISTORIAN)) {
+			  id = 3;
+		  }
+		  if(mode.equals(BrokerMode.STREAMING)) {
+			  id = 4;
+		  }
+
+		  return id;
+	  }
 	
   @Override
   public void connected() {
@@ -117,8 +152,8 @@ public class BusWallSt implements ConnectionHandler {
   }
 
   @Override
-  public void show(String string) {
-    System.out.println(string);
+  public void show(String log) {
+  	Watchr.log(Level.INFO, log);
   }
 
   

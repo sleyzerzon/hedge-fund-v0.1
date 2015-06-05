@@ -15,7 +15,7 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
 import com.onenow.io.TSDB;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class ClerkRealTimeMain {
 
@@ -54,7 +54,7 @@ public class ClerkRealTimeMain {
 				success = false;
 				retry = true;
 				String log = "TSDB RT TRANSACTION WRITE FAILED: " + event.time + " " + event.inv.toString();
-				WatchLog.addToLog(Level.SEVERE, log);
+				Watchr.log(Level.SEVERE, log);
 	
 				// e.printStackTrace();
 				try {
@@ -64,7 +64,7 @@ public class ClerkRealTimeMain {
 		}
 		if(retry) {
 			String log = "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.inv.toString();
-			WatchLog.addToLog(Level.INFO, log);
+			Watchr.log(Level.INFO, log);
 		}
 	}
 

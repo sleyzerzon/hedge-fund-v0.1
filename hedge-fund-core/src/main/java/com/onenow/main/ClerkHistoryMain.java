@@ -10,7 +10,7 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
 import com.onenow.io.TSDB;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class ClerkHistoryMain {
 
@@ -50,7 +50,7 @@ public class ClerkHistoryMain {
 				success = false;
 				retry = true;
 				String log = "TSDB HISTORY WRITE FAILED: " + event.investment.toString();
-				WatchLog.addToLog(Level.SEVERE, log);
+				Watchr.log(Level.SEVERE, log);
 				// e.printStackTrace();
 				try {
 					Thread.sleep(1000);
@@ -59,7 +59,7 @@ public class ClerkHistoryMain {
 		}
 		if(retry) {
 			String log = "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + event.investment.toString();
-			WatchLog.addToLog(Level.INFO, log);
+			Watchr.log(Level.INFO, log);
 		}
 				
 	}

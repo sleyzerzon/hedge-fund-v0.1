@@ -9,7 +9,7 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorF
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 import com.onenow.constant.StreamName;
 import com.onenow.io.Lookup;
 
@@ -101,7 +101,7 @@ public class BusSystem {
             kinesysWorker.run();
         } catch (Throwable t) {
         	String log = "Caught throwable while processing data." + t;
-        	WatchLog.addToLog(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, log);
             return false;
         }        
 		return true;

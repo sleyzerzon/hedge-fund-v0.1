@@ -27,24 +27,30 @@ import com.onenow.execution.Contract;
 import com.onenow.execution.EClientErrors;
 import com.onenow.execution.EClientSocket;
 import com.onenow.execution.EReader;
+import com.onenow.util.Watchr;
 
 // NOTE: TWS 936 SERVER_VERSION is 67.
 
 public class ApiConnection extends EClientSocket {
-	public interface ILogger {
-		void log(String valueOf);
-	}
+	
+//	public interface ILogger {
+//		void logReplace(String valueOf);
+//	}
 
 	public static final char EOL = 0;
 	public static final char LOG_EOL = '_';
 
-	private final ILogger m_inLogger;
-	private final ILogger m_outLogger;
+//	private final ILogger m_inLogger;
+//	private final ILogger m_outLogger;
 
-	public ApiConnection(EWrapper wrapper, ILogger inLogger, ILogger outLogger) {
+//	public ApiConnection(EWrapper wrapper, ILogger inLogger, ILogger outLogger) {
+//		super( wrapper);
+////		m_inLogger = inLogger;
+////		m_outLogger = outLogger;
+//	}
+
+	public ApiConnection(EWrapper wrapper) {
 		super( wrapper);
-		m_inLogger = inLogger;
-		m_outLogger = outLogger;
 	}
 
 	@Override public synchronized void eConnect(Socket socket, int clientId) throws IOException {
@@ -288,17 +294,17 @@ public class ApiConnection extends EClientSocket {
 
     	@Override public void write(byte[] b) throws IOException {
     		m_os.write( b);
-    		log( new String( b) );
+    		logReplace( new String( b) );
     	}
 
     	@Override public synchronized void write(byte[] b, int off, int len) throws IOException {
     		m_os.write(b, off, len);
-    		log( new String( b, off, len) );
+    		logReplace( new String( b, off, len) );
     	}
 
     	@Override public synchronized void write(int b) throws IOException {
     		m_os.write(b);
-    		log( String.valueOf( (char)b) );
+    		logReplace( String.valueOf( (char)b) );
     	}
 
     	@Override public void flush() throws IOException {
@@ -307,11 +313,15 @@ public class ApiConnection extends EClientSocket {
 
     	@Override public void close() throws IOException {
     		m_os.close();
-    		m_outLogger.log( "<output stream closed>");
+    		String log = "<output stream closed>";
+//    		m_outLogger.logReplace( log );
+    		// Watch.log(log);
     	}
 
-    	void log( String str) {
-    		m_outLogger.log( str.replace( EOL, LOG_EOL) );
+    	void logReplace( String str) {
+    		String log = str.replace( EOL, LOG_EOL);
+//    		m_outLogger.logReplace( log );
+    		// Watch.log(log);
     	}
     }
 
@@ -325,29 +335,31 @@ public class ApiConnection extends EClientSocket {
 
 		@Override public int read() throws IOException {
 			int c = m_is.read();
-			log( String.valueOf( (char)c) );
+			logReplace( String.valueOf( (char)c) );
 			return c;
 		}
 
 		@Override public int read(byte[] b) throws IOException {
 			int n = m_is.read(b);
-			log( new String( b, 0, n) );
+			logReplace( new String( b, 0, n) );
 			return n;
 		}
 
 		@Override public int read(byte[] b, int off, int len) throws IOException {
 			int n = m_is.read(b, off, len);
-			log( new String( b, 0, n) );
+			logReplace( new String( b, 0, n) );
 			return n;
 		}
 
 		@Override public void close() throws IOException {
 			super.close();
-			log( "<input stream closed>");
+			logReplace( "<input stream closed>");
 		}
 
-    	void log( String str) {
-    		m_inLogger.log( str.replace( EOL, LOG_EOL) );
+    	void logReplace( String str) {
+    		String log = str.replace( EOL, LOG_EOL);
+//    		m_inLogger.logReplace( log );
+    		Watchr.log(log);
     	}
     }
 }

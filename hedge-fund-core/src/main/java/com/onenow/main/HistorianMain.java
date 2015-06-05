@@ -14,7 +14,7 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 /** 
  * Gather complete accurate historical market data
@@ -44,7 +44,7 @@ public class HistorianMain {
 		int count=0;
 		while(true) {
 			String log = "^^ HISTORIAN MAIN: " + toDashedDate;
-			WatchLog.addToLog(Level.INFO, log);
+			Watchr.log(Level.INFO, log);
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
 					InitMarket initMarket = new InitMarket(	marketPortfolio, 

@@ -26,7 +26,7 @@ import com.ib.controller.AccountSummaryTag;
 import com.ib.controller.AdvisorUtil;
 import com.ib.controller.Alias;
 import com.ib.controller.ApiConnection;
-import com.ib.controller.ApiConnection.ILogger;
+//import com.ib.controller.ApiConnection.ILogger;
 import com.ib.controller.ConcurrentHashSet;
 import com.ib.controller.Group;
 import com.ib.controller.MarketValueTag;
@@ -42,10 +42,12 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
+import com.onenow.util.Watchr;
+
 public class BrokerController implements EWrapper {
 	private ApiConnection m_client;
-	private final ILogger m_outLogger;
-	private final ILogger m_inLogger;
+//	private final ILogger m_outLogger;
+//	private final ILogger m_inLogger;
 	private int m_reqId;	// used for all requests except orders; designed not to conflict with m_orderId
 	private int m_orderId;
 
@@ -83,11 +85,18 @@ public class BrokerController implements EWrapper {
 		void show(String string);
 	}
 	
-	public BrokerController( ConnectionHandler handler, ILogger inLogger, ILogger outLogger) {
+//	public BrokerController( ConnectionHandler handler, ILogger inLogger, ILogger outLogger) {
+//		m_connectionHandler = handler;
+//		m_client = new ApiConnection( this, inLogger, outLogger);
+////		m_inLogger = inLogger;
+////		m_outLogger = outLogger;
+//	}
+
+	public BrokerController( ConnectionHandler handler) {
 		m_connectionHandler = handler;
-		m_client = new ApiConnection( this, inLogger, outLogger);
-		m_inLogger = inLogger;
-		m_outLogger = outLogger;
+//		m_client = new ApiConnection( this, inLogger, outLogger);
+		m_client = new ApiConnection( this);
+
 	}
 
 	public void connect( String host, int port, int clientId, String connectionOpts ) {
@@ -991,11 +1000,11 @@ public class BrokerController implements EWrapper {
 	}
 
 	protected void sendEOM() {
-		m_outLogger.log( "\n");
+		Watchr.log( "\n");
 	}
 
 	private void recEOM() {
-		m_inLogger.log( "\n");
+		Watchr.log( "\n");
 	}
 
 	public void show(String string) {

@@ -21,7 +21,7 @@ import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import java.util.logging.Level;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class TSDB {
 	
@@ -80,7 +80,7 @@ public static void writePrice(Long time, Investment inv, TradeType tradeType, Do
 	.values(time, price)
 	.build();
 	String log = "TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + serie;
-	WatchLog.add(Level.INFO, log, "\n", "");
+	Watchr.log(Level.INFO, log, "\n", "");
 
 	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
@@ -98,7 +98,7 @@ public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType,
 		candles = priceSeriesToCandles(series); 
 		
 		String log = "TSDB Cache Chart/Price READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Prices: " + candles.toString();
-		WatchLog.add(Level.INFO, log, "\n", "");
+		Watchr.log(Level.INFO, log, "\n", "");
 
 		return candles;
 	}
@@ -240,7 +240,7 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 	} catch (Exception e) {
 		s = "-1.0";
 		String log = "TSDB NULL query result" + "row " + row + " " + row.get(col);
-		WatchLog.addToLog(Level.SEVERE, log);
+		Watchr.log(Level.SEVERE, log);
 		// TODO: something to do for defaults?
 		// e.printStackTrace();
 	}
@@ -256,7 +256,7 @@ public static void writeSize(Long time, Investment inv, TradeType tradeType, Int
 	.values(time, size)
 	.build();
 	String log = "TSDB WRITE SIZE: " + DBname.SIZE.toString() + " " + serie;
-	WatchLog.add(Level.INFO, log, "\n", "");
+	Watchr.log(Level.INFO, log, "\n", "");
 
 	influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
@@ -274,7 +274,7 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
 	sizes = sizeSeriesToInts(series); 
 	
 	String log = "TSDB Cache Chart/Size READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString();
-	WatchLog.add(Level.INFO, log, "\n", "");
+	Watchr.log(Level.INFO, log, "\n", "");
 
 	return sizes;
 }

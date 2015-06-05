@@ -18,7 +18,7 @@ import com.onenow.research.Chart;
 import java.util.logging.Level;
 
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class PriceSizeCache {
 	

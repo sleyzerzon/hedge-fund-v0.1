@@ -23,7 +23,7 @@ import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class ChartistMain {
 
@@ -56,7 +56,7 @@ public class ChartistMain {
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			
 			String log = "***** PRE-FETCH SAMPLING ***** " + samplr;
-	    	WatchLog.addToLog(Level.INFO, log);
+	    	Watchr.log(Level.INFO, log);
 
 			String today = TimeParser.getDashedToday();
 			readChartToL1FromRTL2(	event.inv, event.tradeType, samplr,

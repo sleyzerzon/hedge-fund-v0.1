@@ -12,7 +12,7 @@ import com.onenow.io.Kinesis;
 import com.onenow.io.S3;
 import com.onenow.io.SQS;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class AnalystMain {
 	
@@ -20,7 +20,7 @@ public class AnalystMain {
 
 		FlexibleLogger.setup();
 		
-		WatchLog.addToLog(Level.INFO, "checking");
+		Watchr.log(Level.INFO, "checking");
 		
 		// S3 storage = new S3();
 		

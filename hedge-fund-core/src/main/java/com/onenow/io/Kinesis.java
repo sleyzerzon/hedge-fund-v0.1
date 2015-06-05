@@ -21,7 +21,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.data.DynamoDBCountPersister;
 import com.onenow.data.HttpReferrerPair;
 import com.onenow.util.StreamUtils;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class Kinesis {
 
@@ -44,7 +44,7 @@ public class Kinesis {
         streamUtils.createStreamIfNotExists(streamName.toString(), numShards);
         
         String log = streamName + " is ready for use";
-    	WatchLog.addToLog(Level.FINE, log);
+    	Watchr.log(Level.FINE, log);
 
 	}
 	
@@ -61,7 +61,7 @@ public class Kinesis {
             bytes = jsonMapper.writeValueAsBytes(objectToSend);
         } catch (IOException e) {
         	log = "Skipping pair. Unable to serialize: " + e;
-        	WatchLog.addToLog(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, log);
             return;
         }
 
@@ -80,7 +80,7 @@ public class Kinesis {
         } catch (ProvisionedThroughputExceededException ex) {
         	success = false;
         	log = "Throughput exceeded";
-        	WatchLog.addToLog(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, log);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -88,12 +88,12 @@ public class Kinesis {
             }
         } catch (AmazonClientException ex) {
         	log = "Error sending record to Amazon Kinesis: " + ex;
-        	WatchLog.addToLog(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, log);
         }
         
         if(success) {
     		log = "&&&&&&&&&&&&& WROTE: " + objectToSend.toString() + " INTO STREAM: " + streamName;
-        	WatchLog.addToLog(Level.INFO, log);
+        	Watchr.log(Level.INFO, log);
         }
     }
     

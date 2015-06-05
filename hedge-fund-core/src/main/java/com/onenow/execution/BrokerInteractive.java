@@ -24,7 +24,7 @@ import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class BrokerInteractive implements Broker  {
 
@@ -79,7 +79,7 @@ public class BrokerInteractive implements Broker  {
 		  for(Investment inv:invs) {
 
 			  String log = "#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString();
-			  WatchLog.add(Level.INFO, log, "\n\n", "");
+			  Watchr.log(Level.INFO, log, "\n\n", "");
 
 			  QuoteRealTime quoteLive = new QuoteRealTime(bus.controller, marketPrices, inv);
 		  }
@@ -121,7 +121,7 @@ public class BrokerInteractive implements Broker  {
 	    													1, config.durationUnit, config.barSize, config.whatToShow, 
 	    													false, quoteHistory);
 		  String log = "#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId;
-		  WatchLog.addToLog(Level.INFO, log);
+		  Watchr.log(Level.INFO, log);
 	    
 		  return reqId;
 	  }

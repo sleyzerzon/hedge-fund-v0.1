@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 import net.spy.memcached.MemcachedClient;
 
@@ -38,7 +38,7 @@ public class ElastiCache {
 			e.printStackTrace();
 		}
 		String log = "GOT FROM CACHE: " + myObject.toString();
-    	WatchLog.addToLog(Level.INFO, log);
+    	Watchr.log(Level.INFO, log);
 
 	}
 
@@ -50,6 +50,6 @@ public class ElastiCache {
 			e.printStackTrace();
 		}
 		String log = "WROTE TO CACHE: " + someObject.toString();
-    	WatchLog.addToLog(Level.INFO, log);
+    	Watchr.log(Level.INFO, log);
 	}
 }

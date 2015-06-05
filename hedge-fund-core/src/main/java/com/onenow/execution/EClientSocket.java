@@ -25,7 +25,7 @@ import com.ib.client.Types.SecType;
 import com.onenow.execution.EClientErrors.CodeMsgPair;
 import java.util.logging.Level;
 import com.onenow.util.TimeParser;
-import com.onenow.util.WatchLog;
+import com.onenow.util.Watchr;
 
 public class EClientSocket {
 
@@ -305,7 +305,7 @@ public class EClientSocket {
 	        	tryToConnect = false;
 
 	        	String log = "TRYING TO CONNECT TO GATEWAY/TWS: " + m_host + " " + port;
-				WatchLog.add(Level.INFO, log, "\n", "");
+				Watchr.log(Level.INFO, log, "\n", "");
 
 	            socket = new Socket( m_host, port);
 	            eConnect(socket); // TODO: why CONNECT_FAIL exception on Gateway connection 
@@ -314,7 +314,7 @@ public class EClientSocket {
 	        	tryToConnect = true;
 	        	
 	        	String log = "... COULD NOT CONNECT TO GATEWAY/TWS: ";
-				WatchLog.add(Level.SEVERE, log, "\n", "");
+				Watchr.log(Level.SEVERE, log, "\n", "");
 
 	            connectionError(); 
 	        	e.printStackTrace();
@@ -326,7 +326,7 @@ public class EClientSocket {
 
     protected void connectionError() {
     	String log = "CONNECTION ERROR WITH GATEWAY/TWS";
-		WatchLog.add(Level.SEVERE, log, "", "");
+		Watchr.log(Level.SEVERE, log, "", "");
 
         m_eWrapper.error( EClientErrors.NO_VALID_ID, EClientErrors.CONNECT_FAIL.code(),
                 EClientErrors.CONNECT_FAIL.msg());
@@ -335,7 +335,7 @@ public class EClientSocket {
 
     protected String checkConnected(String host) {
     	String s = "CHECKING IF CONNECTED WITH GATEWAY/TWS";
-		WatchLog.add(Level.SEVERE, s, "", "");
+		Watchr.log(Level.SEVERE, s, "", "");
 
         if( m_connected) {
             m_eWrapper.error(EClientErrors.NO_VALID_ID, EClientErrors.ALREADY_CONNECTED.code(),
