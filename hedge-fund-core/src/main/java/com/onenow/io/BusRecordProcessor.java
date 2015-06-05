@@ -37,21 +37,16 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	
 	public BusRecordProcessor(Class<T> recordType) {
 		
-		// System.out.println("&&&&&&&&&&&&& CREATED PROCESSOR");
-
 		this.recordType = recordType;
 		
         // Create an object mapper to deserialize records that ignores unknown properties
         jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
-        // jsonMapper.registerModule( new ExampleJacksonModule() );
 	}
 
 
 	@Override
 	public void initialize(String shardId) {
-
-		// System.out.println("&&&&&&&&&&&&& INITIALIZED PROCESSOR");
 
 		this.kinesisShardId = shardId;
 		
@@ -60,31 +55,29 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	@Override
 	public void shutdown(IRecordProcessorCheckpointer checkpointer, ShutdownReason reason) {
 
-		System.out.println("Shutting down record processor for shard: " + kinesisShardId);
+		String log = "Shutting down record processor for shard: " + kinesisShardId;
+    	WatchLog.addToLog(Level.INFO, log);
+
 	}
 
 	// TODO: handle NON-STRING records (i.e. EventHistory)
 	@Override
 	public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
 		
-		// System.out.println("&&&&&&&&&&&&& PROCESSING RECORDS");
-		
         for (Record r : records) {
             // Deserialize each record as an UTF-8 encoded JSON String of the type provided
             T record;
             try {
                 String json = new String(r.getData().array());
-                // System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^" + json);
-                // System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^" + recordType);
             	record = jsonMapper.readValue(json, recordType);
             	handleByRecordType(record);
                 
             } catch (IOException e) {
-            	String s = 	"Skipping record. Unable to parse record into: " + recordType + 
+            	String log = 	"Skipping record. Unable to parse record into: " + recordType + 
             				". Partition Key: " + r.getPartitionKey() + 
             				". Sequence Number: " + r.getSequenceNumber() + 
             				e;
-            	System.out.println(s);
+            	WatchLog.addToLog(Level.INFO, log);
                 continue;
             }
             
@@ -98,7 +91,8 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 */
 	private void handleByRecordType(T record) {
 		
-		System.out.println("******************************** GOT RECORD: " + record.toString());
+		String log = "******************************** GOT RECORD: " + record.toString();
+    	WatchLog.addToLog(Level.INFO, log);
 		
 		if(recordType.equals(String.class)) {
 			

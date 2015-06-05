@@ -2,6 +2,7 @@ package com.onenow.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
 
 import kinesis.CountingRecordProcessorFactory;
 
@@ -20,13 +21,14 @@ import com.onenow.constant.StreamName;
 import com.onenow.data.DynamoDBCountPersister;
 import com.onenow.data.HttpReferrerPair;
 import com.onenow.util.StreamUtils;
+import com.onenow.util.WatchLog;
 
 public class Kinesis {
 
 	private static AmazonKinesis kinesis;
 	
 	private final ObjectMapper jsonMapper = new ObjectMapper();
-
+	
 	public Kinesis() {
 	}
 	
@@ -36,20 +38,20 @@ public class Kinesis {
 	
 	public void createStreamIfNotExists(StreamName streamName, int numShards) {
 		
-		System.out.println("&&&&&&&&&&&&& CREATED STREAM: " + streamName);
-
         // Creates a stream to write to with N shards if it doesn't exist
         StreamUtils streamUtils = new StreamUtils(kinesis);
         
         streamUtils.createStreamIfNotExists(streamName.toString(), numShards);
         
-        System.out.println(streamName + " is ready for use");
+        String log = streamName + " is ready for use";
+    	WatchLog.addToLog(Level.FINE, log);
+
 	}
 	
     public void sendObject(Object objectToSend, StreamName streamName) {
 		
-		// System.out.println("&&&&&&&&&&&&& TRYING TO WRITE: " + objectToSend.toString() + " INTO " + streamName);
-
+    	String log = "";
+    	
 		boolean success = true;
 		
     	jsonMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -58,7 +60,8 @@ public class Kinesis {
         try {
             bytes = jsonMapper.writeValueAsBytes(objectToSend);
         } catch (IOException e) {
-        	System.out.println("Skipping pair. Unable to serialize: " + e);
+        	log = "Skipping pair. Unable to serialize: " + e;
+        	WatchLog.addToLog(Level.SEVERE, log);
             return;
         }
 
@@ -76,18 +79,21 @@ public class Kinesis {
             kinesis.putRecord(putRecord);
         } catch (ProvisionedThroughputExceededException ex) {
         	success = false;
-        	System.out.println("Throughput exceeded");
+        	log = "Throughput exceeded";
+        	WatchLog.addToLog(Level.SEVERE, log);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         } catch (AmazonClientException ex) {
-        	System.out.println("Error sending record to Amazon Kinesis: " + ex);
+        	log = "Error sending record to Amazon Kinesis: " + ex;
+        	WatchLog.addToLog(Level.SEVERE, log);
         }
         
         if(success) {
-    		System.out.println("&&&&&&&&&&&&& WROTE: " + objectToSend.toString() + " INTO STREAM: " + streamName);
+    		log = "&&&&&&&&&&&&& WROTE: " + objectToSend.toString() + " INTO STREAM: " + streamName;
+        	WatchLog.addToLog(Level.INFO, log);
         }
     }
     

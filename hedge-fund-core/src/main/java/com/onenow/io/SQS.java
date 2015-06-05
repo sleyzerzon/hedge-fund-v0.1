@@ -2,6 +2,7 @@ package com.onenow.io;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -18,6 +19,7 @@ import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.onenow.admin.InitAmazon;
+import com.onenow.util.WatchLog;
 
 /**
  * This sample demonstrates how to make basic requests to Amazon SQS using the
@@ -63,80 +65,91 @@ public class SQS {
     }
 
 	private void catchAWSClientException(AmazonClientException ace) {
-		System.out.println("Caught an AmazonClientException, which means the client encountered " +
+		String log = "Caught an AmazonClientException, which means the client encountered " +
 		"a serious internal problem while trying to communicate with SQS, such as not " +
-		"being able to access the network.");
-		System.out.println("Error Message: " + ace.getMessage());
+		"being able to access the network. " + ace.getMessage();
+    	WatchLog.addToLog(Level.INFO, log);
 	}
 
 	private void catchAWSServiceException(AmazonServiceException ase) {
-		System.out.println("Caught an AmazonServiceException, which means your request made it " +
-		"to Amazon SQS, but was rejected with an error response for some reason.");
-		System.out.println("Error Message:    " + ase.getMessage());
-		System.out.println("HTTP Status Code: " + ase.getStatusCode());
-		System.out.println("AWS Error Code:   " + ase.getErrorCode());
-		System.out.println("Error Type:       " + ase.getErrorType());
-		System.out.println("Request ID:       " + ase.getRequestId());
+		String log = "Caught an AmazonServiceException, which means your request made it " +
+		"to Amazon SQS, but was rejected with an error response for some reason." + "\n";
+		log = log + "Error Message:    " + ase.getMessage();
+		log = log + "HTTP Status Code: " + ase.getStatusCode();
+		log = log + "AWS Error Code:   " + ase.getErrorCode();
+		log = log + "Error Type:       " + ase.getErrorType();
+		log = log + "Request ID:       " + ase.getRequestId();
+    	WatchLog.addToLog(Level.INFO, log);
 	}
 
 	private void deleteQueue(AmazonSQS sqs, String myQueueUrl) {
-		// Delete a queue
-		System.out.println("Deleting the test queue.\n");
+		String log = "Deleting SQS queue: " + myQueueUrl;
+    	WatchLog.addToLog(Level.INFO, log);
 		sqs.deleteQueue(new DeleteQueueRequest(myQueueUrl));
 	}
 
 	private void deleteMesssage(AmazonSQS sqs, String myQueueUrl,
 			List<Message> messages) {
-		// Delete a message
-		System.out.println("Deleting a message.\n");
+		String log = "Deleting a message: " + messages + " FROM " + myQueueUrl;
+    	WatchLog.addToLog(Level.INFO, log);
 		String messageRecieptHandle = messages.get(0).getReceiptHandle();
 		sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl, messageRecieptHandle));
 	}
 
 	private List<Message> receiveMessages(AmazonSQS sqs, String myQueueUrl) {
-		// Receive messages
-		System.out.println("Receiving messages from MyQueue.\n");
+		
+		String log = "Receiving messages from MyQueue: " + myQueueUrl;
+    	WatchLog.addToLog(Level.INFO, log);
+    	
 		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(myQueueUrl);
 		List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
 
 		for (Message message : messages) {
-			System.out.println("  Message");
-			System.out.println("    MessageId:     " + message.getMessageId());
-			System.out.println("    ReceiptHandle: " + message.getReceiptHandle());
-			System.out.println("    MD5OfBody:     " + message.getMD5OfBody());
-			System.out.println("    Body:          " + message.getBody());
+			log = "  Message";
+			log = log + "    MessageId:     " + message.getMessageId();
+			log = log + "    ReceiptHandle: " + message.getReceiptHandle();
+			log = log + "    MD5OfBody:     " + message.getMD5OfBody();
+			log = log + "    Body:          " + message.getBody();
+	    	WatchLog.addToLog(Level.INFO, log);
 
 			for (Entry<String, String> entry : message.getAttributes().entrySet()) {
-				System.out.println("  Attribute");
-				System.out.println("    Name:  " + entry.getKey());
-				System.out.println("    Value: " + entry.getValue());
+				log = "  Attribute";
+				log = log + "    Name:  " + entry.getKey();
+				log = log + "    Value: " + entry.getValue();
+		    	WatchLog.addToLog(Level.INFO, log);
 		        }
             }
-		
-			System.out.println();
 		return messages;
 	}
 
 	private void sendMessage(AmazonSQS sqs, String myQueueUrl) {
-		// Send a message
-		System.out.println("Sending a message to MyQueue.\n");
-		            sqs.sendMessage(new SendMessageRequest(myQueueUrl, "This is my message text."));
+
+		String log = "Sending a message to: " + myQueueUrl;
+    	WatchLog.addToLog(Level.INFO, log);
+
+		sqs.sendMessage(new SendMessageRequest(myQueueUrl, "This is my message text."));
 	}
 
 	private void listQueues(AmazonSQS sqs) {
-		// List queues
-		System.out.println("Listing all queues in your account.\n");
+
+		String log = "Listing all queues in your account.";
+    	WatchLog.addToLog(Level.INFO, log);
+
 		for (String queueUrl : sqs.listQueues().getQueueUrls()) {
-			System.out.println("  QueueUrl: " + queueUrl);
+			log = "  QueueUrl: " + queueUrl;
+	    	WatchLog.addToLog(Level.INFO, log);
             }
 		System.out.println();
 	}
 
 	private String createQueue(AmazonSQS sqs) {
-		// Create a queue
-		System.out.println("Creating a new SQS queue called MyQueue.\n");
+		
+		String log = "Creating a new SQS queue called MyQueue.";
+    	WatchLog.addToLog(Level.INFO, log);
+
 		CreateQueueRequest createQueueRequest = new CreateQueueRequest("MyQueue");
 		String myQueueUrl = sqs.createQueue(createQueueRequest).getQueueUrl();
+		
 		return myQueueUrl;
 	}
 }

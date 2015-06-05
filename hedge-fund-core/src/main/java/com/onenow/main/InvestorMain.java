@@ -1,5 +1,7 @@
 package com.onenow.main;
 
+import java.util.logging.Level;
+
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.Topology;
 import com.onenow.data.InitMarket;
@@ -9,6 +11,7 @@ import com.onenow.execution.BusWallSt;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
+import com.onenow.util.WatchLog;
 
 /** 
  * Makes investment choices in real-time
@@ -74,7 +77,8 @@ public class InvestorMain {
 					mode = BrokerMode.STREAMING;
 				}
 			} else {
-				System.out.println("ERROR: mode is a required argument");
+				String log = "ERROR: mode is a required argument";
+		    	WatchLog.addToLog(Level.SEVERE, log);
 			}
 		}
 		return mode;

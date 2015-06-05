@@ -67,7 +67,7 @@ public class WatchLog {
 		if(level.equals(Level.INFO)) {
 			LOGGER.info(formattedMessage);
 		}
-		if(level.equals(Level.FINEST)) {
+		else {
 			LOGGER.finest(formattedMessage);
 		}
 	}

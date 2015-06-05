@@ -4,6 +4,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.onenow.alpha.Broker;
 import com.onenow.constant.BrokerMode;
@@ -23,6 +24,7 @@ import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
 import com.onenow.util.TimeParser;
+import com.onenow.util.WatchLog;
 
 public class BrokerInteractive implements Broker  {
 
@@ -75,7 +77,10 @@ public class BrokerInteractive implements Broker  {
 	  public void getLiveQuotes() {
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
-			  System.out.println("\n\n" + "#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
+
+			  String log = "#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString();
+			  WatchLog.add(Level.INFO, log, "\n\n", "");
+
 			  QuoteRealTime quoteLive = new QuoteRealTime(bus.controller, marketPrices, inv);
 		  }
 	  }	
@@ -115,7 +120,8 @@ public class BrokerInteractive implements Broker  {
 		  Integer reqId = bus.controller.reqHistoricalData(	contract, end, 
 	    													1, config.durationUnit, config.barSize, config.whatToShow, 
 	    													false, quoteHistory);
-		  System.out.println("#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId);
+		  String log = "#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId;
+		  WatchLog.addToLog(Level.INFO, log);
 	    
 		  return reqId;
 	  }

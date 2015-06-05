@@ -1,6 +1,7 @@
 package com.onenow.io;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -8,6 +9,7 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorF
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
+import com.onenow.util.WatchLog;
 import com.onenow.constant.StreamName;
 import com.onenow.io.Lookup;
 
@@ -98,7 +100,8 @@ public class BusSystem {
 		try {
             kinesysWorker.run();
         } catch (Throwable t) {
-        	System.out.println("Caught throwable while processing data." + t);
+        	String log = "Caught throwable while processing data." + t;
+        	WatchLog.addToLog(Level.SEVERE, log);
             return false;
         }        
 		return true;

@@ -2,6 +2,9 @@ package com.onenow.io;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.logging.Level;
+
+import com.onenow.util.WatchLog;
 
 import net.spy.memcached.MemcachedClient;
 
@@ -34,7 +37,9 @@ public class ElastiCache {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("GOT FROM CACHE: " + myObject.toString());
+		String log = "GOT FROM CACHE: " + myObject.toString();
+    	WatchLog.addToLog(Level.INFO, log);
+
 	}
 
 	public void write(String key, Object someObject) {
@@ -44,6 +49,7 @@ public class ElastiCache {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("WROTE TO CACHE: " + someObject.toString());
+		String log = "WROTE TO CACHE: " + someObject.toString();
+    	WatchLog.addToLog(Level.INFO, log);
 	}
 }

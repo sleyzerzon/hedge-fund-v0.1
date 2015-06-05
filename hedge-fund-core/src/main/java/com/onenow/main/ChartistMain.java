@@ -2,6 +2,7 @@ package com.onenow.main;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.InvDataSource;
@@ -22,6 +23,7 @@ import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
+import com.onenow.util.WatchLog;
 
 public class ChartistMain {
 
@@ -53,12 +55,13 @@ public class ChartistMain {
 		
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			
-			System.out.println("\n" + "***** PRE-FETCH SAMPLING ***** " + samplr);
+			String log = "***** PRE-FETCH SAMPLING ***** " + samplr;
+	    	WatchLog.addToLog(Level.INFO, log);
+
 			String today = TimeParser.getDashedToday();
 			readChartToL1FromRTL2(	event.inv, event.tradeType, samplr,
 									TimeParser.getDashedDateMinus(today, 1), today, // TODO: From/To Date actual
 									event.source, event.timing);
-			System.out.println("\n");
 		}
 	}
 	
