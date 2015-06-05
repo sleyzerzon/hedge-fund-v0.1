@@ -42,6 +42,12 @@ public class InvestorMain {
 		    setPortfolioForInvestment();						
 			broker.getLiveQuotes(); 			
 		}
+		
+		if(mode.equals(BrokerMode.STANDBY)) {
+			// register once: get all market real-time quotes
+//		    setPortfolioForInvestment();						
+//			broker.getLiveQuotes(); 			
+		}
 
 		if(	mode.equals(BrokerMode.REALTIME)) {
 			// Do realtime queries from SQS
