@@ -29,34 +29,50 @@ public class InvestorMain {
 	public static void main(String[] args) {
 		
 		BrokerMode mode = getModeArgument(args);
+		
 		FlexibleLogger.setup(mode.toString());
-
-	    // choose relevant time frame
-	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
 
 	    BrokerInteractive broker = new BrokerInteractive(	mode, 
 	    													marketPortfolio, 
 	    													new BusWallSt(mode, Topology.LOCAL)); 
-	   
+
+		
+		if(	mode.equals(BrokerMode.PRIMARY) || mode.equals(BrokerMode.STANDBY)) {
+			// register once: get all market real-time quotes
+		    setPortfolioForInvestment();						
+			broker.getLiveQuotes(); 			
+		}
+
+		if(	mode.equals(BrokerMode.REALTIME)) {
+			// Do realtime queries from SQS
+			 // broker.getLiveQuotes(); 			
+		}
+
+		if(mode.equals(BrokerMode.HISTORIAN)) {
+			// Do historical queries from SQS
+			// broker.procesHistoricalQuotesRequests();
+		}
+
+		if(	mode.equals(BrokerMode.STREAMING)) {
+			// TODO: Do straming queries from SQS
+		}
+
+//		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
+//		portfolioFactory.launch();							
+
+	}
+
+	private static void setPortfolioForInvestment() {
+		// choose relevant time frame
+	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
+
 	    // choose what to hedge on
 		InitMarket initMarket = new InitMarket(	marketPortfolio, 
 												InvestmentList.getUnderlying(InvestmentList.someStocks), 
 												InvestmentList.getUnderlying(InvestmentList.someIndices),
 												InvestmentList.getUnderlying(InvestmentList.futures), 
 												InvestmentList.getUnderlying(InvestmentList.options),
-    											toDashedDate);						
-		
-		// register once: get all market real-time quotes
-		 broker.getLiveQuotes(); 
-
-		if(mode.equals(BrokerMode.HISTORIAN)) {
-			// Do historical queries from SQS
-			broker.procesHistoricalQuotesRequests();
-		}
-		
-//		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
-//		portfolioFactory.launch();							
-
+    											toDashedDate);
 	}
 	
 	private static BrokerMode getModeArgument(String[] args) {
