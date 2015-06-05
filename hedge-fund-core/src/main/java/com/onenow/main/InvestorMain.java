@@ -44,7 +44,9 @@ public class InvestorMain {
 		}
 
 		if(	mode.equals(BrokerMode.REALTIME)) {
+			
 			// Do realtime queries from SQS
+			
 			 // broker.getLiveQuotes(); 			
 		}
 
