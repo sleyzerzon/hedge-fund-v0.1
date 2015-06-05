@@ -47,14 +47,59 @@ public class Watchr {
 		} 	
 		ipLog = "[" + ipLog + "]";
 				
-		String caller = new Exception().getStackTrace()[5].getClassName() + " -> " +
-						new Exception().getStackTrace()[4].getClassName() + " -> " +
-						new Exception().getStackTrace()[3].getClassName() + " -> " + 
-						new Exception().getStackTrace()[2].getClassName() + " -> ";
+		String caller = getCallerTrace();
 		
 		s = " " + ipLog + "\t" + caller + "     "+ message;
 
 		return s;
+	}
+
+	private static String getCallerTrace() {
+
+		String caller8 = "";
+		String caller7 = "";
+		String caller6 = "";
+		String caller5 = "";
+		String caller4 = "";
+
+		try {
+			caller8 = new Exception().getStackTrace()[8].getClassName();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		try {
+			caller7 = new Exception().getStackTrace()[7].getClassName();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		try {
+			caller6 = new Exception().getStackTrace()[6].getClassName();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+
+		try {
+			caller5 = new Exception().getStackTrace()[5].getClassName();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		try {
+			caller4 = new Exception().getStackTrace()[4].getClassName();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+
+		
+		String caller = caller8 + " -> " +
+						caller7 + " -> " +
+						caller6 + " => " + 
+						caller5 + " -> " +
+						caller4 + " => "; 
+		return caller;
 	}
 
 	private static void fanoutLog(Level level, String message, String formattedMessage) {
