@@ -2,6 +2,7 @@ package com.onenow.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
@@ -15,18 +16,19 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.util.TimeParser;
+import com.onenow.util.Watchr;
 
 /**
  * Initialize the market
  */
 public class InitMarket {
 
-	InvestmentIndex index;
-	Portfolio marketPortfolio;
+	private InvestmentIndex index;
+	private Portfolio marketPortfolio;
 	
-	List<String> indices = new ArrayList<String>();
+	private List<String> indices = new ArrayList<String>();
 	
-	TimeParser parseDate = new TimeParser();
+	private TimeParser parseDate = new TimeParser();
 	
 	public InitMarket() {	
 	}
@@ -45,16 +47,16 @@ public class InitMarket {
 		this.marketPortfolio = portfolio;
 
 		initStocks(stocks);		
-		System.out.println(marketPortfolio.toStocksString());		
+		Watchr.log(Level.INFO, marketPortfolio.toStocksString());		
 
 		addIndicesToPortfolio(indices);
-		System.out.println(marketPortfolio.toIndicesString());				
+		Watchr.log(Level.INFO, marketPortfolio.toIndicesString());				
 
 		initOptions(options, toDashedDate);
-		System.out.println(marketPortfolio.toOptionsString());		
+		Watchr.log(Level.INFO, marketPortfolio.toOptionsString());		
 
 		initFutures(futures);
-		System.out.println(marketPortfolio.toFuturesString());			
+		Watchr.log(Level.INFO, marketPortfolio.toFuturesString());			
 
 		// TODO: futures options
 		
@@ -180,24 +182,6 @@ public class InitMarket {
 		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);
 		marketPortfolio.enterTransaction(stockTrans);		
-	}
-
-
-	// SET GET
-	private List<String> getIndices() {
-		return indices;
-	}
-
-	private void setIndices(List<String> indices) {
-		this.indices = indices;
-	}
-
-	private InvestmentIndex getIndex() {
-		return index;
-	}
-
-	private void setIndex(InvestmentIndex index) {
-		this.index = index;
 	}
 	
 }

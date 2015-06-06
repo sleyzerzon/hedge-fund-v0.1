@@ -1,6 +1,8 @@
 package com.onenow.util;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
@@ -8,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.Handler;
+
+import com.onenow.admin.NetworkConfig;
 
 public class FlexibleLogger {
   static private FileHandler fileTxt;
@@ -22,9 +26,15 @@ public class FlexibleLogger {
   }
 
   static public boolean setup(String mode) {
+
+		if(!NetworkConfig.isMac()) {
+			// redirect all System.out and System.err log
+			redirectSystemStreams();
+		}
+
 	  return setup(Level.INFO, mode);
   }
-
+  
   static public boolean setup(Level level, String appMode) {
 	  
 	  boolean success = true;
@@ -58,7 +68,7 @@ public class FlexibleLogger {
 	    // create an HTML formatter
 	    formatterHTML = new HtmlFormatter();
 	    fileHTML.setFormatter(formatterHTML);
-	    logger.addHandler(fileHTML);    
+	    logger.addHandler(fileHTML);  	    
 	  }
     catch (IOException e) {
     	success = false;
@@ -68,5 +78,48 @@ public class FlexibleLogger {
 	  
 	  return success;
   }
+  
+  /**
+   * Redirects all System.out.println to Watchr
+   * 
+   */
+  private static void redirectSystemStreams() {
+	  
+	  OutputStream myStream = new OutputStream() {
+
+		@Override
+	    public void write(final int b) throws IOException {
+			updateLog(String.valueOf((char) b));
+	    }
+	 
+	    @Override
+	    public void write(byte[] b, int off, int len) throws IOException {
+	    	updateLog(new String(b, off, len));
+	    }
+	 
+	    @Override
+	    public void write(byte[] b) throws IOException {
+	      write(b, 0, b.length);
+	    }
+	  };
+	 
+	  System.setOut(new PrintStream(myStream, true));
+	  System.setErr(new PrintStream(myStream, true));
+	}
+  
+ 
+  /** 
+   * Thread the logger
+   * @param text
+   */
+	  private static void updateLog(final String text) {
+		  
+		  new Thread () {
+			  @Override public void run () {
+			    Watchr.log(Level.INFO, text);
+			  }
+			}.start();
+			
+		}
 }
  

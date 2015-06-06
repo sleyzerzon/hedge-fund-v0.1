@@ -56,6 +56,7 @@ public class Watchr {
 
 	private static String getCallerTrace() {
 
+		String caller = "";
 		String caller8 = "";
 		String caller7 = "";
 		String caller6 = "";
@@ -88,13 +89,23 @@ public class Watchr {
 		}
 		
 
+		if(!caller8.equals("")){
+			caller = caller + caller8 + " -> ";
+		}
+		if(!caller7.equals("")){
+			caller = caller + caller7 + " -> ";
+		}
+		if(!caller6.equals("")){
+			caller = caller + caller6 + " -> ";
+		}
+		if(!caller5.equals("")){
+			caller = caller + caller5 + " -> ";
+		}
+		if(!caller4.equals("")){
+			caller = caller + caller4;
+		}
 		
-		String caller = caller8 + " -> " +
-						caller7 + " -> " +
-						caller6 + " => " + 
-						caller5 + " -> " +
-						caller4 + " => "; 
-		return caller;
+		return caller = caller + " ==> ";
 	}
 
 	private static void fanoutLog(Level level, String message, String formattedMessage) {
@@ -107,7 +118,9 @@ public class Watchr {
 		}
 		
 		// print to console
-		System.out.println(message);
+		if(NetworkConfig.isMac()) {
+			System.out.println(message);
+		}
 		
 		// print to files, not to console
 		if(level.equals(Level.SEVERE)) {

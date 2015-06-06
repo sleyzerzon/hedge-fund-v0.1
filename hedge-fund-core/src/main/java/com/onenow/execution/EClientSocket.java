@@ -3265,11 +3265,11 @@ public class EClientSocket {
         m_eWrapper.error( err);
     }
 
-    public synchronized void message( int id, int errorCode, String errorMsg) {
+    public synchronized void message( int id, int code, String message) {
     	
-		Watchr.log(Level.INFO, "~ message( int id, int errorCode, String errorMsg)", "\n", "");
+		Watchr.log(Level.INFO, "~ message( int id, int code, String message)", "\n", "");
 
-        m_eWrapper.error( id, errorCode, errorMsg);
+        m_eWrapper.error( id, code, message);
     }
 
     protected void error(int id, EClientErrors.CodeMsgPair pair, String tail) {
