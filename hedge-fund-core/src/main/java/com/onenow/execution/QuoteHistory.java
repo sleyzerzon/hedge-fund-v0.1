@@ -12,7 +12,7 @@ import com.onenow.data.EventHistory;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BrokerBusHistorian;
-import com.onenow.io.BrokerBusHistorianRT;
+import com.onenow.io.BrokerBusRealtime;
 import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.BrokerController.IRealTimeBarHandler;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;

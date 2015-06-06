@@ -37,7 +37,7 @@ public class PriceSizeCache {
 	
 	
 	// REAL-TIME from broker
-	public boolean writeEventRT(EventRealTime event) {
+	public boolean writeEventRT(final EventRealTime event) {
 
 		String key = Lookup.getInvestmentKey(	event.inv, event.tradeType,
 												event.source, event.timing);
@@ -60,8 +60,11 @@ public class PriceSizeCache {
 		}
 		
 		// CRITICAL PATH
-		// TODO: FAST WRITE TO RING 
-		writeEventThroughRing(event);
+		new Thread () {
+			@Override public void run () {
+				writeEventThroughRing(event);
+			}
+		}.start();
 
 		return success;
 	}
@@ -72,18 +75,15 @@ public class PriceSizeCache {
 	 */
 	public void writeEventThroughRing(EventRealTime event) {
 
-		// TODO: INSERT RING		
+		// TODO: FAST WRITE TO RING		
 		
 		if(	broker.getMode().equals(BrokerMode.PRIMARY) ||
 			broker.getMode().equals(BrokerMode.STANDBY)) {
 						
-			// TODO: SQS/SNS/ELASTICACHE ORCHESTRATION
-
 			// Write to Real-Time datastream
 			Watchr.log(Level.INFO, "PriceSizeCache WRITE " + event.toString());
-			BrokerBusHistorianRT historyRTBroker = new BrokerBusHistorianRT();
-			BrokerBusHistorianRT.write(event);
-			
+			BrokerBusRealtime historyRTBroker = new BrokerBusRealtime();
+			BrokerBusRealtime.write(event);			
 		}
 	}
 

@@ -85,16 +85,16 @@ public class FlexibleLogger {
    */
   private static void redirectSystemStreams() {
 	  
-	  OutputStream myStream = new OutputStream() {
+	  OutputStream outStream = new OutputStream() {
 
 		@Override
 	    public void write(final int b) throws IOException {
-			updateLog(String.valueOf((char) b));
+			updateLog(Level.INFO, String.valueOf((char) b));
 	    }
 	 
 	    @Override
 	    public void write(byte[] b, int off, int len) throws IOException {
-	    	updateLog(new String(b, off, len));
+	    	updateLog(Level.INFO, new String(b, off, len));
 	    }
 	 
 	    @Override
@@ -103,8 +103,26 @@ public class FlexibleLogger {
 	    }
 	  };
 	 
-	  System.setOut(new PrintStream(myStream, true));
-	  System.setErr(new PrintStream(myStream, true));
+	  OutputStream errStream = new OutputStream() {
+
+		@Override
+	    public void write(final int b) throws IOException {
+			updateLog(Level.SEVERE, String.valueOf((char) b));
+	    }
+	 
+	    @Override
+	    public void write(byte[] b, int off, int len) throws IOException {
+	    	updateLog(Level.SEVERE, new String(b, off, len));
+	    }
+	 
+	    @Override
+	    public void write(byte[] b) throws IOException {
+	      write(b, 0, b.length);
+	    }
+	  };
+	  
+	  System.setOut(new PrintStream(outStream, true));
+	  System.setErr(new PrintStream(errStream, true));
 	}
   
  
@@ -112,11 +130,11 @@ public class FlexibleLogger {
    * Thread the logger
    * @param text
    */
-	  private static void updateLog(final String text) {
+	  private static void updateLog(final Level level, final String text) {
 		  
 		  new Thread () {
 			  @Override public void run () {
-			    Watchr.log(Level.INFO, text);
+			    Watchr.log(level, text);
 			  }
 			}.start();
 			

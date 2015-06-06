@@ -3,13 +3,13 @@ package com.onenow.io;
 import com.onenow.constant.StreamName;
 import com.onenow.data.EventRealTime;
 
-public class BrokerBusHistorianRT {
+public class BrokerBusRealtime {
 
 	static Kinesis kinesis = BusSystem.getKinesis();
 
 	private static Integer numShards = 1;
 	
-	public BrokerBusHistorianRT() {
+	public BrokerBusRealtime() {
 		kinesis.createStreamIfNotExists(StreamName.REALTIME, numShards); 
 	}
 
