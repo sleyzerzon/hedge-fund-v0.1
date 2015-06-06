@@ -37,16 +37,14 @@ public class ElastiCache {
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, e.getMessage());
 		}
-		String log = "GOT FROM CACHE: " + myObject.toString();
-    	Watchr.log(Level.INFO, log);
+    	Watchr.log(Level.INFO, "GOT FROM CACHE: " + myObject.toString());
 
 	}
 
 	public void write(String key, Object someObject) {
 		// Store a value (async) for one hour
 		try {
-			String log = "WROTE TO CACHE: " + someObject.toString();
-	    	Watchr.log(Level.INFO, log);
+	    	Watchr.log(Level.INFO, "WROTE TO CACHE: " + someObject.toString());
 			client.set(key, 3600, someObject);
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, e.getMessage());

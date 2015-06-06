@@ -1,8 +1,9 @@
 package com.onenow.data;
 
 import java.util.List;
+import java.util.logging.Level;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -11,20 +12,21 @@ import com.onenow.instrument.Investment;
 import com.onenow.io.PriceSizeCache;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Chart;
+import com.onenow.util.Watchr;
 
 public class MarketPrice {
 
 	private PriceSizeCache cache; 		// just storage	
 	private Portfolio portfolio;
 	private DataSampling sampling;
-	private Broker broker;
+	private BrokerInterface broker;
 	
 	
 	public MarketPrice() {
 		
 	}
 	
-	public MarketPrice(Portfolio marketPortfolio, Broker broker) {
+	public MarketPrice(Portfolio marketPortfolio, BrokerInterface broker) {
 		this.portfolio = marketPortfolio;
 		this.broker = broker;
 		this.cache = new PriceSizeCache(broker);
@@ -42,7 +44,6 @@ public class MarketPrice {
 			EventRealTime event = new EventRealTime(	timeStamp, inv, TradeType.TRADED, 
 														lastPrice, lastSize,
 														source, timing);
-			// System.out.println("MarketPrice WRITE " + event.toString());
 			cache.writeEventRT(event);
 			
 			
@@ -80,7 +81,7 @@ public class MarketPrice {
 		
 		chart = cache.readChart(	inv, tradeType, sampling, fromDate, toDate,
 											source, timing);
-		System.out.println("READ CHART " + "\n" + chart);
+		Watchr.log(Level.INFO, "READ CHART " + "\n" + chart);
 		
 		return chart;
 	}		

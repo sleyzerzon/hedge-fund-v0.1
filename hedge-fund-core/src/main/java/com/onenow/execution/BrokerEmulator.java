@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
@@ -20,7 +20,7 @@ import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
 
-public class BrokerEmulator implements Broker {
+public class BrokerEmulator implements BrokerInterface {
 
 	private static List<Underlying> underList;
 	private static Portfolio marketPortfolio;

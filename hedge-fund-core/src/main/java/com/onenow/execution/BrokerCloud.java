@@ -1,7 +1,7 @@
 package com.onenow.execution;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 
-public abstract interface BrokerCloud extends Broker {
+public abstract interface BrokerCloud extends BrokerInterface {
 
 }

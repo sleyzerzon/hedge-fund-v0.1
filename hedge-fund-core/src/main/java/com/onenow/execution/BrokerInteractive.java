@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
@@ -26,7 +26,7 @@ import com.onenow.risk.MarketAnalytics;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
-public class BrokerInteractive implements Broker  {
+public class BrokerInteractive implements BrokerInterface  {
 
 	  private BrokerMode brokerMode;	
 	  private List<Underlying> underList;
@@ -39,7 +39,7 @@ public class BrokerInteractive implements Broker  {
 	  private ContractFactory contractFactory = new ContractFactory();
 	//  private List<Channel> channels = new ArrayList<Channel>();
 	  
-	  private BusWallSt bus;
+	  private BusWallStIB bus;
 
 	  private static HashMap<String, QuoteHistory>		history;						// price history from L3
 	  private static long lastQueryTime;
@@ -52,7 +52,7 @@ public class BrokerInteractive implements Broker  {
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
 	   */
-	  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio, BusWallSt bus) { 
+	  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio, BusWallStIB bus) { 
 		  
 		this.brokerMode = mode;
 	    this.marketPortfolio = marketPortfolio;
@@ -78,9 +78,7 @@ public class BrokerInteractive implements Broker  {
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
 
-			  String log = "#PRICE# SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString();
-			  Watchr.log(Level.INFO, log, "\n\n", "");
-
+			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString(), "\n\n", "");
 			  QuoteRealTime quoteLive = new QuoteRealTime(bus.controller, marketPrices, inv);
 		  }
 	  }	
@@ -120,7 +118,7 @@ public class BrokerInteractive implements Broker  {
 		  Integer reqId = bus.controller.reqHistoricalData(	contract, end, 
 	    													1, config.durationUnit, config.barSize, config.whatToShow, 
 	    													false, quoteHistory);
-		  String log = "#PRICE# REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId;
+		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId;
 		  Watchr.log(Level.INFO, log);
 	    
 		  return reqId;

@@ -3,7 +3,7 @@ package com.onenow.portfolio;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
@@ -26,7 +26,7 @@ import com.onenow.util.TimeParser;
 
 public class PortfolioFactory {
 	
-	private Broker 			broker;
+	private BrokerInterface 			broker;
 	private Portfolio 		marketPortfolio;
 	private MarketPrice 	marketPrice;
 	private Underlying 		index;
@@ -38,7 +38,7 @@ public class PortfolioFactory {
 		
 	}
 	
-	public PortfolioFactory(Broker broker, Portfolio marketPortfolio) {
+	public PortfolioFactory(BrokerInterface broker, Portfolio marketPortfolio) {
 		this.broker = broker;
 		this.marketPortfolio = marketPortfolio;
 		this.marketPrice = new MarketPrice(getMarketPortfolio(), broker);		

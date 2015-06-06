@@ -6,7 +6,7 @@ import java.util.List;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activities;
 import com.amazonaws.services.simpleworkflow.flow.annotations.Activity;
 import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrationOptions;
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.ConstantsWorkflow;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
@@ -23,7 +23,7 @@ import com.onenow.portfolio.Transaction;
 								defaultTaskStartToCloseTimeoutSeconds = 300, 
 								defaultTaskList = ConstantsWorkflow.AWS_SWF_TASK_LIST_NAME)
 @Activities(version = ConstantsWorkflow.AWS_SWF_VERSION_DEV)
-public interface BrokerActivity extends Broker {
+public interface BrokerActivity extends BrokerInterface {
 	
 	public List<Underlying> getUnderlying();
 	public Portfolio getMarketPortfolio();

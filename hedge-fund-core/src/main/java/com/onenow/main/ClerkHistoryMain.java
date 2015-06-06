@@ -49,8 +49,7 @@ public class ClerkHistoryMain {
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				String log = "TSDB HISTORY WRITE FAILED: " + event.investment.toString();
-				Watchr.log(Level.SEVERE, log);
+				Watchr.log(Level.SEVERE, "TSDB HISTORY WRITE FAILED: " + event.investment.toString() + e.getMessage());
 				// e.printStackTrace();
 				try {
 					Thread.sleep(1000);
@@ -58,8 +57,7 @@ public class ClerkHistoryMain {
 			}				
 		}
 		if(retry) {
-			String log = "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + event.investment.toString();
-			Watchr.log(Level.INFO, log);
+			Watchr.log(Level.INFO, "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + event.investment.toString());
 		}
 				
 	}

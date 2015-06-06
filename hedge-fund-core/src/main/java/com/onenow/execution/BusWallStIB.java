@@ -6,7 +6,6 @@ import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
-import com.onenow.alpha.Broker;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.Topology;
@@ -20,7 +19,7 @@ import java.util.logging.Level;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
-public class BusWallSt implements ConnectionHandler {
+public class BusWallStIB implements ConnectionHandler {
 
 	public BrokerController controller = new BrokerController(this);
 	
@@ -31,14 +30,14 @@ public class BusWallSt implements ConnectionHandler {
 	private BrokerMode mode;
 	
 	
-	public BusWallSt() {
+	public BusWallStIB() {
 		// always local for now
 		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
 		this.mode = BrokerMode.STREAMING;
 	}
 	
 	// configurable topology for testing
-	public BusWallSt(BrokerMode mode, Topology topo) {
+	public BusWallStIB(BrokerMode mode, Topology topo) {
 		
 		this.mode = mode;
 		this.gateway = NetworkConfig.getGateway(topo);
@@ -70,14 +69,12 @@ public class BusWallSt implements ConnectionHandler {
 			    						clientID, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
-				String log = "...COULD NOT CONNECT TO BUS: " + e.getMessage();
-				Watchr.log(Level.SEVERE, log, "", "\n");
+				Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO BUS: " + e.getMessage(), "", "\n");
 				e.printStackTrace();
 				TimeParser.wait(10);
 			}			
 		} // end try to connect
-		String log = "CONNECTED TO BUS!";
-		Watchr.log(Level.INFO, log, "", "");
+		Watchr.log(Level.INFO, "CONNECTED TO BUS!", "", "");
 	  }
 
 	  private Integer getClientID() {

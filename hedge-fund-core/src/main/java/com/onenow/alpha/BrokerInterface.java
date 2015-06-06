@@ -12,7 +12,7 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 
-public  interface Broker {
+public  interface BrokerInterface {
 	public abstract BrokerMode getMode();
 	public abstract List<Underlying> getUnderlying();
 	public abstract Portfolio getMarketPortfolio();

@@ -2,6 +2,8 @@ package com.onenow.execution;
 
 import static com.ib.controller.Formats.fmtPct;
 
+import java.util.logging.Level;
+
 import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
@@ -13,6 +15,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
+import com.onenow.util.Watchr;
 
 /**
  * Single quote class
@@ -113,25 +116,25 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 				// System.out.println("Last time " + m_lastTime);
 				break;
 			case AVG_VOLUME:
-				System.out.println("AVG_VOLUME " + value); // not for indices
+				Watchr.log(Level.INFO, "AVG_VOLUME " + value); // not for indices
 				break;
 			case OPTION_CALL_VOLUME:
-				System.out.println("OPTION_CALL_VOLUME " + value); // stocks 
+				Watchr.log(Level.INFO, "OPTION_CALL_VOLUME " + value); // stocks 
 				break;
 			case OPTION_PUT_VOLUME:
-				System.out.println("OPTION_PUT_VOLUME " + value); // stocks
+				Watchr.log(Level.INFO, "OPTION_PUT_VOLUME " + value); // stocks
 				break;
 			case AUCTION_VOLUME:
-				System.out.println("AUCTION_VOLUME " + value); // subscribe to
+				Watchr.log(Level.INFO, "AUCTION_VOLUME " + value); // subscribe to
 				break;
 			case RT_VOLUME:
 				// the time-stamp is in UTC time zone
-				System.out.println("\n" + "RT_VOLUME " + value); 
+				Watchr.log(Level.INFO, "RT_VOLUME " + value, "\n", ""); 
 				parseAndWriteRealTime(investment, value);
 				// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
 				break;
 			case VOLUME_RATE:
-				System.out.println("VOLUME_RATE " + value); // not for indices
+				Watchr.log(Level.INFO, "VOLUME_RATE " + value); // not for indices
 				break;
 			
             default: break; 
@@ -143,7 +146,7 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 		m_model.fireTableDataChanged();
 		
 		if(m_frozen==true) {
-			System.out.println("...frozen data");
+			Watchr.log(Level.WARNING, "...frozen data");
 		}
 	}
 

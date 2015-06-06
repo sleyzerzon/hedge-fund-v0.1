@@ -50,8 +50,6 @@ public class Kinesis {
 	
     public void sendObject(Object objectToSend, StreamName streamName) {
 		
-    	String log = "";
-    	
 		boolean success = true;
 		
     	jsonMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -60,8 +58,7 @@ public class Kinesis {
         try {
             bytes = jsonMapper.writeValueAsBytes(objectToSend);
         } catch (IOException e) {
-        	log = "Skipping pair. Unable to serialize: " + e;
-        	Watchr.log(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, "Skipping pair. Unable to serialize: " + e.getMessage());
             return;
         }
 
@@ -79,21 +76,18 @@ public class Kinesis {
             kinesis.putRecord(putRecord);
         } catch (ProvisionedThroughputExceededException ex) {
         	success = false;
-        	log = "Throughput exceeded";
-        	Watchr.log(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, "Throughput exceeded" + ex.getMessage());
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         } catch (AmazonClientException ex) {
-        	log = "Error sending record to Amazon Kinesis: " + ex;
-        	Watchr.log(Level.SEVERE, log);
+        	Watchr.log(Level.SEVERE, "Error sending record to Amazon Kinesis: " + ex.getMessage());
         }
         
         if(success) {
-    		log = "&&&&&&&&&&&&& WROTE: " + objectToSend.toString() + " INTO STREAM: " + streamName;
-        	Watchr.log(Level.INFO, log);
+        	Watchr.log(Level.INFO, "&&&&&&&&&&&&& WROTE: " + objectToSend.toString() + " INTO STREAM: " + streamName);
         }
     }
     

@@ -10,13 +10,13 @@ public class BusWallStTest {
 
   @Test
   public void BusWallSt() {
-	  BusWallSt bus = new BusWallSt();
+	  BusWallStIB bus = new BusWallStIB();
 	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.LOCAL)));
   }
 
   @Test
   public void BusWallStTopology() {
-	  BusWallSt bus;
+	  BusWallStIB bus;
 	  
 //	  if(NetworkConfig.isMac()) {
 //		  bus = new BusWallSt(Topology.LOCAL);

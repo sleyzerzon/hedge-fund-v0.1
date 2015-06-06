@@ -7,7 +7,7 @@ import com.onenow.constant.Topology;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
-import com.onenow.execution.BusWallSt;
+import com.onenow.execution.BusWallStIB;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
@@ -29,14 +29,13 @@ public class InvestorMain {
 	public static void main(String[] args) {
 		
 		BrokerMode mode = getModeArgument(args);
-		String log = "Starting in MODE: " + mode;
-		Watchr.log(Level.INFO, log);
+		Watchr.log(Level.INFO, "Starting in MODE: " + mode);
 
 		FlexibleLogger.setup(mode.toString());
 
 	    BrokerInteractive broker = new BrokerInteractive(	mode, 
 	    													marketPortfolio, 
-	    													new BusWallSt(mode, Topology.LOCAL)); 
+	    													new BusWallStIB(mode, Topology.LOCAL)); 
 
 		
 		if(	mode.equals(BrokerMode.PRIMARY) || mode.equals(BrokerMode.STANDBY)) {
@@ -101,8 +100,7 @@ public class InvestorMain {
 					mode = BrokerMode.STREAMING;
 				}
 			} else {
-				String log = "ERROR: mode is a required argument";
-		    	Watchr.log(Level.SEVERE, log);
+		    	Watchr.log(Level.SEVERE, "ERROR: mode is a required argument");
 			}
 		}
 		return mode;

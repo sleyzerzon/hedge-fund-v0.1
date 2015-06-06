@@ -20,7 +20,6 @@ import com.onenow.data.DataSampling;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import java.util.logging.Level;
-import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class TSDB {
@@ -44,13 +43,13 @@ private void dbConnect() {
 	while(tryToConnect) {
 		try {
 			tryToConnect = false;
-			System.out.println("\n" + "CONNECTING TO TSDB...");
+			Watchr.log(Level.INFO, "CONNECTING TO TSDB...", "\n", "");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
 			influxDB = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
 													tsdbService.user, tsdbService.pass);
 		} catch (Exception e) {
 			tryToConnect = true;
-			System.out.println("\n" + "...COULD NOT CONNECT TO TSDB: ");
+			Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO TSDB: ", "\n", "");
 			e.printStackTrace();
 			try {
 				Thread.sleep(10000);
@@ -59,7 +58,7 @@ private void dbConnect() {
 			}
 		}
 	} 
-	System.out.println("CONNECTED TO TSDB!");
+	Watchr.log(Level.INFO, "CONNECTED TO TSDB!");
 }
 
 private void dbCreate() {
@@ -144,7 +143,7 @@ public static List<Serie> queryPrice(String dbName, String serieName, SamplingRa
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		System.out.println("#PRICE# QUERY: " + query);
+		Watchr.log(Level.INFO, "#PRICE# QUERY: " + query);
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 		//		e.printStackTrace();  some time series don't exist or have data
@@ -155,7 +154,7 @@ public static List<Serie> queryPrice(String dbName, String serieName, SamplingRa
 private static List<Candle> priceSeriesToCandles(List<Serie> series) {
 	List<Candle> candles = new ArrayList<Candle>();
 	
-	System.out.println("SERIES: " + series.toString());
+	Watchr.log(Level.INFO, "SERIES: " + series.toString());
 			
 	String s="";
 	for (Serie ser : series) {
@@ -315,7 +314,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 					"time < " + "'" + toDate + "' ";
 					
 	try {
-		System.out.println("#SIZE# QUERY: " + query);
+		Watchr.log(Level.INFO, "#SIZE# QUERY: " + query);
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data

@@ -5,12 +5,7 @@ import java.util.logging.Level;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
-import com.amazonaws.regions.Regions;
 import com.onenow.alpha.WordCount;
-import com.onenow.io.BusSystem;
-import com.onenow.io.Kinesis;
-import com.onenow.io.S3;
-import com.onenow.io.SQS;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.Watchr;
 

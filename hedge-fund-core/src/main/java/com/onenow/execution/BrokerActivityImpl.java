@@ -3,7 +3,7 @@ package com.onenow.execution;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
@@ -45,8 +45,8 @@ public class BrokerActivityImpl implements BrokerActivity {
 	 * A broker is selected to operate with
 	 * @return
 	 */
-	private Broker getBroker() {
-		Broker broker = null;
+	private BrokerInterface getBroker() {
+		BrokerInterface broker = null;
 		if(brokerEmulator!=null) {
 			broker = brokerEmulator;
 		}

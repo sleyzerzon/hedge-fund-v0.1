@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.Socket;
+import java.util.logging.Level;
 
 import com.ib.client.ComboLeg;
 import com.ib.client.EWrapper;
@@ -359,7 +360,7 @@ public class ApiConnection extends EClientSocket {
     	void logReplace( String str) {
     		String log = str.replace( EOL, LOG_EOL);
 //    		m_inLogger.logReplace( log );
-    		Watchr.log(log);
+    		Watchr.log(Level.INFO, log);
     	}
     }
 }

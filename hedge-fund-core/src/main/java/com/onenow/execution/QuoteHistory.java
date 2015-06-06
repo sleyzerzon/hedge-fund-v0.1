@@ -57,7 +57,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		handleRow(row);
 		
 		if(hasGaps) {
-			System.out.println("Historic data has gaps!");
+			Watchr.log(Level.WARNING, "Historic data has gaps!");
 		}		
 	}
 	
@@ -87,8 +87,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		BrokerBusHistorian histroyBroker = new BrokerBusHistorian();
 		histroyBroker.write(row);
 
-		String log = "History " + row.toString();
-		Watchr.log(Level.INFO, log, "", "");
+		Watchr.log(Level.INFO, "History " + row.toString());
 
 		// Channel handling
 		if(channel!=null) { // if constructed that way

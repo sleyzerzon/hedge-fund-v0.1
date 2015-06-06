@@ -2,7 +2,7 @@ package com.onenow.execution;
 
 import java.util.List;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
@@ -12,7 +12,7 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 
-public class BrokerGoogle implements Broker {
+public class BrokerGoogle implements BrokerInterface {
 
 	@Override
 	public List<Underlying> getUnderlying() {

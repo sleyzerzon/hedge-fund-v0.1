@@ -3,13 +3,8 @@ package com.onenow.main;
 import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
-import com.onenow.data.EventHistory;
 import com.onenow.data.EventRealTime;
-import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;

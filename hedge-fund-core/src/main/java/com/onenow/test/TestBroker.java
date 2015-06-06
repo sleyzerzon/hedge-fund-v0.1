@@ -10,7 +10,7 @@ import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
-import com.onenow.execution.BusWallSt;
+import com.onenow.execution.BusWallStIB;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
@@ -27,7 +27,7 @@ public class TestBroker implements Testable {
 
 	private DatabaseSystemActivityImpl logDB;
 	private BrokerActivityImpl broker;
-	private BusWallSt bus;
+	private BusWallStIB bus;
 	private List<Underlying> unders;
 	private Portfolio market;
 
@@ -71,7 +71,7 @@ public class TestBroker implements Testable {
 	    										futures, options,
 	    										toDate);
 
-    	bus = new BusWallSt();
+    	bus = new BusWallStIB();
 
 	    try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 

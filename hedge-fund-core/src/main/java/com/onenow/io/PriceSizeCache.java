@@ -3,13 +3,12 @@ package com.onenow.io;
 import java.util.HashMap;
 import java.util.List;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
-import com.onenow.data.DataSampling;
 import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
@@ -22,7 +21,7 @@ import com.onenow.util.Watchr;
 
 public class PriceSizeCache {
 	
-	private Broker 								broker;
+	private BrokerInterface 								broker;
 	private HashMap<String, EventRealTime>		lastEventRT = new HashMap<String, EventRealTime>(); 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
@@ -32,7 +31,7 @@ public class PriceSizeCache {
 		
 	}
 	
-	public PriceSizeCache(Broker broker) {
+	public PriceSizeCache(BrokerInterface broker) {
 		this.broker = broker;
 	}
 	
@@ -81,7 +80,7 @@ public class PriceSizeCache {
 			// TODO: SQS/SNS/ELASTICACHE ORCHESTRATION
 
 			// Write to Real-Time datastream
-			// System.out.println("PriceSizeCache WRITE " + event.toString());
+			Watchr.log(Level.INFO, "PriceSizeCache WRITE " + event.toString());
 			BrokerBusHistorianRT historyRTBroker = new BrokerBusHistorianRT();
 			BrokerBusHistorianRT.write(event);
 			
@@ -105,11 +104,11 @@ public class PriceSizeCache {
 
 		// MISS: fill with the last data from chart until RT events start to hit
 		if(price==null) {
-			System.out.println("Null price from cache");
+			Watchr.log(Level.INFO, "Null price from cache");
 			price = readPriceFromChart(inv, tradeType);
 		} 
 		
-		System.out.println("Cache PRICE READ: " + price);
+		Watchr.log(Level.INFO, "Cache PRICE READ: " + price);
 
 		return price;
 	}
@@ -121,7 +120,7 @@ public class PriceSizeCache {
 		String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 		Double price = lastEventRT.get(key).price;
 		
-		System.out.println("Cache PRICE READ: L0 " + price);
+		Watchr.log(Level.INFO, "Cache PRICE READ: L0 " + price);
 
 		return price;
 	}
@@ -143,7 +142,7 @@ public class PriceSizeCache {
 		Candle last = candles.get(candles.size()-1);
 		price = last.closePrice;
 		
-		System.out.println("Cache PRICE from Chart READ " + price);
+		Watchr.log(Level.INFO, "Cache PRICE from Chart READ " + price);
 
 		return price;
 	
@@ -182,7 +181,7 @@ public class PriceSizeCache {
 //												source, timing);
 		} 
 		
-		System.out.println(s + chart.toString());
+		Watchr.log(Level.INFO, s + chart.toString());
 		return chart;
 	}
 
@@ -196,7 +195,7 @@ public class PriceSizeCache {
 												source, timing);
 		chart = charts.get(key);
 
-		System.out.println("Cache Chart READ: L0 " + chart.toString());
+		Watchr.log(Level.INFO, "Cache Chart READ: L0 " + chart.toString());
 		return chart;
 	}
 

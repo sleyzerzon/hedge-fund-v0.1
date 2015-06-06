@@ -49,7 +49,7 @@ public class Watchr {
 				
 		String caller = getCallerTrace();
 		
-		s = " " + ipLog + "\t" + caller + "     "+ message;
+		s = " " + ipLog + "\t" + caller + "     "+ message.toUpperCase();
 
 		return s;
 	}

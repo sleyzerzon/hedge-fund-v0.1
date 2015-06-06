@@ -55,8 +55,7 @@ public class ChartistMain {
 		
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			
-			String log = "***** PRE-FETCH SAMPLING ***** " + samplr;
-	    	Watchr.log(Level.INFO, log);
+	    	Watchr.log(Level.INFO, "***** PRE-FETCH SAMPLING ***** " + samplr);
 
 			String today = TimeParser.getDashedToday();
 			readChartToL1FromRTL2(	event.inv, event.tradeType, samplr,

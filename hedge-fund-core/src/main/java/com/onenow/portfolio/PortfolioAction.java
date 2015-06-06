@@ -1,6 +1,6 @@
 package com.onenow.portfolio;
 
-import com.onenow.alpha.Broker;
+import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
@@ -21,7 +21,7 @@ public class PortfolioAction {
 	
 	private Contract contract;
 	
-	private Broker broker;
+	private BrokerInterface broker;
 	private Double agression;
 	private Double spread=5.0; // TODO: generalize
 	
@@ -32,7 +32,7 @@ public class PortfolioAction {
 		
 	}
 	
-	public PortfolioAction(Integer quant, Underlying under, String exp, Broker broker) {
+	public PortfolioAction(Integer quant, Underlying under, String exp, BrokerInterface broker) {
 		setQuant(quant);
 		setUnder(under);
 		setExp(exp);	
@@ -420,11 +420,11 @@ public class PortfolioAction {
 		this.agression = agression;
 	}
 
-	private Broker getBroker() {
+	private BrokerInterface getBroker() {
 		return broker;
 	}
 
-	private void setBroker(Broker broker) {
+	private void setBroker(BrokerInterface broker) {
 		this.broker = broker;
 	}
 
