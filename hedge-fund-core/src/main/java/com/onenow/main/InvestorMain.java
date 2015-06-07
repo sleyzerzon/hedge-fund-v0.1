@@ -2,19 +2,12 @@ package com.onenow.main;
 
 import java.util.logging.Level;
 
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.BrokerMode;
-import com.onenow.constant.StreamName;
-import com.onenow.constant.TestValues;
 import com.onenow.constant.Topology;
-import com.onenow.data.EventRealTime;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallStIB;
-import com.onenow.io.BusProcessingFactory;
-import com.onenow.io.BusSystem;
-import com.onenow.io.ElastiCache;
 import com.onenow.io.KinesisTest;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
