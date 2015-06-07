@@ -96,6 +96,8 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 		if(recordType.equals(String.class)) {
 			
+			// write the last one to cache to validate the stream works
+			
 		}
 		
 		if(recordType.equals(EventHistory.class)) {

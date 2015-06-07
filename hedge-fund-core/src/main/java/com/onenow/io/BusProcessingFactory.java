@@ -15,21 +15,21 @@ public class BusProcessingFactory {
 		
 	}
 	
-	public static IRecordProcessorFactory recordProcessorString() {
+	public static IRecordProcessorFactory processorFactoryString() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<String>(String.class);
 
         return recordProcessor;
 	}
 
-	public static IRecordProcessorFactory processorFactoryEventHistoryRT() {
+	public static IRecordProcessorFactory processorFactoryRealTime() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventRealTime>(EventRealTime.class);
 
         return recordProcessor;
 	}
 
-	public static IRecordProcessorFactory processorFactoryEventHistory() {
+	public static IRecordProcessorFactory processorFactoryHistory() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventHistory>(EventHistory.class);
 

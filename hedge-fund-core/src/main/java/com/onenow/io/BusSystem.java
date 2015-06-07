@@ -15,7 +15,7 @@ import com.onenow.io.Lookup;
 
 public class BusSystem {
 
-	private static HashMap<String, Kinesis> kinesis = new HashMap<String, Kinesis>();
+	private static HashMap<String, Kinesis> kinesisMap = new HashMap<String, Kinesis>();
 	private static HashMap<Kinesis, Region> kinesisRegion = new HashMap<Kinesis, Region>();
 
 	public BusSystem() {
@@ -37,32 +37,49 @@ public class BusSystem {
 		
 		String key = Lookup.getKinesisKey(region);
 		
-		if(kinesis.get(key)==null) {
+		if(kinesisMap.get(key)==null) {
 			
 			kin = new Kinesis(region);
-			kinesis.put(key, kin);
+			kinesisMap.put(key, kin);
 			kinesisRegion.put(kin, region);
 			
 		} else {
-			kin = kinesis.get(key);
+			kin = kinesisMap.get(key);
 		}
 		
 		return kin;
 	}
 	
-	public static boolean createStream(Kinesis kinesis, StreamName streamName, Integer numShards) {
+	private static boolean createStreamIfNotExists(StreamName name) {
+		
+		getKinesis().createStreamIfNotExists(name, getNumShards(name));
+		
+		return true;
+	}
 
-		kinesis.createStreamIfNotExists(streamName, numShards);
+	/** 
+	 * Set right number of shards for a given StreamName
+	 * @param name
+	 * @return
+	 */
+	private static int getNumShards(StreamName name) {
+		Integer shards = 1;
+		return shards;
+	}
+
+	public static boolean createStream(StreamName streamName, Integer numShards) {
+
+		getKinesis().createStreamIfNotExists(streamName, numShards);
 		
 		return true;
 	}
 	
-	public static boolean writeToBusIndefnitely(Kinesis kinesis, StreamName streamName) {
+	public static boolean writeToBusIndefnitely(StreamName streamName) {
 		String s = "Hola World! ";
 		Integer i=0;
 		while(true) {
 			s = s + i;
-			write(kinesis, streamName, s);
+			write(streamName, s);
 			TimeParser.wait(1);
 			i++;
 		}
@@ -70,29 +87,29 @@ public class BusSystem {
 //		return true;
 	}
 
-	public static void write(Kinesis kinesis, StreamName streamName, Object objToSend) {
-		kinesis.sendObject(objToSend, streamName);
+	public static void write(StreamName streamName, Object objToSend) {
+		getKinesis().sendObject(objToSend, streamName);
 	}
 	
 
-	public static boolean read(Kinesis kinesis, StreamName streamName, IRecordProcessorFactory recordProcessor) {
+	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessor) {
 
-		KinesisClientLibConfiguration clientConfig = configureReadingClient(kinesis, streamName);
+		KinesisClientLibConfiguration clientConfig = configureReadingClient(streamName);
 		
 		Worker kinesysWorker = new Worker(recordProcessor, clientConfig);
 		
         return runProcessor(kinesysWorker);
 
 	}
-	private static KinesisClientLibConfiguration configureReadingClient(Kinesis kinesis, StreamName streamName) {
+	private static KinesisClientLibConfiguration configureReadingClient(StreamName streamName) {
 		
 		String applicationName = "appName";
 		String workerId = "fulano";
 		
-		KinesisClientLibConfiguration clientConfig = kinesis.configureClient(	applicationName, 
-																				streamName.toString(), 
-																				workerId, 
-																				kinesisRegion.get(kinesis));
+		KinesisClientLibConfiguration clientConfig = getKinesis().configureClient(	applicationName, 
+																					streamName.toString(), 
+																					workerId, 
+																					kinesisRegion.get(getKinesis()));
 		return clientConfig;
 	}
 

@@ -23,12 +23,8 @@ public class ClerkRealTimeMain {
 
 		FlexibleLogger.setup();
 
-		Kinesis kinesis = BusSystem.getKinesis();
-		
-		StreamName streamName = StreamName.REALTIME;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.processorFactoryEventHistoryRT();
-
-		BusSystem.read(kinesis, streamName, recordProcessorFactory);
+		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.processorFactoryRealTime();
+		BusSystem.read(StreamName.REALTIME, rtProcessorFactory);
 		
 	}
 	

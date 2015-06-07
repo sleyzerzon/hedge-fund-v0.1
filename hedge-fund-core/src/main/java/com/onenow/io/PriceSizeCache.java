@@ -8,6 +8,7 @@ import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
@@ -26,7 +27,6 @@ public class PriceSizeCache {
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
 	private TSDB 								TSDB = new TSDB();				// database		
-	private BrokerBusRealtime 					brokerBusRealtime = new BrokerBusRealtime();
 	
 	public PriceSizeCache() {
 		
@@ -83,7 +83,7 @@ public class PriceSizeCache {
 						
 			// Write to Real-Time datastream
 			Watchr.log(Level.INFO, "PriceSizeCache WRITE " + event.toString());
-			brokerBusRealtime.write(event);			
+			BusSystem.write(StreamName.REALTIME, event);			
 		}
 	}
 

@@ -40,14 +40,9 @@ public class ChartistMain {
 
 		FlexibleLogger.setup();
 
-		Kinesis kinesis = BusSystem.getKinesis();
-		
-		StreamName streamName = StreamName.REALTIME;
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.processorFactoryEventHistoryRT();
-
-		BusSystem.read(kinesis, streamName, recordProcessorFactory);
-		
-				
+		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.processorFactoryRealTime();
+		BusSystem.read(StreamName.REALTIME, rtProcessorFactory);
+					
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html

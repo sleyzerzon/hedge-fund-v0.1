@@ -6,13 +6,13 @@ import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
 import com.onenow.data.EventHistory;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
-import com.onenow.io.BrokerBusHistorian;
-import com.onenow.io.BrokerBusRealtime;
+import com.onenow.io.BusSystem;
 import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;
 import com.onenow.portfolio.BrokerController.IRealTimeBarHandler;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
@@ -84,8 +84,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		row.timing = timing;
 				
 		// Write to history data stream
-		BrokerBusHistorian histroyBroker = new BrokerBusHistorian();
-		histroyBroker.write(row);
+		BusSystem.write(StreamName.HISTORY, row);
 
 		Watchr.log(Level.INFO, "History " + row.toString());
 

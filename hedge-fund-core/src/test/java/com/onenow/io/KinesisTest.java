@@ -4,20 +4,62 @@ import java.util.logging.Level;
 
 import org.testng.annotations.Test;
 
+import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.StreamName;
+import com.onenow.constant.TradeType;
 import com.onenow.data.EventRealTime;
+import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
 
 public class KinesisTest {
-	private BrokerBusRealtime 					brokerBusRealtime = new BrokerBusRealtime();
+
+	IRecordProcessorFactory testingProcessorFactory = BusProcessingFactory.processorFactoryString();
+
+	private Long time = new Long("1424288913903");
+	private Investment inv = new Investment();
+	private TradeType tradeType = TradeType.TRADED; 
+
+	private Double price = 2011.0;
+	private Integer size = 5;
+	
+	private InvDataSource source = InvDataSource.IB;
+	private InvDataTiming timing = InvDataTiming.REALTIME;
+
 
   @Test
   public void sendObject() {
-
-	  	EventRealTime event = null;
 	  
-		// Write to Real-Time datastream
-		Watchr.log(Level.INFO, "PriceSizeCache WRITE " + event.toString());
-		brokerBusRealtime.write(event);			
+	  	final String eventString = "Hola PA!";
+	  
+	  	// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
+	  	EventRealTime eventRT = new EventRealTime(	time, inv, tradeType,
+	  												price, size,
+	  												source, timing);
+
+		new Thread () {
+			@Override public void run () {
+				writeRepeatedly(eventString);
+			}
+		}.start();
+
+		readRepeatedly(); 
 
   }
+  
+	  private void writeRepeatedly(String eventString) {
+		  	while(true) {	
+				Watchr.log(Level.INFO, "KinesisTest: WRITE " + eventString);
+				BusSystem.write(StreamName.TESTING, eventString);					
+		  	}
+	  }
+	  
+	  private void readRepeatedly() {
+		  	while(true) {	
+				Watchr.log(Level.INFO, "KinesisTest: READ ");
+				BusSystem.read(StreamName.TESTING, testingProcessorFactory);
+		  	}
+	  }
+
 }
