@@ -24,7 +24,7 @@ import com.onenow.util.Watchr;
 
 public class TSDB {
 	
-	private static InfluxDB influxDB;
+	private static InfluxDB influxDB = dbConnect();
 	private static Lookup dbLookup = new Lookup();
 	private static DataSampling dataSampling = new DataSampling();
 	
@@ -32,21 +32,20 @@ public class TSDB {
 	 * Default constructor connects to database
 	 */
 	public TSDB() {
-		dbConnect();
-		dbCreate();
 	}
 	
 // INIT
-private void dbConnect() { 
+private static InfluxDB dbConnect() { 
+	InfluxDB db  = null;
 	boolean tryToConnect = true;
-	
-	while(tryToConnect) {
-		try {
+	while(tryToConnect) {		
+		try {	
 			tryToConnect = false;
 			Watchr.log(Level.INFO, "CONNECTING TO TSDB...", "\n", "");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
 			influxDB = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
 													tsdbService.user, tsdbService.pass);
+			dbCreate();	
 		} catch (Exception e) {
 			tryToConnect = true;
 			Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO TSDB: ", "\n", "");
@@ -59,9 +58,10 @@ private void dbConnect() {
 		}
 	} 
 	Watchr.log(Level.INFO, "CONNECTED TO TSDB!");
+	return db;
 }
 
-private void dbCreate() {
+private static void dbCreate() {
 	try {
 		influxDB.createDatabase(DBname.PRICE.toString());
 		influxDB.createDatabase(DBname.SIZE.toString());
@@ -260,7 +260,7 @@ public static void writeSize(Long time, Investment inv, TradeType tradeType, Int
 	influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
+public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
 										String fromDate, String toDate,
 										InvDataSource source, InvDataTiming timing) {
 	
@@ -287,7 +287,7 @@ public List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, Sampli
  * @param toDate
  * @return
  */
-public List<Serie> querySize(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
+public static List<Serie> querySize(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
 	String query = 	"SELECT " +
@@ -323,7 +323,7 @@ public List<Serie> querySize(String dbName, String serieName, SamplingRate sampl
 	return series;
 }
 
-private List<Integer> sizeSeriesToInts(List<Serie> series) {
+private static List<Integer> sizeSeriesToInts(List<Serie> series) {
 	List<Integer> sizes = new ArrayList<Integer>();
 	
 	String s="";

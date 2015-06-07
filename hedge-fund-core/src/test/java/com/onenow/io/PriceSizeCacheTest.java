@@ -14,7 +14,7 @@ public class PriceSizeCacheTest {
 
 	BrokerInterface broker = new BrokerInteractive();
 	
-	PriceSizeCache cache = new PriceSizeCache(broker);
+	CacheInProcess cache = new CacheInProcess(broker);
 
 	EventRealTime event = new EventRealTime();
 	

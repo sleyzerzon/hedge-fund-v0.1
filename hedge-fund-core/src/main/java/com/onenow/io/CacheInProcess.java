@@ -20,19 +20,17 @@ import java.util.logging.Level;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
-public class PriceSizeCache {
+public class CacheInProcess {
 	
-	private BrokerInterface 								broker;
+	private BrokerInterface 					broker;
 	private HashMap<String, EventRealTime>		lastEventRT = new HashMap<String, EventRealTime>(); 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
-	private TSDB 								TSDB = new TSDB();				// database		
-	
-	public PriceSizeCache() {
+	public CacheInProcess() {
 		
 	}
 	
-	public PriceSizeCache(BrokerInterface broker) {
+	public CacheInProcess(BrokerInterface broker) {
 		this.broker = broker;
 	}
 	

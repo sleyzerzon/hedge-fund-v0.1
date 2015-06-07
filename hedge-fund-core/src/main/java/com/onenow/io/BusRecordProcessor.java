@@ -91,7 +91,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 */
 	private void handleByRecordType(T record) {
 		
-		String log = "******************************** GOT RECORD: " + record.toString();
+		String log = "******************************** READ RECORD: " + record.toString();
     	Watchr.log(Level.INFO, log);
 		
 		if(recordType.equals(String.class)) {

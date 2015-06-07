@@ -28,6 +28,9 @@ public class NetworkConfig {
 	private static NetworkService rdsAWS = new NetworkService(			"pablo0000", "pablo777",
 																		"jdbc:mysql", "hedge-fund-dev-free.c38uxrs0s2gx.us-east-1.rds.amazonaws.com", "3306",
 																		"core_dev_free");
+	private static NetworkService elastiCache = new NetworkService(		"", "",
+																		"", "hedgefundcache.cusyjv.cfg.use1.cache.amazonaws.com", "11211",
+																		"");
 
 	
 	public NetworkConfig() {
@@ -76,6 +79,13 @@ public class NetworkConfig {
 		NetworkService net = rdsAWS;
 		
 		return net;		
+	}
+	
+	public static NetworkService getCache() {
+		
+		NetworkService net = elastiCache;
+		
+		return net;
 	}
 
 	public static boolean isWindows() { 

@@ -26,8 +26,6 @@ import com.onenow.util.Watchr;
  */
 public class HistorianMain {
 
-	private static TSDB TSDB = new TSDB();				// database
-
 	private static Portfolio marketPortfolio = new Portfolio();
 
 	// relevant time frame

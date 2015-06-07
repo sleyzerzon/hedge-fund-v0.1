@@ -9,14 +9,14 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.io.PriceSizeCache;
+import com.onenow.io.CacheInProcess;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Chart;
 import com.onenow.util.Watchr;
 
 public class MarketPrice {
 
-	private PriceSizeCache cache; 		// just storage	
+	private CacheInProcess cache; 		// just storage	
 	private Portfolio portfolio;
 	private DataSampling sampling;
 	private BrokerInterface broker;
@@ -29,7 +29,7 @@ public class MarketPrice {
 	public MarketPrice(Portfolio marketPortfolio, BrokerInterface broker) {
 		this.portfolio = marketPortfolio;
 		this.broker = broker;
-		this.cache = new PriceSizeCache(broker);
+		this.cache = new CacheInProcess(broker);
 		this.sampling = new DataSampling();
 	}
 	

@@ -1,7 +1,5 @@
 package com.onenow.io;
 
-import java.util.logging.Level;
-
 import org.testng.annotations.Test;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
@@ -11,7 +9,6 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
-import com.onenow.util.Watchr;
 
 public class KinesisTest {
 
@@ -50,15 +47,15 @@ public class KinesisTest {
   
 	  private void writeRepeatedly(String eventString) {
 		  	while(true) {	
-				Watchr.log(Level.INFO, "KinesisTest: WRITE " + eventString);
 				BusSystem.write(StreamName.TESTING, eventString);					
 		  	}
 	  }
 	  
 	  private void readRepeatedly() {
 		  	while(true) {	
-				Watchr.log(Level.INFO, "KinesisTest: READ ");
 				BusSystem.read(StreamName.TESTING, testingProcessorFactory);
+				
+				// validate read=write via ElastiCache
 		  	}
 	  }
 

@@ -29,8 +29,6 @@ public class ChartistMain {
 
 	private static HashMap<String, Chart>		charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
-	private static TSDB 		TSDB = new TSDB();								// database		
-	private static ElastiCache	cache = new ElastiCache();
 	
 	/**
 	 * Pre-fetches to L1 cache the chart analysis, based on the latest Real-Time data 
@@ -96,9 +94,9 @@ public class ChartistMain {
 			// store in process memory
 			charts.put(key, chart);			
 			// Write to ElastiCache
-			cache.write(key, (Object) chart);
+			ElastiCache.write(key, (Object) chart);
 				
-			cache.read(key);
+			ElastiCache.read(key);
 
 						
 		} catch (Exception e) {
