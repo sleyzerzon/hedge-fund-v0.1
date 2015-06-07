@@ -24,28 +24,25 @@ import com.onenow.util.Watchr;
 public class InitMarket {
 
 	private InvestmentIndex index;
-	private Portfolio marketPortfolio;
+	private static Portfolio marketPortfolio = new Portfolio();
 	
 	private List<String> indices = new ArrayList<String>();
 	
-	private TimeParser parseDate = new TimeParser();
-	
-	public InitMarket() {	
-	}
 
 	/**
 	 * Initialize market instruments: indices, stocks, futures
 	 * @param index
 	 * @param portfolio
 	 */
-	
-	public InitMarket(	Portfolio portfolio,
-						List<Underlying> stocks, List<Underlying> indices,
-						List<Underlying> futures, List<Underlying> options,
-						String toDashedDate) {
-		
-		this.marketPortfolio = portfolio;
 
+	public InitMarket() {	
+	}
+
+		
+	public static Portfolio getPortfolio(	List<Underlying> stocks, List<Underlying> indices,
+											List<Underlying> futures, List<Underlying> options,
+											String toDashedDate) {
+		
 		initStocks(stocks);		
 		Watchr.log(Level.INFO, marketPortfolio.toStocksString());		
 
@@ -58,17 +55,16 @@ public class InitMarket {
 		initFutures(futures);
 		Watchr.log(Level.INFO, marketPortfolio.toFuturesString());			
 
-		// TODO: futures options
+		return marketPortfolio;
 		
 	}
-	
 	 
 	// INDEX 
 	/**
 	 * Initialize indices
 	 * @param under
 	 */
-	private void addIndicesToPortfolio(List<Underlying> unders) {
+	private static void addIndicesToPortfolio(List<Underlying> unders) {
 		for(Underlying under:unders) {
 			InvestmentIndex index = new InvestmentIndex(under);
 			Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
@@ -82,15 +78,15 @@ public class InitMarket {
 	 * Initialize options
 	 * @param unders
 	 */
-	private void initOptions(List<Underlying> unders, String toDashedDate) { 
+	private static void initOptions(List<Underlying> unders, String toDashedDate) { 
 		ExpirationDate exps = new ExpirationDate();
 		exps.initIndexOptionExpList(); 
 		
 		// look at high/low price basis in the last 30 days
-		String fromDashedDate = parseDate.getDashedDateMinus(toDashedDate, 30);
+		String fromDashedDate = TimeParser.getDashedDateMinus(toDashedDate, 30);
 
 		for(Underlying under:unders) {
-			for(String expDate:exps.getValidOptionExpList(parseDate.getUndashedToday())) { 			
+			for(String expDate:exps.getValidOptionExpList(TimeParser.getUndashedToday())) { 			
 				// TODO: seed lowprice and highprice automatically from market value range in the time window of interest
 				addOptionsToPortfolio(	under, expDate, 
 										lowPrice(under, fromDashedDate, toDashedDate), 
@@ -99,7 +95,7 @@ public class InitMarket {
 		}
 	}
 	
-	private double lowPrice(Underlying index, String fromDate, String toDate) {
+	private static double lowPrice(Underlying index, String fromDate, String toDate) {
 		Double price=0.0;		
 		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
 			price = 2090.0;	
@@ -113,7 +109,7 @@ public class InitMarket {
 		return price;
 	}
 	
-	private double highPrice(Underlying index, String fromDate, String toDate) {
+	private static double highPrice(Underlying index, String fromDate, String toDate) {
 		Double price=0.0;	
 		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
 			price = 2110.0;	
@@ -132,7 +128,7 @@ public class InitMarket {
 	 * @param under
 	 * @param expDate
 	 */
-	private void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
+	private static void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
 		Integer interval = 5;			// options interval
 		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+interval) {
 			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
@@ -148,17 +144,17 @@ public class InitMarket {
 	/**
 	 * Initialize all futures
 	 */
-	private void initFutures(List<Underlying> unders) {
+	private static void initFutures(List<Underlying> unders) {
 		ExpirationDate exps = new ExpirationDate();
 		exps.initFuturesExpList(); 
 		
 		for(Underlying under:unders) {
-			for(String expDate:exps.getValidFuturesExpList(parseDate.getUndashedToday())) {
+			for(String expDate:exps.getValidFuturesExpList(TimeParser.getUndashedToday())) {
 				initExpFutures(under, expDate);
 			}
 		}
 	}
-	private void initExpFutures(Underlying under, String expDate) {
+	private static void initExpFutures(Underlying under, String expDate) {
 		InvestmentFuture future = new InvestmentFuture(under, expDate);
 		Trade trade = new Trade(future, TradeType.BUY, 1, 0.0);
 		Transaction trans = new Transaction(trade);
@@ -171,13 +167,13 @@ public class InitMarket {
 	 * Initialize all stocks
 	 * @param stocks
 	 */
-	private void initStocks(List<Underlying> stocks) {
+	private static void initStocks(List<Underlying> stocks) {
 		for (Underlying stock:stocks) {
 			setStock(stock);
 		}
 	}
 
-	private void setStock(Underlying under) {
+	private static void setStock(Underlying under) {
 		InvestmentStock stock = new InvestmentStock(under);
 		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);

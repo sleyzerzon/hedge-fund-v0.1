@@ -66,10 +66,9 @@ public class TestBroker implements Testable {
 	    String toDate = TimeParser.getDashedToday();
 
 	    // fill the market portfolio
-	    InitMarket initMarket = new InitMarket(	marketPortfolio, 
-	    										stocks, indices,
-	    										futures, options,
-	    										toDate);
+	    marketPortfolio = InitMarket.getPortfolio(	stocks, indices,
+	    											futures, options,
+	    											toDate);
 
     	bus = new BusWallStIB();
 

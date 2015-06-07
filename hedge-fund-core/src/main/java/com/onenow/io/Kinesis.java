@@ -43,7 +43,7 @@ public class Kinesis {
         
         streamUtils.createStreamIfNotExists(streamName.toString(), numShards);
         
-        String log = streamName + " is ready for use";
+        String log = streamName + " stream is ready for use";
     	Watchr.log(Level.FINE, log);
 
 	}

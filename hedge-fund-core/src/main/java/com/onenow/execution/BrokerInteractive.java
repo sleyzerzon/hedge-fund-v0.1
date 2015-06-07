@@ -75,6 +75,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	   * Quotes are in response to specific request, or real-time notifications
 	   */
 	  public void getLiveQuotes() {
+		  Watchr.log(marketPortfolio.toString());
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
 

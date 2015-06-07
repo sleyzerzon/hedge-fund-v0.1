@@ -24,23 +24,29 @@ import com.onenow.util.Watchr;
 
 public class InvestorMain {
 
-	private static Portfolio marketPortfolio = new Portfolio();
-
 	public static void main(String[] args) {
 		
 		BrokerMode mode = getModeArgument(args);
 		Watchr.log(Level.INFO, "Starting in MODE: " + mode);
 
 		FlexibleLogger.setup(mode.toString());
-
-	    BrokerInteractive broker = new BrokerInteractive(	mode, 
-	    													marketPortfolio, 
-	    													new BusWallStIB(mode, Topology.LOCAL)); 
-
 		
-		if(	mode.equals(BrokerMode.PRIMARY) || mode.equals(BrokerMode.STANDBY)) {
+		if(	mode.equals(BrokerMode.PRIMARY)) {
 			// register once: get all market real-time quotes
-		    setPortfolioForInvestment();						
+			// choose relevant time frame
+		    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
+
+		    // choose what to hedge on
+			Portfolio marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+																	InvestmentList.getUnderlying(InvestmentList.someIndices),
+																	InvestmentList.getUnderlying(InvestmentList.futures), 
+																	InvestmentList.getUnderlying(InvestmentList.options),
+																	toDashedDate);
+
+			BrokerInteractive broker = new BrokerInteractive(	mode, 
+																marketPortfolio, 
+																new BusWallStIB(mode, Topology.LOCAL)); 
+
 			broker.getLiveQuotes(); 			
 		}
 		
@@ -67,19 +73,6 @@ public class InvestorMain {
 //		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
 //		portfolioFactory.launch();							
 
-	}
-
-	private static void setPortfolioForInvestment() {
-		// choose relevant time frame
-	    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
-
-	    // choose what to hedge on
-		InitMarket initMarket = new InitMarket(	marketPortfolio, 
-												InvestmentList.getUnderlying(InvestmentList.someStocks), 
-												InvestmentList.getUnderlying(InvestmentList.someIndices),
-												InvestmentList.getUnderlying(InvestmentList.futures), 
-												InvestmentList.getUnderlying(InvestmentList.options),
-    											toDashedDate);
 	}
 	
 	private static BrokerMode getModeArgument(String[] args) {

@@ -26,6 +26,7 @@ public class PriceSizeCache {
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
 	private TSDB 								TSDB = new TSDB();				// database		
+	private BrokerBusRealtime 					brokerBusRealtime = new BrokerBusRealtime();
 	
 	public PriceSizeCache() {
 		
@@ -82,8 +83,7 @@ public class PriceSizeCache {
 						
 			// Write to Real-Time datastream
 			Watchr.log(Level.INFO, "PriceSizeCache WRITE " + event.toString());
-			BrokerBusRealtime historyRTBroker = new BrokerBusRealtime();
-			BrokerBusRealtime.write(event);			
+			brokerBusRealtime.write(event);			
 		}
 	}
 

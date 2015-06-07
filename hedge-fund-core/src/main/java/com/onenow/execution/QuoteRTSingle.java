@@ -129,6 +129,7 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 				break;
 			case RT_VOLUME:
 				// the time-stamp is in UTC time zone
+				System.out.println(value);
 				Watchr.log(Level.INFO, "RT_VOLUME " + value, "\n", ""); 
 				parseAndWriteRealTime(investment, value);
 				// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true

@@ -46,8 +46,7 @@ public class HistorianMain {
 			Watchr.log(Level.INFO, "^^ HISTORIAN MAIN: " + toDashedDate);
 	    	// update the market portfolio, broker, and historian every month
 	    	if(count%30 == 0) {
-					InitMarket initMarket = new InitMarket(	marketPortfolio, 
-															InvestmentList.getUnderlying(InvestmentList.someStocks), 
+	    		marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
 															InvestmentList.getUnderlying(InvestmentList.someIndices),
 															InvestmentList.getUnderlying(InvestmentList.futures), 
 															InvestmentList.getUnderlying(InvestmentList.options),
