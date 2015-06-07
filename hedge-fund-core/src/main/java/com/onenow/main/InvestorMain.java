@@ -15,6 +15,7 @@ import com.onenow.execution.BusWallStIB;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.ElastiCache;
+import com.onenow.io.KinesisTest;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
@@ -30,8 +31,6 @@ import com.onenow.util.Watchr;
  */
 
 public class InvestorMain {
-	
-	static IRecordProcessorFactory testingProcessorFactory = BusProcessingFactory.processorFactoryString();
  
 	public static void main(String[] args) {
 		
@@ -40,7 +39,7 @@ public class InvestorMain {
 
 		FlexibleLogger.setup(mode.toString());
 		
-		testKinesis();
+		KinesisTest.run();
 		
 		if(	mode.equals(BrokerMode.PRIMARY)) {
 			// register once: get all market real-time quotes
@@ -85,41 +84,6 @@ public class InvestorMain {
 //		portfolioFactory.launch();							
 
 	}
-	
-	private static void testKinesis() {
-		
-		  
-	  	// RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
-	  	// EventRealTime eventRT = new EventRealTime(	time, inv, tradeType,
-	  	//												price, size,
-	  	//												source, timing);
-
-		new Thread () {
-			@Override public void run () {
-				writeRepeatedly();
-			}
-		}.start();
-
-		readRepeatedly(); 
-		
-	}
-	
-	  private static void writeRepeatedly() {
-		  	int count = 0;
-		  	while(true) {	
-				BusSystem.write(StreamName.TESTING, TestValues.CACHEVALUE.toString());
-				TimeParser.wait(5);
-				count ++;
-				if(count>10) {
-					return;
-				}
-		  	}
-	  }
-	  
-	  private static void readRepeatedly() {
-			BusSystem.read(StreamName.TESTING, testingProcessorFactory);
-	  }
-
 	
 	private static BrokerMode getModeArgument(String[] args) {
 		BrokerMode mode = BrokerMode.REALTIME;
