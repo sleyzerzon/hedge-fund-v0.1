@@ -64,8 +64,7 @@ public class ChartistMain {
 			  Watchr.log(Level.INFO, "ElastiCache test PASS");
 		  } else {
 			  Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");			  
-		  }
-			  
+		  }		    
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html

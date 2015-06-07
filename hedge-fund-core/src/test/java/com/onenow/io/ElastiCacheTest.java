@@ -16,9 +16,5 @@ public class ElastiCacheTest {
 		  Assert.assertTrue(ElastiCache.cache.port.equals("11211"));
 	  }
 
-//	  @Test
-//	  public void write() {
-//		  
-//	  }
 
 }

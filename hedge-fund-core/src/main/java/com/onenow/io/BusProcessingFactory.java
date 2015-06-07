@@ -14,6 +14,7 @@ public class BusProcessingFactory {
 	public BusProcessingFactory() {
 		
 	}
+
 	
 	public static IRecordProcessorFactory processorFactoryString() {
 		

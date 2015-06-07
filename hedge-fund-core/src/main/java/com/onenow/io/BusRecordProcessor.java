@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.TestValues;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventHistory;
 import com.onenow.data.EventRealTime;
@@ -91,13 +92,25 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 */
 	private void handleByRecordType(T record) {
 		
-		String log = "******************************** READ RECORD: " + record.toString();
+		String log = "******************************** READ RECORD: " + record.toString() + " FROM STREAM";
     	Watchr.log(Level.INFO, log);
 		
 		if(recordType.equals(String.class)) {
 			
-			// write the last one to cache to validate the stream works
-			
+			try {
+				// Kinesis + Elasticache Test
+				// Read to see if the cache already has the test value
+				String testValue = (String) ElastiCache.readAsync(TestValues.CACHEKEY.toString());
+				boolean valuesMatch = testValue.equals(TestValues.CACHEVALUE.toString()); 
+				if(valuesMatch) {
+					Watchr.log(Level.WARNING, "Kinesis test PASS");
+					return;
+				} 
+				// Write the last one to cache to validate the stream works
+				ElastiCache.write(TestValues.CACHEKEY.toString(), (Object) record);
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
 		}
 		
 		if(recordType.equals(EventHistory.class)) {
