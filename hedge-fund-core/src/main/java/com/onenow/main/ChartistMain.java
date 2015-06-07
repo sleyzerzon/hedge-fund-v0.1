@@ -38,9 +38,34 @@ public class ChartistMain {
 
 		FlexibleLogger.setup();
 
+		testCache();
+		
 		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.processorFactoryRealTime();
 		BusSystem.read(StreamName.REALTIME, rtProcessorFactory);
 					
+	}
+	
+	private static void testCache() {
+		
+		  String key = "hello";
+		  String value = "hello back";
+		  
+		  ElastiCache.write(key, (Object) value);
+
+		  TimeParser.wait(5);
+		  
+		  String testValue = (String) ElastiCache.readAsync(key);
+
+		  TimeParser.wait(5);
+
+		  Watchr.log("ElastiCache test: " + value + " vs. " + testValue);
+		  
+		  if(testValue.equals(value)) {
+			  Watchr.log(Level.INFO, "ElastiCache test PASS");
+		  } else {
+			  Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");			  
+		  }
+			  
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
