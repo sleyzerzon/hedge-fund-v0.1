@@ -8,7 +8,7 @@ import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallStIB;
-import com.onenow.io.KinesisTest;
+import com.onenow.io.Kinesis;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
@@ -32,7 +32,7 @@ public class InvestorMain {
 
 		FlexibleLogger.setup(mode.toString());
 		
-		KinesisTest.run();
+		Kinesis.selfTest();
 		
 		if(	mode.equals(BrokerMode.PRIMARY)) {
 			// register once: get all market real-time quotes

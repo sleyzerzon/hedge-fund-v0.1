@@ -9,6 +9,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
+import com.onenow.constant.TestValues;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventRealTime;
@@ -47,20 +48,12 @@ public class ChartistMain {
 	
 	private static void testCache() {
 		
-		  String key = "hello";
-		  String value = "hello back";
-		  
-		  ElastiCache.write(key, (Object) value);
-
+		  ElastiCache.write(TestValues.KEY.toString(), (Object) TestValues.VALUE.toString());
 		  TimeParser.wait(5);
-		  
-		  String testValue = (String) ElastiCache.readAsync(key);
-
+		  String testValue = (String) ElastiCache.readAsync(TestValues.KEY.toString());
 		  TimeParser.wait(5);
 
-		  Watchr.log("ElastiCache test: " + value + " vs. " + testValue);
-		  
-		  if(testValue.equals(value)) {
+		  if(testValue.equals(TestValues.VALUE.toString())) {
 			  Watchr.log(Level.INFO, "ElastiCache test PASS");
 		  } else {
 			  Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");			  

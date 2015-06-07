@@ -100,14 +100,14 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			try {
 				// Kinesis + Elasticache Test
 				// Read to see if the cache already has the test value
-				String testValue = (String) ElastiCache.readAsync(TestValues.CACHEKEY.toString());
-				boolean valuesMatch = testValue.equals(TestValues.CACHEVALUE.toString()); 
+				String testValue = (String) ElastiCache.readAsync(TestValues.KEY.toString());
+				boolean valuesMatch = testValue.equals(TestValues.VALUE.toString()); 
 				if(valuesMatch) {
 					Watchr.log(Level.WARNING, "Kinesis test PASS");
 					return;
 				} 
 				// Write the last one to cache to validate the stream works
-				ElastiCache.write(TestValues.CACHEKEY.toString(), (Object) record);
+				ElastiCache.write(TestValues.KEY.toString(), (Object) record);
 			} catch (Exception e) {
 				// e.printStackTrace();
 			}

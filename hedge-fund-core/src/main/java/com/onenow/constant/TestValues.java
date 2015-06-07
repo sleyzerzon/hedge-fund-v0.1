@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
 public enum TestValues {
-	CACHEKEY, CACHEVALUE
+	KEY, VALUE, BOGUS
 }
