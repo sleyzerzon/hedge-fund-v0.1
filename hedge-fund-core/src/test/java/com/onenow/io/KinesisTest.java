@@ -35,13 +35,13 @@ public class KinesisTest {
 	  												price, size,
 	  												source, timing);
 
-		new Thread () {
-			@Override public void run () {
-				writeRepeatedly(eventString);
-			}
-		}.start();
-
-		readRepeatedly(); 
+//		new Thread () {
+//			@Override public void run () {
+//				writeRepeatedly(eventString);
+//			}
+//		}.start();
+//
+//		readRepeatedly(); 
 
   }
   
