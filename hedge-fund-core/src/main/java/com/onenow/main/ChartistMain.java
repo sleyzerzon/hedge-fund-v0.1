@@ -16,7 +16,7 @@ import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
-import com.onenow.io.ElastiCache;
+import com.onenow.io.CacheElastic;
 import com.onenow.io.Kinesis;
 import com.onenow.io.Lookup;
 import com.onenow.io.TSDB;
@@ -48,9 +48,9 @@ public class ChartistMain {
 	
 	private static void testCache() {
 		
-		  ElastiCache.write(TestValues.KEY.toString(), (Object) TestValues.VALUE.toString());
+		  CacheElastic.write(TestValues.KEY.toString(), (Object) TestValues.VALUE.toString());
 		  TimeParser.wait(5);
-		  String testValue = (String) ElastiCache.readAsync(TestValues.KEY.toString());
+		  String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
 		  TimeParser.wait(5);
 
 		  if(testValue.equals(TestValues.VALUE.toString())) {
@@ -111,9 +111,9 @@ public class ChartistMain {
 			// store in process memory
 			charts.put(key, chart);			
 			// Write to ElastiCache
-			ElastiCache.write(key, (Object) chart);
+			CacheElastic.write(key, (Object) chart);
 				
-			ElastiCache.read(key);
+			CacheElastic.read(key);
 
 						
 		} catch (Exception e) {

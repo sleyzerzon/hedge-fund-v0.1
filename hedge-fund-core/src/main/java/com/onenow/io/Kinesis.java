@@ -140,15 +140,19 @@ public class Kinesis {
 	  private static void writeRepeatedly() {
 		  	int count = 0;
 		  	while(true) {	
+		  		Watchr.log(Level.WARNING, "KINESIS SELF TEST");
 				BusSystem.write(StreamName.TESTING, TestValues.VALUE.toString());
-				TimeParser.wait(5);
+				TimeParser.wait(15);
 				count ++;
-				if(count>10) {
+				if(count>4) {
 					return;
 				}
 		  	}
 	  }
 	  
+	  /**
+	   * Reading processor will look for write-read matches in the cache
+	   */
 	  private static void readRepeatedly() {
 			BusSystem.read(StreamName.TESTING, testingProcessorFactory);
 	  }

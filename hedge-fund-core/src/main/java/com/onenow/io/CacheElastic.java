@@ -1,43 +1,24 @@
 package com.onenow.io;
 
-import io.netty.util.concurrent.Future;
-
-import java.awt.List;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import com.amazonaws.services.elasticache.AmazonElastiCacheClient;
-import com.amazonaws.services.elasticache.model.CacheCluster;
-import com.amazonaws.services.elasticache.model.CacheNode;
-import com.amazonaws.services.elasticache.model.DescribeCacheClustersRequest;
-import com.amazonaws.services.elasticache.model.DescribeCacheClustersResult;
-import com.onenow.admin.InitAmazon;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 import com.onenow.util.Watchr;
 
 import net.spy.memcached.AddrUtil;
-import net.spy.memcached.BinaryConnectionFactory;
-import net.spy.memcached.ConnectionFactory;
-import net.spy.memcached.ConnectionFactoryBuilder;
-import net.spy.memcached.DefaultConnectionFactory;
-import net.spy.memcached.HashAlgorithm;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.auth.AuthDescriptor;
-import net.spy.memcached.auth.PlainCallbackHandler;
 import net.spy.memcached.internal.GetFuture;
 import net.spy.memcached.internal.OperationFuture;
 
-import net.spy.memcached.HashAlgorithm;
 
-public class ElastiCache {
+public class CacheElastic {
 	
 	public static NetworkService cache = NetworkConfig.getCache();
 	private static MemcachedClient client = connect();
 
-	public ElastiCache() {
+	public CacheElastic() {
 	}
 
 	private static MemcachedClient connect() {
