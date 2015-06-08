@@ -134,7 +134,11 @@ public class Kinesis {
 				writeRepeatedly();
 			}
 		}.start();
-		readRepeatedly(); 
+		new Thread () {
+			@Override public void run () {
+				readRepeatedly();
+			}
+		}.start();
 	}
 	
 	  private static void writeRepeatedly() {
