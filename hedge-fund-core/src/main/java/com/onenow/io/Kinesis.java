@@ -143,12 +143,13 @@ public class Kinesis {
 	
 	  private static void writeRepeatedly() {
 		  	int count = 0;
+		  	int maxTries=3;
 		  	while(true) {	
-		  		Watchr.log(Level.WARNING, "KINESIS SELF TEST");
+		  		Watchr.log(Level.WARNING, "KINESIS SELF TEST: ");
 				BusSystem.write(StreamName.TESTING, TestValues.VALUE.toString());
 				TimeParser.wait(15);
 				count ++;
-				if(count>4) {
+				if(count>maxTries) {
 					return;
 				}
 		  	}
