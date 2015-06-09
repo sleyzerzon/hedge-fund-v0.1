@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import kinesis.CountingRecordProcessorFactory;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.AmazonKinesis;
@@ -100,7 +101,10 @@ public class Kinesis {
     														String workerId, Region region) {
     	
         KinesisClientLibConfiguration kclConfig =
-                new KinesisClientLibConfiguration(applicationName, streamName, InitAmazon.getAWSCredentialProvider(), workerId);
+                new KinesisClientLibConfiguration(	applicationName, streamName, 
+                									new DefaultAWSCredentialsProviderChain(), 
+                									workerId);
+        
         kclConfig.withCommonClientConfig(InitAmazon.getClientConfig());
         kclConfig.withRegionName(region.getName());
         kclConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
