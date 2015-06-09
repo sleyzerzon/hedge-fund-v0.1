@@ -1,5 +1,7 @@
 package com.onenow.admin;
 
+import java.util.logging.Level;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
@@ -19,6 +21,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.onenow.util.SampleUtils;
+import com.onenow.util.Watchr;
 
 public class InitAmazon {
 
@@ -63,12 +66,6 @@ public class InitAmazon {
 		return credentials;
 	}
 	
-	public static AWSCredentialsProvider getAWSCredentialProvider() {
-		AWSCredentialsProvider credentialsProvider = new DefaultAWSCredentialsProviderChain();
-		return credentialsProvider;
-	}
-
-	
 	// S3
 	public static AmazonS3 getS3Connection() {
 		
@@ -100,13 +97,12 @@ public class InitAmazon {
 	public static AmazonKinesis getKinesis(Region region) {
 
 		AmazonKinesis kinesis = null;
-		
-                
-        
+
 		try {
+			Watchr.log(Level.INFO, "Creating new Kinesis client: credentials");
 			if(NetworkConfig.isMac()) {
 				// AmazonS3 s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());
-				kinesis = new AmazonKinesisClient(getAWSCredentialProvider(), getClientConfig());
+				kinesis = new AmazonKinesisClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
 			} else {
 				kinesis = new AmazonKinesisClient();
 			}
@@ -124,7 +120,11 @@ public class InitAmazon {
 		
         AmazonDynamoDB dynamoDB = null;
 		try {
-			dynamoDB = new AmazonDynamoDBClient(getAWSCredentialProvider(), getClientConfig());
+			if(NetworkConfig.isMac()) {
+				dynamoDB = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
+			} else {
+				dynamoDB = new AmazonDynamoDBClient();
+			}
 			dynamoDB.setRegion(region);
 		} catch (IllegalArgumentException e) {
 			System.out.println("COULD NOT CREATE DYNAMODB CLIENT");
