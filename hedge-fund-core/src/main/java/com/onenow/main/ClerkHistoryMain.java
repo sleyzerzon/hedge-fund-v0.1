@@ -22,8 +22,6 @@ public class ClerkHistoryMain {
 
 		FlexibleLogger.setup();
 
-		Kinesis kinesis = BusSystem.getKinesis();
-		
 		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.processorFactoryRealTime();
 		BusSystem.read(StreamName.HISTORY, recordProcessorFactory);
 		

@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
@@ -33,7 +34,7 @@ public class BusSystem {
 	}
 	
 	public static Kinesis getKinesis(Region region) {
-		
+				
 		Kinesis kin = null;
 		
 		String key = Lookup.getKinesisKey(region);
@@ -48,6 +49,9 @@ public class BusSystem {
 			kin = kinesisMap.get(key);
 		}
 		
+		Watchr.log(Level.INFO, kinesisMap.toString());
+		Watchr.log(Level.INFO, kinesisRegion.toString());
+
 		return kin;
 	}
 	
@@ -59,6 +63,9 @@ public class BusSystem {
 		if(region==null){
 			region = defaultRegion; 
 		}
+		
+		// Watchr.log(Level.INFO, "Kinesis region is: " + region);
+		
 		return region;
 	}
 	
@@ -103,8 +110,10 @@ public class BusSystem {
 		getKinesis().sendObject(objToSend, streamName);
 	}
 	
-
-	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessor) {
+	
+	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
+	// http://docs.aws.amazon.com/general/latest/gr/rande.html
+	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory) {
 
 		String applicationName = "appName";
 		String workerId = "fulano";
@@ -114,7 +123,9 @@ public class BusSystem {
 																					workerId, 
 																					getRegion(getKinesis()));
 		
-		Worker kinesysWorker = new Worker(recordProcessor, clientConfig);
+		clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
+		
+		Worker kinesysWorker = new Worker(recordProcessorFactory, clientConfig);
 		
         return runProcessor(kinesysWorker);
 

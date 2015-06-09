@@ -6,6 +6,12 @@ import org.testng.annotations.Test;
 
 public class BusSystemTest {
 
+	@Test 
+	public void getKinesis() {
+		
+		Assert.assertTrue(BusSystem.getKinesis()!=null);
+	}
+	
   @Test
   public void getRegion() {
 	  
