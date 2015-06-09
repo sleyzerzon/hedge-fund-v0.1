@@ -72,7 +72,17 @@ public class InitAmazon {
 		ClientConfiguration clientConfig = new ClientConfiguration();
 		clientConfig.setProtocol(Protocol.HTTP);
 		
-		AmazonS3 s3Client = new AmazonS3Client();		
+		AmazonS3 s3Client = null;
+		try {
+			if(NetworkConfig.isMac()) {
+				s3Client = new AmazonS3Client();
+			} else {
+				s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());
+			}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 		s3Client.setEndpoint(s3Endpoint);
 		
 		return s3Client;
@@ -123,7 +133,7 @@ public class InitAmazon {
 			if(NetworkConfig.isMac()) {
 				dynamoDB = new AmazonDynamoDBClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
 			} else {
-				dynamoDB = new AmazonDynamoDBClient();
+				dynamoDB = new AmazonDynamoDBClient(new InstanceProfileCredentialsProvider());
 			}
 			dynamoDB.setRegion(region);
 		} catch (IllegalArgumentException e) {
