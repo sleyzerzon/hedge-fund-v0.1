@@ -22,7 +22,7 @@ import com.onenow.research.Candle;
 import java.util.logging.Level;
 import com.onenow.util.Watchr;
 
-public class TSDB {
+public class databaseTimeSeries {
 	
 	private static InfluxDB influxDB = dbConnect();
 	private static Lookup dbLookup = new Lookup();
@@ -31,7 +31,7 @@ public class TSDB {
 	/**
 	 * Default constructor connects to database
 	 */
-	public TSDB() {
+	public databaseTimeSeries() {
 	}
 	
 // INIT

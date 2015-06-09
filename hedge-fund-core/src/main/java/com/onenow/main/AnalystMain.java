@@ -17,7 +17,6 @@ public class AnalystMain {
 		
 		Watchr.log(Level.INFO, "checking");
 		
-		// S3 storage = new S3();
 		
 		// SQS q = new SQS(Regions.US_EAST_1);
 		

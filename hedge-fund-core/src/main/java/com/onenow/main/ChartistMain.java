@@ -19,7 +19,7 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.CacheElastic;
 import com.onenow.io.Kinesis;
 import com.onenow.io.Lookup;
-import com.onenow.io.TSDB;
+import com.onenow.io.databaseTimeSeries;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.FlexibleLogger;
@@ -93,10 +93,10 @@ public class ChartistMain {
 		
 		try{	// some time series just don't exist or have data 			
 			
-			List<Candle> prices = TSDB.readPriceFromDB(		inv, tradeType, samplingRate, 
+			List<Candle> prices = databaseTimeSeries.readPriceFromDB(		inv, tradeType, samplingRate, 
 															fromDate, toDate,
 															source, timing);
-			List<Integer> sizes = TSDB.readSizeFromDB(		inv, tradeType, samplingRate, 
+			List<Integer> sizes = databaseTimeSeries.readSizeFromDB(		inv, tradeType, samplingRate, 
 															fromDate, toDate,
 															source, timing);
 

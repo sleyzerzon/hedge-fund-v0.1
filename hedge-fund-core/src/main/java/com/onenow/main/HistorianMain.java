@@ -9,7 +9,7 @@ import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
-import com.onenow.io.TSDB;
+import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
@@ -78,7 +78,7 @@ public class HistorianMain {
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-		List<Candle> prices = TSDB.readPriceFromDB(		inv, config.tradeType, config.sampling, 
+		List<Candle> prices = databaseTimeSeries.readPriceFromDB(		inv, config.tradeType, config.sampling, 
 														TimeParser.getDashedDateMinus(toDashedDate, 1), toDashedDate, 
 														config.source, config.timing);
 

@@ -8,7 +8,7 @@ import com.onenow.data.EventRealTime;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
-import com.onenow.io.TSDB;
+import com.onenow.io.databaseTimeSeries;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.Watchr;
 
@@ -37,9 +37,9 @@ public class ClerkRealTimeMain {
 			// handle as a transaction, both price+size write or nothing
 			try {
 				success = true;
-				TSDB.writePrice(event.time, event.inv, event.tradeType, event.price,
+				databaseTimeSeries.writePrice(event.time, event.inv, event.tradeType, event.price,
 								event.source, event.timing);				
-				TSDB.writeSize(	event.time, event.inv, event.tradeType, event.size,			
+				databaseTimeSeries.writeSize(	event.time, event.inv, event.tradeType, event.size,			
 								event.source, event.timing);
 			} catch (Exception e) {
 				success = false;

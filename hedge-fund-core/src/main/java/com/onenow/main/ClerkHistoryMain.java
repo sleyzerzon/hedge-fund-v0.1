@@ -8,7 +8,7 @@ import com.onenow.data.EventHistory;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
-import com.onenow.io.TSDB;
+import com.onenow.io.databaseTimeSeries;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.Watchr;
 
@@ -42,7 +42,7 @@ public class ClerkHistoryMain {
 		while (!success) {
 			try {
 				success = true;
-				TSDB.writePrice(	event.time*1000, event.investment, event.tradeType, event.open,
+				databaseTimeSeries.writePrice(	event.time*1000, event.investment, event.tradeType, event.open,
 									event.source, event.timing);
 			} catch (Exception e) {
 				success = false;
