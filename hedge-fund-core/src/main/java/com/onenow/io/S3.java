@@ -5,6 +5,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.amazonaws.util.StringUtils;
 import com.amazonaws.services.s3.AmazonS3;
@@ -15,8 +16,8 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-
-import com.onenow.admin.InitAmazon;;
+import com.onenow.admin.InitAmazon;
+import com.onenow.util.Watchr;
 
 
 public class S3 {
@@ -25,9 +26,6 @@ public class S3 {
 	
 	public S3 () {
 
-		List<Bucket> buckets = listBuckets();
-		
-		System.out.println(buckets.toString());
 	}
 
 	/** 
@@ -37,17 +35,22 @@ public class S3 {
 	 * 		mahbuckat3   2011-04-21T18:07:18.000Z
 	 * @return
 	 */
-	private static List<Bucket> listBuckets() {
+	public static List<Bucket> listBuckets() {
 		List<Bucket> buckets = connection.listBuckets();
 		for (Bucket bucket : buckets) {
-		        System.out.println(bucket.getName() + "\t" +
-		                StringUtils.fromDate(bucket.getCreationDate()));
+		       Watchr.log(Level.INFO, bucket.getName() + "\t\t" + StringUtils.fromDate(bucket.getCreationDate()));
 		}
 		return buckets;
 	}
 	
-	private static void createBucket(String name) {
-		Bucket bucket = connection.createBucket(name);
+	public static Bucket createBucket(String name) {
+		Bucket bucket = null;
+		try {
+			bucket = connection.createBucket(name);
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "Cannot create bucket");
+		}
+		return bucket;
 	}
 	
 	/**
@@ -56,16 +59,19 @@ public class S3 {
 	 * 		myphoto2.jpg 262518  2011-08-08T21:38:01.000Z
 	 * @param bucket
 	 */
-	private static void listObjects(Bucket bucket) {
+	public static void listObjects(Bucket bucket) {
+
 		ObjectListing objects = connection.listObjects(bucket.getName());
 		do {
 		        for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
-		                System.out.println(objectSummary.getKey() + "\t" +
-		                		objectSummary.getSize() + "\t" +
-		                        StringUtils.fromDate(objectSummary.getLastModified()));
+		        	Watchr.log(Level.INFO, 	bucket.getName() + " CONTAINS: " +   
+		        							objectSummary.getKey() + "\t" +
+        									"modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
+		                					"size " + objectSummary.getSize() + "\t"
+		                					);
 		        }
 		        objects = connection.listNextBatchOfObjects(objects);
-		} while (objects.isTruncated());
+		 } while (objects.isTruncated());
 	}
 	
 	private static void deleteBucket(Bucket bucket) {
@@ -75,11 +81,11 @@ public class S3 {
 	/**
 	 * This creates an object (i.e. hello.txt) with a content string (i.e. "Hello World!")
 	 * @param bucket
-	 * @param content
+	 * @param objectContent
 	 * @param objectName
 	 */
-	private static void createObject(Bucket bucket, String content, String objectName) {
-		ByteArrayInputStream input = new ByteArrayInputStream(content.getBytes());
+	public static void createObject(Bucket bucket, String objectContent, String objectName) {
+		ByteArrayInputStream input = new ByteArrayInputStream(objectContent.getBytes());
 		connection.putObject(bucket.getName(), objectName, input, new ObjectMetadata());
 	}	
 	
@@ -127,7 +133,7 @@ public class S3 {
 			e.printStackTrace();
 		}
 		url = connection.generatePresignedUrl(request);
-		System.out.println(url);
+		Watchr.log(Level.INFO, url.toString());
 		return url;
 	}
 
