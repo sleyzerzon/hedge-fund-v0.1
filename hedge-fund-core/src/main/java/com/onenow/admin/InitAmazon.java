@@ -99,9 +99,20 @@ public class InitAmazon {
 	// KINESIS
 	public static AmazonKinesis getKinesis(Region region) {
 
-        // Example: AmazonS3 s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());        
-        // AmazonKinesis kinesis = new AmazonKinesisClient(getAWSCredentialProvider(), getClientConfig());	
-        AmazonKinesis kinesis = new AmazonKinesisClient(new InstanceProfileCredentialsProvider());	        
+		AmazonKinesis kinesis = null;
+		
+                
+        
+		try {
+			if(NetworkConfig.isMac()) {
+				// AmazonS3 s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());
+				kinesis = new AmazonKinesisClient(getAWSCredentialProvider(), getClientConfig());
+			} else {
+				kinesis = new AmazonKinesisClient();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         
         kinesis.setRegion(region);
         
