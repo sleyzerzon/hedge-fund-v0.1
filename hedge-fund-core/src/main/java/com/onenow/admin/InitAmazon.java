@@ -6,6 +6,7 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -43,7 +44,7 @@ public class InitAmazon {
 		//			1. Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
 		//			2. Java System Properties - aws.accessKeyId and aws.secretKey
 		//			3. Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
-		//			4. Instance profile credentials delivered through the Amazon EC2 metadata service
+		//			4. Instance Profile credentials delivered through the Amazon EC2 metadata service
 		return new DefaultAWSCredentialsProviderChain();
 	}
 	
@@ -97,7 +98,11 @@ public class InitAmazon {
 	
 	// KINESIS
 	public static AmazonKinesis getKinesis(Region region) {
-        AmazonKinesis kinesis = new AmazonKinesisClient(getAWSCredentialProvider(), getClientConfig());
+
+        // Example: AmazonS3 s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());        
+        // AmazonKinesis kinesis = new AmazonKinesisClient(getAWSCredentialProvider(), getClientConfig());	
+        AmazonKinesis kinesis = new AmazonKinesisClient(new InstanceProfileCredentialsProvider());	        
+        
         kinesis.setRegion(region);
         
         return kinesis;

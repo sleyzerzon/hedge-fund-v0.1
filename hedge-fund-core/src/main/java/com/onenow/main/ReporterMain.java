@@ -66,9 +66,10 @@ public class ReporterMain {
 		try{	// some time series just don't exist or have data 			
 			
 			String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
-			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);
-							
-			S3.createObject(bucket, series.toString(), key+"-"+toDate);
+			String fileName = key+"-"+toDate;
+			Watchr.log(Level.INFO, "working on: " + fileName);
+			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);				
+			S3.createObject(bucket, series.toString(), fileName);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
