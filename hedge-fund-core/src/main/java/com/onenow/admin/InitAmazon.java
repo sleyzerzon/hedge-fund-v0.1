@@ -104,7 +104,7 @@ public class InitAmazon {
 				// AmazonS3 s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());
 				kinesis = new AmazonKinesisClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
 			} else {
-				kinesis = new AmazonKinesisClient();
+				kinesis = new AmazonKinesisClient(new InstanceProfileCredentialsProvider());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
