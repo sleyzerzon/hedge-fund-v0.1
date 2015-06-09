@@ -80,7 +80,6 @@ public class CacheInProcess {
 			broker.getMode().equals(BrokerMode.STANDBY)) {
 						
 			// Write to Real-Time datastream
-			Watchr.log(Level.INFO, "PriceSizeCache WRITE " + event.toString());
 			BusSystem.write(StreamName.REALTIME, event);			
 		}
 	}

@@ -53,11 +53,14 @@ public class ChartistMain {
 		  String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
 		  TimeParser.wait(5);
 
-		  if(testValue.equals(TestValues.VALUE.toString())) {
-			  Watchr.log(Level.INFO, "ElastiCache test PASS");
-		  } else {
-			  Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");			  
-		  }		    
+		  try {
+			if(testValue.equals(TestValues.VALUE.toString())) {
+				  Watchr.log(Level.INFO, "ElastiCache test PASS");
+			  } 
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");
+			e.printStackTrace();
+		}		    
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
@@ -65,7 +68,7 @@ public class ChartistMain {
 		
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 			
-	    	Watchr.log(Level.INFO, "***** PRE-FETCH SAMPLING ***** " + samplr);
+	    	Watchr.log(Level.INFO, "@@@@@@@@@@ PRE-FETCH SAMPLING: " + samplr, "\n", "");
 
 			String today = TimeParser.getTodayDashed();
 			readChartToL1FromRTL2(	event.inv, event.tradeType, samplr,

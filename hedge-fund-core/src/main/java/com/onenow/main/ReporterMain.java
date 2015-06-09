@@ -39,38 +39,42 @@ public class ReporterMain {
 		String toDate = TimeParser.getTodayDashed();
 		Integer numDays = 30;
 		
+		writeInvestmentPriceIntoBucket(marketPortfolio, bucket, toDate,
+				numDays);
+	}
+
+	private static void writeInvestmentPriceIntoBucket(
+		Portfolio marketPortfolio, Bucket bucket, String toDate,
+		Integer numDays) {
 		for(int days=0; days<numDays; days++) {
-
 			String fromDate = TimeParser.getDateMinusDashed(toDate, 1);
-			
-			for (Investment inv:marketPortfolio.investments) {
-				
-				TradeType tradeType = TradeType.TRADED;
-				SamplingRate samplingRate = SamplingRate.SCALPMEDIUM;
-				InvDataSource source = InvDataSource.IB;  
-				InvDataTiming timing = InvDataTiming.REALTIME; 
-				
-				try{	// some time series just don't exist or have data 			
-					
-					String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
-					List<Serie> series = databaseTimeSeries.queryPrice(DBname.PRICE.toString(), key, samplingRate, fromDate, toDate);
-
-					Watchr.log(Level.INFO, series.toString());
-									
-					S3.createObject(bucket, series.toString(), key+"-"+toDate);
-					
-				} catch (Exception e) {
-					Watchr.log(Level.SEVERE, e.getMessage());
-				}
-				
+			for (Investment inv:marketPortfolio.investments) {				
+				writeInvestmentDayPriceIntoBucket(inv, bucket, fromDate, toDate);
 			}
-			
 			toDate = TimeParser.getDateMinusDashed(toDate, 1);
-
 		}
-		
 		S3.listObjects(bucket);
+	}
+
+	private static void writeInvestmentDayPriceIntoBucket(Investment inv,
+		Bucket bucket, String fromDate, String toDate) {
+		TradeType tradeType = TradeType.TRADED;
+		SamplingRate samplingRate = SamplingRate.SCALPMEDIUM;
+		InvDataSource source = InvDataSource.IB;  
+		InvDataTiming timing = InvDataTiming.REALTIME; 
 		
+		try{	// some time series just don't exist or have data 			
+			
+			String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
+			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);
+
+			Watchr.log(Level.INFO, series.toString());
+							
+			S3.createObject(bucket, series.toString(), key+"-"+toDate);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

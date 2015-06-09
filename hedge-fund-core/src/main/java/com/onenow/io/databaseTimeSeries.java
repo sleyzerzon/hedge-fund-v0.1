@@ -90,7 +90,7 @@ public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType,
 		
 		String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 
-		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, samplingRate, fromDate, toDate);
+		List<Serie> series = readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);
 
 		candles = priceSeriesToCandles(series); 
 		
@@ -99,6 +99,11 @@ public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType,
 
 		return candles;
 	}
+
+public static List<Serie> readPriceSeriesFromDB(String key, SamplingRate samplingRate, String fromDate, String toDate) {
+	List<Serie> series = queryPrice(DBname.PRICE.toString(), key, samplingRate, fromDate, toDate);
+	return series;
+}
 
 /**
  * Price queries per http://influxdb.com/docs/v0.7/api/aggregate_functions.html
@@ -112,20 +117,7 @@ public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType,
 public static List<Serie> queryPrice(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	 
-	String query = 	"SELECT " +
-						"FIRST(price)" + ", " +			
-						"LAST(price)" + ", " +			
-						"DIFFERENCE(price)" + ", " +							
-						"MIN(price)" + ", " +			
-						"MAX(price)" + ", " +			
-						"MEAN(price)" + ", " +			
-						"MODE(price)" + ", " +			
-						"MEDIAN(price)" + ", " +						
-						"STDDEV(price)" + ", " +						
-						"DISTINCT(price)" + ", " +					
-						"COUNT(price)" + ", " +			
-						"SUM(price)" + ", " + 
-						"DERIVATIVE(price)" + " " + 						
+	String query = 	"SELECT " + getThoroughSelect("price") + " " + 						
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
 						"time" + "(" + DataSampling.getGroupByTimeString(sampling) + ") " + 
@@ -267,7 +259,7 @@ public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType,
 	
 	String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 	
-	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
+	List<Serie> series = readSizeSeriesFromDB(key, sampling, fromDate, toDate);
 	
 	sizes = sizeSeriesToInts(series); 
 	
@@ -275,6 +267,12 @@ public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType,
 	Watchr.log(Level.INFO, log, "\n", "");
 
 	return sizes;
+}
+
+private static List<Serie> readSizeSeriesFromDB(String key,
+		SamplingRate sampling, String fromDate, String toDate) {
+	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
+	return series;
 }
 
 /**
@@ -289,20 +287,7 @@ public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType,
 public static List<Serie> querySize(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
 	List<Serie> series = new ArrayList<Serie>();
 	
-	String query = 	"SELECT " +
-						"FIRST(size)" + ", " +			
-						"LAST(size)" + ", " +			
-						"DIFFERENCE(size)" + ", " +							
-						"MIN(size)" + ", " +			
-						"MAX(size)" + ", " +			
-						"MEAN(size)" + ", " +			
-						"MODE(size)" + ", " +			
-						"MEDIAN(size)" + ", " +						
-						"STDDEV(size)" + ", " +						
-						"DISTINCT(size)" + ", " +					
-						"COUNT(size)" + ", " +			
-						"SUM(size)" + ", " +
-						"DERIVATIVE(size)" + " " +						  
+	String query = 	"SELECT " + getThoroughSelect("size") + " " +
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
 						"time" + "(" + DataSampling.getGroupByTimeString(sampling) + ") " +
@@ -320,6 +305,25 @@ public static List<Serie> querySize(String dbName, String serieName, SamplingRat
 	}
 	
 	return series;
+}
+
+private static String getThoroughSelect(String table) {
+	String s = null;
+	s = 	"FIRST(" + table + ")" + ", " +			
+			"LAST("  + table + ")" + ", " +			
+			"DIFFERENCE(" + table + ")" + ", " +							
+			"MIN("  + table + ")" + ", " +			
+			"MAX(" +  table + ")" + ", " +			
+			"MEAN(" + table + ")" + ", " +			
+			"MODE(" + table + ")" + ", " +			
+			"MEDIAN(" +  table + ")" + ", " +						
+			"STDDEV(" +  table + ")" + ", " +						
+			"DISTINCT(" + table + ")" + ", " +					
+			"COUNT("  + table + ")" + ", " +			
+			"SUM("  + table + ")" + ", " +
+			"DERIVATIVE(" + table + ")" + " ";						  
+
+	return s;
 }
 
 private static List<Integer> sizeSeriesToInts(List<Serie> series) {

@@ -6,8 +6,16 @@ import org.testng.annotations.Test;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.Topology;
 
-public class BusWallStTest {
+public class BusWallStIBTest {
 
+  @Test
+  public void BusWallStIB() {
+
+	  BusWallStIB bus = new BusWallStIB();
+	  
+	  Assert.assertTrue(bus.controller!=null);
+  }
+  
   @Test
   public void BusWallSt() {
 	  BusWallStIB bus = new BusWallStIB();
@@ -34,4 +42,5 @@ public class BusWallStTest {
 //		  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.AWSLOCAL)));		  
 //	  } 
   }
+  
 }

@@ -484,6 +484,7 @@ public class EClientSocket {
             }
         }
         catch( Exception e) {
+        	Watchr.log(Level.WARNING, "Reader interrupt");
         }
 
         try {
@@ -493,6 +494,7 @@ public class EClientSocket {
             }
         }
         catch( Exception e) {
+        	Watchr.log(Level.WARNING, "Dos close");
         }
     }
 

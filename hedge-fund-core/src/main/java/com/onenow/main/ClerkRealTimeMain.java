@@ -44,18 +44,16 @@ public class ClerkRealTimeMain {
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				String log = "TSDB RT TRANSACTION WRITE FAILED: " + event.time + " " + event.inv.toString();
-				Watchr.log(Level.SEVERE, log);
-	
-				// e.printStackTrace();
+				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.time + " " + event.inv.toString());	
+				e.printStackTrace();
+				
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {}
 			}
 		}
 		if(retry) {
-			String log = "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.inv.toString();
-			Watchr.log(Level.INFO, log);
+			Watchr.log(Level.INFO, "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.inv.toString());
 		}
 	}
 
