@@ -67,8 +67,6 @@ public class ReporterMain {
 			
 			String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);
-
-			Watchr.log(Level.INFO, series.toString());
 							
 			S3.createObject(bucket, series.toString(), key+"-"+toDate);
 			
