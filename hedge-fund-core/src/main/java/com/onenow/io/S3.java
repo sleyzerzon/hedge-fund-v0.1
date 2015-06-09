@@ -22,7 +22,7 @@ import com.onenow.util.Watchr;
 
 public class S3 {
 	
-	private static AmazonS3 connection = InitAmazon.getS3Connection();
+	public static AmazonS3 connection = InitAmazon.getS3Connection();
 	
 	public S3 () {
 

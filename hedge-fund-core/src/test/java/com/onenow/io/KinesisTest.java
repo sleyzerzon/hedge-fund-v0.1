@@ -1,5 +1,6 @@
 package com.onenow.io;
 
+import org.junit.Assert;
 import org.testng.annotations.Test;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
@@ -14,5 +15,11 @@ import com.onenow.util.TimeParser;
 
 public class KinesisTest {
 
-
+	  @Test
+	  public void Kinesis() {
+		  
+		  Kinesis kin = new Kinesis();
+		  Assert.assertTrue(kin.kinesis!=null);
+		  
+	  }
 }

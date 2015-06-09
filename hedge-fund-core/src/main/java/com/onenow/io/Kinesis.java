@@ -8,6 +8,7 @@ import kinesis.CountingRecordProcessorFactory;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
@@ -27,11 +28,12 @@ import com.onenow.util.Watchr;
 
 public class Kinesis {
 
-	private static AmazonKinesis kinesis;
+	public static AmazonKinesis kinesis;
 	
 	private final ObjectMapper jsonMapper = new ObjectMapper();
 	
 	public Kinesis() {
+		this.kinesis = InitAmazon.getKinesis(Region.getRegion(Regions.US_EAST_1));
 	}
 	
 	public Kinesis(Region region) {

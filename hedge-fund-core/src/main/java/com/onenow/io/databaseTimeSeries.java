@@ -145,7 +145,7 @@ public static List<Serie> queryPrice(String dbName, String serieName, SamplingRa
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 		// Watchr.log(Level.WARNING, e.toString());
-		e.printStackTrace();
+		// e.printStackTrace();
 	}
 	return series;
 }
