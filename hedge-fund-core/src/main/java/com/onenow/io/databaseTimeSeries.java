@@ -33,7 +33,7 @@ public class databaseTimeSeries {
 	}
 	
 // INIT
-private static InfluxDB dbConnect() { 
+public static InfluxDB dbConnect() { 
 	InfluxDB db  = null;
 	boolean tryToConnect = true;
 	while(tryToConnect) {		
