@@ -43,7 +43,7 @@ public class ClerkHistoryMain {
 			try {
 				success = true;
 				databaseTimeSeries.writePrice(	event.time*1000, event.investment, event.tradeType, event.open,
-									event.source, event.timing);
+												event.source, event.timing);
 			} catch (Exception e) {
 				success = false;
 				retry = true;

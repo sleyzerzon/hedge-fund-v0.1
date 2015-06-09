@@ -18,6 +18,8 @@ public class BusSystem {
 	private static HashMap<String, Kinesis> kinesisMap = new HashMap<String, Kinesis>();
 	private static HashMap<Kinesis, Region> kinesisRegion = new HashMap<Kinesis, Region>();
 
+	private static Region defaultRegion = Region.getRegion(Regions.US_EAST_1);
+
 	public BusSystem() {
 		
 	}
@@ -25,8 +27,7 @@ public class BusSystem {
 	// KINESIS
 	public static Kinesis getKinesis() {
 		
-		// default to east region
-		Region region = Region.getRegion(Regions.US_EAST_1);
+		Region region = defaultRegion;
 		
 		return getKinesis(region);
 	}
@@ -48,6 +49,17 @@ public class BusSystem {
 		}
 		
 		return kin;
+	}
+	
+	public static Region getRegion(Kinesis kinesis) {
+		Region region = null;
+		
+		region = kinesisRegion.get(kinesis);
+		
+		if(region==null){
+			region = defaultRegion; 
+		}
+		return region;
 	}
 	
 	private static boolean createStreamIfNotExists(StreamName name) {
@@ -94,23 +106,18 @@ public class BusSystem {
 
 	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessor) {
 
-		KinesisClientLibConfiguration clientConfig = configureReadingClient(streamName);
-		
-		Worker kinesysWorker = new Worker(recordProcessor, clientConfig);
-		
-        return runProcessor(kinesysWorker);
-
-	}
-	private static KinesisClientLibConfiguration configureReadingClient(StreamName streamName) {
-		
 		String applicationName = "appName";
 		String workerId = "fulano";
 		
 		KinesisClientLibConfiguration clientConfig = getKinesis().configureClient(	applicationName, 
 																					streamName.toString(), 
 																					workerId, 
-																					kinesisRegion.get(getKinesis()));
-		return clientConfig;
+																					getRegion(getKinesis()));
+		
+		Worker kinesysWorker = new Worker(recordProcessor, clientConfig);
+		
+        return runProcessor(kinesysWorker);
+
 	}
 
 	private static boolean runProcessor(Worker kinesysWorker) {
