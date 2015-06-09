@@ -29,7 +29,7 @@ public class HistorianMain {
 	private static Portfolio marketPortfolio = new Portfolio();
 
 	// relevant time frame
-    private static String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
+    private static String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
     
 	private static HistorianConfig config = new HistorianService().size30sec;
 	
@@ -55,7 +55,7 @@ public class HistorianMain {
 			run();
 			
 			// go back further in time
-			toDashedDate = TimeParser.getDashedDateMinus(toDashedDate, 1);
+			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			count++;
 		}
 	}
@@ -79,7 +79,7 @@ public class HistorianMain {
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> prices = databaseTimeSeries.readPriceFromDB(		inv, config.tradeType, config.sampling, 
-														TimeParser.getDashedDateMinus(toDashedDate, 1), toDashedDate, 
+														TimeParser.getDateMinusDashed(toDashedDate, 1), toDashedDate, 
 														config.source, config.timing);
 
 		// query L3 only if L2 data is incomplete

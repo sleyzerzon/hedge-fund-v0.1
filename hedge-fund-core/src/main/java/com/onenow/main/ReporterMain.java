@@ -20,12 +20,12 @@ public class ReporterMain {
 		
 		List<Bucket> buckets = S3.listBuckets();
 		
-		String startDate = TimeParser.getDashedToday();
+		String startDate = TimeParser.getTodayDashed();
 		Integer numDays = 3;
 		
 		for(int days=0; days<numDays; days++) {
 
-			String date = TimeParser.getDashedDateMinus(startDate, 1);
+			String date = TimeParser.getDateMinusDashed(startDate, 1);
 			
 			// Watchr.log("DATE " + date);
 			

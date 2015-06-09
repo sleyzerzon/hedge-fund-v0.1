@@ -67,9 +67,9 @@ public class ChartistMain {
 			
 	    	Watchr.log(Level.INFO, "***** PRE-FETCH SAMPLING ***** " + samplr);
 
-			String today = TimeParser.getDashedToday();
+			String today = TimeParser.getTodayDashed();
 			readChartToL1FromRTL2(	event.inv, event.tradeType, samplr,
-									TimeParser.getDashedDateMinus(today, 1), today, // TODO: From/To Date actual
+									TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
 									event.source, event.timing);
 		}
 	}

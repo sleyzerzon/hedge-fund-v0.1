@@ -58,6 +58,17 @@ public class InitMarket {
 		return marketPortfolio;
 		
 	}
+	
+	public static Portfolio getDefaultPortfolio() {	
+			
+		String toDashedDate = TimeParser.getTodayDashed(); 
+				
+		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+								InvestmentList.getUnderlying(InvestmentList.someIndices),
+								InvestmentList.getUnderlying(InvestmentList.futures), 
+								InvestmentList.getUnderlying(InvestmentList.options),
+								toDashedDate);
+	}
 	 
 	// INDEX 
 	/**
@@ -83,10 +94,10 @@ public class InitMarket {
 		exps.initIndexOptionExpList(); 
 		
 		// look at high/low price basis in the last 30 days
-		String fromDashedDate = TimeParser.getDashedDateMinus(toDashedDate, 30);
+		String fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 30);
 
 		for(Underlying under:unders) {
-			for(String expDate:exps.getValidOptionExpList(TimeParser.getUndashedToday())) { 			
+			for(String expDate:exps.getValidOptionExpList(TimeParser.getTodayUndashed())) { 			
 				// TODO: seed lowprice and highprice automatically from market value range in the time window of interest
 				addOptionsToPortfolio(	under, expDate, 
 										lowPrice(under, fromDashedDate, toDashedDate), 
@@ -149,7 +160,7 @@ public class InitMarket {
 		exps.initFuturesExpList(); 
 		
 		for(Underlying under:unders) {
-			for(String expDate:exps.getValidFuturesExpList(TimeParser.getUndashedToday())) {
+			for(String expDate:exps.getValidFuturesExpList(TimeParser.getTodayUndashed())) {
 				initExpFutures(under, expDate);
 			}
 		}

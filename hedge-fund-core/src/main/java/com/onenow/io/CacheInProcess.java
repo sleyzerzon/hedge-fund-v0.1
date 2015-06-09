@@ -127,7 +127,7 @@ public class CacheInProcess {
 		
 		Double price;
 		SamplingRate scalping = SamplingRate.TREND;
-		String today = TimeParser.getDashedToday();
+		String today = TimeParser.getTodayDashed();
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				

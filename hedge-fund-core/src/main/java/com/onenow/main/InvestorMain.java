@@ -37,7 +37,7 @@ public class InvestorMain {
 		if(	mode.equals(BrokerMode.PRIMARY)) {
 			// register once: get all market real-time quotes
 			// choose relevant time frame
-		    String toDashedDate = TimeParser.getDashedDatePlus(TimeParser.getDashedToday(), 1);
+		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 
 		    // choose what to hedge on
 			Portfolio marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 

@@ -12,9 +12,9 @@ public class ParseDateTest {
 		String date3 = "2015-05-15";
 		int delta = 1;
 		
-		String actualDateOut1 = TimeParser.getDashedDatePlus(date1, delta);	
-		String actualDateOut2 = TimeParser.getDashedDatePlus(date2, delta);	
-		String actualDateOut3 = TimeParser.getDashedDatePlus(date3, delta);	
+		String actualDateOut1 = TimeParser.getDatePlusDashed(date1, delta);	
+		String actualDateOut2 = TimeParser.getDatePlusDashed(date2, delta);	
+		String actualDateOut3 = TimeParser.getDatePlusDashed(date3, delta);	
 
 		Assert.assertEquals(actualDateOut1, "2015-03-01");
 		Assert.assertEquals(actualDateOut2, "2016-01-01");

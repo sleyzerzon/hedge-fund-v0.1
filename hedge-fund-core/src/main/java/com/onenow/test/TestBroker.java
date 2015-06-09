@@ -63,7 +63,7 @@ public class TestBroker implements Testable {
 	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.someIndices);
 	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.futures);
 	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.options);
-	    String toDate = TimeParser.getDashedToday();
+	    String toDate = TimeParser.getTodayDashed();
 
 	    // fill the market portfolio
 	    marketPortfolio = InitMarket.getPortfolio(	stocks, indices,

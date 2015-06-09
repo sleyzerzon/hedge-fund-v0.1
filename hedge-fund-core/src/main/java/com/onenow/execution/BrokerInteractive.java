@@ -102,7 +102,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	
 			  // look for SQS requests for history
 			  Integer reqId = readHistoricalQuotes(	req.investment, 
-													TimeParser.getClose(TimeParser.getUndashedDate(TimeParser.getDashedDateMinus(req.toDashedDate, 1))), 
+													TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(req.toDashedDate, 1))), 
 													req.config, invHist);
 	
 			  lastQueryTime = TimeParser.getTimestampNow();		

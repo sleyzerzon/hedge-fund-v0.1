@@ -105,9 +105,9 @@ public class Channel {
 		String lastResistanceDate = getLastResistanceDate();
 		String lastSupportDate = getLastSupportDate();
 		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
-			date = parser.getDashedDatePlus(lastResistanceDate, halfSupportCycle); 
+			date = parser.getDatePlusDashed(lastResistanceDate, halfSupportCycle); 
 		} else {
-			date = parser.getDashedDatePlus(lastSupportDate, halfSupportCycle+halfResistanceCycle);
+			date = parser.getDatePlusDashed(lastSupportDate, halfSupportCycle+halfResistanceCycle);
 		}
 
 //		System.out.println("f- " + lastDate + " " + halfCycle + " " + date);
@@ -123,9 +123,9 @@ public class Channel {
 		String lastResistanceDate = getLastResistanceDate();
 		String lastSupportDate = getLastSupportDate();
 		if(parser.isLaterDate(lastSupportDate, lastResistanceDate)) {
-			date = parser.getDashedDatePlus(lastResistanceDate, halfSupportCycle+halfResistanceCycle); 
+			date = parser.getDatePlusDashed(lastResistanceDate, halfSupportCycle+halfResistanceCycle); 
 		} else {
-			date = parser.getDashedDatePlus(lastSupportDate, halfResistanceCycle);
+			date = parser.getDatePlusDashed(lastSupportDate, halfResistanceCycle);
 		}
 
 		return date;		
@@ -221,7 +221,7 @@ public class Channel {
 		String oldDate = getResistanceDayList().get(0);
 		Double oldPrice = (Double) getResistanceDayMap().get(oldDate);
 		
-		Double range = parser.getElapsedDashedDays(oldDate, newDate)*1.0;	
+		Double range = parser.getElapsedDaysDashed(oldDate, newDate)*1.0;	
 		Double slope = (newPrice-oldPrice)/range; 		
 //		System.out.println("RES SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
 
@@ -237,7 +237,7 @@ public class Channel {
 		String oldDate = getSupportDayList().get(0);
 		Double oldPrice = (Double) getSupportDayMap().get(oldDate);
 		
-		Double range = parser.getElapsedDashedDays(oldDate, newDate)*1.0;	
+		Double range = parser.getElapsedDaysDashed(oldDate, newDate)*1.0;	
 		Double slope = (newPrice-oldPrice)/range;	
 //		System.out.println("SUP SLOPE " + newPrice + " " + oldPrice + " " + range + " " + slope);
 		
@@ -414,7 +414,7 @@ public class Channel {
 		Double prevSubprice = (Double) getSupportDayMap().get(prevDate);
 		Double range = resPrice-prevSubprice;
 		widthToResistance.add(range);
-		Integer elapsed = parser.getElapsedDashedDays(prevDate, date);
+		Integer elapsed = parser.getElapsedDaysDashed(prevDate, date);
 		halfCycleToResistance.add(elapsed*1.0);
 		
 		if(resPrice>0 && resPrice<9999) {
@@ -436,7 +436,7 @@ public class Channel {
 		Double prevResprice = (Double) getResistanceDayMap().get(prevDate);
 		Double range = prevResprice-supPrice;
 		widthToSupport.add(range);
-		Integer elapsed = parser.getElapsedDashedDays(prevDate, date);
+		Integer elapsed = parser.getElapsedDaysDashed(prevDate, date);
 		halfCycleToSupport.add(elapsed*1.0);
 
 		if(supPrice>0 && supPrice<9999) {

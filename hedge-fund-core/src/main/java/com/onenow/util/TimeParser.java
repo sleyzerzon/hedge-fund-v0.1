@@ -28,7 +28,7 @@ public class TimeParser implements Testable {
 	 * Returns today's date in dashed format without time
 	 * @return
 	 */
-	public static String getDashedToday() {
+	public static String getTodayDashed() {
 		
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -39,13 +39,13 @@ public class TimeParser implements Testable {
 		return sdf.format(today);
 	}
 	
-	public static String getUndashedToday() {
+	public static String getTodayUndashed() {
 		String date = "";
-		date = getUndashedDate(getDashedToday());
+		date = getDateUndashed(getTodayDashed());
 		return date;
 	}
 
-	public static String getDashedNow() {
+	public static String getNowDashed() {
 		Date today = new Date();
 		// TODO: it uses local time zone, what should it use?
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
@@ -126,7 +126,7 @@ public class TimeParser implements Testable {
 
 	public static String getDashedCloseToday() {
 		String s = "";
-		s = getClose(getDashedToday());
+		s = getClose(getTodayDashed());
 		return s;
 	}
 	
@@ -142,9 +142,9 @@ public class TimeParser implements Testable {
 		String year = "";
 		String month = "";
 		String day = "";
-		year = getDashedYear(dashedDate);
-		month = getDashedMonth(dashedDate);
-		day = getDashedDay(dashedDate);
+		year = getYearDashed(dashedDate);
+		month = getMonthDashed(dashedDate);
+		day = getDayDashed(dashedDate);
 		date = year + month + day;
 //		System.out.println("End " + end);
 		return date;
@@ -155,9 +155,9 @@ public class TimeParser implements Testable {
 		String year = "";
 		String month = "";
 		String day = "";
-		year = getUndashedYear(undashedDate);
-		month = getUndashedMonth(undashedDate);
-		day = getUndashedDay(undashedDate);
+		year = getYearUndashed(undashedDate);
+		month = getMonthUndashed(undashedDate);
+		day = getDayUndashed(undashedDate);
 		if(!day.equals("")) {
 			date = year + "-" + month + "-" + day;					
 		} else {
@@ -171,7 +171,7 @@ public class TimeParser implements Testable {
 	 * @param dashed
 	 * @return
 	 */
-	public static String getDashedYear(String dashed) {
+	public static String getYearDashed(String dashed) {
 		String s = "";
 		try {
 			s = dashed.substring(0, 4);
@@ -183,21 +183,21 @@ public class TimeParser implements Testable {
 	 * @param unDashed
 	 * @return
 	 */
-	public static String getUndashedYear(String unDashed) {
+	public static String getYearUndashed(String unDashed) {
 		String s = "";
 		try {
 			s = unDashed.substring(0, 4);
 		} catch (Exception e) { } 
 		return s;
 	}
-	public static String getDashedMonth(String dashed) {
+	public static String getMonthDashed(String dashed) {
 		String s = "";
 		try {
 			s= dashed.substring(5, 7);
 		} catch (Exception e) { } 
 		return s;
 	}
-	public static String getUndashedMonth(String unDashed) {
+	public static String getMonthUndashed(String unDashed) {
 		String s = "";
 		try {
 			s= unDashed.substring(4, 6);
@@ -205,14 +205,14 @@ public class TimeParser implements Testable {
 		return s;
 	}
 
-	public static String getDashedDay(String dashed) {
+	public static String getDayDashed(String dashed) {
 		String s = "";
 		try {
 			s = dashed.substring(8, 10);
 		} catch (Exception e) { } 
 		return s;
 	}
-	public static String getUndashedDay(String unDashed) {
+	public static String getDayUndashed(String unDashed) {
 		String s = "";
 		try {
 			s = unDashed.substring(6, 8);
@@ -225,10 +225,10 @@ public class TimeParser implements Testable {
 	 * @param dashedDate
 	 * @return
 	 */
-	public static String getUndashedDate(String dashedDate) {
-		String year = getDashedYear(dashedDate);
-		String month = getDashedMonth(dashedDate);
-		String day = getDashedDay(dashedDate);
+	public static String getDateUndashed(String dashedDate) {
+		String year = getYearDashed(dashedDate);
+		String month = getMonthDashed(dashedDate);
+		String day = getDayDashed(dashedDate);
 		String unDashedDate = year + month + day;
 		return unDashedDate;		
 	}
@@ -237,10 +237,10 @@ public class TimeParser implements Testable {
 	 * @param unDashedDate
 	 * @return
 	 */
-	public static String getDashedDate(String unDashedDate) {
-		String year = getUndashedYear(unDashedDate);
-		String month = getUndashedMonth(unDashedDate);
-		String day = getUndashedDay(unDashedDate);
+	public static String getDateDashed(String unDashedDate) {
+		String year = getYearUndashed(unDashedDate);
+		String month = getMonthUndashed(unDashedDate);
+		String day = getDayUndashed(unDashedDate);
 		String dashedDate = year + "-" + month + "-" + day;
 		return dashedDate;
 	}
@@ -257,7 +257,7 @@ public class TimeParser implements Testable {
 	 * @return
 	 */
 	public int getWeeksToPresent(String dashedDate) {
-		String dashedToday = getDashedToday();
+		String dashedToday = getTodayDashed();
 		int weeksToPresent = 0;
 		while(true) {
 			if(isLaterDate(dashedDate, dashedToday)) {
@@ -266,7 +266,7 @@ public class TimeParser implements Testable {
 			} else {
 				return weeksToPresent;
 			}
-			dashedDate = getDashedDatePlus(dashedDate, 7); // skip a week
+			dashedDate = getDatePlusDashed(dashedDate, 7); // skip a week
 		}
 	}
 	
@@ -284,14 +284,14 @@ public class TimeParser implements Testable {
 	 */
 	public boolean isLaterDate(String dashedDate, String dashedCheckAgainstDate) {
 		boolean later = true;
-		Integer year1 = Integer.parseInt(getDashedYear(dashedDate));
-		Integer year2 = Integer.parseInt(getDashedYear(dashedCheckAgainstDate));
+		Integer year1 = Integer.parseInt(getYearDashed(dashedDate));
+		Integer year2 = Integer.parseInt(getYearDashed(dashedCheckAgainstDate));
 		if(year1>year2) { return false; }
-		Integer month1 = Integer.parseInt(getDashedMonth(dashedDate));
-		Integer month2 = Integer.parseInt(getDashedMonth(dashedCheckAgainstDate));
+		Integer month1 = Integer.parseInt(getMonthDashed(dashedDate));
+		Integer month2 = Integer.parseInt(getMonthDashed(dashedCheckAgainstDate));
 		if(month1>month2) { return false; }
-		Integer day1 = Integer.parseInt(getDashedDay(dashedDate));
-		Integer day2 = Integer.parseInt(getDashedDay(dashedCheckAgainstDate));
+		Integer day1 = Integer.parseInt(getDayDashed(dashedDate));
+		Integer day2 = Integer.parseInt(getDayDashed(dashedCheckAgainstDate));
 		if(day1>day2) { return false; }
 		return later;
 	}
@@ -346,13 +346,13 @@ public class TimeParser implements Testable {
 	}
 	
 
-	public static Integer getElapsedUndashedDays(String undashedDay1, String undahsedBasisDay2) {
+	public static Integer getElapsedDaysUndashed(String undashedDay1, String undahsedBasisDay2) {
 		int elapsed = 0;
-		elapsed = getElapsedDashedDays(addDash(undashedDay1), addDash(undahsedBasisDay2));
+		elapsed = getElapsedDaysDashed(addDash(undashedDay1), addDash(undahsedBasisDay2));
 		return elapsed;
 	}
 	
-	public static Integer getElapsedDashedDays(String dashedDay1, String dahsedBasisDay2) {
+	public static Integer getElapsedDaysDashed(String dashedDay1, String dahsedBasisDay2) {
 		
 		Integer year1=0;
 		Integer year2=0;
@@ -362,18 +362,18 @@ public class TimeParser implements Testable {
 		Integer day2=0;
 		
 		try {
-			year1 = Integer.parseInt(getDashedYear(dashedDay1));  
-			year2 = Integer.parseInt(getDashedYear(dahsedBasisDay2));  				
+			year1 = Integer.parseInt(getYearDashed(dashedDay1));  
+			year2 = Integer.parseInt(getYearDashed(dahsedBasisDay2));  				
 		} catch (NumberFormatException e) { } // some intentionally come null
 		
 		try {
-			month1 = Integer.parseInt(getDashedMonth(dashedDay1));
-			month2 = Integer.parseInt(getDashedMonth(dahsedBasisDay2));
+			month1 = Integer.parseInt(getMonthDashed(dashedDay1));
+			month2 = Integer.parseInt(getMonthDashed(dahsedBasisDay2));
 		} catch (NumberFormatException e) { } // some intentionally come null
 				
 		try {
-			day1 = Integer.parseInt(getDashedDay(dashedDay1));
-			day2 = Integer.parseInt(getDashedDay(dahsedBasisDay2));
+			day1 = Integer.parseInt(getDayDashed(dashedDay1));
+			day2 = Integer.parseInt(getDayDashed(dahsedBasisDay2));
 		} catch (NumberFormatException e) { } // some intentionally come null
 
 		Integer elapsedTotal = (year2-year1)*365 + (month2-month1)*31 + day2-day1;
@@ -386,10 +386,10 @@ public class TimeParser implements Testable {
 		return elapsedTotal;
 	}
 	
-	public static String getUndashedDatePlus(String undashedDate, Integer plusDays) {
+	public static String getDatePlusUndashed(String undashedDate, Integer plusDays) {
 		String s = "";
-		s = getDashedDatePlus(getDashedDate(undashedDate), plusDays);
-		s = getUndashedDate(s);
+		s = getDatePlusDashed(getDateDashed(undashedDate), plusDays);
+		s = getDateUndashed(s);
 		return s;
 	}
 	/**
@@ -398,7 +398,7 @@ public class TimeParser implements Testable {
 	 * @param plusDays
 	 * @return
 	 */
-	public static String getDashedDatePlus(String dashedDate, Integer plusDays){
+	public static String getDatePlusDashed(String dashedDate, Integer plusDays){
 //		System.out.println("Dashed date " + dashedDate + ". Num " + num);
 		
 		String s= "";
@@ -412,13 +412,13 @@ public class TimeParser implements Testable {
 		String sMonth="";
 		String sYear="";
 		try {
-			day = Integer.parseInt(getDashedDay(dashedDate));
+			day = Integer.parseInt(getDayDashed(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do		
 		try {
-			month = Integer.parseInt(getDashedMonth(dashedDate));
+			month = Integer.parseInt(getMonthDashed(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do 
 		try {
-			year = Integer.parseInt(getDashedYear(dashedDate));
+			year = Integer.parseInt(getYearDashed(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do
 
 		newDay=day+plusDays;
@@ -448,14 +448,14 @@ public class TimeParser implements Testable {
 	}
 	
 
-	public static String getUndashedDateMinus(String undashedDate, Integer minusDays) {
+	public static String getDateMinusUndashed(String undashedDate, Integer minusDays) {
 		String s = "";
-		s = getDashedDateMinus(getDashedDate(undashedDate), minusDays);
-		s = getUndashedDate(s);
+		s = getDateMinusDashed(getDateDashed(undashedDate), minusDays);
+		s = getDateUndashed(s);
 		return s;
 	}
 	
-	public static String getDashedDateMinus(String dashedDate, Integer minusDays){
+	public static String getDateMinusDashed(String dashedDate, Integer minusDays){
 //		System.out.println("Dashed date " + dashedDate + ". Num " + num);
 		
 		String s= "";
@@ -469,13 +469,13 @@ public class TimeParser implements Testable {
 		String sMonth="";
 		String sYear="";
 		try {
-			day = Integer.parseInt(getDashedDay(dashedDate));
+			day = Integer.parseInt(getDayDashed(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do		
 		try {
-			month = Integer.parseInt(getDashedMonth(dashedDate));
+			month = Integer.parseInt(getMonthDashed(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do 
 		try {
-			year = Integer.parseInt(getDashedYear(dashedDate));
+			year = Integer.parseInt(getYearDashed(dashedDate));
 		} catch (NumberFormatException e) { } // nothing to do
 
 		newDay=day-minusDays;
@@ -556,9 +556,9 @@ public class TimeParser implements Testable {
 		String date3 = "2015-05-15";
 		int delta = 1;
 		
-		String actualDateOut1 = getDashedDatePlus(date1, delta);	
-		String actualDateOut2 = getDashedDatePlus(date2, delta);	
-		String actualDateOut3 = getDashedDatePlus(date3, delta);	
+		String actualDateOut1 = getDatePlusDashed(date1, delta);	
+		String actualDateOut2 = getDatePlusDashed(date2, delta);	
+		String actualDateOut3 = getDatePlusDashed(date3, delta);	
 
 		Assert.assertEquals(actualDateOut1, "2015-03-01");
 		
@@ -586,9 +586,9 @@ public class TimeParser implements Testable {
 
 		int delta = 1;
 		
-		String dateOut1 = getDashedDateMinus(date1, delta);
-		String dateOut2 = getDashedDateMinus(date2, delta);
-		String dateOut3 = getDashedDateMinus(date3, delta);	
+		String dateOut1 = getDateMinusDashed(date1, delta);
+		String dateOut2 = getDateMinusDashed(date2, delta);
+		String dateOut3 = getDateMinusDashed(date3, delta);	
 
 		
 		if(	dateOut1.equals("2015-02-28") &&
@@ -621,9 +621,9 @@ public class TimeParser implements Testable {
 //		Integer deltaOut2 = getMonthDelta(date2, dateBasis2);
 //		Integer deltaOut3 = getMonthDelta(date3, dateBasis3);
 
-		Integer deltaOut1 = getElapsedUndashedDays(date1, dateBasis1);
-		Integer deltaOut2 = getElapsedUndashedDays(date2, dateBasis2);
-		Integer deltaOut3 = getElapsedUndashedDays(date3, dateBasis3);
+		Integer deltaOut1 = getElapsedDaysUndashed(date1, dateBasis1);
+		Integer deltaOut2 = getElapsedDaysUndashed(date2, dateBasis2);
+		Integer deltaOut3 = getElapsedDaysUndashed(date3, dateBasis3);
 		
 		if(		deltaOut1.equals(86) &&
 				deltaOut2.equals(-644) && 
