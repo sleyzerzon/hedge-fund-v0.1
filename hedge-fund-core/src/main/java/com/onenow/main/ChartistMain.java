@@ -87,26 +87,26 @@ public class ChartistMain {
 	 * @return
 	 */
 	private static Chart readChartToL1FromRTL2(	Investment inv, TradeType tradeType, SamplingRate samplingRate, 
-											String fromDate, String toDate,
-											InvDataSource source, InvDataTiming timing) {		
+												String fromDate, String toDate,
+												InvDataSource source, InvDataTiming timing) {		
 		Chart chart = new Chart();
 		
 		try{	// some time series just don't exist or have data 			
 			
-			List<Candle> prices = databaseTimeSeries.readPriceFromDB(		inv, tradeType, samplingRate, 
-															fromDate, toDate,
-															source, timing);
-			List<Integer> sizes = databaseTimeSeries.readSizeFromDB(		inv, tradeType, samplingRate, 
-															fromDate, toDate,
-															source, timing);
+			List<Candle> prices = databaseTimeSeries.readPriceFromDB(	inv, tradeType, samplingRate, 
+																		fromDate, toDate,
+																		source, timing);
+			List<Integer> sizes = databaseTimeSeries.readSizeFromDB(	inv, tradeType, samplingRate, 
+																		fromDate, toDate,
+																		source, timing);
 
 			chart.setPrices(prices);
 			chart.setSizes(sizes);
 			
 			// keep last chart in L0 memory (with data)
 			String key = Lookup.getChartKey(	inv, tradeType, samplingRate, 
-					fromDate, toDate,
-					source, timing);
+												fromDate, toDate,
+												source, timing);
 
 			// store in process memory
 			charts.put(key, chart);			

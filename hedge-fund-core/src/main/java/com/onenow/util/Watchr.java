@@ -38,8 +38,8 @@ public class Watchr {
 	private static String machineTextLogFormatter(String message) {
 		
 		String s = "";
-		
 		String ipLog = "";
+		String upperCase = "";
 		try {
 			ipLog = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
@@ -49,7 +49,13 @@ public class Watchr {
 				
 		String caller = getCallerTrace();
 		
-		s = " " + ipLog + "\t" + caller + "     "+ message.toUpperCase();
+		try {
+			upperCase = message.toUpperCase();
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		s = " " + ipLog + "\t" + caller + "     "+ upperCase;
 
 		return s;
 	}

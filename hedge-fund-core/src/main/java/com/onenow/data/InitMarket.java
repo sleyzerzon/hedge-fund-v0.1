@@ -58,18 +58,41 @@ public class InitMarket {
 		return marketPortfolio;
 		
 	}
-	
-	public static Portfolio getDefaultPortfolio() {	
-			
+
+	public static Portfolio getSamplePortfolio() {	
+		
 		String toDashedDate = TimeParser.getTodayDashed(); 
-				
+
+		return getDefaultPortfolio(toDashedDate);
+		
+	}
+	
+	public static Portfolio getDefaultPortfolio(String toDashedDate) {	
+							
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
 								InvestmentList.getUnderlying(InvestmentList.futures), 
 								InvestmentList.getUnderlying(InvestmentList.options),
 								toDashedDate);
 	}
-	 
+
+	public static Portfolio getTestPortfolio() {	
+		
+		String toDashedDate = TimeParser.getTodayDashed(); 
+
+		return getTestPortfolio(toDashedDate);
+		
+	}
+
+	public static Portfolio getTestPortfolio(String toDashedDate) {	
+		
+		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.justApple), 
+								new ArrayList<Underlying>(),
+								new ArrayList<Underlying>(), 
+								new ArrayList<Underlying>(),
+								toDashedDate);
+	}
+
 	// INDEX 
 	/**
 	 * Initialize indices

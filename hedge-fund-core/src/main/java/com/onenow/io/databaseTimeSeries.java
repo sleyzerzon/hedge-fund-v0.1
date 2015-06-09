@@ -25,8 +25,6 @@ import com.onenow.util.Watchr;
 public class databaseTimeSeries {
 	
 	private static InfluxDB influxDB = dbConnect();
-	private static Lookup dbLookup = new Lookup();
-	private static DataSampling dataSampling = new DataSampling();
 	
 	/**
 	 * Default constructor connects to database
@@ -43,7 +41,7 @@ private static InfluxDB dbConnect() {
 			tryToConnect = false;
 			Watchr.log(Level.INFO, "CONNECTING TO TSDB...", "\n", "");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
-			influxDB = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
+			db = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
 													tsdbService.user, tsdbService.pass);
 			dbCreate();	
 		} catch (Exception e) {
@@ -73,7 +71,7 @@ private static void dbCreate() {
 
 // PRICE
 public static void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
-	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
+	String name = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	.values(time, price)
@@ -84,15 +82,15 @@ public static void writePrice(Long time, Investment inv, TradeType tradeType, Do
 	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
 }
 
-public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
+public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate samplingRate,
 										String fromDate, String toDate,
 										InvDataSource source, InvDataTiming timing) {
 	
 		List<Candle> candles = new ArrayList<Candle>();
 		
-		String key = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
+		String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 
-		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, sampling, fromDate, toDate);
+		List<Serie> series = queryPrice(DBname.PRICE.toString(), key, samplingRate, fromDate, toDate);
 
 		candles = priceSeriesToCandles(series); 
 		
@@ -126,11 +124,11 @@ public static List<Serie> queryPrice(String dbName, String serieName, SamplingRa
 						"STDDEV(price)" + ", " +						
 						"DISTINCT(price)" + ", " +					
 						"COUNT(price)" + ", " +			
-						"SUM(price) " + ", " + 
-						"DERIVATIVE(price)" + 						
+						"SUM(price)" + ", " + 
+						"DERIVATIVE(price)" + " " + 						
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
-						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " + 
+						"time" + "(" + DataSampling.getGroupByTimeString(sampling) + ") " + 
 					// "FILL(0) " +
 					"WHERE " +
 					"time > " + "'" + fromDate + "' " + 
@@ -143,10 +141,11 @@ public static List<Serie> queryPrice(String dbName, String serieName, SamplingRa
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		Watchr.log(Level.INFO, "#PRICE# QUERY: " + query);
+		Watchr.log(Level.INFO, query);
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
-		//		e.printStackTrace();  some time series don't exist or have data
+		// Watchr.log(Level.WARNING, e.toString());
+		e.printStackTrace();
 	}
 	return series;
 }
@@ -249,7 +248,7 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 
 // SIZE
 public static void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
-	String name = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
+	String name = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(time, size)
@@ -266,7 +265,7 @@ public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType,
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String key = dbLookup.getInvestmentKey(inv, tradeType, source, timing);
+	String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
 	
 	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
 	
@@ -299,14 +298,14 @@ public static List<Serie> querySize(String dbName, String serieName, SamplingRat
 						"MEAN(size)" + ", " +			
 						"MODE(size)" + ", " +			
 						"MEDIAN(size)" + ", " +						
-						"DISTINCT(size)" + ", " +					
 						"STDDEV(size)" + ", " +						
-						"DERIVATIVE(size)" + ", " +						
+						"DISTINCT(size)" + ", " +					
 						"COUNT(size)" + ", " +			
-						"SUM(size) " +  
+						"SUM(size)" + ", " +
+						"DERIVATIVE(size)" + " " +						  
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
-						"time" + "(" + dataSampling.getGroupByTimeString(sampling) + ") " +
+						"time" + "(" + DataSampling.getGroupByTimeString(sampling) + ") " +
 					// "FILL(0) " +
 					"WHERE " +
 					"time > " + "'" + fromDate + "' " + 
@@ -314,7 +313,7 @@ public static List<Serie> querySize(String dbName, String serieName, SamplingRat
 					"time < " + "'" + toDate + "' ";
 					
 	try {
-		Watchr.log(Level.INFO, "#SIZE# QUERY: " + query);
+		Watchr.log(Level.INFO, query);
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
 //		e.printStackTrace(); some time series don't exist or have data

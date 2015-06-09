@@ -14,6 +14,7 @@ public class InvestmentList {
 	public static List<String> options = getOptions();	
 	// subsets
 	public static List<String> someStocks = getSomeStocks();
+	public static List<String> justApple = getAAPLStock();
 	public static List<String> someIndices = getSomeIndices();
 
 	public InvestmentList() {
@@ -58,6 +59,7 @@ public class InvestmentList {
 		return list;
 	}
 
+	
 	private static List<String> getSomeStocks() {
 		List<String> list = new ArrayList<String>();
 		int count = 0;
@@ -71,6 +73,11 @@ public class InvestmentList {
 		return list;
 	}
 		
+	private static List<String> getAAPLStock() {
+		List<String> list = new ArrayList<String>();
+		list.add("AAPL");
+		return list;
+	}
 
 	private static List<String> getSNP500() {
 

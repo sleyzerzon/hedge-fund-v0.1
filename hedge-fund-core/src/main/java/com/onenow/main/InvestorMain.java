@@ -40,11 +40,7 @@ public class InvestorMain {
 		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 
 		    // choose what to hedge on
-			Portfolio marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
-																	InvestmentList.getUnderlying(InvestmentList.someIndices),
-																	InvestmentList.getUnderlying(InvestmentList.futures), 
-																	InvestmentList.getUnderlying(InvestmentList.options),
-																	toDashedDate);
+			Portfolio marketPortfolio = InitMarket.getSamplePortfolio();
 
 			BrokerInteractive broker = new BrokerInteractive(	mode, 
 																marketPortfolio, 
