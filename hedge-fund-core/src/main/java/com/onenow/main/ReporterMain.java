@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import org.influxdb.dto.Serie;
 
 import com.amazonaws.services.s3.model.Bucket;
-import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -17,7 +16,6 @@ import com.onenow.io.Lookup;
 import com.onenow.io.S3;
 import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;

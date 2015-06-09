@@ -47,7 +47,6 @@ public class ClerkHistoryMain {
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				Watchr.log(Level.SEVERE, "TSDB HISTORY WRITE FAILED: " + event.investment.toString() + e.getMessage());
 				// e.printStackTrace();
 				try {
 					Thread.sleep(1000);
