@@ -3,6 +3,8 @@ package com.onenow.io;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
@@ -11,6 +13,7 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
+import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.StreamName;
 import com.onenow.io.Lookup;
 
@@ -118,11 +121,21 @@ public class BusSystem {
 		String applicationName = "appName";
 		String workerId = "fulano";
 		
-		KinesisClientLibConfiguration clientConfig = getKinesis().configureClient(	applicationName, 
-																					streamName.toString(), 
-																					workerId, 
-																					getRegion(getKinesis()));
-				
+		KinesisClientLibConfiguration clientConfig = null;
+		
+		if(NetworkConfig.isMac()) {
+			clientConfig = getKinesis().configureClient(	applicationName, 
+															streamName.toString(), 
+															workerId, 
+															getRegion(getKinesis()));
+		} else {
+			// Requires instance created with IAM role that has sufficient permission 
+			clientConfig = new KinesisClientLibConfiguration(	applicationName,
+																streamName.toString(),
+																new InstanceProfileCredentialsProvider(),							
+																workerId);			
+		}
+		
 		clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
 		
 		Worker kinesysWorker = new Worker(recordProcessorFactory, clientConfig);

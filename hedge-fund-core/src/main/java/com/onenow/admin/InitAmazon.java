@@ -114,9 +114,11 @@ public class InitAmazon {
 				// AmazonS3 s3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());
 				kinesis = new AmazonKinesisClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
 			} else {
+				// Requires instance created with IAM role that has sufficient permission 
 				boolean refreshCredentials = false;
-				AWSCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider(refreshCredentials);
-				kinesis = new AmazonKinesisClient(credentialsProvider.getCredentials());
+				AWSCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
+				// credentialsProvider.getCredentials();
+				kinesis = new AmazonKinesisClient();
 			}
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, "Error creating AmazonKinesisClient" );
