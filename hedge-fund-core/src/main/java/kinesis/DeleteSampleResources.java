@@ -26,6 +26,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
+import com.onenow.admin.InitAmazon;
 import com.onenow.data.DynamoDBUtils;
 import com.onenow.util.SampleUtils;
 import com.onenow.util.StreamUtils;
@@ -49,7 +50,7 @@ public class DeleteSampleResources {
         Region region = SampleUtils.parseRegion(args[3]);
 
         AWSCredentialsProvider credentialsProvider = new DefaultAWSCredentialsProviderChain();
-        ClientConfiguration clientConfig = SampleUtils.configureUserAgentForSample(new ClientConfiguration());
+        ClientConfiguration clientConfig = InitAmazon.getClientConfig();
         AmazonKinesis kinesis = new AmazonKinesisClient(credentialsProvider, clientConfig);
         kinesis.setRegion(region);
         AmazonDynamoDB dynamoDB = new AmazonDynamoDBClient(credentialsProvider, clientConfig);

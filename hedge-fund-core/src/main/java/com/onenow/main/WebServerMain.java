@@ -28,6 +28,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.onenow.admin.InitAmazon;
 import com.onenow.data.DynamoDBUtils;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.SampleUtils;
@@ -72,7 +73,7 @@ public class WebServerMain {
 
         // Create the servlet to handle /GetCounts
         AWSCredentialsProvider credentialsProvider = new DefaultAWSCredentialsProviderChain();
-        ClientConfiguration clientConfig = SampleUtils.configureUserAgentForSample(new ClientConfiguration());
+        ClientConfiguration clientConfig = InitAmazon.getClientConfig();
         AmazonDynamoDB dynamoDB = new AmazonDynamoDBClient(credentialsProvider, clientConfig);
         dynamoDB.setRegion(region);
         DynamoDBUtils dynamoDBUtils = new DynamoDBUtils(dynamoDB);

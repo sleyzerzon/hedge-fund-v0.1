@@ -13,6 +13,7 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
+import com.onenow.admin.InitAmazon;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.StreamName;
 import com.onenow.io.Lookup;
@@ -22,7 +23,6 @@ public class BusSystem {
 	private static HashMap<String, Kinesis> kinesisMap = new HashMap<String, Kinesis>();
 	private static HashMap<Kinesis, Region> kinesisRegion = new HashMap<Kinesis, Region>();
 
-	private static Region defaultRegion = Region.getRegion(Regions.US_EAST_1);
 
 	public BusSystem() {
 		
@@ -31,7 +31,7 @@ public class BusSystem {
 	// KINESIS
 	public static Kinesis getKinesis() {
 		
-		Region region = defaultRegion;
+		Region region = InitAmazon.defaultRegion;
 		
 		return getKinesis(region);
 	}
@@ -64,7 +64,7 @@ public class BusSystem {
 		region = kinesisRegion.get(kinesis);
 		
 		if(region==null){
-			region = defaultRegion; 
+			region = InitAmazon.defaultRegion; 
 		}
 		
 		// Watchr.log(Level.INFO, "Kinesis region is: " + region);
@@ -117,27 +117,9 @@ public class BusSystem {
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
 	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory) {
-
-		String applicationName = "appName";
-		String workerId = "fulano";
 		
-		KinesisClientLibConfiguration clientConfig = null;
-		
-		if(NetworkConfig.isMac()) {
-			clientConfig = getKinesis().configureClient(	applicationName, 
-															streamName.toString(), 
-															workerId, 
-															getRegion(getKinesis()));
-		} else {
-			// Requires instance created with IAM role that has sufficient permission 
-			clientConfig = new KinesisClientLibConfiguration(	applicationName,
-																streamName.toString(),
-																new InstanceProfileCredentialsProvider(),							
-																workerId);			
-		}
-		
-		clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
-		
+		KinesisClientLibConfiguration clientConfig = Kinesis.getClientConfiguration(streamName);
+				
 		Worker kinesysWorker = new Worker(recordProcessorFactory, clientConfig);
 		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + kinesysWorker.toString() + " " + 
 								"for kinesis: " + getKinesis());

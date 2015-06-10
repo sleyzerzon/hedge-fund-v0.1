@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 
-import kinesis.CountingRecordProcessorFactory;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
@@ -19,10 +17,9 @@ import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.onenow.admin.InitAmazon;
+import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
-import com.onenow.data.DynamoDBCountPersister;
-import com.onenow.data.HttpReferrerPair;
 import com.onenow.util.StreamUtils;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -30,15 +27,17 @@ import com.onenow.util.Watchr;
 public class Kinesis {
 
 	public static AmazonKinesis kinesis;
+	private static Region region;
 	
 	private final ObjectMapper jsonMapper = new ObjectMapper();
 	
 	public Kinesis() {
-		this.kinesis = InitAmazon.getKinesis(Region.getRegion(Regions.US_EAST_1));
+		this.region = InitAmazon.defaultRegion;		
+		this.kinesis = InitAmazon.createKinesis(this.region);
 	}
 	
 	public Kinesis(Region region) {
-		this.kinesis = InitAmazon.getKinesis(region);
+		this.kinesis = InitAmazon.createKinesis(region);
 	}
 	
 	public void createStreamIfNotExists(StreamName streamName, int numShards) {
@@ -97,19 +96,32 @@ public class Kinesis {
         }
     }
     
-    public KinesisClientLibConfiguration configureClient(	String applicationName, String streamName, 
-    														String workerId, Region region) {
+    public static KinesisClientLibConfiguration getClientConfiguration(StreamName streamName) {
     	
-        KinesisClientLibConfiguration kclConfig =
-                new KinesisClientLibConfiguration(	applicationName, streamName, 
-                									new DefaultAWSCredentialsProviderChain(), 
-                									workerId);
-        
-        kclConfig.withCommonClientConfig(InitAmazon.getClientConfig());
-        kclConfig.withRegionName(region.getName());
-        kclConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
+		String applicationName = "appName";
+		String workerId = "fulano";
 
-        return kclConfig;
+		KinesisClientLibConfiguration clientConfig = null;
+		
+		if(NetworkConfig.isMac()) {
+			
+			clientConfig = new KinesisClientLibConfiguration(	applicationName, 
+																streamName.toString(), 
+																new DefaultAWSCredentialsProviderChain(), 
+																workerId);
+		} else {
+			// Requires instance created with IAM role that has sufficient permission 
+			clientConfig = new KinesisClientLibConfiguration(	applicationName,
+																streamName.toString(),
+																new InstanceProfileCredentialsProvider(),							
+																workerId);			
+		}
+		
+	//	clientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
+	//	clientConfig.withRegionName(region.getName());
+	//	clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
+
+        return clientConfig;
     }
 
     
