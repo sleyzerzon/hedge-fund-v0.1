@@ -40,27 +40,8 @@ public class ChartistMain {
 		FlexibleLogger.setup();
 
 		testCache();
-		
-		new Thread () {
-			@Override public void run () {
-				IRecordProcessorFactory rtPrimaryProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
-				BusSystem.read(StreamName.PRIMARY, rtPrimaryProcessorFactory);
-			}
-		}.start();
 
-		new Thread () {
-			@Override public void run () {
-				IRecordProcessorFactory rtStandbyProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
-				BusSystem.read(StreamName.STANDBY, rtStandbyProcessorFactory);
-			}
-		}.start();
-
-		new Thread () {
-			@Override public void run () {
-				IRecordProcessorFactory rtRealtimeProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
-				BusSystem.read(StreamName.REALTIME, rtRealtimeProcessorFactory);
-			}
-		}.start();
+		BusSystem.read(StreamName.PRIMARY, BusProcessingFactory.createProcessorFactoryEventRealTime());
 
 	}
 	

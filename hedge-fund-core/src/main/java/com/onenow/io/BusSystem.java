@@ -127,7 +127,7 @@ public class BusSystem {
 		return true;
 	}
 	
-	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
+	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
 									InitialPositionInStream initPosition) {
 		
 		String applicationName = "appName";

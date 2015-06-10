@@ -23,7 +23,7 @@ public class ClerkRealTimeMain {
 
 		FlexibleLogger.setup();
 
-		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
+		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime();
 		BusSystem.read(StreamName.REALTIME, rtProcessorFactory);
 		
 	}

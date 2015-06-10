@@ -16,25 +16,25 @@ public class BusProcessingFactory {
 	}
 
 	
-	public static IRecordProcessorFactory processorFactoryString() {
+	public static IRecordProcessorFactory createProcessorFactoryString() {
 		
-        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<String>(String.class);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<String>(String.class);
 
-        return recordProcessor;
+        return processorFactory;
 	}
 
-	public static IRecordProcessorFactory processorFactoryEventRealTime() {
+	public static IRecordProcessorFactory createProcessorFactoryEventRealTime() {
 		
-        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventRealTime>(EventRealTime.class);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventRealTime>(EventRealTime.class);
 
-        return recordProcessor;
+        return processorFactory;
 	}
 
-	public static IRecordProcessorFactory processorFactoryEventHistory() {
+	public static IRecordProcessorFactory createProcessorFactoryEventHistory() {
 		
-        IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventHistory>(EventHistory.class);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventHistory>(EventHistory.class);
 
-        return recordProcessor;
+        return processorFactory;
 	}
 
     
