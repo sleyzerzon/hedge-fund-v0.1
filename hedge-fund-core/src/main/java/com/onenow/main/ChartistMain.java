@@ -47,6 +47,9 @@ public class ChartistMain {
 		IRecordProcessorFactory rtStandbyProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
 		BusSystem.read(StreamName.STANDBY, rtStandbyProcessorFactory);
 
+		IRecordProcessorFactory rtRealtimeProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
+		BusSystem.read(StreamName.REALTIME, rtRealtimeProcessorFactory);
+
 	}
 	
 	private static void testCache() {
