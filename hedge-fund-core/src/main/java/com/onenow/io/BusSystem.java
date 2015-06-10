@@ -130,15 +130,15 @@ public class BusSystem {
 	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
 									InitialPositionInStream initPosition) {
 		
-		String applicationName = "appName";
-		String workerId = "fulano";
+		String applicationName = "KinesisRead" + "-" + streamName;
+		Long workerId = TimeParser.getTimestampNow();
        
 		KinesisClientLibConfiguration readClientConfig = null;
 		
 		readClientConfig = new KinesisClientLibConfiguration(	applicationName, 
 																streamName.toString(), 
 																InitAmazon.getCredentialsProvider(), 
-																workerId);
+																workerId.toString());
 		
 		// http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html
 		readClientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
