@@ -23,14 +23,14 @@ public class BusProcessingFactory {
         return recordProcessor;
 	}
 
-	public static IRecordProcessorFactory processorFactoryRealTime() {
+	public static IRecordProcessorFactory processorFactoryEventRealTime() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventRealTime>(EventRealTime.class);
 
         return recordProcessor;
 	}
 
-	public static IRecordProcessorFactory processorFactoryHistory() {
+	public static IRecordProcessorFactory processorFactoryEventHistory() {
 		
         IRecordProcessorFactory recordProcessor = new BusRecordProcessorFactory<EventHistory>(EventHistory.class);
 
