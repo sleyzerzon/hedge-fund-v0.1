@@ -63,11 +63,11 @@ public class InitMarket {
 		
 		String toDashedDate = TimeParser.getTodayDashed(); 
 
-		return getDefaultPortfolio(toDashedDate);
+		return getSamplePortfolio(toDashedDate);
 		
 	}
 	
-	public static Portfolio getDefaultPortfolio(String toDashedDate) {	
+	public static Portfolio getSamplePortfolio(String toDashedDate) {	
 							
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),

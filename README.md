@@ -100,3 +100,6 @@ Services are easy to maintain. Simply created hedge-*.conf files under hedge-fun
 
 Notice the appspec.yaml-referenced scripts look for hedge-fund-* in order to manage the job lifecycle.
 
+# Dependencies
+
+The default system requires the Interactive Brokers Gateway.  To jump-start, you may want to use AMI "Hedge Fund v0.5," which we have made publicly available in Amazon Web Services.  See NetworkConfig.java for the complete set of network configurations.
