@@ -112,15 +112,26 @@ public class BusSystem {
 	public static void write(StreamName streamName, Object objToSend) {
 		getKinesis().sendObject(objToSend, streamName);
 	}
-	
-	
+		
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
 	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory) {
 		
-		KinesisClientLibConfiguration clientConfig = Kinesis.getClientConfiguration(streamName);
-				
-		Worker kinesysWorker = new Worker(recordProcessorFactory, clientConfig);
+		String applicationName = "appName";
+		String workerId = "fulano";
+       
+		KinesisClientLibConfiguration readClientConfig = null;
+		
+		readClientConfig = new KinesisClientLibConfiguration(	applicationName, 
+																streamName.toString(), 
+																InitAmazon.getCredentialsProvider(), 
+																workerId);
+		
+		readClientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
+		readClientConfig.withRegionName(InitAmazon.defaultRegion.getName());
+		readClientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);		
+		
+		Worker kinesysWorker = new Worker(recordProcessorFactory, readClientConfig);
 		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + kinesysWorker.toString() + " " + 
 								"for kinesis: " + getKinesis());
 		

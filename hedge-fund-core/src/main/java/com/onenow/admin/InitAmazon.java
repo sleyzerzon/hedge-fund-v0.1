@@ -47,30 +47,25 @@ public class InitAmazon {
 	}
 	
 	// CREDENTIALS
-	public static DefaultAWSCredentialsProviderChain getProviderChain() {
+	public static AWSCredentialsProvider getCredentialsProvider() {
 		
-		//		DefaultAWSCredentialsProviderChain looks for credentials in this order:
-		//			1. Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
-		//			2. Java System Properties - aws.accessKeyId and aws.secretKey
-		//			3. Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
-		//			4. Instance Profile credentials delivered through the Amazon EC2 metadata service
-		return new DefaultAWSCredentialsProviderChain();
+		AWSCredentialsProvider credentialsProvider = null;
+		
+		if(NetworkConfig.isMac()) {
+			//		DefaultAWSCredentialsProviderChain looks for credentials in this order:
+			//			1. Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
+			//			2. Java System Properties - aws.accessKeyId and aws.secretKey
+			//			3. Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
+			//			4. Instance Profile credentials delivered through the Amazon EC2 metadata service
+			credentialsProvider = new DefaultAWSCredentialsProviderChain();
+		} else {
+			// Requires instance created with IAM role that has sufficient permission 
+			credentialsProvider = new InstanceProfileCredentialsProvider();
+		}
+		
+		return credentialsProvider;
 	}
 	
-	public static AWSCredentials getCredentials() {
-		AWSCredentials credentials = null;
-		try {
-			credentials = new ProfileCredentialsProvider().getCredentials();
-			} 
-		catch (Exception e) {
-			throw new AmazonClientException(
-		"Cannot load the credentials from the credential profiles file. " +
-		"Please make sure that your credentials file is at the correct " +
-		"location (~/.aws/credentials), and is in valid format.",
-		                    e);
-		        }
-		return credentials;
-	}
 	
 	// S3
 	public static AmazonS3 getS3Connection() {
@@ -96,14 +91,32 @@ public class InitAmazon {
 	
 	// SQS
 	public static AmazonSQS getSQS(Region region) {
-		AWSCredentials credentials = InitAmazon.getCredentials();
-		AmazonSQS sqs = new AmazonSQSClient(credentials);
 		
+//		AWSCredentials credentials = InitAmazon.getCredentials();
+//		AmazonSQS sqs = new AmazonSQSClient(credentials);
+
+		AmazonSQS sqs = new AmazonSQSClient();
 		sqs.setRegion(region);
 		
 		return sqs;
 	}
 
+//	public static AWSCredentials getCredentials() {
+//	AWSCredentials credentials = null;
+//	try {
+//		credentials = new ProfileCredentialsProvider().getCredentials();
+//		} 
+//	catch (Exception e) {
+//		throw new AmazonClientException(
+//	"Cannot load the credentials from the credential profiles file. " +
+//	"Please make sure that your credentials file is at the correct " +
+//	"location (~/.aws/credentials), and is in valid format.",
+//	                    e);
+//	        }
+//	return credentials;
+//}
+
+	
 	// CLIENT 
     /**
      * Creates a new client configuration with a uniquely identifiable value for this sample application.
@@ -112,11 +125,14 @@ public class InitAmazon {
      * @return A new client configuration based on the provided one with its user agent overridden.
      */
     public static ClientConfiguration getClientConfig() {
+    	return getClientConfig(new ClientConfiguration());
+    }
+    
+    public static ClientConfiguration getClientConfig(ClientConfiguration clientConfig) {
     	
-    	ClientConfiguration clientConfig = new ClientConfiguration();
         ClientConfiguration newConfig = new ClientConfiguration(clientConfig);
+        
         StringBuilder userAgent = new StringBuilder(ClientConfiguration.DEFAULT_USER_AGENT);
-
         // Separate regions of the UserAgent with a space
         userAgent.append(" ");
         // Append the repository name followed by version number of the sample
@@ -142,20 +158,25 @@ public class InitAmazon {
 	public static AmazonKinesis createKinesis(Region region) {
 
 		AmazonKinesis kinesis = null;
+		Watchr.log(Level.INFO, "Creating new Kinesis client: credentials");
 
 		try {
-			Watchr.log(Level.INFO, "Creating new Kinesis client: credentials");
-			if(NetworkConfig.isMac()) {
-				kinesis = new AmazonKinesisClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
-			} else {
-				// Requires instance created with IAM role that has sufficient permission 
-				AWSCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
-				kinesis = new AmazonKinesisClient();
-			}
-		} catch (Exception e) {
+			kinesis = new AmazonKinesisClient(getCredentialsProvider(), getClientConfig());
+		} catch (Exception e1) {
 			Watchr.log(Level.SEVERE, "Error creating AmazonKinesisClient" );
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+	
+//		try {
+//			if(NetworkConfig.isMac()) {
+//				kinesis = new AmazonKinesisClient(new DefaultAWSCredentialsProviderChain(), getClientConfig());
+//			} else {
+//				// Requires instance created with IAM role that has sufficient permission 
+//				AWSCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
+//				kinesis = new AmazonKinesisClient();
+//			}
+//		} catch (Exception e) {
+//		}
         
         kinesis.setRegion(region);
         
