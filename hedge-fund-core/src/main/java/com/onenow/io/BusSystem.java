@@ -122,11 +122,12 @@ public class BusSystem {
 																					streamName.toString(), 
 																					workerId, 
 																					getRegion(getKinesis()));
-		
+				
 		clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
 		
 		Worker kinesysWorker = new Worker(recordProcessorFactory, clientConfig);
-		Watchr.log(Level.INFO, "Created kinesis read worker: " + kinesysWorker.toString());
+		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + kinesysWorker.toString() + " " + 
+								"for kinesis: " + getKinesis());
 		
 		runProcessor(kinesysWorker);
 		
