@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -96,38 +97,6 @@ public class Kinesis {
         }
     }
     
-    public static KinesisClientLibConfiguration getClientConfiguration(StreamName streamName) {
-    	
-		String applicationName = "appName";
-		String workerId = "fulano";
-
-		KinesisClientLibConfiguration clientConfig = null;
-		
-		if(NetworkConfig.isMac()) {
-			
-			clientConfig = new KinesisClientLibConfiguration(	applicationName, 
-																streamName.toString(), 
-																new DefaultAWSCredentialsProviderChain(), 
-																workerId);
-		} else {
-			// Requires instance created with IAM role that has sufficient permission 
-			clientConfig = new KinesisClientLibConfiguration(	applicationName,
-																streamName.toString(),
-																new InstanceProfileCredentialsProvider(),							
-																workerId);			
-		}
-		
-		try {
-			clientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
-			clientConfig.withRegionName(region.getName());
-			clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-        return clientConfig;
-    }
-
     
     
     // TESTING
