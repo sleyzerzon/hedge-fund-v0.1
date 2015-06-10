@@ -131,7 +131,8 @@ public class BusSystem {
 									InitialPositionInStream initPosition) {
 		
 		String applicationName = "KinesisRead" + "-" + streamName;
-		Long workerId = TimeParser.getTimestampNow();
+		Long workerId = TimeParser.getTimestampNow();  //  String workerId = String.valueOf(UUID.randomUUID());
+
        
 		KinesisClientLibConfiguration readClientConfig = null;
 		

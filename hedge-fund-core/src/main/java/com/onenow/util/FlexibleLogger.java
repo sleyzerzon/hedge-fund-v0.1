@@ -56,7 +56,7 @@ public class FlexibleLogger {
 	    logger.setLevel(level);
 	    
 	    String date = TimeParser.getTodayDashed();
-	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[2].getClassName()+appMode+"-"+date+"-Log.";
+	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[2].getClassName()+appMode+"-Log.";
 	    System.out.println("Will log to: " + base + "*");
 	    fileTxt = new FileHandler(base+"txt");
 	    fileHTML = new FileHandler(base+"html");
