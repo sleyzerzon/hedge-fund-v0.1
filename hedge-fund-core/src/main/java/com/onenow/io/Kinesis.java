@@ -117,9 +117,13 @@ public class Kinesis {
 																workerId);			
 		}
 		
-	//	clientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
-	//	clientConfig.withRegionName(region.getName());
-	//	clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
+		try {
+			clientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
+			clientConfig.withRegionName(region.getName());
+			clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
         return clientConfig;
     }
