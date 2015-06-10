@@ -49,8 +49,8 @@ public class BusSystem {
 			kin = kinesisMap.get(key);
 		}
 		
-		Watchr.log(Level.INFO, kinesisMap.toString());
-		Watchr.log(Level.INFO, kinesisRegion.toString());
+		Watchr.log(Level.INFO, "Kinesis map: " + kinesisMap.toString());
+		Watchr.log(Level.INFO, "Kinesis region map: " + kinesisRegion.toString());
 
 		return kin;
 	}
@@ -126,13 +126,17 @@ public class BusSystem {
 		clientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);
 		
 		Worker kinesysWorker = new Worker(recordProcessorFactory, clientConfig);
+		Watchr.log(Level.INFO, "Created kinesis read worker: " + kinesysWorker.toString());
 		
-        return runProcessor(kinesysWorker);
+		runProcessor(kinesysWorker);
+		
+        return true;
 
 	}
 
 	private static boolean runProcessor(Worker kinesysWorker) {
 		try {
+			Watchr.log(Level.INFO, "Running kinesis read worker: " + kinesysWorker.toString());
             kinesysWorker.run();
         } catch (Throwable t) {
         	String log = "Caught throwable while processing data." + t;
