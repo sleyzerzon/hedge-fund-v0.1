@@ -140,6 +140,7 @@ public class BusSystem {
 																InitAmazon.getCredentialsProvider(), 
 																workerId);
 		
+		// http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html
 		readClientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
 		readClientConfig.withRegionName(InitAmazon.defaultRegion.getName());
 		readClientConfig.withInitialPositionInStream(initPosition);		
