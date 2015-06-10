@@ -65,6 +65,8 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	@Override
 	public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
 		
+		Watchr.log(Level.INFO, "processRecords: " + records.toString());
+		
         for (Record r : records) {
             // Deserialize each record as an UTF-8 encoded JSON String of the type provided
             T record;
@@ -78,7 +80,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
             				". Partition Key: " + r.getPartitionKey() + 
             				". Sequence Number: " + r.getSequenceNumber() + 
             				e;
-            	Watchr.log(Level.INFO, log);
+            	Watchr.log(Level.SEVERE, log);
                 continue;
             }
             
@@ -92,7 +94,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 */
 	private void handleByRecordType(T record) {
 		
-    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM" + record.toString(), "\n", "");
+    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + record.toString(), "\n", "");
 		
 		if(recordType.equals(String.class)) {
 			

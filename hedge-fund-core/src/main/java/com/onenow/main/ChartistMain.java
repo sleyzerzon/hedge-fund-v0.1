@@ -55,7 +55,7 @@ public class ChartistMain {
 
 		  try {
 			if(testValue.equals(TestValues.VALUE.toString())) {
-				  Watchr.log(Level.INFO, "ElastiCache test PASS");
+				  Watchr.log(Level.WARNING, "ElastiCache test PASS");
 			  } 
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");
