@@ -3,7 +3,7 @@ package com.onenow.execution;
 import java.util.List;
 
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.constant.BrokerMode;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.instrument.Investment;
@@ -51,16 +51,16 @@ public class BrokerAWS implements BrokerInterface {
 	}
 
 	@Override
-	public BrokerMode getMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Integer readHistoricalQuotes(Investment inv, String end,
 			HistorianConfig config, QuoteHistory history) {
 		// TODO Auto-generated method stub
 		return 1;
+	}
+
+	@Override
+	public StreamName getStream() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

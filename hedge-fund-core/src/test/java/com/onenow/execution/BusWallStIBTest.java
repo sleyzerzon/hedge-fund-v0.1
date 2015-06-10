@@ -21,6 +21,12 @@ public class BusWallStIBTest {
 	  BusWallStIB bus = new BusWallStIB();
 	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.LOCAL)));
   }
+  
+  @Test
+  public void getClientId() {
+	  BusWallStIB bus = new BusWallStIB();
+	  Assert.assertTrue(bus.getClientID()!=null);
+  }
 
   @Test
   public void BusWallStTopology() {

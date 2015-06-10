@@ -2,14 +2,12 @@ package com.onenow.main;
 
 import java.util.logging.Level;
 
-import com.onenow.constant.BrokerMode;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
 import com.onenow.data.InitMarket;
-import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallStIB;
 import com.onenow.io.Kinesis;
-import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -27,45 +25,42 @@ public class InvestorMain {
  
 	public static void main(String[] args) {
 		
-		BrokerMode mode = getModeArgument(args);
-		Watchr.log(Level.INFO, "Starting in MODE: " + mode);
+		StreamName mode = getModeArgument(args);
+		Watchr.log(Level.INFO, "Starting for STREAM: " + mode);
 
 		FlexibleLogger.setup(mode.toString());
 		
 		Kinesis.selfTest();
 		
-		if(	mode.equals(BrokerMode.PRIMARY)) {
-			// register once: get all market real-time quotes
-			// choose relevant time frame
+		if(	mode.equals(StreamName.PRIMARY)) {
 		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 
-		    // choose what to hedge on
-			Portfolio marketPortfolio = InitMarket.getSamplePortfolio();
-
 			BrokerInteractive broker = new BrokerInteractive(	mode, 
-																marketPortfolio, 
+																InitMarket.getTestPortfolio(), 
 																new BusWallStIB(mode, Topology.LOCAL)); 
 
 			broker.getLiveQuotes(); 			
 		}
 		
-		if(mode.equals(BrokerMode.STANDBY)) {
-			// register once: get all market real-time quotes
-//		    setPortfolioForInvestment();						
-//			broker.getLiveQuotes(); 			
+		if(mode.equals(StreamName.STANDBY)) {
 		}
 
-		if(	mode.equals(BrokerMode.REALTIME)) {
-			// Do realtime queries from SQS
-			 // broker.getLiveQuotes(); 			
+		if(	mode.equals(StreamName.REALTIME)) {
+		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
+
+			BrokerInteractive broker = new BrokerInteractive(	mode, 
+																InitMarket.getSamplePortfolio(), 
+																new BusWallStIB(mode, Topology.LOCAL)); 
+
+			broker.getLiveQuotes(); 			
 		}
 
-		if(mode.equals(BrokerMode.HISTORIAN)) {
+		if(mode.equals(StreamName.HISTORY)) {
 			// Do historical queries from SQS
 			// broker.procesHistoricalQuotesRequests();
 		}
 
-		if(	mode.equals(BrokerMode.STREAMING)) {
+		if(	mode.equals(StreamName.STREAMING)) {
 			// TODO: Do straming queries from SQS
 		}
 
@@ -74,22 +69,22 @@ public class InvestorMain {
 
 	}
 	
-	private static BrokerMode getModeArgument(String[] args) {
-		BrokerMode mode = BrokerMode.REALTIME;
+	private static StreamName getModeArgument(String[] args) {
+		StreamName mode = null;
 		if(args.length>0) {
 			if(args[0]!=null) {
 				String s0 = args[0];
 				if(s0.equals("PRIMARY")) {
-					mode = BrokerMode.PRIMARY;
+					mode = StreamName.PRIMARY;
 				}
 				if(s0.equals("STANDBY")) {
-					mode = BrokerMode.STANDBY;
+					mode = StreamName.STANDBY;
 				}
-				if(s0.equals("HISTORIAN")) {
-					mode = BrokerMode.HISTORIAN;
+				if(s0.equals("HISTORY")) {
+					mode = StreamName.HISTORY;
 				}
 				if(s0.equals("STREAMING")) {
-					mode = BrokerMode.STREAMING;
+					mode = StreamName.STREAMING;
 				}
 			} else {
 		    	Watchr.log(Level.SEVERE, "ERROR: mode is a required argument");

@@ -6,8 +6,8 @@ import com.ib.client.Types.NewsType;
 import com.ib.controller.Formats;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
-import com.onenow.constant.BrokerMode;
 import com.onenow.constant.ConnectionStatus;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ConnectionHandler;
@@ -27,19 +27,19 @@ public class BusWallStIB implements ConnectionHandler {
 
 	public NetworkService gateway;
 	
-	private BrokerMode mode;
+	private StreamName streamName;
 	
 	
 	public BusWallStIB() {
 		// always local for now
 		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
-		this.mode = BrokerMode.STREAMING;
+		this.streamName = StreamName.STREAMING;
 	}
 	
 	// configurable topology for testing
-	public BusWallStIB(BrokerMode mode, Topology topo) {
+	public BusWallStIB(StreamName mode, Topology topo) {
 		
-		this.mode = mode;
+		this.streamName = mode;
 		this.gateway = NetworkConfig.getGateway(topo);
 		
 		// fixed gateway for production
@@ -77,24 +77,27 @@ public class BusWallStIB implements ConnectionHandler {
 		Watchr.log(Level.INFO, "CONNECTED TO BUS!", "", "");
 	  }
 
-	  private Integer getClientID() {
+	  public Integer getClientID() {
 		  
-		  Integer id = 0;
+		  Integer id = null;
 		  
-		  if(mode.equals(BrokerMode.PRIMARY)) {
+		  if(streamName.equals(StreamName.PRIMARY)) {
 			  id = 0;
 		  }
-		  if(mode.equals(BrokerMode.STANDBY)) {
+		  if(streamName.equals(StreamName.STANDBY)) {
 			  id = 1;
 		  }
-		  if(mode.equals(BrokerMode.REALTIME)) {
+		  if(streamName.equals(StreamName.REALTIME)) {
 			  id = 2;
 		  }
-		  if(mode.equals(BrokerMode.HISTORIAN)) {
+		  if(streamName.equals(StreamName.HISTORY)) {
 			  id = 3;
 		  }
-		  if(mode.equals(BrokerMode.STREAMING)) {
+		  if(streamName.equals(StreamName.STREAMING)) {
 			  id = 4;
+		  }
+		  if(streamName.equals(StreamName.TESTING)) {
+			  id = 5;
 		  }
 
 		  return id;

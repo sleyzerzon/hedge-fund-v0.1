@@ -102,4 +102,4 @@ Notice the appspec.yaml-referenced scripts look for hedge-fund-* in order to man
 
 # Dependencies
 
-The default system requires the Interactive Brokers Gateway.  To jump-start, you may want to use AMI "Hedge Fund v0.5," which we have made publicly available in Amazon Web Services.  See NetworkConfig.java for the complete set of network configurations.
+The default system requires the Interactive Brokers Gateway.  To jump-start, you may want to use AMI "Hedge Fund v0.5," which we have made publicly available in Amazon Web Services (ami-79e51012).  See NetworkConfig.java for the complete set of network configurations.  For AWS Identity and Access Management configuration, see InitAmazon.java

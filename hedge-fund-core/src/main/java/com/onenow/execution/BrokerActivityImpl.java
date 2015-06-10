@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.constant.BrokerMode;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
-import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
@@ -144,16 +141,16 @@ public class BrokerActivityImpl implements BrokerActivity {
 	}
 
 	@Override
-	public BrokerMode getMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Integer readHistoricalQuotes(Investment inv, String end,
 			HistorianConfig config, QuoteHistory history) {
 		// TODO Auto-generated method stub
 		return 1;
+	}
+
+	@Override
+	public StreamName getStream() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
 import com.onenow.data.EventHistoryRequest;
@@ -28,13 +28,14 @@ import com.onenow.util.Watchr;
 
 public class BrokerInteractive implements BrokerInterface  {
 
-	  private BrokerMode brokerMode;	
 	  private List<Underlying> underList;
 	  private Portfolio marketPortfolio;
 	  private List<Trade> trades;
 	  private Portfolio myPortfolio;
 	  private MarketPrice marketPrices;
 	  private MarketAnalytics marketAnalytics;
+	  
+	  private StreamName streamName;
 	
 	  private ContractFactory contractFactory = new ContractFactory();
 	//  private List<Channel> channels = new ArrayList<Channel>();
@@ -45,16 +46,16 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private static long lastQueryTime;
 
 	  public BrokerInteractive() {
-		  this.brokerMode = BrokerMode.REALTIME;
+		  this.streamName = StreamName.REALTIME;
 	  }
 	
 	  /**
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
 	   */
-	  public BrokerInteractive(BrokerMode mode, Portfolio marketPortfolio, BusWallStIB bus) { 
+	  public BrokerInteractive(StreamName streamName, Portfolio marketPortfolio, BusWallStIB bus) { 
 		  
-		this.brokerMode = mode;
+		this.streamName = streamName;
 	    this.marketPortfolio = marketPortfolio;
 		this.bus = bus;
 		
@@ -315,11 +316,10 @@ public class BrokerInteractive implements BrokerInterface  {
 	    s = s + "MY PORTFOLIO" + "\n" + getMyPortfolio() + "\n";
 	    return s;
 	  }
-	
-	
-	  // SET GET
-		@Override
-		public BrokerMode getMode() {
-			return brokerMode;
-		}
+
+	@Override
+	public StreamName getStream() {
+		return streamName;
+	}
+
 }

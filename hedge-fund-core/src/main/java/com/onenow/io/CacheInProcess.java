@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
@@ -33,7 +31,7 @@ public class CacheInProcess {
 	public CacheInProcess(BrokerInterface broker) {
 		this.broker = broker;
 	}
-	
+
 	
 	// REAL-TIME from broker
 	public boolean writeEventRT(final EventRealTime event) {
@@ -75,13 +73,10 @@ public class CacheInProcess {
 	public void writeEventThroughRing(EventRealTime event) {
 
 		// TODO: FAST WRITE TO RING		
+
+		// Write to Real-Time datastream
+		BusSystem.write(broker.getStream(), event);	
 		
-		if(	broker.getMode().equals(BrokerMode.PRIMARY) ||
-			broker.getMode().equals(BrokerMode.STANDBY)) {
-						
-			// Write to Real-Time datastream
-			BusSystem.write(StreamName.REALTIME, event);			
-		}
 	}
 
 

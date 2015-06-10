@@ -3,9 +3,9 @@ package com.onenow.test;
 import java.util.List;
 
 import com.onenow.admin.DatabaseSystemActivityImpl;
-import com.onenow.constant.BrokerMode;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
+import com.onenow.constant.StreamName;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.BrokerActivityImpl;
@@ -74,7 +74,7 @@ public class TestBroker implements Testable {
 
 	    try {
 			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
-			this.broker = new BrokerActivityImpl(new BrokerInteractive(BrokerMode.STANDBY, marketPortfolio, bus));
+			this.broker = new BrokerActivityImpl(new BrokerInteractive(StreamName.STANDBY, marketPortfolio, bus));
 			this.unders = broker.getUnderlying();
 			this.market = broker.getMarketPortfolio();
 			setUnders(getBroker().getUnderlying());

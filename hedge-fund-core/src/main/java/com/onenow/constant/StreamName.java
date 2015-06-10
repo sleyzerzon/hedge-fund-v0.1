@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
 public enum StreamName {
-	REALTIME, HISTORY, TESTING
+	PRIMARY, STANDBY, HISTORY, REALTIME, STREAMING, TESTING
 }

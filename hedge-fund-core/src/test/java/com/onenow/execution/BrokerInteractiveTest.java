@@ -3,7 +3,7 @@ package com.onenow.execution;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.onenow.constant.BrokerMode;
+import com.onenow.constant.StreamName;
 
 public class BrokerInteractiveTest {
 
@@ -11,6 +11,6 @@ public class BrokerInteractiveTest {
 	
   @Test
   public void BrokerInteractive() {
-    Assert.assertTrue(broker.getMode().equals(BrokerMode.REALTIME));
+    Assert.assertTrue(broker.getStream().equals(StreamName.REALTIME));
   }
 }

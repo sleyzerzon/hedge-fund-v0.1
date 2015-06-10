@@ -4,11 +4,8 @@ import org.junit.Assert;
 import org.testng.annotations.Test;
 
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.constant.BrokerMode;
 import com.onenow.data.EventRealTime;
 import com.onenow.execution.BrokerInteractive;
-import com.onenow.execution.BusWallStIB;
-import com.onenow.portfolio.Portfolio;
 
 public class PriceSizeCacheTest {
 
