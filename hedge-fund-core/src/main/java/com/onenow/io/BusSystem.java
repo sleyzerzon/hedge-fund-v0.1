@@ -86,6 +86,9 @@ public class BusSystem {
 	 */
 	private static int getNumShards(StreamName name) {
 		Integer shards = 1;
+		if(name.equals(StreamName.REALTIME)) {
+			shards = 2;
+		}
 		return shards;
 	}
 

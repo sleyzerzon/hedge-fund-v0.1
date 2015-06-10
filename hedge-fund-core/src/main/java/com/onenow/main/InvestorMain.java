@@ -25,42 +25,42 @@ public class InvestorMain {
  
 	public static void main(String[] args) {
 		
-		StreamName mode = getModeArgument(args);
-		Watchr.log(Level.INFO, "Starting for STREAM: " + mode);
+		StreamName streamName = getArgument(args);
+		Watchr.log(Level.INFO, "Starting for STREAM: " + streamName);
 
-		FlexibleLogger.setup(mode.toString());
+		FlexibleLogger.setup(streamName.toString());
 		
 		Kinesis.selfTest();
 		
-		if(	mode.equals(StreamName.PRIMARY)) {
+		if(	streamName.equals(StreamName.PRIMARY)) {
 		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 
-			BrokerInteractive broker = new BrokerInteractive(	mode, 
+			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getTestPortfolio(), 
-																new BusWallStIB(mode, Topology.LOCAL)); 
+																new BusWallStIB(streamName, Topology.LOCAL)); 
 
 			broker.getLiveQuotes(); 			
 		}
 		
-		if(mode.equals(StreamName.STANDBY)) {
+		if(streamName.equals(StreamName.STANDBY)) {
 		}
 
-		if(	mode.equals(StreamName.REALTIME)) {
+		if(	streamName.equals(StreamName.REALTIME)) {
 		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 
-			BrokerInteractive broker = new BrokerInteractive(	mode, 
+			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getSamplePortfolio(), 
-																new BusWallStIB(mode, Topology.LOCAL)); 
+																new BusWallStIB(streamName, Topology.LOCAL)); 
 
 			broker.getLiveQuotes(); 			
 		}
 
-		if(mode.equals(StreamName.HISTORY)) {
+		if(streamName.equals(StreamName.HISTORY)) {
 			// Do historical queries from SQS
 			// broker.procesHistoricalQuotesRequests();
 		}
 
-		if(	mode.equals(StreamName.STREAMING)) {
+		if(	streamName.equals(StreamName.STREAMING)) {
 			// TODO: Do straming queries from SQS
 		}
 
@@ -69,7 +69,7 @@ public class InvestorMain {
 
 	}
 	
-	private static StreamName getModeArgument(String[] args) {
+	private static StreamName getArgument(String[] args) {
 		StreamName mode = null;
 		if(args.length>0) {
 			if(args[0]!=null) {
@@ -79,6 +79,9 @@ public class InvestorMain {
 				}
 				if(s0.equals("STANDBY")) {
 					mode = StreamName.STANDBY;
+				}
+				if(s0.equals("REALTIME")) {
+					mode = StreamName.REALTIME;
 				}
 				if(s0.equals("HISTORY")) {
 					mode = StreamName.HISTORY;
