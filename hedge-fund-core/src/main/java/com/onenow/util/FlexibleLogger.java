@@ -55,7 +55,7 @@ public class FlexibleLogger {
 	    // set the LogLevel to Severe, only severe Messages will be written
 	    logger.setLevel(level);
 	    
-	    String date = TimeParser.getNowDashed();
+	    String date = TimeParser.getTodayDashed();
 	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[2].getClassName()+appMode+"-"+date+"-Log.";
 	    System.out.println("Will log to: " + base + "*");
 	    fileTxt = new FileHandler(base+"txt");

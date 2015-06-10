@@ -119,6 +119,16 @@ public class BusSystem {
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
 	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory) {
+
+		InitialPositionInStream initPosition = InitialPositionInStream.LATEST;
+		
+		read(streamName, recordProcessorFactory, initPosition);
+				
+		return true;
+	}
+	
+	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
+									InitialPositionInStream initPosition) {
 		
 		String applicationName = "appName";
 		String workerId = "fulano";
@@ -132,7 +142,7 @@ public class BusSystem {
 		
 		readClientConfig.withCommonClientConfig(InitAmazon.getClientConfig());
 		readClientConfig.withRegionName(InitAmazon.defaultRegion.getName());
-		readClientConfig.withInitialPositionInStream(InitialPositionInStream.LATEST);		
+		readClientConfig.withInitialPositionInStream(initPosition);		
 		
 		Worker kinesysWorker = new Worker(recordProcessorFactory, readClientConfig);
 		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + kinesysWorker.toString() + " " + 

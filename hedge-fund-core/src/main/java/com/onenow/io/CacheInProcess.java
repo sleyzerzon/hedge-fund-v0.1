@@ -57,6 +57,7 @@ public class CacheInProcess {
 		}
 		
 		// CRITICAL PATH
+		
 		new Thread () {
 			@Override public void run () {
 				writeEventThroughRing(event);
@@ -191,10 +192,6 @@ public class CacheInProcess {
 		return chart;
 	}
 
-	
-	// TEST
-	
-	// PRINT
 	
 	// TODO: print all the data in memory, not just prices, from Maps/Ring/etc
 	public String toString() {

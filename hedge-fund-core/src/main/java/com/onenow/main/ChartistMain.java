@@ -41,14 +41,26 @@ public class ChartistMain {
 
 		testCache();
 		
-		IRecordProcessorFactory rtPrimaryProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
-		BusSystem.read(StreamName.PRIMARY, rtPrimaryProcessorFactory);
+		new Thread () {
+			@Override public void run () {
+				IRecordProcessorFactory rtPrimaryProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
+				BusSystem.read(StreamName.PRIMARY, rtPrimaryProcessorFactory);
+			}
+		}.start();
 
-		IRecordProcessorFactory rtStandbyProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
-		BusSystem.read(StreamName.STANDBY, rtStandbyProcessorFactory);
+		new Thread () {
+			@Override public void run () {
+				IRecordProcessorFactory rtStandbyProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
+				BusSystem.read(StreamName.STANDBY, rtStandbyProcessorFactory);
+			}
+		}.start();
 
-		IRecordProcessorFactory rtRealtimeProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
-		BusSystem.read(StreamName.REALTIME, rtRealtimeProcessorFactory);
+		new Thread () {
+			@Override public void run () {
+				IRecordProcessorFactory rtRealtimeProcessorFactory = BusProcessingFactory.processorFactoryEventRealTime();
+				BusSystem.read(StreamName.REALTIME, rtRealtimeProcessorFactory);
+			}
+		}.start();
 
 	}
 	
