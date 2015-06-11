@@ -15,8 +15,7 @@ import com.ib.client.Types.SecType;
 import com.onenow.execution.Contract;
 
 public class Contract implements Cloneable {
-    // private int     m_conid;
-	private String     m_conid;
+	private int     m_conid;
     private String  m_symbol;
     private String  m_secType;
     private String  m_expiry;
@@ -39,8 +38,7 @@ public class Contract implements Cloneable {
 
     // Get
     public double strike()          { return m_strike; }
-    // public int conid()              { return m_conid; }
-    public String conid()              { return m_conid; }
+    public int conid()              { return m_conid; }
     public SecIdType secIdType()    { return SecIdType.get(m_secIdType); }
     public String getSecIdType()    { return m_secIdType; }
     public SecType secType()        { return m_secType == null ? SecType.None : SecType.valueOf(m_secType); }
@@ -62,7 +60,7 @@ public class Contract implements Cloneable {
     public String comboLegsDescrip()        { return m_comboLegsDescrip; }
 
     // Set
-    public void conid(String v)            { m_conid = v; }
+    public void conid(int v)            { m_conid = v; }
     public void currency(String v)      { m_currency = v; }
     public void exchange(String v)      { m_exchange = v; }
     public void expiry(String v)        { m_expiry = v; }
@@ -85,7 +83,7 @@ public class Contract implements Cloneable {
     public void comboLegsDescrip(String v)        { m_comboLegsDescrip = v; }
     
     public Contract() {
-    	m_conid = "0";
+    	m_conid = 0;
         m_strike = 0;
         m_includeExpired = false;
     }
@@ -107,7 +105,7 @@ public class Contract implements Cloneable {
         }
     }
 
-    public Contract(String p_conId, String p_symbol, String p_secType, String p_expiry,
+    public Contract(int p_conId, String p_symbol, String p_secType, String p_expiry,
                     double p_strike, String p_right, String p_multiplier,
                     String p_exchange, String p_currency, String p_localSymbol, String p_tradingClass,
                     ArrayList<ComboLeg> p_comboLegs, String p_primaryExch, boolean p_includeExpired,

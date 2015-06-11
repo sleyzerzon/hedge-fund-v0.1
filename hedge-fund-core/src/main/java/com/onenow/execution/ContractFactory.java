@@ -59,7 +59,7 @@ public class ContractFactory {
 		String p_symbol=inv.getUnder().getTicker();
 		String p_exchange="SMART";		
 		
-		String p_conId = inv.id;
+		int p_conId = 0;
 		
 		String p_expiry="";
 		double p_strike=0.0;
@@ -96,7 +96,7 @@ public class ContractFactory {
 		String p_symbol=inv.getUnder().getTicker();
 		String p_exchange="GLOBEX";		
 		
-		String p_conId = inv.id;
+		int p_conId = 0;
 		
 		String p_expiry=((InvestmentFuture) inv).getExpirationDate();
 		String p_multiplier="50";		
@@ -141,7 +141,7 @@ public class ContractFactory {
 			p_exchange="NASDAQ";		
 		}
 			
-		String p_conId = inv.id;
+		int p_conId = 0;
 		
 		String p_expiry="";		
 		double p_strike=0.0;	
@@ -170,7 +170,7 @@ public class ContractFactory {
 		String p_secType=SecType.STK.toString();	
 		String p_symbol=inv.getUnder().getTicker();
 
-		String p_conId = inv.id;
+		int p_conId = 0;
 		
 		String p_expiry="";		
 		double p_strike=0.0;	

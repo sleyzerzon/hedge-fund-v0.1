@@ -17,7 +17,7 @@ public class Position {
 	private double m_realPnl;
 
 	public Contract contract()      { return m_contract; }
-	public String conid()			{ return m_contract.conid(); }
+	public int conid()			{ return m_contract.conid(); }
 	public double averageCost() 	{ return m_averageCost;}
 	public double marketPrice() 	{ return m_marketPrice;}
 	public double marketValue() 	{ return m_marketValue;}

@@ -45,7 +45,7 @@ public class ContractDetails {
     private String   m_notes;
 
     // Get
-    public String conid()               { return m_contract.conid(); }
+    public int conid()               { return m_contract.conid(); }
     public Contract contract()          { return m_contract; }
     public String marketName()          { return m_marketName; }
     public double minTick()             { return m_minTick; }
