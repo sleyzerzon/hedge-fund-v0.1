@@ -19,7 +19,7 @@ public class EventRealTime extends Event {
 	 * @param price
 	 * @param size
 	 */
-	public EventRealTime(	Long time, Investment inv, TradeType tradeType, Double price, int size,
+	public EventRealTime(	Long time, Investment inv, TradeType tradeType, Double price, long size,
 					InvDataSource source, InvDataTiming timing) {
 		this.time = time;
 		this.investment = inv;
@@ -32,14 +32,13 @@ public class EventRealTime extends Event {
 	
 	public String toString() {
 		String s = "\n";
-		s = s + "- id: " + id + "\n";
-		s = s + "- time: " + time + "\n";
-		s = s + "- inv: " + investment.toString() + "\n";
-		s = s + "- tradeType: " + tradeType.toString() + "\n";
-		s = s + "- price: " + price + "\n";
-		s = s + "- size: " + size + "\n";
-		s = s + "- source: " + source.toString() + "\n";
-		s = s + "- timing: " + timing.toString() + "\n";
+		s = s + super.toString();
+		s = s + "- inv " + investment.toString() + "\n";
+		s = s + "- tradeType " + tradeType.toString() + "\n";
+		s = s + "- price " + price + "\n";
+		s = s + "- size " + size + "\n";
+		s = s + "- source " + source.toString() + "\n";
+		s = s + "- timing " + timing.toString() + "\n";
 		return s;
 	}
 }

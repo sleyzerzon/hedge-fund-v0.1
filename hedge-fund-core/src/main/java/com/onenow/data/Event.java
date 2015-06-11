@@ -14,7 +14,7 @@ public class Event {
 	public Investment investment;
 	
 	public Double price;
-	public Integer size; // volume
+	public Long size; 
 
 	public InvDataSource source;
 	public InvDataTiming timing;
@@ -26,6 +26,13 @@ public class Event {
 
 	public Event() {
 		
+	}
+	
+	public String toString() {
+		String s = "";
+		s = s + "- id " + id.toString();
+		s = s + "- start " + start.toString();
+		return s;
 	}
 
 }

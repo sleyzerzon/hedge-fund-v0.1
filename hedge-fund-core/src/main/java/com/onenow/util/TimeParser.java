@@ -56,8 +56,12 @@ public class TimeParser implements Testable {
 
 		long timeStamp=0;
 		
-		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		timeStamp = calendar.getTimeInMillis(); ;
+		try {
+			Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			timeStamp = calendar.getTimeInMillis(); ;
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
 
 		return timeStamp;
 	}

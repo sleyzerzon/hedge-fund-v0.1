@@ -35,18 +35,24 @@ public class ClerkRealTimeMain {
 		boolean success = false;
 		boolean retry = false;
 		
+		int tries = 0;
+		int maxTries = 3;
+		
 		while(!success) {
 			// handle as a transaction, both price+size write or nothing
 			try {
+				tries++;
 				success = true;
 				databaseTimeSeries.writePrice(event);				
 				databaseTimeSeries.writeSize(event);
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.time + " " + event.investment.toString());	
+				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.id + " " + event.investment.toString() + " " + e.toString());	
 				e.printStackTrace();
-				
+				if(tries>maxTries) {
+					return;
+				}
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {}

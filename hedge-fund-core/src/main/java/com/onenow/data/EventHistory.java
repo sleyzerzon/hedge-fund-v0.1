@@ -34,7 +34,7 @@ public class EventHistory extends Event {
 
 	// TODO: what time zone is this time?
 	public EventHistory( 	int reqId, 
-							long time, double high, double low, double open, double close, double wap, int size, int count) {
+							long time, double high, double low, double open, double close, double wap, long size, int count) {
 		
 		this.reqId = reqId;
 		this.time = time;
@@ -57,7 +57,7 @@ public class EventHistory extends Event {
 	}
 
 	@Override public String toString() {
-		return String.format(	"- id " + id +
+		return String.format(	super.toString() +
 								"\t req id " + reqId + 
 								"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
 								"\t FROM " + formattedTime() + "\t TIME ZONE?");

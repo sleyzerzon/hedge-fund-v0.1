@@ -17,8 +17,6 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.data.EventHistory;
-import com.onenow.data.EventRealTime;
 import com.onenow.data.Event;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
