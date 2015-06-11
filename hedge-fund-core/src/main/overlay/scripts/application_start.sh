@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+export set JAVA_OPTS="-Xms256m -Xmx512m"
+
 printenv
 
 for i in /etc/init/hedge-*.conf ; do

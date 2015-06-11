@@ -3,6 +3,7 @@ package com.onenow.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Properties;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
@@ -34,6 +35,21 @@ public class FlexibleLogger {
 
 	  return setup(Level.INFO, mode);
   }
+
+  
+// CLOUDWATCH LOGS
+// SSH to instance
+// sudo su
+// cd /root
+// root@ip-172-31-36-250:~# sudo python ./awslogs-agent-setup.py --region us-east-1
+//  ------------------------------------------------------
+//  - Configuration file successfully saved at: /var/awslogs/etc/awslogs.conf
+//  - You can begin accessing new log events after a few moments at https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logs:
+//  - You can use 'sudo service awslogs start|stop|status|restart' to control the daemon.
+//  - To see diagnostic information for the CloudWatch Logs Agent, see /var/log/awslogs.log
+//  - You can rerun interactive setup using 'sudo python ./awslogs-agent-setup.py --region us-east-1 --only-generate-config'
+//  ------------------------------------------------------
+
   
   static public boolean setup(Level level, String appMode) {
 	  
@@ -55,12 +71,10 @@ public class FlexibleLogger {
 	    // set the LogLevel to Severe, only severe Messages will be written
 	    logger.setLevel(level);
 	    
-	    String date = TimeParser.getTodayDashed();
 	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[2].getClassName()+appMode+"-Log.";
-	    System.out.println("Will log to: " + base + "*");
 	    fileTxt = new FileHandler(base+"txt");
 	    fileHTML = new FileHandler(base+"html");
-	
+	    
 	    // create a TXT formatter
 	    formatterTxt = new SimpleFormatter();
 	    fileTxt.setFormatter(formatterTxt);
@@ -70,6 +84,11 @@ public class FlexibleLogger {
 	    formatterHTML = new HtmlFormatter();
 	    fileHTML.setFormatter(formatterHTML);
 	    logger.addHandler(fileHTML);  	    
+	    
+	    // Start logging
+	    System.out.println("Will log to: " + base + "*");
+	    // System.getProperties().list(System.out);
+	    Watchr.log("SYSTEM PROPERTIES: " + System.getProperties().toString());
 	  }
     catch (IOException e) {
     	success = false;
