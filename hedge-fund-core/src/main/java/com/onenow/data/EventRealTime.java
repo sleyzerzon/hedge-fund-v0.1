@@ -1,5 +1,7 @@
 package com.onenow.data;
 
+import java.util.UUID;
+
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
@@ -17,6 +19,8 @@ public class EventRealTime {
 	public InvDataSource source;
 	public InvDataTiming timing;
 
+	public final String id = String.valueOf(UUID.randomUUID());
+	
 	public EventRealTime() {
 		
 	}
@@ -42,6 +46,7 @@ public class EventRealTime {
 	
 	public String toString() {
 		String s = "\n";
+		s = s + "-id: " + id + "\n";
 		s = s + "- time: " + time + "\n";
 		s = s + "- inv: " + inv.toString() + "\n";
 		s = s + "- tradeType: " + tradeType.toString() + "\n";

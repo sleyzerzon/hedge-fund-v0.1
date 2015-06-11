@@ -2,6 +2,7 @@ package com.onenow.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import com.ib.controller.Formats;
 import com.onenow.constant.InvDataSource;
@@ -32,6 +33,9 @@ public class EventHistory {
 	public InvDataSource source;
 	public InvDataTiming timing;
 	
+	public final String id = String.valueOf(UUID.randomUUID());
+
+	
 //	public EventHistory() {
 //	
 //	}
@@ -61,7 +65,8 @@ public class EventHistory {
 	}
 
 	@Override public String toString() {
-		return String.format(	"id " + reqId + 
+		return String.format(	"- id " + id +
+								"\t req id " + reqId + 
 								"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
 								"\t FROM " + formattedTime() + "\t TIME ZONE?");
 	}
