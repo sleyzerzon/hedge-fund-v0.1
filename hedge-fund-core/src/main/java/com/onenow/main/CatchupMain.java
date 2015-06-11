@@ -19,7 +19,7 @@ public class CatchupMain {
 		FlexibleLogger.setup();
 
 		// InitialPositionInStream.TRIM_HORIZON
-		BusSystem.read(StreamName.REALTIME, BusProcessingFactory.createProcessorFactoryEventRealTime());
+		BusSystem.read(StreamName.REALTIME, BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME));
 	}
 
 }

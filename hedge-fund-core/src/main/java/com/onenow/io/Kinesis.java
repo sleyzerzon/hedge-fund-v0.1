@@ -94,7 +94,8 @@ public class Kinesis {
     
     
     // TESTING
-	private static IRecordProcessorFactory testingProcessorFactory = BusProcessingFactory.createProcessorFactoryString();
+	private static IRecordProcessorFactory testingProcessorFactory = 
+			BusProcessingFactory.createProcessorFactoryString(StreamName.TESTING);
 
 //	private Long time = new Long("1424288913903");
 //	private Investment inv = new Investment();

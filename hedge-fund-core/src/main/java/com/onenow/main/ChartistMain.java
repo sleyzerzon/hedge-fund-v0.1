@@ -31,7 +31,7 @@ public class ChartistMain {
 
 	private static HashMap<String, Chart>		charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
-	private static Long lastQuery;
+	public static Long lastQueryStamp = (long) 0;
 	
 	/**
 	 * Pre-fetches to L1 cache the chart analysis, based on the latest Real-Time data 
@@ -44,7 +44,7 @@ public class ChartistMain {
 
 		testCache();
 
-		BusSystem.read(StreamName.PRIMARY, BusProcessingFactory.createProcessorFactoryEventRealTime());
+		BusSystem.read(StreamName.PRIMARY, BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.PRIMARY));
 
 	}
 	
@@ -68,7 +68,7 @@ public class ChartistMain {
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
 	public static void prefetchCharts(EventRealTime event) {
 		
-		Long elapsedTime = TimeParser.getTimestampNow()-lastQuery;
+		Long elapsedTime = TimeParser.getTimestampNow()-lastQueryStamp;
 		Watchr.log(Level.WARNING, "ELAPSED " + elapsedTime);
 		
 		if( elapsedTime > 10000 ) {
@@ -81,7 +81,7 @@ public class ChartistMain {
 				readChartToL1FromRTL2(	event.investment, event.tradeType, samplr,
 										TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
 										event.source, event.timing);
-				lastQuery = TimeParser.getTimestampNow(); 
+				lastQueryStamp = TimeParser.getTimestampNow(); 
 	
 			}
 		}		

@@ -25,12 +25,12 @@ public class ClerkRealTimeMain {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
-		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime();
+		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME);
 		BusSystem.read(StreamName.REALTIME, rtProcessorFactory);
 		
 	}
 	
-	public static void writeHistoryRTtoL2(EventRealTime event) {
+	public static void writeRealtimeRTtoL2(EventRealTime event) {
 	
 		boolean success = false;
 		boolean retry = false;

@@ -24,7 +24,7 @@ public class ClerkHistoryMain {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime();
+		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.HISTORY);
 		BusSystem.read(StreamName.HISTORY, recordProcessorFactory);
 		
 	}

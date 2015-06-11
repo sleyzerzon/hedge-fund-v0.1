@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventHistory;
@@ -25,6 +26,7 @@ import com.onenow.util.Watchr;
 public class BusRecordProcessor<T> implements IRecordProcessor {
 
 	Class<T> recordType;
+	StreamName streamName;
 	
 	// TODO: https://code.google.com/p/google-gson/
     // Our JSON object mapper for deserializing records
@@ -37,7 +39,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	public BusRecordProcessor() {
 	}
 	
-	public BusRecordProcessor(Class<T> recordType) {
+	public BusRecordProcessor(Class<T> recordType, StreamName streamName) {
 		
 		this.recordType = recordType;
 		
@@ -125,7 +127,9 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventRealTime.class)) {			
 			EventRealTime event = (EventRealTime) record;
 			ChartistMain.prefetchCharts(event);
-			ClerkRealTimeMain.writeHistoryRTtoL2(event);
+			if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
+				ClerkRealTimeMain.writeRealtimeRTtoL2(event);
+			}
 		}
 
 	}

@@ -3,6 +3,7 @@ package com.onenow.io;
 import kinesis.CountingRecordProcessorFactory;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.onenow.constant.StreamName;
 import com.onenow.data.DynamoDBCountPersister;
 import com.onenow.data.EventRealTime;
 import com.onenow.data.EventHistory;
@@ -16,23 +17,23 @@ public class BusProcessingFactory {
 	}
 
 	
-	public static IRecordProcessorFactory createProcessorFactoryString() {
+	public static IRecordProcessorFactory createProcessorFactoryString(StreamName streamName) {
 		
-        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<String>(String.class);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<String>(String.class, streamName);
 
         return processorFactory;
 	}
 
-	public static IRecordProcessorFactory createProcessorFactoryEventRealTime() {
+	public static IRecordProcessorFactory createProcessorFactoryEventRealTime(StreamName streamName) {
 		
-        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventRealTime>(EventRealTime.class);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventRealTime>(EventRealTime.class, streamName);
 
         return processorFactory;
 	}
 
-	public static IRecordProcessorFactory createProcessorFactoryEventHistory() {
+	public static IRecordProcessorFactory createProcessorFactoryEventHistory(StreamName streamName) {
 		
-        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventHistory>(EventHistory.class);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventHistory>(EventHistory.class, streamName);
 
         return processorFactory;
 	}
