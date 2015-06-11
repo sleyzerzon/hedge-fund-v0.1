@@ -126,9 +126,9 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 
 		if(recordType.equals(EventRealTime.class)) {			
 			EventRealTime event = (EventRealTime) record;
-			ChartistMain.prefetchCharts(event);
+			ClerkRealTimeMain.writeRealtimeRTtoL2(event);
 			if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
-				ClerkRealTimeMain.writeRealtimeRTtoL2(event);
+				ChartistMain.prefetchCharts(event);				
 			}
 		}
 
