@@ -72,13 +72,19 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
         for (Record r : records) {
             // Deserialize each record as an UTF-8 encoded JSON String of the type provided
-            T record;
-            try {
-                String json = new String(r.getData().array());
+            final T record;
+            try {            	
+            	
+				String json = new String(r.getData().array());
             	record = jsonMapper.readValue(json, recordType);
-            	handleByRecordType(record);
+
+        		new Thread () {
+        			@Override public void run () {
+        				handleByRecordType(record);
+        			}
+        		}.start();
                 
-            } catch (IOException e) {
+            } catch (Exception e) {
             	String log = 	"Skipping record. Unable to parse record into: " + recordType + 
             				". Partition Key: " + r.getPartitionKey() + 
             				". Sequence Number: " + r.getSequenceNumber() + 

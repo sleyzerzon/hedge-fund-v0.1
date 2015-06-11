@@ -81,6 +81,8 @@ public class ChartistMain {
 				readChartToL1FromRTL2(	event.investment, event.tradeType, samplr,
 										TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
 										event.source, event.timing);
+				
+				TimeParser.wait(1);
 				lastQueryStamp = TimeParser.getTimestampNow(); 
 	
 			}
