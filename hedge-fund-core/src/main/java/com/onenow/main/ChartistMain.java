@@ -82,7 +82,7 @@ public class ChartistMain {
 										TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
 										event.source, event.timing);
 				
-				TimeParser.wait(1);
+				TimeParser.wait(1); // pace queries
 				lastQueryStamp = TimeParser.getTimestampNow(); 
 	
 			}

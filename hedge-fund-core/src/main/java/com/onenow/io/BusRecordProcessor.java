@@ -86,9 +86,9 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
                 
             } catch (Exception e) {
             	String log = 	"Skipping record. Unable to parse record into: " + recordType + 
-            				". Partition Key: " + r.getPartitionKey() + 
-            				". Sequence Number: " + r.getSequenceNumber() + 
-            				e;
+            					". Partition Key: " + r.getPartitionKey() + 
+            					". Sequence Number: " + r.getSequenceNumber() + 
+            					e.toString();
             	Watchr.log(Level.SEVERE, log);
                 continue;
             }

@@ -46,8 +46,12 @@ public static InfluxDB dbConnect() {
 			Watchr.log(Level.INFO, "CONNECTING TO TSDB...", "\n", "");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
 			db = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
-													tsdbService.user, tsdbService.pass);
-			dbCreate();	
+											tsdbService.user, tsdbService.pass);
+//			InfluxDBClient dbPrice = db.InfluxDBClient(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
+//												tsdbService.user, tsdbService.pass,
+//												DBname.PRICE.toString());
+
+			dbCreateAndConnect();	
 		} catch (Exception e) {
 			tryToConnect = true;
 			Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO TSDB: ", "\n", "");
@@ -63,10 +67,11 @@ public static InfluxDB dbConnect() {
 	return db;
 }
 
-private static void dbCreate() {
+private static void dbCreateAndConnect() {
 	try {
 		influxDB.createDatabase(DBname.PRICE.toString());
 		influxDB.createDatabase(DBname.SIZE.toString());
+		
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
 		// e.printStackTrace();
@@ -78,11 +83,14 @@ public static void writePrice(Event event) {
 	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
-	.values(event.time*1000, event.price)
+	// iclient.write_points(json_body, time_precision='ms')
+	// time*1000
+	.values(event.time, event.price)  // precision in seconds
 	.build();
 
 	Long before = TimeParser.getTimestampNow();
 	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+	// time_precision='ms'
 	Long after = TimeParser.getTimestampNow();
 
 	Watchr.log(Level.INFO, 	"TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + 
@@ -250,7 +258,7 @@ public static void writeSize(Event event) {
 	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
-	.values(event.time*1000, event.size)
+	.values(event.time, event.size) // precision in seconds
 	.build();
 
 	long before = TimeParser.getTimestampNow();
