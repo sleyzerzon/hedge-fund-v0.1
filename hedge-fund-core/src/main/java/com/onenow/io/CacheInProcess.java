@@ -7,6 +7,7 @@ import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
+import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
@@ -64,6 +65,11 @@ public class CacheInProcess {
 			}
 		}.start();
 
+		if(	broker.getStream().equals(StreamName.PRIMARY) ||
+			broker.getStream().equals(StreamName.STANDBY)) {
+			Watchr.log(Level.WARNING, "READY TO INVEST IN: " + (event.start-event.time) + "ms");
+		}
+		
 		return success;
 	}
 		
@@ -76,8 +82,8 @@ public class CacheInProcess {
 		// TODO: FAST WRITE TO RING		
 
 		// Write to Real-Time datastream
-		BusSystem.write(broker.getStream(), event);	
-		
+		BusSystem.write(broker.getStream(), event);
+						
 	}
 
 

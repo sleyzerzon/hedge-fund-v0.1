@@ -96,7 +96,7 @@ public static void writePrice(final Event event) {
 		// time_precision='ms'
 		Long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(Level.INFO, 	"TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + 
+		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE.toString() + " " + 
 								event.toString() + " " +  
 								"ELAPSED WRITE " + (after-before) + "ms " +
 								"ELAPSED TOTAL " + (after-event.start) + "ms ",
@@ -272,8 +272,7 @@ public static void writeSize(final Event event) {
 		influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
 		long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(	Level.INFO, "TSDB WRITE SIZE: " + 
-					DBname.SIZE.toString() + " " + 
+		Watchr.log(	Level.INFO, "TSDB WRITE: " + DBname.SIZE.toString() + " " + 
 					event.toString() + " " +  
 					"ELAPSED WRITE " + (after-before) + "ms " +
 					"ELAPSED TOTAL " + (after-event.start) + "ms ",
