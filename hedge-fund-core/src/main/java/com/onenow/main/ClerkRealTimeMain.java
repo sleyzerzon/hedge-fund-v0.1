@@ -39,10 +39,8 @@ public class ClerkRealTimeMain {
 			// handle as a transaction, both price+size write or nothing
 			try {
 				success = true;
-				databaseTimeSeries.writePrice(event.time, event.inv, event.tradeType, event.price,
-								event.source, event.timing);				
-				databaseTimeSeries.writeSize(	event.time, event.inv, event.tradeType, event.size,			
-								event.source, event.timing);
+				databaseTimeSeries.writePrice(event);				
+				databaseTimeSeries.writeSize(event);
 			} catch (Exception e) {
 				success = false;
 				retry = true;

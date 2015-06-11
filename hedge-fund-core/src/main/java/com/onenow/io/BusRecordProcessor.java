@@ -107,7 +107,9 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 				if(valuesMatch) {
 					Watchr.log(Level.WARNING, "Kinesis test PASS");
 					return;
-				} 
+				} else {
+					Watchr.log(Level.WARNING, "Kinesis test FAIL");
+				}
 				// Write the last one to cache to validate the stream works
 				CacheElastic.write(TestValues.KEY.toString(), (Object) record);
 			} catch (Exception e) {

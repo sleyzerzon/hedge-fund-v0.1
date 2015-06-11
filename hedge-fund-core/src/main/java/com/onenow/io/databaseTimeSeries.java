@@ -17,9 +17,13 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
+import com.onenow.data.EventRealTime;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
+
 import java.util.logging.Level;
+
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class databaseTimeSeries {
@@ -70,16 +74,23 @@ private static void dbCreate() {
 }
 
 // PRICE
-public static void writePrice(Long time, Investment inv, TradeType tradeType, Double price, InvDataSource source, InvDataTiming timing) {
-	String name = Lookup.getInvestmentKey(inv, tradeType, source, timing);
+public static void writePrice(EventRealTime event) {
+	String name = Lookup.getInvestmentKey(event.inv, event.tradeType, event.source, event.timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
-	.values(time, price)
+	.values(event.time, event.price)
 	.build();
-	String log = "TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + serie;
-	Watchr.log(Level.INFO, log, "\n", "");
 
+	Long before = TimeParser.getTimestampNow();
 	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+	Long after = TimeParser.getTimestampNow();
+
+	Watchr.log(Level.INFO, 	"TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + 
+							event.toString() + " " +  
+							"ELAPSED WRITE " + (after-before)/1000 + "seconds " +
+							"ELAPSED TOTAL " + (after-event.start)/1000 + "seconds ",
+							"\n", "");
+
 }
 
 public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate samplingRate,
@@ -239,16 +250,24 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 
 
 // SIZE
-public static void writeSize(Long time, Investment inv, TradeType tradeType, Integer size, InvDataSource source, InvDataTiming timing) {
-	String name = Lookup.getInvestmentKey(inv, tradeType, source, timing);
+public static void writeSize(EventRealTime event) {
+	String name = Lookup.getInvestmentKey(event.inv, event.tradeType, event.source, event.timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
-	.values(time, size)
+	.values(event.time, event.size)
 	.build();
-	String log = "TSDB WRITE SIZE: " + DBname.SIZE.toString() + " " + serie;
-	Watchr.log(Level.INFO, log, "\n", "");
 
+	long before = TimeParser.getTimestampNow();
 	influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+	long after = TimeParser.getTimestampNow();
+
+	Watchr.log(	Level.INFO, "TSDB WRITE SIZE: " + 
+				DBname.SIZE.toString() + " " + 
+				event.toString() + " " +  
+				"ELAPSED WRITE " + (after-before)/1000 + "seconds " +
+				"ELAPSED TOTAL " + (after-event.start)/1000 + "seconds ",
+				"\n", "");
+
 }
 
 public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,

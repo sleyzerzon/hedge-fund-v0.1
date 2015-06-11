@@ -6,6 +6,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
+import com.onenow.util.TimeParser;
 
 public class EventRealTime {
 
@@ -20,6 +21,7 @@ public class EventRealTime {
 	public InvDataTiming timing;
 
 	public final String id = String.valueOf(UUID.randomUUID());
+	public final Long start = TimeParser.getTimestampNow();
 	
 	public EventRealTime() {
 		
@@ -46,7 +48,7 @@ public class EventRealTime {
 	
 	public String toString() {
 		String s = "\n";
-		s = s + "-id: " + id + "\n";
+		s = s + "- id: " + id + "\n";
 		s = s + "- time: " + time + "\n";
 		s = s + "- inv: " + inv.toString() + "\n";
 		s = s + "- tradeType: " + tradeType.toString() + "\n";
