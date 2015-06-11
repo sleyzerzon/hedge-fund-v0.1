@@ -31,7 +31,8 @@ public class ChartistMain {
 
 	private static HashMap<String, Chart>		charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
-	public static Long lastQueryStamp = (long) 0;
+	
+	private static HashMap<SamplingRate, Long> lastQueryStamp = new HashMap<SamplingRate, Long>();
 	
 	/**
 	 * Pre-fetches to L1 cache the chart analysis, based on the latest Real-Time data 
@@ -66,27 +67,40 @@ public class ChartistMain {
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
-	public static void prefetchCharts(EventRealTime event) {
-		
-		Long elapsedTime = TimeParser.getTimestampNow()-lastQueryStamp;
-		Watchr.log(Level.WARNING, "ELAPSED " + elapsedTime);
-		
-		if( elapsedTime > 10000 ) {
+	public static void prefetchCharts(EventRealTime event) {		
 			
-			for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
-				
-		    	Watchr.log(Level.INFO, "@@@@@@@@@@ PRE-FETCH SAMPLING: " + samplr, "\n", "");
-	
-				String today = TimeParser.getTodayDashed();
-				readChartToL1FromRTL2(	event.investment, event.tradeType, samplr,
-										TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
-										event.source, event.timing);
-				
-				TimeParser.wait(1); // pace queries
-				lastQueryStamp = TimeParser.getTimestampNow(); 
-	
-			}
+		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
+
+			prefetchPacedCharts(event, samplr);
 		}		
+	}
+
+	private static void prefetchPacedCharts(EventRealTime event, SamplingRate samplr) {
+		
+		Long lastStamp = getLastStamp(samplr);
+		Long elapsedTime = TimeParser.getTimestampNow()-lastStamp;
+		Watchr.log(Level.WARNING, "ELAPSED " + elapsedTime + " FOR " + samplr);
+
+		if( elapsedTime > 10000 ) {
+
+			Watchr.log(Level.INFO, "@@@@@@@@@@ PRE-FETCH SAMPLING: " + samplr, "\n", "");
+
+			String today = TimeParser.getTodayDashed();
+			readChartToL1FromRTL2(	event.investment, event.tradeType, samplr,
+									TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
+									event.source, event.timing);
+			
+			lastQueryStamp.put(samplr, TimeParser.getTimestampNow()); 
+
+		}
+	}
+
+	private static Long getLastStamp(SamplingRate samplr) {
+		Long lastStamp = lastQueryStamp.get(samplr);
+		if(lastStamp==null) {
+			lastStamp = (long) 0;
+		}
+		return lastStamp;
 	}
 	
 	/**

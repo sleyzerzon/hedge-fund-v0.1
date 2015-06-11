@@ -79,26 +79,30 @@ private static void dbCreateAndConnect() {
 }
 
 // PRICE
-public static void writePrice(Event event) {
+public static void writePrice(final Event event) {
 	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
-	Serie serie = new Serie.Builder(name)
+	final Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	// iclient.write_points(json_body, time_precision='ms')
 	// time*1000
 	.values(event.time, event.price)  // precision in seconds
 	.build();
 
-	Long before = TimeParser.getTimestampNow();
-	influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
-	// time_precision='ms'
-	Long after = TimeParser.getTimestampNow();
+	new Thread () {
+		@Override public void run () {
 
-	Watchr.log(Level.INFO, 	"TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + 
-							event.toString() + " " +  
-							"ELAPSED WRITE " + (after-before) + "ms " +
-							"ELAPSED TOTAL " + (after-event.start) + "ms ",
-							"\n", "");
-
+		Long before = TimeParser.getTimestampNow();
+		influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+		// time_precision='ms'
+		Long after = TimeParser.getTimestampNow();
+	
+		Watchr.log(Level.INFO, 	"TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + 
+								event.toString() + " " +  
+								"ELAPSED WRITE " + (after-before) + "ms " +
+								"ELAPSED TOTAL " + (after-event.start) + "ms ",
+								"\n", "");
+		}
+	}.start();
 }
 
 public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate samplingRate,
@@ -254,23 +258,28 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 
 
 // SIZE
-public static void writeSize(Event event) {
+public static void writeSize(final Event event) {
 	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
-	Serie serie = new Serie.Builder(name)
+	final Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(event.time, event.size) // precision in seconds
 	.build();
 
-	long before = TimeParser.getTimestampNow();
-	influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
-	long after = TimeParser.getTimestampNow();
+	new Thread () {
+		@Override public void run () {
 
-	Watchr.log(	Level.INFO, "TSDB WRITE SIZE: " + 
-				DBname.SIZE.toString() + " " + 
-				event.toString() + " " +  
-				"ELAPSED WRITE " + (after-before) + "ms " +
-				"ELAPSED TOTAL " + (after-event.start) + "ms ",
-				"\n", "");
+		long before = TimeParser.getTimestampNow();
+		influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+		long after = TimeParser.getTimestampNow();
+	
+		Watchr.log(	Level.INFO, "TSDB WRITE SIZE: " + 
+					DBname.SIZE.toString() + " " + 
+					event.toString() + " " +  
+					"ELAPSED WRITE " + (after-before) + "ms " +
+					"ELAPSED TOTAL " + (after-event.start) + "ms ",
+					"\n", "");
+		}
+	}.start();
 
 }
 
