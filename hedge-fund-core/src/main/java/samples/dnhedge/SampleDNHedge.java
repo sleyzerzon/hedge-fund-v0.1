@@ -126,9 +126,9 @@ public class SampleDNHedge extends SimpleWrapper {
                /*
                 * Store underConId if needed
                 */
-               if (m_underConId == 0) {
-                  m_underConId  = contractDetails.contract().conid(); 
-               }
+//               if (m_underConId == 0) {
+//                  m_underConId  = contractDetails.contract().conid(); 
+//               }
 
                consoleMsg("using " + m_underConId + " for hedging");
 

@@ -1,6 +1,7 @@
 package com.onenow.instrument;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
@@ -8,6 +9,7 @@ import com.onenow.execution.Contract;
 import com.onenow.research.Chart;
 import com.onenow.risk.Reward;
 import com.onenow.risk.Risk;
+import com.onenow.util.TimeParser;
 
 public class Investment {
 
@@ -19,6 +21,8 @@ public class Investment {
 	
 	HashMap<SamplingRate, Chart> charts = new HashMap<SamplingRate, Chart>();
 	
+	public final String id = String.valueOf(UUID.randomUUID());
+	public final Long start = TimeParser.getTimestampNow();
 	
 	// CONSTRUCTOR
 	public Investment() {
@@ -47,7 +51,9 @@ public class Investment {
 	// PRINT:
 	public String toString() {
 		String s = "";
-		s = getUnder().toString() + "-" + getInvType();
+		s = s + "- id " + id.toString() + "\n"; 
+		s = s + "-start " + start.toString() + "\n";
+		s = s + getUnder().toString() + "-" + getInvType();
 		return s;
 	}
 	

@@ -59,7 +59,7 @@ public class ClerkRealTimeMain {
 			}
 		}
 		if(retry) {
-			Watchr.log(Level.INFO, "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.investment.toString());
+			Watchr.log(Level.WARNING, "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.investment.toString());
 		}
 	}
 

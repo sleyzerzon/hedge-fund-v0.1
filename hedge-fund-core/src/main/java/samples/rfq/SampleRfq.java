@@ -209,9 +209,13 @@ public class SampleRfq extends SimpleWrapper {
 
                int legId = reqId - 1;
 
+//               ComboLeg comboLeg = new ComboLeg(
+//                  contractDetails.contract().conid(), /* ratio */ 1,
+//                  (reqId == 1 ? "BUY" : "SELL"), m_contract.exchange(), 0);
+
                ComboLeg comboLeg = new ComboLeg(
-                  contractDetails.contract().conid(), /* ratio */ 1,
-                  (reqId == 1 ? "BUY" : "SELL"), m_contract.exchange(), 0);
+                       0, /* ratio */ 1,
+                       (reqId == 1 ? "BUY" : "SELL"), m_contract.exchange(), 0);
 
                m_contract.comboLegs().set(legId, comboLeg);
 
@@ -323,8 +327,8 @@ public class SampleRfq extends SimpleWrapper {
                consoleMsg("using " + m_frontMonthFuture.conid() +
                   " for hedging");
 
-               m_contract.underComp().conid(m_frontMonthFuture.conid());
-
+//               m_contract.underComp().conid(m_frontMonthFuture.conid());
+//
                /*
                 * And finally submit RFQ
                 */
