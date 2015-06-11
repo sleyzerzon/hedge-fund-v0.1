@@ -109,6 +109,7 @@ public class BusSystem {
 	}
 
 	public static void write(StreamName streamName, Object objToSend) {
+		createStreamIfNotExists(streamName);
 		getKinesis().sendObject(objToSend, streamName);
 	}
 		
