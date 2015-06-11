@@ -3,15 +3,14 @@ package com.onenow.data;
 import java.util.UUID;
 
 import com.onenow.instrument.Investment;
+import com.onenow.util.TimeParser;
 
-public class EventHistoryRequest {
+public class EventHistoryRequest extends Event {
 
 	public static Investment investment;
 	public static String toDashedDate;
 	public static HistorianConfig config;
 	
-	public final String id = String.valueOf(UUID.randomUUID());
-
 	public EventHistoryRequest() {
 		
 	}

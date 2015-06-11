@@ -1,27 +1,11 @@
 package com.onenow.data;
 
-import java.util.UUID;
-
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.util.TimeParser;
 
-public class EventRealTime {
-
-	public Long time;
-	public Investment inv;
-	public TradeType tradeType; 
-
-	public Double price;
-	public Integer size;
-	
-	public InvDataSource source;
-	public InvDataTiming timing;
-
-	public final String id = String.valueOf(UUID.randomUUID());
-	public final Long start = TimeParser.getTimestampNow();
+public class EventRealTime extends Event {
 	
 	public EventRealTime() {
 		
@@ -38,7 +22,7 @@ public class EventRealTime {
 	public EventRealTime(	Long time, Investment inv, TradeType tradeType, Double price, int size,
 					InvDataSource source, InvDataTiming timing) {
 		this.time = time;
-		this.inv = inv;
+		this.investment = inv;
 		this.tradeType = tradeType;
 		this.price = price;
 		this.size = size;
@@ -50,7 +34,7 @@ public class EventRealTime {
 		String s = "\n";
 		s = s + "- id: " + id + "\n";
 		s = s + "- time: " + time + "\n";
-		s = s + "- inv: " + inv.toString() + "\n";
+		s = s + "- inv: " + investment.toString() + "\n";
 		s = s + "- tradeType: " + tradeType.toString() + "\n";
 		s = s + "- price: " + price + "\n";
 		s = s + "- size: " + size + "\n";

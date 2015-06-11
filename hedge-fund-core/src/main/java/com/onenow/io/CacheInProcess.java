@@ -36,7 +36,7 @@ public class CacheInProcess {
 	// REAL-TIME from broker
 	public boolean writeEventRT(final EventRealTime event) {
 
-		String key = Lookup.getInvestmentKey(	event.inv, event.tradeType,
+		String key = Lookup.getInvestmentKey(	event.investment, event.tradeType,
 												event.source, event.timing);
 		
 		boolean success = false;

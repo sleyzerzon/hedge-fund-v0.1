@@ -44,7 +44,7 @@ public class ClerkRealTimeMain {
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.time + " " + event.inv.toString());	
+				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.time + " " + event.investment.toString());	
 				e.printStackTrace();
 				
 				try {
@@ -53,7 +53,7 @@ public class ClerkRealTimeMain {
 			}
 		}
 		if(retry) {
-			Watchr.log(Level.INFO, "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.inv.toString());
+			Watchr.log(Level.INFO, "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.time + " " + event.investment.toString());
 		}
 	}
 

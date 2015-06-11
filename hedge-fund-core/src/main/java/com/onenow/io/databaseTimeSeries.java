@@ -17,7 +17,9 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
+import com.onenow.data.EventHistory;
 import com.onenow.data.EventRealTime;
+import com.onenow.data.Event;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 
@@ -74,11 +76,11 @@ private static void dbCreate() {
 }
 
 // PRICE
-public static void writePrice(EventRealTime event) {
-	String name = Lookup.getInvestmentKey(event.inv, event.tradeType, event.source, event.timing);
+public static void writePrice(Event event) {
+	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
-	.values(event.time, event.price)
+	.values(event.time*1000, event.price)
 	.build();
 
 	Long before = TimeParser.getTimestampNow();
@@ -87,8 +89,8 @@ public static void writePrice(EventRealTime event) {
 
 	Watchr.log(Level.INFO, 	"TSDB WRITE PRICE: " + DBname.PRICE.toString() + " " + 
 							event.toString() + " " +  
-							"ELAPSED WRITE " + (after-before)/1000 + "seconds " +
-							"ELAPSED TOTAL " + (after-event.start)/1000 + "seconds ",
+							"ELAPSED WRITE " + (after-before) + "ms " +
+							"ELAPSED TOTAL " + (after-event.start) + "ms ",
 							"\n", "");
 
 }
@@ -250,11 +252,11 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 
 
 // SIZE
-public static void writeSize(EventRealTime event) {
-	String name = Lookup.getInvestmentKey(event.inv, event.tradeType, event.source, event.timing);
+public static void writeSize(Event event) {
+	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
 	Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
-	.values(event.time, event.size)
+	.values(event.time*1000, event.size)
 	.build();
 
 	long before = TimeParser.getTimestampNow();
@@ -264,8 +266,8 @@ public static void writeSize(EventRealTime event) {
 	Watchr.log(	Level.INFO, "TSDB WRITE SIZE: " + 
 				DBname.SIZE.toString() + " " + 
 				event.toString() + " " +  
-				"ELAPSED WRITE " + (after-before)/1000 + "seconds " +
-				"ELAPSED TOTAL " + (after-event.start)/1000 + "seconds ",
+				"ELAPSED WRITE " + (after-before) + "ms " +
+				"ELAPSED TOTAL " + (after-event.start) + "ms ",
 				"\n", "");
 
 }

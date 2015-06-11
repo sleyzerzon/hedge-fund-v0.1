@@ -2,9 +2,8 @@ package com.onenow.data;
 
 import java.util.UUID;
 
-public class EventStreaming {
+public class EventStreaming extends Event {
 
-	public final String id = String.valueOf(UUID.randomUUID());
 
 	public EventStreaming() {
 		

@@ -1,5 +1,8 @@
 package com.onenow.data;
 
-public class EventStreamingRequest {
+public class EventStreamingRequest extends Event {
 
+	public EventStreamingRequest() {
+		
+	}
 }

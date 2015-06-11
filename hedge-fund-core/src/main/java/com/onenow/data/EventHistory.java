@@ -9,15 +9,15 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
+import com.onenow.util.TimeParser;
 
-public class EventHistory {
+public class EventHistory extends Event {
 	
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
 
 	// meta
 	private int reqId = 0;
-	// time
-	public final long time;
+
 	// candle
 	public final double high;
 	public final double low;
@@ -25,16 +25,8 @@ public class EventHistory {
 	public final double close;
 	// other
 	public final double wap;
-	public final long volume;
 	public final int count;
-	// added
-	public Investment investment;
-	public TradeType tradeType;
-	public InvDataSource source;
-	public InvDataTiming timing;
 	
-	public final String id = String.valueOf(UUID.randomUUID());
-
 	
 //	public EventHistory() {
 //	
@@ -42,7 +34,7 @@ public class EventHistory {
 
 	// TODO: what time zone is this time?
 	public EventHistory( 	int reqId, 
-							long time, double high, double low, double open, double close, double wap, long volume, int count) {
+							long time, double high, double low, double open, double close, double wap, int size, int count) {
 		
 		this.reqId = reqId;
 		this.time = time;
@@ -51,7 +43,7 @@ public class EventHistory {
 		this.open = open;
 		this.close = close;
 		this.wap = wap;
-		this.volume = volume;
+		this.size = size;
 		this.count = count;
 	}
 	
