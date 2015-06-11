@@ -13,6 +13,7 @@ import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
@@ -36,6 +37,7 @@ public class HistorianMain {
 	
 	public static void main(String[] args) {
 		
+		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
 	    // get ready to loop

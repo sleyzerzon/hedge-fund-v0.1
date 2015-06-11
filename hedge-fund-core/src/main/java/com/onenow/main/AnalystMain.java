@@ -7,12 +7,14 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.onenow.alpha.WordCount;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.SysProperties;
 import com.onenow.util.Watchr;
 
 public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 
+		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 		
 		Watchr.log(Level.INFO, "checking");

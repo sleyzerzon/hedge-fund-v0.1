@@ -10,6 +10,7 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
 import com.onenow.io.databaseTimeSeries;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.SysProperties;
 import com.onenow.util.Watchr;
 
 public class ClerkHistoryMain {
@@ -20,6 +21,7 @@ public class ClerkHistoryMain {
 	 */
 	public static void main(String[] args) {
 
+		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
 		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime();

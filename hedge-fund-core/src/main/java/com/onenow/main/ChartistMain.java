@@ -23,6 +23,7 @@ import com.onenow.io.databaseTimeSeries;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
@@ -37,6 +38,7 @@ public class ChartistMain {
 	 */
 	public static void main(String[] args) {
 
+		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
 		testCache();

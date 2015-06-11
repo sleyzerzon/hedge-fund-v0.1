@@ -6,11 +6,13 @@ import com.onenow.test.TestDatabase;
 import com.onenow.test.TestFinance;
 import com.onenow.test.TestUtil;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.SysProperties;
 
 public class TestMain {
 
 	public static void main(String[] args) {
 
+		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
 		DatabaseSystemActivityImpl logDB = new DatabaseSystemActivityImpl();

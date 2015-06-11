@@ -32,6 +32,7 @@ import com.onenow.admin.InitAmazon;
 import com.onenow.data.DynamoDBUtils;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.SampleUtils;
+import com.onenow.util.SysProperties;
 import com.onenow.web.GetCountsServlet;
 
 /**
@@ -48,6 +49,7 @@ public class WebServerMain {
      */
     public static void main(String[] args) throws Exception {
     	
+		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
     	
         if (args.length != 4) {

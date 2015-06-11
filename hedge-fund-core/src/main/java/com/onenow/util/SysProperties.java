@@ -20,7 +20,7 @@ public class SysProperties {
 	//	    	6. thrown - a string representing the throwable associated with the log record and its backtrace beginning with a newline character, if any; otherwise, an empty string.
 	public static void setLogProperties() {
 	    Properties properties = new Properties(System.getProperties());
-	    properties.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc] --%4$s-- %5$s %n");  // "%4$s: %5$s [%1$tc]%n"
+	    properties.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc] --%4$s-- %5$s %6$s %n");  // "%4$s: %5$s [%1$tc]%n"
 	    System.setProperties(properties);
 	    System.out.println("LOG FORMAT: " + System.getProperty("java.util.logging.SimpleFormatter.format"));	
 	}
