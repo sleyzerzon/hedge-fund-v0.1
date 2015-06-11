@@ -26,6 +26,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 
 	Class<T> recordType;
 	
+	// TODO: https://code.google.com/p/google-gson/
     // Our JSON object mapper for deserializing records
     private final ObjectMapper jsonMapper = new ObjectMapper();
     

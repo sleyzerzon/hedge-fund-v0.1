@@ -55,7 +55,7 @@ public class Watchr {
 			// e.printStackTrace();
 		}
 		
-		s = " " + ipLog + "\t" + caller + "     "+ upperCase;
+		s = " " + ipLog + " " + caller + " "+ upperCase;
 
 		return s;
 	}
@@ -96,22 +96,22 @@ public class Watchr {
 		
 
 		if(!caller8.equals("")){
-			caller = caller + caller8 + " -> ";
+			caller = caller + caller8 + "->";
 		}
 		if(!caller7.equals("")){
-			caller = caller + caller7 + " -> ";
+			caller = caller + caller7 + "->";
 		}
 		if(!caller6.equals("")){
-			caller = caller + caller6 + " -> ";
+			caller = caller + caller6 + "->";
 		}
 		if(!caller5.equals("")){
-			caller = caller + caller5 + " -> ";
+			caller = caller + caller5 + "->";
 		}
 		if(!caller4.equals("")){
 			caller = caller + caller4;
 		}
 		
-		return caller = caller + " ==> ";
+		return caller = "[" + caller + "]==> ";
 	}
 
 	private static void fanoutLog(Level level, String message, String formattedMessage) {
