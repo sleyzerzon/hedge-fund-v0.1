@@ -55,7 +55,7 @@ public class Watchr {
 			// e.printStackTrace();
 		}
 		
-		s = " " + ipLog + " " + caller + " "+ upperCase;
+		s = " " + ipLog + " " + caller + " "+ upperCase.replace("\n", "");;
 
 		return s;
 	}
