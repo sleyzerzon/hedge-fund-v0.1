@@ -147,6 +147,8 @@ public class BusSystem {
 		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + kinesysWorker.toString() + " " + 
 								"for kinesis: " + getKinesis());
 		
+		// TODO: start only when the stream is created & active
+		// isActive(kinesis.describeStream(streamName)
 		runProcessor(kinesysWorker);
 		
         return true;
@@ -155,7 +157,7 @@ public class BusSystem {
 
 	private static boolean runProcessor(Worker kinesysWorker) {
 		try {
-			Watchr.log(Level.INFO, "Running kinesis read worker: " + kinesysWorker.toString());
+			Watchr.log(Level.INFO, "Running kinesis read worker: " + kinesysWorker.toString());			
             kinesysWorker.run();
         } catch (Throwable t) {
         	String log = "Caught throwable while processing data." + t;
