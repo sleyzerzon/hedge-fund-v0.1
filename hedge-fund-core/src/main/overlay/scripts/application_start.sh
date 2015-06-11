@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-export set JAVA_OPTS="-Xms256m -Xmx512m"
+export set JAVA_OPTS="-Xms256m -Xmx1024m"
 
 printenv
 

@@ -144,9 +144,8 @@ public static List<Serie> queryPrice(String dbName, String serieName, SamplingRa
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		Watchr.log(Level.INFO, query);
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
-		Watchr.log(Level.INFO, series.toString());
+		Watchr.log(Level.INFO, query + " RETURNED " + series.toString());
 	} catch (Exception e) {
 		e.printStackTrace(); // some series don't exist or have data 
 	}
@@ -240,10 +239,7 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 		s = row.get(col).toString();
 	} catch (Exception e) {
 		s = "-1.0";
-		String log = "TSDB NULL query result" + "row " + row + " " + row.get(col);
-		Watchr.log(Level.SEVERE, log);
-		// TODO: something to do for defaults?
-		// e.printStackTrace();
+		Watchr.log(Level.WARNING, "TSDB NULL query result for ROW " + row + " " + row.get(col));
 	}
 	return s;
 }
@@ -317,9 +313,8 @@ public static List<Serie> querySize(String dbName, String serieName, SamplingRat
 					"time < " + "'" + toDate + "' ";
 					
 	try {
-		Watchr.log(Level.INFO, query);
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
-		Watchr.log(Level.INFO, series.toString());
+		Watchr.log(Level.INFO, query + " RETURNED " + series.toString());
 	} catch (Exception e) {
 		e.printStackTrace(); // some time series don't exist or have data
 	}

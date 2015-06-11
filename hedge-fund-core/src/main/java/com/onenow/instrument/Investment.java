@@ -52,8 +52,8 @@ public class Investment {
 	public String toString() {
 		String s = "";
 		s = s + "- id " + id.toString() + "\n"; 
-		s = s + "-start " + start.toString() + "\n";
-		s = s + getUnder().toString() + "-" + getInvType();
+		s = s + "- start " + start.toString() + "\n";
+		s = s + getUnder().toString() + "- " + getInvType();
 		return s;
 	}
 	

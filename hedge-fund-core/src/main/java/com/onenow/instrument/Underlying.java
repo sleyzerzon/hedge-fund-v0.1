@@ -13,9 +13,10 @@ public class Underlying {
 	}
 
 	public String toString() {
-		String string = getTicker();
+		String s = "";
+		s = s + getTicker();
 		// System.out.println("Underlying: " + string);
-		return string;
+		return s;
 	}
 
 	public String getTicker() {
