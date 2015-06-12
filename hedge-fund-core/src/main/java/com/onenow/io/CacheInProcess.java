@@ -66,11 +66,8 @@ public class CacheInProcess {
 			}
 		}.start();
 
-		if(	broker.getStream().equals(StreamName.PRIMARY) ||
-			broker.getStream().equals(StreamName.STANDBY)) {
 			
-			RuntimeMetrics.notifyWallstLatency(TimeParser.getTimestampNow()-event.time);
-		}
+		RuntimeMetrics.notifyWallstLatency((Long) TimeParser.getTimestampNow()-event.time, broker.getStream());
 		
 		return success;
 	}
