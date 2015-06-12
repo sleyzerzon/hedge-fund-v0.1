@@ -16,6 +16,7 @@ import com.onenow.research.Chart;
 
 import java.util.logging.Level;
 
+import com.onenow.util.RuntimeMetrics;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
@@ -67,7 +68,8 @@ public class CacheInProcess {
 
 		if(	broker.getStream().equals(StreamName.PRIMARY) ||
 			broker.getStream().equals(StreamName.STANDBY)) {
-			Watchr.log(Level.WARNING, "READY TO INVEST IN: " + (event.start-event.time) + "ms");
+			
+			RuntimeMetrics.notifyWallstLatency(TimeParser.getTimestampNow()-event.time);
 		}
 		
 		return success;

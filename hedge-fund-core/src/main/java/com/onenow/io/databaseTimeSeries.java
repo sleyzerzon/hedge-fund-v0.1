@@ -251,7 +251,7 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 		s = row.get(col).toString();
 	} catch (Exception e) {
 		s = "-1.0";
-		Watchr.log(Level.WARNING, "TSDB NULL query result for ROW " + row + " " + row.get(col));
+		Watchr.log(Level.FINE, "TSDB NULL query result for ROW " + row + " " + row.get(col));
 	}
 	return s;
 }
