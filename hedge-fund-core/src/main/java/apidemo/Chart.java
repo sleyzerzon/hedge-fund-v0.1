@@ -10,19 +10,19 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
-import com.onenow.data.EventHistory;
+import com.onenow.data.EventActivityHistory;
 
 public class Chart extends JComponent {
 	private static final int width = 5;
 	private int height;
 	private double min;
 	private double max;
-	private final ArrayList<EventHistory> m_rows;
+	private final ArrayList<EventActivityHistory> m_rows;
 	private double m_current = 118;
 	
 	public void current( double v) { m_current = v; }
 	
-	public Chart(ArrayList<EventHistory> rows) {
+	public Chart(ArrayList<EventActivityHistory> rows) {
 		m_rows = rows;
 	}
 	
@@ -32,7 +32,7 @@ public class Chart extends JComponent {
 		max = getMax();
 	
 		int x = 1;
-		for (EventHistory bar : m_rows) {
+		for (EventActivityHistory bar : m_rows) {
 			int high = getY( bar.high );
 			int low = getY( bar.low ); 
 			int open = getY( bar.open );
@@ -74,7 +74,7 @@ public class Chart extends JComponent {
 	
 	private double getMin() {
 		double min = Double.MAX_VALUE;
-		for( EventHistory bar : m_rows) {
+		for( EventActivityHistory bar : m_rows) {
 			min = Math.min( min, bar.low );
 		}
 		return min;
@@ -82,7 +82,7 @@ public class Chart extends JComponent {
 	
 	private double getMax() {
 		double max = 0;
-		for( EventHistory bar : m_rows) {
+		for( EventActivityHistory bar : m_rows) {
 			max = Math.max( max, bar.high );
 		}
 		return max;

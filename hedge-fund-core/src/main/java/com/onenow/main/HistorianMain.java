@@ -3,7 +3,7 @@ package com.onenow.main;
 import java.util.List;
 import java.util.logging.Level;
 
-import com.onenow.data.EventHistoryRequest;
+import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
@@ -56,6 +56,8 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			run();
 			
+			TimeParser.wait(1); // pace
+			
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			count++;
@@ -75,27 +77,25 @@ public class HistorianMain {
  */
 	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate) {
 		
-		System.out.println("Cache Chart READ: L3 (augment data) "  + inv.toString());
+		// minimum number of price data points
+		int minPrices = 50;
 		
+		Watchr.log(Level.INFO, "Cache Chart READ: L3 (augment data) "  + inv.toString());
+		
+		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-		List<Candle> prices = databaseTimeSeries.readPriceFromDB(		inv, config.tradeType, config.sampling, 
-														TimeParser.getDateMinusDashed(toDashedDate, 1), toDashedDate, 
-														config.source, config.timing);
+		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
 
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
-		if (prices.size()<50) {	
+		if ( storedPrices.size()<minPrices ) {	
 
-			EventHistoryRequest req = new EventHistoryRequest(inv, toDashedDate, config);
-			
 			// TODO: SQS instead of call to broker
 
-			TimeParser.wait(5);
-			
 		} else {
-			// System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& HISTORIC L2 HIT:" + inv.toString() + "\n\n");
+			Watchr.log(Level.INFO, "HISTORIC L2 HIT:" + inv.toString(), "", "\n\n");
 		}
 	}
 

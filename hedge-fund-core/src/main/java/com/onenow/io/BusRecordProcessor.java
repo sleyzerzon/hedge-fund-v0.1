@@ -15,8 +15,8 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.constant.TradeType;
-import com.onenow.data.EventHistory;
-import com.onenow.data.EventRealTime;
+import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityRealtime;
 import com.onenow.instrument.Investment;
 import com.onenow.main.ChartistMain;
 import com.onenow.main.ClerkHistoryMain;
@@ -125,13 +125,13 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			}
 		}
 		
-		if(recordType.equals(EventHistory.class)) {
-			EventHistory event = (EventHistory) record;
+		if(recordType.equals(EventActivityHistory.class)) {
+			EventActivityHistory event = (EventActivityHistory) record;
 			ClerkHistoryMain.writeHistoryToL2(event);
 		}
 
-		if(recordType.equals(EventRealTime.class)) {			
-			EventRealTime event = (EventRealTime) record;
+		if(recordType.equals(EventActivityRealtime.class)) {			
+			EventActivityRealtime event = (EventActivityRealtime) record;
 			ClerkRealTimeMain.writeRealtimeRTtoL2(event);
 			if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
 				ChartistMain.prefetchCharts(event);				

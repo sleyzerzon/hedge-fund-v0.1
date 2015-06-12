@@ -4,7 +4,7 @@ import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.StreamName;
-import com.onenow.data.EventRealTime;
+import com.onenow.data.EventActivityRealtime;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
@@ -30,7 +30,7 @@ public class ClerkRealTimeMain {
 		
 	}
 	
-	public static void writeRealtimeRTtoL2(EventRealTime event) {
+	public static void writeRealtimeRTtoL2(EventActivityRealtime event) {
 	
 		boolean success = false;
 		boolean retry = false;

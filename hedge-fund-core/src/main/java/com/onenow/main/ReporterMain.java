@@ -10,6 +10,9 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
+import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventRequestHistory;
+import com.onenow.data.EventRequestRealtime;
 import com.onenow.data.InitMarket;
 import com.onenow.instrument.Investment;
 import com.onenow.io.Lookup;
@@ -52,23 +55,27 @@ public class ReporterMain {
 				writeInvestmentDayPriceIntoBucket(inv, bucket, fromDate, toDate);
 			}
 			toDate = TimeParser.getDateMinusDashed(toDate, 1);
+			
+			TimeParser.wait(1); // TODO: pace
 		}
 		S3.listObjects(bucket);
 	}
 
-	private static void writeInvestmentDayPriceIntoBucket(Investment inv,
-		Bucket bucket, String fromDate, String toDate) {
-		TradeType tradeType = TradeType.TRADED;
-		SamplingRate samplingRate = SamplingRate.SCALPMEDIUM;
-		InvDataSource source = InvDataSource.IB;  
-		InvDataTiming timing = InvDataTiming.REALTIME; 
+	private static void writeInvestmentDayPriceIntoBucket(Investment inv, Bucket bucket, String fromDashedDate, String toDashedDate) {
+		
+		
+		EventRequestRealtime request = new EventRequestRealtime(	InvDataSource.IB,
+																	InvDataTiming.REALTIME,
+																	SamplingRate.SCALPMEDIUM,
+																	TradeType.TRADED, 
+																	fromDashedDate, toDashedDate);
 		
 		try{	// some time series just don't exist or have data 			
 			
-			String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
-			String fileName = key+"-"+toDate;
+			String key = Lookup.getEventKey(request);
+			String fileName = key+"-"+toDashedDate;
 			Watchr.log(Level.INFO, "working on: " + fileName);
-			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);				
+			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(request);				
 			S3.createObject(bucket, series.toString(), fileName);
 			
 		} catch (Exception e) {

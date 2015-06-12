@@ -40,7 +40,7 @@ import com.ib.client.Types.MktDataType;
 import com.ib.client.Types.WhatToShow;
 import com.ib.controller.Instrument;
 import com.ib.controller.ScanCode;
-import com.onenow.data.EventHistory;
+import com.onenow.data.EventActivityHistory;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ApiController.IDeepMktDataHandler;
 import com.onenow.execution.ApiController.IHistoricalDataHandler;
@@ -389,7 +389,7 @@ public class MarketDataPanel extends JPanel {
 	// Pablo made public
 	public static class BarResultsPanel extends NewTabPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
 		final BarModel m_model = new BarModel();
-		final ArrayList<EventHistory> m_rows = new ArrayList<EventHistory>();
+		final ArrayList<EventActivityHistory> m_rows = new ArrayList<EventActivityHistory>();
 		final boolean m_historical;
 		final Chart m_chart = new Chart( m_rows);
 				
@@ -426,7 +426,7 @@ public class MarketDataPanel extends JPanel {
 			}
 		}
 
-		@Override public void historicalData(EventHistory bar, boolean hasGaps) {
+		@Override public void historicalData(EventActivityHistory bar, boolean hasGaps) {
 			m_rows.add( bar);
 		}
 		
@@ -434,7 +434,7 @@ public class MarketDataPanel extends JPanel {
 			fire();
 		}
 
-		@Override public void realtimeBar(EventHistory bar) {
+		@Override public void realtimeBar(EventActivityHistory bar) {
 			m_rows.add( bar); 
 			fire();
 		}
@@ -471,7 +471,7 @@ public class MarketDataPanel extends JPanel {
 			}
 
 			@Override public Object getValueAt(int rowIn, int col) {
-				EventHistory row = m_rows.get( rowIn);
+				EventActivityHistory row = m_rows.get( rowIn);
 				switch( col) {
 					case 0: return row.formattedTime();
 					case 1: return row.open;

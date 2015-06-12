@@ -9,6 +9,7 @@ import com.onenow.admin.NetworkConfig;
 
 public class Watchr {
 
+	// TODO: set logger level (info/finest...)
 	// http://www.vogella.com/tutorials/Logging/article.html
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	

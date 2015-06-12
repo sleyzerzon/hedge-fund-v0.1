@@ -35,7 +35,7 @@ import com.ib.controller.Group;
 import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
-import com.onenow.data.EventHistory;
+import com.onenow.data.EventActivityHistory;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
@@ -844,7 +844,7 @@ public class ApiController implements EWrapper {
 
 	// ----------------------------------------- Historical data handling ----------------------------------------
 	public interface IHistoricalDataHandler {
-		void historicalData(EventHistory bar, boolean hasGaps);
+		void historicalData(EventActivityHistory bar, boolean hasGaps);
 		void historicalDataEnd();
 	}
 
@@ -886,7 +886,7 @@ public class ApiController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				EventHistory bar = new EventHistory( 	reqId, 
+				EventActivityHistory bar = new EventActivityHistory( 	reqId, 
 														longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps);
 			}
@@ -897,7 +897,7 @@ public class ApiController implements EWrapper {
 
 	//----------------------------------------- Real-time bars --------------------------------------
 	public interface IRealTimeBarHandler {
-		void realtimeBar(EventHistory bar); // time is in seconds since epoch
+		void realtimeBar(EventActivityHistory bar); // time is in seconds since epoch
 	}
 
     public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, IRealTimeBarHandler handler) {
@@ -919,7 +919,7 @@ public class ApiController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			EventHistory bar = new EventHistory(reqId, time, high, low, open, close, wap, volume, count);
+			EventActivityHistory bar = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

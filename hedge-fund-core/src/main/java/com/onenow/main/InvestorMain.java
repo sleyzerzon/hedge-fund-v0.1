@@ -31,16 +31,16 @@ public class InvestorMain {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup(streamName.toString());
 		Watchr.log(Level.INFO, "Starting for STREAM: " + streamName);
-		
-		Kinesis.selfTest();
-		
-		if(	streamName.equals(StreamName.PRIMARY)) {
-		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 
+		BusWallStIB bus = new BusWallStIB(streamName);
+
+		Kinesis.selfTest();
+
+
+		if(	streamName.equals(StreamName.PRIMARY)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getTestPortfolio(), 
-																new BusWallStIB(streamName, Topology.LOCAL)); 
-
+																bus); 
 			broker.getLiveQuotes(); 			
 		}
 		
@@ -48,18 +48,16 @@ public class InvestorMain {
 		}
 
 		if(	streamName.equals(StreamName.REALTIME)) {
-		    String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
-
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getSamplePortfolio(), 
-																new BusWallStIB(streamName, Topology.LOCAL)); 
-
+																bus); 
 			broker.getLiveQuotes(); 			
 		}
 
 		if(streamName.equals(StreamName.HISTORY)) {
-			// Do historical queries from SQS
-			// broker.procesHistoricalQuotesRequests();
+			BrokerInteractive broker = new BrokerInteractive(	streamName, 
+																bus); 
+			broker.procesHistoricalQuotesRequests();
 		}
 
 		if(	streamName.equals(StreamName.STREAMING)) {

@@ -12,7 +12,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
-import com.onenow.data.EventHistoryRequest;
+import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
@@ -49,6 +49,13 @@ public class BrokerInteractive implements BrokerInterface  {
 		  this.streamName = StreamName.REALTIME;
 	  }
 	
+	  public BrokerInteractive(StreamName streamName, BusWallStIB bus) { 
+			this.streamName = streamName;
+			this.bus = bus;
+
+			bus.connectToServer();
+	  }
+	  
 	  /**
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
@@ -92,7 +99,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  while(true) {
 			  
 			  // get events from SQS
-			  EventHistoryRequest req = null;
+			  EventRequestHistory req = null;
 		  
 			  // get the history reference for the specific investment 
 			  QuoteHistory invHist = lookupInvHistory(	req.investment, req.config.tradeType, 
@@ -134,15 +141,13 @@ public class BrokerInteractive implements BrokerInterface  {
 		 * @param timing
 		 * @return
 		 */
-		private static QuoteHistory lookupInvHistory(	Investment inv, TradeType tradeType,
-												InvDataSource source, InvDataTiming timing) {
-			
-			String key = Lookup.getInvestmentKey(	inv, tradeType,
-													source, timing);
+	  	private static QuoteHistory lookupInvHistory(EventRequestHistory request) {
+	  		
+			String key = Lookup.getEventTimedKey(request);
 	
 			QuoteHistory invHist = history.get(key);
 			if(invHist==null) {
-				invHist = new QuoteHistory(inv, tradeType, source, timing);
+				invHist = new QuoteHistory(request);
 				history.put(key, invHist);			
 			}
 			return invHist;

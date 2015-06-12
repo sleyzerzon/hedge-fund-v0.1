@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.testng.annotations.Test;
 
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.data.EventRealTime;
+import com.onenow.data.EventActivityRealtime;
 import com.onenow.execution.BrokerInteractive;
 
 public class PriceSizeCacheTest {
@@ -13,7 +13,7 @@ public class PriceSizeCacheTest {
 	
 	CacheInProcess cache = new CacheInProcess(broker);
 
-	EventRealTime event = new EventRealTime();
+	EventActivityRealtime event = new EventActivityRealtime();
 	
   @Test
   // test for initialization of in process cache

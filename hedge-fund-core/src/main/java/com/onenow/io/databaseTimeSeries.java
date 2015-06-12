@@ -17,7 +17,10 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.data.Event;
+import com.onenow.data.EventActivity;
+import com.onenow.data.EventRequestHistory;
+import com.onenow.data.EventRequestRealtime;
+import com.onenow.data.EventRequest;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 
@@ -79,8 +82,8 @@ private static void dbCreateAndConnect() {
 }
 
 // PRICE
-public static void writePrice(final Event event) {
-	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
+public static void writePrice(final EventActivity event) {
+	String name = Lookup.getEventKey(event);
 	final Serie serie = new Serie.Builder(name)
 	.columns("time", "price")
 	// iclient.write_points(json_body, time_precision='ms')
@@ -99,32 +102,31 @@ public static void writePrice(final Event event) {
 		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE.toString() + " " + 
 								event.toString() + " " +  
 								"ELAPSED WRITE " + (after-before) + "ms " +
-								"ELAPSED TOTAL " + (after-event.start) + "ms ",
+								"ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
 		}
 	}.start();
 }
 
-public static List<Candle> readPriceFromDB(	Investment inv, TradeType tradeType, SamplingRate samplingRate,
-										String fromDate, String toDate,
-										InvDataSource source, InvDataTiming timing) {
 	
-		List<Candle> candles = new ArrayList<Candle>();
+	public static List<Candle> readPriceFromDB(EventRequest request) {
 		
-		String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
+		List<Candle> candles = null;
+				
+		String key = Lookup.getEventKey(request);
 
-		List<Serie> series = readPriceSeriesFromDB(key, samplingRate, fromDate, toDate);
+		List<Serie> series = readPriceSeriesFromDB(request);
 
 		candles = priceSeriesToCandles(series); 
-		
-		String log = "TSDB Cache Chart/Price READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Prices: " + candles.toString();
+		 
+		String log = "TSDB Cache Chart/Price READ: L1 HISTORY " + request.fromDashedDate + " " + request.toDashedDate + " " + " for " + key + " Prices: " + candles.toString();
 		Watchr.log(Level.INFO, log, "\n", "");
 
 		return candles;
 	}
 
-public static List<Serie> readPriceSeriesFromDB(String key, SamplingRate samplingRate, String fromDate, String toDate) {
-	List<Serie> series = queryPrice(DBname.PRICE.toString(), key, samplingRate, fromDate, toDate);
+public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
+	List<Serie> series = queryPrice(DBname.PRICE.toString(), request);
 	return series;
 }
 
@@ -137,18 +139,21 @@ public static List<Serie> readPriceSeriesFromDB(String key, SamplingRate samplin
  * @param toDate
  * @return
  */
-public static List<Serie> queryPrice(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
-	List<Serie> series = new ArrayList<Serie>();
+public static List<Serie> queryPrice(String dbName, EventRequest request) {
+	
+	String serieName = Lookup.getEventKey(request);
+
+	List<Serie> series = null;
 	 
 	String query = 	"SELECT " + getThoroughSelect("price") + " " + 						
 					"FROM " + "\"" + serieName + "\" " +
 					"GROUP BY " +
-						"time" + "(" + DataSampling.getGroupByTimeString(sampling) + ") " + 
+						"time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") " + 
 					// "FILL(0) " +
 					"WHERE " +
-					"time > " + "'" + fromDate + "' " + 
+					"time > " + "'" + request.fromDashedDate + "' " + 
 					"AND " +
-					"time < " + "'" + toDate + "' "; 
+					"time < " + "'" + request.toDashedDate + "' "; 
 					
 	// TODO: SELECT PERCENTILE(column_name, N) FROM series_name group by time(10m) ...
 	// TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
@@ -258,8 +263,8 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 
 
 // SIZE
-public static void writeSize(final Event event) {
-	String name = Lookup.getInvestmentKey(event.investment, event.tradeType, event.source, event.timing);
+public static void writeSize(final EventActivity event) {
+	String name = Lookup.getEventKey(event);
 	final Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
 	.values(event.time, event.size) // precision in seconds
@@ -275,26 +280,25 @@ public static void writeSize(final Event event) {
 		Watchr.log(	Level.INFO, "TSDB WRITE: " + DBname.SIZE.toString() + " " + 
 					event.toString() + " " +  
 					"ELAPSED WRITE " + (after-before) + "ms " +
-					"ELAPSED TOTAL " + (after-event.start) + "ms ",
+					"ELAPSED TOTAL " + (after-event.origin.start) + "ms ",
 					"\n", "");
 		}
 	}.start();
 
 }
 
-public static List<Integer> readSizeFromDB(	Investment inv, TradeType tradeType, SamplingRate sampling,
-										String fromDate, String toDate,
-										InvDataSource source, InvDataTiming timing) {
+public static List<Integer> readSizeFromDB(	EventRequest request) {
 	
 	List<Integer> sizes = new ArrayList<Integer>();
 	
-	String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
+	String key = Lookup.getEventKey(request);
 	
-	List<Serie> series = readSizeSeriesFromDB(key, sampling, fromDate, toDate);
+	String fromDashedDate = TimeParser.getDateMinusDashed(request.toDashedDate, 1);		
+	List<Serie> series = readSizeSeriesFromDB(key, request.sampling, fromDashedDate, request.toDashedDate);
 	
 	sizes = sizeSeriesToInts(series); 
 	
-	String log = "TSDB Cache Chart/Size READ: L1 " + fromDate + " " + toDate + " " + " for " + key + " Sizes: " + sizes.toString();
+	String log = "TSDB Cache Chart/Size READ: L1 SIZE" + fromDashedDate + " " + request.toDashedDate + " " + " for " + key + " Sizes: " + sizes.toString();
 	Watchr.log(Level.INFO, log, "\n", "");
 
 	return sizes;

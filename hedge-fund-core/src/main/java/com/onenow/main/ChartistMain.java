@@ -12,7 +12,9 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
-import com.onenow.data.EventRealTime;
+import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventRequest;
+import com.onenow.data.EventRequestRealtime;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
@@ -67,7 +69,7 @@ public class ChartistMain {
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
-	public static void prefetchCharts(EventRealTime event) {		
+	public static void prefetchCharts(EventActivityRealtime event) {		
 			
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 
@@ -75,22 +77,24 @@ public class ChartistMain {
 		}		
 	}
 
-	private static void prefetchPacedCharts(EventRealTime event, SamplingRate samplr) {
+	private static void prefetchPacedCharts(EventActivityRealtime event, SamplingRate samplingRate) {
 		
-		Long lastStamp = getLastStamp(samplr);
+		Long lastStamp = getLastStamp(samplingRate);
 		Long elapsedTime = TimeParser.getTimestampNow()-lastStamp;
-		Watchr.log(Level.WARNING, "ELAPSED " + elapsedTime + " FOR " + samplr);
+		Watchr.log(Level.WARNING, "ELAPSED " + elapsedTime + " FOR " + samplingRate);
 
 		if( elapsedTime > 10000 ) {
 
-			Watchr.log(Level.INFO, "@@@@@@@@@@ PRE-FETCH SAMPLING: " + samplr, "\n", "");
+			Watchr.log(Level.INFO, "@@@@@@@@@@ PRE-FETCH SAMPLING: " + samplingRate, "\n", "");
 
-			String today = TimeParser.getTodayDashed();
-			readChartToL1FromRTL2(	event.investment, event.tradeType, samplr,
-									TimeParser.getDateMinusDashed(today, 1), today, // TODO: From/To Date actual
-									event.source, event.timing);
+			String toDashedDate = TimeParser.getTodayDashed();
+			String fromDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
+
+			EventRequestRealtime request = new EventRequestRealtime(event.source, event.timing, samplingRate, event.tradeType, fromDate, toDashedDate);
 			
-			lastQueryStamp.put(samplr, TimeParser.getTimestampNow()); 
+			readChartToL1FromRTL2(request);
+			
+			lastQueryStamp.put(samplingRate, TimeParser.getTimestampNow()); 
 
 		}
 	}
@@ -115,32 +119,24 @@ public class ChartistMain {
 	 * @param timing
 	 * @return
 	 */
-	private static Chart readChartToL1FromRTL2(	Investment inv, TradeType tradeType, SamplingRate samplingRate, 
-												String fromDate, String toDate,
-												InvDataSource source, InvDataTiming timing) {		
+	private static Chart readChartToL1FromRTL2(EventRequest request) {		
 		Chart chart = new Chart();
 		
 		try{	// some time series just don't exist or have data 			
 			
-			List<Candle> prices = databaseTimeSeries.readPriceFromDB(	inv, tradeType, samplingRate, 
-																		fromDate, toDate,
-																		source, timing);
-			List<Integer> sizes = databaseTimeSeries.readSizeFromDB(	inv, tradeType, samplingRate, 
-																		fromDate, toDate,
-																		source, timing);
+			List<Candle> prices = databaseTimeSeries.readPriceFromDB(request);
+			List<Integer> sizes = databaseTimeSeries.readSizeFromDB(request);
 
 			chart.setPrices(prices);
 			chart.setSizes(sizes);
 			
 			// keep last chart in L0 memory (with data)
-			String key = Lookup.getChartKey(	inv, tradeType, samplingRate, 
-												fromDate, toDate,
-												source, timing);
+			String key = Lookup.getChartKey(request);
 
 			// store in process memory
 			charts.put(key, chart);			
 			// Write to ElastiCache
-			CacheElastic.write(key, (Object) chart);
+			CacheElastic.write(key, (Object) chart); // TODO: CloudWatch
 				
 			CacheElastic.read(key);
 

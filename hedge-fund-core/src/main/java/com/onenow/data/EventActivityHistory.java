@@ -11,7 +11,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.util.TimeParser;
 
-public class EventHistory extends Event {
+public class EventActivityHistory extends EventActivity {
 	
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
 
@@ -23,6 +23,10 @@ public class EventHistory extends Event {
 	public final double low;
 	public final double open;
 	public final double close;
+	
+	// weight
+	public final Long volume; 
+
 	// other
 	public final double wap;
 	public final int count;
@@ -33,18 +37,23 @@ public class EventHistory extends Event {
 //	}
 
 	// TODO: what time zone is this time?
-	public EventHistory( 	int reqId, 
-							long time, double high, double low, double open, double close, double wap, long size, int count) {
+	public EventActivityHistory( 	int reqId, 
+							long time, double high, double low, double open, double close, double wap, long volume, int count) {
 		
 		this.reqId = reqId;
-		this.time = time;
 		this.high = high;
 		this.low = low;
 		this.open = open;
 		this.close = close;
 		this.wap = wap;
-		this.size = size;
+		this.volume = volume;
 		this.count = count;
+		
+		// for general use (EventActivity)
+		this.time = time;
+		this.price = open;
+		this.size = volume;
+		
 	}
 	
 	public String formattedTime() {

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
+import com.onenow.data.ObjectOrigination;
 import com.onenow.execution.Contract;
 import com.onenow.research.Chart;
 import com.onenow.risk.Reward;
@@ -19,10 +20,10 @@ public class Investment {
 	private Reward reward;
 	private Risk risk;
 	
-	HashMap<SamplingRate, Chart> charts = new HashMap<SamplingRate, Chart>();
+	private HashMap<SamplingRate, Chart> charts = new HashMap<SamplingRate, Chart>();
 	
-	public final String id = String.valueOf(UUID.randomUUID());
-	public final Long start = TimeParser.getTimestampNow();
+	public ObjectOrigination origin = new ObjectOrigination();
+	
 	
 	// CONSTRUCTOR
 	public Investment() {
@@ -51,8 +52,8 @@ public class Investment {
 	// PRINT:
 	public String toString() {
 		String s = "";
-		s = s + "- id " + id.toString() + "\n"; 
-		s = s + "- start " + start.toString() + "\n";
+		s = s + "- id " + origin.id.toString() + "\n"; 
+		s = s + "- start " + origin.start.toString() + "\n";
 		s = s + getUnder().toString() + "- " + getInvType();
 		return s;
 	}

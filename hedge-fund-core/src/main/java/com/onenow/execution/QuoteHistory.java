@@ -9,7 +9,9 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
-import com.onenow.data.EventHistory;
+import com.onenow.data.EventActivity;
+import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventRequestHistory;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusSystem;
@@ -27,7 +29,7 @@ import com.onenow.util.Watchr;
  */
 public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	public ArrayList<EventHistory> quoteRows = new ArrayList<EventHistory>();
+	public ArrayList<EventActivityHistory> quoteRows = new ArrayList<EventActivityHistory>();
 	
 	private Investment investment;
 	private TradeType tradeType;
@@ -39,11 +41,11 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	public QuoteHistory (){
 	}
 	
-	public QuoteHistory(Investment inv, TradeType tradeType, InvDataSource source, InvDataTiming timing) {
-		this.investment = inv;
-		this.tradeType = tradeType;
-		this.source = source;
-		this.timing = timing;
+	public QuoteHistory(EventRequestHistory request) {
+		this.investment = request.investment;
+		this.tradeType = request.tradeType;
+		this.source = request.source;
+		this.timing = request.timing;
 	}
 	
 	public QuoteHistory (Channel channel) {
@@ -51,7 +53,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	}
 	
 	// INTERFACE: IHistoricalDataHandler
-	@Override public void historicalData(EventHistory row, boolean hasGaps) {
+	@Override public void historicalData(EventActivityHistory row, boolean hasGaps) {
 		
 		quoteRows.add(row);
 		handleRow(row);
@@ -68,14 +70,14 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	}	
 	
 	// INTERFACE: IRealTimeBarHandler
-	@Override public void realtimeBar(EventHistory row) {		
+	@Override public void realtimeBar(EventActivityHistory row) {		
 
 		quoteRows.add(row); 
 		
 		handleRow(row);
 	}
 
-	private void handleRow(EventHistory row) {
+	private void handleRow(EventActivityHistory row) {
 		
 		// Clarify provenance
 		row.investment = investment;

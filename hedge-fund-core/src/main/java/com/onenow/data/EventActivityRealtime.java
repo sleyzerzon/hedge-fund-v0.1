@@ -5,9 +5,9 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 
-public class EventRealTime extends Event {
+public class EventActivityRealtime extends EventActivity {
 	
-	public EventRealTime() {
+	public EventActivityRealtime() {
 		
 	}
 	
@@ -19,15 +19,18 @@ public class EventRealTime extends Event {
 	 * @param price
 	 * @param size
 	 */
-	public EventRealTime(	Long time, Investment inv, TradeType tradeType, Double price, long size,
+	public EventActivityRealtime(	Long time, Investment inv, TradeType tradeType, Double price, long size,
 					InvDataSource source, InvDataTiming timing) {
-		this.time = time;
+
 		this.investment = inv;
-		this.tradeType = tradeType;
-		this.price = price;
-		this.size = size;
+		this.tradeType = tradeType;		
 		this.source = source;
 		this.timing = timing;
+
+		this.time = time;
+		this.price = price;
+		this.size = size;
+
 	}
 	
 	public String toString() {

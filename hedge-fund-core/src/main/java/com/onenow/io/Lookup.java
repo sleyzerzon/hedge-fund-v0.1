@@ -9,6 +9,9 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
+import com.onenow.data.EventActivity;
+import com.onenow.data.Event;
+import com.onenow.data.EventRequest;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
@@ -30,10 +33,10 @@ public class Lookup {
 	 * @param tradeType
 	 * @return
 	 */
-	public static String getInvestmentTimedKey(Long time, Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
+	public static String getEventTimedKey(EventRequest event) {
 		String s = "";
-		s = s + time.toString();
-		s = s + "-" + getInvestmentKey(inv, tradeType, source, timing);
+		s = s + event.toDashedDate.toString(); // time -> toDashedDate
+		s = s + "-" + getEventKey(event);
 		return s;
 	}
 	
@@ -43,19 +46,19 @@ public class Lookup {
 	 * @param tradeType
 	 * @return
 	 */
-	public static String getInvestmentKey(Investment inv, TradeType tradeType, com.onenow.constant.InvDataSource source, InvDataTiming timing) {
+	public static String getEventKey(Event event) {
 		String s = ""; 
 	
 		try {
-			Underlying under = inv.getUnder();
-			s = s + under.getTicker() + "-" + inv.getInvType();		
-			if (inv instanceof InvestmentOption) {
-				String exp = (String) ((InvestmentOption) inv).getExpirationDate();
-				Double strike = ((InvestmentOption) inv).getStrikePrice();
+			Underlying under = event.investment.getUnder();
+			s = s + under.getTicker() + "-" + event.investment.getInvType();		
+			if (event.investment instanceof InvestmentOption) {
+				String exp = (String) ((InvestmentOption) event.investment).getExpirationDate();
+				Double strike = ((InvestmentOption) event.investment).getStrikePrice();
 				s = s + "-" + exp + "-" + strike; 
 			}
-			s = s + "-" + tradeType.toString();
-			s = s + "-" + source.toString() + "-" + timing.toString();
+			s = s + "-" + event.tradeType.toString();
+			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,15 +81,14 @@ public class Lookup {
 	}
 
 	
-	public static String getChartKey(	Investment inv, TradeType tradeType, SamplingRate sampling, 
-								String fromDate, String toDate,
-								InvDataSource source, InvDataTiming timing) {
+	public static String getChartKey(EventRequest request) {
 		String s = "";
-		s = s + inv.toString();
-		s = s + "-" + tradeType.toString();
-		s = s + "-" + sampling.toString();
-		s = s + "-" + fromDate + "-" + toDate;
-		s = s + "-" + source.toString() + "-" + timing.toString();
+		s = s + request.investment.toString();
+		s = s + "-" + request.tradeType.toString();
+		s = s + "-" + request.sampling.toString();
+//		s = s + "-" + fromDate + "-" + toDate;
+		s = s + "-" + request.toDashedDate;
+		s = s + "-" + request.source.toString() + "-" + request.timing.toString();
 //		System.out.println("key " + s);
 		return s;
 	}

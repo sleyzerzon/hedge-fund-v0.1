@@ -9,7 +9,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
-import com.onenow.data.EventRealTime;
+import com.onenow.data.EventActivityRealtime;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -23,7 +23,7 @@ import com.onenow.util.Watchr;
 public class CacheInProcess {
 	
 	private BrokerInterface 					broker;
-	private HashMap<String, EventRealTime>		lastEventRT = new HashMap<String, EventRealTime>(); 	// last set of price/size/etc
+	private HashMap<String, EventActivityRealtime>		lastEventRT = new HashMap<String, EventActivityRealtime>(); 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
 	public CacheInProcess() {
@@ -36,9 +36,9 @@ public class CacheInProcess {
 
 	
 	// REAL-TIME from broker
-	public boolean writeEventRT(final EventRealTime event) {
+	public boolean writeEventRT(final EventActivityRealtime event) {
 
-		String key = Lookup.getInvestmentKey(	event.investment, event.tradeType,
+		String key = Lookup.getEventKey(	event.investment, event.tradeType,
 												event.source, event.timing);
 		
 		boolean success = false;
@@ -76,7 +76,7 @@ public class CacheInProcess {
 	 * 
 	 * @param event
 	 */
-	public void writeEventThroughRing(EventRealTime event) {
+	public void writeEventThroughRing(EventActivityRealtime event) {
 
 		// TODO: FAST WRITE TO RING		
 
@@ -115,7 +115,7 @@ public class CacheInProcess {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
-		String key = Lookup.getInvestmentKey(inv, tradeType, source, timing);
+		String key = Lookup.getEventKey(inv, tradeType, source, timing);
 		Double price = lastEventRT.get(key).price;
 		
 		Watchr.log(Level.INFO, "Cache PRICE READ: L0 " + price);

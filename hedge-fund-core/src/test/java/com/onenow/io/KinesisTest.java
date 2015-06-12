@@ -9,7 +9,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.constant.TradeType;
-import com.onenow.data.EventRealTime;
+import com.onenow.data.EventActivityRealtime;
 import com.onenow.instrument.Investment;
 import com.onenow.util.TimeParser;
 

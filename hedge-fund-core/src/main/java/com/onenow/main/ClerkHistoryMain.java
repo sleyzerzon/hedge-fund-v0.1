@@ -4,7 +4,7 @@ import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.StreamName;
-import com.onenow.data.EventHistory;
+import com.onenow.data.EventActivityHistory;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
@@ -34,7 +34,7 @@ public class ClerkHistoryMain {
 	 * Write one row of quote history to TSDB, upon receiving it from a data stream
 	 * @param event
 	 */
-	public static void writeHistoryToL2(EventHistory event) {
+	public static void writeHistoryToL2(EventActivityHistory event) {
 
 		// System.out.println("Cache History WRITE: L2 (from L3 via L0) "  + inv.toString() + " " + invHistory.toString());
 		boolean success = false;

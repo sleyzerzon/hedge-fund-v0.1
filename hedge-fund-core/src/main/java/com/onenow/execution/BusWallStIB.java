@@ -35,11 +35,17 @@ public class BusWallStIB implements ConnectionHandler {
 		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
 		this.streamName = StreamName.STREAMING;
 	}
-	
+
+	public BusWallStIB(StreamName streamName) {
+		// always local for now
+		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
+		this.streamName = streamName;
+	}
+
 	// configurable topology for testing
-	public BusWallStIB(StreamName mode, Topology topo) {
+	public BusWallStIB(StreamName streamName, Topology topo) {
 		
-		this.streamName = mode;
+		this.streamName = streamName;
 		this.gateway = NetworkConfig.getGateway(topo);
 		
 		// fixed gateway for production
