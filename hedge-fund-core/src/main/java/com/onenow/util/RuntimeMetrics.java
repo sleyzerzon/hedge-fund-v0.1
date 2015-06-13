@@ -16,15 +16,21 @@ public class RuntimeMetrics {
 	// https://aws.amazon.com/blogs/aws/amazon-cloudwatch-user-defined-metrics/
 	// http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html
 	public static void notifyWallstLatency(Long miliseconds, StreamName streamName) {
-		
+
 		Watchr.log(Level.WARNING, streamName + " READY TO INVEST IN: " + miliseconds + "ms");
 
-		// mon-put-data -namespace App1 -metric-name Latency -dimensions “Host=host1″ -value 104
-		final String message = "mon-put-data -General Investor -metric-name READY-TO-INVEST-IN -dimensions " + streamName + " -value " + miliseconds.toString();
-
+		String app = "aws cloudwatch put-metric-data";
+		String metric = "--metric-name";
+		String nameSpace = "--namespace";
+		String value = "--value";
+		String stamp = "--timestamp";
 		
-		aws cloudwatch put-metric-data --metric-name PageViewCount --namespace "MyService" --value 2 --timestamp 2014-02-14T12:00:00.000Z
-
+		final String message = 	app + " " + "Investor" + streamName + " " +
+								metric + " " + "READY-TO-INVEST-IN" + " " +
+								nameSpace + " " + "\"General\"" + " " +
+								value + " " + miliseconds.toString() + " " +
+								stamp + " " + "2015-06-12T12:00:00.000Z";
+		
 		messageRuntime(message);
 
 	}

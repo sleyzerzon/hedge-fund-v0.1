@@ -12,6 +12,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
+import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
@@ -99,19 +100,19 @@ public class BrokerInteractive implements BrokerInterface  {
 		  while(true) {
 			  
 			  // get events from SQS
-			  EventRequestHistory req = null;
+			  EventRequestHistory request = null;
 		  
 			  // get the history reference for the specific investment 
-			  QuoteHistory invHist = lookupInvHistory(	req.investment, req.config.tradeType, 
-														req.config.source, req.config.timing);
+			  QuoteHistory invHist = lookupInvHistory(request);
 	
 			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
 			  TimeParser.paceHistoricalQuery(lastQueryTime); 
 	
 			  // look for SQS requests for history
-			  Integer reqId = readHistoricalQuotes(	req.investment, 
-													TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(req.toDashedDate, 1))), 
-													req.config, invHist);
+			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
+			  Integer reqId = readHistoricalQuotes(	request.investment, 
+													endDateTime, 
+													request.config, invHist);
 	
 			  lastQueryTime = TimeParser.getTimestampNow();		
 		  }
@@ -120,14 +121,14 @@ public class BrokerInteractive implements BrokerInterface  {
 	  /**
 	   * Returns reference to object where history will be stored, upon asynchronous return
 	   */
-	  public Integer readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistory quoteHistory) {
+	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistory quoteHistory) {
 	
 		  Contract contract = ContractFactory.getContract(inv);
 	
-		  Integer reqId = bus.controller.reqHistoricalData(	contract, end, 
+		  Integer reqId = bus.controller.reqHistoricalData(	contract, endDateTime, 
 	    													1, config.durationUnit, config.barSize, config.whatToShow, 
 	    													false, quoteHistory);
-		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + end + " REQ ID " + reqId;
+		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + endDateTime + " REQ ID " + reqId;
 		  Watchr.log(Level.INFO, log);
 	    
 		  return reqId;

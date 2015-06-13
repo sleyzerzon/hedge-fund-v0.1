@@ -12,7 +12,6 @@ public class Event {
 
 	public InvDataSource source;
 	public InvDataTiming timing;
-	public SamplingRate sampling;
 	public TradeType tradeType; 
 
 	public ObjectOrigination origin = new ObjectOrigination();
@@ -20,5 +19,21 @@ public class Event {
 	public Event() {
 		
 	}	
+	
+	public Event(Investment investment, InvDataSource source, InvDataTiming timing, TradeType tradeType) {
+		this.investment = investment;
+		this.source = source;
+		this.timing = timing;
+		this.tradeType = tradeType; 
 
+	}
+
+	public String toString() {
+		String s = "";
+		
+		s = super.toString();
+		s = s + investment.toString() + " " + source + " " + timing + " " + tradeType;
+		
+		return s;
+	}
 }

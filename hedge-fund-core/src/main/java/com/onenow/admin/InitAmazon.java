@@ -90,6 +90,10 @@ public class InitAmazon {
 	}
 	
 	// SQS
+	public static AmazonSQS getSQS() {
+		return getSQS(defaultRegion);
+	}
+	
 	public static AmazonSQS getSQS(Region region) {
 		
 //		AWSCredentials credentials = InitAmazon.getCredentials();

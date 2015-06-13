@@ -45,7 +45,7 @@ public class Lookup {
 	 * @param inv
 	 * @param tradeType
 	 * @return
-	 */
+	 */	
 	public static String getEventKey(Event event) {
 		String s = ""; 
 	

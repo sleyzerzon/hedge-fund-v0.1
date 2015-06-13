@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.onenow.constant.InvTerm;
 import com.onenow.constant.InvType;
@@ -15,6 +16,7 @@ import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentReserved;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
+import com.onenow.util.Watchr;
 
 public class Portfolio {
 
@@ -201,10 +203,12 @@ public class Portfolio {
 	public String toStocksString() {
 		String s = "";
 		Integer i = 0;
-		System.out.println("\n" + "INITIALIZED STOCKS");
+		Watchr.log(Level.INFO,  "INITIALIZED STOCKS", "\n", "");
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentStock) {
-				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
+				s = s + investments.get(i) + " ";
+				s = s + "(" + getQuantity().get(inv) + ")";
+				s = s + "\n";
 			}
 			i++;
 		}

@@ -10,6 +10,8 @@ import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.Event;
+import com.onenow.data.EventRequest;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -38,8 +40,7 @@ public class CacheInProcess {
 	// REAL-TIME from broker
 	public boolean writeEventRT(final EventActivityRealtime event) {
 
-		String key = Lookup.getEventKey(	event.investment, event.tradeType,
-												event.source, event.timing);
+		String key = Lookup.getEventKey(event);
 		
 		boolean success = false;
 		
@@ -112,11 +113,15 @@ public class CacheInProcess {
 	}
 
 	private Double readPriceFromL0(Investment inv, TradeType tradeType) {
+		
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
-				
-		String key = Lookup.getEventKey(inv, tradeType, source, timing);
-		Double price = lastEventRT.get(key).price;
+		
+		
+		Event event = new Event(inv, source, timing, tradeType);
+		String key = Lookup.getEventKey(event);
+		EventActivityRealtime eventRT = lastEventRT.get(key); 
+		Double price = eventRT.price;
 		
 		Watchr.log(Level.INFO, "Cache PRICE READ: L0 " + price);
 
@@ -131,9 +136,11 @@ public class CacheInProcess {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
-		Chart chart = readChart(	inv, tradeType, scalping, 
-									today, today,
-									source, timing);
+		EventRequest request = new EventRequest(	inv, tradeType, scalping, 
+													today, today, 					// TODO: repeat today?
+													source, timing);
+		
+		Chart chart = readChart(request);
 		
 		List<Candle> candles = chart.getPrices(); 
 		
@@ -157,17 +164,13 @@ public class CacheInProcess {
 	 * @param sampling
 	 * @return
 	 */
-	public Chart readChart(	Investment inv, TradeType tradeType, SamplingRate sampling, 
-							String fromDate, String toDate,
-							InvDataSource source, InvDataTiming timing) {
+	public Chart readChart(EventRequest request) {
 		
 		String s = "";
 
 		// HIT? Memory is L0
 		s = "Cache Chart HIT: L0";		
-		Chart chart = readChartFromL0(	inv, tradeType, sampling, 
-										fromDate, toDate, 
-										source, timing);
+		Chart chart = readChartFromL0(request);
 		
 		// MISS: one-off requests, ok that they take longer for now
 		if(chart==null) {
@@ -184,13 +187,9 @@ public class CacheInProcess {
 	}
 
 
-	private Chart readChartFromL0(	Investment inv, TradeType tradeType, SamplingRate sampling, 
-									String fromDate, String toDate,
-									InvDataSource source, InvDataTiming timing) {
+	private Chart readChartFromL0(EventRequest request) {
 		Chart chart = new Chart();
-		String key = Lookup.getChartKey(	inv, tradeType, sampling, 
-												fromDate, toDate,
-												source, timing);
+		String key = Lookup.getChartKey(request);
 		chart = charts.get(key);
 
 		Watchr.log(Level.INFO, "Cache Chart READ: L0 " + chart.toString());

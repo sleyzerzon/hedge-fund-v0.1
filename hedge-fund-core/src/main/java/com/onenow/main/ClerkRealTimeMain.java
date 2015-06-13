@@ -48,7 +48,7 @@ public class ClerkRealTimeMain {
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.id + " " + event.investment.toString() + " " + e.toString());	
+				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.origin.id + " " + event.investment.toString() + " " + e.toString());	
 				e.printStackTrace();
 				if(tries>maxTries) {
 					return;

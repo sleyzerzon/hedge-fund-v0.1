@@ -12,4 +12,12 @@ public class ObjectOrigination {
 	public ObjectOrigination() {
 		
 	}
+	
+	public String toString() {
+		String s = "";
+		
+		s = "id " + id + " " + "start " + start + " ";
+		
+		return s;
+	}
 }

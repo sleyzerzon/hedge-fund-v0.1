@@ -20,7 +20,7 @@ public class EventActivityRealtime extends EventActivity {
 	 * @param size
 	 */
 	public EventActivityRealtime(	Long time, Investment inv, TradeType tradeType, Double price, long size,
-					InvDataSource source, InvDataTiming timing) {
+									InvDataSource source, InvDataTiming timing) {
 
 		this.investment = inv;
 		this.tradeType = tradeType;		
@@ -36,12 +36,12 @@ public class EventActivityRealtime extends EventActivity {
 	public String toString() {
 		String s = "\n";
 		s = s + super.toString();
-		s = s + "- inv " + investment.toString() + "\n";
-		s = s + "- tradeType " + tradeType.toString() + "\n";
-		s = s + "- price " + price + "\n";
-		s = s + "- size " + size + "\n";
-		s = s + "- source " + source.toString() + "\n";
-		s = s + "- timing " + timing.toString() + "\n";
+//		s = s + "- inv " + investment.toString() + "\n";
+//		s = s + "- tradeType " + tradeType.toString() + "\n";
+//		s = s + "- price " + price + "\n";
+//		s = s + "- size " + size + "\n";
+//		s = s + "- source " + source.toString() + "\n";
+//		s = s + "- timing " + timing.toString() + "\n";
 		return s;
 	}
 }

@@ -111,7 +111,7 @@ public static void writePrice(final EventActivity event) {
 	
 	public static List<Candle> readPriceFromDB(EventRequest request) {
 		
-		List<Candle> candles = null;
+		List<Candle> candles = new ArrayList<Candle>();
 				
 		String key = Lookup.getEventKey(request);
 
@@ -126,6 +126,7 @@ public static void writePrice(final EventActivity event) {
 	}
 
 public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
+	Watchr.log(Level.INFO, "REQUESTING " + request.toString());
 	List<Serie> series = queryPrice(DBname.PRICE.toString(), request);
 	return series;
 }
@@ -161,10 +162,10 @@ public static List<Serie> queryPrice(String dbName, EventRequest request) {
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
+		series = influxDB.query(dbName, query, TimeUnit.MILLISECONDS);
 		Watchr.log(Level.INFO, query + " RETURNED " + series.toString());  
 	} catch (Exception e) {
-		e.printStackTrace(); // some series don't exist or have data 
+		// e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }

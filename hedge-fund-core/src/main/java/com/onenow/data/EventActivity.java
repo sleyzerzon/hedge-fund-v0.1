@@ -13,8 +13,9 @@ public class EventActivity extends Event {
 	
 	public String toString() {
 		String s = "";
-		s = s + "- id " + origin.id.toString();
-		s = s + "- start " + origin.start.toString();
+		s = super.toString() + " ";
+		s = s + "time " + time + " ";
+		s = s + "size " + size;
 		return s;
 	}
 

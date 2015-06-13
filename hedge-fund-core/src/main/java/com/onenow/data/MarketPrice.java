@@ -73,14 +73,11 @@ public class MarketPrice {
 	
 
 	// READ CHART
-	public Chart readChart(	Investment inv, TradeType tradeType, SamplingRate sampling,
-							String fromDate, String toDate,
-							InvDataSource source, InvDataTiming timing) {
+	public Chart readChart(	EventRequest request ) {
 		
 		Chart chart = new Chart();
 		
-		chart = cache.readChart(	inv, tradeType, sampling, fromDate, toDate,
-											source, timing);
+		chart = cache.readChart(request);
 		Watchr.log(Level.INFO, "READ CHART " + "\n" + chart);
 		
 		return chart;

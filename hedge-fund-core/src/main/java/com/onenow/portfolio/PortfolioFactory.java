@@ -10,6 +10,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
+import com.onenow.data.EventRequest;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.DataSampling;
@@ -87,31 +88,30 @@ public class PortfolioFactory {
 	// CHARTS
 	// TODO: underlying price, resistance/support?
 	private void getUptodateInvestmentCharts() {
-		String fromDate = "2015-02-21"; 	// TODO: configurable date
-		String toDate = "2015-02-28";
+		String fromDashedDate = "2015-02-21"; 	// TODO: configurable date
+		String toDashedDate = "2015-02-28";
 		for(SamplingRate sampling:getSampling().getList(SamplingRate.SCALPSHORT)) { // TODO: what rates?
 			for(Investment inv:getMarketPortfolio().investments) {
-				getInvestmentChart(inv, sampling, fromDate, toDate);
+				EventRequest request = new EventRequest(	inv, TradeType.TRADED, sampling, fromDashedDate, toDashedDate, 
+															InvDataSource.IB, InvDataTiming.REALTIME); 
+				getInvestmentChart(request);
 			}
 		}
 	}
 	
-	private void getInvestmentChart(Investment inv, SamplingRate sampling, String fromDate, String toDate) {
+	private void getInvestmentChart(EventRequest request) {
 
 		Chart chart = new Chart();
+				
+		chart = marketPrice.readChart(request);
 		
-		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.REALTIME;
-		
-		chart = marketPrice.readChart(	inv, TradeType.TRADED, sampling, 
-										fromDate, toDate,
-										source, timing);
+		SamplingRate sr = SamplingRate.SCALP;
 		
 		if(!chart.getSizes().isEmpty()) {
-			inv.getCharts().put(sampling, chart); // sampling is key	
-			System.out.println("+ chart " + inv.toString() +  " " + sampling + "\n" + chart.toString() + "\n\n");			
+			request.investment.getCharts().put(sr, chart); // sampling is key	
+			System.out.println("+ chart " + request.investment.toString() +  " " + sampling + "\n" + chart.toString() + "\n\n");			
 		} else {
-			System.out.println("- chart " + inv.toString() + " " + sampling  + "\n\n");
+			System.out.println("- chart " + request.investment.toString() + " " + sampling  + "\n\n");
 		}		
 	}
 

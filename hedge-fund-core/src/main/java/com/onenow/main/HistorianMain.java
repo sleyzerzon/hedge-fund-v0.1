@@ -3,12 +3,14 @@ package com.onenow.main;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.onenow.admin.InitAmazon;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.data.InvestmentList;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
+import com.onenow.io.SQS;
 import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
@@ -56,8 +58,10 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			run();
 			
+			SQS q = new SQS();
+
 			TimeParser.wait(1); // pace
-			
+						
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			count++;
@@ -82,7 +86,8 @@ public class HistorianMain {
 		
 		Watchr.log(Level.INFO, "Cache Chart READ: L3 (augment data) "  + inv.toString());
 		
-		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
+		String fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
+		EventRequestHistory request = new EventRequestHistory(inv, fromDashedDate, toDashedDate, config);
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
