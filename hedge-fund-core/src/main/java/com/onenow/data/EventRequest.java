@@ -37,12 +37,10 @@ public class EventRequest extends Event {
 	
 	public String toString() {
 		String s = "";
-		try {
-			s = super.toString();
-			s = s + "-sampling " + sampling + "-from " + fromDashedDate + "-to " + toDashedDate;
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+		s = 	super.toString() + " " +
+				"-sampling " + sampling + " " +
+				"-from " + fromDashedDate + " " +
+				"-to " + toDashedDate;
 		return s;
 	}
 

@@ -28,7 +28,13 @@ public class Watchr {
 	
 	public static String log(Level level, String message) {
 
-		return log(level, message, "", "");
+		String s = "";
+		try {
+			s = log(level, message, "", "");
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "WATCHR EXCEPTION " + e.toString());
+		}
+		return s;
 
 	}
 	

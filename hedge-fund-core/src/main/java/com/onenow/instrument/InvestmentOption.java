@@ -52,13 +52,9 @@ public class InvestmentOption extends Investment { // call, put
 	public String toString() { // TODO add shares
 		String s = " "; 	
 	
-		try {
-			s = super.toString() + " " + 
-				"-expires "+ getExpirationDate().toString() + " " + 
-				"-strike " + getStrikePrice().toString();
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+		s = super.toString() + " " + 
+			"-expires "+ getExpirationDate().toString() + " " + 
+			"-strike " + getStrikePrice().toString();
 		
 		return s;
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.onenow.admin.InitAmazon;
+import com.onenow.constant.MemoryLevel;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
@@ -19,14 +20,6 @@ import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
-/** 
- * Gather complete accurate historical market data
- * L0: investor application memory
- * L1: ElastiCache
- * L2: Time Series Database
- * L3: 3rd party database via API
- * @param args
- */
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
@@ -42,24 +35,20 @@ public class HistorianMain {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
-	    // get ready to loop
 		int count=0;
 		while(true) {
-			Watchr.log(Level.INFO, "^^ HISTORIAN MAIN: " + toDashedDate);
-	    	// update the market portfolio, broker, and historian every month
-	    	if(count%30 == 0) {
-	    		marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
-															InvestmentList.getUnderlying(InvestmentList.someIndices),
-															InvestmentList.getUnderlying(InvestmentList.futures), 
-															InvestmentList.getUnderlying(InvestmentList.options),
-			    											toDashedDate);
-		    }	
-
-			// updates historical L1 from L2
-			run();
 			
+			Watchr.log(Level.INFO, "HISTORIAN through: " + toDashedDate);
+
+			getTimelyMarketPortfolio(count);	
+
 			SQS q = new SQS();
 
+			// updates historical L1 from L2
+			for(Investment inv:marketPortfolio.investments) {
+				updateL2HistoryFromL3(inv, toDashedDate);
+			}
+			
 			TimeParser.wait(10); // pace
 						
 			// go back further in time
@@ -67,12 +56,16 @@ public class HistorianMain {
 			count++;
 		}
 	}
-	
-	public static void run() {
-			// iterate through investments
-			for(Investment inv:marketPortfolio.investments) {
-				updateL2HistoryFromL3(inv, toDashedDate);
-			}
+
+	private static void getTimelyMarketPortfolio(int count) {
+		// update the market portfolio, broker, and historian every month
+		if(count%30 == 0) {
+			marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+														InvestmentList.getUnderlying(InvestmentList.someIndices),
+														InvestmentList.getUnderlying(InvestmentList.futures), 
+														InvestmentList.getUnderlying(InvestmentList.options),
+		    											toDashedDate);
+		}
 	}
 	
 /**
@@ -84,7 +77,7 @@ public class HistorianMain {
 		// minimum number of price data points
 		int minPrices = 50;
 		
-		Watchr.log(Level.INFO, "Cache Chart READ: L3 (augment data) "  + inv.toString());
+		Watchr.log(Level.INFO, "Cache Chart READ: " + MemoryLevel.L3PARTNER + " (augment data) "  + inv.toString());
 		
 		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
@@ -92,11 +85,13 @@ public class HistorianMain {
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
 
+		Watchr.log(Level.FINEST, "Number of Prices Found in " + MemoryLevel.L2TSDB + ": " + storedPrices.size());
+		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if ( storedPrices.size()<minPrices ) {	
 
-			// TODO: SQS instead of call to broker
+			// TODO: send SQS request to broker
 
 		} else {
 			Watchr.log(Level.INFO, "HISTORIC L2 HIT:" + inv.toString(), "", "\n\n");

@@ -70,14 +70,10 @@ public class EventActivityHistory extends EventActivity {
 	@Override public String toString() {
 		String s = "";
 		
-		try {
-			s = String.format(	super.toString() +
-									"\t req id " + reqId + 
-									"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
-									"\t FROM " + formattedTime() + "\t TIME ZONE?");
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+		s = String.format(	super.toString() +
+								"\t req id " + reqId + 
+								"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
+								"\t FROM " + formattedTime() + "\t TIME ZONE?");
 
 		return s;
 	}

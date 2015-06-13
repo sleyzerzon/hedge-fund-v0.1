@@ -45,11 +45,7 @@ public class EventRequestHistory extends EventRequest {
 
 	public String toString() {
 		String s = "";
-		try {
-			s = super.toString();
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+		s = super.toString();
 		return s;
 	}
 	

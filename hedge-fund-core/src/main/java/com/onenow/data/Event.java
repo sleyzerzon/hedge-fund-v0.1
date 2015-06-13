@@ -34,11 +34,11 @@ public class Event {
 	public String toString() {
 		String s = "";
 		
-		try {
-			s = origin.toString("EVENT") + " " + investment.toString() + " " + source + " " + timing + " " + tradeType;
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+		s = 	origin.toString("EVENT") + " " + 
+				investment.toString() + " " +
+				"source " + source + " " + 
+				"-timing " + timing + " " + 
+				"-tradeType " + tradeType;
 		
 		return s;
 	}

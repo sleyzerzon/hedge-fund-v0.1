@@ -28,4 +28,14 @@ public class EventRequestRealtime extends EventRequest {
 		this.toDashedDate = toDashedDate;
 	}
 
+	public String toString() {
+		String s = "";
+		s = 	super.toString() + " " +
+				"-source " + source + " " + 
+				"-timing " + timing + " " +
+				"-sampling " + sampling + " " +
+				"-tradeType " + tradeType;
+		
+		return s;
+	}
 }

@@ -38,11 +38,9 @@ public class EventActivityRealtime extends EventActivity {
 	
 	public String toString() {
 		String s = "\n";
-		try {
-			s = s + super.toString();
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+
+		s = s + super.toString();
+
 		return s;
 	}
 }

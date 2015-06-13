@@ -55,13 +55,9 @@ public class Investment {
 	public String toString() {
 		String s = "";
 		
-		try {
-			s = origin.toString("INVESTMENT") + " " + 
-				"-under " + getUnder().toString() + " " +
-				"-type " + getInvType();
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-		}
+		s = origin.toString("INVESTMENT") + " " + 
+			"-under " + getUnder().toString() + " " +
+			"-type " + getInvType();
 		
 		return s;
 	}

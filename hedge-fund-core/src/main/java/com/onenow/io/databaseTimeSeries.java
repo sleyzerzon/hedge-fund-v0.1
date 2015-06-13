@@ -14,6 +14,7 @@ import com.onenow.admin.NetworkService;
 import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
@@ -49,11 +50,7 @@ public static InfluxDB dbConnect() {
 			Watchr.log(Level.INFO, "CONNECTING TO TSDB...", "\n", "");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
 			db = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
-											tsdbService.user, tsdbService.pass);
-//			InfluxDBClient dbPrice = db.InfluxDBClient(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
-//												tsdbService.user, tsdbService.pass,
-//												DBname.PRICE.toString());
-
+											tsdbService.user, tsdbService.pass);	
 			dbCreateAndConnect();	
 		} catch (Exception e) {
 			tryToConnect = true;
@@ -96,7 +93,7 @@ public static void writePrice(final EventActivity event) {
 
 		Long before = TimeParser.getTimestampNow();
 		influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
-		// time_precision='ms'
+		// TODO: time_precision='ms'
 		Long after = TimeParser.getTimestampNow();
 	
 		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE.toString() + " " + 
@@ -119,14 +116,14 @@ public static void writePrice(final EventActivity event) {
 
 		candles = priceSeriesToCandles(series); 
 		 
-		String log = "TSDB Cache Chart/Price READ: L1 HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
+		String log = "TSDB Cache Chart/Price READ: " + MemoryLevel.L2TSDB + "HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
 		Watchr.log(Level.INFO, log, "\n", "");
 
 		return candles;
 	}
 
 public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
-	Watchr.log(Level.INFO, "REQUESTING " + request.toString());
+	// Watchr.log(Level.INFO, "REQUESTING " + request.toString());
 	List<Serie> series = queryPrice(DBname.PRICE.toString(), request);
 	return series;
 }
@@ -144,7 +141,7 @@ public static List<Serie> queryPrice(String dbName, EventRequest request) {
 	
 	String serieName = Lookup.getEventKey(request);
 
-	List<Serie> series = null;
+	List<Serie> series = new ArrayList<Serie>();
 	 
 	String query = 	"SELECT " + getThoroughSelect("price") + " " + 						
 					"FROM " + "\"" + serieName + "\" " +
@@ -299,7 +296,7 @@ public static List<Integer> readSizeFromDB(	EventRequest request) {
 	
 	sizes = sizeSeriesToInts(series); 
 	
-	String log = "TSDB Cache Chart/Size READ: L1 SIZE" + fromDashedDate + " " + request.toDashedDate + " " + " for " + key + " Sizes: " + sizes.toString();
+	String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
 	Watchr.log(Level.INFO, log, "\n", "");
 
 	return sizes;
@@ -344,7 +341,7 @@ public static List<Serie> querySize(String dbName, String serieName, SamplingRat
 }
 
 private static String getThoroughSelect(String table) {
-	String s = null;
+	String s = "";
 	s = 	"FIRST(" + table + ")" + ", " +			
 			"LAST("  + table + ")" + ", " +			
 			"DIFFERENCE(" + table + ")" + ", " +							
