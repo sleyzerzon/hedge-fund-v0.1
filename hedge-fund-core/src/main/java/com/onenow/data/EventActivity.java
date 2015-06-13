@@ -15,6 +15,7 @@ public class EventActivity extends Event {
 		String s = "";
 		s = super.toString() + " ";
 		s = s + "time " + time + " ";
+		s = s + "price " + price + " ";
 		s = s + "size " + size;
 		return s;
 	}

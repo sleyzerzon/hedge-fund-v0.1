@@ -55,6 +55,7 @@ public class CacheInProcess {
 		}
 		
 		if(writeToMem) {
+			Watchr.log(key + " " + event.toString());
 			lastEventRT.put(key, event);
 			success = true;
 		}

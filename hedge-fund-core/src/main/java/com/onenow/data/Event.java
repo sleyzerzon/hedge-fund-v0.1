@@ -31,7 +31,7 @@ public class Event {
 	public String toString() {
 		String s = "";
 		
-		s = super.toString();
+		s = origin.toString();
 		s = s + investment.toString() + " " + source + " " + timing + " " + tradeType;
 		
 		return s;
