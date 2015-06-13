@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.MemoryLevel;
+import com.onenow.constant.QueueName;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
@@ -29,20 +30,25 @@ public class HistorianMain {
     
 	private static HistorianConfig config = new HistorianService().size30sec;
 	
+	private static SQS sqs = new SQS();
+	private static String queueURL;
 	
 	public static void main(String[] args) {
 		
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
+		queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
+		sqs.listQueues();
+        // sqs.deleteQueue(queueURL);
+
+		
 		int count=0;
 		while(true) {
 			
 			Watchr.log(Level.INFO, "HISTORIAN through: " + toDashedDate);
 
 			getTimelyMarketPortfolio(count);	
-
-			SQS q = new SQS();
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
@@ -85,16 +91,18 @@ public class HistorianMain {
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
 
-		Watchr.log(Level.FINEST, "Number of Prices Found in " + MemoryLevel.L2TSDB + ": " + storedPrices.size());
 		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if ( storedPrices.size()<minPrices ) {	
 
+			Watchr.log(Level.WARNING, "Request this! " + request.toString());
+			sqs.sendMessage(request.toString(), queueURL);
+
 			// TODO: send SQS request to broker
 
 		} else {
-			Watchr.log(Level.INFO, "HISTORIC L2 HIT:" + inv.toString(), "", "\n\n");
+			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
 		}
 	}
 

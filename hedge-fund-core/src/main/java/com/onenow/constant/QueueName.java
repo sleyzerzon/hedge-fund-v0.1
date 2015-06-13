@@ -1,0 +1,8 @@
+package com.onenow.constant;
+
+public enum QueueName {
+
+	HISTORY_TEST, HISTORY_STAGING, HISTORY_PRODUCTION,
+	REALTIME_TEST, REALTIME_STAGING, REALTIME_PRODUCTION
+
+}

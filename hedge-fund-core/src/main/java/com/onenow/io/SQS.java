@@ -1,5 +1,6 @@
 package com.onenow.io;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.onenow.admin.InitAmazon;
+import com.onenow.constant.QueueName;
 import com.onenow.util.Watchr;
 
 /**
@@ -32,33 +34,12 @@ public class SQS {
 	
 	AmazonSQS sqs = InitAmazon.getSQS();
 	
-	
 	public SQS() {
 		
 	}
 	
 	public SQS(Regions regions) {
 		
-	
-	try {
-		String myQueueUrl = createQueue(sqs);
-		
-		listQueues(sqs);
-			
-		sendMessage(sqs, myQueueUrl);
-		            
-		List<Message> messages = receiveMessages(sqs, myQueueUrl);
-		
-		deleteMesssage(sqs, myQueueUrl, messages);
-
-        deleteQueue(sqs, myQueueUrl);
-        
-	} catch (AmazonServiceException ase) {
-			catchAWSServiceException(ase);
-        
-	} catch (AmazonClientException ace) {
-			catchAWSClientException(ace);
-        }
     }
 
 	private void catchAWSClientException(AmazonClientException ace) {
@@ -79,27 +60,40 @@ public class SQS {
     	Watchr.log(Level.INFO, log);
 	}
 
-	private void deleteQueue(AmazonSQS sqs, String myQueueUrl) {
+	public void deleteQueue(String myQueueUrl) {
 		String log = "Deleting SQS queue: " + myQueueUrl;
     	Watchr.log(Level.INFO, log);
-		sqs.deleteQueue(new DeleteQueueRequest(myQueueUrl));
+		try {
+			sqs.deleteQueue(new DeleteQueueRequest(myQueueUrl));
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 	}
 
-	private void deleteMesssage(AmazonSQS sqs, String myQueueUrl,
-			List<Message> messages) {
+	public void deleteMesssage(String myQueueUrl, List<Message> messages) {
+		
 		String log = "Deleting a message: " + messages + " FROM " + myQueueUrl;
     	Watchr.log(Level.INFO, log);
 		String messageRecieptHandle = messages.get(0).getReceiptHandle();
-		sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl, messageRecieptHandle));
+		try {
+			sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl, messageRecieptHandle));
+		} catch (AmazonServiceException e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 	}
 
-	private List<Message> receiveMessages(AmazonSQS sqs, String myQueueUrl) {
+	public List<Message> receiveMessages(String myQueueUrl) {
 		
-		String log = "Receiving messages from MyQueue: " + myQueueUrl;
+		String log = "Receiving messages to " + myQueueUrl;
     	Watchr.log(Level.INFO, log);
     	
 		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(myQueueUrl);
-		List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
+		List<Message> messages = new ArrayList<Message>();
+		try {
+			messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 
 		for (Message message : messages) {
 			log = "  Message";
@@ -119,33 +113,45 @@ public class SQS {
 		return messages;
 	}
 
-	private void sendMessage(AmazonSQS sqs, String myQueueUrl) {
+	public void sendMessage(String message, String queueURL) {
 
-		String log = "Sending a message to: " + myQueueUrl;
+		String log = "Sending " + message +  " to " + queueURL ;
     	Watchr.log(Level.INFO, log);
 
-		sqs.sendMessage(new SendMessageRequest(myQueueUrl, "This is my message text."));
+		try {
+			sqs.sendMessage(new SendMessageRequest(queueURL, message));
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 	}
 
-	private void listQueues(AmazonSQS sqs) {
+	public void listQueues() {
 
 		String log = "Listing all queues in your account.";
     	Watchr.log(Level.INFO, log);
 
-		for (String queueUrl : sqs.listQueues().getQueueUrls()) {
-			log = "  QueueUrl: " + queueUrl;
-	    	Watchr.log(Level.INFO, log);
-            }
-		System.out.println();
+		try {
+			for (String queueUrl : sqs.listQueues().getQueueUrls()) {
+				log = "  QueueUrl: " + queueUrl;
+				Watchr.log(Level.INFO, log);
+			    }
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 	}
 
-	private String createQueue(AmazonSQS sqs) {
+	public String createQueue(QueueName name) {
 		
 		String log = "Creating a new SQS queue called MyQueue.";
     	Watchr.log(Level.INFO, log);
 
-		CreateQueueRequest createQueueRequest = new CreateQueueRequest("MyQueue");
-		String myQueueUrl = sqs.createQueue(createQueueRequest).getQueueUrl();
+		CreateQueueRequest createQueueRequest = new CreateQueueRequest(name.toString());
+		String myQueueUrl = "";
+		try {
+			myQueueUrl = sqs.createQueue(createQueueRequest).getQueueUrl();
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 		
 		return myQueueUrl;
 	}

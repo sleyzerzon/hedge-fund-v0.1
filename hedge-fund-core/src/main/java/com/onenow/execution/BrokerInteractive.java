@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.amazonaws.services.sqs.model.Message;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.QueueName;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
@@ -20,6 +22,7 @@ import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
 import com.onenow.io.Lookup;
+import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
@@ -43,9 +46,13 @@ public class BrokerInteractive implements BrokerInterface  {
 	  
 	  private BusWallStIB bus;
 
-	  private static HashMap<String, QuoteHistory>		history;						// price history from L3
+	  private static HashMap<String, QuoteHistory>		history = new HashMap<String, QuoteHistory>();						// price history from L3
 	  private static long lastQueryTime;
 
+	  private static SQS sqs = new SQS();
+	  private static String queueURL;
+
+	  
 	  public BrokerInteractive() {
 		  this.streamName = StreamName.REALTIME;
 	  }
@@ -55,6 +62,10 @@ public class BrokerInteractive implements BrokerInterface  {
 			this.bus = bus;
 
 			bus.connectToServer();
+			
+			queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
+			sqs.listQueues();
+
 	  }
 	  
 	  /**
@@ -100,6 +111,9 @@ public class BrokerInteractive implements BrokerInterface  {
 		  while(true) {
 			  
 			  // get events from SQS
+			  List<Message> messages = sqs.receiveMessages(queueURL);
+			  sqs.deleteMesssage(queueURL, messages);
+
 			  EventRequestHistory request = null;
 		  
 			  // get the history reference for the specific investment 
@@ -146,12 +160,11 @@ public class BrokerInteractive implements BrokerInterface  {
 	  		
 			String key = Lookup.getEventTimedKey(request);
 	
-			QuoteHistory invHist = history.get(key);
-			if(invHist==null) {
-				invHist = new QuoteHistory(request);
-				history.put(key, invHist);			
-			}
-			return invHist;
+			if(history.get(key)==null) {
+				history.put(key, new QuoteHistory(request));	
+			} 
+				
+			return history.get(key);
 		}
 	
 		  // CHANNELS

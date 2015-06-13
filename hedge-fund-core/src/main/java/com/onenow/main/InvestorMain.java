@@ -34,7 +34,7 @@ public class InvestorMain {
 
 		BusWallStIB bus = new BusWallStIB(streamName);
 
-		Kinesis.selfTest();
+		// Kinesis.selfTest();
 
 
 		if(	streamName.equals(StreamName.PRIMARY)) {
@@ -87,6 +87,9 @@ public class InvestorMain {
 				}
 				if(s0.equals("STREAMING")) {
 					mode = StreamName.STREAMING;
+				}
+				else {
+					Watchr.log(Level.SEVERE, "Invalid args[0], should be Investor StreamName");
 				}
 			} else {
 		    	Watchr.log(Level.SEVERE, "ERROR: mode is a required argument");

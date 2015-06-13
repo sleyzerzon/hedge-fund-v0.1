@@ -1,5 +1,7 @@
 package com.onenow.io;
 
+import java.util.logging.Level;
+
 import javax.sql.DataSource;
 
 import com.amazonaws.regions.Region;
@@ -13,8 +15,10 @@ import com.onenow.data.EventActivity;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
+import com.onenow.util.Watchr;
 
 /**
  * Generate the database key for individual time series and data points
@@ -35,9 +39,14 @@ public class Lookup {
 	 */
 	public static String getEventTimedKey(EventRequest event) {
 		String s = "";
-		s = s + event.toDashedDate.toString(); // time -> toDashedDate
-		s = s + "-" + getEventKey(event);
-		return s;
+		try {
+			s = s + event.toDashedDate.toString(); // time -> toDashedDate
+			s = s + "-" + getEventKey(event);
+			return s;
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+			return "";
+		}
 	}
 	
 	/**
@@ -57,10 +66,14 @@ public class Lookup {
 				Double strike = ((InvestmentOption) event.investment).getStrikePrice();
 				s = s + "-" + exp + "-" + strike; 
 			}
+			if (event.investment instanceof InvestmentFuture) {
+				String exp = (String) ((InvestmentFuture) event.investment).getExpirationDate();
+				s = s + "-" + exp;
+			}
 			s = s + "-" + event.tradeType.toString();
 			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Watchr.log(Level.SEVERE, e.toString());
 		}
 	
 		return (s);

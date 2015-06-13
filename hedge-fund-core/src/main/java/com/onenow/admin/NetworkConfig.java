@@ -31,6 +31,9 @@ public class NetworkConfig {
 	private static NetworkService elastiCache = new NetworkService(		"", "",
 																		"", "hedgefundcache.cusyjv.cfg.use1.cache.amazonaws.com", "11211",
 																		"");
+	private static NetworkService grafana = new NetworkService(			"", "",
+																		"", "http://52.4.110.54", "3000",
+																		"");
 
 	
 	public NetworkConfig() {
