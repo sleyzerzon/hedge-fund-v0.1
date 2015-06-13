@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -53,6 +54,7 @@ public class ChartistMain {
 	
 	private static void testCache() {
 		
+		if(!NetworkConfig.isMac()) {
 		  CacheElastic.write(TestValues.KEY.toString(), (Object) TestValues.VALUE.toString());
 		  TimeParser.wait(5);
 		  String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
@@ -66,6 +68,7 @@ public class ChartistMain {
 			Watchr.log(Level.SEVERE, "ElastiCache test FAILURE");
 			e.printStackTrace();
 		}		    
+		}
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html

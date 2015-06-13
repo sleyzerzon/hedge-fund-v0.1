@@ -126,7 +126,7 @@ public static void writePrice(final EventActivity event) {
 	}
 
 public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
-	Watchr.log(Level.INFO, "REQUESTING " + request.toString());
+	// Watchr.log(Level.INFO, "REQUESTING " + request.toString());
 	List<Serie> series = queryPrice(DBname.PRICE.toString(), request);
 	return series;
 }

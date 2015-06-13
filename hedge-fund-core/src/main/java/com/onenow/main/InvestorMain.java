@@ -55,8 +55,7 @@ public class InvestorMain {
 		}
 
 		if(streamName.equals(StreamName.HISTORY)) {
-			BrokerInteractive broker = new BrokerInteractive(	streamName, 
-																bus); 
+			BrokerInteractive broker = new BrokerInteractive(	streamName, bus); 
 			broker.procesHistoricalQuotesRequests();
 		}
 

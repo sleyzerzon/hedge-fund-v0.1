@@ -60,7 +60,7 @@ public class HistorianMain {
 			
 			SQS q = new SQS();
 
-			TimeParser.wait(1); // pace
+			TimeParser.wait(10); // pace
 						
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
