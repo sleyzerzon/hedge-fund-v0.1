@@ -2,6 +2,7 @@ package com.onenow.instrument;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
@@ -11,6 +12,7 @@ import com.onenow.research.Chart;
 import com.onenow.risk.Reward;
 import com.onenow.risk.Risk;
 import com.onenow.util.TimeParser;
+import com.onenow.util.Watchr;
 
 public class Investment {
 
@@ -52,8 +54,15 @@ public class Investment {
 	// PRINT:
 	public String toString() {
 		String s = "";
-		s = s + origin .toString() + "\t"; 
-		s = s + getUnder().toString() + " " + getInvType();
+		
+		try {
+			s = origin.toString("INVESTMENT") + " " + 
+				"-under " + getUnder().toString() + " " +
+				"-type " + getInvType();
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
+		
 		return s;
 	}
 	

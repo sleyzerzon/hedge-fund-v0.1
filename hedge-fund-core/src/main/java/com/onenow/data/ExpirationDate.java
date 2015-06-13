@@ -28,6 +28,12 @@ public class ExpirationDate {
 		getIndexExpList().add("20150514");
 		getIndexExpList().add("20150522");
 		getIndexExpList().add("20150529");
+		getIndexExpList().add("20150529");
+		getIndexExpList().add("20150612");
+		getIndexExpList().add("20150618"); // TODO monthly options
+		getIndexExpList().add("20150626");
+		getIndexExpList().add("20150630");
+
 	}	
 	
 	public void initFuturesExpList() {
@@ -41,6 +47,7 @@ public class ExpirationDate {
 		// getFuturesExpList().add("201510");
 		// getFuturesExpList().add("201511");
 		getFuturesExpList().add("201512");
+
 	}
 	
 

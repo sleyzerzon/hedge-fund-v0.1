@@ -86,8 +86,7 @@ public class HistorianMain {
 		
 		Watchr.log(Level.INFO, "Cache Chart READ: L3 (augment data) "  + inv.toString());
 		
-		String fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
-		EventRequestHistory request = new EventRequestHistory(inv, fromDashedDate, toDashedDate, config);
+		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'

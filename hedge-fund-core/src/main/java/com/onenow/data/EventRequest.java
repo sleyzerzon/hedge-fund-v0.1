@@ -1,10 +1,13 @@
 package com.onenow.data;
 
+import java.util.logging.Level;
+
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
+import com.onenow.util.Watchr;
 
 
 public class EventRequest extends Event {
@@ -34,8 +37,12 @@ public class EventRequest extends Event {
 	
 	public String toString() {
 		String s = "";
-		s = super.toString();
-		s = s + sampling + " from " + fromDashedDate + " to " + toDashedDate;
+		try {
+			s = super.toString();
+			s = s + "-sampling " + sampling + "-from " + fromDashedDate + "-to " + toDashedDate;
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 		return s;
 	}
 

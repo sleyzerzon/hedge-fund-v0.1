@@ -1,9 +1,12 @@
 package com.onenow.data;
 
+import java.util.logging.Level;
+
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
+import com.onenow.util.Watchr;
 
 public class EventActivityRealtime extends EventActivity {
 	
@@ -35,13 +38,11 @@ public class EventActivityRealtime extends EventActivity {
 	
 	public String toString() {
 		String s = "\n";
-		s = s + super.toString();
-//		s = s + "- inv " + investment.toString() + "\n";
-//		s = s + "- tradeType " + tradeType.toString() + "\n";
-//		s = s + "- price " + price + "\n";
-//		s = s + "- size " + size + "\n";
-//		s = s + "- source " + source.toString() + "\n";
-//		s = s + "- timing " + timing.toString() + "\n";
+		try {
+			s = s + super.toString();
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
 		return s;
 	}
 }

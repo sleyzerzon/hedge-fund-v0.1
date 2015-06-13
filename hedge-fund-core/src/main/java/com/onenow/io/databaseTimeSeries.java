@@ -119,14 +119,14 @@ public static void writePrice(final EventActivity event) {
 
 		candles = priceSeriesToCandles(series); 
 		 
-		String log = "TSDB Cache Chart/Price READ: L1 HISTORY " + request.fromDashedDate + " " + request.toDashedDate + " " + " for " + key + " Prices: " + candles.toString();
+		String log = "TSDB Cache Chart/Price READ: L1 HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
 		Watchr.log(Level.INFO, log, "\n", "");
 
 		return candles;
 	}
 
 public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
-	// Watchr.log(Level.INFO, "REQUESTING " + request.toString());
+	Watchr.log(Level.INFO, "REQUESTING " + request.toString());
 	List<Serie> series = queryPrice(DBname.PRICE.toString(), request);
 	return series;
 }

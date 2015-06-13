@@ -1,6 +1,10 @@
 package com.onenow.data;
 
+import java.util.logging.Level;
+
 import com.onenow.instrument.Investment;
+import com.onenow.util.TimeParser;
+import com.onenow.util.Watchr;
 
 public class EventRequestHistory extends EventRequest {
 
@@ -10,9 +14,10 @@ public class EventRequestHistory extends EventRequest {
 		
 	}
 
-	public EventRequestHistory(Investment inv, String fromDashedDate, String toDashedDate, HistorianConfig config) {
+	public EventRequestHistory(Investment inv, String toDashedDate, HistorianConfig config) {
 
-		this.fromDashedDate = fromDashedDate;
+		this.fromDashedDate = getFromDate(config, toDashedDate);
+		
 		this.toDashedDate = toDashedDate;
 		this.investment = inv;
 
@@ -24,5 +29,28 @@ public class EventRequestHistory extends EventRequest {
 		this.tradeType = config.tradeType; 		
 
 	}
+	
+	/** 
+	 * Calculate the from based on the extent of the query in the config
+	 * @param config
+	 * @return
+	 */
+	private String getFromDate(HistorianConfig config, String toDashedDate) {
+		String fromDashedDate = "";
+		
+		fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
+		
+		return fromDashedDate;
+	}
 
+	public String toString() {
+		String s = "";
+		try {
+			s = super.toString();
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
+		return s;
+	}
+	
 }

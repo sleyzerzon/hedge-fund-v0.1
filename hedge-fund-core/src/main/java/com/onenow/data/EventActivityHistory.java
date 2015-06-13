@@ -3,6 +3,7 @@ package com.onenow.data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import com.ib.controller.Formats;
 import com.onenow.constant.InvDataSource;
@@ -10,6 +11,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.util.TimeParser;
+import com.onenow.util.Watchr;
 
 public class EventActivityHistory extends EventActivity {
 	
@@ -66,10 +68,18 @@ public class EventActivityHistory extends EventActivity {
 	}
 
 	@Override public String toString() {
-		return String.format(	super.toString() +
-								"\t req id " + reqId + 
-								"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
-								"\t FROM " + formattedTime() + "\t TIME ZONE?");
+		String s = "";
+		
+		try {
+			s = String.format(	super.toString() +
+									"\t req id " + reqId + 
+									"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
+									"\t FROM " + formattedTime() + "\t TIME ZONE?");
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
+
+		return s;
 	}
 		
 }

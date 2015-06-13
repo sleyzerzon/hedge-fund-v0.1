@@ -1,8 +1,10 @@
 package com.onenow.instrument;
 
 import java.util.Date;
+import java.util.logging.Level;
 
 import com.onenow.constant.InvType;
+import com.onenow.util.Watchr;
 
 public class InvestmentOption extends Investment { // call, put
 
@@ -48,9 +50,16 @@ public class InvestmentOption extends Investment { // call, put
 
 	// PRINT
 	public String toString() { // TODO add shares
-		String s = 	super.toString() + 
-					"-Expires"+ getExpirationDate().toString() +
-					"-Strike" + getStrikePrice().toString(); 
+		String s = " "; 	
+	
+		try {
+			s = super.toString() + " " + 
+				"-expires "+ getExpirationDate().toString() + " " + 
+				"-strike " + getStrikePrice().toString();
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
+		
 		return s;
 	}
 
