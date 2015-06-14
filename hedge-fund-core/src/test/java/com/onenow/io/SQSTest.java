@@ -6,7 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.amazonaws.services.sqs.model.Message;
-import com.onenow.data.EventRequestHistory;
 import com.onenow.util.Serializer;
 import com.onenow.util.TimeParser;
 
@@ -25,22 +24,23 @@ public class SQSTest {
 		sqs.sendMessage(sentMessage, queueURL);
 		
 		TimeParser.wait(5);
-  
-//		while(true) {
-			List<Message> serializedMessages = sqs.receiveMessages(queueURL);
-			if(serializedMessages.size()>0) {	
-				for(Message receivedMessage: serializedMessages) {
-					Object requestObject = Serializer.deserialize(receivedMessage.getBody(), String.class);
-					if(requestObject!=null) {
-						String requestReceived = (String) requestObject;
-						boolean success = Serializer.serialize(requestSent).equals(Serializer.serialize(requestReceived));
-						if(success) {
-							Assert.assertTrue(success);
-							return;
-					  }
+
+		// TODO: flush queue first
+		List<Message> serializedMessages = sqs.receiveMessages(queueURL);
+		if(serializedMessages.size()>0) {	
+			for(Message receivedMessage: serializedMessages) {
+				Object requestObject = Serializer.deserialize(receivedMessage.getBody(), String.class);
+				if(requestObject!=null) {
+					String requestReceived = (String) requestObject;
+					boolean success = Serializer.serialize(requestSent).equals(Serializer.serialize(requestReceived));
+					if(success) {
+						Assert.assertTrue(success);
+						return;
 				  }
 			  }
 		  }
-//		}
+		}	
+		sqs.deleteMesssage(queueURL, serializedMessages);
+
 	}
 }

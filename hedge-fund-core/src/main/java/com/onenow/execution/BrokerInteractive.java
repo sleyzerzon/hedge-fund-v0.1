@@ -59,14 +59,11 @@ public class BrokerInteractive implements BrokerInterface  {
 	  }
 	
 	  public BrokerInteractive(StreamName streamName, BusWallStIB bus) { 
-			this.streamName = streamName;
-			this.bus = bus;
-
-			bus.connectToServer();
 			
-			queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
-			sqs.listQueues();
-
+		  	this.streamName = streamName;
+			this.bus = bus;
+			
+			connectToServices(bus);
 	  }
 	  
 	  /**
@@ -79,7 +76,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	    this.marketPortfolio = marketPortfolio;
 		this.bus = bus;
 		
-	    bus.connectToServer();
+		connectToServices(bus);
 	
 	    // create new underlying list, portfolio, then initialize the market
 	    this.underList = new ArrayList<Underlying>(); // TODO: get from portfolio?
@@ -90,6 +87,13 @@ public class BrokerInteractive implements BrokerInterface  {
 	    this.trades = new ArrayList<Trade>();
 	  }
 		  
+	  private void connectToServices(BusWallStIB bus) {
+		  bus.connectToServer();
+		  queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
+		sqs.listQueues();
+	  }
+
+	
 	  // GET REAL TIME QUOTES
 	  /**
 	   * For every currently-traded investment: request quotes
@@ -106,43 +110,35 @@ public class BrokerInteractive implements BrokerInterface  {
 	  }	
 	  
 	  // GET HISTORICAL QUOTES
-	  // TODO: pool of threads so main flow is not blocked
 	  public void procesHistoricalQuotesRequests() {
-
 		  while(true) {
-			  
-			  // get events from SQS
-			  List<Message> serializedMessages = sqs.receiveMessages(queueURL);
-			  
+			  List<Message> serializedMessages = sqs.receiveMessages(queueURL);			  
 			  if(serializedMessages.size()>0) {	
-				  for(Message message: serializedMessages) {
-					  
-					  Object requestObject = Serializer.deserialize(message.getBody(), EventRequestHistory.class);
-					  	  
-					  if(requestObject!=null) {
-						  
-						  EventRequestHistory request = (EventRequestHistory) requestObject;
-
-						  // get the history reference for the specific investment 
-						  QuoteHistory invHist = lookupInvHistory(request);
-				
-						  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
-						  TimeParser.paceHistoricalQuery(lastQueryTime); 
-				
-						  // look for SQS requests for history
-						  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
-						  Integer reqId = readHistoricalQuotes(	request.investment, 
-																endDateTime, 
-																request.config, invHist);
-				
-						  lastQueryTime = TimeParser.getTimestampNow();		
-					  }
+				  for(Message message: serializedMessages) {				  
+					  processHistoryOneRequest(message);
 				  }
 				  sqs.deleteMesssage(queueURL, serializedMessages);
 			  }
 			  TimeParser.wait(1); // pace requests for messages from queue 
 		  }
 		}
+
+	private void processHistoryOneRequest(Message message) {
+		Object requestObject = Serializer.deserialize(message.getBody(), EventRequestHistory.class);
+		  if(requestObject!=null) {
+			  EventRequestHistory request = (EventRequestHistory) requestObject;
+			  // get the history reference for the specific investment 
+			  QuoteHistory invHist = lookupInvHistory(request);
+			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
+			  TimeParser.paceHistoricalQuery(lastQueryTime); 
+			  // look for SQS requests for history
+			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
+			  Integer reqId = readHistoricalQuotes(	request.investment, 
+													endDateTime, 
+													request.config, invHist);
+			  lastQueryTime = TimeParser.getTimestampNow();		
+		  }
+	}
 		
 	  /**
 	   * Returns reference to object where history will be stored, upon asynchronous return
@@ -150,7 +146,6 @@ public class BrokerInteractive implements BrokerInterface  {
 	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistory quoteHistory) {
 	
 		  Contract contract = ContractFactory.getContract(inv);
-	
 		  Integer reqId = bus.controller.reqHistoricalData(	contract, endDateTime, 
 	    													1, config.durationUnit, config.barSize, config.whatToShow, 
 	    													false, quoteHistory);

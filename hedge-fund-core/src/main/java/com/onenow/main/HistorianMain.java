@@ -25,10 +25,7 @@ import com.onenow.util.Watchr;
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-
-	// relevant time frame
     private static String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
-    
 	private static HistorianConfig config = new HistorianService().size30sec;
 	
 	private static SQS sqs = new SQS();
@@ -41,13 +38,10 @@ public class HistorianMain {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
-		
 		// queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING"; 
 		// sqs.deleteQueue(queueURL);
 		// sqs.createQueue(QueueName.HISTORY_STAGING);
 		sqs.listQueues();
-        
-
 		
 		int count=0;
 		while(true) {
@@ -59,11 +53,12 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
 				TimeParser.paceHistoricalQuery(lastQueryTime);
+				
 				updateL2HistoryFromL3(inv, toDashedDate);					
+				
 				lastQueryTime = TimeParser.getTimestampNow();		
 			}
-			
-						
+									
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			count++;
@@ -97,7 +92,6 @@ public class HistorianMain {
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
-
 		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
