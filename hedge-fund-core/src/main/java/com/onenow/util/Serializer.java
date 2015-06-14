@@ -1,7 +1,6 @@
 package com.onenow.util;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 public class Serializer {
 	

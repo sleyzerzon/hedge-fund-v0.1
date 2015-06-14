@@ -114,14 +114,11 @@ public class BrokerInteractive implements BrokerInterface  {
 			  // get events from SQS
 			  List<Message> serializedMessages = sqs.receiveMessages(queueURL);
 			  
-			  if(serializedMessages.size()>0) {
-				  sqs.deleteMesssage(queueURL, serializedMessages);
-	
+			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {
 					  
 					  Object requestObject = Serializer.deserialize(message.getBody(), EventRequestHistory.class);
-					  
-				  
+					  	  
 					  if(requestObject!=null) {
 						  
 						  EventRequestHistory request = (EventRequestHistory) requestObject;
@@ -141,8 +138,9 @@ public class BrokerInteractive implements BrokerInterface  {
 						  lastQueryTime = TimeParser.getTimestampNow();		
 					  }
 				  }
+				  sqs.deleteMesssage(queueURL, serializedMessages);
 			  }
-			  TimeParser.wait(1);
+			  TimeParser.wait(1); // pace requests for messages from queue 
 		  }
 		}
 		
