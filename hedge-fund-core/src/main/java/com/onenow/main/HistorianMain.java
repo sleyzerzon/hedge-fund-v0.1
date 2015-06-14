@@ -34,6 +34,8 @@ public class HistorianMain {
 	private static SQS sqs = new SQS();
 	private static String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING";
 	
+	private static long lastQueryTime;
+
 	public static void main(String[] args) {
 		
 		SysProperties.setLogProperties();
@@ -56,8 +58,9 @@ public class HistorianMain {
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
-				updateL2HistoryFromL3(inv, toDashedDate);
-				TimeParser.wait(5); // pace
+				TimeParser.paceHistoricalQuery(lastQueryTime);
+				updateL2HistoryFromL3(inv, toDashedDate);					
+				lastQueryTime = TimeParser.getTimestampNow();		
 			}
 			
 						
