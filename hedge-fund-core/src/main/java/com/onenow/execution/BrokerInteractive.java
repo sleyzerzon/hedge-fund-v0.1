@@ -90,7 +90,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private void connectToServices(BusWallStIB bus) {
 		  bus.connectToServer();
 		  queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
-		sqs.listQueues();
+		  sqs.listQueues();
 	  }
 
 	
@@ -149,7 +149,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  Integer reqId = bus.controller.reqHistoricalData(	contract, endDateTime, 
 	    													1, config.durationUnit, config.barSize, config.whatToShow, 
 	    													false, quoteHistory);
-		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " ENDING " + endDateTime + " REQ ID " + reqId;
+		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " CONTRACT " + contract.toString() + " ENDING " + endDateTime + " REQ ID " + reqId + " CONFIG " + config.toString();
 		  Watchr.log(Level.INFO, log);
 	    
 		  return reqId;
