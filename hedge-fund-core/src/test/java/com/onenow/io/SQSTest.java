@@ -26,7 +26,7 @@ public class SQSTest {
 		
 		TimeParser.wait(5);
   
-		while(true) {
+//		while(true) {
 			List<Message> serializedMessages = sqs.receiveMessages(queueURL);
 			if(serializedMessages.size()>0) {	
 				for(Message receivedMessage: serializedMessages) {
@@ -41,6 +41,6 @@ public class SQSTest {
 				  }
 			  }
 		  }
-		}
+//		}
 	}
 }
