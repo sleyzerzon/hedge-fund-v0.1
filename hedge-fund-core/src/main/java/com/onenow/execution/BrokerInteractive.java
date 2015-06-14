@@ -27,6 +27,7 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
+import com.onenow.util.Serializer;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
@@ -111,24 +112,37 @@ public class BrokerInteractive implements BrokerInterface  {
 		  while(true) {
 			  
 			  // get events from SQS
-			  List<Message> messages = sqs.receiveMessages(queueURL);
-			  sqs.deleteMesssage(queueURL, messages);
+			  List<Message> serializedMessages = sqs.receiveMessages(queueURL);
+			  
+			  if(serializedMessages.size()>0) {
+				  sqs.deleteMesssage(queueURL, serializedMessages);
+	
+				  for(Message message: serializedMessages) {
+					  
+					  Object requestObject = Serializer.deserialize(message.getBody(), EventRequestHistory.class);
+					  
+				  
+					  if(requestObject!=null) {
+						  
+						  EventRequestHistory request = (EventRequestHistory) requestObject;
 
-			  EventRequestHistory request = null;
-		  
-			  // get the history reference for the specific investment 
-			  QuoteHistory invHist = lookupInvHistory(request);
-	
-			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
-			  TimeParser.paceHistoricalQuery(lastQueryTime); 
-	
-			  // look for SQS requests for history
-			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
-			  Integer reqId = readHistoricalQuotes(	request.investment, 
-													endDateTime, 
-													request.config, invHist);
-	
-			  lastQueryTime = TimeParser.getTimestampNow();		
+						  // get the history reference for the specific investment 
+						  QuoteHistory invHist = lookupInvHistory(request);
+				
+						  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
+						  TimeParser.paceHistoricalQuery(lastQueryTime); 
+				
+						  // look for SQS requests for history
+						  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
+						  Integer reqId = readHistoricalQuotes(	request.investment, 
+																endDateTime, 
+																request.config, invHist);
+				
+						  lastQueryTime = TimeParser.getTimestampNow();		
+					  }
+				  }
+			  }
+			  TimeParser.wait(1);
 		  }
 		}
 		

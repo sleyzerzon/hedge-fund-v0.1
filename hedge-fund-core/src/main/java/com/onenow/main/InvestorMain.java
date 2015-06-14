@@ -69,24 +69,23 @@ public class InvestorMain {
 	}
 	
 	private static StreamName getArgument(String[] args) {
-		StreamName mode = null;
 		if(args.length>0) {
 			if(args[0]!=null) {
 				String s0 = args[0];
 				if(s0.equals("PRIMARY")) {
-					mode = StreamName.PRIMARY;
+					return StreamName.PRIMARY;
 				}
 				if(s0.equals("STANDBY")) {
-					mode = StreamName.STANDBY;
+					return StreamName.STANDBY;
 				}
 				if(s0.equals("REALTIME")) {
-					mode = StreamName.REALTIME;
+					return StreamName.REALTIME;
 				}
 				if(s0.equals("HISTORY")) {
-					mode = StreamName.HISTORY;
+					return StreamName.HISTORY;
 				}
 				if(s0.equals("STREAMING")) {
-					mode = StreamName.STREAMING;
+					return StreamName.STREAMING;
 				}
 				else {
 					Watchr.log(Level.SEVERE, "Invalid args[0], should be Investor StreamName");
@@ -95,7 +94,8 @@ public class InvestorMain {
 		    	Watchr.log(Level.SEVERE, "ERROR: mode is a required argument");
 			}
 		}
-		return mode;
+		return null;
 	}
+	
 	
 }

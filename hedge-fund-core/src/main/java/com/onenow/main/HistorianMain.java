@@ -17,6 +17,7 @@ import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.Serializer;
 import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -31,16 +32,19 @@ public class HistorianMain {
 	private static HistorianConfig config = new HistorianService().size30sec;
 	
 	private static SQS sqs = new SQS();
-	private static String queueURL;
+	private static String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING";
 	
 	public static void main(String[] args) {
 		
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
-		queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
+		
+		// queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING"; 
+		// sqs.deleteQueue(queueURL);
+		// sqs.createQueue(QueueName.HISTORY_STAGING);
 		sqs.listQueues();
-        // sqs.deleteQueue(queueURL);
+        
 
 		
 		int count=0;
@@ -53,9 +57,9 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
 				updateL2HistoryFromL3(inv, toDashedDate);
+				TimeParser.wait(5); // pace
 			}
 			
-			TimeParser.wait(10); // pace
 						
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
@@ -97,9 +101,10 @@ public class HistorianMain {
 		if ( storedPrices.size()<minPrices ) {	
 
 			Watchr.log(Level.WARNING, "Request this! " + request.toString());
-			sqs.sendMessage(request.toString(), queueURL);
-
-			// TODO: send SQS request to broker
+			
+			// Send SQS request to broker
+			String message = Serializer.serialize((Object) request);
+			sqs.sendMessage(message, queueURL);
 
 		} else {
 			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());

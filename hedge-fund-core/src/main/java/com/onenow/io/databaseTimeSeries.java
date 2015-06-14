@@ -69,8 +69,13 @@ public static InfluxDB dbConnect() {
 
 private static void dbCreateAndConnect() {
 	try {
-		influxDB.createDatabase(DBname.PRICE.toString());
-		influxDB.createDatabase(DBname.SIZE.toString());
+		influxDB.createDatabase(DBname.PRICE_DEVELOPMENT.toString());
+		influxDB.createDatabase(DBname.PRICE_STAGING.toString());
+		influxDB.createDatabase(DBname.PRICE_PRODUCTION.toString());
+
+		influxDB.createDatabase(DBname.SIZE_DEVELOPMENT.toString());
+		influxDB.createDatabase(DBname.SIZE_STAGING.toString());
+		influxDB.createDatabase(DBname.SIZE_PRODUCTION.toString());
 		
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
@@ -92,11 +97,11 @@ public static void writePrice(final EventActivity event) {
 		@Override public void run () {
 
 		Long before = TimeParser.getTimestampNow();
-		influxDB.write(DBname.PRICE.toString(), TimeUnit.MILLISECONDS, serie);
+		influxDB.write(DBname.PRICE_STAGING.toString(), TimeUnit.MILLISECONDS, serie);
 		// TODO: time_precision='ms'
 		Long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE.toString() + " " + 
+		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE_STAGING.toString() + " " + 
 								event.toString() + " " +  
 								"ELAPSED WRITE " + (after-before) + "ms " +
 								"ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
@@ -124,7 +129,7 @@ public static void writePrice(final EventActivity event) {
 
 public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
 	// Watchr.log(Level.INFO, "REQUESTING " + request.toString());
-	List<Serie> series = queryPrice(DBname.PRICE.toString(), request);
+	List<Serie> series = queryPrice(DBname.PRICE_STAGING.toString(), request);
 	return series;
 }
 
@@ -272,10 +277,10 @@ public static void writeSize(final EventActivity event) {
 		@Override public void run () {
 
 		long before = TimeParser.getTimestampNow();
-		influxDB.write(DBname.SIZE.toString(), TimeUnit.MILLISECONDS, serie);
+		influxDB.write(DBname.SIZE_STAGING.toString(), TimeUnit.MILLISECONDS, serie);
 		long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(	Level.INFO, "TSDB WRITE: " + DBname.SIZE.toString() + " " + 
+		Watchr.log(	Level.INFO, "TSDB WRITE: " + DBname.SIZE_STAGING.toString() + " " + 
 					event.toString() + " " +  
 					"ELAPSED WRITE " + (after-before) + "ms " +
 					"ELAPSED TOTAL " + (after-event.origin.start) + "ms ",
@@ -304,7 +309,7 @@ public static List<Integer> readSizeFromDB(	EventRequest request) {
 
 private static List<Serie> readSizeSeriesFromDB(String key,
 		SamplingRate sampling, String fromDate, String toDate) {
-	List<Serie> series = querySize(	DBname.SIZE.toString(), key,  sampling, fromDate, toDate);
+	List<Serie> series = querySize(	DBname.SIZE_STAGING.toString(), key,  sampling, fromDate, toDate);
 	return series;
 }
 

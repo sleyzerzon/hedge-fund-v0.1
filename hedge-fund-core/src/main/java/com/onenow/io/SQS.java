@@ -72,13 +72,13 @@ public class SQS {
 
 	public void deleteMesssage(String myQueueUrl, List<Message> messages) {
 		
-		String log = "Deleting a message: " + messages + " FROM " + myQueueUrl;
+		String log = "Deleting a message list: " + messages + " FROM " + myQueueUrl;
     	Watchr.log(Level.INFO, log);
-		String messageRecieptHandle = messages.get(0).getReceiptHandle();
 		try {
+			String messageRecieptHandle = messages.get(0).getReceiptHandle();
 			sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl, messageRecieptHandle));
-		} catch (AmazonServiceException e) {
-			Watchr.log(Level.SEVERE, e.toString());
+		} catch (Exception e) {
+			// e.printStackTrace();
 		}
 	}
 
