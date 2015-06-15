@@ -1,6 +1,5 @@
 package com.onenow.io;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -10,14 +9,10 @@ import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.model.Record;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
-import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventActivityRealtime;
-import com.onenow.instrument.Investment;
 import com.onenow.main.ChartistMain;
 import com.onenow.main.ClerkHistoryMain;
 import com.onenow.main.ClerkRealTimeMain;

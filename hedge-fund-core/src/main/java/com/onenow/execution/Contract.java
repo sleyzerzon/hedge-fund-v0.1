@@ -268,8 +268,7 @@ public class Contract implements Cloneable {
         }
 
         sb.append( tag);
-        // sb.append( ' ');
         sb.append( val);
-        // sb.append( ' ');
+        sb.append(" ");
     }
 }

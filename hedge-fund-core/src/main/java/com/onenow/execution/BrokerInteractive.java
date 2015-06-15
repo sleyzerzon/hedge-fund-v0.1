@@ -130,6 +130,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	private void processHistoryOneRequest(Message message) {
 		Object requestObject = Piping.deserialize(message.getBody(), EventRequestHistory.class);
 		  if(requestObject!=null) {
+			  Watchr.log(Level.FINE, "Received request object: " + requestObject.toString());
 			  EventRequestHistory request = (EventRequestHistory) requestObject;
 			  // get the history reference for the specific investment 
 			  QuoteHistory invHist = lookupInvHistory(request);

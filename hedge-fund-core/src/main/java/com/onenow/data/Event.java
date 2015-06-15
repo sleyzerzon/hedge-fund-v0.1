@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
@@ -15,8 +16,6 @@ import com.onenow.util.Watchr;
 
 public class Event {
 	
-	// public Investment investment;
-
 	public InvestmentIndex index = null;
 	public InvestmentOption option = null;
 	public InvestmentStock stock = null;
@@ -41,19 +40,19 @@ public class Event {
 	}
 	
 	public void setInvestment(Investment inv) {
-		if(inv instanceof InvestmentIndex) {
+		if(inv instanceof InvestmentIndex || inv.getInvType().equals(InvType.INDEX)) {
 			index = (InvestmentIndex) inv;
 			return;
 		}
-		if(inv instanceof InvestmentOption) {
+		if(inv instanceof InvestmentOption || inv.getInvType().equals(InvType.CALL) || inv.getInvType().equals(InvType.PUT)) {
 			option = (InvestmentOption) inv;
 			return;
 		}
-		if(inv instanceof InvestmentStock) {
+		if(inv instanceof InvestmentStock || inv.getInvType().equals(InvType.STOCK)) {
 			stock = (InvestmentStock) inv;
 			return;
 		}
-		if(inv instanceof InvestmentFuture) {
+		if(inv instanceof InvestmentFuture || inv.getInvType().equals(InvType.FUTURE)) {
 			future = (InvestmentFuture) inv;
 			return;
 		}
