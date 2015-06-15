@@ -71,9 +71,12 @@ public class EventActivityHistory extends EventActivity {
 		String s = "";
 		
 		s = String.format(	super.toString() +
-								"\t req id " + reqId + 
-								"\t open " + open + "\t high " +  high + "\t low " + low + "\t close " + close +
-								"\t FROM " + formattedTime() + "\t TIME ZONE?");
+							"-reqID " + reqId + 
+							"-open " + open + 
+							"-high " +  high + 
+							"-low " + low + 
+							"-close " + close +
+							"-FROM " + formattedTime() + "\t TIME ZONE?");
 
 		return s;
 	}

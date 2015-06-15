@@ -26,7 +26,7 @@ public class Event {
 	public InvDataTiming timing;
 	public TradeType tradeType; 
 
-	public ObjectOrigination origin = new ObjectOrigination();
+	// public ObjectOrigination origin = new ObjectOrigination();
 
 	public Event() {
 		
@@ -76,11 +76,11 @@ public class Event {
 	public String toString() {
 		String s = "";
 		
-		s = 	origin.toString("EVENT") + " " + 
-				getInvestment().toString() + " " +
-				"source " + source + " " + 
-				"-timing " + timing + " " + 
-				"-tradeType " + tradeType;
+		// s = s + origin.toString("EVENT") + " "; 
+		s =	s + getInvestment().toString() + " ";
+		s =	s + "source " + source + " "; 
+		s =	s + "-timing " + timing + " "; 
+		s =	s + "-tradeType " + tradeType;
 		
 		return s;
 	}

@@ -103,8 +103,8 @@ public static void writePrice(final EventActivity event) {
 	
 		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE_STAGING.toString() + " " + 
 								event.toString() + " " +  
-								"ELAPSED WRITE " + (after-before) + "ms " +
-								"ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
+								"ELAPSED WRITE " + (after-before) + "ms ",
+								// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
 		}
 	}.start();
@@ -282,8 +282,8 @@ public static void writeSize(final EventActivity event) {
 	
 		Watchr.log(	Level.INFO, "TSDB WRITE: " + DBname.SIZE_STAGING.toString() + " " + 
 					event.toString() + " " +  
-					"ELAPSED WRITE " + (after-before) + "ms " +
-					"ELAPSED TOTAL " + (after-event.origin.start) + "ms ",
+					"ELAPSED WRITE " + (after-before) + "ms ",
+					// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ",
 					"\n", "");
 		}
 	}.start();
