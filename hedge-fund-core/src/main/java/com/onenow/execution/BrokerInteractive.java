@@ -10,6 +10,7 @@ import com.amazonaws.services.sqs.model.Message;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.InvType;
 import com.onenow.constant.QueueName;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
@@ -19,7 +20,10 @@ import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
+import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.io.Lookup;
 import com.onenow.io.SQS;
@@ -27,7 +31,7 @@ import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
-import com.onenow.util.Serializer;
+import com.onenow.util.Piping;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
@@ -124,7 +128,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		}
 
 	private void processHistoryOneRequest(Message message) {
-		Object requestObject = Serializer.deserialize(message.getBody(), EventRequestHistory.class);
+		Object requestObject = Piping.deserialize(message.getBody(), EventRequestHistory.class);
 		  if(requestObject!=null) {
 			  EventRequestHistory request = (EventRequestHistory) requestObject;
 			  // get the history reference for the specific investment 
@@ -133,13 +137,13 @@ public class BrokerInteractive implements BrokerInterface  {
 			  TimeParser.paceHistoricalQuery(lastQueryTime); 
 			  // look for SQS requests for history
 			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
-			  Integer reqId = readHistoricalQuotes(	request.investment, 
+			  Integer reqId = readHistoricalQuotes(	request.getInvestment(), 
 													endDateTime, 
 													request.config, invHist);
 			  lastQueryTime = TimeParser.getTimestampNow();		
 		  }
 	}
-		
+				  
 	  /**
 	   * Returns reference to object where history will be stored, upon asynchronous return
 	   */

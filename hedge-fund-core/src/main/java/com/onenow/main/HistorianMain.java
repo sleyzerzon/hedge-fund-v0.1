@@ -17,7 +17,7 @@ import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
-import com.onenow.util.Serializer;
+import com.onenow.util.Piping;
 import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -68,7 +68,7 @@ public class HistorianMain {
 	private static void getTimelyMarketPortfolio(int count) {
 		// update the market portfolio, broker, and historian every month
 		if(count%30 == 0) {
-			marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+			marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks),
 														InvestmentList.getUnderlying(InvestmentList.someIndices),
 														InvestmentList.getUnderlying(InvestmentList.futures), 
 														InvestmentList.getUnderlying(InvestmentList.options),
@@ -100,7 +100,7 @@ public class HistorianMain {
 			Watchr.log(Level.WARNING, "Request this! " + request.toString());
 			
 			// Send SQS request to broker
-			String message = Serializer.serialize((Object) request);
+			String message = Piping.serialize((Object) request);
 			sqs.sendMessage(message, queueURL);
 
 		} else {

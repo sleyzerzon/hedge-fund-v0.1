@@ -1,10 +1,7 @@
 package com.onenow.data;
 
-import java.util.logging.Level;
-
 import com.onenow.instrument.Investment;
 import com.onenow.util.TimeParser;
-import com.onenow.util.Watchr;
 
 public class EventRequestHistory extends EventRequest {
 
@@ -19,7 +16,7 @@ public class EventRequestHistory extends EventRequest {
 		this.fromDashedDate = getFromDate(config, toDashedDate);
 		
 		this.toDashedDate = toDashedDate;
-		this.investment = inv;
+		setInvestment(inv);
 
 		this.config = config;
 

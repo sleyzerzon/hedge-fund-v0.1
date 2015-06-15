@@ -2,11 +2,11 @@ package com.onenow.util;
 
 import com.google.gson.Gson;
 
-public class Serializer {
+public class Piping {
 	
 	private static Gson gson = new Gson();
 
-	public Serializer() {
+	public Piping() {
 		
 	}
 
@@ -30,5 +30,17 @@ public class Serializer {
 			e.printStackTrace();
 		}
 		return obj;
+	}
+	
+	public static String compress(String message) {
+		String s = "";
+		
+		return s;
+	}
+	
+	public static String decompress(String message) {
+		String s = "";
+		
+		return s;
 	}
 }

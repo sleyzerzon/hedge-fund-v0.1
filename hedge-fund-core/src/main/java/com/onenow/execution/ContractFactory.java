@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.ib.client.ComboLeg;
 import com.ib.client.Types.SecType;
@@ -16,6 +17,7 @@ import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.util.TimeParser;
+import com.onenow.util.Watchr;
 
 /**
  * Translate investment objects into contract in the format of the specific Wall Street Broker 
@@ -29,26 +31,33 @@ public class ContractFactory {
 	
 	
 	public static Contract getContract(Investment inv) {
-		
-		// System.out.println("GET CONTRACT FROM " + inv.toString());
-		
+				
 		Contract contract = new Contract();
 		
-		if(inv instanceof InvestmentIndex) {
+		if(inv.invType.equals(InvType.INDEX)) { // instanceof InvestmentIndex
+			System.out.println("GET INDEX CONTRACT FOR " + inv.toString());
 			return getIndexToQuote(inv);
 		}
 
-		if(inv instanceof InvestmentOption) {
+//		if(inv instanceof InvestmentOption) {
+		if( inv.invType.equals(InvType.CALL) || inv.invType.equals(InvType.PUT)) {
+			System.out.println("GET OPTION CONTRACT FOR " + inv.toString());
 			return getOptionToQuote(inv);			
 		}
 
-		if(inv instanceof InvestmentStock) {
+//		if(inv instanceof InvestmentStock) {
+		if(inv.invType.equals(InvType.STOCK)) {
+			System.out.println("GET STOCK CONTRACT FOR " + inv.toString());
 			return getStockToQuote(inv);			
 		}
 
-		if(inv instanceof InvestmentFuture) {
+//		if(inv instanceof InvestmentFuture) {
+		if(inv.invType.equals(InvType.FUTURE)) {
+			System.out.println("GET FUTURE CONTRACT FOR " + inv.toString());
 			return getFutureToQuote(inv);			
 		}
+		
+		Watchr.log(Level.SEVERE, "COULD NOT MATCH INVESTMETN TO CONTRACT");
 
 		return contract;
 	}

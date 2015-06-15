@@ -17,14 +17,14 @@ import com.onenow.util.Watchr;
 public class Investment {
 
 	private Underlying under;
-	private InvType invType;
+	public InvType invType;
 	
 	private Reward reward;
 	private Risk risk;
 	
 	private HashMap<SamplingRate, Chart> charts = new HashMap<SamplingRate, Chart>();
 	
-	public ObjectOrigination origin = new ObjectOrigination();
+	// public ObjectOrigination origin = new ObjectOrigination();
 	
 	
 	// CONSTRUCTOR
@@ -55,9 +55,9 @@ public class Investment {
 	public String toString() {
 		String s = "";
 		
-		s = origin.toString("INVESTMENT") + " " + 
-			"-under " + getUnder().toString() + " " +
-			"-type " + getInvType();
+//		s = s + origin.toString("INVESTMENT") + " ";
+		s = s + "-under " + getUnder().toString() + " ";
+		s = s +	"-type " + getInvType();
 		
 		return s;
 	}

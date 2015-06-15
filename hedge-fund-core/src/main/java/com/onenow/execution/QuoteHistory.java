@@ -42,7 +42,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	}
 	
 	public QuoteHistory(EventRequestHistory request) {
-		this.investment = request.investment;
+		this.investment = request.getInvestment();
 		this.tradeType = request.tradeType;
 		this.source = request.source;
 		this.timing = request.timing;
@@ -80,7 +80,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	private void handleRow(EventActivityHistory row) {
 		
 		// Clarify provenance
-		row.investment = investment;
+		row.setInvestment(investment);
 		row.tradeType = tradeType;
 		row.source = source;
 		row.timing = timing;

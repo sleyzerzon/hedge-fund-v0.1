@@ -53,7 +53,7 @@ public class ClerkHistoryMain {
 			}				
 		}
 		if(retry) {
-			Watchr.log(Level.INFO, "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + event.investment.toString());
+			Watchr.log(Level.INFO, "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + event.getInvestment().toString());
 		}
 				
 	}

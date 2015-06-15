@@ -59,15 +59,15 @@ public class Lookup {
 		String s = ""; 
 	
 		try {
-			Underlying under = event.investment.getUnder();
-			s = s + under.getTicker() + "-" + event.investment.getInvType();		
-			if (event.investment instanceof InvestmentOption) {
-				String exp = (String) ((InvestmentOption) event.investment).getExpirationDate();
-				Double strike = ((InvestmentOption) event.investment).getStrikePrice();
+			Underlying under = event.getInvestment().getUnder();
+			s = s + under.getTicker() + "-" + event.getInvestment().getInvType();		
+			if (event.getInvestment() instanceof InvestmentOption) {
+				String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
+				Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
 				s = s + "-" + exp + "-" + strike; 
 			}
-			if (event.investment instanceof InvestmentFuture) {
-				String exp = (String) ((InvestmentFuture) event.investment).getExpirationDate();
+			if (event.getInvestment() instanceof InvestmentFuture) {
+				String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
 				s = s + "-" + exp;
 			}
 			s = s + "-" + event.tradeType.toString();
@@ -96,7 +96,7 @@ public class Lookup {
 	
 	public static String getChartKey(EventRequest request) {
 		String s = "";
-		s = s + request.investment.toString();
+		s = s + request.getInvestment().toString();
 		s = s + "-" + request.tradeType.toString();
 		s = s + "-" + request.sampling.toString();
 //		s = s + "-" + fromDate + "-" + toDate;

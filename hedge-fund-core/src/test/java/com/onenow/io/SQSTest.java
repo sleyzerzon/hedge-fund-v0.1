@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.amazonaws.services.sqs.model.Message;
-import com.onenow.util.Serializer;
+import com.onenow.util.Piping;
 import com.onenow.util.TimeParser;
 
 public class SQSTest {
@@ -20,7 +20,7 @@ public class SQSTest {
 		String requestSent = "Say hello to world!";
 
 		// Send SQS request to broker
-		String sentMessage = Serializer.serialize((Object) requestSent);
+		String sentMessage = Piping.serialize((Object) requestSent);
 		sqs.sendMessage(sentMessage, queueURL);
 		
 		TimeParser.wait(5);
@@ -29,10 +29,10 @@ public class SQSTest {
 		List<Message> serializedMessages = sqs.receiveMessages(queueURL);
 		if(serializedMessages.size()>0) {	
 			for(Message receivedMessage: serializedMessages) {
-				Object requestObject = Serializer.deserialize(receivedMessage.getBody(), String.class);
+				Object requestObject = Piping.deserialize(receivedMessage.getBody(), String.class);
 				if(requestObject!=null) {
 					String requestReceived = (String) requestObject;
-					boolean success = Serializer.serialize(requestSent).equals(Serializer.serialize(requestReceived));
+					boolean success = Piping.serialize(requestSent).equals(Piping.serialize(requestReceived));
 					if(success) {
 						Assert.assertTrue(success);
 						return;

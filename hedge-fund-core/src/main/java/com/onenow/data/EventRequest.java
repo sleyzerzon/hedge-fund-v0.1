@@ -25,7 +25,7 @@ public class EventRequest extends Event {
 							String fromDashedDate, String toDashedDate,
 							InvDataSource source, InvDataTiming timing) {
 		
-		this.investment = inv;
+		setInvestment(inv);
 		this.tradeType = tradeType;
 		this.sampling = sampling;
 		this.fromDashedDate = fromDashedDate;

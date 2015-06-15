@@ -22,13 +22,13 @@ public class SerializerTest {
 	@Test
 	public void deserialize() {
 		Watchr.log("OBJECT " + request.toString());
-		String json = Serializer.serialize((Object) request);
+		String json = Piping.serialize((Object) request);
 		Watchr.log("SERIALIZED " + json);
-		EventRequestHistory newReq = (EventRequestHistory) Serializer.deserialize(json, EventRequestHistory.class);
+		EventRequestHistory newReq = (EventRequestHistory) Piping.deserialize(json, EventRequestHistory.class);
 		Watchr.log("DESERIALIZED " + newReq.toString());
 		
 		// equals compares the string form
-		Assert.assertTrue(Serializer.serialize(request).equals(Serializer.serialize(newReq)));
+		Assert.assertTrue(Piping.serialize(request).equals(Piping.serialize(newReq)));
 	}
 
 

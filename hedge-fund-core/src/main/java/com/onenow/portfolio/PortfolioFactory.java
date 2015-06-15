@@ -108,10 +108,10 @@ public class PortfolioFactory {
 		SamplingRate sr = SamplingRate.SCALP;
 		
 		if(!chart.getSizes().isEmpty()) {
-			request.investment.getCharts().put(sr, chart); // sampling is key	
-			System.out.println("+ chart " + request.investment.toString() +  " " + sampling + "\n" + chart.toString() + "\n\n");			
+			request.getInvestment().getCharts().put(sr, chart); // sampling is key	
+			System.out.println("+ chart " + request.getInvestment().toString() +  " " + sampling + "\n" + chart.toString() + "\n\n");			
 		} else {
-			System.out.println("- chart " + request.investment.toString() + " " + sampling  + "\n\n");
+			System.out.println("- chart " + request.getInvestment().toString() + " " + sampling  + "\n\n");
 		}		
 	}
 
