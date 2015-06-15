@@ -70,13 +70,14 @@ public class EventActivityHistory extends EventActivity {
 	@Override public String toString() {
 		String s = "";
 		
-		s = String.format(	super.toString() +
-							"-reqID " + reqId + 
-							"-open " + open + 
-							"-high " +  high + 
-							"-low " + low + 
-							"-close " + close +
-							"-FROM " + formattedTime() + "\t TIME ZONE?");
+		s = String.format(	super.toString() + " " +
+							"-reqID " + reqId + " " + 
+							"-open " + open + " " +
+							"-high " +  high + " " +
+							"-low " + low + " " +
+							"-close " + close + " " +
+							"-FROM " + formattedTime() + " " +
+							"-TIME ZONE???"); // TODO: time zone
 
 		return s;
 	}

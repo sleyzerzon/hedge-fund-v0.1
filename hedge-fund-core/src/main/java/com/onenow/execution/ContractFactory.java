@@ -34,25 +34,22 @@ public class ContractFactory {
 				
 		Contract contract = new Contract();
 		
-		if(inv.invType.equals(InvType.INDEX)) { // instanceof InvestmentIndex
+		if(inv instanceof InvestmentIndex) { 
 			System.out.println("GET INDEX CONTRACT FOR " + inv.toString());
 			return getIndexToQuote(inv);
 		}
 
-//		if(inv instanceof InvestmentOption) {
-		if( inv.invType.equals(InvType.CALL) || inv.invType.equals(InvType.PUT)) {
+		if(inv instanceof InvestmentOption) {
 			System.out.println("GET OPTION CONTRACT FOR " + inv.toString());
 			return getOptionToQuote(inv);			
 		}
 
-//		if(inv instanceof InvestmentStock) {
-		if(inv.invType.equals(InvType.STOCK)) {
+		if(inv instanceof InvestmentStock) {
 			System.out.println("GET STOCK CONTRACT FOR " + inv.toString());
 			return getStockToQuote(inv);			
 		}
 
-//		if(inv instanceof InvestmentFuture) {
-		if(inv.invType.equals(InvType.FUTURE)) {
+		if(inv instanceof InvestmentFuture) {
 			System.out.println("GET FUTURE CONTRACT FOR " + inv.toString());
 			return getFutureToQuote(inv);			
 		}

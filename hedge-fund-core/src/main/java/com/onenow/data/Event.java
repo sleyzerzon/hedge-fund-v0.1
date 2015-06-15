@@ -17,10 +17,10 @@ public class Event {
 	
 	// public Investment investment;
 
-	public InvestmentIndex index;
-	public InvestmentOption option;
-	public InvestmentStock stock;
-	public InvestmentFuture future;
+	public InvestmentIndex index = null;
+	public InvestmentOption option = null;
+	public InvestmentStock stock = null;
+	public InvestmentFuture future = null;
 	
 	public InvDataSource source;
 	public InvDataTiming timing;
@@ -53,7 +53,7 @@ public class Event {
 		if(inv instanceof InvestmentFuture) {
 			future = (InvestmentFuture) inv;
 		}
-		Watchr.log(Level.SEVERE, "Investment type not handled");
+		Watchr.log(Level.SEVERE, "Trying to set investment type not handled: " + inv.toString());
 	}
 	
 	public Investment getInvestment() {
@@ -69,7 +69,7 @@ public class Event {
 		if(future!=null) {
 			return future;
 		}
-		Watchr.log(Level.SEVERE, "Investment type not handled");
+		Watchr.log(Level.SEVERE, "Trying to get investment type not handled: ");
 		return null;
 	}
 

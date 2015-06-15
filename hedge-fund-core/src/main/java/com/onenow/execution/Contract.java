@@ -242,20 +242,20 @@ public class Contract implements Cloneable {
     @Override public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        add( sb, "conid", m_conid);
-        add( sb, "symbol", m_symbol);
-        add( sb, "secType", m_secType);
-        add( sb, "expiry", m_expiry);
-        add( sb, "strike", m_strike);
-        add( sb, "right", m_right);
-        add( sb, "multiplier", m_multiplier);
-        add( sb, "exchange", m_exchange);
-        add( sb, "currency", m_currency);
-        add( sb, "localSymbol", m_localSymbol);
-        add( sb, "tradingClass", m_tradingClass);
-        add( sb, "primaryExch", m_primaryExch);
-        add( sb, "secIdType", m_secIdType);
-        add( sb, "secId", m_secId);
+        add( sb, "-conid ", m_conid);
+        add( sb, "-symbol ", m_symbol);
+        add( sb, "-secType ", m_secType);
+        add( sb, "-expiry ", m_expiry);
+        add( sb, "-strike ", m_strike);
+        add( sb, "-right ", m_right);
+        add( sb, "-multiplier ", m_multiplier);
+        add( sb, "-exchange ", m_exchange);
+        add( sb, "-currency ", m_currency);
+        add( sb, "-localSymbol ", m_localSymbol);
+        add( sb, "-tradingClass ", m_tradingClass);
+        add( sb, "-primaryExch ", m_primaryExch);
+        add( sb, "-secIdType ", m_secIdType);
+        add( sb, "-secId ", m_secId);
 
         return sb.toString();
     }
@@ -268,8 +268,8 @@ public class Contract implements Cloneable {
         }
 
         sb.append( tag);
-        sb.append( '\t');
+        // sb.append( ' ');
         sb.append( val);
-        sb.append( '\n');
+        // sb.append( ' ');
     }
 }
