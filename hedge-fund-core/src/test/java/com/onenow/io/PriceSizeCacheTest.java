@@ -11,6 +11,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
 
 public class PriceSizeCacheTest {
@@ -19,7 +20,7 @@ public class PriceSizeCacheTest {
 	
 	CacheInProcess cache = new CacheInProcess(broker);
 
-	EventActivityRealtime event = new EventActivityRealtime(	(long) 1234, new Investment(new Underlying("ON"), InvType.INDEX), 
+	EventActivityRealtime event = new EventActivityRealtime(	(long) 1234, new InvestmentIndex(new Underlying("ON")), 
 																TradeType.BUY, 
 																2.34, 5, 
 																InvDataSource.AMERITRADE, InvDataTiming.REALTIME);
