@@ -26,8 +26,8 @@ public class InvestmentFuture extends Investment {
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = super.toString() + "-Exp"
-				+ getExpirationDate().toString();
+		s = 	super.toString() + " " +
+				"-Exp "+ getExpirationDate().toString();
 //		System.out.println("Investment Future: " + s);
 		return s;
 	}

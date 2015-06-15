@@ -43,15 +43,19 @@ public class Event {
 	public void setInvestment(Investment inv) {
 		if(inv instanceof InvestmentIndex) {
 			index = (InvestmentIndex) inv;
+			return;
 		}
 		if(inv instanceof InvestmentOption) {
 			option = (InvestmentOption) inv;
+			return;
 		}
 		if(inv instanceof InvestmentStock) {
 			stock = (InvestmentStock) inv;
+			return;
 		}
 		if(inv instanceof InvestmentFuture) {
 			future = (InvestmentFuture) inv;
+			return;
 		}
 		Watchr.log(Level.SEVERE, "Trying to set investment type not handled: " + inv.toString());
 	}
