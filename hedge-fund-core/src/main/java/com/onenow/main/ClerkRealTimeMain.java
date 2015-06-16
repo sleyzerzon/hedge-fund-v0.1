@@ -11,6 +11,7 @@ import com.onenow.io.Kinesis;
 import com.onenow.io.databaseTimeSeries;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.SysProperties;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class ClerkRealTimeMain {
@@ -24,6 +25,8 @@ public class ClerkRealTimeMain {
 
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
+
+		TimeParser.wait(180); // boot sequence
 
 		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME);
 		BusSystem.read(StreamName.REALTIME, rtProcessorFactory);

@@ -91,7 +91,7 @@ public class HistorianMain {
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
 //		if ( storedPrices.size()<minPrices ) {	
 
-			Watchr.log(Level.INFO, "Request this! " + request.toString());
+//			Watchr.log(Level.INFO, "Request this! " + request.toString());
 			
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);

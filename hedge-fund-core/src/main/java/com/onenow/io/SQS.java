@@ -85,7 +85,7 @@ public class SQS {
 	public List<Message> receiveMessages(String myQueueUrl) {
 		
 		String log = "Receiving messages to " + myQueueUrl;
-    	Watchr.log(Level.INFO, log);
+		// Watchr.log(Level.INFO, "Receiving messages to " + myQueueUrl);
     	
 		ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(myQueueUrl);
 		List<Message> messages = new ArrayList<Message>();
@@ -101,13 +101,13 @@ public class SQS {
 			log = log + "    ReceiptHandle: " + message.getReceiptHandle();
 			log = log + "    MD5OfBody:     " + message.getMD5OfBody();
 			log = log + "    Body:          " + message.getBody();
-	    	Watchr.log(Level.INFO, log);
+			// Watchr.log(Level.INFO, log);
 
 			for (Entry<String, String> entry : message.getAttributes().entrySet()) {
 				log = "  Attribute";
 				log = log + "    Name:  " + entry.getKey();
 				log = log + "    Value: " + entry.getValue();
-		    	Watchr.log(Level.INFO, log);
+				// Watchr.log(Level.INFO, log);
 		        }
             }
 		return messages;
