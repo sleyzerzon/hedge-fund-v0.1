@@ -11,8 +11,6 @@ for i in /etc/init/hedge-*.conf ; do
 
     start $SERVICE_NAME || true
 	
-    sudo service awslogs restart
-
 done
 
 exit 0

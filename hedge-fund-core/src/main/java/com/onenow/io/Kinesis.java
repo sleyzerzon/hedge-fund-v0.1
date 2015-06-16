@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
+import com.onenow.util.Piping;
 import com.onenow.util.StreamUtils;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -55,8 +56,9 @@ public class Kinesis {
     	
         byte[] bytes;
         try {
-            bytes = jsonMapper.writeValueAsBytes(objectToSend);
-        } catch (IOException e) {
+            // bytes = jsonMapper.writeValueAsBytes(objectToSend);
+        	bytes = Piping.serialize(objectToSend).getBytes();        	
+        } catch (Exception e) {
         	Watchr.log(Level.SEVERE, "Skipping pair. Unable to serialize: " + e.getMessage());
             return;
         }
@@ -96,16 +98,6 @@ public class Kinesis {
     // TESTING
 	private static IRecordProcessorFactory testingProcessorFactory = 
 			BusProcessingFactory.createProcessorFactoryString(StreamName.TESTING);
-
-//	private Long time = new Long("1424288913903");
-//	private Investment inv = new Investment();
-//	private TradeType tradeType = TradeType.TRADED; 
-//
-//	private Double price = 2011.0;
-//	private Integer size = 5;
-//	
-//	private InvDataSource source = InvDataSource.IB;
-//	private InvDataTiming timing = InvDataTiming.REALTIME;
 
 	/**
 	 * Write repeatedly to a data stream.  Have record processor write to cache.  Then read and validate it write the right amount.

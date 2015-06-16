@@ -13,20 +13,18 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventRequestHistory;
 import com.onenow.main.ChartistMain;
 import com.onenow.main.ClerkHistoryMain;
 import com.onenow.main.ClerkRealTimeMain;
+import com.onenow.util.Piping;
 import com.onenow.util.Watchr;
 
 public class BusRecordProcessor<T> implements IRecordProcessor {
 
 	Class<T> recordType;
 	StreamName streamName;
-	
-	// TODO: https://code.google.com/p/google-gson/
-    // Our JSON object mapper for deserializing records
-    private final ObjectMapper jsonMapper = new ObjectMapper();
-    
+	    
     // The shard this processor is processing
     private String kinesisShardId;
 
@@ -38,9 +36,6 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 		this.recordType = recordType;
 		
-        // Create an object mapper to deserialize records that ignores unknown properties
-        jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        
 	}
 
 
@@ -59,23 +54,23 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 
 	}
 
-	// TODO: handle NON-STRING records (i.e. EventHistory)
 	@Override
 	public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
 		
 		Watchr.log(Level.INFO, "processRecords: " + records.toString());
 		
         for (Record r : records) {
-            // Deserialize each record as an UTF-8 encoded JSON String of the type provided
-            final T record;
+            
+            final Object activityObject;
+            
             try {            	
-            	
-				String json = new String(r.getData().array());
-            	record = jsonMapper.readValue(json, recordType);
-
+              String json = new String(r.getData().array());
+        	  activityObject = Piping.deserialize(json, recordType);
+  			  Watchr.log(Level.FINE, "Received activity object: " + activityObject.toString());
+  			
         		new Thread () {
         			@Override public void run () {
-        				handleByRecordType(record);
+        				handleByRecordType(activityObject);
         			}
         		}.start();
                 
@@ -94,11 +89,11 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 
 	/** 
 	 * Handle records in Kinesis, in some cases with multiple consumers
-	 * @param record
+	 * @param recordObject
 	 */
-	private void handleByRecordType(T record) {
+	private void handleByRecordType(Object recordObject) {
 		
-    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + record.toString(), "\n", "");
+    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + recordObject.toString(), "\n", "");
 		
 		if(recordType.equals(String.class)) {
 			
@@ -113,8 +108,10 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 				} else {
 					Watchr.log(Level.WARNING, "Kinesis test FAIL");
 				}
+				// TODO 
 				// Write the last one to cache to validate the stream works
-				CacheElastic.write(TestValues.KEY.toString(), (Object) record);
+				// CacheElastic.write(TestValues.KEY.toString(), (Object) recordObject);
+				
 			} catch (Exception e) {
 				// e.printStackTrace();
 			}
@@ -122,7 +119,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		
 		if(recordType.equals(EventActivityHistory.class)) {
 			try {
-				EventActivityHistory event = (EventActivityHistory) record;
+				EventActivityHistory event = (EventActivityHistory) recordObject;
 				ClerkHistoryMain.writeHistoryToL2(event);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -132,7 +129,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 
 		if(recordType.equals(EventActivityRealtime.class)) {			
 			try {
-				EventActivityRealtime event = (EventActivityRealtime) record;
+				EventActivityRealtime event = (EventActivityRealtime) recordObject;
 				ClerkRealTimeMain.writeRealtimeRTtoL2(event);
 				if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
 					ChartistMain.prefetchCharts(event);				
