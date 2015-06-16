@@ -121,8 +121,8 @@ public static void writePrice(final EventActivity event) {
 
 		candles = priceSeriesToCandles(series); 
 		 
-		String log = "TSDB Cache Chart/Price READ: " + MemoryLevel.L2TSDB + "HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
-		Watchr.log(Level.INFO, log, "\n", "");
+//		String log = "TSDB Cache Chart/Price READ: " + MemoryLevel.L2TSDB + "HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
+//		Watchr.log(Level.INFO, log, "\n", "");
 
 		return candles;
 	}
@@ -301,8 +301,8 @@ public static List<Integer> readSizeFromDB(	EventRequest request) {
 	
 	sizes = sizeSeriesToInts(series); 
 	
-	String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
-	Watchr.log(Level.INFO, log, "\n", "");
+//	String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
+//	Watchr.log(Level.INFO, log, "\n", "");
 
 	return sizes;
 }
