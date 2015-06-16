@@ -38,6 +38,7 @@ public class FlexibleLogger {
 
   
 // CLOUDWATCH LOGS
+  // everything is in root
 // SSH to instance
 // sudo su
 // cd /root

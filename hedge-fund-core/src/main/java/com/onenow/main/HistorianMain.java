@@ -75,7 +75,7 @@ public class HistorianMain {
 		// minimum number of price data points
 		int minPrices = 50;
 		
-		Watchr.log(Level.INFO, "Cache Chart READ: " + MemoryLevel.L3PARTNER + " (augment data) "  + inv.toString());
+		Watchr.log(Level.INFO, "Cache Chart READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
 		
 		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			

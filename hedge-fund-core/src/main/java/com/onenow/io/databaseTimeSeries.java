@@ -90,7 +90,7 @@ public static void writePrice(final EventActivity event) {
 	.columns("time", "price")
 	// iclient.write_points(json_body, time_precision='ms')
 	// time*1000
-	.values(event.time, event.price)  // precision in seconds
+	.values(event.time*1000, event.price)  // precision in seconds
 	.build();
 
 	new Thread () {
@@ -270,7 +270,7 @@ public static void writeSize(final EventActivity event) {
 	String name = Lookup.getEventKey(event);
 	final Serie serie = new Serie.Builder(name)
 	.columns("time", "size")
-	.values(event.time, event.size) // precision in seconds
+	.values(event.time*1000, event.size) // precision in seconds
 	.build();
 
 	new Thread () {
