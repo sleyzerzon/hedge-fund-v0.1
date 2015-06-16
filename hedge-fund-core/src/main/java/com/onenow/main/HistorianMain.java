@@ -1,23 +1,17 @@
 package com.onenow.main;
 
-import java.util.List;
 import java.util.logging.Level;
 
-import com.amazonaws.services.sqs.model.Message;
-import com.onenow.admin.InitAmazon;
 import com.onenow.constant.MemoryLevel;
-import com.onenow.constant.QueueName;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
-import com.onenow.data.InvestmentList;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
 import com.onenow.io.SQS;
-import com.onenow.io.databaseTimeSeries;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.research.Candle;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.InitLogger;
 import com.onenow.util.Piping;
 import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
@@ -36,8 +30,7 @@ public class HistorianMain {
 
 	public static void main(String[] args) {
 		
-		SysProperties.setLogProperties();
-		FlexibleLogger.setup();
+		InitLogger.run();
 
 		// queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING"; 
 		// sqs.deleteQueue(queueURL);
@@ -53,15 +46,11 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
 				
-//				TimeParser.paceHistoricalQuery(lastQueryTime);
+				TimeParser.paceHistoricalQuery(lastQueryTime);
 				
 				updateL2HistoryFromL3(inv, toDashedDate);	
-				
-				while(sqs.receiveMessages(queueURL).size() > 100) { // kill time if queue full 
-					TimeParser.wait(10);
-				}
-				
-//				lastQueryTime = TimeParser.getTimestampNow();		
+								
+				lastQueryTime = TimeParser.getTimestampNow();		
 			}
 									
 			// go back further in time

@@ -10,6 +10,7 @@ import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallStIB;
 import com.onenow.io.Kinesis;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -28,8 +29,7 @@ public class InvestorMain {
 	public static void main(String[] args) {
 		
 		StreamName streamName = getArgument(args);
-		SysProperties.setLogProperties();
-		FlexibleLogger.setup(streamName.toString());
+		InitLogger.run(streamName.toString());
 		Watchr.log(Level.INFO, "Starting for STREAM: " + streamName);
 
 		BusWallStIB bus = new BusWallStIB(streamName);

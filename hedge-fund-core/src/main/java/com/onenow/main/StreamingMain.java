@@ -1,6 +1,7 @@
 package com.onenow.main;
 
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
 
 public class StreamingMain {
@@ -11,8 +12,7 @@ public class StreamingMain {
 	 */
 	public static void main(String[] args) {
 
-		SysProperties.setLogProperties();
-		FlexibleLogger.setup();
+		InitLogger.run();
 
 	}
 

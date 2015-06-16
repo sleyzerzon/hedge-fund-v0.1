@@ -5,6 +5,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
 
 
@@ -17,8 +18,7 @@ public class CatchupHistoryMain {
 
 	public static void main(String[] args) {
 				
-		SysProperties.setLogProperties();
-		FlexibleLogger.setup();
+		InitLogger.run();
 
 		BusSystem.read(	StreamName.HISTORY, 
 						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.HISTORY),

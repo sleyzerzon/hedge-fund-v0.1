@@ -10,6 +10,7 @@ import com.onenow.io.BusSystem;
 import com.onenow.io.Kinesis;
 import com.onenow.io.databaseTimeSeries;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -23,8 +24,7 @@ public class ClerkRealTimeMain {
 	 */
 	public static void main(String[] args) {
 
-		SysProperties.setLogProperties();
-		FlexibleLogger.setup();
+		InitLogger.run();
 
 		TimeParser.wait(180); // boot sequence
 

@@ -25,6 +25,20 @@ public class TimeParser implements Testable {
 		}
 	}
 	
+	public static String getFormatedPacificDateTime(Long time) {
+		
+		TimeZone zone = TimeZone.getTimeZone("PST");
+		getFormat().setTimeZone(zone);
+
+		return getFormat().format(time);
+	}
+	
+	private static SimpleDateFormat getFormat() {
+		//  %a %b %d %H:%M:%S %z %Y
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz"); 
+
+	}
+	
 	/**
 	 * Returns today's date in dashed format without time
 	 * @return

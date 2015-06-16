@@ -1,5 +1,6 @@
 package com.onenow.data;
 
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 
 import com.onenow.constant.InvDataSource;
@@ -17,6 +18,7 @@ public class EventRequest extends Event {
 	public String toDashedDate;
 	public String fromDashedDate;
 		
+
 	public EventRequest() {
 		
 	}
