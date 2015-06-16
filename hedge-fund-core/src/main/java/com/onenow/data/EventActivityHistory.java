@@ -2,16 +2,8 @@ package com.onenow.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
-import java.util.logging.Level;
 
 import com.ib.controller.Formats;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.TradeType;
-import com.onenow.instrument.Investment;
-import com.onenow.util.TimeParser;
-import com.onenow.util.Watchr;
 
 public class EventActivityHistory extends EventActivity {
 	

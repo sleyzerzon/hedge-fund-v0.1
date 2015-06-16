@@ -121,15 +121,25 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		}
 		
 		if(recordType.equals(EventActivityHistory.class)) {
-			EventActivityHistory event = (EventActivityHistory) record;
-			ClerkHistoryMain.writeHistoryToL2(event);
+			try {
+				EventActivityHistory event = (EventActivityHistory) record;
+				ClerkHistoryMain.writeHistoryToL2(event);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		if(recordType.equals(EventActivityRealtime.class)) {			
-			EventActivityRealtime event = (EventActivityRealtime) record;
-			ClerkRealTimeMain.writeRealtimeRTtoL2(event);
-			if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
-				ChartistMain.prefetchCharts(event);				
+			try {
+				EventActivityRealtime event = (EventActivityRealtime) record;
+				ClerkRealTimeMain.writeRealtimeRTtoL2(event);
+				if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
+					ChartistMain.prefetchCharts(event);				
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
