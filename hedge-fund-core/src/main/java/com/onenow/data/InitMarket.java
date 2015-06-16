@@ -93,17 +93,6 @@ public class InitMarket {
 								toDashedDate);
 	}
 	
-	public static void getTimelyMarketPortfolio(String toDashedDate, int count) {
-		// update the market portfolio, broker, and historian every month
-		if(count%30 == 0) {
-			marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks),
-														InvestmentList.getUnderlying(InvestmentList.someIndices),
-														InvestmentList.getUnderlying(InvestmentList.futures), 
-														InvestmentList.getUnderlying(InvestmentList.options),
-		    											toDashedDate);
-		}
-	}
-
 
 	// INDEX 
 	/**
@@ -224,6 +213,12 @@ public class InitMarket {
 		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);
 		marketPortfolio.enterTransaction(stockTrans);		
+	}
+
+
+	public static Portfolio getMarketPortfolio(String toDashedDate) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

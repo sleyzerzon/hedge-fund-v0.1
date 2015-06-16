@@ -44,12 +44,11 @@ public class HistorianMain {
 		// sqs.createQueue(QueueName.HISTORY_STAGING);
 		sqs.listQueues();
 		
-		int count=0;
 		while(true) {
 			
 			Watchr.log(Level.INFO, "HISTORIAN through: " + toDashedDate);
 
-			InitMarket.getTimelyMarketPortfolio(toDashedDate, count);	
+			marketPortfolio = InitMarket.getSamplePortfolio(toDashedDate);	
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
@@ -63,7 +62,6 @@ public class HistorianMain {
 									
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
-			count++;
 		}
 	}
 
