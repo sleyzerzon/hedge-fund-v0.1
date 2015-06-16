@@ -64,10 +64,8 @@ public class ReporterMain {
 	private static void writeInvestmentDayPriceIntoBucket(Investment inv, Bucket bucket, String fromDashedDate, String toDashedDate) {
 		
 		
-		EventRequestRealtime request = new EventRequestRealtime(	InvDataSource.IB,
-																	InvDataTiming.REALTIME,
-																	SamplingRate.SCALPMEDIUM,
-																	TradeType.TRADED, 
+		EventRequestRealtime request = new EventRequestRealtime(	inv, InvDataSource.IB, InvDataTiming.REALTIME,
+																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
 																	fromDashedDate, toDashedDate);
 		
 		try{	// some time series just don't exist or have data 			

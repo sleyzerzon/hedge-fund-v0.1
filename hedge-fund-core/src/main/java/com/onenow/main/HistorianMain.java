@@ -49,7 +49,7 @@ public class HistorianMain {
 			
 			Watchr.log(Level.INFO, "HISTORIAN through: " + toDashedDate);
 
-			getTimelyMarketPortfolio(count);	
+			InitMarket.getTimelyMarketPortfolio(toDashedDate, count);	
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
@@ -66,16 +66,6 @@ public class HistorianMain {
 		}
 	}
 
-	private static void getTimelyMarketPortfolio(int count) {
-		// update the market portfolio, broker, and historian every month
-		if(count%30 == 0) {
-			marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks),
-														InvestmentList.getUnderlying(InvestmentList.someIndices),
-														InvestmentList.getUnderlying(InvestmentList.futures), 
-														InvestmentList.getUnderlying(InvestmentList.options),
-		    											toDashedDate);
-		}
-	}
 	
 /**
  * Continually augment L2 (TSDB) with data from L3 (3rd party DB)

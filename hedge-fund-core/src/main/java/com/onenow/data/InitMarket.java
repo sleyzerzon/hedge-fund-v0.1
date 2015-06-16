@@ -92,6 +92,18 @@ public class InitMarket {
 								new ArrayList<Underlying>(),
 								toDashedDate);
 	}
+	
+	public static void getTimelyMarketPortfolio(String toDashedDate, int count) {
+		// update the market portfolio, broker, and historian every month
+		if(count%30 == 0) {
+			marketPortfolio = InitMarket.getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks),
+														InvestmentList.getUnderlying(InvestmentList.someIndices),
+														InvestmentList.getUnderlying(InvestmentList.futures), 
+														InvestmentList.getUnderlying(InvestmentList.options),
+		    											toDashedDate);
+		}
+	}
+
 
 	// INDEX 
 	/**

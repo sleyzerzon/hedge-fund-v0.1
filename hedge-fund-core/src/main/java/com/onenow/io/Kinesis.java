@@ -25,8 +25,6 @@ public class Kinesis {
 	public static AmazonKinesis kinesis;
 	private static Region region;
 	
-	private final ObjectMapper jsonMapper = new ObjectMapper();
-	
 	public Kinesis() {
 		this.region = InitAmazon.defaultRegion;		
 		this.kinesis = InitAmazon.createKinesis(this.region);
@@ -52,11 +50,8 @@ public class Kinesis {
 		
 		boolean success = true;
 		
-    	jsonMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    	
         byte[] bytes;
         try {
-            // bytes = jsonMapper.writeValueAsBytes(objectToSend);
         	bytes = Piping.serialize(objectToSend).getBytes();        	
         } catch (Exception e) {
         	Watchr.log(Level.SEVERE, "Skipping pair. Unable to serialize: " + e.getMessage());

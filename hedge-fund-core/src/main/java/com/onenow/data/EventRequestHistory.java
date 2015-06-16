@@ -13,11 +13,11 @@ public class EventRequestHistory extends EventRequest {
 
 	public EventRequestHistory(Investment inv, String toDashedDate, HistorianConfig config) {
 
-		this.fromDashedDate = getFromDate(config, toDashedDate);
-		
-		this.toDashedDate = toDashedDate;
 		setInvestment(inv);
 
+		this.fromDashedDate = getFromDate(config, toDashedDate);		
+		this.toDashedDate = toDashedDate;
+		
 		this.config = config;
 
 		this.source = config.source;
