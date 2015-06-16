@@ -3,6 +3,7 @@ package com.onenow.main;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.amazonaws.services.sqs.model.Message;
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.QueueName;
@@ -99,9 +100,13 @@ public class HistorianMain {
 
 			Watchr.log(Level.WARNING, "Request this! " + request.toString());
 			
+			while(sqs.receiveMessages(queueURL).size() > 100) { // kill time if queue full 
+				TimeParser.wait(10);
+			}
+
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
-			sqs.sendMessage(message, queueURL);
+			sqs.sendMessage(message, queueURL);				
 
 		} else {
 			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());

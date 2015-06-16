@@ -40,23 +40,27 @@ public class Event {
 	}
 	
 	public void setInvestment(Investment inv) {
-		if(inv instanceof InvestmentIndex || inv.getInvType().equals(InvType.INDEX)) {
+		if( (inv instanceof InvestmentIndex) || inv.getInvType().equals(InvType.INDEX)) {
 			index = (InvestmentIndex) inv;
 			return;
 		}
-		if(inv instanceof InvestmentOption || inv.getInvType().equals(InvType.CALL) || inv.getInvType().equals(InvType.PUT)) {
+		if( (inv instanceof InvestmentOption) || inv.getInvType().equals(InvType.CALL) || inv.getInvType().equals(InvType.PUT)) {
 			option = (InvestmentOption) inv;
 			return;
 		}
-		if(inv instanceof InvestmentStock || inv.getInvType().equals(InvType.STOCK)) {
+		if( (inv instanceof InvestmentStock) || inv.getInvType().equals(InvType.STOCK)) {
 			stock = (InvestmentStock) inv;
 			return;
 		}
-		if(inv instanceof InvestmentFuture || inv.getInvType().equals(InvType.FUTURE)) {
+		if( (inv instanceof InvestmentFuture) || inv.getInvType().equals(InvType.FUTURE)) {
 			future = (InvestmentFuture) inv;
 			return;
 		}
-		Watchr.log(Level.SEVERE, "Trying to set investment type not handled: " + inv.toString());
+		try {
+			Watchr.log(Level.SEVERE, "Trying to set investment type not handled: " + inv.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Investment getInvestment() {
