@@ -12,7 +12,7 @@ import com.onenow.util.SysProperties;
  * @author pablo
  *
  */
-public class CatchupMain {
+public class CatchupRealtimeMain {
 
 	public static void main(String[] args) {
 				

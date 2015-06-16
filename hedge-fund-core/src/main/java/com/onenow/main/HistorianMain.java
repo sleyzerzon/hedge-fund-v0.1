@@ -91,9 +91,9 @@ public class HistorianMain {
 
 			Watchr.log(Level.WARNING, "Request this! " + request.toString());
 			
-			while(sqs.receiveMessages(queueURL).size() > 100) { // kill time if queue full 
-				TimeParser.wait(10);
-			}
+//			while(sqs.receiveMessages(queueURL).size() > 100) { // kill time if queue full 
+//				TimeParser.wait(10);
+//			}
 
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
