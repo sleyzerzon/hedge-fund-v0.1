@@ -93,7 +93,9 @@ public class ChartistMain {
 			String toDashedDate = TimeParser.getTodayDashed();
 			String fromDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
 
-			EventRequestRealtime request = new EventRequestRealtime(event.source, event.timing, samplingRate, event.tradeType, fromDate, toDashedDate);
+			EventRequestRealtime request = new EventRequestRealtime(event.getInvestment(), event.source, event.timing, 
+																	samplingRate, event.tradeType, 
+																	fromDate, toDashedDate);
 			
 			readChartToL1FromRTL2(request);
 			
