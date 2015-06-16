@@ -44,7 +44,7 @@ public class EventActivityHistory extends EventActivity {
 		this.count = count;
 		
 		// for general use (EventActivity)
-		this.time = time;
+		this.time = time*1000;
 		this.price = open;
 		this.size = volume;
 		

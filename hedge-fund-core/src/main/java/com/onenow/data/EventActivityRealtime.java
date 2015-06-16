@@ -30,7 +30,7 @@ public class EventActivityRealtime extends EventActivity {
 		this.source = source;
 		this.timing = timing;
 
-		this.time = time;
+		this.time = time*1000;
 		this.price = price;
 		this.size = size;
 

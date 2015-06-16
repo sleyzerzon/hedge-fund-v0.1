@@ -112,7 +112,7 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 	@Override public void tickString(TickType tickType, String value) {
 		switch( tickType) {
 			case LAST_TIMESTAMP:
-				m_lastTime = Long.parseLong( value) * 1000;
+				m_lastTime = Long.parseLong(value);
 				// System.out.println("Last time " + m_lastTime);
 				break;
 			case AVG_VOLUME:
@@ -199,7 +199,7 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 			}
 			i++;
 		}
-		Long time = Long.parseLong(lastTradeTime); 	// TODO: *1000 ?
+		Long time = Long.parseLong(lastTradeTime); 	
 		
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;

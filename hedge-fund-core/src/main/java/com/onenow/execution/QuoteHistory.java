@@ -6,6 +6,7 @@ import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.Channel;
@@ -88,7 +89,7 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		// Write to history data stream
 		BusSystem.write(StreamName.HISTORY, row);
 
-		Watchr.log(Level.INFO, "History " + row.toString());
+		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
 
 		// Channel handling
 		if(channel!=null) { // if constructed that way

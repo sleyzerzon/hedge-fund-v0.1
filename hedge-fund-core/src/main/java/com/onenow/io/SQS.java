@@ -72,8 +72,8 @@ public class SQS {
 
 	public void deleteMesssage(String myQueueUrl, List<Message> messages) {
 		
-		String log = "Deleting a message list: " + messages + " FROM " + myQueueUrl;
-    	Watchr.log(Level.INFO, log);
+		// String log = "Deleting a message list: " + messages + " FROM " + myQueueUrl;
+    	// Watchr.log(Level.INFO, log);
 		try {
 			String messageRecieptHandle = messages.get(0).getReceiptHandle();
 			sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl, messageRecieptHandle));

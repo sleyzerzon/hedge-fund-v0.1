@@ -169,11 +169,17 @@ public class Portfolio {
 	// PRINT
 	public String toString() {
 		String s = "";
-		Integer i = 0;
-		for(Investment inv:investments) {
-			s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
-			i++;
-		}
+//		Integer i = 0;
+//		for(Investment inv:investments) {
+//			s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
+//			i++;
+//		}
+
+		s = s + toIndicesString() + " ";
+		s = s + toOptionsString() + " ";
+		s = s + toStocksString() + " ";
+		s = s + toFuturesString();
+		
 		return s;
 	}
 	public String toIndicesString() {
@@ -220,7 +226,7 @@ public class Portfolio {
 		System.out.println("\n" + "INITIALIZED FUTURES");
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentFuture) {
-				s = s + "[[[" + getQuantity().get(inv) + "]]]" + " ";				
+				s = s + "   [[[" + getQuantity().get(inv) + "]]]" + " ";				
 				s = s + investments.get(i);
 			}
 			i++;

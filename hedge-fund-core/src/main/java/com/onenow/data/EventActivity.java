@@ -18,7 +18,7 @@ public class EventActivity extends Event {
 		
 		s = super.toString() + " ";
 		s = s + "-time " + time + " ";
-		s = s + "-timeDate" + new Date(time*1000).toString() + " ";
+		s = s + "-timeDate" + new Date(time).toString() + " ";
 		s = s + "-price " + price + " ";
 		s = s + "-size " + size;
 		

@@ -24,7 +24,7 @@ import com.onenow.util.Watchr;
 public class InitMarket {
 
 	private InvestmentIndex index;
-	private static Portfolio marketPortfolio = new Portfolio();
+	private static Portfolio marketPortfolio;
 	
 	private List<String> indices = new ArrayList<String>();
 	
@@ -43,17 +43,17 @@ public class InitMarket {
 											List<Underlying> futures, List<Underlying> options,
 											String toDashedDate) {
 		
-		initStocks(stocks);		
-		Watchr.log(Level.INFO, marketPortfolio.toStocksString());		
+		marketPortfolio = new Portfolio();
+		
+		addStocksToPortfolio(stocks);		
 
 		addIndicesToPortfolio(indices);
-		Watchr.log(Level.INFO, marketPortfolio.toIndicesString());				
 
-		initOptions(options, toDashedDate);
-		Watchr.log(Level.INFO, marketPortfolio.toOptionsString());		
+		addOptionsToPortfolio(options, toDashedDate);
 
-		initFutures(futures);
-		Watchr.log(Level.INFO, marketPortfolio.toFuturesString());			
+		addFuturesToPortfolio(futures);
+		
+		marketPortfolio.toString();
 
 		return marketPortfolio;
 		
@@ -77,14 +77,14 @@ public class InitMarket {
 	}
 
 	public static Portfolio getTestPortfolio() {	
-		
+				
 		String toDashedDate = TimeParser.getTodayDashed(); 
 
-		return getTestPortfolio(toDashedDate);
+		return getNewTestPortfolio(toDashedDate);
 		
 	}
 
-	public static Portfolio getTestPortfolio(String toDashedDate) {	
+	public static Portfolio getNewTestPortfolio(String toDashedDate) {	
 		
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.justApple), 
 								new ArrayList<Underlying>(),
@@ -113,7 +113,7 @@ public class InitMarket {
 	 * Initialize options
 	 * @param unders
 	 */
-	private static void initOptions(List<Underlying> unders, String toDashedDate) { 
+	private static void addOptionsToPortfolio(List<Underlying> unders, String toDashedDate) { 
 		ExpirationDate exps = new ExpirationDate();
 		exps.initIndexOptionExpList(); 
 		
@@ -179,7 +179,7 @@ public class InitMarket {
 	/**
 	 * Initialize all futures
 	 */
-	private static void initFutures(List<Underlying> unders) {
+	private static void addFuturesToPortfolio(List<Underlying> unders) {
 		ExpirationDate exps = new ExpirationDate();
 		exps.initFuturesExpList(); 
 		
@@ -202,7 +202,7 @@ public class InitMarket {
 	 * Initialize all stocks
 	 * @param stocks
 	 */
-	private static void initStocks(List<Underlying> stocks) {
+	private static void addStocksToPortfolio(List<Underlying> stocks) {
 		for (Underlying stock:stocks) {
 			setStock(stock);
 		}

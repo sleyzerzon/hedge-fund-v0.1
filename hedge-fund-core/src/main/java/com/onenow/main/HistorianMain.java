@@ -46,18 +46,22 @@ public class HistorianMain {
 		
 		while(true) {
 			
-			Watchr.log(Level.INFO, "HISTORIAN through: " + toDashedDate);
+			Watchr.log(Level.WARNING, "HISTORIAN through: " + toDashedDate);
 
 			marketPortfolio = InitMarket.getSamplePortfolio(toDashedDate);	
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
 				
-				TimeParser.paceHistoricalQuery(lastQueryTime);
+//				TimeParser.paceHistoricalQuery(lastQueryTime);
 				
-				updateL2HistoryFromL3(inv, toDashedDate);					
+				updateL2HistoryFromL3(inv, toDashedDate);	
 				
-				lastQueryTime = TimeParser.getTimestampNow();		
+				while(sqs.receiveMessages(queueURL).size() > 100) { // kill time if queue full 
+					TimeParser.wait(10);
+				}
+				
+//				lastQueryTime = TimeParser.getTimestampNow();		
 			}
 									
 			// go back further in time
@@ -85,21 +89,17 @@ public class HistorianMain {
 		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
-		if ( storedPrices.size()<minPrices ) {	
+//		if ( storedPrices.size()<minPrices ) {	
 
-			Watchr.log(Level.WARNING, "Request this! " + request.toString());
+			Watchr.log(Level.INFO, "Request this! " + request.toString());
 			
-//			while(sqs.receiveMessages(queueURL).size() > 100) { // kill time if queue full 
-//				TimeParser.wait(10);
-//			}
-
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
 			sqs.sendMessage(message, queueURL);				
 
-		} else {
-			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
-		}
+//		} else {
+//			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
+//		}
 	}
 
 }

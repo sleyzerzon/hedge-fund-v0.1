@@ -14,7 +14,7 @@ public class Piping {
 		String json = "";
 		try {
 			json = gson.toJson(obj);
-			Watchr.log("Serialized " + obj.toString() + " into " + json);
+			// Watchr.log("Serialized " + obj.toString() + " into " + json);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -25,7 +25,7 @@ public class Piping {
 		Object obj = null;
 		try {
 			obj = gson.fromJson(json, recordType);
-			Watchr.log("Deserialized " + json + " into " + obj);
+			// Watchr.log("Deserialized " + json + " into " + obj);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
