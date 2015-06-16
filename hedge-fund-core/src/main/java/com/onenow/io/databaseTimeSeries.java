@@ -165,7 +165,7 @@ public static List<Serie> queryPrice(String dbName, EventRequest request) {
 	
 	try {
 		series = influxDB.query(dbName, query, TimeUnit.MILLISECONDS);
-		Watchr.log(Level.INFO, query + " RETURNED " + series.toString());  
+		// Watchr.log(Level.INFO, query + " RETURNED " + series.toString());  
 	} catch (Exception e) {
 		// e.printStackTrace(); // some series don't exist or have data 
 	}
@@ -337,7 +337,7 @@ public static List<Serie> querySize(String dbName, String serieName, SamplingRat
 					
 	try {
 		series = influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
-		Watchr.log(Level.INFO, query + " RETURNED " + series.toString()); 
+//		Watchr.log(Level.INFO, query + " RETURNED " + series.toString()); 
 	} catch (Exception e) {
 		e.printStackTrace(); // some time series don't exist or have data
 	}

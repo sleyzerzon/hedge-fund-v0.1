@@ -79,13 +79,13 @@ public class HistorianMain {
 		// minimum number of price data points
 		int minPrices = 50;
 		
-		Watchr.log(Level.INFO, "Cache Chart READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
+		Watchr.log(Level.INFO, "READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
 		
 		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
+//		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
 		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
