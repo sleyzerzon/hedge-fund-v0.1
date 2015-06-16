@@ -41,6 +41,14 @@ public class Watchr {
 	public static void log(String log) {
 		log(Level.INFO, log);		
 	}
+	
+	public static void info(String log) {
+		log(Level.INFO, log);
+	}
+	
+	public static void severe(String log) {
+		log(Level.SEVERE, log);
+	}
 
 	private static String machineTextLogFormatter(String message) {
 		

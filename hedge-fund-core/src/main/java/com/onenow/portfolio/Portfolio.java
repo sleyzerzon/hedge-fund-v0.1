@@ -220,7 +220,8 @@ public class Portfolio {
 		System.out.println("\n" + "INITIALIZED FUTURES");
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentFuture) {
-				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
+				s = s + "[[[" + getQuantity().get(inv) + "]]]" + " ";				
+				s = s + investments.get(i);
 			}
 			i++;
 		}

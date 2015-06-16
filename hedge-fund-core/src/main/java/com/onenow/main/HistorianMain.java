@@ -53,6 +53,7 @@ public class HistorianMain {
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
+				
 				TimeParser.paceHistoricalQuery(lastQueryTime);
 				
 				updateL2HistoryFromL3(inv, toDashedDate);					

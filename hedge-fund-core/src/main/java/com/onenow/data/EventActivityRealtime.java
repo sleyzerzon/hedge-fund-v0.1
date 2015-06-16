@@ -37,10 +37,8 @@ public class EventActivityRealtime extends EventActivity {
 	}
 	
 	public String toString() {
-		String s = "\n";
-
+		String s = "";
 		s = s + super.toString();
-
 		return s;
 	}
 }

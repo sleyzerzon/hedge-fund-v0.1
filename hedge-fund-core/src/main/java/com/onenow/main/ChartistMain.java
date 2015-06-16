@@ -26,6 +26,7 @@ import com.onenow.io.databaseTimeSeries;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.FlexibleLogger;
+import com.onenow.util.Piping;
 import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -140,11 +141,14 @@ public class ChartistMain {
 
 			// store in process memory
 			charts.put(key, chart);			
+			
 			// Write to ElastiCache
-			CacheElastic.write(key, (Object) chart); // TODO: CloudWatch
-				
-			CacheElastic.read(key);
+			// CacheElastic.write(key, (Object) chart); 
+			// CacheElastic.read(key);
 
+			CacheElastic.write(key,  Piping.serialize((Object) chart));
+			Object readObject = CacheElastic.read(key);
+			Watchr.log(Level.INFO, "Read from elastic cache: " + readObject);
 						
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, e.getMessage());

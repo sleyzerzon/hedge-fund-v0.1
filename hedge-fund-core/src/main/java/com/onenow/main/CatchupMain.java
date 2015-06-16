@@ -1,5 +1,6 @@
 package com.onenow.main;
 
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.constant.StreamName;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
@@ -18,8 +19,9 @@ public class CatchupMain {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup();
 
-		// InitialPositionInStream.TRIM_HORIZON
-		BusSystem.read(StreamName.REALTIME, BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME));
+		BusSystem.read(	StreamName.REALTIME, 
+						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME),
+						InitialPositionInStream.TRIM_HORIZON);
 	}
 
 }

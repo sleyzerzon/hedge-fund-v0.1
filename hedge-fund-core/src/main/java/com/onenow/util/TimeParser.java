@@ -18,6 +18,7 @@ public class TimeParser implements Testable {
 	
 	public static void wait(int seconds) {
 		try {
+			Watchr.info("Going to sleep: " + seconds + "seconds");
 			Thread.sleep(seconds*1000);
 		} catch (InterruptedException e1) { 
 			// nothing to do 

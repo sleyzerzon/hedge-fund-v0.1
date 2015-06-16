@@ -67,9 +67,10 @@ public class EventActivityHistory extends EventActivity {
 							"-open " + open + " " +
 							"-high " +  high + " " +
 							"-low " + low + " " +
-							"-close " + close + " " +
-							"-FROM " + formattedTime() + " " +
-							"-TIME ZONE???"); // TODO: time zone
+							"-close " + close );
+							// "-time " + time + " " + 
+							// "-timeDate " + formattedTime() + " " +
+							// "-TIME ZONE???"); // TODO: time zone
 
 		return s;
 	}

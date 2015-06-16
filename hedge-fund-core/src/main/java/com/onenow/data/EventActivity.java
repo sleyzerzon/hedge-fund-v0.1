@@ -1,5 +1,7 @@
 package com.onenow.data;
 
+import java.util.Date;
+
 
 public class EventActivity extends Event {
 	
@@ -15,9 +17,10 @@ public class EventActivity extends Event {
 		String s = "";
 		
 		s = super.toString() + " ";
-		s = s + "time " + time + " ";
-		s = s + "price " + price + " ";
-		s = s + "size " + size;
+		s = s + "-time " + time + " ";
+		s = s + "-timeDate" + new Date(time).toString() + " ";
+		s = s + "-price " + price + " ";
+		s = s + "-size " + size;
 		
 		return s;
 	}
