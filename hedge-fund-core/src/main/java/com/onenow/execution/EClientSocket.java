@@ -721,11 +721,11 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_REQ_MKT_DATA_CONID) {
-//            if (contract.conid() > 0) {
-//                error(tickerId, EClientErrors.UPDATE_TWS,
-//                    "  It does not support conId parameter.");
-//                return;
-//            }
+            if (contract.conid() > 0) {
+                error(tickerId, EClientErrors.UPDATE_TWS,
+                    "  It does not support conId parameter.");
+                return;
+            }
         }
 
         if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {
@@ -967,11 +967,11 @@ public class EClientSocket {
           }
 
           if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {
-//              if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
-//                  error(tickerId, EClientErrors.UPDATE_TWS,
-//                      "  It does not support conId and tradingClass parameters in reqHistroricalData.");
-//                  return;
-//              }
+              if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
+                  error(tickerId, EClientErrors.UPDATE_TWS,
+                      "  It does not support conId and tradingClass parameters in reqHistroricalData.");
+                  return;
+              }
           }
 
           EWireBuilder b = prepareBuffer(); 
@@ -1079,11 +1079,11 @@ public class EClientSocket {
             return;
         }
         if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {
-//            if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
-//                  error(tickerId, EClientErrors.UPDATE_TWS,
-//                      "  It does not support conId and tradingClass parameters in reqRealTimeBars.");
-//                  return;
-//            }
+            if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
+                  error(tickerId, EClientErrors.UPDATE_TWS,
+                      "  It does not support conId and tradingClass parameters in reqRealTimeBars.");
+                  return;
+            }
         }
 
         final int VERSION = 3;
@@ -1270,11 +1270,11 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {
-//            if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
-//                  error(tickerId, EClientErrors.UPDATE_TWS,
-//                      "  It does not support conId and tradingClass parameters in reqMktDepth.");
-//                  return;
-//            }
+            if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
+                  error(tickerId, EClientErrors.UPDATE_TWS,
+                      "  It does not support conId and tradingClass parameters in reqMktDepth.");
+                  return;
+            }
         }
 
         final int VERSION = 5;
@@ -1421,11 +1421,11 @@ public class EClientSocket {
           }
 
           if (m_serverVersion < MIN_SERVER_VER_TRADING_CLASS) {
-//              if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
-//                    error(tickerId, EClientErrors.UPDATE_TWS,
-//                        "  It does not support conId and tradingClass parameters in exerciseOptions.");
-//                    return;
-//              }
+              if (!IsEmpty(contract.tradingClass()) || (contract.conid() > 0)) {
+                    error(tickerId, EClientErrors.UPDATE_TWS,
+                        "  It does not support conId and tradingClass parameters in exerciseOptions.");
+                    return;
+              }
           }
 
           EWireBuilder b = prepareBuffer(); 
@@ -1546,11 +1546,11 @@ public class EClientSocket {
         }
 
         if (m_serverVersion < MIN_SERVER_VER_PLACE_ORDER_CONID) {
-//        	if (contract.conid() > 0) {
-//        		error(id, EClientErrors.UPDATE_TWS,
-//        			"  It does not support conId parameter.");
-//        		return;
-//        	}
+        	if (contract.conid() > 0) {
+        		error(id, EClientErrors.UPDATE_TWS,
+        			"  It does not support conId parameter.");
+        		return;
+        	}
         }
 
         if (m_serverVersion < MIN_SERVER_VER_SSHORTX) {

@@ -45,6 +45,7 @@ public class Lookup {
 			return s;
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, e.toString());
+			e.printStackTrace();
 			return "";
 		}
 	}
@@ -74,6 +75,7 @@ public class Lookup {
 			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, e.toString());
+			e.printStackTrace();
 		}
 	
 		return (s);

@@ -203,7 +203,7 @@ public class EReader extends Thread {
                 String account = readStr();
 
                 Contract contract = new Contract();
-//                contract.conid(readInt());
+                contract.conid(readInt());
                 contract.symbol(readStr());
                 contract.secType(readStr());
                 contract.expiry(readStr());
@@ -392,9 +392,9 @@ public class EReader extends Thread {
             case PORTFOLIO_VALUE: {
                 int version = readInt();
                 Contract contract = new Contract();
-//                if (version >= 6) {
-//                	contract.conid(readInt());
-//                }
+                if (version >= 6) {
+                	contract.conid(readInt());
+                }
                 contract.symbol(readStr());
                 contract.secType(readStr());
                 contract.expiry(readStr());
@@ -470,9 +470,9 @@ public class EReader extends Thread {
 
                 // read contract fields
                 Contract contract = new Contract();
-//                if (version >= 17) {
-//                	contract.conid(readInt());
-//                }
+                if (version >= 17) {
+                	contract.conid(readInt());
+                }
                 contract.symbol(readStr());
                 contract.secType(readStr());
                 contract.expiry(readStr());
@@ -784,9 +784,9 @@ public class EReader extends Thread {
                 int numberOfElements = readInt();
                 for (int ctr=0; ctr < numberOfElements; ctr++) {
                     int rank = readInt();
-//                    if (version >= 3) {
-//                    	contract.contract().conid(readInt());
-//                    }
+                    if (version >= 3) {
+                    	contract.contract().conid(readInt());
+                    }
                     contract.contract().symbol(readStr());
                     contract.contract().secType(readStr());
                     contract.contract().expiry(readStr());
@@ -830,7 +830,7 @@ public class EReader extends Thread {
                 contract.contract().localSymbol(readStr());
                 contract.marketName(readStr());
                 contract.contract().tradingClass(readStr());
-//                contract.contract().conid(readInt());
+                contract.contract().conid(readInt());
                 contract.minTick(readDouble());
                 contract.contract().multiplier(readStr());
                 contract.orderTypes(readStr());
@@ -901,7 +901,7 @@ public class EReader extends Thread {
                 contract.contract().currency(readStr());
                 contract.marketName(readStr());
                 contract.contract().tradingClass(readStr());
-//                contract.contract().conid(readInt());
+                contract.contract().conid(readInt());
                 contract.minTick(readDouble());
                 contract.orderTypes(readStr());
                 contract.validExchanges(readStr());
@@ -946,9 +946,9 @@ public class EReader extends Thread {
 
                 // read contract fields
                 Contract contract = new Contract();
-//                if (version >= 5) {
-//                	contract.conid(readInt());
-//                }
+                if (version >= 5) {
+                	contract.conid(readInt());
+                }
                 contract.symbol(readStr());
                 contract.secType(readStr());
                 contract.expiry(readStr());

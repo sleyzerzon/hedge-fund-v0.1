@@ -3,6 +3,7 @@ package com.onenow.main;
 import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.constant.StreamName;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.io.BusProcessingFactory;
@@ -27,7 +28,9 @@ public class ClerkHistoryMain {
 
 		TimeParser.wait(180); // boot sequence
 		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.HISTORY);
-		BusSystem.read(StreamName.HISTORY, recordProcessorFactory);
+		BusSystem.read(	StreamName.HISTORY, 
+						recordProcessorFactory,
+						InitialPositionInStream.LATEST);
 		
 	}
 

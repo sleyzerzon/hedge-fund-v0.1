@@ -75,8 +75,8 @@ public class BusWallStIB implements ConnectionHandler {
 			    						clientID, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
-				Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO BUS: " + e.getMessage(), "", "\n");
-				e.printStackTrace();
+				Watchr.log(Level.WARNING, "...COULD NOT CONNECT TO BUS: " + e.getMessage(), "", "\n");
+				// e.printStackTrace();
 				TimeParser.wait(10);
 			}			
 		} // end try to connect

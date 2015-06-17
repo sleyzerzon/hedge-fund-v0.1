@@ -14,65 +14,69 @@ public class DataSampling {
 		
 		String dbSamplingRate = "15m";
 
-		if(sampling.equals(SamplingRate.UHFREQ)) {		// midpoint
-			dbSamplingRate = "5s";
-		}
-		if(sampling.equals(SamplingRate.HIFREQ)) {		// midpoint
-			dbSamplingRate = "2m";
-		}
-		if(sampling.equals(SamplingRate.SCALP)) {		// midpoint
-			dbSamplingRate = "15m";
-		}
-		if(sampling.equals(SamplingRate.SWING)) {		// midpoint
-			dbSamplingRate = "60m";
-		}
-		if(sampling.equals(SamplingRate.TREND)) {		// midpoint
-			dbSamplingRate = "4h";
-		}
-		if(sampling.equals(SamplingRate.UHFSHORT)) {	// UHF 1sec, 5sec, 20sec
-			dbSamplingRate = "1s";
-		}
-		if(sampling.equals(SamplingRate.UHFMEDIUM)) {
-			dbSamplingRate = "5s";
-		}
-		if(sampling.equals(SamplingRate.UHFLONG)) {
-			dbSamplingRate = "20s";
-		}
-		if(sampling.equals(SamplingRate.HFSHORT)) {		//HF 1min, 3min, 15min
-			dbSamplingRate = "1m";
-		}
-		if(sampling.equals(SamplingRate.HFMEDIUM)) {
-			dbSamplingRate = "3m";
-		}
-		if(sampling.equals(SamplingRate.HFLONG)) {
-			dbSamplingRate = "15m";
-		}
-		if(sampling.equals(SamplingRate.SCALPSHORT)) {		//SCALPING 5min, 15min, 60min
-			dbSamplingRate = "5m";
-		}
-		if(sampling.equals(SamplingRate.SCALPMEDIUM)) {
-			dbSamplingRate = "15m";
-		}
-		if(sampling.equals(SamplingRate.SCALPLONG)) {
-			dbSamplingRate = "60m";
-		}
-		if(sampling.equals(SamplingRate.SWINGSHORT)) {		//SWINGING 60min, 240min, daily
-			dbSamplingRate = "60m";
-		}
-		if(sampling.equals(SamplingRate.SWINGMEDIUM)) {
-			dbSamplingRate = "4h";
-		}
-		if(sampling.equals(SamplingRate.SWINGLONG)) {
-			dbSamplingRate = "1d";
-		}
-		if(sampling.equals(SamplingRate.TRENDSHORT)) {		//TREND 4hr, daily, weekly
-			dbSamplingRate = "4h";
-		}
-		if(sampling.equals(SamplingRate.TRENDMEDIUM)) {
-			dbSamplingRate = "1d";
-		}
-		if(sampling.equals(SamplingRate.TRENDLONG)) {
-			dbSamplingRate = "1w";
+		try {
+			if(sampling.equals(SamplingRate.UHFREQ)) {		// midpoint
+				dbSamplingRate = "5s";
+			}
+			if(sampling.equals(SamplingRate.HIFREQ)) {		// midpoint
+				dbSamplingRate = "2m";
+			}
+			if(sampling.equals(SamplingRate.SCALP)) {		// midpoint
+				dbSamplingRate = "15m";
+			}
+			if(sampling.equals(SamplingRate.SWING)) {		// midpoint
+				dbSamplingRate = "60m";
+			}
+			if(sampling.equals(SamplingRate.TREND)) {		// midpoint
+				dbSamplingRate = "4h";
+			}
+			if(sampling.equals(SamplingRate.UHFSHORT)) {	// UHF 1sec, 5sec, 20sec
+				dbSamplingRate = "1s";
+			}
+			if(sampling.equals(SamplingRate.UHFMEDIUM)) {
+				dbSamplingRate = "5s";
+			}
+			if(sampling.equals(SamplingRate.UHFLONG)) {
+				dbSamplingRate = "20s";
+			}
+			if(sampling.equals(SamplingRate.HFSHORT)) {		//HF 1min, 3min, 15min
+				dbSamplingRate = "1m";
+			}
+			if(sampling.equals(SamplingRate.HFMEDIUM)) {
+				dbSamplingRate = "3m";
+			}
+			if(sampling.equals(SamplingRate.HFLONG)) {
+				dbSamplingRate = "15m";
+			}
+			if(sampling.equals(SamplingRate.SCALPSHORT)) {		//SCALPING 5min, 15min, 60min
+				dbSamplingRate = "5m";
+			}
+			if(sampling.equals(SamplingRate.SCALPMEDIUM)) {
+				dbSamplingRate = "15m";
+			}
+			if(sampling.equals(SamplingRate.SCALPLONG)) {
+				dbSamplingRate = "60m";
+			}
+			if(sampling.equals(SamplingRate.SWINGSHORT)) {		//SWINGING 60min, 240min, daily
+				dbSamplingRate = "60m";
+			}
+			if(sampling.equals(SamplingRate.SWINGMEDIUM)) {
+				dbSamplingRate = "4h";
+			}
+			if(sampling.equals(SamplingRate.SWINGLONG)) {
+				dbSamplingRate = "1d";
+			}
+			if(sampling.equals(SamplingRate.TRENDSHORT)) {		//TREND 4hr, daily, weekly
+				dbSamplingRate = "4h";
+			}
+			if(sampling.equals(SamplingRate.TRENDMEDIUM)) {
+				dbSamplingRate = "1d";
+			}
+			if(sampling.equals(SamplingRate.TRENDLONG)) {
+				dbSamplingRate = "1w";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return dbSamplingRate;
 	}

@@ -169,12 +169,6 @@ public class Portfolio {
 	// PRINT
 	public String toString() {
 		String s = "";
-//		Integer i = 0;
-//		for(Investment inv:investments) {
-//			s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
-//			i++;
-//		}
-
 		s = s + toIndicesString() + " ";
 		s = s + toOptionsString() + " ";
 		s = s + toStocksString() + " ";
@@ -188,7 +182,8 @@ public class Portfolio {
 		System.out.println("\n" + "INITIALIZED INDICES");
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentIndex) {
-				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
+				s = s + "   [[[" +getQuantity().get(inv) + "]]]" + " ";
+				s = s + investments.get(i) + " ";
 			}
 			i++;
 		}
@@ -200,7 +195,8 @@ public class Portfolio {
 		System.out.println("\n" + "INITIALIZED OPTIONS");
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentOption) {
-				s = s + getQuantity().get(inv) + " " + investments.get(i) + "\n";
+				s = s + "   [[[" + getQuantity().get(inv) + "]]]" + " ";
+				s = s + investments.get(i) + " ";
 			}
 			i++;
 		}
@@ -212,8 +208,8 @@ public class Portfolio {
 		Watchr.log(Level.INFO,  "INITIALIZED STOCKS", "\n", "");
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentStock) {
+				s = s + "   [[[" + getQuantity().get(inv) + "]]]" + " ";
 				s = s + investments.get(i) + " ";
-				s = s + "(" + getQuantity().get(inv) + ")";
 				s = s + "\n";
 			}
 			i++;

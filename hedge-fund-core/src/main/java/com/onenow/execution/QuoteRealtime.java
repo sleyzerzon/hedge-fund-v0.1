@@ -8,20 +8,20 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.controller.Formats;
 import com.onenow.data.MarketPrice;
-import com.onenow.execution.QuoteRealTime;
+import com.onenow.execution.QuoteRealtime;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 
 
-public class QuoteRealTime extends AbstractTableModel {
+public class QuoteRealtime extends AbstractTableModel {
 
 	private BrokerController controller;
 	private MarketPrice marketPrice;
 	
 	private Investment investment;
 
-	public QuoteRealTime() {
+	public QuoteRealtime() {
 
 	}
 
@@ -31,7 +31,7 @@ public class QuoteRealTime extends AbstractTableModel {
 	 * @param mPrice
 	 * @param inv
 	 */
-	public QuoteRealTime(BrokerController controller, MarketPrice mPrice, Investment inv) {
+	public QuoteRealtime(BrokerController controller, MarketPrice mPrice, Investment inv) {
 		
 		this.controller = controller;
 		this.marketPrice = mPrice;
@@ -70,7 +70,6 @@ public class QuoteRealTime extends AbstractTableModel {
 		
 		controller.reqMktData(contract, volumeTicks, false, (ITopMktDataHandler) quote);
 		
-		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	} 
 
 	
@@ -79,7 +78,6 @@ public class QuoteRealTime extends AbstractTableModel {
 	void addRow( QuoteRTSingle row) { // callback
 		m_rows.add( row);
 		// System.out.println("Quote " + toString(0));
-		fireTableRowsInserted( m_rows.size() - 1, m_rows.size() - 1);
 	}
 	
 	public void desubscribe() {

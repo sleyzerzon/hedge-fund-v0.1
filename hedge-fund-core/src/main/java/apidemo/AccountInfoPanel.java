@@ -366,12 +366,9 @@ public class AccountInfoPanel extends JPanel implements INewTab, IAccountHandler
 			}
 
 			if (!m_portfolioMap.containsKey( position.conid() ) && position.position() != 0) {
-				// contract id changed to string from int
-				// m_positions.add( position.conid() );
-				m_positions.add( 0 );
+				m_positions.add( position.conid() );
 			}
-			// m_portfolioMap.put( position.conid(), position);
-			m_portfolioMap.put( 0, position);
+			 m_portfolioMap.put( position.conid(), position);
 
 			fireTableDataChanged();
 		}

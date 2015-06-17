@@ -563,8 +563,7 @@ public class MarketDataPanel extends JPanel {
 
 		@Override public void scannerData(int rank, final ContractDetails contractDetails, String legsStr) {
 			if (!m_conids.contains( contractDetails.conid() ) ) {
-				// m_conids.add( contractDetails.conid() );
-				m_conids.add( 0 );
+				 m_conids.add( contractDetails.conid() );
 
 				SwingUtilities.invokeLater( new Runnable() {
 					@Override public void run() {

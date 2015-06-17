@@ -109,7 +109,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  for(Investment inv:invs) {
 
 			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString(), "\n\n", "");
-			  QuoteRealTime quoteLive = new QuoteRealTime(bus.controller, marketPrices, inv);
+			  QuoteRealtime quoteLive = new QuoteRealtime(bus.controller, marketPrices, inv);
 		  }
 	  }	
 	  

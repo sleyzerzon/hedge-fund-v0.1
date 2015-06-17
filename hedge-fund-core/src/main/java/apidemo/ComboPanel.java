@@ -197,9 +197,7 @@ public class ComboPanel extends JPanel implements INewTab {
 			ComboLeg leg = new ComboLeg();
 			leg.action( m_action.getSelectedItem() );
 			leg.ratio( m_ratio.getInt() );
-			// changed to string from int
-//			leg.conid( c.conid() );
-			leg.conid( 0 );
+			leg.conid( c.conid() );
 			leg.exchange( c.exchange() );
 
 			LegRow row = new LegRow( c, leg);
@@ -316,8 +314,7 @@ public class ComboPanel extends JPanel implements INewTab {
 					@Override public void contractDetails(ArrayList<ContractDetails> list) {
 						if (list.size() == 1) {
 						    Contract c = list.get( 0).contract();
-//							m_dnContract = new DeltaNeutralContract( c.conid(), m_delta.getDouble(), m_price.getDouble() );
-						    m_dnContract = new DeltaNeutralContract( 0, m_delta.getDouble(), m_price.getDouble() );
+							m_dnContract = new DeltaNeutralContract( c.conid(), m_delta.getDouble(), m_price.getDouble() );
 							m_dnText.setText( String.format( "Delta-neutral: %s Delta: %s  Price: %s", c.description(), m_delta.getText(), m_price.getText() ) );
 						}
 						else {
@@ -442,8 +439,7 @@ public class ComboPanel extends JPanel implements INewTab {
 			ComboLeg leg = new ComboLeg();
 			leg.action( action);
 			leg.ratio( ratio);
-//			leg.conid( contract.conid() );
-			leg.conid( 0 );
+			leg.conid( contract.conid() );
 			leg.exchange( contract.exchange() );
 
 			LegRow row = new LegRow( contract, leg);
