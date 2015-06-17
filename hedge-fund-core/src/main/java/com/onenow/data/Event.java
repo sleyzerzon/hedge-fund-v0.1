@@ -100,14 +100,14 @@ public class Event {
 
 	public String getOptionExpirationDate() {
 		if(option==null) {
-			return "";
+			return "na";
 		} 
 		return option.getExpirationDate();
 	}
 
 	public String getFutureExpirationDate() {
 		if(future==null) {
-			return "";
+			return "na";
 		}
 		return future.getExpirationDate();
 	}

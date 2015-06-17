@@ -12,17 +12,10 @@ import org.influxdb.dto.Serie;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 import com.onenow.constant.DBname;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
-import com.onenow.data.EventRequestHistory;
-import com.onenow.data.EventRequestRealtime;
 import com.onenow.data.EventRequest;
-import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 
 import java.util.logging.Level;
@@ -79,39 +72,78 @@ private static void dbCreateAndConnect() {
 		
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
-		// e.printStackTrace();
 	}
 }
 
 // PRICE
-public static void writePrice(final EventActivity event) {
+public static boolean writePrice(final EventActivity event) {
+	final boolean success = false;
 	String name = Lookup.getEventKey(event);
+	
+	final Serie serie = getWritePriceSerie(event, name);
+	
+	writeThreadedPrice(event, serie);
+
+	return success;
+}
+
+
+static Serie getWritePriceSerie(final EventActivity event, String name) {
 	final Serie serie = new Serie.Builder(name)
-	.columns("time", "size", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
-	.values(event.time, event.size, 											// basic columns
-			event.source, event.timing, event.tradeType,						// event origination
-			event.getUnder(), event.getInvType(), 								// investment
-			event.getOptionStrikePrice(), event.getOptionExpirationDate(),		// option
-			event.getFutureExpirationDate()										// if future, expiration
+	.columns("time", "price", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
+	.values(event.time, event.price, 																		// basic columns
+			"\""+ event.source + "\"", "\""+ event.timing + "\"", event.tradeType + "\"",					// event origination
+			"\""+ event.getUnder() + "\"", "\""+ event.getInvType() + "\"", 								// investment
+			"\""+ event.getOptionStrikePrice() + "\"", "\""+ event.getOptionExpirationDate() + "\"",		// option
+			"\""+ event.getFutureExpirationDate() + "\""													// if future, expiration
 			) 
 
 	.build();
+	return serie;
+}
 
+static Serie getWriteSizeSerie(final EventActivity event, String name) {
+	final Serie serie = new Serie.Builder(name)
+	.columns("time", "size", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
+	.values(event.time, event.size, 																		// basic columns
+			"\""+ event.source + "\"", "\""+ event.timing + "\"", event.tradeType + "\"",					// event origination
+			"\""+ event.getUnder() + "\"", "\""+ event.getInvType() + "\"", 								// investment
+			"\""+ event.getOptionStrikePrice() + "\"", "\""+ event.getOptionExpirationDate() + "\"",		// option
+			"\""+ event.getFutureExpirationDate() + "\""													// if future, expiration
+			) 
+
+	.build();
+	return serie;
+}
+
+static void writeThreadedPrice(final EventActivity event, final Serie serie) {
+	
 	new Thread () {
 		@Override public void run () {
 
 		Long before = TimeParser.getTimestampNow();
-		influxDB.write(DBname.PRICE_STAGING.toString(), TimeUnit.MILLISECONDS, serie);
-		// TODO: time_precision='ms'
+		try {
+			influxDB.write(getPriceDatabaseName().toString(), TimeUnit.MILLISECONDS, serie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBname.PRICE_STAGING.toString() + " " + 
+		Watchr.log(Level.INFO, 	"TSDB WRITE: " + getPriceDatabaseName() + " " + 
 								event.toString() + " " +  
 								"ELAPSED WRITE " + (after-before) + "ms ",
 								// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
 		}
 	}.start();
+}
+
+/** 
+ * Each environment has its own database
+ * @return
+ */
+private static DBname getPriceDatabaseName() {
+	return DBname.PRICE_STAGING;
 }
 
 	
@@ -277,16 +309,7 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 // SIZE
 public static void writeSize(final EventActivity event) {
 	String name = Lookup.getEventKey(event);
-	final Serie serie = new Serie.Builder(name)
-	.columns("time", "size", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
-	.values(event.time, event.size, 											// basic columns
-			event.source, event.timing, event.tradeType,						// event origination
-			event.getUnder(), event.getInvType(), 								// investment
-			event.getOptionStrikePrice(), event.getOptionExpirationDate(),		// option
-			event.getFutureExpirationDate()										// if future, expiration
-			) 
-			
-	.build();
+	final Serie serie = getWriteSizeSerie(event, name);
 
 	new Thread () {
 		@Override public void run () {
