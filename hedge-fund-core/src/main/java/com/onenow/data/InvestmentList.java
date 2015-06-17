@@ -63,10 +63,11 @@ public class InvestmentList {
 	private static List<String> getSomeStocks() {
 		List<String> list = new ArrayList<String>();
 		int count = 0;
+		int maxNum = 3;
 		for(String stock:SNP500){
 			list.add(stock);
 			count++;
-			if(count>10) {
+			if(count>maxNum) {
 				return list;
 			}
 		}
