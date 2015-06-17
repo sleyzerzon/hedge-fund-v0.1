@@ -45,7 +45,7 @@ public class ChartistMain {
 	 */
 	public static void main(String[] args) {
 
-		InitLogger.run();
+		InitLogger.run("");
 
 		testCache();
 

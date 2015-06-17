@@ -3,6 +3,7 @@ package com.onenow.data;
 import com.onenow.instrument.Investment;
 import com.onenow.util.TimeParser;
 
+// https://www.interactivebrokers.com/en/software/api/apiguide/tables/historical_data_limitations.htm
 public class EventRequestHistory extends EventRequest {
 
 	public HistorianConfig config;

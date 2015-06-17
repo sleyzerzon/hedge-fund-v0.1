@@ -17,7 +17,7 @@ public class CatchupRealtimeMain {
 
 	public static void main(String[] args) {
 				
-		InitLogger.run();
+		InitLogger.run("");
 
 		BusSystem.read(	StreamName.REALTIME, 
 						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME),

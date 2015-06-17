@@ -10,7 +10,4 @@ public class InitLogger {
 		SysProperties.setLogProperties();
 		FlexibleLogger.setup(stream);		
 	}
-	public static void run() {
-		run("");
-	}
 }

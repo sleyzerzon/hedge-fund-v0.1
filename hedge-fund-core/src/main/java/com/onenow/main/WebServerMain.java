@@ -50,7 +50,7 @@ public class WebServerMain {
      */
     public static void main(String[] args) throws Exception {
     	
-		InitLogger.run();
+		InitLogger.run("");
     	
         if (args.length != 4) {
             System.err.println("Usage: " + WebServerMain.class

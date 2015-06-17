@@ -13,7 +13,7 @@ public class TestMain {
 
 	public static void main(String[] args) {
 
-		InitLogger.run();
+		InitLogger.run("");
 
 		DatabaseSystemActivityImpl logDB = new DatabaseSystemActivityImpl();
 

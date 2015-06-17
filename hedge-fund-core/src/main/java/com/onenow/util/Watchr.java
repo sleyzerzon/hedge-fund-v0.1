@@ -53,8 +53,13 @@ public class Watchr {
 	private static String machineTextLogFormatter(String message) {
 		
 		String s = "";
+		
+		String localTime = "";
+		
+		localTime = "[" + TimeParser.getFormatedPacificDateTime(TimeParser.getTimestampNow()) + "]";
+		
 		String ipLog = "";
-		String upperCase = "";
+		
 		try {
 			ipLog = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
@@ -64,13 +69,14 @@ public class Watchr {
 				
 		String caller = getCallerTrace();
 		
+		String upperCase = "";
 		try {
 			upperCase = message.toUpperCase();
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
 		
-		s = " " + ipLog + " " + caller + " "+ upperCase.replace("\n", " ");;
+		s = " " + localTime + " "+ ipLog + " " + caller + " "+ upperCase.replace("\n", " ");;
 
 		return s;
 	}

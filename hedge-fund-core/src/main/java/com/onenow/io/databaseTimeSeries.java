@@ -162,6 +162,11 @@ public static List<Serie> queryPrice(String dbName, EventRequest request) {
 					"AND " +
 					"time < " + "'" + request.toDashedDate + "' "; 
 					
+	
+	// TODO The where clause supports comparisons against regexes, strings, booleans, floats, integers, and the times listed before. 
+	// Comparators include = equal to, > greater than, < less than, <> not equal to, =~ matches against, !~ doesn’t match against. 
+	// You can chain logic together using and and or and you can separate using ( and )
+	
 	// TODO: SELECT PERCENTILE(column_name, N) FROM series_name group by time(10m) ...
 	// TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
 	// TODO: SELECT TOP(column_name, N) FROM series_name ...

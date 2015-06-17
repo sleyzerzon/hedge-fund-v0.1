@@ -12,7 +12,7 @@ public class StreamingMain {
 	 */
 	public static void main(String[] args) {
 
-		InitLogger.run();
+		InitLogger.run("");
 
 	}
 

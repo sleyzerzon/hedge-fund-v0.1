@@ -23,7 +23,7 @@ public class ClerkHistoryMain {
 	 */
 	public static void main(String[] args) {
 
-		InitLogger.run();
+		InitLogger.run("");
 
 		TimeParser.wait(180); // boot sequence
 		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.HISTORY);

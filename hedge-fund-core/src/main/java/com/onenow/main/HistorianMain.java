@@ -28,7 +28,7 @@ public class HistorianMain {
 
 	public static void main(String[] args) {
 		
-		InitLogger.run();
+		InitLogger.run("");
 
 		// queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING"; 
 		// sqs.deleteQueue(queueURL);

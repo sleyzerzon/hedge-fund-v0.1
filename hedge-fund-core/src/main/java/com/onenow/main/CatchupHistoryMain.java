@@ -18,7 +18,7 @@ public class CatchupHistoryMain {
 
 	public static void main(String[] args) {
 				
-		InitLogger.run();
+		InitLogger.run("");
 
 		BusSystem.read(	StreamName.HISTORY, 
 						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.HISTORY),

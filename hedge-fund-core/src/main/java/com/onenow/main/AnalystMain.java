@@ -15,7 +15,7 @@ public class AnalystMain {
 	
 	public static void main(String[] args) throws Exception {
 
-		InitLogger.run();
+		InitLogger.run("");
 		
 		Watchr.log(Level.INFO, "checking");
 		
