@@ -12,10 +12,12 @@ import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.Underlying;
 import com.onenow.util.Watchr;
 
 public class Event {
 	
+	// investments to facilitate serialization / deserialization
 	public InvestmentIndex index = null;
 	public InvestmentOption option = null;
 	public InvestmentStock stock = null;
@@ -40,6 +42,7 @@ public class Event {
 	}
 	
 	public void setInvestment(Investment inv) {
+		
 		if( (inv instanceof InvestmentIndex) || inv.getInvType().equals(InvType.INDEX)) {
 			index = (InvestmentIndex) inv;
 			return;
@@ -78,6 +81,35 @@ public class Event {
 		}
 		Watchr.log(Level.SEVERE, "Trying to get investment type not handled: ");
 		return null;
+	}
+	
+	public Underlying getUnder() {
+		return getInvestment().getUnder();
+	}
+	
+	public InvType getInvType() {
+		return getInvestment().getInvType();
+	}
+
+	public Double getOptionStrikePrice() {
+		if(option==null) {
+			return 0.0;
+		}
+		return option.getStrikePrice();
+	}
+
+	public String getOptionExpirationDate() {
+		if(option==null) {
+			return "";
+		} 
+		return option.getExpirationDate();
+	}
+
+	public String getFutureExpirationDate() {
+		if(future==null) {
+			return "";
+		}
+		return future.getExpirationDate();
 	}
 
 	public String toString() {

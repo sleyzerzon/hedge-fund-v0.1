@@ -72,7 +72,7 @@ public class FlexibleLogger {
 	    // set the LogLevel to Severe, only severe Messages will be written
 	    logger.setLevel(level);
 	    
-	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[2].getClassName()+appMode+"-Log.";
+	    String base = Watchr.getLogPath() + new Exception().getStackTrace()[3].getClassName()+appMode+"-Log.";
 	    fileTxt = new FileHandler(base+"txt");
 	    fileHTML = new FileHandler(base+"html");
 	    

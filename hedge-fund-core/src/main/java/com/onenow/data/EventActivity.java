@@ -16,6 +16,7 @@ public class EventActivity extends Event {
 		
 	}
 	
+	
 	public String toString() {
 		String s = "";
 		

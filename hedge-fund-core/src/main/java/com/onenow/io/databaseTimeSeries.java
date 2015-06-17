@@ -87,10 +87,14 @@ private static void dbCreateAndConnect() {
 public static void writePrice(final EventActivity event) {
 	String name = Lookup.getEventKey(event);
 	final Serie serie = new Serie.Builder(name)
-	.columns("time", "price")
-	// iclient.write_points(json_body, time_precision='ms')
-	// time*1000
-	.values(event.time, event.price)  // precision in seconds
+	.columns("time", "size", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
+	.values(event.time, event.size, 											// basic columns
+			event.source, event.timing, event.tradeType,						// event origination
+			event.getUnder(), event.getInvType(), 								// investment
+			event.getOptionStrikePrice(), event.getOptionExpirationDate(),		// option
+			event.getFutureExpirationDate()										// if future, expiration
+			) 
+
 	.build();
 
 	new Thread () {
@@ -269,8 +273,14 @@ private static String extractQueryString(Map<String, Object> row, String col) {
 public static void writeSize(final EventActivity event) {
 	String name = Lookup.getEventKey(event);
 	final Serie serie = new Serie.Builder(name)
-	.columns("time", "size")
-	.values(event.time, event.size) // precision in seconds
+	.columns("time", "size", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
+	.values(event.time, event.size, 											// basic columns
+			event.source, event.timing, event.tradeType,						// event origination
+			event.getUnder(), event.getInvType(), 								// investment
+			event.getOptionStrikePrice(), event.getOptionExpirationDate(),		// option
+			event.getFutureExpirationDate()										// if future, expiration
+			) 
+			
 	.build();
 
 	new Thread () {
