@@ -33,6 +33,8 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
+import com.onenow.data.QuoteChainSingle;
+import com.onenow.execution.ApiController.TopMktDataAdapter;
 import com.onenow.execution.Contract;
 
 import java.util.ArrayList;
@@ -59,7 +61,9 @@ public class BrokerController implements EWrapper {
 	private ITimeHandler m_timeHandler;
 	private IBulletinHandler m_bulletinHandler;
 	private final HashMap<Integer,IInternalHandler> m_contractDetailsMap = new HashMap<Integer,IInternalHandler>();
-	private final HashMap<Integer,IOptHandler> m_optionCompMap = new HashMap<Integer,IOptHandler>();
+//	private final HashMap<Integer,IOptHandler> m_optionCompMap = new HashMap<Integer,IOptHandler>(); // QuoteChainSingle
+	private final HashMap<Integer,QuoteChainSingle> m_optionCompMap = new HashMap<Integer,QuoteChainSingle>(); // QuoteChainSingle
+
 	private final HashMap<Integer,IEfpHandler> m_efpMap = new HashMap<Integer,IEfpHandler>();
 	private final HashMap<Integer,ITopMktDataHandler> m_topMktDataMap = new HashMap<Integer,ITopMktDataHandler>();
 	private final HashMap<Integer,IDeepMktDataHandler> m_deepMktDataMap = new HashMap<Integer,IDeepMktDataHandler>();
@@ -423,7 +427,7 @@ public class BrokerController implements EWrapper {
 		sendEOM();
     }
 
-    public void reqOptionMktData(Contract contract, String genericTickList, boolean snapshot, IOptHandler handler) {
+    public void reqOptionMktData(Contract contract, String genericTickList, boolean snapshot, QuoteChainSingle handler) { // IOptHandler handler
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, handler);
     	m_optionCompMap.put( reqId, handler);
@@ -450,7 +454,7 @@ public class BrokerController implements EWrapper {
 		sendEOM();
     }
 
-    public void cancelOptionMktData( IOptHandler handler) {
+    public void cancelOptionMktData(QuoteChainSingle handler) {
     	cancelMktData( handler);
     	getAndRemoveKey( m_optionCompMap, handler);
     }
@@ -565,21 +569,21 @@ public class BrokerController implements EWrapper {
 	// ****************************************
 	// ****************************************
 
-	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, IOptHandler handler) {
+	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, QuoteChainSingle handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);
 		m_client.calculateImpliedVolatility( reqId, c, optPrice, underPrice);
 		sendEOM();
 	}
 
-	public void reqOptionComputation( Contract c, double vol, double underPrice, IOptHandler handler) {
+	public void reqOptionComputation( Contract c, double vol, double underPrice, QuoteChainSingle handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);
 		m_client.calculateOptionPrice(reqId, c, vol, underPrice);
 		sendEOM();
 	}
 
-	void cancelOptionComp( IOptHandler handler) {
+	void cancelOptionComp( QuoteChainSingle handler) {
 		Integer reqId = getAndRemoveKey( m_optionCompMap, handler);
 		if (reqId != null) {
 			m_client.cancelCalculateOptionPrice( reqId);
@@ -589,7 +593,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickOptionComputation(int reqId, int tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 		
-		IOptHandler handler = m_optionCompMap.get( reqId);
+		QuoteChainSingle handler = m_optionCompMap.get( reqId);
 		
 		if (handler != null) {
 			handler.tickOptionComputation( TickType.get( tickType), impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);

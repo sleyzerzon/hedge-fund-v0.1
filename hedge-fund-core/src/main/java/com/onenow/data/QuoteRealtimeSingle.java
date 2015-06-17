@@ -12,6 +12,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvDataType;
 import com.onenow.constant.TradeType;
+import com.onenow.execution.Contract;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController.MktDataAdapter;
 import com.onenow.util.Watchr;
@@ -33,18 +34,19 @@ public class QuoteRealtimeSingle extends MktDataAdapter {
 	double m_close;
 	int m_volume;
 	boolean m_frozen;
+	
 	// added:
 	Investment investment;
 	MarketPrice marketPrice;
+	Contract contract;
 	
 	public QuoteRealtimeSingle () {
 		
 	}
 	
-	QuoteRealtimeSingle( AbstractTableModel model, String description, Investment inv, MarketPrice marketPrice) {
-		m_model = model;
-		m_description = description;
-		
+	QuoteRealtimeSingle( AbstractTableModel model, Contract contract, Investment inv, MarketPrice marketPrice) {
+		this.m_model = model;
+		this.contract = contract;		
 		this.investment = inv;
 		this.marketPrice = marketPrice;
 	}
@@ -136,12 +138,6 @@ public class QuoteRealtimeSingle extends MktDataAdapter {
 	}
 	
 	@Override public void marketDataType(MktDataType marketDataType) {
-//		m_frozen = marketDataType == MktDataType.Frozen;
-//		m_model.fireTableDataChanged();
-//		
-//		if(m_frozen==true) {
-//			Watchr.log(Level.WARNING, "...frozen data");
-//		}
 	}
 
 
@@ -150,7 +146,7 @@ public class QuoteRealtimeSingle extends MktDataAdapter {
 	public String toString() {
 		String s="\n\n";
 		s = s + "QUOTE" + "\n";
-		s = s + "Description " + m_description + "\n";
+		s = s + "Contract " + contract.description() + "\n";
 		s = s + "Bid " + m_bid + "\n";
 		s = s + "Ask " + m_ask + "\n";
 		s = s + "Last " + m_last + "\n";

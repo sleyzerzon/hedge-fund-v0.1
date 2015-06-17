@@ -2,15 +2,19 @@ package com.onenow.data;
 
 import java.util.logging.Level;
 
+import javax.swing.table.AbstractTableModel;
+
 import com.ib.client.TickType;
+import com.ib.client.Types.MktDataType;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.execution.ApiController.TopMktDataAdapter;
 import com.onenow.instrument.Investment;
+import com.onenow.portfolio.BrokerController.MktDataAdapter;
 import com.onenow.util.Watchr;
 
-public class QuoteChainSingle extends TopMktDataAdapter implements IOptHandler {
-	Contract m_c;
+public class QuoteChainSingle extends MktDataAdapter implements IOptHandler { // extends TopMktDataAdapter implements IOptHandler {  
+//	Contract m_c;
 	double m_bid;
 	double m_ask;
 	double m_impVol;
@@ -23,13 +27,20 @@ public class QuoteChainSingle extends TopMktDataAdapter implements IOptHandler {
 	// added:
 	Investment investment;
 	MarketPrice marketPrice;
+	String m_description;
+	AbstractTableModel m_model;
+	Contract contract;
 
 	public QuoteChainSingle() {
 		
 	}
 	
-	public QuoteChainSingle(Contract contract, Investment inv, MarketPrice marketPrice) {
-		m_c = contract;
+	public QuoteChainSingle(AbstractTableModel model, Contract contract, Investment inv, MarketPrice marketPrice) {
+		this.m_model = model;
+		this.contract = contract;		
+		this.investment = inv;
+		this.marketPrice = marketPrice;
+	
 	}
 
 	@Override public void tickPrice(TickType tickType, double price, int canAutoExecute) {
@@ -92,4 +103,33 @@ public class QuoteChainSingle extends TopMktDataAdapter implements IOptHandler {
 	@Override public void tickSnapshotEnd() {
 		m_done = true;
 	}
+	
+	// PRINT
+	public String toString() {
+		String s="\n\n";
+		s = s + "QUOTE" + "\n";
+		s = s + "Contract " + contract.description() + "\n";
+		s = s + "Bid " + m_bid + "\n";
+		s = s + "Ask " + m_ask + "\n";
+		s = s + "ImpliedVol " + m_impVol + "\n";		
+		s = s + "Delta " + m_delta + "\n";
+		s = s + "Gamma " + m_gamma + "\n";
+		s = s + "Vega " + m_vega + "\n";
+		s = s + "Theta " + m_theta + "\n";
+		s = s + "Done " + m_done + "\n";
+		return s;
+	}
+
+	@Override
+	public void tickSize(TickType tickType, int size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marketDataType(MktDataType marketDataType) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

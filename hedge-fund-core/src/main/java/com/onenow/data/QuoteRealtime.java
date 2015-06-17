@@ -15,6 +15,7 @@ import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
+import com.onenow.util.Watchr;
 
 
 public class QuoteRealtime extends AbstractTableModel {
@@ -43,10 +44,10 @@ public class QuoteRealtime extends AbstractTableModel {
 		this.investment = inv;
 		
 		Contract contract = ContractFactory.getContract(investment);
-		System.out.println("Contract " + contract.toString());
+		Watchr.log("Contract " + contract.toString());
 		
 		// set quote on table to receive callbacks later
-		QuoteRealtimeSingle quote = new QuoteRealtimeSingle(this, contract.description(), investment, marketPrice);
+		QuoteRealtimeSingle quote = new QuoteRealtimeSingle(this, contract, investment, marketPrice);
 		m_rows.add(quote);
 		
 		controller.reqMktData(contract, BusWallStInteractiveBrokers.getTickList(), false, (ITopMktDataHandler) quote);

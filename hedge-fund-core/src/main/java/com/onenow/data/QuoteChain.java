@@ -13,8 +13,12 @@ import apidemo.util.Util;
 
 import com.onenow.execution.BusWallStInteractiveBrokers;
 import com.onenow.execution.Contract;
+import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController;
+import com.onenow.portfolio.BrokerController.IOptHandler;
+import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
+import com.onenow.util.Watchr;
 
 public class QuoteChain extends AbstractTableModel {
 	
@@ -34,29 +38,19 @@ public class QuoteChain extends AbstractTableModel {
 		this.controller = controller;
 		this.marketPrice = mPrice;
 		this.investment = inv;
-
+		
+		Contract contract = ContractFactory.getContract(investment);
+		Watchr.log("Contract " + contract.toString());
+		
+		// set quote on table to receive callbacks later
+		addRow(contract, false);
+		
 	}
-	
-//	Comparator<ChainRow> c = new Comparator<ChainRow>() {
-//		
-//		@Override public int compare(ChainRow o1, ChainRow o2) {
-//			int rc = o1.m_c.expiry().compareTo( o2.m_c.expiry());
-//			if (rc == 0) {
-//				if (o1.m_c.strike() < o2.m_c.strike()) {
-//					rc = -1;
-//				}
-//				if (o1.m_c.strike() > o2.m_c.strike()) {
-//					rc = 1;
-//				}
-//			}
-//			return rc;
-//		}
-//	};
 	
 	
     public void desubscribe() {
         for (QuoteChainSingle row : m_list) {
-            controller.cancelOptionMktData( (com.onenow.portfolio.BrokerController.IOptHandler) row);
+            controller.cancelOptionMktData(row);
         	// controller.cancelMktData( (com.onenow.portfolio.BrokerController.IOptHandler) row);
         }
     }
@@ -71,10 +65,10 @@ public class QuoteChain extends AbstractTableModel {
 	}
 
 	public void addRow(Contract contract, boolean snapshot) {
-		QuoteChainSingle row = new QuoteChainSingle(contract, investment, marketPrice);
+		QuoteChainSingle row = new QuoteChainSingle(this, contract, investment, marketPrice);
 		m_list.add( row);
 		
-		controller.reqOptionMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, (com.onenow.portfolio.BrokerController.IOptHandler) row);
+		controller.reqOptionMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, row);
 		// controller.reqMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, (com.onenow.portfolio.BrokerController.IOptHandler) row);
 		
 		if (snapshot) {
@@ -108,8 +102,8 @@ public class QuoteChain extends AbstractTableModel {
 	@Override public Object getValueAt(int rowIn, int col) {
 		QuoteChainSingle row = m_list.get( rowIn);
 		switch( col) {
-			case 0: return row.m_c.expiry();
-			case 1: return row.m_c.strike();
+			case 0: return row.contract.expiry();
+			case 1: return row.contract.strike();
 			case 2: return fmtNz( row.m_bid);
 			case 3: return fmtNz( row.m_ask);
 			case 4: return fmtPct( row.m_impVol);
