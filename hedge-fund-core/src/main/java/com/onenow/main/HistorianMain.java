@@ -10,10 +10,8 @@ import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
 import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
-import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
 import com.onenow.util.Piping;
-import com.onenow.util.SysProperties;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
