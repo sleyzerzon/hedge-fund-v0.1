@@ -56,8 +56,8 @@ public class QuoteChain extends AbstractTableModel {
 	
     public void desubscribe() {
         for (QuoteChainSingle row : m_list) {
-            // controller.cancelOptionMktData( (com.onenow.portfolio.BrokerController.IOptHandler) row);
-        	controller.cancelMktData( (com.onenow.portfolio.BrokerController.IOptHandler) row);
+            controller.cancelOptionMktData( (com.onenow.portfolio.BrokerController.IOptHandler) row);
+        	// controller.cancelMktData( (com.onenow.portfolio.BrokerController.IOptHandler) row);
         }
     }
 	
@@ -74,8 +74,8 @@ public class QuoteChain extends AbstractTableModel {
 		QuoteChainSingle row = new QuoteChainSingle(contract, investment, marketPrice);
 		m_list.add( row);
 		
-		// controller.reqOptionMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, (com.onenow.portfolio.BrokerController.IOptHandler) row);
-		controller.reqMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, (com.onenow.portfolio.BrokerController.IOptHandler) row);
+		controller.reqOptionMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, (com.onenow.portfolio.BrokerController.IOptHandler) row);
+		// controller.reqMktData(contract, BusWallStInteractiveBrokers.getTickList(), snapshot, (com.onenow.portfolio.BrokerController.IOptHandler) row);
 		
 		if (snapshot) {
 			Util.sleep( 11); // try to avoid pacing violation at TWS
