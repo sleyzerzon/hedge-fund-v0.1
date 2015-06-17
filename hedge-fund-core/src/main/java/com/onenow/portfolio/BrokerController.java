@@ -594,7 +594,7 @@ public class BrokerController implements EWrapper {
 			handler.tickOptionComputation( TickType.get( tickType), impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 		}
 		else {
-			String log = String.format( "not handled %s %s %s %s %s %s %s %s %s", tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+			String log = String.format( "not handled REQID %s, TickType, ImpliedVol %s, Delta %s, optPrice %s, pvDividend %s, Gamma %s, Vega %s, Theta %s, undPrice %s", reqId, tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 			Watchr.log(Level.WARNING, log);
 		}
 		recEOM();
