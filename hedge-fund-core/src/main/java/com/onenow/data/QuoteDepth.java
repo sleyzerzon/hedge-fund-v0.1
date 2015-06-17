@@ -1,7 +1,10 @@
-package com.onenow.execution;
+package com.onenow.data;
 
 import com.ib.client.Types.DeepSide;
 import com.ib.client.Types.DeepType;
+import com.onenow.execution.BrokerInteractive;
+import com.onenow.execution.Contract;
+import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.IDeepMktDataHandler;

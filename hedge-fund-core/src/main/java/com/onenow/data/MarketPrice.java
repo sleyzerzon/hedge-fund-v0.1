@@ -16,7 +16,7 @@ import com.onenow.util.Watchr;
 
 public class MarketPrice {
 
-	private CacheInProcess cache; 		// just storage	
+	private static CacheInProcess cache; 		// just storage	
 	private Portfolio portfolio;
 	private DataSampling sampling;
 	private BrokerInterface broker;
@@ -35,15 +35,15 @@ public class MarketPrice {
 	
 	
 	// WRITE REAL-TIME 
-	public void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
+	private static void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
 								Integer volume, Double VWAP, boolean splitFlag,
 								InvDataSource source, InvDataTiming timing) {
 
 		if(lastSize>0) { 
 			
 			EventActivityRealtime event = new EventActivityRealtime(	timeStamp, inv, TradeType.TRADED, 
-														lastPrice, lastSize,
-														source, timing);
+																		lastPrice, lastSize,
+																		source, timing);
 			cache.writeEventRT(event);
 			
 			
@@ -82,7 +82,66 @@ public class MarketPrice {
 		
 		return chart;
 	}		
-			
+		
+	
+	// PRIVATE
+	public static void parseAndWriteRealTime(Investment inv, String rtvolume) {
+		String lastTradedPrice="";
+		String lastTradeSize="";
+		String lastTradeTime="";
+		String totalVolume="";
+		String VWAP="";
+		String splitFlag="";
+		
+		int i=1;
+		for(String split:rtvolume.split(";")) {
+			if(i==1) { //	Last trade price
+				lastTradedPrice = split;
+				if(lastTradedPrice.equals("")) {
+					return;
+				}
+			}
+			if(i==2) { //	Last trade size
+				lastTradeSize = split;
+				if(lastTradeSize.equals("")) {
+					return;
+				}
+			}
+			if(i==3) { //	Last trade time
+				lastTradeTime = split;
+				if(lastTradeTime.equals("")) {
+					return;
+				}
+			}
+			if(i==4) { //	Total volume
+				totalVolume = split;
+				if(totalVolume.equals("")) {
+					return;
+				}
+			}
+			if(i==5) { //	VWAP
+				VWAP = split;
+				if(VWAP.equals("")) {
+					return;
+				}
+			}
+			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
+				splitFlag = split;
+				if(splitFlag.equals("")) {
+					return;
+				}
+			}
+			i++;
+		}
+		Long time = Long.parseLong(lastTradeTime); 	
+		
+		InvDataSource source = InvDataSource.IB;
+		InvDataTiming timing = InvDataTiming.REALTIME;
+		writeRealTime(	time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
+									Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
+									source, timing);
+		return;
+	}
 	
 	// PRINT
 	public String toString() {

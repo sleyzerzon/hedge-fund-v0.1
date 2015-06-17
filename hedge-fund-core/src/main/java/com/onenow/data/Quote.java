@@ -1,4 +1,4 @@
-package com.onenow.execution;
+package com.onenow.data;
 
 import static com.ib.controller.Formats.fmtPct;
 
@@ -8,10 +8,10 @@ import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.portfolio.BrokerController;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
-import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
+import com.onenow.portfolio.BrokerController.MktDataAdapter;
 
 
-public class Quote extends TopMktDataAdapter implements ITopMktDataHandler {
+public class Quote extends MktDataAdapter implements ITopMktDataHandler {
 	AbstractTableModel m_model;
 	String m_description;
 	double m_bid;

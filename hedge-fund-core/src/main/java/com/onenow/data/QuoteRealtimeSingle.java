@@ -1,4 +1,4 @@
-package com.onenow.execution;
+package com.onenow.data;
 
 import static com.ib.controller.Formats.fmtPct;
 
@@ -12,16 +12,15 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvDataType;
 import com.onenow.constant.TradeType;
-import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
-import com.onenow.portfolio.BrokerController.TopMktDataAdapter;
+import com.onenow.portfolio.BrokerController.MktDataAdapter;
 import com.onenow.util.Watchr;
 
 /**
  * Single quote class
  *
  */
-public class QuoteRTSingle extends TopMktDataAdapter {
+public class QuoteRealtimeSingle extends MktDataAdapter {
 	
 	AbstractTableModel m_model;
 	String m_description;
@@ -38,11 +37,11 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 	Investment investment;
 	MarketPrice marketPrice;
 	
-	public QuoteRTSingle () {
+	public QuoteRealtimeSingle () {
 		
 	}
 	
-	QuoteRTSingle( AbstractTableModel model, String description, Investment inv, MarketPrice marketPrice) {
+	QuoteRealtimeSingle( AbstractTableModel model, String description, Investment inv, MarketPrice marketPrice) {
 		m_model = model;
 		m_description = description;
 		
@@ -79,7 +78,6 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 				break;
 			default: break;	
 		}
-		m_model.fireTableDataChanged(); // should use a timer to be more efficient
 	}
 
 	@Override public void tickSize( TickType tickType, int size) {
@@ -101,36 +99,32 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 				break;
             default: break; 
 		}
-		m_model.fireTableDataChanged();			
 	}
 	
 	/**
 	 * Handler of all callback tick types
 	 */
-	// reqScannerSubscription 
-	// for 500 companies: $120 / mo
 	@Override public void tickString(TickType tickType, String value) {
 		switch( tickType) {
 			case LAST_TIMESTAMP:
 				m_lastTime = Long.parseLong(value);
-				// System.out.println("Last time " + m_lastTime);
+				Watchr.log("LAST_TIMESTAMP " + m_lastTime);
 				break;
 			case AVG_VOLUME:
-				Watchr.log(Level.INFO, "AVG_VOLUME " + value); // not for indices
+				Watchr.log("AVG_VOLUME " + value); // not for indices
 				break;
 			case OPTION_CALL_VOLUME:
-				Watchr.log(Level.INFO, "OPTION_CALL_VOLUME " + value); // stocks 
+				Watchr.log("OPTION_CALL_VOLUME " + value); // stocks 
 				break;
 			case OPTION_PUT_VOLUME:
-				Watchr.log(Level.INFO, "OPTION_PUT_VOLUME " + value); // stocks
+				Watchr.log("OPTION_PUT_VOLUME " + value); // stocks
 				break;
 			case AUCTION_VOLUME:
-				Watchr.log(Level.INFO, "AUCTION_VOLUME " + value); // subscribe to
+				Watchr.log("AUCTION_VOLUME " + value); // subscribe to
 				break;
 			case RT_VOLUME:
-				// the time-stamp is in UTC time zone
-				Watchr.log(Level.INFO, "RT_VOLUME " + value, "\n", ""); 
-				parseAndWriteRealTime(investment, value);
+				Watchr.log("RT_VOLUME " + value + " for " + investment.toString()); 
+				MarketPrice.parseAndWriteRealTime(investment, value);
 				// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
 				break;
 			case VOLUME_RATE:
@@ -142,72 +136,15 @@ public class QuoteRTSingle extends TopMktDataAdapter {
 	}
 	
 	@Override public void marketDataType(MktDataType marketDataType) {
-		m_frozen = marketDataType == MktDataType.Frozen;
-		m_model.fireTableDataChanged();
-		
-		if(m_frozen==true) {
-			Watchr.log(Level.WARNING, "...frozen data");
-		}
+//		m_frozen = marketDataType == MktDataType.Frozen;
+//		m_model.fireTableDataChanged();
+//		
+//		if(m_frozen==true) {
+//			Watchr.log(Level.WARNING, "...frozen data");
+//		}
 	}
 
-	// PRIVATE
-	public void parseAndWriteRealTime(Investment inv, String rtvolume) {
-		String lastTradedPrice="";
-		String lastTradeSize="";
-		String lastTradeTime="";
-		String totalVolume="";
-		String VWAP="";
-		String splitFlag="";
-		
-		int i=1;
-		for(String split:rtvolume.split(";")) {
-			if(i==1) { //	Last trade price
-				lastTradedPrice = split;
-				if(lastTradedPrice.equals("")) {
-					return;
-				}
-			}
-			if(i==2) { //	Last trade size
-				lastTradeSize = split;
-				if(lastTradeSize.equals("")) {
-					return;
-				}
-			}
-			if(i==3) { //	Last trade time
-				lastTradeTime = split;
-				if(lastTradeTime.equals("")) {
-					return;
-				}
-			}
-			if(i==4) { //	Total volume
-				totalVolume = split;
-				if(totalVolume.equals("")) {
-					return;
-				}
-			}
-			if(i==5) { //	VWAP
-				VWAP = split;
-				if(VWAP.equals("")) {
-					return;
-				}
-			}
-			if(i==6) { //	Single trade flag - True indicates the trade was filled by a single market maker; False indicates multiple market-makers helped fill the trade
-				splitFlag = split;
-				if(splitFlag.equals("")) {
-					return;
-				}
-			}
-			i++;
-		}
-		Long time = Long.parseLong(lastTradeTime); 	
-		
-		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.REALTIME;
-		marketPrice.writeRealTime(	time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
-									Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
-									source, timing);
-		return;
-	}
+
 
 	// PRINT
 	public String toString() {

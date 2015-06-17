@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
-public class BusWallStIB implements ConnectionHandler {
+public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	public BrokerController controller = new BrokerController(this);
 	
@@ -30,20 +30,20 @@ public class BusWallStIB implements ConnectionHandler {
 	private StreamName streamName;
 	
 	
-	public BusWallStIB() {
+	public BusWallStInteractiveBrokers() {
 		// always local for now
 		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
 		this.streamName = StreamName.STREAMING;
 	}
 
-	public BusWallStIB(StreamName streamName) {
+	public BusWallStInteractiveBrokers(StreamName streamName) {
 		// always local for now
 		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
 		this.streamName = streamName;
 	}
 
 	// configurable topology for testing
-	public BusWallStIB(StreamName streamName, Topology topo) {
+	public BusWallStInteractiveBrokers(StreamName streamName, Topology topo) {
 		
 		this.streamName = streamName;
 		this.gateway = NetworkConfig.getGateway(topo);
@@ -109,6 +109,33 @@ public class BusWallStIB implements ConnectionHandler {
 		  return id;
 	  }
 	
+		public static String getTickList() {
+			String volumeTicks = 	"233, " + //  TickType.RT_VOLUME
+									// Contains the last trade price, last trade size, last trade time, 
+									// total volume, VWAP, and single trade flag.
+									"165, " + //  TickType.AVG_VOLUME
+									// Contains generic stats
+									"100, " + //  TickType.OPTION_CALL_VOLUME, TickType.OPTION_PUT_VOLUME
+									// Contains option Volume (currently for stocks)
+									"225, " +
+									// Auction values (volume, price and imbalance)
+									"101, " + 
+									// Contains option Open Interest (currently for stocks)
+									"225, " + // TickType.AUCTION_VOLUME
+									// Contains auction values (volume, price and imbalance)
+									"104, " +
+									// Historical Volatility (currently for stocks)
+									"106, " +
+									// Option Implied Volatility (currently for stocks)
+									"411";
+									// Real-time Historical Volatility
+			
+									// ? TickType.VOLUME_RATE.toString();
+									// ? TickType.OPEN_INTEREST -> 22
+									// ? TickType.VOLUME -> 8
+			return volumeTicks;
+		} 
+		
   @Override
   public void connected() {
     show(ConnectionStatus.CONNECTED.toString());

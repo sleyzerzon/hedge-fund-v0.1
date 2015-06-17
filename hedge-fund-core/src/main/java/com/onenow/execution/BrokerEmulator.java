@@ -10,6 +10,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
+import com.onenow.data.QuoteHistory;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;

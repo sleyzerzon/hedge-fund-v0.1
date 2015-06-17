@@ -54,7 +54,7 @@ public class ContractFactory {
 			return getFutureToQuote(inv);			
 		}
 		
-		Watchr.log(Level.SEVERE, "COULD NOT MATCH INVESTMETN TO CONTRACT");
+		Watchr.log(Level.SEVERE, "COULD NOT MATCH INVESTMENT TO CONTRACT");
 
 		return contract;
 	}

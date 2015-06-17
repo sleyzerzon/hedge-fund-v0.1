@@ -19,6 +19,9 @@ import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
+import com.onenow.data.QuoteHistory;
+import com.onenow.data.QuoteRealtime;
+import com.onenow.data.QuoteChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -49,7 +52,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private ContractFactory contractFactory = new ContractFactory();
 	//  private List<Channel> channels = new ArrayList<Channel>();
 	  
-	  private BusWallStIB bus;
+	  private BusWallStInteractiveBrokers bus;
 
 	  private static HashMap<String, QuoteHistory>		history = new HashMap<String, QuoteHistory>();						// price history from L3
 	  private static long lastQueryTime;
@@ -62,7 +65,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  this.streamName = StreamName.REALTIME;
 	  }
 	
-	  public BrokerInteractive(StreamName streamName, BusWallStIB bus) { 
+	  public BrokerInteractive(StreamName streamName, BusWallStInteractiveBrokers bus) { 
 			
 		  	this.streamName = streamName;
 			this.bus = bus;
@@ -74,7 +77,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
 	   */
-	  public BrokerInteractive(StreamName streamName, Portfolio marketPortfolio, BusWallStIB bus) { 
+	  public BrokerInteractive(StreamName streamName, Portfolio marketPortfolio, BusWallStInteractiveBrokers bus) { 
 		  
 		this.streamName = streamName;
 	    this.marketPortfolio = marketPortfolio;
@@ -91,7 +94,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	    this.trades = new ArrayList<Trade>();
 	  }
 		  
-	  private void connectToServices(BusWallStIB bus) {
+	  private void connectToServices(BusWallStInteractiveBrokers bus) {
 		  bus.connectToServer();
 		  queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
 		  sqs.listQueues();
@@ -109,7 +112,14 @@ public class BrokerInteractive implements BrokerInterface  {
 		  for(Investment inv:invs) {
 
 			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString(), "\n\n", "");
-			  QuoteRealtime quoteLive = new QuoteRealtime(bus.controller, marketPrices, inv);
+			  
+			  if(inv instanceof InvestmentOption) { //reqOptionMktData
+				  QuoteChain chain = new QuoteChain(bus.controller, marketPrices, inv);
+			  } else {
+				  QuoteRealtime quoteLive = new QuoteRealtime(bus.controller, marketPrices, inv);
+			  }
+			  
+			  
 		  }
 	  }	
 	  

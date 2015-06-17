@@ -169,9 +169,9 @@ public class Portfolio {
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = s + toIndicesString() + " ";
-		s = s + toOptionsString() + " ";
-		s = s + toStocksString() + " ";
+		s = s + toIndicesString() + "\t";
+		s = s + toOptionsString() + "\t";
+		s = s + toStocksString() + "\t";
 		s = s + toFuturesString();
 		
 		return s;
@@ -179,11 +179,12 @@ public class Portfolio {
 	public String toIndicesString() {
 		String s = "";
 		Integer i = 0;
-		System.out.println("\n" + "INITIALIZED INDICES");
+		
+		s = s + "***INDICES";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentIndex) {
 				s = s + "   [[" +getQuantity().get(inv) + "]]" + " ";
-				s = s + investments.get(i) + " ";
+				s = s + investments.get(i);
 			}
 			i++;
 		}
@@ -192,11 +193,11 @@ public class Portfolio {
 	public String toOptionsString() {
 		String s = "";
 		Integer i = 0;
-		System.out.println("\n" + "INITIALIZED OPTIONS");
+		s = s + "***OPTIONS";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentOption) {
 				s = s + "   [[" + getQuantity().get(inv) + "]]" + " ";
-				s = s + investments.get(i) + " ";
+				s = s + investments.get(i);
 			}
 			i++;
 		}
@@ -205,12 +206,11 @@ public class Portfolio {
 	public String toStocksString() {
 		String s = "";
 		Integer i = 0;
-		Watchr.log(Level.INFO,  "INITIALIZED STOCKS", "\n", "");
+		s = s + "***STOCKS";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentStock) {
 				s = s + "   [[" + getQuantity().get(inv) + "]]" + " ";
-				s = s + investments.get(i) + " ";
-				s = s + "\n";
+				s = s + investments.get(i);
 			}
 			i++;
 		}
@@ -219,7 +219,7 @@ public class Portfolio {
 	public String toFuturesString() {
 		String s = "";
 		Integer i = 0;
-		System.out.println("\n" + "INITIALIZED FUTURES");
+		s = s + "***FUTURES";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentFuture) {
 				s = s + "   [[" + getQuantity().get(inv) + "]]" + " ";				
@@ -229,9 +229,6 @@ public class Portfolio {
 		}
 		return s;
 	}
-
-	
-	// TEST
 
 	// GET SET
 	public Hashtable<Investment, Integer> getQuantity() {

@@ -1,4 +1,4 @@
-package com.onenow.execution;
+package com.onenow.data;
 
 import java.util.ArrayList;
 
@@ -9,11 +9,6 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
-import com.onenow.data.Channel;
-import com.onenow.data.EventActivity;
-import com.onenow.data.EventActivityHistory;
-import com.onenow.data.EventRequestHistory;
-import com.onenow.data.MarketPrice;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusSystem;
 import com.onenow.portfolio.BrokerController.IHistoricalDataHandler;

@@ -11,26 +11,26 @@ public class BusWallStIBTest {
   @Test
   public void BusWallStIB() {
 
-	  BusWallStIB bus = new BusWallStIB();
+	  BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers();
 	  
 	  Assert.assertTrue(bus.controller!=null);
   }
   
   @Test
   public void BusWallSt() {
-	  BusWallStIB bus = new BusWallStIB();
+	  BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers();
 	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.LOCAL)));
   }
   
   @Test
   public void getClientId() {
-	  BusWallStIB bus = new BusWallStIB();
+	  BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers();
 	  Assert.assertTrue(bus.getClientID()!=null);
   }
 
   @Test
   public void BusWallStTopology() {
-	  BusWallStIB bus;
+	  BusWallStInteractiveBrokers bus;
 	  
 //	  if(NetworkConfig.isMac()) {
 //		  bus = new BusWallSt(Topology.LOCAL);

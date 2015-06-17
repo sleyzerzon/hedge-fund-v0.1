@@ -7,7 +7,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.BrokerInteractive;
-import com.onenow.execution.BusWallStIB;
+import com.onenow.execution.BusWallStInteractiveBrokers;
 import com.onenow.io.Kinesis;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
@@ -32,7 +32,7 @@ public class InvestorMain {
 		InitLogger.run(streamName.toString());
 		Watchr.log(Level.INFO, "Starting for STREAM: " + streamName);
 
-		BusWallStIB bus = new BusWallStIB(streamName);
+		BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers(streamName);
 
 		// Kinesis.selfTest();
 

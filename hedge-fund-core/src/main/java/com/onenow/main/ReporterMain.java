@@ -68,16 +68,17 @@ public class ReporterMain {
 																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
 																	fromDashedDate, toDashedDate);
 		
-		try{	// some time series just don't exist or have data 			
+		try{	 			
 			
 			String key = Lookup.getEventKey(request);
 			String fileName = key+"-"+toDashedDate;
-			Watchr.log(Level.INFO, "working on: " + fileName);
+			Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
 			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(request);				
 			S3.createObject(bucket, series.toString(), fileName);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			// some time series just don't exist or have data
+			// e.printStackTrace();
 		}
 	}
 

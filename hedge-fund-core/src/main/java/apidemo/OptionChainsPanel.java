@@ -181,7 +181,7 @@ public class OptionChainsPanel extends JPanel {
 			m_callsModel.sort();
 		}
 		
-		private class ChainModel extends AbstractTableModel {
+		public class ChainModel extends AbstractTableModel {
 			Comparator<ChainRow> c = new Comparator<ChainRow>() {
 				@Override public int compare(ChainRow o1, ChainRow o2) {
 					int rc = o1.m_c.expiry().compareTo( o2.m_c.expiry());

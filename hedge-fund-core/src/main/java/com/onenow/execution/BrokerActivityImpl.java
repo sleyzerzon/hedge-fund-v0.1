@@ -7,6 +7,7 @@ import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
+import com.onenow.data.QuoteHistory;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
