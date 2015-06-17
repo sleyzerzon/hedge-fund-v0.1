@@ -42,7 +42,7 @@ public class BarModel extends AbstractTableModel {
 	@Override public Object getValueAt(int rowIn, int col) {
 		EventActivityHistory row = m_rows.get( rowIn);
 		switch( col) {
-			case 0: return row.formattedTime();
+//			case 0: return row.formattedTime();
 			case 1: return row.open;
 			case 2: return row.high;
 			case 3: return row.low;

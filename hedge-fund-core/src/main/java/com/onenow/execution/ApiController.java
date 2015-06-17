@@ -421,6 +421,7 @@ public class ApiController implements EWrapper {
     public void reqTopMktData(Contract contract, String genericTickList, boolean snapshot, ITopMktDataHandler handler) {
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, handler);
+    	m_optionCompMap.put( reqId, (IOptHandler) handler); // shot in the dark
     	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
     }

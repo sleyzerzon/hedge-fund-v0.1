@@ -7,8 +7,6 @@ import com.ib.controller.Formats;
 
 public class EventActivityHistory extends EventActivity {
 	
-	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
-
 	// meta
 	private int reqId = 0;
 
@@ -50,15 +48,6 @@ public class EventActivityHistory extends EventActivity {
 		
 	}
 	
-	public String formattedTime() {
-		return Formats.fmtDate( time * 1000);
-	}
-
-	/** Format for query. */
-	public static String format( long ms) {
-		return FORMAT.format( new Date( ms) );
-	}
-
 	@Override public String toString() {
 		String s = "";
 		
@@ -68,9 +57,6 @@ public class EventActivityHistory extends EventActivity {
 							"-high " +  high + " " +
 							"-low " + low + " " +
 							"-close " + close );
-							// "-time " + time + " " + 
-							// "-timeDate " + formattedTime() + " " +
-							// "-TIME ZONE???"); // TODO: time zone
 
 		return s;
 	}

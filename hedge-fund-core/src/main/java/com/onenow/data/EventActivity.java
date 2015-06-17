@@ -16,13 +16,16 @@ public class EventActivity extends Event {
 		
 	}
 	
+	public String getFormatedTime() {
+		return TimeParser.getFormatedPacificDateTime(time);
+	}
 	
 	public String toString() {
 		String s = "";
 		
 		s = super.toString() + " ";
 		s = s + "-time " + time + " ";
-		s = s + "-timePT" + TimeParser.getFormatedPacificDateTime(time) + " ";
+		s = s + "-timePT" + getFormatedTime() + " ";
 		s = s + "-price " + price + " ";
 		s = s + "-size " + size;
 		

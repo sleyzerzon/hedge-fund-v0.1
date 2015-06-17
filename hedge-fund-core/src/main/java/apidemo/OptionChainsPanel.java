@@ -215,7 +215,7 @@ public class OptionChainsPanel extends JPanel {
 			}
 
 			public void addRow(Contract contract, boolean snapshot) {
-				ChainRow row = new ChainRow( contract);
+				ChainRow row = new ChainRow(contract);
 				m_list.add( row);
 				
 				ApiDemo.INSTANCE.controller().reqOptionMktData(contract, "", snapshot, row);

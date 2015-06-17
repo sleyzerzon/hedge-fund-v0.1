@@ -32,6 +32,7 @@ import com.onenow.data.EventActivityHistory;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ApiController.IHistoricalDataHandler;
 import com.onenow.execution.ApiController.IRealTimeBarHandler;
+import com.onenow.util.TimeParser;
 
 
 public class StratPanel extends StackPanel implements IHistoricalDataHandler, IRealTimeBarHandler {
@@ -119,7 +120,8 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 		if (!m_req) {
 			BarSize barSize = m_barSize.getSelectedItem();
 			QueryLength queryLength = getQueryLength( barSize);
-			String date = EventActivityHistory.format( bar.time * 1000);
+			// String date = EventActivityHistory.format( bar.time * 1000);
+			String date = bar.getFormatedTime();
 			int duration = m_bars.getInt() * queryLength.m_units;
 			ApiDemo.INSTANCE.controller().reqHistoricalData(m_contract, date, duration, queryLength.m_unit, barSize, WhatToShow.TRADES, false, this);
 			m_req = true;

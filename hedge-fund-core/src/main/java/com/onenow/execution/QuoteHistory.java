@@ -92,10 +92,10 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
 
 		// Channel handling
-		if(channel!=null) { // if constructed that way
-			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 
-										row.high, row.low, row.close);
-		}
+//		if(channel!=null) { // if constructed that way
+//			channel.setChannelPrices(	row.formattedTime().substring(0, 10), 
+//										row.high, row.low, row.close);
+//		}
 	}
 
 	@Override public void historicalDataEnd() {
