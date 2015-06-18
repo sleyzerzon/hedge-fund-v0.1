@@ -1,7 +1,6 @@
 package com.onenow.data;
 
 import com.ib.client.TickType;
-import com.onenow.execution.Contract;
 import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;

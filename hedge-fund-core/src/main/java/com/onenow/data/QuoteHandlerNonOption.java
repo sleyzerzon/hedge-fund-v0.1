@@ -1,6 +1,5 @@
 package com.onenow.data;
 
-import com.onenow.execution.Contract;
 import com.onenow.instrument.Investment;
 
 /**
