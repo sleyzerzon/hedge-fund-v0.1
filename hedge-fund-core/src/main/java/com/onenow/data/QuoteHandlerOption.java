@@ -32,7 +32,8 @@ public class QuoteHandlerOption extends QuoteHandler implements IOptHandler {
 			m_gamma = gamma;
 			m_vega = vega;
 			m_theta = theta;
-			Watchr.log("IMPVOLATILITY " + impVol + " DELTA " + delta + " GAMMA " + gamma + " VEGA " + vega + " THETA " + theta);
+			Watchr.log("IMPVOLATILITY " + impVol + " DELTA " + delta + " GAMMA " + gamma + " VEGA " + vega + " THETA " + theta +
+						" for " + investment.toString());
 			
 			// TODO: WRITE TO DB
 		}
