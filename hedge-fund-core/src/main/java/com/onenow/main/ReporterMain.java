@@ -74,7 +74,7 @@ public class ReporterMain {
 			String key = Lookup.getEventKey(request);
 			String fileName = key+"-"+toDashedDate;
 			Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
-			List<Serie> series = DBTimeSeriesPrice.readPriceSeriesFromDB(request);				
+			List<Serie> series = DBTimeSeriesPrice.readSeries(request);				
 			S3.createObject(bucket, series.toString(), fileName);
 			
 		} catch (Exception e) {

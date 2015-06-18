@@ -51,8 +51,8 @@ public class ClerkRealTimeMain {
 			try {
 				tries++;
 				success = true;
-				DBTimeSeriesPrice.writePrice(event);				
-				DBTimeSeriesSize.writeSize(event);
+				DBTimeSeriesPrice.write(event);				
+				DBTimeSeriesSize.write(event);
 			} catch (Exception e) {
 				success = false;
 				retry = true;

@@ -132,8 +132,8 @@ public class ChartistMain {
 		
 		try{	// some time series just don't exist or have data 			
 			
-			List<Candle> prices = DBTimeSeriesPrice.readPriceFromDB(request);
-			List<Integer> sizes = DBTimeSeriesSize.readSizeFromDB(request);
+			List<Candle> prices = DBTimeSeriesPrice.read(request);
+			List<Integer> sizes = DBTimeSeriesSize.read(request);
 
 			chart.setPrices(prices);
 			chart.setSizes(sizes);

@@ -48,7 +48,7 @@ public class databaseTimeSeriesTest {
 		activity.timing = InvDataTiming.HISTORICAL;
 
 
-	  Serie serie = DBTimeSeriesSize.getWriteSizeSerie(activity, "hola db");
+	  Serie serie = DBTimeSeriesSize.getWriteSerie(activity, "hola db");
 	  
 	  for(String column:serie.getColumns()) {
 		  Watchr.log("COLUMNS: " + column.toString());		  
@@ -74,7 +74,7 @@ public class databaseTimeSeriesTest {
 		Assert.assertEquals(serie.getRows().get(0).size(), 10);
 
 		
-		DBTimeSeriesPrice.writeThreadedPrice(activity, serie);
+		DBTimeSeriesPrice.writeThreaded(activity, serie);
 		
 		
 		// test iterator

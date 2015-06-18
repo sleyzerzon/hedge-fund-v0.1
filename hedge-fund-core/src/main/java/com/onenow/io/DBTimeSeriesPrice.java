@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.influxdb.dto.Serie;
 
+import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBname;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
@@ -22,22 +23,13 @@ public class DBTimeSeriesPrice {
 		
 	}
 	
-	// PRICE
-	public static boolean writePrice(final EventActivity event) {
-		final boolean success = false;
-		String name = Lookup.getEventKey(event);
-		
-		final Serie serie = getWritePriceSerie(event, name);
-		
-		writeThreadedPrice(event, serie);
-
-		return success;
-	}
-
-
-	static Serie getWritePriceSerie(final EventActivity event, String name) {
-		final Serie serie = new Serie.Builder(name)
-		.columns("time", "price", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
+	static Serie getWriteSerie(final EventActivity event, String serieName) {
+		final Serie serie = new Serie.Builder(serieName)
+		.columns(	ColumnName.TIME.toString(), ColumnName.PRICE.toString(), 
+					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(), 
+					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
+					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
+					ColumnName.FUTUREEXP.toString())
 		.values(event.time, event.price, 																		// basic columns
 				"\""+ event.source + "\"", "\""+ event.timing + "\"", event.tradeType + "\"",					// event origination
 				"\""+ event.getUnder() + "\"", "\""+ event.getInvType() + "\"", 								// investment
@@ -49,20 +41,32 @@ public class DBTimeSeriesPrice {
 		return serie;
 	}
 
-	static void writeThreadedPrice(final EventActivity event, final Serie serie) {
+	public static boolean write(final EventActivity event) {
+		
+		final boolean success = false;
+		String name = Lookup.getEventKey(event);
+		
+		final Serie serie = getWriteSerie(event, name);
+		
+		writeThreaded(event, serie);
+
+		return success;
+	}
+
+	static void writeThreaded(final EventActivity event, final Serie serie) {
 		
 		new Thread () {
 			@Override public void run () {
 
 			Long before = TimeParser.getTimestampNow();
 			try {
-				DBTimeSeries.influxDB.write(getPriceDatabaseName().toString(), TimeUnit.MILLISECONDS, serie);
+				DBTimeSeries.influxDB.write(DBTimeSeries.getPriceDatabaseName().toString(), TimeUnit.MILLISECONDS, serie);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			Long after = TimeParser.getTimestampNow();
 		
-			Watchr.log(Level.INFO, 	"TSDB WRITE: " + getPriceDatabaseName() + " " + 
+			Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBTimeSeries.getPriceDatabaseName() + " " + 
 									event.toString() + " " +  
 									"ELAPSED WRITE " + (after-before) + "ms ",
 									// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
@@ -70,25 +74,14 @@ public class DBTimeSeriesPrice {
 			}
 		}.start();
 	}
-
-	/** 
-	 * Each environment has its own database
-	 * @return
-	 */
-	private static DBname getPriceDatabaseName() {
-		return DBname.PRICE_STAGING;
-	}
-
 		
-		public static List<Candle> readPriceFromDB(EventRequest request) {
+		public static List<Candle> read(EventRequest request) {
 			
 			List<Candle> candles = new ArrayList<Candle>();
 					
-			String key = Lookup.getEventKey(request);
+			List<Serie> series = readSeries(request);
 
-			List<Serie> series = readPriceSeriesFromDB(request);
-
-			candles = priceSeriesToCandles(series); 
+			candles = seriesToCandles(series); 
 			 
 //			String log = "TSDB Cache Chart/Price READ: " + MemoryLevel.L2TSDB + "HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
 //			Watchr.log(Level.INFO, log, "\n", "");
@@ -96,57 +89,13 @@ public class DBTimeSeriesPrice {
 			return candles;
 		}
 
-	public static List<Serie> readPriceSeriesFromDB(EventRequest request) {
+	public static List<Serie> readSeries(EventRequest request) {
 		// Watchr.log(Level.INFO, "REQUESTING " + request.toString());
-		List<Serie> series = queryPrice(DBname.PRICE_STAGING.toString(), request);
+		List<Serie> series = DBTimeSeries.query(ColumnName.PRICE, DBTimeSeries.getPriceDatabaseName().toString(), request);
 		return series;
 	}
 
-	/**
-	 * Price queries per http://influxdb.com/docs/v0.7/api/aggregate_functions.html
-	 * @param dbName
-	 * @param serieName
-	 * @param sampling
-	 * @param fromDate
-	 * @param toDate
-	 * @return
-	 */
-	public static List<Serie> queryPrice(String dbName, EventRequest request) {
-		
-		String serieName = Lookup.getEventKey(request);
-
-		List<Serie> series = new ArrayList<Serie>();
-		 
-		String query = 	"SELECT " + DBTimeSeries.getThoroughSelect("price") + " " + 						
-						"FROM " + "\"" + serieName + "\" " +
-						"GROUP BY " +
-							"time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") " + 
-						// "FILL(0) " +
-						"WHERE " +
-						"time > " + "'" + request.fromDashedDate + "' " + 
-						"AND " +
-						"time < " + "'" + request.toDashedDate + "' "; 
-						
-		
-		// TODO The where clause supports comparisons against regexes, strings, booleans, floats, integers, and the times listed before. 
-		// Comparators include = equal to, > greater than, < less than, <> not equal to, =~ matches against, !~ doesn’t match against. 
-		// You can chain logic together using and and or and you can separate using ( and )
-		
-		// TODO: SELECT PERCENTILE(column_name, N) FROM series_name group by time(10m) ...
-		// TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
-		// TODO: SELECT TOP(column_name, N) FROM series_name ...
-		// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
-		
-		try {
-			series = DBTimeSeries.influxDB.query(dbName, query, TimeUnit.MILLISECONDS);
-			// Watchr.log(Level.INFO, query + " RETURNED " + series.toString());  
-		} catch (Exception e) {
-			// e.printStackTrace(); // some series don't exist or have data 
-		}
-		return series;
-	}
-
-	private static List<Candle> priceSeriesToCandles(List<Serie> series) {
+	private static List<Candle> seriesToCandles(List<Serie> series) {
 		List<Candle> candles = new ArrayList<Candle>();
 		
 		Watchr.log(Level.INFO, "SERIES: " + series.toString());

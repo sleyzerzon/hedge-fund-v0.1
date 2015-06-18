@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.influxdb.dto.Serie;
 
+import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBname;
 import com.onenow.constant.SamplingRate;
 import com.onenow.data.DataSampling;
@@ -23,9 +24,13 @@ public class DBTimeSeriesSize {
 		
 	}
 	
-	static Serie getWriteSizeSerie(final EventActivity event, String name) {
+	static Serie getWriteSerie(final EventActivity event, String name) {
 		final Serie serie = new Serie.Builder(name)
-		.columns("time", "size", "source", "timing", "tradeType", "underlying", "invType", "optionStrike", "optionExp", "futureExp")
+		.columns(	ColumnName.TIME.toString(), ColumnName.SIZE.toString(), 
+					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(), 
+					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
+					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
+					ColumnName.FUTUREEXP.toString())
 		.values(event.time, event.size, 																		// basic columns
 				"\""+ event.source + "\"", "\""+ event.timing + "\"", event.tradeType + "\"",					// event origination
 				"\""+ event.getUnder() + "\"", "\""+ event.getInvType() + "\"", 								// investment
@@ -37,19 +42,18 @@ public class DBTimeSeriesSize {
 		return serie;
 	}
 
-	// SIZE
-	public static void writeSize(final EventActivity event) {
+	public static void write(final EventActivity event) {
 		String name = Lookup.getEventKey(event);
-		final Serie serie = getWriteSizeSerie(event, name);
+		final Serie serie = getWriteSerie(event, name);
 
 		new Thread () {
 			@Override public void run () {
 
 			long before = TimeParser.getTimestampNow();
-			DBTimeSeries.influxDB.write(DBname.SIZE_STAGING.toString(), TimeUnit.MILLISECONDS, serie);
+			DBTimeSeries.influxDB.write(DBTimeSeries.getSizeDatabaseName().toString(), TimeUnit.MILLISECONDS, serie);
 			long after = TimeParser.getTimestampNow();
 		
-			Watchr.log(	Level.INFO, "TSDB WRITE: " + DBname.SIZE_STAGING.toString() + " " + 
+			Watchr.log(	Level.INFO, "TSDB WRITE: " + DBTimeSeries.getSizeDatabaseName().toString() + " " + 
 						event.toString() + " " +  
 						"ELAPSED WRITE " + (after-before) + "ms ",
 						// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ",
@@ -59,16 +63,13 @@ public class DBTimeSeriesSize {
 
 	}
 
-	public static List<Integer> readSizeFromDB(	EventRequest request) {
+	public static List<Integer> read(EventRequest request) {
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		
-		String key = Lookup.getEventKey(request);
+		List<Serie> series = readSeries(request);
 		
-		String fromDashedDate = TimeParser.getDateMinusDashed(request.toDashedDate, 1);		
-		List<Serie> series = readSizeSeriesFromDB(key, request.sampling, fromDashedDate, request.toDashedDate);
-		
-		sizes = sizeSeriesToInts(series); 
+		sizes = seriesToInts(series); 
 		
 //		String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
 //		Watchr.log(Level.INFO, log, "\n", "");
@@ -76,45 +77,14 @@ public class DBTimeSeriesSize {
 		return sizes;
 	}
 
-	private static List<Serie> readSizeSeriesFromDB(String key,
-			SamplingRate sampling, String fromDate, String toDate) {
-		List<Serie> series = querySize(	DBname.SIZE_STAGING.toString(), key,  sampling, fromDate, toDate);
+	private static List<Serie> readSeries(EventRequest request) {
+		
+		List<Serie> series = DBTimeSeries.query(ColumnName.SIZE, DBTimeSeries.getSizeDatabaseName().toString(), request);
 		return series;
 	}
 
-	/**
-	 * Size/volume queries per http://influxdb.com/docs/v0.7/api/aggregate_functions.html
-	 * @param dbName
-	 * @param serieName
-	 * @param sampling
-	 * @param fromDate
-	 * @param toDate
-	 * @return
-	 */
-	public static List<Serie> querySize(String dbName, String serieName, SamplingRate sampling, String fromDate, String toDate) {
-		List<Serie> series = new ArrayList<Serie>();
-		
-		String query = 	"SELECT " + DBTimeSeries.getThoroughSelect("size") + " " +
-						"FROM " + "\"" + serieName + "\" " +
-						"GROUP BY " +
-							"time" + "(" + DataSampling.getGroupByTimeString(sampling) + ") " +
-						// "FILL(0) " +
-						"WHERE " +
-						"time > " + "'" + fromDate + "' " + 
-						"AND " +
-						"time < " + "'" + toDate + "' ";
-						
-		try {
-			series = DBTimeSeries.influxDB.query(	dbName, query, TimeUnit.MILLISECONDS);
-//			Watchr.log(Level.INFO, query + " RETURNED " + series.toString()); 
-		} catch (Exception e) {
-			e.printStackTrace(); // some time series don't exist or have data
-		}
-		
-		return series;
-	}
 
-	private static List<Integer> sizeSeriesToInts(List<Serie> series) {
+	private static List<Integer> seriesToInts(List<Serie> series) {
 		List<Integer> sizes = new ArrayList<Integer>();
 		
 		String s="";

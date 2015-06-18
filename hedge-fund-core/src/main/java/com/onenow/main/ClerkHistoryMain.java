@@ -48,7 +48,7 @@ public class ClerkHistoryMain {
 		while (!success) {
 			try {
 				success = true;
-				DBTimeSeriesPrice.writePrice(event);
+				DBTimeSeriesPrice.write(event);
 			} catch (Exception e) {
 				success = false;
 				retry = true;

@@ -68,7 +68,7 @@ public class QuoteHandler implements ITopMktDataHandler {
 //			marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
 			break;
 		default: break;	
-	}
+		}
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class QuoteHandler implements ITopMktDataHandler {
 			Watchr.log(Level.FINEST, "Volume size " + m_volume + " for " + investment.toString());
 			break;
         default: break; 
-	}
+		}
 	}
 
 	@Override

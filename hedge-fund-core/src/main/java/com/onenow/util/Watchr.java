@@ -56,7 +56,7 @@ public class Watchr {
 		
 		String localTime = "";
 		
-		localTime = "[" + TimeParser.getFormatedPacificDateTime(TimeParser.getTimestampNow()) + "]";
+		localTime = "[" + TimeParser.getFormatedPacificDateTime(TimeParser.getTimestampNow()*1000) + "]";
 		
 		String ipLog = "";
 		
