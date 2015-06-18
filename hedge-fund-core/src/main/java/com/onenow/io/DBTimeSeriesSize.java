@@ -2,7 +2,6 @@ package com.onenow.io;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.influxdb.dto.Serie;
@@ -10,7 +9,6 @@ import org.influxdb.dto.Serie;
 import com.onenow.constant.ColumnName;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequest;
-import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class DBTimeSeriesSize {

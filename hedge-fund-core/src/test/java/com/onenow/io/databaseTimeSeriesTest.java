@@ -35,11 +35,11 @@ public class databaseTimeSeriesTest {
 	long volume = 3; 
 	int count = 23;
 	
-	EventActivityHistory priceActivity = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
-	EventActivityRealtime realtimeectivity;	
+	EventActivityHistory historyActivity = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
+	EventActivityRealtime realtimeActivity;	
 	EventActivityRealtime greekActivity;
 	
-	
+	// EventActivitySize;
 	
   @Test
   public void dbConnect() {
@@ -47,20 +47,20 @@ public class databaseTimeSeriesTest {
 	  Assert.assertTrue(db!=null);
   }
   
-  private EventActivityHistory getContextualizedEvent() {
-	  priceActivity.setInvestment(new InvestmentStock(new Underlying("PABLO")));
-	  priceActivity.tradeType = TradeType.BUY;
-	  priceActivity.source = InvDataSource.AMERITRADE;
-	  priceActivity.timing = InvDataTiming.HISTORICAL;
-	  return priceActivity;
+  private void contextualizeEvent(EventActivityHistory event) {
+	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
+	  event.tradeType = TradeType.BUY;
+	  event.source = InvDataSource.AMERITRADE;
+	  event.timing = InvDataTiming.HISTORICAL;
   }
+  
   @Test
   public void writePrice() {
 	  	  
-	  priceActivity = getContextualizedEvent();
+	  contextualizeEvent(historyActivity);
 
-	  String serieName = Lookup.getEventKey(priceActivity);
-	  Serie serie = DBTimeSeriesPrice.getWriteSerie(priceActivity, serieName);
+	  String serieName = Lookup.getEventKey(historyActivity);
+	  Serie serie = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);
 	 
 	  Watchr.log("WRITE INTO " + serieName + " SERIE " + serie.toString());
 
@@ -88,11 +88,11 @@ public class databaseTimeSeriesTest {
 		Assert.assertEquals(serie.getRows().get(0).size(), 10);
 
 		
-		DBTimeSeriesPrice.writeThread(priceActivity, serie);
+		DBTimeSeriesPrice.writeThread(historyActivity, serie);
 		
 		TimeParser.wait(5); // wait for write thread to complete
 		
-		EventRequestHistory requestHistory = new EventRequestHistory(priceActivity, TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1));
+		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1));
 
 		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
 		Watchr.info("READ CANDLES " + candles);
@@ -100,4 +100,19 @@ public class databaseTimeSeriesTest {
 		Assert.assertTrue(candles.get(0).openPrice.equals(open));
 			
   }
+  
+  @Test
+  public void writeSize() {
+	  // contextualizeEvent(realtimeActivity);
+
+
+  }
+  
+  @Test
+  public void writeGreek() {
+	  // contextualizeEvent(greekActivity);
+
+
+  }
+  
 }

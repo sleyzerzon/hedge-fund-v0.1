@@ -186,10 +186,10 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
+		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
 	} catch (Exception e) {
-		e.printStackTrace(); // some series don't exist or have data 
+		// e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }
