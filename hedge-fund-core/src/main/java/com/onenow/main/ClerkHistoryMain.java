@@ -8,8 +8,9 @@ import com.onenow.constant.StreamName;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
+import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.Kinesis;
-import com.onenow.io.databaseTimeSeries;
+import com.onenow.io.DBTimeSeries;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
@@ -47,7 +48,7 @@ public class ClerkHistoryMain {
 		while (!success) {
 			try {
 				success = true;
-				databaseTimeSeries.writePrice(event);
+				DBTimeSeriesPrice.writePrice(event);
 			} catch (Exception e) {
 				success = false;
 				retry = true;

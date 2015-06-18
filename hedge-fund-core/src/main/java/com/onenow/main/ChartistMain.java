@@ -20,9 +20,11 @@ import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.CacheElastic;
+import com.onenow.io.DBTimeSeriesPrice;
+import com.onenow.io.DBTimeSeriesSize;
 import com.onenow.io.Kinesis;
 import com.onenow.io.Lookup;
-import com.onenow.io.databaseTimeSeries;
+import com.onenow.io.DBTimeSeries;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
 import com.onenow.util.FlexibleLogger;
@@ -130,8 +132,8 @@ public class ChartistMain {
 		
 		try{	// some time series just don't exist or have data 			
 			
-			List<Candle> prices = databaseTimeSeries.readPriceFromDB(request);
-			List<Integer> sizes = databaseTimeSeries.readSizeFromDB(request);
+			List<Candle> prices = DBTimeSeriesPrice.readPriceFromDB(request);
+			List<Integer> sizes = DBTimeSeriesSize.readSizeFromDB(request);
 
 			chart.setPrices(prices);
 			chart.setSizes(sizes);

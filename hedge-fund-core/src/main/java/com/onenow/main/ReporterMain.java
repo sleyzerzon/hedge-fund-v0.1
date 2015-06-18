@@ -15,9 +15,10 @@ import com.onenow.data.EventRequestHistory;
 import com.onenow.data.EventRequestRealtime;
 import com.onenow.data.InitMarket;
 import com.onenow.instrument.Investment;
+import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.Lookup;
 import com.onenow.io.S3;
-import com.onenow.io.databaseTimeSeries;
+import com.onenow.io.DBTimeSeries;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
@@ -73,7 +74,7 @@ public class ReporterMain {
 			String key = Lookup.getEventKey(request);
 			String fileName = key+"-"+toDashedDate;
 			Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
-			List<Serie> series = databaseTimeSeries.readPriceSeriesFromDB(request);				
+			List<Serie> series = DBTimeSeriesPrice.readPriceSeriesFromDB(request);				
 			S3.createObject(bucket, series.toString(), fileName);
 			
 		} catch (Exception e) {

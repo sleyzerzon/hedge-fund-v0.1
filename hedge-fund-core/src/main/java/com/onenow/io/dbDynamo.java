@@ -1,18 +1,20 @@
-package com.onenow.data;
+package com.onenow.io;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.onenow.admin.InitAmazon;
+import com.onenow.data.DynamoDBCountPersister;
+import com.onenow.data.DynamoDBUtils;
 
-public class DynamoDB {
+public class dbDynamo {
 
 	private static AmazonDynamoDB dynamoDB;
 	 private static DynamoDBUtils dynamoDBUtils;
 	 
-	public DynamoDB() {
+	public dbDynamo() {
 	}
 	
-	public DynamoDB(Region region) {
+	public dbDynamo(Region region) {
 		this.dynamoDB = InitAmazon.getDynamo(region);
 	    this.dynamoDBUtils = new DynamoDBUtils(dynamoDB);
 	}

@@ -25,7 +25,7 @@ public class EventActivity extends Event {
 		
 		s = super.toString() + " ";
 		s = s + "-time " + time + " ";
-		s = s + "-timePT " + getFormatedTime() + " ";
+		s = s + "-date " + getFormatedTime() + " ";
 		s = s + "-price " + price + " ";
 		s = s + "-size " + size;
 		

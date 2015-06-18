@@ -8,8 +8,10 @@ import com.onenow.constant.StreamName;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
+import com.onenow.io.DBTimeSeriesPrice;
+import com.onenow.io.DBTimeSeriesSize;
 import com.onenow.io.Kinesis;
-import com.onenow.io.databaseTimeSeries;
+import com.onenow.io.DBTimeSeries;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
@@ -49,8 +51,8 @@ public class ClerkRealTimeMain {
 			try {
 				tries++;
 				success = true;
-				databaseTimeSeries.writePrice(event);				
-				databaseTimeSeries.writeSize(event);
+				DBTimeSeriesPrice.writePrice(event);				
+				DBTimeSeriesSize.writeSize(event);
 			} catch (Exception e) {
 				success = false;
 				retry = true;

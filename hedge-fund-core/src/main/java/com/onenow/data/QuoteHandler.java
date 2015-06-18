@@ -30,8 +30,6 @@ public class QuoteHandler implements ITopMktDataHandler {
 
 	// added:
 	public Investment investment;
-	MarketPrice marketPrice;
-	AbstractTableModel m_model;
 	
 	// other
 	boolean m_frozen;
@@ -138,4 +136,21 @@ public class QuoteHandler implements ITopMktDataHandler {
 	}
 
 
+	public String toString() {
+		String s = "";
+
+		s = s + "*** QUOTE HANDLER " + " ";
+		s = s + "-lastTime " + m_lastTime + " ";
+		s = s + "-investment " + investment + " ";
+		s = s + "-bid " + m_bid + " ";
+		s = s + "-ask " + m_ask + " ";
+		s = s + "-last " + m_last + " ";
+		s = s + "-close " + m_close + " ";
+		s = s + "-askSize " + m_askSize + " ";
+		s = s + "-bidSize " + m_bidSize + " ";
+		s = s + "-volume " + m_volume + " ";
+		s = s + "-frozen " + m_frozen;
+
+		return s;
+	}
 }

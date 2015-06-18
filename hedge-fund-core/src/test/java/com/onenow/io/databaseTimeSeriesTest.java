@@ -35,7 +35,7 @@ public class databaseTimeSeriesTest {
 	
   @Test
   public void dbConnect() {
-	  InfluxDB db = databaseTimeSeries.dbConnect();
+	  InfluxDB db = DBTimeSeries.dbConnect();
 	  Assert.assertTrue(db!=null);
   }
   
@@ -48,7 +48,7 @@ public class databaseTimeSeriesTest {
 		activity.timing = InvDataTiming.HISTORICAL;
 
 
-	  Serie serie = databaseTimeSeries.getWriteSizeSerie(activity, "hola db");
+	  Serie serie = DBTimeSeriesSize.getWriteSizeSerie(activity, "hola db");
 	  
 	  for(String column:serie.getColumns()) {
 		  Watchr.log("COLUMNS: " + column.toString());		  
@@ -74,7 +74,7 @@ public class databaseTimeSeriesTest {
 		Assert.assertEquals(serie.getRows().get(0).size(), 10);
 
 		
-		databaseTimeSeries.writeThreadedPrice(activity, serie);
+		DBTimeSeriesPrice.writeThreadedPrice(activity, serie);
 		
 		
 		// test iterator

@@ -5,7 +5,7 @@ import java.sql.*;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 
-public class databaseRelational {
+public class dbRelational {
 // https://www.youtube.com/watch?v=2i4t-SL1VsU
 	
 	public static void main(String[] args) throws ClassNotFoundException {

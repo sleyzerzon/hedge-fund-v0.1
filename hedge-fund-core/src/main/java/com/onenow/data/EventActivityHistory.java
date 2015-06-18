@@ -1,9 +1,5 @@
 package com.onenow.data;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.ib.controller.Formats;
 
 public class EventActivityHistory extends EventActivity {
 	

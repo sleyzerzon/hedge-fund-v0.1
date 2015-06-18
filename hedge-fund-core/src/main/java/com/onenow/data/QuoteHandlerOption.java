@@ -44,17 +44,14 @@ public class QuoteHandlerOption extends QuoteHandler implements IOptHandler {
 	
 	// PRINT
 	public String toString() {
-		String s="\n\n";
-		s = s + "QUOTE" + "\n";
-		s = s + "Contract " + getContract().description() + "\n";
-		s = s + "Bid " + m_bid + "\n";
-		s = s + "Ask " + m_ask + "\n";
-		s = s + "ImpliedVol " + m_impVol + "\n";		
-		s = s + "Delta " + m_delta + "\n";
-		s = s + "Gamma " + m_gamma + "\n";
-		s = s + "Vega " + m_vega + "\n";
-		s = s + "Theta " + m_theta + "\n";
-		s = s + "Done " + m_done + "\n";
+		String s = "";
+		s = s + super.toString() + " ";
+		s = s + "-ImpliedVol " + m_impVol + " ";		
+		s = s + "-Delta " + m_delta + " ";
+		s = s + "-Gamma " + m_gamma + " ";
+		s = s + "-Vega " + m_vega + " ";
+		s = s + "-Theta " + m_theta + " ";
+		s = s + "-Done " + m_done + " ";
 		return s;
 	}
 }
