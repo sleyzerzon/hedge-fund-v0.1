@@ -111,8 +111,8 @@ public class DBTimeSeriesPrice {
 			}
 			s = s + "\n";
 
-			List<DBTimeIncrement> increments = DBTimeSeries.seriesToIncrements(serie, s);
-			candles.addAll(incrementsToCandles(increments));
+			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
+			candles.add(incrementsToCandle(increment));
 		}
 		System.out.println("CANDLE: " + s + "\n");	// full candle
 		return candles;
@@ -123,32 +123,25 @@ public class DBTimeSeriesPrice {
 	 * @param increments
 	 * @return
 	 */
-	private static List<Candle> incrementsToCandles(List<DBTimeIncrement> increments) {
+	private static Candle incrementsToCandle(DBTimeIncrement increment) {
 		
-		List<Candle> candles = new ArrayList<Candle>();		
-
-		for(DBTimeIncrement increment:increments) {
-			
-			Candle candle = new Candle();
-			
-			candle.openPrice = increment.first;
-			candle.closePrice = increment.last;
-			candle.difference = increment.difference;
-			candle.lowPrice = increment.min;
-			candle.highPrice = increment.max;
-			candle.meanPrice = increment.mean;
-			candle.modePrice = increment.mode;
-			candle.medianPrice = increment.median;
-			candle.stddevPrice = increment.stddev;
-			candle.distinctPrice = increment.distinct;
-			candle.countPrice = increment.count;
-			candle.sumPrice = increment.sum;
-			candle.derivativePrice = increment.derivative;
-			
-			candles.add(candle);
-		}
+		Candle candle = new Candle();
 		
-		return candles;
+		candle.openPrice = increment.first;
+		candle.closePrice = increment.last;
+		candle.difference = increment.difference;
+		candle.lowPrice = increment.min;
+		candle.highPrice = increment.max;
+		candle.meanPrice = increment.mean;
+		candle.modePrice = increment.mode;
+		candle.medianPrice = increment.median;
+		candle.stddevPrice = increment.stddev;
+		candle.distinctPrice = increment.distinct;
+		candle.countPrice = increment.count;
+		candle.sumPrice = increment.sum;
+		candle.derivativePrice = increment.derivative;
+			
+		return candle;
 	}
 
 }

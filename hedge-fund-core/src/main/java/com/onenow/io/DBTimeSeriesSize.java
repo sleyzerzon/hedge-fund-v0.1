@@ -73,7 +73,7 @@ public class DBTimeSeriesSize {
 		
 		List<Serie> series = readSeries(request);
 		
-		sizes = seriesToInts(series); 
+		sizes = seriesToSizes(series); 
 		
 //		String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
 //		Watchr.log(Level.INFO, log, "\n", "");
@@ -92,7 +92,7 @@ public class DBTimeSeriesSize {
 	 * @param series
 	 * @return
 	 */
-	private static List<Integer> seriesToInts(List<Serie> series) {
+	private static List<Integer> seriesToSizes(List<Serie> series) {
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		Watchr.log(Level.INFO, "SERIES: " + series.toString());
@@ -107,9 +107,8 @@ public class DBTimeSeriesSize {
 			}
 			s = s + "\n";
 			
-			List<DBTimeIncrement> rows = DBTimeSeries.seriesToIncrements(serie, s);
-			sizes.addAll(rowsToInts(rows));
-			// sizes.add((int) Math.round(values.sum));
+			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
+			sizes.add(incrementToSize(increment));
 		}
 		System.out.println("SIZES: " + s + "\n");	// full series
 		return sizes;
@@ -120,17 +119,10 @@ public class DBTimeSeriesSize {
 	 * @param increments
 	 * @return
 	 */
-	private static List<Integer> rowsToInts(List<DBTimeIncrement> rows) {
+	private static Integer incrementToSize(DBTimeIncrement row) {
 		
-		List<Integer> integers = new ArrayList<Integer>();		
-
-		for(DBTimeIncrement row:rows) {
+		Integer sum = (int) Math.round(row.sum);
 			
-			Integer sum = (int) Math.round(row.sum);
-			
-			integers.add(sum);
-		}
-		
-		return integers;
+		return sum;
 	}
 }

@@ -167,68 +167,68 @@ public static String getThoroughSelect(String columnName) {
 	return s;
 }
 
-public static List<DBTimeIncrement> seriesToIncrements(Serie serie, String s) {
+/**
+ * Iterate through series JSON to acquire information about a single time increment 
+ * @param serie
+ * @param s
+ * @return
+ */
+public static DBTimeIncrement seriesToIncrements(Serie serie, String s) {
 	
-	List<DBTimeIncrement> increments = new ArrayList<DBTimeIncrement>();
+	DBTimeIncrement increment = new DBTimeIncrement();;
 	
 	for (Map<String, Object> rowMap : serie.getRows()) {
+				
+		Integer i=0;
 		
-		increments.add(extractIncrement(serie, rowMap, s));
+		for (String column : serie.getColumns()) {	// iterate columns to create candle
+			s = s + rowMap.get(column) + "\t";
+			// System.out.println("row " + row + " " + row.get(col)); // full row
+			if(i.equals(1)) {
+				increment.first = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(2)) {
+				increment.last = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(3)) {
+				increment.difference = new Double(extractQueryString(rowMap, column));
+			}				
+			if(i.equals(4)) {
+				increment.min = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(5)) {
+				increment.max = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(6)) {
+				increment.mean = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(7)) {
+				increment.mode = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(8)) {
+				increment.median = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(9)) {
+				increment.stddev = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(10)) {
+				increment.distinct = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(11)) {
+				increment.count = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(12)) {
+				increment.sum = new Double(extractQueryString(rowMap, column));
+			}
+			if(i.equals(13)) {
+				increment.derivative = new Double(extractQueryString(rowMap, column));
+			}
+			i++;
+		}
+		
 		s = s + "\n";
 	}
-	return increments;
-}
-
-private static DBTimeIncrement extractIncrement(Serie serie, Map<String, Object> rowMap, String s) {
 	
-	DBTimeIncrement increment = new DBTimeIncrement();
-	
-	Integer i=0;
-	
-	for (String column : serie.getColumns()) {	// iterate columns to create candle
-		s = s + rowMap.get(column) + "\t";
-		// System.out.println("row " + row + " " + row.get(col)); // full row
-		if(i.equals(1)) {
-			increment.first = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(2)) {
-			increment.last = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(3)) {
-			increment.difference = new Double(extractQueryString(rowMap, column));
-		}				
-		if(i.equals(4)) {
-			increment.min = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(5)) {
-			increment.max = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(6)) {
-			increment.mean = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(7)) {
-			increment.mode = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(8)) {
-			increment.median = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(9)) {
-			increment.stddev = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(10)) {
-			increment.distinct = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(11)) {
-			increment.count = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(12)) {
-			increment.sum = new Double(extractQueryString(rowMap, column));
-		}
-		if(i.equals(13)) {
-			increment.derivative = new Double(extractQueryString(rowMap, column));
-		}
-		i++;
-	}
 	return increment;
 }
 
