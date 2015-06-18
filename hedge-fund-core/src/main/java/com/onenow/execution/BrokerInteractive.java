@@ -19,7 +19,7 @@ import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
-import com.onenow.data.QuoteHistory;
+import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -133,7 +133,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  
 		@Override
 		public Integer readHistoricalQuotes(Investment inv, String end,
-				HistorianConfig config, QuoteHistory history) {
+				HistorianConfig config, QuoteHistoryInvestment history) {
 			return quoteHistoryChain.readHistoricalQuotes(inv, end,
 					config, history);
 		}

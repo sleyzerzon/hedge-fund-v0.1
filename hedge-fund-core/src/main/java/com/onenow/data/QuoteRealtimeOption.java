@@ -5,7 +5,7 @@ import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
 
-public class QuoteHandlerOption extends QuoteHandler implements IOptHandler {  
+public class QuoteRealtimeOption extends QuoteHandler implements IOptHandler {  
 
 	double m_impVol;
 	double m_delta;
@@ -16,11 +16,11 @@ public class QuoteHandlerOption extends QuoteHandler implements IOptHandler {
 	// other
 	boolean m_done;
 
-	public QuoteHandlerOption() {
+	public QuoteRealtimeOption() {
 		
 	}
 
-	public QuoteHandlerOption(Investment inv) {
+	public QuoteRealtimeOption(Investment inv) {
 		this.investment = inv;
 	}
 

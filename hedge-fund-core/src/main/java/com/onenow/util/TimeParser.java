@@ -27,7 +27,7 @@ public class TimeParser implements Testable {
 	
 	public static String getFormatedPacificDateTime(Long time) {
 		
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz");
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss zzzz MM-dd-yyyy");
 		TimeZone zone = TimeZone.getTimeZone("PST");
 		format.setTimeZone(zone);
 

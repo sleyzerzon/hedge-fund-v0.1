@@ -10,7 +10,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
-import com.onenow.data.QuoteHistory;
+import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
@@ -222,7 +222,7 @@ public class BrokerEmulator implements BrokerInterface {
 
 	@Override
 	public Integer readHistoricalQuotes(Investment inv, String end,
-			HistorianConfig config, QuoteHistory history) {
+			HistorianConfig config, QuoteHistoryInvestment history) {
 		// TODO Auto-generated method stub
 		return 1;
 	}

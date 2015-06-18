@@ -10,8 +10,8 @@ import apidemo.util.Util;
 
 import com.ib.controller.Formats;
 import com.onenow.data.QuoteHandler;
-import com.onenow.data.QuoteHandlerNonOption;
-import com.onenow.data.QuoteHandlerOption;
+import com.onenow.data.QuoteRealtimeNonOption;
+import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.QuoteRealtimeChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
@@ -40,9 +40,9 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 		QuoteHandler quoteHandler = null;
 		
 		if(investment instanceof InvestmentOption) {
-			quoteHandler = new QuoteHandlerOption(investment);						
+			quoteHandler = new QuoteRealtimeOption(investment);						
 		} else {
-			quoteHandler = new QuoteHandlerNonOption(investment);			
+			quoteHandler = new QuoteRealtimeNonOption(investment);			
 		}
 		m_rows.add(quoteHandler);
 

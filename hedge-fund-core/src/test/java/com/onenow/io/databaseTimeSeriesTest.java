@@ -8,19 +8,25 @@ import org.influxdb.dto.Serie;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.ib.client.Types.BarSize;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventRequestHistory;
+import com.onenow.execution.HistorianService;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
+import com.onenow.research.Candle;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class databaseTimeSeriesTest {
 
 	int reqId = 123; 
-	long time = 12346; 
+	long time = TimeParser.getTimestampNow()*1000; 
 	double high = 0.23; 
 	double low = 0.19; 
 	double open = 0.12; 
@@ -29,8 +35,11 @@ public class databaseTimeSeriesTest {
 	long volume = 3; 
 	int count = 23;
 	
-	EventActivityHistory activity = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);
-
+	EventActivityHistory priceActivity = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
+	EventActivityRealtime realtimeectivity;	
+	EventActivityRealtime greekActivity;
+	
+	
 	
   @Test
   public void dbConnect() {
@@ -41,20 +50,23 @@ public class databaseTimeSeriesTest {
   @Test
   public void writePrice() {
 	  	  
-	  activity.setInvestment(new InvestmentStock(new Underlying("PABLO")));
-		activity.tradeType = TradeType.BUY;
-		activity.source = InvDataSource.AMERITRADE;
-		activity.timing = InvDataTiming.HISTORICAL;
+	  priceActivity.setInvestment(new InvestmentStock(new Underlying("PABLO")));
+	  priceActivity.tradeType = TradeType.BUY;
+	  priceActivity.source = InvDataSource.AMERITRADE;
+	  priceActivity.timing = InvDataTiming.HISTORICAL;
 
 
-	  Serie serie = DBTimeSeriesSize.getWriteSerie(activity, "hola db");
-	  
+	  String serieName = Lookup.getEventKey(priceActivity);
+	  Serie serie = DBTimeSeriesSize.getWriteSerie(priceActivity, serieName);
+	 
+	  Watchr.log("WRITE INTO " + serieName + " SERIE " + serie.toString());
+
+	  String columns = "";
 	  for(String column:serie.getColumns()) {
-		  Watchr.log("COLUMNS: " + column.toString());		  
+		  columns = columns + column.toString() + " ";
 	  }
-	  
-	  Watchr.log("SERIE " + serie.toString());
-	  
+	  Watchr.log("WRITE SERIES COLUMNS: " + columns.toString());		  
+	 	  
 		Assert.assertNotNull(serie.getColumns());	
 		Assert.assertEquals(serie.getColumns().length, 10);
 		Assert.assertEquals(serie.getColumns()[0], ColumnName.TIME.toString());
@@ -73,8 +85,18 @@ public class databaseTimeSeriesTest {
 		Assert.assertEquals(serie.getRows().get(0).size(), 10);
 
 		
-		DBTimeSeriesPrice.writeThread(activity, serie);
+		DBTimeSeriesPrice.writeThread(priceActivity, serie);
 		
+		TimeParser.wait(5); // wait for write thread to complete
+		
+		EventRequestHistory requestHistory = new EventRequestHistory(	priceActivity.getInvestment(), 
+																		TimeParser.getNowDashed(), 
+																		HistorianService.getConfig(	BarSize._30_secs,
+																									priceActivity.tradeType,
+																									priceActivity.source));
+
+		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
+		Watchr.info("READ CANDLES " + candles);
 		
 		// test iterator
 		List<Map<String, Object>> row = serie.getRows();

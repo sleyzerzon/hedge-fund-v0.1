@@ -691,12 +691,12 @@ public class EClientSocket {
     	
     	Watchr.log(Level.INFO, "~ reqMktData");
 
-    	String req = "== " + "Request Market Data" + "\n";
-    	req = req + "- TickerId " + tickerId + "\n";
-    	req = req + "- Contract " + contract.toString();
-    	req = req + "- Generic Tick List: " + genericTickList + "\n";
-    	req = req + "- Snapshot " + snapshot + "\n";
-    	req = req + "- Mkt Data Options " + mktDataOptions.toString();
+    	String req = "== " + "Request Market Data" + " ";
+    	req = req + "-TickerId " + tickerId + " ";
+    	req = req + "-Contract " + contract.toString() + " ";
+    	req = req + "-TickList: " + genericTickList + " ";
+    	req = req + "-Snapshot " + snapshot + " ";
+    	req = req + "-MktDataOptions " + mktDataOptions.toString();
 		Watchr.log(Level.INFO, req);
     	
         if (!m_connected) {

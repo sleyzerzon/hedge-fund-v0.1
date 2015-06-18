@@ -6,13 +6,13 @@ import com.onenow.instrument.Investment;
  * Single quote class
  *
  */
-public class QuoteHandlerNonOption extends QuoteHandler {
+public class QuoteRealtimeNonOption extends QuoteHandler {
 			
-	public QuoteHandlerNonOption () {
+	public QuoteRealtimeNonOption () {
 		
 	}
 	
-	public QuoteHandlerNonOption(Investment inv) {
+	public QuoteRealtimeNonOption(Investment inv) {
 		this.investment = inv;
 	}
 	

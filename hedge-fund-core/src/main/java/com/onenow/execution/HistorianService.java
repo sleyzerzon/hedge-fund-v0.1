@@ -22,4 +22,14 @@ public class HistorianService {
 	public HistorianService() {
 		
 	}
+	
+	public static HistorianConfig getConfig(BarSize size, TradeType type, InvDataSource source) {
+		
+		HistorianConfig config = new HistorianConfig(	source, InvDataTiming.HISTORICAL,
+														1, DurationUnit.DAY, size, WhatToShow.TRADES,
+														type, SamplingRate.HFMEDIUM); 
+		
+		return config;
+		
+	}
 }

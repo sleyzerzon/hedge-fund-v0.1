@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import com.amazonaws.services.sqs.model.Message;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
-import com.onenow.data.QuoteHistory;
+import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
 import com.onenow.io.Lookup;
 import com.onenow.portfolio.BrokerController;
@@ -19,7 +19,7 @@ public class QuoteHistoryChain {
 	
 	private static BrokerController controller;
 
-	private static HashMap<String, QuoteHistory>		history = new HashMap<String, QuoteHistory>();						// price history from L3
+	private static HashMap<String, QuoteHistoryInvestment>		history = new HashMap<String, QuoteHistoryInvestment>();						// price history from L3
 
 	private static long lastQueryTime;
 
@@ -38,7 +38,7 @@ public class QuoteHistoryChain {
 			  Watchr.log(Level.FINE, "Received request object: " + requestObject.toString());
 			  EventRequestHistory request = (EventRequestHistory) requestObject;
 			  // get the history reference for the specific investment 
-			  QuoteHistory invHist = lookupInvHistory(request);
+			  QuoteHistoryInvestment invHist = lookupInvHistory(request);
 			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
 			  TimeParser.paceHistoricalQuery(lastQueryTime); 
 			  // look for SQS requests for history
@@ -53,7 +53,7 @@ public class QuoteHistoryChain {
 	  /**
 	   * Returns reference to object where history will be stored, upon asynchronous return
 	   */
-	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistory quoteHistory) {
+	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistoryInvestment quoteHistory) {
 	
 		  Contract contract = ContractFactory.getContract(inv);
 		  Integer reqId = controller.reqHistoricalData(	contract, endDateTime, 
@@ -73,12 +73,12 @@ public class QuoteHistoryChain {
 		 * @param timing
 		 * @return
 		 */
-	  	private static QuoteHistory lookupInvHistory(EventRequestHistory request) {
+	  	private static QuoteHistoryInvestment lookupInvHistory(EventRequestHistory request) {
 	  		
 			String key = Lookup.getEventTimedKey(request);
 	
 			if(history.get(key)==null) {
-				history.put(key, new QuoteHistory(request));	
+				history.put(key, new QuoteHistoryInvestment(request));	
 			} 
 				
 			return history.get(key);

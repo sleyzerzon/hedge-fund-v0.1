@@ -8,8 +8,8 @@ import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBname;
-import com.onenow.constant.SamplingRate;
 import com.onenow.data.DataSampling;
+import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequest;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import com.onenow.research.Candle;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class DBTimeSeries {
@@ -77,12 +77,44 @@ private static void dbCreateAndConnect() {
 	}
 }
 
+
+
+public static void writeThread(final EventActivity event, final Serie serie, final DBname dbName) {
+	
+	new Thread () {
+		@Override public void run () {
+
+		Long before = TimeParser.getTimestampNow();
+		try {
+			DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Long after = TimeParser.getTimestampNow();
+	
+		Watchr.log(Level.INFO, 	"TSDB WRITE: " + dbName + " " + 
+								event.toString() + " " +  
+								"ELAPSED WRITE " + (after-before) + "ms ",
+								// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
+								"\n", "");
+		}
+	}.start();
+	
+}
+
+
 /** 
  * Each environment has its own database
  * @return
  */
 public static DBname getPriceDatabaseName() {
-	return DBname.PRICE_STAGING;
+	
+	DBname name = DBname.PRICE_DEVELOPMENT;
+	
+	if(!NetworkConfig.isMac()) {
+		name = DBname.PRICE_STAGING;
+	} 
+	return name;
 }
 
 /** 
@@ -90,7 +122,14 @@ public static DBname getPriceDatabaseName() {
  * @return
  */
 public static DBname getSizeDatabaseName() {
-	return DBname.SIZE_STAGING;
+	
+	DBname name = DBname.SIZE_DEVELOPMENT;
+	
+	if(!NetworkConfig.isMac()) {
+		name = DBname.SIZE_STAGING;
+	} 
+	return name;
+
 }
 
 /** 
@@ -98,7 +137,15 @@ public static DBname getSizeDatabaseName() {
  * @return
  */
 public static DBname getGreekDatabaseName() {
-	return DBname.GREEK_STAGING;
+
+	DBname name = DBname.GREEK_DEVELOPMENT;
+
+	if(!NetworkConfig.isMac()) {
+		name = DBname.GREEK_STAGING;
+	} 
+	
+	return name;
+
 }
 
 
@@ -112,7 +159,7 @@ public static DBname getGreekDatabaseName() {
  * @param toDate
  * @return
  */
-public static List<Serie> query(ColumnName columnName, String dbName, EventRequest request) {
+public static List<Serie> query(ColumnName columnName, DBname dbName, EventRequest request) {
 	
 	String serieName = Lookup.getEventKey(request);
 
@@ -139,10 +186,10 @@ public static List<Serie> query(ColumnName columnName, String dbName, EventReque
 	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
 	
 	try {
-		series = DBTimeSeries.influxDB.query(dbName, query, TimeUnit.MILLISECONDS);
-		// Watchr.log(Level.INFO, query + " RETURNED " + series.toString());  
+		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
+		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
-		// e.printStackTrace(); // some series don't exist or have data 
+		e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }
@@ -150,19 +197,19 @@ public static List<Serie> query(ColumnName columnName, String dbName, EventReque
 
 public static String getThoroughSelect(String columnName) {
 	String s = "";
-	s = 	"FIRST(" + columnName + ")" + ", " +			
-			"LAST("  + columnName + ")" + ", " +			
-			"DIFFERENCE(" + columnName + ")" + ", " +							
-			"MIN("  + columnName + ")" + ", " +			
-			"MAX(" +  columnName + ")" + ", " +			
-			"MEAN(" + columnName + ")" + ", " +			
-			"MODE(" + columnName + ")" + ", " +			
-			"MEDIAN(" +  columnName + ")" + ", " +						
-			"STDDEV(" +  columnName + ")" + ", " +						
-			"DISTINCT(" + columnName + ")" + ", " +					
-			"COUNT("  + columnName + ")" + ", " +			
-			"SUM("  + columnName + ")" + ", " +
-			"DERIVATIVE(" + columnName + ")" + " ";						  
+	s = 	"FIRST(" + columnName + ")" + ", " +			//  1
+			"LAST("  + columnName + ")" + ", " +			//  2
+			"DIFFERENCE(" + columnName + ")" + ", " +		//  3					
+			"MIN("  + columnName + ")" + ", " +				//  4	
+			"MAX(" +  columnName + ")" + ", " +				//  5
+			"MEAN(" + columnName + ")" + ", " +				//  6
+			"MODE(" + columnName + ")" + ", " +				//  7
+			"MEDIAN(" +  columnName + ")" + ", " +			//  8		
+			"STDDEV(" +  columnName + ")" + ", " +			//  9			
+			"DISTINCT(" + columnName + ")" + ", " +			// 10		
+			"COUNT("  + columnName + ")" + ", " +			// 11
+			"SUM("  + columnName + ")" + ", " +				// 12
+			"DERIVATIVE(" + columnName + ")" + " ";			// 13			  
 
 	return s;
 }
@@ -229,6 +276,7 @@ public static DBTimeIncrement seriesToIncrements(Serie serie, String s) {
 		s = s + "\n";
 	}
 	
+	Watchr.log(Level.FINEST, "INCREMENT FROM SERIE: " + increment.toString());
 	return increment;
 }
 

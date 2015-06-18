@@ -2,7 +2,6 @@ package com.onenow.io;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -10,7 +9,6 @@ import org.influxdb.dto.Serie;
 
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBname;
-import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequest;
 import com.onenow.research.Candle;
@@ -41,35 +39,20 @@ public class DBTimeSeriesPrice {
 		return serie;
 	}
 
-	public static void write(final EventActivity event) {
+	public static void write( EventActivity event) {
 		
 		String name = Lookup.getEventKey(event);		
 		final Serie serie = getWriteSerie(event, name);
 		
 		writeThread(event, serie);
+		
 	}
 
-	static void writeThread(final EventActivity event, final Serie serie) {
-		
-		new Thread () {
-			@Override public void run () {
-
-			Long before = TimeParser.getTimestampNow();
-			try {
-				DBTimeSeries.influxDB.write(DBTimeSeries.getPriceDatabaseName().toString(), TimeUnit.MILLISECONDS, serie);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Long after = TimeParser.getTimestampNow();
-		
-			Watchr.log(Level.INFO, 	"TSDB WRITE: " + DBTimeSeries.getPriceDatabaseName() + " " + 
-									event.toString() + " " +  
-									"ELAPSED WRITE " + (after-before) + "ms ",
-									// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
-									"\n", "");
-			}
-		}.start();
+	public static void writeThread(EventActivity event, Serie serie) {
+		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getPriceDatabaseName());
 	}
+
+
 		
 		public static List<Candle> read(EventRequest request) {
 			
@@ -86,8 +69,9 @@ public class DBTimeSeriesPrice {
 		}
 
 	public static List<Serie> readSeries(EventRequest request) {
-		// Watchr.log(Level.INFO, "REQUESTING " + request.toString());
-		List<Serie> series = DBTimeSeries.query(ColumnName.PRICE, DBTimeSeries.getPriceDatabaseName().toString(), request);
+		DBname dbName = DBTimeSeries.getPriceDatabaseName(); 
+		Watchr.log(Level.INFO, "REQUESTING " + dbName + " FOR " + request.toString());
+		List<Serie> series = DBTimeSeries.query(ColumnName.PRICE, dbName, request);
 		return series;
 	}
 
@@ -99,7 +83,7 @@ public class DBTimeSeriesPrice {
 	private static List<Candle> seriesToCandles(List<Serie> series) {
 		
 		List<Candle> candles = new ArrayList<Candle>();		
-		Watchr.log(Level.INFO, "SERIES: " + series.toString());
+		Watchr.log(Level.INFO, "SERIES TO CANDLE: " + series.toString());
 				
 		String s="";
 		
@@ -114,7 +98,7 @@ public class DBTimeSeriesPrice {
 			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
 			candles.add(incrementsToCandle(increment));
 		}
-		System.out.println("CANDLE: " + s + "\n");	// full candle
+		System.out.println("CANDLE FROM SERIES: " + s + "\n");	// full candle
 		return candles;
 	}
 	
@@ -141,6 +125,7 @@ public class DBTimeSeriesPrice {
 		candle.sumPrice = increment.sum;
 		candle.derivativePrice = increment.derivative;
 			
+		Watchr.log(Level.FINEST, "CANDLE FROM INCREMENT: " + candle.toString());
 		return candle;
 	}
 

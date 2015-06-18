@@ -36,10 +36,6 @@ public class Candle {
 //		setIntraDay(intraDay);
 	}
 	
-
-	// PRIVATE
-
-	// TEST
 	
 	// PRINT
 	public String toString() {

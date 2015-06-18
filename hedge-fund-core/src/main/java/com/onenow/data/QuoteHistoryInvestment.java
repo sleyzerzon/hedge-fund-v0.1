@@ -23,7 +23,7 @@ import com.onenow.util.Watchr;
  * Handle historical data call-backs 
  *
  */
-public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
+public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
 	public ArrayList<EventActivityHistory> quoteRows = new ArrayList<EventActivityHistory>();
 	
@@ -34,17 +34,17 @@ public class QuoteHistory implements IHistoricalDataHandler, IRealTimeBarHandler
 	
 	private Channel channel;
 
-	public QuoteHistory (){
+	public QuoteHistoryInvestment (){
 	}
 	
-	public QuoteHistory(EventRequestHistory request) {
+	public QuoteHistoryInvestment(EventRequestHistory request) {
 		this.investment = request.getInvestment();
 		this.tradeType = request.tradeType;
 		this.source = request.source;
 		this.timing = request.timing;
 	}
 	
-	public QuoteHistory (Channel channel) {
+	public QuoteHistoryInvestment (Channel channel) {
 		this.channel = channel;
 	}
 	
