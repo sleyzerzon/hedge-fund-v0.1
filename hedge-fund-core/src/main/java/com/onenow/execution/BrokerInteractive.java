@@ -20,8 +20,6 @@ import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.QuoteHistory;
-import com.onenow.data.QuoteChain;
-import com.onenow.data.QuoteChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -54,13 +52,12 @@ public class BrokerInteractive implements BrokerInterface  {
 	  
 	  private BusWallStInteractiveBrokers bus;
 
-	  private static HashMap<String, QuoteHistory>		history = new HashMap<String, QuoteHistory>();						// price history from L3
-	  private static long lastQueryTime;
-
 	  private static SQS sqs = new SQS();
 	  private static String queueURL;
 
-	  private static QuoteChain quoteChain;
+	  private static QuoteRealtimeChain quoteRealtimeChain;
+	  private static QuoteHistoryChain quoteHistoryChain;
+
 
 	  public BrokerInteractive() {
 		  this.streamName = StreamName.REALTIME;
@@ -85,7 +82,8 @@ public class BrokerInteractive implements BrokerInterface  {
 		this.bus = bus;
 		
 		connectToServices(bus);
-		quoteChain = new QuoteChain(bus.controller);
+		quoteRealtimeChain = new QuoteRealtimeChain(bus.controller);
+		quoteHistoryChain = new QuoteHistoryChain(bus.controller);
 	
 	    // create new underlying list, portfolio, then initialize the market
 	    this.underList = new ArrayList<Underlying>(); // TODO: get from portfolio?
@@ -114,133 +112,32 @@ public class BrokerInteractive implements BrokerInterface  {
 		  for(Investment inv:invs) {
 
 			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
-			  quoteChain.addRow(inv, false);
+			  quoteRealtimeChain.addRow(inv, false);
 		  }
 	  }	
 	  
 	  // GET HISTORICAL QUOTES
 	  public void procesHistoricalQuotesRequests() {
+		  		  
 		  while(true) {
 			  List<Message> serializedMessages = sqs.receiveMessages(queueURL);			  
 			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {				  
-					  processHistoryOneRequest(message);
+					  quoteHistoryChain.processHistoryOneRequest(message);
 				  }
 				  sqs.deleteMesssage(queueURL, serializedMessages);
 			  }
 			  TimeParser.wait(1); // pace requests for messages from queue 
 		  }
 		}
-
-	private void processHistoryOneRequest(Message message) {
-		Object requestObject = Piping.deserialize(message.getBody(), EventRequestHistory.class);
-		  if(requestObject!=null) {
-			  Watchr.log(Level.FINE, "Received request object: " + requestObject.toString());
-			  EventRequestHistory request = (EventRequestHistory) requestObject;
-			  // get the history reference for the specific investment 
-			  QuoteHistory invHist = lookupInvHistory(request);
-			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
-			  TimeParser.paceHistoricalQuery(lastQueryTime); 
-			  // look for SQS requests for history
-			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
-			  Integer reqId = readHistoricalQuotes(	request.getInvestment(), 
-													endDateTime, 
-													request.config, invHist);
-			  lastQueryTime = TimeParser.getTimestampNow();		
-		  }
-	}
-				  
-	  /**
-	   * Returns reference to object where history will be stored, upon asynchronous return
-	   */
-	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistory quoteHistory) {
-	
-		  Contract contract = ContractFactory.getContract(inv);
-		  Integer reqId = bus.controller.reqHistoricalData(	contract, endDateTime, 
-	    													1, config.durationUnit, config.barSize, config.whatToShow, 
-	    													false, quoteHistory);
-		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " CONTRACT " + contract.toString() + " ENDING " + endDateTime + " REQ ID " + reqId + " CONFIG " + config.toString();
-		  Watchr.log(Level.INFO, log);
-	    
-		  return reqId;
-	  }
-
-		/**
-		 * Every investment has it's own history from L3
-		 * @param inv
-		 * @param tradeType
-		 * @param source
-		 * @param timing
-		 * @return
-		 */
-	  	private static QuoteHistory lookupInvHistory(EventRequestHistory request) {
-	  		
-			String key = Lookup.getEventTimedKey(request);
-	
-			if(history.get(key)==null) {
-				history.put(key, new QuoteHistory(request));	
-			} 
-				
-			return history.get(key);
+	  
+		@Override
+		public Integer readHistoricalQuotes(Investment inv, String end,
+				HistorianConfig config, QuoteHistory history) {
+			return quoteHistoryChain.readHistoricalQuotes(inv, end,
+					config, history);
 		}
-	
-		  // CHANNELS
-		  /**
-		   * Get price channel price history
-		   */
-		  public void getChannelPrices() throws InterruptedException {
-		//    InvestmentIndex indexInv = new InvestmentIndex(new Underlying("SPX"));
-		//    Contract index = getContractFactory().getContract(indexInv);
-		//    getContractFactory().addChannel(getChannels(), index);
-		//
-		////		Contract index = contractFactory.getIndexToQuote("RUT");
-		////		getContractFactory().addChannel(getChannels(), index);
-		////		Contract option = contractFactory.getOptionToQuote(indexInv);
-		////		getContractFactory().addChannel(getChannels(), option);
-		//
-		//    for(int i=0; i<getChannels().size(); i++) {
-		//      Channel channel = getChannels().get(i);
-		//      List<String> endList = getEndList(channel);
-		//
-		//      for(int j=0; j<endList.size(); j++) {
-		//        String end = endList.get(j);
-		//
-		//        System.out.println("\n..." + "getting historical quotes for " + indexInv.toString());
-		//
-		//// TODO: add history argument				QuoteHistory quoteHistory = readHistoricalQuotes(channel.getInvestment(), end);
-		//
-		//        Thread.sleep(12000);
-		//        System.out.println("...");
-		//      }
-		//      System.out.println(channel.toString());
-		//    }
-		  }
-		
-		  private List<String> getEndList(Channel channel) {
-			  List<String> list = new ArrayList<String>();
-			  String date="";
-			  for(int i=channel.getResDayList().size()-1; i>=0; i--) { // Resistance
-				  try {
-					  date = channel.getResDayList().get(i);
-					  list.add(TimeParser.removeDash(date).concat(" 16:30:00"));
-				  } catch (Exception e) { } // nothing to do
-			  }
-			  
-			  for(int j=channel.getSupDayList().size()-1; j>=0; j--) { // Support
-				 try {
-					 date = channel.getSupDayList().get(j);
-					 list.add(TimeParser.removeDash(date).concat(" 16:30:00"));
-				  } catch (Exception e) { } // nothing to do
-			  }
-			  
-			  for(int k=channel.getRecentDayMap().size()-1; k>=0; k--) { // Recent
-				 try {
-					 date = channel.getRecentDayList().get(k); // Recent
-					 list.add(TimeParser.removeDash(date).concat(" 16:30:00"));
-				  } catch (Exception e) { } // nothing to do
-			  }
-			return list;
-		  }
+
 		
 		  /**
 		   * Get market depth where available

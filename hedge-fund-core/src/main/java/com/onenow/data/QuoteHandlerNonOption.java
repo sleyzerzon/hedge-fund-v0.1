@@ -12,7 +12,7 @@ public class QuoteHandlerNonOption extends QuoteHandler {
 		
 	}
 	
-	QuoteHandlerNonOption(Investment inv) {
+	public QuoteHandlerNonOption(Investment inv) {
 		this.investment = inv;
 	}
 	

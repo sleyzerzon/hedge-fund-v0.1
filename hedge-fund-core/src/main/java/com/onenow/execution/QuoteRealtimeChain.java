@@ -1,4 +1,4 @@
-package com.onenow.data;
+package com.onenow.execution;
 
 import static com.ib.controller.Formats.*;
 
@@ -9,10 +9,10 @@ import javax.swing.table.AbstractTableModel;
 import apidemo.util.Util;
 
 import com.ib.controller.Formats;
-import com.onenow.data.QuoteChain;
-import com.onenow.execution.BusWallStInteractiveBrokers;
-import com.onenow.execution.Contract;
-import com.onenow.execution.ContractFactory;
+import com.onenow.data.QuoteHandler;
+import com.onenow.data.QuoteHandlerNonOption;
+import com.onenow.data.QuoteHandlerOption;
+import com.onenow.execution.QuoteRealtimeChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.portfolio.BrokerController;
@@ -20,18 +20,18 @@ import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 import com.onenow.util.Watchr;
 
 
-public class QuoteChain extends AbstractTableModel {
+public class QuoteRealtimeChain extends AbstractTableModel {
 
 	private static ArrayList<QuoteHandler> m_rows = new ArrayList<QuoteHandler>(); 
 
 	private static BrokerController controller;
 	
 	
-	public QuoteChain() {
+	public QuoteRealtimeChain() {
 
 	}
 	
-	public QuoteChain(BrokerController controller) {
+	public QuoteRealtimeChain(BrokerController controller) {
 		this.controller = controller;
 	}
 	

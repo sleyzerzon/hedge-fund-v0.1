@@ -1,0 +1,86 @@
+package com.onenow.execution;
+
+import java.util.HashMap;
+import java.util.logging.Level;
+
+import com.amazonaws.services.sqs.model.Message;
+import com.onenow.data.EventRequestHistory;
+import com.onenow.data.HistorianConfig;
+import com.onenow.data.QuoteHistory;
+import com.onenow.instrument.Investment;
+import com.onenow.io.Lookup;
+import com.onenow.portfolio.BrokerController;
+import com.onenow.util.Piping;
+import com.onenow.util.TimeParser;
+import com.onenow.util.Watchr;
+
+public class QuoteHistoryChain {
+
+	
+	private static BrokerController controller;
+
+	private static HashMap<String, QuoteHistory>		history = new HashMap<String, QuoteHistory>();						// price history from L3
+
+	private static long lastQueryTime;
+
+	public QuoteHistoryChain() {
+		
+	}
+	
+	public QuoteHistoryChain(BrokerController controller) {
+		this.controller = controller;
+	}
+
+
+	public void processHistoryOneRequest(Message message) {
+		Object requestObject = Piping.deserialize(message.getBody(), EventRequestHistory.class);
+		  if(requestObject!=null) {
+			  Watchr.log(Level.FINE, "Received request object: " + requestObject.toString());
+			  EventRequestHistory request = (EventRequestHistory) requestObject;
+			  // get the history reference for the specific investment 
+			  QuoteHistory invHist = lookupInvHistory(request);
+			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
+			  TimeParser.paceHistoricalQuery(lastQueryTime); 
+			  // look for SQS requests for history
+			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
+			  Integer reqId = readHistoricalQuotes(	request.getInvestment(), 
+													endDateTime, 
+													request.config, invHist);
+			  lastQueryTime = TimeParser.getTimestampNow();		
+		  }
+	}
+				  
+	  /**
+	   * Returns reference to object where history will be stored, upon asynchronous return
+	   */
+	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistory quoteHistory) {
+	
+		  Contract contract = ContractFactory.getContract(inv);
+		  Integer reqId = controller.reqHistoricalData(	contract, endDateTime, 
+	    													1, config.durationUnit, config.barSize, config.whatToShow, 
+	    													false, quoteHistory);
+		  String log = "REQUESTED HISTORY FOR: " + inv.toString() + " CONTRACT " + contract.toString() + " ENDING " + endDateTime + " REQ ID " + reqId + " CONFIG " + config.toString();
+		  Watchr.log(Level.INFO, log);
+	    
+		  return reqId;
+	  }
+
+		/**
+		 * Every investment has it's own history from L3
+		 * @param inv
+		 * @param tradeType
+		 * @param source
+		 * @param timing
+		 * @return
+		 */
+	  	private static QuoteHistory lookupInvHistory(EventRequestHistory request) {
+	  		
+			String key = Lookup.getEventTimedKey(request);
+	
+			if(history.get(key)==null) {
+				history.put(key, new QuoteHistory(request));	
+			} 
+				
+			return history.get(key);
+		}
+}
