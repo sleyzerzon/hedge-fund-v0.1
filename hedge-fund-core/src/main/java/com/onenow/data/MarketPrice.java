@@ -41,7 +41,7 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventActivityRealtime event = new EventActivityRealtime(	timeStamp, inv, TradeType.TRADED, 
+			EventActivityRealtime event = new EventActivityRealtime(	timeStamp*1000, inv, TradeType.TRADED, 
 																		lastPrice, lastSize,
 																		source, timing);
 			cache.writeEventRT(event);

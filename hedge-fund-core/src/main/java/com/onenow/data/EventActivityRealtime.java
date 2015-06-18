@@ -1,12 +1,9 @@
 package com.onenow.data;
 
-import java.util.logging.Level;
-
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.util.Watchr;
 
 public class EventActivityRealtime extends EventActivity {
 	
@@ -30,7 +27,7 @@ public class EventActivityRealtime extends EventActivity {
 		this.source = source;
 		this.timing = timing;
 
-		this.time = time*1000;
+		this.time = time;
 		this.price = price;
 		this.size = size;
 
