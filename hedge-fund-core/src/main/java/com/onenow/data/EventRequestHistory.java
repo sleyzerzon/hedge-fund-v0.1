@@ -46,6 +46,21 @@ public class EventRequestHistory extends EventRequest {
 							
 	}
 	
+	public EventRequestHistory(EventActivity event, Long requestTime) {
+		
+		setInvestment(event.getInvestment());
+		
+		this.time = requestTime;
+		
+		this.config = HistorianService.getConfig(BarSize._30_secs, event);
+
+		this.source = config.source;
+		this.timing = config.timing;
+		this.sampling = config.sampling;
+		this.tradeType = config.tradeType; 		
+							
+	}
+	
 	/** 
 	 * Calculate the from based on the extent of the query in the config
 	 * @param config

@@ -165,26 +165,8 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 
 	List<Serie> series = new ArrayList<Serie>();
 	 
-	String query = 	"SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " " + 						
-					"FROM " + "\"" + serieName + "\" " +
-					"GROUP BY " +
-						"time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") " + 
-					// "FILL(0) " +
-					"WHERE " +
-					"time > " + "'" + request.fromDashedDate + "' " + 
-					"AND " +
-					"time < " + "'" + request.toDashedDate + "' "; 
-					
-	
-	// TODO The where clause supports comparisons against regexes, strings, booleans, floats, integers, and the times listed before. 
-	// Comparators include = equal to, > greater than, < less than, <> not equal to, =~ matches against, !~ doesn’t match against. 
-	// You can chain logic together using and and or and you can separate using ( and )
-	
-	// TODO: SELECT PERCENTILE(column_name, N) FROM series_name group by time(10m) ...
-	// TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
-	// TODO: SELECT TOP(column_name, N) FROM series_name ...
-	// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
-	
+	String query = getQuery(columnName, request, serieName);
+						
 	try {
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
@@ -194,6 +176,38 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 	return series;
 }
 
+// TODO The where clause supports comparisons against regexes, strings, booleans, floats, integers, and the times listed before. 
+// Comparators include = equal to, > greater than, < less than, <> not equal to, =~ matches against, !~ doesn’t match against. 
+// You can chain logic together using and and or and you can separate using ( and )
+
+// TODO: SELECT PERCENTILE(column_name, N) FROM series_name group by time(10m) ...
+// TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
+// TODO: SELECT TOP(column_name, N) FROM series_name ...
+// TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
+
+private static String getQuery(ColumnName columnName, EventRequest request, String serieName) {
+	String query = 	"SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " " + 						
+					"FROM " + "\"" + serieName + "\" " +
+					"GROUP BY " +
+						"time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") " + 
+					// "FILL(0) " +
+					"WHERE " + getQueryTime(request);
+	return query;
+}
+
+public static String getQueryTime(EventRequest request) {
+	String s = "";
+	
+	if(request.time==null) {
+		s = s + "time > " + "'" + request.fromDashedDate + "' "; 
+		s = s + "AND ";
+		s = s + "time < " + "'" + request.toDashedDate + "' ";
+	} else {
+		s = s + "time = " + request.time;
+	}
+	
+	return s;
+}
 
 public static String getThoroughSelect(String columnName) {
 	String s = "";

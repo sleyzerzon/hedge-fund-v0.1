@@ -6,7 +6,6 @@ import com.onenow.util.TimeParser;
 
 public class EventActivity extends Event {
 	
-	public Long time;
 	public Double price;
 	public Long size; 
 	

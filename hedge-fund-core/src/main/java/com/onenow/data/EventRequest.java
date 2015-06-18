@@ -1,15 +1,10 @@
 package com.onenow.data;
 
-import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
-import com.onenow.util.Watchr;
-
 
 public class EventRequest extends Event {
 	
@@ -17,7 +12,8 @@ public class EventRequest extends Event {
 
 	public String toDashedDate;
 	public String fromDashedDate;
-		
+	
+	
 
 	public EventRequest() {
 		

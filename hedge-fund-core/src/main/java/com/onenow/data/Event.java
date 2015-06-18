@@ -17,6 +17,8 @@ import com.onenow.util.Watchr;
 
 public class Event {
 	
+	public Long time; // for activities and also for specific time queries, instead of to/from range
+
 	// investments to facilitate serialization / deserialization
 	public InvestmentIndex index = null;
 	public InvestmentOption option = null;

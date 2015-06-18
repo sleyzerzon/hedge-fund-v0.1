@@ -8,6 +8,8 @@ import org.influxdb.dto.Serie;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import backtype.storm.event__init;
+
 import com.ib.client.Types.BarSize;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.InvDataSource;
@@ -25,18 +27,8 @@ import com.onenow.util.Watchr;
 
 public class databaseTimeSeriesTest {
 
-	int reqId = 123; 
-	long time = TimeParser.getTimestampNow()*1000; 
-	double high = 0.23; 
-	double low = 0.19; 
-	double open = 0.12; 
-	double close = 0.28; 
-	double wap = 0.0; 
-	long volume = 3; 
-	int count = 23;
+	EventActivityRealtime realtimeActivity = new EventActivityRealtime();	
 	
-	EventActivityHistory historyActivity = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
-	EventActivityRealtime realtimeActivity;	
 	EventActivityRealtime greekActivity;
 	
 	// EventActivitySize;
@@ -47,17 +39,32 @@ public class databaseTimeSeriesTest {
 	  Assert.assertTrue(db!=null);
   }
   
-  private void contextualizeEvent(EventActivityHistory event) {
+  private EventActivityHistory getHistoryActivity() {
+	  
+	  int reqId = 123; 
+	  long time = TimeParser.getTimestampNow()*1000; 
+	  double high = 0.23; 
+	  double low = 0.19; 
+	  double open = 0.12; 
+	  double close = 0.28; 
+	  double wap = 0.0; 
+	  long volume = 3; 
+	  int count = 23;		
+		
+	  EventActivityHistory event = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
+
 	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
 	  event.tradeType = TradeType.BUY;
 	  event.source = InvDataSource.AMERITRADE;
 	  event.timing = InvDataTiming.HISTORICAL;
+	  
+	  return event;
   }
   
   @Test
   public void writePrice() {
 	  	  
-	  contextualizeEvent(historyActivity);
+	  EventActivityHistory historyActivity = getHistoryActivity();
 
 	  String serieName = Lookup.getEventKey(historyActivity);
 	  Serie serie = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);
@@ -92,12 +99,14 @@ public class databaseTimeSeriesTest {
 		
 		TimeParser.wait(5); // wait for write thread to complete
 		
-		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1));
+		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, historyActivity.time);
 
 		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
 		Watchr.info("READ CANDLES " + candles);
 		
-		Assert.assertTrue(candles.get(0).openPrice.equals(open));
+		Assert.assertTrue(candles.get(0).openPrice.equals(historyActivity.open));
+		
+		// time = 1400497861762723 
 			
   }
   
