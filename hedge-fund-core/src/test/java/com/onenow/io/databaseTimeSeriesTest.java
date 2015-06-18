@@ -47,17 +47,20 @@ public class databaseTimeSeriesTest {
 	  Assert.assertTrue(db!=null);
   }
   
-  @Test
-  public void writePrice() {
-	  	  
+  private EventActivityHistory getContextualizedEvent() {
 	  priceActivity.setInvestment(new InvestmentStock(new Underlying("PABLO")));
 	  priceActivity.tradeType = TradeType.BUY;
 	  priceActivity.source = InvDataSource.AMERITRADE;
 	  priceActivity.timing = InvDataTiming.HISTORICAL;
-
+	  return priceActivity;
+  }
+  @Test
+  public void writePrice() {
+	  	  
+	  priceActivity = getContextualizedEvent();
 
 	  String serieName = Lookup.getEventKey(priceActivity);
-	  Serie serie = DBTimeSeriesSize.getWriteSerie(priceActivity, serieName);
+	  Serie serie = DBTimeSeriesPrice.getWriteSerie(priceActivity, serieName);
 	 
 	  Watchr.log("WRITE INTO " + serieName + " SERIE " + serie.toString());
 
@@ -70,7 +73,7 @@ public class databaseTimeSeriesTest {
 		Assert.assertNotNull(serie.getColumns());	
 		Assert.assertEquals(serie.getColumns().length, 10);
 		Assert.assertEquals(serie.getColumns()[0], ColumnName.TIME.toString());
-		Assert.assertEquals(serie.getColumns()[1], ColumnName.SIZE.toString());
+		Assert.assertEquals(serie.getColumns()[1], ColumnName.PRICE.toString());
 		Assert.assertEquals(serie.getColumns()[2], ColumnName.SOURCE.toString());
 		Assert.assertEquals(serie.getColumns()[3], ColumnName.TIMING.toString());
 		Assert.assertEquals(serie.getColumns()[4], ColumnName.TRADETYPE.toString());
@@ -89,33 +92,12 @@ public class databaseTimeSeriesTest {
 		
 		TimeParser.wait(5); // wait for write thread to complete
 		
-		EventRequestHistory requestHistory = new EventRequestHistory(	priceActivity.getInvestment(), 
-																		TimeParser.getNowDashed(), 
-																		HistorianService.getConfig(	BarSize._30_secs,
-																									priceActivity.tradeType,
-																									priceActivity.source));
+		EventRequestHistory requestHistory = new EventRequestHistory(priceActivity, TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1));
 
 		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
 		Watchr.info("READ CANDLES " + candles);
 		
-		// test iterator
-		List<Map<String, Object>> row = serie.getRows();
-		
-
-//		Assert.assertTrue(iterator.hasNext());
-//		Row first = iterator.next();
-		
-//		Assert.assertEquals(row.getColumn(0), 1l);
-//		Assert.assertEquals(first.getColumn(1), 96.3f);
-//		Assert.assertEquals(first.getColumn(2), "no error");
-
-//		Assert.assertTrue(iterator.hasNext());
-//		Row second = iterator.next();
-//		Assert.assertEquals(second.getColumn("time"), 2l);
-//		Assert.assertEquals(second.getColumn("idle"), 69.5f);
-//		Assert.assertEquals(second.getColumn("error"), "with error");
-
-//		Assert.assertFalse(iterator.hasNext());
-		
+		Assert.assertTrue(candles.get(0).openPrice.equals(open));
+			
   }
 }

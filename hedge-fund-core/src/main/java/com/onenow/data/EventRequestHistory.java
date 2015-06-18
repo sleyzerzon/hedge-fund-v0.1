@@ -1,5 +1,7 @@
 package com.onenow.data;
 
+import com.ib.client.Types.BarSize;
+import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
 import com.onenow.util.TimeParser;
 
@@ -26,6 +28,22 @@ public class EventRequestHistory extends EventRequest {
 		this.sampling = config.sampling;
 		this.tradeType = config.tradeType; 		
 
+	}
+	
+	public EventRequestHistory(EventActivity event, String toDashedDate) {
+		
+		setInvestment(event.getInvestment());
+		
+		this.fromDashedDate = getFromDate(config, toDashedDate);		
+		this.toDashedDate = toDashedDate;
+
+		this.config = HistorianService.getConfig(BarSize._30_secs, event);
+
+		this.source = config.source;
+		this.timing = config.timing;
+		this.sampling = config.sampling;
+		this.tradeType = config.tradeType; 		
+							
 	}
 	
 	/** 

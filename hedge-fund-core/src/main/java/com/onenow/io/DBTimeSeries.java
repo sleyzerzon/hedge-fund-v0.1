@@ -199,17 +199,17 @@ public static String getThoroughSelect(String columnName) {
 	String s = "";
 	s = 	"FIRST(" + columnName + ")" + ", " +			//  1
 			"LAST("  + columnName + ")" + ", " +			//  2
-			"DIFFERENCE(" + columnName + ")" + ", " +		//  3					
-			"MIN("  + columnName + ")" + ", " +				//  4	
-			"MAX(" +  columnName + ")" + ", " +				//  5
-			"MEAN(" + columnName + ")" + ", " +				//  6
-			"MODE(" + columnName + ")" + ", " +				//  7
-			"MEDIAN(" +  columnName + ")" + ", " +			//  8		
-			"STDDEV(" +  columnName + ")" + ", " +			//  9			
-			"DISTINCT(" + columnName + ")" + ", " +			// 10		
-			"COUNT("  + columnName + ")" + ", " +			// 11
-			"SUM("  + columnName + ")" + ", " +				// 12
-			"DERIVATIVE(" + columnName + ")" + " ";			// 13			  
+			// "DIFFERENCE(" + columnName + ")" + ", " +							
+			"MIN("  + columnName + ")" + ", " +				//  3	
+			"MAX(" +  columnName + ")" + ", " +				//  4
+			"MEAN(" + columnName + ")" + ", " +				//  5
+			"MODE(" + columnName + ")" + ", " +				//  6
+			"MEDIAN(" +  columnName + ")" + ", " +			//  7		
+			"STDDEV(" +  columnName + ")" + ", " +			//  8			
+			"DISTINCT(" + columnName + ")" + ", " +			// 9		
+			"COUNT("  + columnName + ")" + ", " +			// 10
+			"SUM("  + columnName + ")";						// 11
+			// "DERIVATIVE(" + columnName + ")" + " ";	    // 12			  
 
 	return s;
 }
@@ -238,38 +238,36 @@ public static DBTimeIncrement seriesToIncrements(Serie serie, String s) {
 				increment.last = new Double(extractQueryString(rowMap, column));
 			}
 			if(i.equals(3)) {
-				increment.difference = new Double(extractQueryString(rowMap, column));
-			}				
-			if(i.equals(4)) {
 				increment.min = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(5)) {
+			if(i.equals(4)) {
 				increment.max = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(6)) {
+			if(i.equals(5)) {
 				increment.mean = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(7)) {
+			if(i.equals(6)) {
 				increment.mode = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(8)) {
+			if(i.equals(7)) {
 				increment.median = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(9)) {
+			if(i.equals(8)) {
 				increment.stddev = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(10)) {
+			if(i.equals(9)) {
 				increment.distinct = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(11)) {
+			if(i.equals(10)) {
 				increment.count = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(12)) {
+			if(i.equals(11)) {
 				increment.sum = new Double(extractQueryString(rowMap, column));
 			}
-			if(i.equals(13)) {
-				increment.derivative = new Double(extractQueryString(rowMap, column));
-			}
+			
+			// increment.difference = new Double(extractQueryString(rowMap, column));
+			// increment.derivative = new Double(extractQueryString(rowMap, column));
+			
 			i++;
 		}
 		

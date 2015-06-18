@@ -7,7 +7,9 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
+import com.onenow.data.EventActivity;
 import com.onenow.data.HistorianConfig;
+import com.sun.jersey.core.header.reader.HttpHeaderReader.Event;
 
 public class HistorianService {
 
@@ -23,11 +25,12 @@ public class HistorianService {
 		
 	}
 	
-	public static HistorianConfig getConfig(BarSize size, TradeType type, InvDataSource source) {
+	public static HistorianConfig getConfig(BarSize size, EventActivity event) {
 		
-		HistorianConfig config = new HistorianConfig(	source, InvDataTiming.HISTORICAL,
+		
+		HistorianConfig config = new HistorianConfig(	event.source, InvDataTiming.HISTORICAL,
 														1, DurationUnit.DAY, size, WhatToShow.TRADES,
-														type, SamplingRate.HFMEDIUM); 
+														event.tradeType, SamplingRate.HFMEDIUM); 
 		
 		return config;
 		
