@@ -133,7 +133,7 @@ public class InitMarket {
 	private static double lowPrice(Underlying index, String fromDate, String toDate) {
 		Double price=0.0;		
 		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
-			price = 2080.0;	
+			price = 2050.0;	
 		}
 		if(index.getTicker().equals("NDX")) {
 			price = 4450.0;
@@ -147,7 +147,7 @@ public class InitMarket {
 	private static double highPrice(Underlying index, String fromDate, String toDate) {
 		Double price=0.0;	
 		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
-			price = 2090.0;	
+			price = 2115.0;	
 		}
 		if(index.getTicker().equals("NDX")) {
 			price = 4450.0;

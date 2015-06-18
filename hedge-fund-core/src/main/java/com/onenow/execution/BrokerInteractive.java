@@ -20,7 +20,7 @@ import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.QuoteHistory;
-import com.onenow.data.QuoteRealtime;
+import com.onenow.data.QuoteChain;
 import com.onenow.data.QuoteChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
@@ -60,7 +60,8 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private static SQS sqs = new SQS();
 	  private static String queueURL;
 
-	  
+	  private static QuoteChain quoteChain;
+
 	  public BrokerInteractive() {
 		  this.streamName = StreamName.REALTIME;
 	  }
@@ -84,6 +85,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		this.bus = bus;
 		
 		connectToServices(bus);
+		quoteChain = new QuoteChain(bus.controller);
 	
 	    // create new underlying list, portfolio, then initialize the market
 	    this.underList = new ArrayList<Underlying>(); // TODO: get from portfolio?
@@ -111,15 +113,8 @@ public class BrokerInteractive implements BrokerInterface  {
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
 
-			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString(), "\n\n", "");
-			  
-			  if(inv instanceof InvestmentOption) { 
-				  QuoteChain chain = new QuoteChain(bus.controller, marketPrices, inv);
-			  } else {
-				  QuoteRealtime quoteLive = new QuoteRealtime(bus.controller, marketPrices, inv);
-			  }
-			  
-			  
+			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
+			  quoteChain.addRow(inv, false);
 		  }
 	  }	
 	  

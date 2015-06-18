@@ -33,9 +33,11 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
-import com.onenow.data.QuoteChainSingle;
+import com.onenow.data.QuoteHandler;
+import com.onenow.data.QuoteHandlerOption;
 import com.onenow.execution.ApiController.TopMktDataAdapter;
 import com.onenow.execution.Contract;
+import com.onenow.instrument.InvestmentOption;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,7 +64,7 @@ public class BrokerController implements EWrapper {
 	private IBulletinHandler m_bulletinHandler;
 	private final HashMap<Integer,IInternalHandler> m_contractDetailsMap = new HashMap<Integer,IInternalHandler>();
 //	private final HashMap<Integer,IOptHandler> m_optionCompMap = new HashMap<Integer,IOptHandler>(); // QuoteChainSingle
-	private final HashMap<Integer,QuoteChainSingle> m_optionCompMap = new HashMap<Integer,QuoteChainSingle>(); // QuoteChainSingle
+	private final HashMap<Integer,QuoteHandlerOption> m_optionCompMap = new HashMap<Integer,QuoteHandlerOption>(); // QuoteChainSingle
 
 	private final HashMap<Integer,IEfpHandler> m_efpMap = new HashMap<Integer,IEfpHandler>();
 	private final HashMap<Integer,ITopMktDataHandler> m_topMktDataMap = new HashMap<Integer,ITopMktDataHandler>();
@@ -407,31 +409,15 @@ public class BrokerController implements EWrapper {
 		void tickOptionComputation( TickType tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice);
 	}
 
-	public static class MktDataAdapter implements ITopMktDataHandler {
-		@Override public void tickPrice(TickType tickType, double price, int canAutoExecute) {			
-		}
-		@Override public void tickSize(TickType tickType, int size) {
-		}
-		@Override public void tickString(TickType tickType, String value) {
-		}
-		@Override public void tickSnapshotEnd() {
-		}
-		@Override public void marketDataType(MktDataType marketDataType) {
-		}
-	}
-
-    public void reqMktData(Contract contract, String genericTickList, boolean snapshot, ITopMktDataHandler row) {
-    	int reqId = m_reqId++;
-    	m_topMktDataMap.put( reqId, row);
-    	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
-		sendEOM();
-    }
-
-    public void reqOptionMktData(Contract contract, String genericTickList, boolean snapshot, QuoteChainSingle handler) { // IOptHandler handler
+    public void requestData(String genericTickList, boolean snapshot, QuoteHandler handler) { 
     	int reqId = m_reqId++;
     	m_topMktDataMap.put( reqId, handler);
-    	m_optionCompMap.put( reqId, handler);
-    	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
+    	
+    	if(handler.investment instanceof InvestmentOption) {
+    		m_optionCompMap.put( reqId, (QuoteHandlerOption) handler);
+    	}
+    	
+    	m_client.reqMktData( reqId, handler.getContract(), genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
     }
 
@@ -454,7 +440,7 @@ public class BrokerController implements EWrapper {
 		sendEOM();
     }
 
-    public void cancelOptionMktData(QuoteChainSingle handler) {
+    public void cancelOptionMktData(QuoteHandlerOption handler) {
     	cancelMktData( handler);
     	getAndRemoveKey( m_optionCompMap, handler);
     }
@@ -569,21 +555,21 @@ public class BrokerController implements EWrapper {
 	// ****************************************
 	// ****************************************
 
-	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, QuoteChainSingle handler) {
+	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, QuoteHandlerOption handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);
 		m_client.calculateImpliedVolatility( reqId, c, optPrice, underPrice);
 		sendEOM();
 	}
 
-	public void reqOptionComputation( Contract c, double vol, double underPrice, QuoteChainSingle handler) {
+	public void reqOptionComputation( Contract c, double vol, double underPrice, QuoteHandlerOption handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);
 		m_client.calculateOptionPrice(reqId, c, vol, underPrice);
 		sendEOM();
 	}
 
-	void cancelOptionComp( QuoteChainSingle handler) {
+	void cancelOptionComp( QuoteHandlerOption handler) {
 		Integer reqId = getAndRemoveKey( m_optionCompMap, handler);
 		if (reqId != null) {
 			m_client.cancelCalculateOptionPrice( reqId);
@@ -593,7 +579,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickOptionComputation(int reqId, int tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 		
-		QuoteChainSingle handler = m_optionCompMap.get( reqId);
+		QuoteHandlerOption handler = m_optionCompMap.get( reqId);
 		
 		if (handler != null) {
 			handler.tickOptionComputation( TickType.get( tickType), impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
