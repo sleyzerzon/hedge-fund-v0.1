@@ -41,19 +41,15 @@ public class DBTimeSeriesPrice {
 		return serie;
 	}
 
-	public static boolean write(final EventActivity event) {
+	public static void write(final EventActivity event) {
 		
-		final boolean success = false;
-		String name = Lookup.getEventKey(event);
-		
+		String name = Lookup.getEventKey(event);		
 		final Serie serie = getWriteSerie(event, name);
 		
-		writeThreaded(event, serie);
-
-		return success;
+		writeThread(event, serie);
 	}
 
-	static void writeThreaded(final EventActivity event, final Serie serie) {
+	static void writeThread(final EventActivity event, final Serie serie) {
 		
 		new Thread () {
 			@Override public void run () {

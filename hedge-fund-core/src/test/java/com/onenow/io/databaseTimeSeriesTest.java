@@ -74,7 +74,7 @@ public class databaseTimeSeriesTest {
 		Assert.assertEquals(serie.getRows().get(0).size(), 10);
 
 		
-		DBTimeSeriesPrice.writeThreaded(activity, serie);
+		DBTimeSeriesPrice.writeThread(activity, serie);
 		
 		
 		// test iterator

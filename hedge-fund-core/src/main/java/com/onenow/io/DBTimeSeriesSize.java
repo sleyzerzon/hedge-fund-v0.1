@@ -46,6 +46,11 @@ public class DBTimeSeriesSize {
 		String name = Lookup.getEventKey(event);
 		final Serie serie = getWriteSerie(event, name);
 
+		writeThread(event, serie);
+
+	}
+
+	private static void writeThread(final EventActivity event, final Serie serie) {
 		new Thread () {
 			@Override public void run () {
 
@@ -60,7 +65,6 @@ public class DBTimeSeriesSize {
 						"\n", "");
 			}
 		}.start();
-
 	}
 
 	public static List<Integer> read(EventRequest request) {
@@ -95,7 +99,6 @@ public class DBTimeSeriesSize {
 			}
 			s = s + "\n";
 			for (Map<String, Object> row : ser.getRows()) {
-				Candle candle = new Candle();
 				Integer i=0;
 				for (String col : ser.getColumns()) {	// iterate columsn to get ints
 					s = s + row.get(col) + "\t";
