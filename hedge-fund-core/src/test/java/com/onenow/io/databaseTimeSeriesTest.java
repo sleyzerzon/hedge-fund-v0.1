@@ -1,6 +1,5 @@
 package com.onenow.io;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import com.onenow.constant.ColumnName;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
-import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;

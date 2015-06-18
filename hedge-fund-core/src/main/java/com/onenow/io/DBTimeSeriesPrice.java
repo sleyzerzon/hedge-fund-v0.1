@@ -91,84 +91,63 @@ public class DBTimeSeriesPrice {
 		return series;
 	}
 
+	/**
+	 * A serie contains a list of increments
+	 * @param series
+	 * @return
+	 */
 	private static List<Candle> seriesToCandles(List<Serie> series) {
-		List<Candle> candles = new ArrayList<Candle>();
 		
+		List<Candle> candles = new ArrayList<Candle>();		
 		Watchr.log(Level.INFO, "SERIES: " + series.toString());
 				
 		String s="";
-		for (Serie ser : series) {
-			for (String col : ser.getColumns()) {
+		
+		for (Serie serie : series) {
+			
+			for (String col : serie.getColumns()) {
 				s = s + col + "\t";
-				// System.out.println("column " + col); column names
+				System.out.println("column " + col); // column names
 			}
 			s = s + "\n";
-			for (Map<String, Object> row : ser.getRows()) {
-				Candle candle = new Candle();
-				Integer i=0;
-				for (String col : ser.getColumns()) {	// iterate columns to create candle
-					s = s + row.get(col) + "\t";
-					// System.out.println("row " + row + " " + row.get(col)); // full row
-					if(i.equals(1)) {
-						candle.openPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(2)) {
-						candle.closePrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(3)) {
-						candle.difference = new Double(DBTimeSeries.extractQueryString(row, col));
-					}				
-					//				"FIRST(price)" + ", " +			
-					//				"LAST(price)" + ", " +			
-					//				"DIFFERENCE(price)" + ", " +							
-					if(i.equals(4)) {
-						candle.lowPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(5)) {
-						candle.highPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					//				"MIN(price)" + ", " +			
-					//				"MAX(price)" + ", " +			
-					if(i.equals(6)) {
-						candle.meanPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(7)) {
-						candle.modePrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(8)) {
-						candle.medianPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(9)) {
-						candle.stddevPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					//				"MEAN(price)" + ", " +			
-					//				"MODE(price)" + ", " +			
-					//				"MEDIAN(price)" + ", " +						
-					//				"STDDEV(price)" + ", " +						
-					if(i.equals(10)) {
-						candle.distinctPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(11)) {
-						candle.countPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(12)) {
-						candle.sumPrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					if(i.equals(13)) {
-						candle.derivativePrice = new Double(DBTimeSeries.extractQueryString(row, col));
-					}
-					//				"DISTINCT(price)" + ", " +					
-					//				"COUNT(price)" + ", " +			
-					//				"SUM(price) " + ", " + 
-					//				"DERIVATIVE(price)" + 						
 
-					i++;
-				}
-				s = s + "\n";
-				candles.add(candle);
-			}
+			List<DBTimeIncrement> increments = DBTimeSeries.seriesToIncrements(serie, s);
+			candles.addAll(incrementsToCandles(increments));
 		}
-//		System.out.println("CANDLE: " + s + "\n");	full candle
+		System.out.println("CANDLE: " + s + "\n");	// full candle
+		return candles;
+	}
+	
+	/** 
+	 * Each increment has a candle
+	 * @param increments
+	 * @return
+	 */
+	private static List<Candle> incrementsToCandles(List<DBTimeIncrement> increments) {
+		
+		List<Candle> candles = new ArrayList<Candle>();		
+
+		for(DBTimeIncrement increment:increments) {
+			
+			Candle candle = new Candle();
+			
+			candle.openPrice = increment.first;
+			candle.closePrice = increment.last;
+			candle.difference = increment.difference;
+			candle.lowPrice = increment.min;
+			candle.highPrice = increment.max;
+			candle.meanPrice = increment.mean;
+			candle.modePrice = increment.mode;
+			candle.medianPrice = increment.median;
+			candle.stddevPrice = increment.stddev;
+			candle.distinctPrice = increment.distinct;
+			candle.countPrice = increment.count;
+			candle.sumPrice = increment.sum;
+			candle.derivativePrice = increment.derivative;
+			
+			candles.add(candle);
+		}
+		
 		return candles;
 	}
 

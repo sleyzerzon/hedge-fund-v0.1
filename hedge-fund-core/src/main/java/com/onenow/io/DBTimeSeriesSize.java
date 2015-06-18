@@ -87,70 +87,50 @@ public class DBTimeSeriesSize {
 		return series;
 	}
 
-
+	/**
+	 * A serie contains a list of increments
+	 * @param series
+	 * @return
+	 */
 	private static List<Integer> seriesToInts(List<Serie> series) {
-		List<Integer> sizes = new ArrayList<Integer>();
 		
+		List<Integer> sizes = new ArrayList<Integer>();
+		Watchr.log(Level.INFO, "SERIES: " + series.toString());
+
 		String s="";
-		for (Serie ser : series) {
-			for (String col : ser.getColumns()) {
+		
+		for (Serie serie : series) {
+			
+			for (String col : serie.getColumns()) {
 				s = s + col + "\t";
-//				System.out.println("column " + col); column names
+				System.out.println("column " + col); // column names
 			}
 			s = s + "\n";
-			for (Map<String, Object> row : ser.getRows()) {
-				Integer i=0;
-				for (String col : ser.getColumns()) {	// iterate columsn to get ints
-					s = s + row.get(col) + "\t";
-					// System.out.println("row " + row + " " + row.get(col)); full row
-					if(i.equals(1)) {
-					}
-					if(i.equals(2)) {
-					}
-					if(i.equals(3)) {
-					}
-					//				"FIRST(price)" + ", " +			
-					//				"LAST(price)" + ", " +			
-					//				"DIFFERENCE(price)" + ", " +							
-					if(i.equals(4)) {
-					}
-					if(i.equals(5)) {
-					}
-					//				"MIN(price)" + ", " +			
-					//				"MAX(price)" + ", " +	
-					if(i.equals(6)) {
-					}
-					if(i.equals(7)) {
-					}
-					if(i.equals(8)) {
-					}
-					if(i.equals(9)) {
-					}
-					//				"MEAN(price)" + ", " +			
-					//				"MODE(price)" + ", " +			
-					//				"MEDIAN(price)" + ", " +						
-					//				"STDDEV(price)" + ", " +						
-					if(i.equals(10)) {
-					}
-					if(i.equals(11)) {
-					}
-					if(i.equals(12)) {
-						Double num = new Double(DBTimeSeries.extractQueryString(row, col));
-						sizes.add((int) Math.round(num));
-					}
-					if(i.equals(13)) {
-					}
-					//				"DISTINCT(price)" + ", " +					
-					//				"COUNT(price)" + ", " +			
-					//				"SUM(price) " + ", " + 
-					//				"DERIVATIVE(price)" + 	
-					i++;
-				}
-				s = s + "\n";
-			}
+			
+			List<DBTimeIncrement> rows = DBTimeSeries.seriesToIncrements(serie, s);
+			sizes.addAll(rowsToInts(rows));
+			// sizes.add((int) Math.round(values.sum));
 		}
-//		System.out.println("SIZES: " + s + "\n");	full series
+		System.out.println("SIZES: " + s + "\n");	// full series
 		return sizes;
 	}
+	
+	/** 
+	 * Each increment has an Integer "size"
+	 * @param increments
+	 * @return
+	 */
+	private static List<Integer> rowsToInts(List<DBTimeIncrement> rows) {
+		
+		List<Integer> integers = new ArrayList<Integer>();		
 
+		for(DBTimeIncrement row:rows) {
+			
+			Integer sum = (int) Math.round(row.sum);
+			
+			integers.add(sum);
+		}
+		
+		return integers;
+	}
 }
