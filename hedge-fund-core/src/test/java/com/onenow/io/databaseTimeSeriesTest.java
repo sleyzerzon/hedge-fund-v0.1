@@ -9,6 +9,7 @@ import org.influxdb.dto.Serie;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.onenow.constant.ColumnName;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
@@ -58,16 +59,16 @@ public class databaseTimeSeriesTest {
 	  
 		Assert.assertNotNull(serie.getColumns());	
 		Assert.assertEquals(serie.getColumns().length, 10);
-		Assert.assertEquals(serie.getColumns()[0], "time");
-		Assert.assertEquals(serie.getColumns()[1], "size");
-		Assert.assertEquals(serie.getColumns()[2], "source");
-		Assert.assertEquals(serie.getColumns()[3], "timing");
-		Assert.assertEquals(serie.getColumns()[4], "tradeType");
-		Assert.assertEquals(serie.getColumns()[5], "underlying");
-		Assert.assertEquals(serie.getColumns()[6], "invType");
-		Assert.assertEquals(serie.getColumns()[7], "optionStrike");
-		Assert.assertEquals(serie.getColumns()[8], "optionExp");
-		Assert.assertEquals(serie.getColumns()[9], "futureExp");
+		Assert.assertEquals(serie.getColumns()[0], ColumnName.TIME.toString());
+		Assert.assertEquals(serie.getColumns()[1], ColumnName.SIZE.toString());
+		Assert.assertEquals(serie.getColumns()[2], ColumnName.SOURCE.toString());
+		Assert.assertEquals(serie.getColumns()[3], ColumnName.TIMING.toString());
+		Assert.assertEquals(serie.getColumns()[4], ColumnName.TRADETYPE.toString());
+		Assert.assertEquals(serie.getColumns()[5], ColumnName.UNDERLYING.toString());
+		Assert.assertEquals(serie.getColumns()[6], ColumnName.INVTYPE.toString());
+		Assert.assertEquals(serie.getColumns()[7], ColumnName.OPTIONSTRIKE.toString());
+		Assert.assertEquals(serie.getColumns()[8], ColumnName.OPTIONEXP.toString());
+		Assert.assertEquals(serie.getColumns()[9], ColumnName.FUTUREEXP.toString());
 
 		Assert.assertNotNull(serie.getRows());
 		Assert.assertEquals(serie.getRows().size(), 1);
