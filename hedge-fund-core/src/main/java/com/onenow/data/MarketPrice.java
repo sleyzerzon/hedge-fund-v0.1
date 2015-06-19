@@ -6,6 +6,7 @@ import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.TradeType;
+import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
 import com.onenow.io.CacheInProcess;
 import com.onenow.portfolio.Portfolio;
@@ -17,14 +18,14 @@ public class MarketPrice {
 	private static CacheInProcess cache; 		// just storage	
 	private Portfolio portfolio;
 	private DataSampling sampling;
-	private BrokerInterface broker;
+	private BrokerInteractive broker;
 	
 	
 	public MarketPrice() {
 		
 	}
 	
-	public MarketPrice(Portfolio marketPortfolio, BrokerInterface broker) {
+	public MarketPrice(Portfolio marketPortfolio, BrokerInteractive broker) {
 		this.portfolio = marketPortfolio;
 		this.broker = broker;
 		this.cache = new CacheInProcess(broker);

@@ -92,9 +92,9 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 		}
 		Long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(Level.INFO, 	"TSDB WRITE: " + dbName + " " + 
+		Watchr.log(Level.INFO, 	"TSDB WRITE: "+ "<" + dbName + ">" + " " + 
 								event.toString() + " " +  
-								"ELAPSED WRITE " + (after-before) + "ms ",
+								"-ELAPSED " + (after-before) + "ms ",
 								// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
 		}

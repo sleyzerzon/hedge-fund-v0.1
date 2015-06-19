@@ -3,7 +3,6 @@ package com.onenow.io;
 import java.util.HashMap;
 import java.util.List;
 
-import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -12,6 +11,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
+import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -24,7 +24,7 @@ import com.onenow.util.Watchr;
 
 public class CacheInProcess {
 	
-	private BrokerInterface 					broker;
+	private BrokerInteractive 					broker;
 	private HashMap<String, EventActivityRealtime>		lastEventRT = new HashMap<String, EventActivityRealtime>(); 	// last set of price/size/etc
 	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
@@ -32,7 +32,7 @@ public class CacheInProcess {
 		
 	}
 	
-	public CacheInProcess(BrokerInterface broker) {
+	public CacheInProcess(BrokerInteractive broker) {
 		this.broker = broker;
 	}
 
@@ -83,7 +83,9 @@ public class CacheInProcess {
 		// TODO: FAST WRITE TO RING		
 
 		// Write to Real-Time datastream
-		BusSystem.write(broker.getStream(), event);
+		StreamName stream = broker.getStream();
+		Watchr.log(Level.WARNING, "Writing into Stream " + "<" + stream + ">" + " OBJECT: " + event.toString());
+		BusSystem.write(stream, (Object) event);
 						
 	}
 

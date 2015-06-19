@@ -118,7 +118,7 @@ public class BusSystem {
 	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
 									InitialPositionInStream initPosition) {
 		
-		String applicationName = "KinesisRead" + "-" + streamName;
+		String applicationName = "Investor" + "-" + streamName;
 		Long workerId = TimeParser.getTimestampNow();  //  String workerId = String.valueOf(UUID.randomUUID());
 
        
