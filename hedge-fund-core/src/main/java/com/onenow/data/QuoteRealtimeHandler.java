@@ -55,8 +55,7 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	@Override
 	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
 		
-		Watchr.log(Level.INFO, 	"tickPrice:" + " -tickType " + tickType + " -price " + price + " -canAutoExecute " + canAutoExecute +
-									" for " + investment.toString());
+		Watchr.log(Level.INFO, 	"$$$$$ tickPrice:" + " -tickType " + tickType);
 		
 		switch( tickType) {
 		case BID:
@@ -89,8 +88,10 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	@Override
 	public void tickSize(TickType tickType, int size) {
 		
-		Watchr.log(Level.INFO, 	"tickSize:" + " -tickType " + tickType + " -size " + size +
-									" for " + investment.toString());
+		Watchr.log(Level.INFO, 	"$$$$$ tickSize:" + " -tickType " + tickType);
+		
+		// TODO
+		// TICKSIZE: -TICKTYPE OPTION_CALL_OPEN_INTEREST -SIZE 0 FOR -UNDER SPX -TYPE PUT -EXPIRES 20150626 -STRIKE 2100.0  
 		
 		switch( tickType) {
 		case BID_SIZE:
@@ -117,8 +118,7 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	@Override
 	public void tickString(TickType tickType, String value) {
 		
-		Watchr.log(Level.INFO, 	"tickString:" + " -tickType " + tickType + " -value " + value +
-									" for " + investment.toString());
+		Watchr.log(Level.INFO, 	"$$$$$ tickString:" + " -tickType " + tickType);
 				
 		switch( tickType) {
 		case LAST_TIMESTAMP:
