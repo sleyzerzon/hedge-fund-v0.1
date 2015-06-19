@@ -171,7 +171,7 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
-		e.printStackTrace(); // some series don't exist or have data 
+		// e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }
