@@ -99,9 +99,9 @@ public class databaseTimeSeriesTest {
 		
 		TimeParser.wait(5); // wait for write thread to complete
 		
-		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, historyActivity.time);
-//		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
-//		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, toDashedDate);
+		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
+		
+		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, "-1m" ,"now()");
 
 		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
 		Watchr.info("READ CANDLES " + candles);

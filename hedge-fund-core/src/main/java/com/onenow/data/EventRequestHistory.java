@@ -18,7 +18,7 @@ public class EventRequestHistory extends EventRequest {
 
 		setInvestment(inv);
 
-		this.fromDashedDate = getFromDate(config, toDashedDate);		
+		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
 		this.toDashedDate = toDashedDate;
 		
 		this.config = config;
@@ -29,12 +29,39 @@ public class EventRequestHistory extends EventRequest {
 		this.tradeType = config.tradeType; 		
 
 	}
-	
+
+	/**
+	 * Requests toDashedDate, from an earlier time determined by timeGap
+	 * @param event
+	 * @param toDashedDate
+	 * @param timeGap
+	 */
+	public EventRequestHistory(EventActivity event, String timeGap, String endPoint) {
+		
+		setInvestment(event.getInvestment());
+		
+		this.timeGap = timeGap;
+		this.endPoint = endPoint;
+		
+		this.config = HistorianService.getConfig(BarSize._30_secs, event);
+
+		this.source = config.source;
+		this.timing = config.timing;
+		this.sampling = config.sampling;
+		this.tradeType = config.tradeType; 		
+							
+	}
+
+	/**
+	 * Requests toDashedDate, from one day before
+	 * @param event
+	 * @param toDashedDate
+	 */
 	public EventRequestHistory(EventActivity event, String toDashedDate) {
 		
 		setInvestment(event.getInvestment());
 		
-		this.fromDashedDate = getFromDate(config, toDashedDate);		
+		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 		this.toDashedDate = toDashedDate;
 
 		this.config = HistorianService.getConfig(BarSize._30_secs, event);
@@ -46,6 +73,11 @@ public class EventRequestHistory extends EventRequest {
 							
 	}
 	
+	/**
+	 * Requests for one specific point in time
+	 * @param event
+	 * @param requestTime
+	 */
 	public EventRequestHistory(EventActivity event, Long requestTime) {
 		
 		setInvestment(event.getInvestment());
@@ -61,18 +93,6 @@ public class EventRequestHistory extends EventRequest {
 							
 	}
 	
-	/** 
-	 * Calculate the from based on the extent of the query in the config
-	 * @param config
-	 * @return
-	 */
-	private String getFromDate(HistorianConfig config, String toDashedDate) {
-		String fromDashedDate = "";
-		
-		fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
-		
-		return fromDashedDate;
-	}
 
 	public String toString() {
 		String s = "";

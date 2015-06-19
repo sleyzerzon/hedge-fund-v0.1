@@ -193,11 +193,7 @@ private static String getQuery(ColumnName columnName, EventRequest request, Stri
 	
 	query = query + "SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
 	query = query + "FROM " + "\"" + serieName + "\" ";
-	
-	if(request.time==null) {
-		query = query + "GROUP BY " + "time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
-	}
-	
+	query = query + "GROUP BY " + "time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
 	query = query + "WHERE " + getQueryTime(request);
 	
 	return query;
@@ -206,12 +202,12 @@ private static String getQuery(ColumnName columnName, EventRequest request, Stri
 public static String getQueryTime(EventRequest request) {
 	String s = "";
 	
-	if(request.time==null) {
+	if(request.toDashedDate!=null) {
 		s = s + "time > " + "'" + request.fromDashedDate + "' "; 
 		s = s + "AND ";
 		s = s + "time < " + "'" + request.toDashedDate + "' ";
 	} else {
-		s = s + "time > " + request.time;
+		s = s + "time > " + request.endPoint + " " + request.timeGap; 
 	}
 	
 	return s;
