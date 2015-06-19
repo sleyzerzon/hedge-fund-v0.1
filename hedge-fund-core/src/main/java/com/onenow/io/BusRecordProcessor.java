@@ -89,15 +89,15 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 * @param recordObject
 	 */
 	private void handleByRecordType(Object recordObject) {
-		
-    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + recordObject.toString(), "\n", "");
-		
+				
 		if(recordType.equals(String.class)) {
 			
 			try {
 				// Kinesis + Elasticache Test
 				// Read to see if the cache already has the test value
 				String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: <String>" + testValue.toString(), "\n", "");
+
 				boolean valuesMatch = testValue.equals(TestValues.VALUE.toString()); 
 				if(valuesMatch) {
 					Watchr.log(Level.WARNING, "Kinesis test PASS");
@@ -117,6 +117,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventActivityHistory.class)) {
 			try {
 				EventActivityHistory event = (EventActivityHistory) recordObject;
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: <EventActivityHistory>" + event.toString(), "\n", "");
 				ClerkHistoryMain.writeHistoryToL2(event);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -127,6 +128,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventActivityRealtime.class)) {			
 			try {
 				EventActivityRealtime event = (EventActivityRealtime) recordObject;
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: <EventActivityRealtime>" + event.toString(), "\n", "");
 				ClerkRealTimeMain.writeRealtimeRTtoL2(event);
 				try {
 					if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
