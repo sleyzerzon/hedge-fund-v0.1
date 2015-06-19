@@ -33,7 +33,7 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
-import com.onenow.data.QuoteHandler;
+import com.onenow.data.QuoteRealtimeHandler;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.ApiController.TopMktDataAdapter;
 import com.onenow.execution.Contract;
@@ -92,16 +92,9 @@ public class BrokerController implements EWrapper {
 		void show(String string);
 	}
 	
-//	public BrokerController( ConnectionHandler handler, ILogger inLogger, ILogger outLogger) {
-//		m_connectionHandler = handler;
-//		m_client = new ApiConnection( this, inLogger, outLogger);
-////		m_inLogger = inLogger;
-////		m_outLogger = outLogger;
-//	}
 
 	public BrokerController( ConnectionHandler handler) {
 		m_connectionHandler = handler;
-//		m_client = new ApiConnection( this, inLogger, outLogger);
 		m_client = new ApiConnection( this);
 
 	}
@@ -409,8 +402,16 @@ public class BrokerController implements EWrapper {
 		void tickOptionComputation( TickType tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice);
 	}
 
-    public void requestData(String genericTickList, boolean snapshot, QuoteHandler handler) { 
+	/**
+	 * All real-time and streaming data requests are done through this class
+	 * @param genericTickList
+	 * @param snapshot
+	 * @param handler
+	 */
+    public void requestData(String genericTickList, boolean snapshot, QuoteRealtimeHandler handler) { 
+    	
     	int reqId = m_reqId++;
+    	
     	m_topMktDataMap.put( reqId, handler);
     	
     	if(handler.investment instanceof InvestmentOption) {
@@ -456,6 +457,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickPrice(int reqId, int tickType, double price, int canAutoExecute) {
+		Watchr.log(Level.WARNING, "tickPrice: " + "-reqId " + reqId + "-tickType " + tickType + "-price " + price + "-autoExec " + canAutoExecute);
 		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), price, canAutoExecute);
@@ -472,6 +474,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickSize(int reqId, int tickType, int size) {
+		Watchr.log(Level.WARNING, "TickSize: " + "-reqId " + reqId + "-tickType " + tickType + "-size " + size);
 		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickSize( TickType.get( tickType), size);
@@ -480,6 +483,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickString(int reqId, int tickType, String value) {
+		Watchr.log(Level.WARNING, "tickString: " + "-reqId " + reqId + "-tickType " + tickType + "-value " + value);
 		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickString( TickType.get( tickType), value);
@@ -579,6 +583,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickOptionComputation(int reqId, int tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 		
+		Watchr.log(Level.WARNING, "tickOptionComputation: " + "-reqId " + reqId + "-tickType" + "-impliedVol " + impliedVol + "-delta " + delta + "-optPrice " + optPrice + "-pvDividend " + pvDividend + "-gamma " + gamma + "-vega " + vega + "-theta " + theta + "-undPrice " + undPrice);
 		QuoteRealtimeOption handler = m_optionCompMap.get( reqId);
 		
 		if (handler != null) {

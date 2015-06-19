@@ -1,11 +1,13 @@
 package com.onenow.data;
 
+import javax.swing.table.AbstractTableModel;
+
 import com.ib.client.TickType;
 import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
 
-public class QuoteRealtimeOption extends QuoteHandler implements IOptHandler {  
+public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHandler {  
 
 	double m_impVol;
 	double m_delta;
@@ -20,8 +22,9 @@ public class QuoteRealtimeOption extends QuoteHandler implements IOptHandler {
 		
 	}
 
-	public QuoteRealtimeOption(Investment inv) {
+	public QuoteRealtimeOption(Investment inv, AbstractTableModel chainTable) {
 		this.investment = inv;
+		this.chainTable = chainTable;
 	}
 
 	@Override public void tickOptionComputation( TickType tickType, double impVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
@@ -31,11 +34,13 @@ public class QuoteRealtimeOption extends QuoteHandler implements IOptHandler {
 			m_gamma = gamma;
 			m_vega = vega;
 			m_theta = theta;
-			Watchr.log("IMPVOLATILITY " + impVol + " DELTA " + delta + " GAMMA " + gamma + " VEGA " + vega + " THETA " + theta +
-						" for " + investment.toString());
+			Watchr.log(	"price " + optPrice + " " +
+						"-IMPVOLATILITY " + impVol + "-DELTA " + delta + "-GAMMA " + gamma + "-VEGA " + vega + "-THETA " + theta + " " +
+						"-for " + investment.toString());
 			
 			// TODO: WRITE TO DB
 		}
+		chainTable.fireTableDataChanged();
 	}
 		
 	@Override public void tickSnapshotEnd() {

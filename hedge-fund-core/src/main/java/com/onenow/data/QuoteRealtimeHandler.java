@@ -12,7 +12,7 @@ import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
 import com.onenow.util.Watchr;
 
-public class QuoteHandler implements ITopMktDataHandler {
+public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	
 	// time
 	long m_lastTime;
@@ -34,10 +34,14 @@ public class QuoteHandler implements ITopMktDataHandler {
 	// other
 	boolean m_frozen;
 
+	// table
+	protected AbstractTableModel chainTable;
 
-	public QuoteHandler() {
+	
+	public QuoteRealtimeHandler() {
 		
 	}
+	
 	
 	public Contract getContract() {
 		return ContractFactory.getContract(investment);
@@ -69,6 +73,8 @@ public class QuoteHandler implements ITopMktDataHandler {
 			break;
 		default: break;	
 		}
+		
+		chainTable.fireTableDataChanged();
 	}
 
 	@Override
@@ -91,6 +97,8 @@ public class QuoteHandler implements ITopMktDataHandler {
 			break;
         default: break; 
 		}
+		
+		chainTable.fireTableDataChanged();
 	}
 
 	@Override
@@ -123,6 +131,8 @@ public class QuoteHandler implements ITopMktDataHandler {
 		
         default: break; 
 		}
+		
+		chainTable.fireTableDataChanged();
 	}
 
 	@Override
@@ -132,7 +142,11 @@ public class QuoteHandler implements ITopMktDataHandler {
 
 	@Override
 	public void marketDataType(MktDataType marketDataType) {
-		Watchr.log(Level.SEVERE, "call to empty: marketDataType" + " for " + investment.toString());
+				
+		m_frozen = marketDataType == MktDataType.Frozen;
+		
+		chainTable.fireTableDataChanged();
+
 	}
 
 

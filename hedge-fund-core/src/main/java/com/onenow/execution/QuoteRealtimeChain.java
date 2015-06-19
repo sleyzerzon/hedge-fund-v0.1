@@ -1,28 +1,23 @@
 package com.onenow.execution;
 
-import static com.ib.controller.Formats.*;
-
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
 import apidemo.util.Util;
 
-import com.ib.controller.Formats;
-import com.onenow.data.QuoteHandler;
+import com.onenow.data.QuoteRealtimeHandler;
 import com.onenow.data.QuoteRealtimeNonOption;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.QuoteRealtimeChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.portfolio.BrokerController;
-import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
-import com.onenow.util.Watchr;
 
 
 public class QuoteRealtimeChain extends AbstractTableModel {
 
-	private static ArrayList<QuoteHandler> m_rows = new ArrayList<QuoteHandler>(); 
+	private static ArrayList<QuoteRealtimeHandler> handlerRows = new ArrayList<QuoteRealtimeHandler>(); 
 
 	private static BrokerController controller;
 	
@@ -35,16 +30,16 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 		this.controller = controller;
 	}
 	
-	public static void addRow(Investment investment, boolean snapshot) {
+	public void addRow(Investment investment, boolean snapshot) {
 		
-		QuoteHandler quoteHandler = null;
+		QuoteRealtimeHandler quoteHandler = null;
 		
 		if(investment instanceof InvestmentOption) {
-			quoteHandler = new QuoteRealtimeOption(investment);						
+			quoteHandler = new QuoteRealtimeOption(investment, this);						
 		} else {
-			quoteHandler = new QuoteRealtimeNonOption(investment);			
+			quoteHandler = new QuoteRealtimeNonOption(investment, this);			
 		}
-		m_rows.add(quoteHandler);
+		handlerRows.add(quoteHandler);
 
 		controller.requestData(BusWallStInteractiveBrokers.getTickList(), false, quoteHandler);
 
@@ -55,7 +50,7 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 	}
 	
 	public void desubscribeAll() {
-		for (QuoteHandler row : m_rows) {
+		for (QuoteRealtimeHandler row : handlerRows) {
 			controller.cancelMktData( row);
 		}
 	}		
@@ -63,27 +58,40 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 
 	// TABLE (UI)
 	@Override public int getRowCount() {
-		return m_rows.size();
+		return handlerRows.size();
 	}
 	
 	@Override public int getColumnCount() {
-		return 9;
+		int columnCount = 999;
+		return columnCount;
 	}
 	
 	@Override public String getColumnName(int col) {
-		String s = "";
+
+		// TODO: columns
+		// switch( col) {
+		// case 0: return row.m_description;
+		// case 1: return row.m_bidSize;
+
+		String s = "columnName";
+	
 		return s;
 	}
 	
-	@Override public Object getValueAt(int rowIn, int col) {
-		Object o = null;
-		return o;
+	@Override public Object getValueAt(int row, int column) {
+		
+		// TODO: columns
+		// switch( collumn ) {
+		// case 0: return row.m_description;
+		// case 1: return row.m_bidSize;
+
+		return (Object) handlerRows.get(row); 
 	}
 
 	// PRINT
 	public String toString(int which) {
 		String s = "";
-		s = s + m_rows.get(which).toString();
+		s = s + handlerRows.get(which).toString();
 		return s;
 	}				
 }
