@@ -59,24 +59,19 @@ public class Lookup {
 	public static String getEventKey(Event event) {
 		String s = ""; 
 	
-		try {
-			Underlying under = event.getInvestment().getUnder();
-			s = s + under.getTicker() + "-" + event.getInvestment().getInvType();		
-			if (event.getInvestment() instanceof InvestmentOption) {
-				String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
-				Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
-				s = s + "-" + exp + "-" + strike; 
-			}
-			if (event.getInvestment() instanceof InvestmentFuture) {
-				String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
-				s = s + "-" + exp;
-			}
-			s = s + "-" + event.tradeType.toString();
-			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
-		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-			e.printStackTrace();
+		Underlying under = event.getInvestment().getUnder();
+		s = s + under.getTicker() + "-" + event.getInvestment().getInvType();		
+		if (event.getInvestment() instanceof InvestmentOption) {
+			String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
+			Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
+			s = s + "-" + exp + "-" + strike; 
 		}
+		if (event.getInvestment() instanceof InvestmentFuture) {
+			String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
+			s = s + "-" + exp;
+		}
+		s = s + "-" + event.tradeType.toString();
+		s = s + "-" + event.source.toString() + "-" + event.timing.toString();
 	
 		return (s);
 	}

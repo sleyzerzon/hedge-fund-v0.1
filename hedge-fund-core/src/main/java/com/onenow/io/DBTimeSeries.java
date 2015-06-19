@@ -160,14 +160,14 @@ public static DBname getGreekDatabaseName() {
  * @return
  */
 public static List<Serie> query(ColumnName columnName, DBname dbName, EventRequest request) {
-	
-	String serieName = Lookup.getEventKey(request);
 
 	List<Serie> series = new ArrayList<Serie>();
-	 
-	String query = getQuery(columnName, request, serieName);
-						
+
 	try {
+		String serieName = Lookup.getEventKey(request);
+			 
+		String query = getQuery(columnName, request, serieName);
+						
 		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
