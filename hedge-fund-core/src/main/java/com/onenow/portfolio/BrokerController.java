@@ -34,6 +34,7 @@ import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.QuoteRealtimeHandler;
+import com.onenow.data.QuoteRealtimeNonOption;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.ApiController.TopMktDataAdapter;
 import com.onenow.execution.Contract;
@@ -51,10 +52,11 @@ import com.onenow.util.Watchr;
 
 public class BrokerController implements EWrapper {
 	private ApiConnection m_client;
-//	private final ILogger m_outLogger;
-//	private final ILogger m_inLogger;
 	private int m_reqId;	// used for all requests except orders; designed not to conflict with m_orderId
 	private int m_orderId;
+
+	private final HashMap<Integer,QuoteRealtimeOption> m_optionCompMap = new HashMap<Integer,QuoteRealtimeOption>(); 
+	private final HashMap<Integer,QuoteRealtimeNonOption> m_topMktDataMap = new HashMap<Integer,QuoteRealtimeNonOption>();
 
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
@@ -63,11 +65,7 @@ public class BrokerController implements EWrapper {
 	private ITimeHandler m_timeHandler;
 	private IBulletinHandler m_bulletinHandler;
 	private final HashMap<Integer,IInternalHandler> m_contractDetailsMap = new HashMap<Integer,IInternalHandler>();
-//	private final HashMap<Integer,IOptHandler> m_optionCompMap = new HashMap<Integer,IOptHandler>(); // QuoteChainSingle
-	private final HashMap<Integer,QuoteRealtimeOption> m_optionCompMap = new HashMap<Integer,QuoteRealtimeOption>(); // QuoteChainSingle
-
 	private final HashMap<Integer,IEfpHandler> m_efpMap = new HashMap<Integer,IEfpHandler>();
-	private final HashMap<Integer,ITopMktDataHandler> m_topMktDataMap = new HashMap<Integer,ITopMktDataHandler>();
 	private final HashMap<Integer,IDeepMktDataHandler> m_deepMktDataMap = new HashMap<Integer,IDeepMktDataHandler>();
 	private final HashMap<Integer, IScannerHandler> m_scannerMap = new HashMap<Integer, IScannerHandler>();
 	private final HashMap<Integer, IRealTimeBarHandler> m_realTimeBarMap = new HashMap<Integer, IRealTimeBarHandler>();
@@ -412,7 +410,7 @@ public class BrokerController implements EWrapper {
     	
     	int reqId = m_reqId++;
     	
-    	m_topMktDataMap.put( reqId, handler);
+    	m_topMktDataMap.put( reqId, (QuoteRealtimeNonOption) handler);
     	
     	if(handler.investment instanceof InvestmentOption) {
     		m_optionCompMap.put( reqId, (QuoteRealtimeOption) handler);
@@ -424,21 +422,24 @@ public class BrokerController implements EWrapper {
 
     public void reqEfpMktData(Contract contract, String genericTickList, boolean snapshot, IEfpHandler handler) {
     	int reqId = m_reqId++;
-    	m_topMktDataMap.put( reqId, handler);
+    	m_topMktDataMap.put( reqId, (QuoteRealtimeNonOption) handler);
     	m_efpMap.put( reqId, handler);
     	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
     }
 
     public void cancelMktData( ITopMktDataHandler handler) {
-    	Integer reqId = getAndRemoveKey( m_topMktDataMap, handler);
-    	if (reqId != null) {
-    		m_client.cancelMktData( reqId);
-    	}
-    	else {
-    		show( "Error: could not cancel top market data");
-    	}
-		sendEOM();
+
+    	Watchr.log(Level.SEVERE, "unimplemented cancelMktData method");
+    	// TODO: MUST DO FOR CANCELATION
+    	// Integer reqId = getAndRemoveKey( m_topMktDataMap, handler);
+//    	if (reqId != null) {
+//    		m_client.cancelMktData( reqId);
+//    	}
+//    	else {
+//    		show( "Error: could not cancel top market data");
+//    	}
+//		sendEOM();
     }
 
     public void cancelOptionMktData(QuoteRealtimeOption handler) {
@@ -458,7 +459,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickPrice(int reqId, int tickType, double price, int canAutoExecute) {
 		Watchr.log(Level.FINEST, "tickPrice:" + " -reqId " + reqId + " -tickType " + tickType + " -price " + price + " -autoExec " + canAutoExecute);
-		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), price, canAutoExecute);
 		}
@@ -466,7 +467,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickGeneric(int reqId, int tickType, double value) {
-		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), value, 0);
 		}
@@ -475,7 +476,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickSize(int reqId, int tickType, int size) {
 		Watchr.log(Level.FINEST, "TickSize:" + " -reqId " + reqId + " -tickType " + tickType + " -size " + size);
-		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickSize( TickType.get( tickType), size);
 		}
@@ -484,7 +485,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickString(int reqId, int tickType, String value) {
 		Watchr.log(Level.FINEST, "tickString:" + " -reqId " + reqId + " -tickType " + tickType + " -value " + value);
-		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickString( TickType.get( tickType), value);
 		}
