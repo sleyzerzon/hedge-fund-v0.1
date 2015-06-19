@@ -151,7 +151,7 @@ public class Watchr {
 		}
 
 		// LOGGER.setLevel(Level.FINER);
-		LOGGER.setLevel(Level.ALL);
+		LOGGER.setLevel(Level.FINER);
 		// LOGGER.setLevel(Level.OFF);
 		
 		// print to files, not to console
