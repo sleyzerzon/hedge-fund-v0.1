@@ -54,6 +54,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 
 	@Override
 	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+		
+		Watchr.log(Level.FINEST, "tickPrice " + "-tickType " + tickType + "-price " + price + "-canAutoExecute " + canAutoExecute);
+		
 		switch( tickType) {
 		case BID:
 			m_bid = price;
@@ -75,7 +78,8 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			Watchr.log(Level.FINER, "Close " + m_close + " for " + investment.toString());
 //			marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
 			break;
-		default: break;	
+		default: 
+			break;	
 		}
 		
 		chainTable.fireTableDataChanged();
@@ -83,6 +87,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 
 	@Override
 	public void tickSize(TickType tickType, int size) {
+		
+		Watchr.log(Level.FINEST, "tickSize " + "-tickType " + tickType + "-size " + size);
+		
 		switch( tickType) {
 		case BID_SIZE:
 			m_bidSize = size;
@@ -107,6 +114,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 
 	@Override
 	public void tickString(TickType tickType, String value) {
+		
+		Watchr.log(Level.FINEST, "tickString " + "tickType " + tickType + "-value " + value);
+				
 		switch( tickType) {
 		case LAST_TIMESTAMP:
 			m_lastTime = Long.parseLong(value);
