@@ -42,6 +42,10 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		
 	}
 	
+	public QuoteRealtimeHandler(Investment inv, AbstractTableModel chainTable) {
+		this.investment = inv;
+		this.chainTable = chainTable;
+	}
 	
 	public Contract getContract() {
 		return ContractFactory.getContract(investment);

@@ -34,9 +34,7 @@ import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.QuoteRealtimeHandler;
-import com.onenow.data.QuoteRealtimeNonOption;
 import com.onenow.data.QuoteRealtimeOption;
-import com.onenow.execution.ApiController.TopMktDataAdapter;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentOption;
 
@@ -422,7 +420,8 @@ public class BrokerController implements EWrapper {
 
     public void reqEfpMktData(Contract contract, String genericTickList, boolean snapshot, IEfpHandler handler) {
     	int reqId = m_reqId++;
-    	m_topMktDataMap.put( reqId, (QuoteRealtimeNonOption) handler);
+    	// TODO: is casting right?
+    	m_topMktDataMap.put( reqId, (QuoteRealtimeHandler) handler);
     	m_efpMap.put( reqId, handler);
     	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
@@ -462,6 +461,8 @@ public class BrokerController implements EWrapper {
 		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), price, canAutoExecute);
+		} else {
+			Watchr.log(Level.SEVERE, "tickPrice: useless handler");
 		}
 		recEOM();
 	}
@@ -470,6 +471,8 @@ public class BrokerController implements EWrapper {
 		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), value, 0);
+		} else {
+			Watchr.log(Level.SEVERE, "tickPrice: useless handler");
 		}
 		recEOM();
 	}
@@ -479,6 +482,8 @@ public class BrokerController implements EWrapper {
 		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickSize( TickType.get( tickType), size);
+		} else {
+			Watchr.log(Level.SEVERE, "tickPrice: useless handler");
 		}
 		recEOM();
 	}
@@ -488,6 +493,8 @@ public class BrokerController implements EWrapper {
 		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickString( TickType.get( tickType), value);
+		} else {
+			Watchr.log(Level.SEVERE, "tickPrice: useless handler");
 		}
 		recEOM();
 	}

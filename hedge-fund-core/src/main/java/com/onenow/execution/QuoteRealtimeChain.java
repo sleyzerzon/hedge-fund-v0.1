@@ -7,7 +7,6 @@ import javax.swing.table.AbstractTableModel;
 import apidemo.util.Util;
 
 import com.onenow.data.QuoteRealtimeHandler;
-import com.onenow.data.QuoteRealtimeNonOption;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.QuoteRealtimeChain;
 import com.onenow.instrument.Investment;
@@ -37,7 +36,7 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 		if(investment instanceof InvestmentOption) {
 			quoteHandler = new QuoteRealtimeOption(investment, this);						
 		} else {
-			quoteHandler = new QuoteRealtimeNonOption(investment, this);			
+			quoteHandler = new QuoteRealtimeHandler(investment, this);			
 		}
 		handlerRows.add(quoteHandler);
 
