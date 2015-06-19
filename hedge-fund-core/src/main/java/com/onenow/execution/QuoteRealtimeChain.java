@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import apidemo.util.Util;
-
 import com.onenow.data.QuoteRealtimeHandler;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.QuoteRealtimeChain;
@@ -15,6 +13,11 @@ import com.onenow.portfolio.BrokerController;
 
 
 public class QuoteRealtimeChain extends AbstractTableModel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static ArrayList<QuoteRealtimeHandler> handlerRows = new ArrayList<QuoteRealtimeHandler>(); 
 
@@ -26,10 +29,10 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 	}
 	
 	public QuoteRealtimeChain(BrokerController controller) {
-		this.controller = controller;
+		QuoteRealtimeChain.controller = controller;
 	}
 	
-	public void addRow(Investment investment, boolean snapshot) {
+	public void addRow(Investment investment) {
 		
 		QuoteRealtimeHandler quoteHandler = null;
 		
@@ -40,11 +43,7 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 		}
 		handlerRows.add(quoteHandler);
 
-		controller.requestData(BusWallStInteractiveBrokers.getTickList(), false, quoteHandler);
-
-		if (snapshot) {
-			Util.sleep( 11); // try to avoid pacing violation at TWS
-		}
+		controller.requestData(BusWallStInteractiveBrokers.getTickList(), quoteHandler);
 
 	}
 	

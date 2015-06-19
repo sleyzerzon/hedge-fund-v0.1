@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
@@ -51,7 +52,9 @@ public class ChartistMain {
 
 		testCache();
 
-		BusSystem.read(StreamName.PRIMARY, BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.PRIMARY));
+		BusSystem.read(	StreamName.PRIMARY, 
+						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.PRIMARY),
+						InitialPositionInStream.LATEST);
 
 	}
 	

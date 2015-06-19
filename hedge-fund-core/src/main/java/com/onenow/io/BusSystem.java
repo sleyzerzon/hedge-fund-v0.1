@@ -115,15 +115,6 @@ public class BusSystem {
 		
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
-	public static boolean read(StreamName streamName, IRecordProcessorFactory recordProcessorFactory) {
-
-		InitialPositionInStream initPosition = InitialPositionInStream.LATEST;
-		
-		read(streamName, recordProcessorFactory, initPosition);
-				
-		return true;
-	}
-	
 	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
 									InitialPositionInStream initPosition) {
 		

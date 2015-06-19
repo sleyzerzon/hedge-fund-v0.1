@@ -47,10 +47,9 @@ public class BrokerInteractive implements BrokerInterface  {
 	  
 	  private StreamName streamName;
 	
-	  private ContractFactory contractFactory = new ContractFactory();
 	//  private List<Channel> channels = new ArrayList<Channel>();
 	  
-	  private BusWallStInteractiveBrokers bus;
+	  private BusWallStInteractiveBrokers busIB;
 
 	  private static SQS sqs = new SQS();
 	  private static String queueURL;
@@ -63,12 +62,12 @@ public class BrokerInteractive implements BrokerInterface  {
 		  this.streamName = StreamName.REALTIME;
 	  }
 	
-	  public BrokerInteractive(StreamName streamName, BusWallStInteractiveBrokers bus) { 
+	  public BrokerInteractive(StreamName streamName, BusWallStInteractiveBrokers busIB) { 
 			
 		  	this.streamName = streamName;
-			this.bus = bus;
+			this.busIB = busIB;
 			
-			connectToServices(bus);
+			connectToServices(busIB);
 	  }
 	  
 	  /**
@@ -79,7 +78,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  
 		this.streamName = streamName;
 	    this.marketPortfolio = marketPortfolio;
-		this.bus = bus;
+		this.busIB = bus;
 		
 		connectToServices(bus);
 		quoteRealtimeChain = new QuoteRealtimeChain(bus.controller);
@@ -112,7 +111,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  for(Investment inv:invs) {
 
 			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
-			  quoteRealtimeChain.addRow(inv, false);
+			  quoteRealtimeChain.addRow(inv);
 		  }
 	  }	
 	  
@@ -199,9 +198,9 @@ public class BrokerInteractive implements BrokerInterface  {
 	   * Test if the prices are set for the investments under consideration
 	   * @return
 	   */
+		
 	  //TODO: use it for testing
 	  private boolean allQuotesSet() {
-	    boolean allSet=true;
 	    List<Investment> invs = getMarketPortfolio().investments;
 	    Integer notDone=0;
 	    for(Investment inv:invs) {

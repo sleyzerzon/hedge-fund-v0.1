@@ -8,6 +8,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.model.ProvisionedThroughputExceededException;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,7 +133,7 @@ public class Kinesis {
 	   * Reading processor will look for write-read matches in the cache
 	   */
 	  private static void readRepeatedly() {
-			BusSystem.read(StreamName.TESTING, testingProcessorFactory);
+			BusSystem.read(StreamName.TESTING, testingProcessorFactory, InitialPositionInStream.LATEST);
 	  }
 
 }

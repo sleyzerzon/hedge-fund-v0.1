@@ -404,7 +404,7 @@ public class BrokerController implements EWrapper {
 	 * @param snapshot
 	 * @param handler
 	 */
-    public void requestData(String genericTickList, boolean snapshot, QuoteRealtimeHandler handler) { 
+    public void requestData(String genericTickList, QuoteRealtimeHandler handler) { 
     	
     	int reqId = m_reqId++;
     	
@@ -414,7 +414,7 @@ public class BrokerController implements EWrapper {
     		m_optionCompMap.put( reqId, (QuoteRealtimeOption) handler);
     	}
     	
-    	m_client.reqMktData( reqId, handler.getContract(), genericTickList, snapshot, Collections.<TagValue>emptyList() );
+    	m_client.reqMktData( reqId, handler.getContract(), genericTickList, false, Collections.<TagValue>emptyList() );
 		sendEOM();
     }
 
@@ -688,6 +688,8 @@ public class BrokerController implements EWrapper {
 				ArrayList<Alias> aliases = AdvisorUtil.getAliases( xml);
 				m_advisorHandler.aliases(aliases);
 				break;
+		default:
+			break;
 		}
 		recEOM();
 	}
