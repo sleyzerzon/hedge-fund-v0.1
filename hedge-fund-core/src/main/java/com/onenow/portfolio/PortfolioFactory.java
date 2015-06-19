@@ -27,7 +27,7 @@ import com.onenow.util.TimeParser;
 
 public class PortfolioFactory {
 	
-	private BrokerInterface 			broker;
+	private BrokerInteractive 			broker;
 	private Portfolio 		marketPortfolio;
 	private MarketPrice 	marketPrice;
 	private Underlying 		index;
@@ -39,7 +39,7 @@ public class PortfolioFactory {
 		
 	}
 	
-	public PortfolioFactory(BrokerInterface broker, Portfolio marketPortfolio) {
+	public PortfolioFactory(BrokerInteractive broker, Portfolio marketPortfolio) {
 		this.broker = broker;
 		this.marketPortfolio = marketPortfolio;
 		this.marketPrice = new MarketPrice(getMarketPortfolio(), broker);		

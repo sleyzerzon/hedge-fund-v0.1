@@ -3,20 +3,17 @@ package com.onenow.io;
 import org.junit.Assert;
 import org.testng.annotations.Test;
 
-import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.InvType;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.execution.BrokerInteractive;
-import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.Underlying;
 
 public class PriceSizeCacheTest {
 
-	BrokerInterface broker = new BrokerInteractive();
+	BrokerInteractive broker = new BrokerInteractive();
 	
 	CacheInProcess cache = new CacheInProcess(broker);
 

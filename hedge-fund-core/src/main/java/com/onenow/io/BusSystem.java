@@ -109,6 +109,7 @@ public class BusSystem {
 	}
 
 	public static void write(StreamName streamName, Object objToSend) {
+		validateStream(streamName);
 		createStreamIfNotExists(streamName);
 		getKinesis().sendObject(objToSend, streamName);
 	}
@@ -117,6 +118,8 @@ public class BusSystem {
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
 	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
 									InitialPositionInStream initPosition) {
+		
+		validateStream(streamName);
 		
 		String applicationName = "Investor" + "-" + streamName;
 		Long workerId = TimeParser.getTimestampNow();  //  String workerId = String.valueOf(UUID.randomUUID());
@@ -144,6 +147,16 @@ public class BusSystem {
 		
         return true;
 
+	}
+
+	private static void validateStream(StreamName streamName) {
+		if(	!streamName.equals(StreamName.HISTORY) && 
+			!streamName.equals(StreamName.PRIMARY) &&
+			!streamName.equals(StreamName.REALTIME) &&
+			!streamName.equals(StreamName.STREAMING) && 
+			!streamName.equals(StreamName.TESTING)) {
+			Watchr.log(Level.SEVERE, "Empty stream name in kinesis bus read");
+		}
 	}
 
 	private static boolean runProcessor(Worker kinesysWorker) {
