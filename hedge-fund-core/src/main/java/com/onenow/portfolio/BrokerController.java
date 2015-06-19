@@ -56,7 +56,7 @@ public class BrokerController implements EWrapper {
 	private int m_orderId;
 
 	private final HashMap<Integer,QuoteRealtimeOption> m_optionCompMap = new HashMap<Integer,QuoteRealtimeOption>(); 
-	private final HashMap<Integer,QuoteRealtimeNonOption> m_topMktDataMap = new HashMap<Integer,QuoteRealtimeNonOption>();
+	private final HashMap<Integer,QuoteRealtimeHandler> m_topMktDataMap = new HashMap<Integer,QuoteRealtimeHandler>();
 
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
@@ -410,7 +410,7 @@ public class BrokerController implements EWrapper {
     	
     	int reqId = m_reqId++;
     	
-    	m_topMktDataMap.put( reqId, (QuoteRealtimeNonOption) handler);
+    	m_topMktDataMap.put( reqId, handler);
     	
     	if(handler.investment instanceof InvestmentOption) {
     		m_optionCompMap.put( reqId, (QuoteRealtimeOption) handler);
@@ -459,7 +459,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickPrice(int reqId, int tickType, double price, int canAutoExecute) {
 		Watchr.log(Level.FINEST, "tickPrice:" + " -reqId " + reqId + " -tickType " + tickType + " -price " + price + " -autoExec " + canAutoExecute);
-		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), price, canAutoExecute);
 		}
@@ -467,7 +467,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickGeneric(int reqId, int tickType, double value) {
-		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), value, 0);
 		}
@@ -476,7 +476,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickSize(int reqId, int tickType, int size) {
 		Watchr.log(Level.FINEST, "TickSize:" + " -reqId " + reqId + " -tickType " + tickType + " -size " + size);
-		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickSize( TickType.get( tickType), size);
 		}
@@ -485,7 +485,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickString(int reqId, int tickType, String value) {
 		Watchr.log(Level.FINEST, "tickString:" + " -reqId " + reqId + " -tickType " + tickType + " -value " + value);
-		QuoteRealtimeNonOption handler = m_topMktDataMap.get( reqId);
+		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickString( TickType.get( tickType), value);
 		}
