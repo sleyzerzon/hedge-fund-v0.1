@@ -27,10 +27,10 @@ public class DBTimeSeriesPrice {
 					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
 					ColumnName.FUTUREEXP.toString())
 		.values(event.time, event.price, 																		// basic columns
-				"\""+ event.source + "\"", "\""+ event.timing + "\"", event.tradeType + "\"",					// event origination
-				"\""+ event.getUnder() + "\"", "\""+ event.getInvType() + "\"", 								// investment
-				"\""+ event.getOptionStrikePrice() + "\"", "\""+ event.getOptionExpirationDate() + "\"",		// option
-				"\""+ event.getFutureExpirationDate() + "\""													// if future, expiration
+				"\""+ event.source + "\"", "\""+ event.timing +"\"", "\""+ event.tradeType +"\"",					// event origination
+				"\""+ event.getUnder() + "\"", "\""+ event.getInvType() +"\"", 								// investment
+				"\""+ event.getOptionStrikePrice() +"\"", "\""+ event.getOptionExpirationDate() +"\"",		// option
+				"\""+ event.getFutureExpirationDate() +"\""													// if future, expiration
 				) 
 
 		.build();

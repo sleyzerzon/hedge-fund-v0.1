@@ -13,6 +13,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class Event {
@@ -43,6 +44,10 @@ public class Event {
 
 	}
 	
+	public String getFormatedTime() {
+		return TimeParser.getFormatedPacificDateTime(time);
+	}
+
 	public void setInvestment(Investment inv) {
 		
 		if( (inv instanceof InvestmentIndex) || inv.getInvType().equals(InvType.INDEX)) {

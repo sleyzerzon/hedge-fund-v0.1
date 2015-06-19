@@ -1,9 +1,6 @@
 package com.onenow.data;
 
 
-import com.onenow.util.TimeParser;
-
-
 public class EventActivity extends Event {
 	
 	public Double price;
@@ -14,11 +11,7 @@ public class EventActivity extends Event {
 	public EventActivity() {
 		
 	}
-	
-	public String getFormatedTime() {
-		return TimeParser.getFormatedPacificDateTime(time);
-	}
-	
+		
 	public String toString() {
 		String s = "";
 		

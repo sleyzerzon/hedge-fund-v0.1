@@ -168,10 +168,10 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 	String query = getQuery(columnName, request, serieName);
 						
 	try {
-		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
+		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 	} catch (Exception e) {
-		// e.printStackTrace(); // some series don't exist or have data 
+		e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }
@@ -184,14 +184,22 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 // TODO: SELECT HISTOGRAM(column_name) FROM series_name ...
 // TODO: SELECT TOP(column_name, N) FROM series_name ...
 // TODO: SELECT BOTTOM(column_name, N) FROM series_name ...
+//"FILL(0) " +
+
 
 private static String getQuery(ColumnName columnName, EventRequest request, String serieName) {
-	String query = 	"SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " " + 						
-					"FROM " + "\"" + serieName + "\" " +
-					"GROUP BY " +
-						"time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") " + 
-					// "FILL(0) " +
-					"WHERE " + getQueryTime(request);
+	
+	String query = "";
+	
+	query = query + "SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
+	query = query + "FROM " + "\"" + serieName + "\" ";
+	
+	if(request.time==null) {
+		query = query + "GROUP BY " + "time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
+	}
+	
+	query = query + "WHERE " + getQueryTime(request);
+	
 	return query;
 }
 
@@ -203,7 +211,7 @@ public static String getQueryTime(EventRequest request) {
 		s = s + "AND ";
 		s = s + "time < " + "'" + request.toDashedDate + "' ";
 	} else {
-		s = s + "time = " + request.time;
+		s = s + "time > " + request.time;
 	}
 	
 	return s;

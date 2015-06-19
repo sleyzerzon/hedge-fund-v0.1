@@ -100,11 +100,14 @@ public class databaseTimeSeriesTest {
 		TimeParser.wait(5); // wait for write thread to complete
 		
 		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, historyActivity.time);
+//		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
+//		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, toDashedDate);
 
 		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
 		Watchr.info("READ CANDLES " + candles);
 		
-		Assert.assertTrue(candles.get(0).openPrice.equals(historyActivity.open));
+		int lastCandle = candles.size()-1;
+		Assert.assertTrue(candles.get(lastCandle).openPrice.equals(historyActivity.open));
 		
 		// time = 1400497861762723 
 			

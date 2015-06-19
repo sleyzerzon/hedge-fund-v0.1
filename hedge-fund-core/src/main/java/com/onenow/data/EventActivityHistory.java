@@ -26,7 +26,7 @@ public class EventActivityHistory extends EventActivity {
 
 	// TODO: what time zone is this time?
 	public EventActivityHistory( 	int reqId, 
-							long time, double high, double low, double open, double close, double wap, long volume, int count) {
+							long timeActivity, double high, double low, double open, double close, double wap, long volume, int count) {
 		
 		this.reqId = reqId;
 		this.high = high;
@@ -38,7 +38,7 @@ public class EventActivityHistory extends EventActivity {
 		this.count = count;
 		
 		// for general use (EventActivity)
-		this.time = time;
+		this.time = timeActivity;
 		this.price = open;
 		this.size = volume;
 		

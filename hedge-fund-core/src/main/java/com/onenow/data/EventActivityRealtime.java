@@ -13,13 +13,13 @@ public class EventActivityRealtime extends EventActivity {
 	
 	/** Set real-time price/size/etc 
 	 * 
-	 * @param time
+	 * @param timeActivity
 	 * @param inv
 	 * @param dataType
 	 * @param price
 	 * @param size
 	 */
-	public EventActivityRealtime(	Long time, Investment inv, TradeType tradeType, Double price, long size,
+	public EventActivityRealtime(	Long timeActivity, Investment inv, TradeType tradeType, Double price, long size,
 									InvDataSource source, InvDataTiming timing) {
 
 		setInvestment(inv);
@@ -27,7 +27,7 @@ public class EventActivityRealtime extends EventActivity {
 		this.source = source;
 		this.timing = timing;
 
-		this.time = time;
+		this.time = timeActivity;
 		this.price = price;
 		this.size = size;
 
