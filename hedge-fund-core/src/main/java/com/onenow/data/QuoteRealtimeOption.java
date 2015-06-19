@@ -1,5 +1,7 @@
 package com.onenow.data;
 
+import java.util.logging.Level;
+
 import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
@@ -34,7 +36,8 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 			m_gamma = gamma;
 			m_vega = vega;
 			m_theta = theta;
-			Watchr.log(	"price " + optPrice + " " +
+			Watchr.log(	Level.FINER,
+						"price " + optPrice + " " +
 						"-IMPVOLATILITY " + impVol + "-DELTA " + delta + "-GAMMA " + gamma + "-VEGA " + vega + "-THETA " + theta + " " +
 						"-for " + investment.toString());
 			

@@ -149,8 +149,9 @@ public class Watchr {
 		if(NetworkConfig.isMac()) {
 			System.out.println(message);
 		}
-		
-		LOGGER.setLevel(Level.ALL);
+
+		LOGGER.setLevel(Level.FINER);
+		// LOGGER.setLevel(Level.ALL);
 		// LOGGER.setLevel(Level.OFF);
 		
 		// print to files, not to console
