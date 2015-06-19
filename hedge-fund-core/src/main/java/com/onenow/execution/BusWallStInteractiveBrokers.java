@@ -9,10 +9,10 @@ import com.onenow.admin.NetworkService;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
-import com.onenow.portfolio.BrokerController;
-import com.onenow.portfolio.BrokerController.ConnectionHandler;
-import com.onenow.portfolio.BrokerController.IBulletinHandler;
-import com.onenow.portfolio.BrokerController.ITimeHandler;
+import com.onenow.portfolio.BusController;
+import com.onenow.portfolio.BusController.ConnectionHandler;
+import com.onenow.portfolio.BusController.IBulletinHandler;
+import com.onenow.portfolio.BusController.ITimeHandler;
 
 import java.util.logging.Level;
 
@@ -21,7 +21,7 @@ import com.onenow.util.Watchr;
 
 public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
-	public BrokerController controller = new BrokerController(this);
+	public BusController controller = new BusController(this);
 	
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
@@ -68,7 +68,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				tryToConnect = false;
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				Watchr.log(Level.INFO, log, "\n", "");
-			    controller = new BrokerController((com.onenow.portfolio.BrokerController.ConnectionHandler) this);
+			    controller = new BusController((com.onenow.portfolio.BusController.ConnectionHandler) this);
 
 			    // controller.disconnect(); 
 			    controller.connect(		gateway.URI, Integer.parseInt(gateway.port), 

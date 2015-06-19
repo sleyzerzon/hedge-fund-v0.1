@@ -6,8 +6,8 @@ import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
-import com.onenow.portfolio.BrokerController;
-import com.onenow.portfolio.BrokerController.IDeepMktDataHandler;
+import com.onenow.portfolio.BusController;
+import com.onenow.portfolio.BusController.IDeepMktDataHandler;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
   final DeepModel m_buy = new DeepModel();
   final DeepModel m_sell = new DeepModel();
 
-  private BrokerController controller;
+  private BusController controller;
   private BrokerInteractive broker;
   private ContractFactory contractFactory = new ContractFactory();
   private Investment investment;
@@ -33,7 +33,7 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
 
   }
 
-  public QuoteDepth(BrokerInteractive broker, BrokerController cont, Investment inv) {
+  public QuoteDepth(BrokerInteractive broker, BusController cont, Investment inv) {
 
     setController(cont);
     setBroker(broker);
@@ -164,11 +164,11 @@ public class QuoteDepth extends NewTabPanel implements IDeepMktDataHandler {
     }
   }
 
-  private BrokerController getController() {
+  private BusController getController() {
     return controller;
   }
 
-  private void setController(BrokerController controller) {
+  private void setController(BusController controller) {
     this.controller = controller;
   }
 

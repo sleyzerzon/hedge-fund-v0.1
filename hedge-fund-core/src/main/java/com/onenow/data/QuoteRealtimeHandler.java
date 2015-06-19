@@ -9,7 +9,7 @@ import com.ib.client.Types.MktDataType;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
-import com.onenow.portfolio.BrokerController.ITopMktDataHandler;
+import com.onenow.portfolio.BusController.ITopMktDataHandler;
 import com.onenow.util.Watchr;
 
 public class QuoteRealtimeHandler implements ITopMktDataHandler {

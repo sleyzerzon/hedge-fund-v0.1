@@ -9,7 +9,7 @@ import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.QuoteRealtimeChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
-import com.onenow.portfolio.BrokerController;
+import com.onenow.portfolio.BusController;
 
 
 public class QuoteRealtimeChain extends AbstractTableModel {
@@ -21,14 +21,14 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 
 	private static ArrayList<QuoteRealtimeHandler> handlerRows = new ArrayList<QuoteRealtimeHandler>(); 
 
-	private static BrokerController controller;
+	private static BusController controller;
 	
 	
 	public QuoteRealtimeChain() {
 
 	}
 	
-	public QuoteRealtimeChain(BrokerController controller) {
+	public QuoteRealtimeChain(BusController controller) {
 		QuoteRealtimeChain.controller = controller;
 	}
 	

@@ -48,7 +48,7 @@ import java.util.StringTokenizer;
 
 import com.onenow.util.Watchr;
 
-public class BrokerController implements EWrapper {
+public class BusController implements EWrapper {
 	private ApiConnection m_client;
 	private int m_reqId;	// used for all requests except orders; designed not to conflict with m_orderId
 	private int m_orderId;
@@ -89,7 +89,7 @@ public class BrokerController implements EWrapper {
 	}
 	
 
-	public BrokerController( ConnectionHandler handler) {
+	public BusController( ConnectionHandler handler) {
 		m_connectionHandler = handler;
 		m_client = new ApiConnection( this);
 

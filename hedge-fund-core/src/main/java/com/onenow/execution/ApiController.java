@@ -49,8 +49,6 @@ import java.util.StringTokenizer;
 
 public class ApiController implements EWrapper {
 	private ApiConnection m_client;
-//	private final ILogger m_outLogger;
-//	private final ILogger m_inLogger;
 	private int m_reqId;	// used for all requests except orders; designed not to conflict with m_orderId
 	private int m_orderId;
 
@@ -920,7 +918,7 @@ public class ApiController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			EventActivityHistory bar = new EventActivityHistory(reqId, time*1000, high, low, open, close, wap, volume, count);
+			EventActivityHistory bar = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

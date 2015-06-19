@@ -31,7 +31,7 @@ public class TimeParser implements Testable {
 		TimeZone zone = TimeZone.getTimeZone("PST");
 		format.setTimeZone(zone);
 
-		return format.format(time/1000);
+		return format.format(time);
 	}
 	
 

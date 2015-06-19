@@ -1,12 +1,10 @@
 package com.onenow.data;
 
-import java.util.List;
 import java.util.logging.Level;
 
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 import com.onenow.io.CacheInProcess;
@@ -41,7 +39,7 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventActivityRealtime event = new EventActivityRealtime(	timeStamp*1000, inv, TradeType.TRADED, 
+			EventActivityRealtime event = new EventActivityRealtime(	timeStamp, inv, TradeType.TRADED, 
 																		lastPrice, lastSize,
 																		source, timing);
 			cache.writeEventRT(event);

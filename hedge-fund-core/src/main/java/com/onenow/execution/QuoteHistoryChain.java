@@ -9,7 +9,7 @@ import com.onenow.data.HistorianConfig;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
 import com.onenow.io.Lookup;
-import com.onenow.portfolio.BrokerController;
+import com.onenow.portfolio.BusController;
 import com.onenow.util.Piping;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -17,7 +17,7 @@ import com.onenow.util.Watchr;
 public class QuoteHistoryChain {
 
 	
-	private static BrokerController controller;
+	private static BusController controller;
 
 	private static HashMap<String, QuoteHistoryInvestment>		history = new HashMap<String, QuoteHistoryInvestment>();						// price history from L3
 
@@ -27,7 +27,7 @@ public class QuoteHistoryChain {
 		
 	}
 	
-	public QuoteHistoryChain(BrokerController controller) {
+	public QuoteHistoryChain(BusController controller) {
 		this.controller = controller;
 	}
 
