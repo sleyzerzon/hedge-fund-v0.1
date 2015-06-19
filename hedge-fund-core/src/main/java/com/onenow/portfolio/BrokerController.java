@@ -457,7 +457,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickPrice(int reqId, int tickType, double price, int canAutoExecute) {
-		Watchr.log(Level.WARNING, "tickPrice: " + "-reqId " + reqId + "-tickType " + tickType + "-price " + price + "-autoExec " + canAutoExecute);
+		Watchr.log(Level.WARNING, "tickPrice:" + " -reqId " + reqId + " -tickType " + tickType + " -price " + price + " -autoExec " + canAutoExecute);
 		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), price, canAutoExecute);
@@ -474,7 +474,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickSize(int reqId, int tickType, int size) {
-		Watchr.log(Level.WARNING, "TickSize: " + "-reqId " + reqId + "-tickType " + tickType + "-size " + size);
+		Watchr.log(Level.WARNING, "TickSize:" + " -reqId " + reqId + " -tickType " + tickType + " -size " + size);
 		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickSize( TickType.get( tickType), size);
@@ -483,7 +483,7 @@ public class BrokerController implements EWrapper {
 	}
 
 	@Override public void tickString(int reqId, int tickType, String value) {
-		Watchr.log(Level.WARNING, "tickString: " + "-reqId " + reqId + "-tickType " + tickType + "-value " + value);
+		Watchr.log(Level.WARNING, "tickString:" + " -reqId " + reqId + " -tickType " + tickType + " -value " + value);
 		ITopMktDataHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickString( TickType.get( tickType), value);
@@ -583,7 +583,7 @@ public class BrokerController implements EWrapper {
 
 	@Override public void tickOptionComputation(int reqId, int tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 		
-		Watchr.log(Level.WARNING, "tickOptionComputation: " + "-reqId " + reqId + "-tickType" + "-impliedVol " + impliedVol + "-delta " + delta + "-optPrice " + optPrice + "-pvDividend " + pvDividend + "-gamma " + gamma + "-vega " + vega + "-theta " + theta + "-undPrice " + undPrice);
+		Watchr.log(Level.WARNING, "tickOptionComputation:" + " -reqId " + reqId + " -tickType" + " -impliedVol " + impliedVol + " -delta " + delta + " -optPrice " + optPrice + " -pvDividend " + pvDividend + " -gamma " + gamma + " -vega " + vega + " -theta " + theta + " -undPrice " + undPrice);
 		QuoteRealtimeOption handler = m_optionCompMap.get( reqId);
 		
 		if (handler != null) {

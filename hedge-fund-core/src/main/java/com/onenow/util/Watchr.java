@@ -135,6 +135,7 @@ public class Watchr {
 		return caller = "[" + caller + "]==> ";
 	}
 
+	// http://docs.oracle.com/javase/7/docs/api/java/util/logging/Level.html
 	private static void fanoutLog(Level level, String message, String formattedMessage) {
 
 		// TODO: add to CloudWatch Logs here
@@ -148,6 +149,9 @@ public class Watchr {
 		if(NetworkConfig.isMac()) {
 			System.out.println(message);
 		}
+		
+		LOGGER.setLevel(Level.ALL);
+		// LOGGER.setLevel(Level.OFF);
 		
 		// print to files, not to console
 		if(level.equals(Level.SEVERE)) {
