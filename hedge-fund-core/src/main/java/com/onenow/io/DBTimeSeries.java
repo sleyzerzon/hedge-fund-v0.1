@@ -188,12 +188,13 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 
 
 private static String getQuery(ColumnName columnName, EventRequest request, String serieName) {
-	
+	// select mean(PRICE) from AAPL-STOCK-TRADED-IB-REALTIME group by TIME(1h) WHERE time > -1h AND time < now() order asc
+	// select mean(PRICE) from /^AAPL-STOCK.*/i  where $timeFilter group by time($interval) order asc	
 	String query = "";
 	
 	query = query + "SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
 	query = query + "FROM " + "\"" + serieName + "\" ";
-	query = query + "GROUP BY " + "time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
+	query = query + "GROUP BY " + ColumnName.TIME.toString() + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
 	query = query + "WHERE " + getQueryTime(request);
 	
 	return query;

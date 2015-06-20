@@ -32,7 +32,8 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 	@Override public void tickOptionComputation( TickType tickType, double impVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 		
 		Watchr.log(Level.INFO, 	"$$$$$ tickOptionComputation:" + " -tickType " + tickType +
-								" -optPrice " + optPrice + " -undPrice " + undPrice + " -pvdividend " + pvDividend);
+								" -optPrice " + optPrice + " -undPrice " + undPrice + " -pvdividend " + pvDividend +
+								" -for " + investment.toString());
 		
 		if (tickType == TickType.MODEL_OPTION) {
 			m_impVol = impVol;
