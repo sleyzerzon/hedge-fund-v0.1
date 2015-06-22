@@ -194,7 +194,7 @@ private static String getQuery(ColumnName columnName, EventRequest request, Stri
 	
 	query = query + "SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
 	query = query + "FROM " + "\"" + serieName + "\" ";
-	query = query + "GROUP BY " + ColumnName.TIME.toString() + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
+	query = query + "GROUP BY " + "time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
 	query = query + "WHERE " + getQueryTime(request);
 	
 	return query;
