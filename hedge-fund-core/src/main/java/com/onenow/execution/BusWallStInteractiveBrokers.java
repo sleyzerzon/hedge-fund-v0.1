@@ -109,6 +109,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  return id;
 	  }
 	
+	  // https://www.interactivebrokers.com/en/software/api/apiguide/tables/generic_tick_types.htm
 		public static String getTickList() {
 			String volumeTicks = 	"";
 
@@ -121,9 +122,13 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			volumeTicks = volumeTicks + "106, ";	// Option Implied Volatility (currently for stocks)
 
+			volumeTicks = volumeTicks + "162, ";	// Index Future Premium 
+			
 			volumeTicks = volumeTicks + "165, "; 	//  TickType.AVG_VOLUME
 													// Contains generic stats
 
+			volumeTicks = volumeTicks + "221, ";	// Mark Price (used in TWS P&L computations)
+			
 			volumeTicks = volumeTicks + "225, ";	// Auction values (volume, price and imbalance)
 													// TickType.AUCTION_VOLUME
 													// Contains auction values (volume, price and imbalance)
@@ -132,11 +137,18 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 													// Contains the last trade price, last trade size, last trade time, 
 													// total volume, VWAP, and single trade flag.								
 									
-			volumeTicks = volumeTicks + "411";		// Real-time Historical Volatility
+			volumeTicks = volumeTicks + "236, "; 	// Shortable
+
+			volumeTicks = volumeTicks + "256, "; 	// Inventory
+
+			volumeTicks = volumeTicks + "256, ";	// Fundamental Ratios
 			
-									// ? TickType.VOLUME_RATE.toString();
-									// ? TickType.OPEN_INTEREST -> 22
-									// ? TickType.VOLUME -> 8
+			volumeTicks = volumeTicks + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
+			
+			volumeTicks = volumeTicks + "411, ";		// Real-time Historical Volatility
+			
+			volumeTicks = volumeTicks + "456";			// IBDividends
+
 			return volumeTicks;
 		} 
 		

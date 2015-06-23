@@ -130,7 +130,46 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case OPTION_PUT_VOLUME:
 			// TODO
 			break;
+		case OPTION_CALL_OPEN_INTEREST:
+			// TODO
+			break;
+		case OPTION_PUT_OPEN_INTEREST:
+			// TODO
+			break;
 		case LAST_SIZE:
+			// TODO
+			break;
+		case AUCTION_VOLUME:
+			// TODO
+			break;
+		case AUCTION_IMBALANCE:
+			// TODO
+			break;
+		case REGULATORY_IMBALANCE:
+			// TODO
+			break;
+		case AUCTION_PRICE:
+			// TODO
+			break;
+		case OPEN:
+			// TODO
+			break;
+		case HIGH_13_WEEK:
+			// TODO
+			break;
+		case HIGH_26_WEEK:
+			// TODO
+			break;
+		case HIGH_52_WEEK:
+			// TODO
+			break;
+		case LOW_13_WEEK:
+			// TODO
+			break;
+		case LOW_26_WEEK:
+			// TODO
+			break;
+		case LOW_52_WEEK:
 			// TODO
 			break;
         default:
