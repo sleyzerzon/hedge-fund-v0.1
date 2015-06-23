@@ -77,18 +77,21 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 //			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
 			// marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
 			break;
-		case OPTION_HISTORICAL_VOL:
-			// TODO
-//			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
-			break;
-		case RT_HISTORICAL_VOL:
-			// TODO!!!!!
-			break;
 		case HIGH:
 			// TODO
 			break;
 		case LOW:
 			// TODO
+			break;
+		case OPTION_HISTORICAL_VOL:
+			// TODO
+//			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
+			break;
+		case OPTION_IMPLIED_VOL:
+			// TODO
+			break;
+		case RT_HISTORICAL_VOL:
+			// TODO!!!!!
 			break;
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice: " + " -tickType " + tickType +

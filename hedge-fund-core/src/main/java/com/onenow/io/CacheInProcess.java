@@ -69,7 +69,7 @@ public class CacheInProcess {
 		}.start();
 
 			
-		RuntimeMetrics.notifyWallstLatency((Long) TimeParser.getTimestampNow()-event.time, broker.getStream());
+		RuntimeMetrics.notifyWallstLatency((Long) TimeParser.getTimestampNow()/1000-event.time, broker.getStream());
 		
 		return success;
 	}
