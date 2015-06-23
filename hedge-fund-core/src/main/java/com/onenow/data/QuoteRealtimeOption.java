@@ -45,6 +45,16 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 			//			" -for " + investment.toString());
 			
 			// TODO: WRITE TO DB
+			break;
+		case ASK_OPTION: 
+			// TODO
+			break;
+		case BID_OPTION:
+			// TODO
+			break;
+		case LAST_OPTION:
+			// TODO
+			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickOptionComputation:" + " -tickType " + tickType +
 					" -optPrice " + optPrice + " -undPrice " + undPrice + " -pvdividend " + pvDividend +
