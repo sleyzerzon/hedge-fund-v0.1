@@ -168,7 +168,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "291, ";	// IVCLOSE
 			
-			if(!(inv instanceof InvestmentFuture)) {
+			if(!(inv instanceof InvestmentFuture) && (inv instanceof InvestmentStock)) {
 				tickType = tickType + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
 			}
 			
