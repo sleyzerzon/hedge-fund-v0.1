@@ -12,6 +12,7 @@ import com.onenow.constant.Topology;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvestmentStock;
 import com.onenow.portfolio.BusController;
 import com.onenow.portfolio.BusController.ConnectionHandler;
 import com.onenow.portfolio.BusController.IBulletinHandler;
@@ -121,7 +122,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 			tickType = tickType + "101, "; 	// Contains option Open Interest (currently for stocks)
 
-			if(!(inv instanceof InvestmentFuture)) {
+			if(!(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "104, ";	// Historical Volatility (currently for stocks)
 			}
 			
@@ -133,7 +134,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "125, ";  // Bond Analytic Data
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture)) {
+			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "162, ";	// Index Future Premium 
 			}
 			
@@ -144,7 +145,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "221, ";	// Mark Price (used in TWS P&L computations)
 			
-			if(!(inv instanceof InvestmentFuture)) {
+			if(!(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "225, ";	// Auction values (volume, price and imbalance)
 			}										// TickType.AUCTION_VOLUME
 													// Contains auction values (volume, price and imbalance)
@@ -159,7 +160,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 			tickType = tickType + "247, ";  // Fundamentals
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture)) {
+			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "256, "; 	// Inventory
 			}
 			
