@@ -81,6 +81,15 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			// TODO
 //			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
 			break;
+		case RT_HISTORICAL_VOL:
+			// TODO!!!!!
+			break;
+		case HIGH:
+			// TODO
+			break;
+		case LOW:
+			// TODO
+			break;
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice: " + " -tickType " + tickType +
 					" -for " + investment.toString());
@@ -111,6 +120,12 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			m_volume = size;
 //			marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
 			// Watchr.log(Level.INFO, ">Volume size " + m_volume + " for " + investment.toString());
+			break;
+		case OPTION_CALL_VOLUME:
+			// TODO
+			break;
+		case OPTION_PUT_VOLUME:
+			// TODO
 			break;
 		case LAST_SIZE:
 			// TODO
@@ -151,6 +166,12 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			break;
 		case VOLUME_RATE:
 			// Watchr.log(Level.INFO, ">VOLUME_RATE " + value + " for " + investment.toString()); // not for indices
+			break;
+		case BID_EXCH:
+			// TODO
+			break;
+		case ASK_EXCH:
+			// TODO
 			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickString: " + " -tickType " + tickType +

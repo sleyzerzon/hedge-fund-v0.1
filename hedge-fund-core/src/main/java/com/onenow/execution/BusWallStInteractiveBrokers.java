@@ -110,25 +110,29 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  }
 	
 		public static String getTickList() {
-			String volumeTicks = 	"233, " + //  TickType.RT_VOLUME
-									// Contains the last trade price, last trade size, last trade time, 
-									// total volume, VWAP, and single trade flag.
-									"165, " + //  TickType.AVG_VOLUME
-									// Contains generic stats
-									"100, " + //  TickType.OPTION_CALL_VOLUME, TickType.OPTION_PUT_VOLUME
-									// Contains option Volume (currently for stocks)
-									"225, " +
-									// Auction values (volume, price and imbalance)
-									"101, " + 
-									// Contains option Open Interest (currently for stocks)
-									"225, " + // TickType.AUCTION_VOLUME
-									// Contains auction values (volume, price and imbalance)
-									"104, " +
-									// Historical Volatility (currently for stocks)
-									"106, " +
-									// Option Implied Volatility (currently for stocks)
-									"411";
-									// Real-time Historical Volatility
+			String volumeTicks = 	"";
+
+			volumeTicks = volumeTicks + "100, "; 	//  TickType.OPTION_CALL_VOLUME, TickType.OPTION_PUT_VOLUME
+			// Contains option Volume (currently for stocks)
+
+			volumeTicks = volumeTicks + "101, "; 	// Contains option Open Interest (currently for stocks)
+
+			volumeTicks = volumeTicks + "104, ";	// Historical Volatility (currently for stocks)
+			
+			volumeTicks = volumeTicks + "106, ";	// Option Implied Volatility (currently for stocks)
+
+			volumeTicks = volumeTicks + "165, "; 	//  TickType.AVG_VOLUME
+													// Contains generic stats
+
+			volumeTicks = volumeTicks + "225, ";	// Auction values (volume, price and imbalance)
+													// TickType.AUCTION_VOLUME
+													// Contains auction values (volume, price and imbalance)
+			
+			volumeTicks = volumeTicks + "233, "; 	//  TickType.RT_VOLUME
+													// Contains the last trade price, last trade size, last trade time, 
+													// total volume, VWAP, and single trade flag.								
+									
+			volumeTicks = volumeTicks + "411";		// Real-time Historical Volatility
 			
 									// ? TickType.VOLUME_RATE.toString();
 									// ? TickType.OPEN_INTEREST -> 22
