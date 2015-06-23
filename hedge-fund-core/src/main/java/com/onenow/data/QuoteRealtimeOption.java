@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
+import com.onenow.constant.InvType;
 import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
@@ -30,12 +31,9 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 
 
 	@Override public void tickOptionComputation( TickType tickType, double impVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
-		
-		Watchr.log(Level.INFO, 	"$$$$$ tickOptionComputation:" + " -tickType " + tickType +
-								" -optPrice " + optPrice + " -undPrice " + undPrice + " -pvdividend " + pvDividend +
-								" -for " + investment.toString());
-		
-		if (tickType == TickType.MODEL_OPTION) {
+				
+		switch( tickType) {
+		case MODEL_OPTION:
 			m_impVol = impVol;
 			m_delta = delta;
 			m_gamma = gamma;
@@ -47,6 +45,12 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 						" -for " + investment.toString());
 			
 			// TODO: WRITE TO DB
+        default:
+    		Watchr.log(Level.WARNING, 	"$$$$$ tickOptionComputation:" + " -tickType " + tickType +
+					" -optPrice " + optPrice + " -undPrice " + undPrice + " -pvdividend " + pvDividend +
+					" -for " + investment.toString());
+        	break; 
+		
 		}
 		chainTable.fireTableDataChanged();
 	}

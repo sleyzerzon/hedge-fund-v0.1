@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
+import com.onenow.constant.InvType;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
@@ -54,10 +55,15 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 
 	@Override
 	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
-		
-		Watchr.log(Level.INFO, 	"$$$$$ tickPrice:" + " -tickType " + tickType +
-								" -for " + investment.toString());
-		
+				
+		if(investment.invType.equals(InvType.CALL) || investment.invType.equals(InvType.PUT)) {
+			Watchr.log(Level.WARNING, "@@@@@ Option tickPrice");
+		}
+
+		if(investment.invType.equals(InvType.INDEX)) {
+			Watchr.log(Level.WARNING, "@@@@@ Index tickPrice");
+		}
+
 		switch( tickType) {
 		case BID:
 			m_bid = price;
@@ -79,7 +85,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
 //			marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
 			break;
-		default: 
+		default:
+			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice:" + " -tickType " + tickType +
+					" -for " + investment.toString());
 			break;	
 		}
 		
@@ -89,9 +97,15 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	@Override
 	public void tickSize(TickType tickType, int size) {
 		
-		Watchr.log(Level.INFO, 	"$$$$$ tickSize:" + " -tickType " + tickType +
-								" -for " + investment.toString());
-		
+		if(investment.invType.equals(InvType.CALL) || investment.invType.equals(InvType.PUT)) {
+			Watchr.log(Level.WARNING, "@@@@@ Option tickSize");
+		}
+
+		if(investment.invType.equals(InvType.INDEX)) {
+			Watchr.log(Level.WARNING, "@@@@@ Index tickSize");
+		}
+
+				
 		// TODO
 		// TICKSIZE: -TICKTYPE OPTION_CALL_OPEN_INTEREST -SIZE 0 FOR -UNDER SPX -TYPE PUT -EXPIRES 20150626 -STRIKE 2100.0  
 		
@@ -111,7 +125,10 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 //			marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
 			Watchr.log(Level.INFO, ">Volume size " + m_volume + " for " + investment.toString());
 			break;
-        default: break; 
+        default:
+    		Watchr.log(Level.WARNING, 	"$$$$$ tickSize:" + " -tickType " + tickType +
+					" -for " + investment.toString());
+        	break; 
 		}
 		
 		chainTable.fireTableDataChanged();
@@ -119,10 +136,15 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 
 	@Override
 	public void tickString(TickType tickType, String value) {
+			
+		if(investment.invType.equals(InvType.CALL) || investment.invType.equals(InvType.PUT)) {
+			Watchr.log(Level.WARNING, "@@@@@ Option tickString");
+		}
+
+		if(investment.invType.equals(InvType.INDEX)) {
+			Watchr.log(Level.WARNING, "@@@@@ Index tickString");
+		}
 		
-		Watchr.log(Level.INFO, 	"$$$$$ tickString:" + " -tickType " + tickType +
-								" -for " + investment.toString());
-				
 		switch( tickType) {
 		case LAST_TIMESTAMP:
 			m_lastTime = Long.parseLong(value);
@@ -148,8 +170,10 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case VOLUME_RATE:
 			Watchr.log(Level.INFO, ">VOLUME_RATE " + value + " for " + investment.toString()); // not for indices
 			break;
-		
-        default: break; 
+        default:
+    		Watchr.log(Level.WARNING, 	"$$$$$ tickString:" + " -tickType " + tickType +
+					" -for " + investment.toString());
+        	break; 
 		}
 		
 		chainTable.fireTableDataChanged();
