@@ -57,11 +57,11 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
 				
 		if(investment.invType.equals(InvType.CALL) || investment.invType.equals(InvType.PUT)) {
-			Watchr.log(Level.WARNING, "@@@@@ Option tickPrice");
+			Watchr.log(Level.WARNING, "@@@@@ Option tickPrice" + tickType);
 		}
 
 		if(investment.invType.equals(InvType.INDEX)) {
-			Watchr.log(Level.WARNING, "@@@@@ Index tickPrice");
+			Watchr.log(Level.WARNING, "@@@@@ Index tickPrice " + tickType);
 		}
 
 		switch( tickType) {
@@ -85,6 +85,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
 //			marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
 			break;
+		case OPTION_HISTORICAL_VOL:
+			// TODO
+			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice:" + " -tickType " + tickType +
 					" -for " + investment.toString());
@@ -98,11 +101,11 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	public void tickSize(TickType tickType, int size) {
 		
 		if(investment.invType.equals(InvType.CALL) || investment.invType.equals(InvType.PUT)) {
-			Watchr.log(Level.WARNING, "@@@@@ Option tickSize");
+			Watchr.log(Level.WARNING, "@@@@@ Option tickSize " + tickType);
 		}
 
 		if(investment.invType.equals(InvType.INDEX)) {
-			Watchr.log(Level.WARNING, "@@@@@ Index tickSize");
+			Watchr.log(Level.WARNING, "@@@@@ Index tickSize " + tickType);
 		}
 
 				
@@ -125,6 +128,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 //			marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
 			Watchr.log(Level.INFO, ">Volume size " + m_volume + " for " + investment.toString());
 			break;
+		case LAST_SIZE:
+			// TODO
+			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickSize:" + " -tickType " + tickType +
 					" -for " + investment.toString());
@@ -138,11 +144,11 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	public void tickString(TickType tickType, String value) {
 			
 		if(investment.invType.equals(InvType.CALL) || investment.invType.equals(InvType.PUT)) {
-			Watchr.log(Level.WARNING, "@@@@@ Option tickString");
+			Watchr.log(Level.WARNING, "@@@@@ Option tickString " + tickType);
 		}
 
 		if(investment.invType.equals(InvType.INDEX)) {
-			Watchr.log(Level.WARNING, "@@@@@ Index tickString");
+			Watchr.log(Level.WARNING, "@@@@@ Index tickString " + tickType);
 		}
 		
 		switch( tickType) {
