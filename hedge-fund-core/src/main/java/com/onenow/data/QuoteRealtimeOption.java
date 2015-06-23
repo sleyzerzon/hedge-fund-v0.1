@@ -39,10 +39,10 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 			m_gamma = gamma;
 			m_vega = vega;
 			m_theta = theta;
-			Watchr.log(	Level.INFO,
-						"-modeloption: " + 
-						" -IMPVOLATILITY " + impVol + " -DELTA " + delta + " -GAMMA " + gamma + " -VEGA " + vega + " -THETA " + theta + " " +
-						" -for " + investment.toString());
+			// Watchr.log(	Level.INFO,
+			//			"-modeloption: " + 
+			//			" -IMPVOLATILITY " + impVol + " -DELTA " + delta + " -GAMMA " + gamma + " -VEGA " + vega + " -THETA " + theta + " " +
+			//			" -for " + investment.toString());
 			
 			// TODO: WRITE TO DB
         default:
