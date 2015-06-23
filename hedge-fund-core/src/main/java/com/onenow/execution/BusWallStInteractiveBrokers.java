@@ -9,6 +9,8 @@ import com.onenow.admin.NetworkService;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
+import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentOption;
 import com.onenow.portfolio.BusController;
 import com.onenow.portfolio.BusController.ConnectionHandler;
 import com.onenow.portfolio.BusController.IBulletinHandler;
@@ -110,46 +112,116 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  }
 	
 	  // https://www.interactivebrokers.com/en/software/api/apiguide/tables/generic_tick_types.htm
-		public static String getTickList() {
-			String volumeTicks = 	"";
+		public static String getTickList(Investment inv) {
+			String tickType = 	"";
 
-			volumeTicks = volumeTicks + "100, "; 	//  TickType.OPTION_CALL_VOLUME, TickType.OPTION_PUT_VOLUME
+			tickType = tickType + "100, "; 	//  TickType.OPTION_CALL_VOLUME, TickType.OPTION_PUT_VOLUME
 			// Contains option Volume (currently for stocks)
 
-			volumeTicks = volumeTicks + "101, "; 	// Contains option Open Interest (currently for stocks)
+			tickType = tickType + "101, "; 	// Contains option Open Interest (currently for stocks)
 
-			volumeTicks = volumeTicks + "104, ";	// Historical Volatility (currently for stocks)
+			tickType = tickType + "104, ";	// Historical Volatility (currently for stocks)
 			
-			volumeTicks = volumeTicks + "106, ";	// Option Implied Volatility (currently for stocks)
+			tickType = tickType + "105, ";  // 105(AVERAGE OPT VOLUME)
+			
+			tickType = tickType + "106, ";	// Option Implied Volatility (currently for stocks)
 
-			volumeTicks = volumeTicks + "162, ";	// Index Future Premium 
+			tickType = tickType + "107, ";  // CLIMPVLT
 			
-			volumeTicks = volumeTicks + "165, "; 	//  TickType.AVG_VOLUME
-													// Contains generic stats
+			tickType = tickType + "125, ";  // Bond Analytic Data
+			
+			if(!(inv instanceof InvestmentOption)) {
+				tickType = tickType + "162, ";	// Index Future Premium 
+			}
+			
+			tickType = tickType + "165, "; 	//  TickType.AVG_VOLUME
+											// Contains generic stats
 
-			volumeTicks = volumeTicks + "221, ";	// Mark Price (used in TWS P&L computations)
+			tickType = tickType + "166, ";  // CSCREEN
 			
-			volumeTicks = volumeTicks + "225, ";	// Auction values (volume, price and imbalance)
+			tickType = tickType + "221, ";	// Mark Price (used in TWS P&L computations)
+			
+			tickType = tickType + "225, ";	// Auction values (volume, price and imbalance)
 													// TickType.AUCTION_VOLUME
 													// Contains auction values (volume, price and imbalance)
 			
-			volumeTicks = volumeTicks + "233, "; 	//  TickType.RT_VOLUME
+			tickType = tickType + "232"; 	// Mark Price
+			
+			tickType = tickType + "233, "; 	//  TickType.RT_VOLUME
 													// Contains the last trade price, last trade size, last trade time, 
 													// total volume, VWAP, and single trade flag.								
 									
-			volumeTicks = volumeTicks + "236, "; 	// Shortable
+			tickType = tickType + "236, "; 	// Shortable
 
-			volumeTicks = volumeTicks + "256, "; 	// Inventory
+			tickType = tickType + "247, ";  // Fundamentals
+			
+			if(!(inv instanceof InvestmentOption)) {
+				tickType = tickType + "256, "; 	// Inventory
+			}
+			
+			tickType = tickType + "258, ";	// Fundamental Ratios
+			
+			tickType = tickType + "291, ";	// IVCLOSE
+			
+			tickType = tickType + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
 
-			volumeTicks = volumeTicks + "256, ";	// Fundamental Ratios
+			tickType = tickType + "293, "; 	// TRADECOUNT
 			
-			volumeTicks = volumeTicks + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
-			
-			volumeTicks = volumeTicks + "411, ";		// Real-time Historical Volatility
-			
-			volumeTicks = volumeTicks + "456";			// IBDividends
+			tickType = tickType + "294, ";	// TRADERATE
 
-			return volumeTicks;
+			tickType = tickType + "295, "; 	// VOLUMERATE
+			
+			tickType = tickType + "318, "; 	// LASTRTHTRADE
+			
+			tickType = tickType + "370, ";	// PARTICIPATIONMONITOR
+			
+			tickType = tickType + "377, "; 	// CTTTICKTAG
+			
+			tickType = tickType + "381, "; 	// IB RATE
+			
+			tickType = tickType + "384, ";	// RFQTICKRESPTAG
+			
+			tickType = tickType + "387, "; 	// DMM
+			
+			tickType = tickType + "388, "; 	// ISSUER FUNDAMENTALS
+			
+			tickType = tickType + "391, "; 	// IBWARRANTIMPVOLCOMPETETICK
+			
+			tickType = tickType + "407, "; 	// FUTURESMARGINS
+			
+			tickType = tickType + "411, ";		// Real-time Historical Volatility
+			
+			tickType = tickType + "428, "; 	// MONETARY CLOSE PRICE
+			
+			tickType = tickType + "439, "; 	// MONITORTICKTAG
+			
+			tickType = tickType + "456, ";			// IBDividends
+
+			tickType = tickType + "459, ";	// RTCLOSE
+			
+			tickType = tickType + "460, "; 	// BOND FACTOR MULTIPLIER
+			
+			tickType = tickType + "499, ";	// FEE AND REBATE RATE
+			
+			tickType = tickType + "506, "; 	// MIDPTIV
+			
+			tickType = tickType + "511, "; 	// HVOLRT10 (PER-UNDERLYING)
+			
+			tickType = tickType + "512, ";	// HVOLRT30 (PER-UNDERLYING)
+			
+			tickType = tickType + "513, "; 	// HVOLRT50 (PER-UNDERLYING)
+			
+			tickType = tickType + "514, ";	// HVOLRT75 (PER-UNDERLYING)
+			
+			tickType = tickType + "515, "; 	// HVOLRT100 (PER-UNDERLYING)
+			
+			tickType = tickType + "516, ";	// HVOLRT150 (PER-UNDERLYING)
+			
+			tickType = tickType + "517, "; 	// HVOLRT200 (PER-UNDERLYING)
+			
+			tickType = tickType + "545, ";	// VSIV
+			
+			return tickType;
 		} 
 		
   @Override

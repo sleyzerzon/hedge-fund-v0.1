@@ -15,6 +15,9 @@ import com.onenow.util.Watchr;
 
 public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	
+	// tickEFP
+	// tickSnapshotEnd
+	
 	// time
 	long m_lastTime;
 

@@ -43,7 +43,7 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 		}
 		handlerRows.add(quoteHandler);
 
-		controller.requestData(BusWallStInteractiveBrokers.getTickList(), quoteHandler);
+		controller.requestData(BusWallStInteractiveBrokers.getTickList(investment), quoteHandler);
 
 	}
 	
