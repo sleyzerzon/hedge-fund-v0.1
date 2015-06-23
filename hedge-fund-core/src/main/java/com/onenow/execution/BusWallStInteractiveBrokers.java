@@ -11,6 +11,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
+import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.portfolio.BusController;
@@ -122,7 +123,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 			tickType = tickType + "101, "; 	// Contains option Open Interest (currently for stocks)
 
-			if(!(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
+			if(!(inv instanceof InvestmentIndex) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "104, ";	// Historical Volatility (currently for stocks)
 			}
 			
@@ -145,7 +146,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "221, ";	// Mark Price (used in TWS P&L computations)
 			
-			if(!(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
+			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "225, ";	// Auction values (volume, price and imbalance)
 			}										// TickType.AUCTION_VOLUME
 													// Contains auction values (volume, price and imbalance)
@@ -168,7 +169,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "291, ";	// IVCLOSE
 			
-			if(!(inv instanceof InvestmentFuture) && (inv instanceof InvestmentStock)) {
+			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && (inv instanceof InvestmentStock)) {
 				tickType = tickType + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
 			}
 			
