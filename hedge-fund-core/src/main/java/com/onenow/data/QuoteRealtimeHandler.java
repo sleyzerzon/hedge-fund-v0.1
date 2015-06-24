@@ -75,10 +75,16 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 //			Watchr.log(Level.INFO, ">Last " + m_last + " for " + investment.toString());
 			// marketPrice.writePriceNotRealTime(investment, m_last, TradeType.TRADED.toString());
 			break;
+		case OPEN:
+			// TODO
+			break;
 		case CLOSE:
 			m_close = price;
 //			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
 			// marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
+			break;
+		case AUCTION_PRICE:
+			// TODO
 			break;
 		case HIGH:
 			// TODO
@@ -95,6 +101,27 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			break;
 		case RT_HISTORICAL_VOL:
 			// TODO!!!!!
+			break;
+		case SHORTABLE:
+			// TODO
+			break;
+		case HIGH_13_WEEK:
+			// TODO
+			break;
+		case HIGH_26_WEEK:
+			// TODO
+			break;
+		case HIGH_52_WEEK:
+			// TODO
+			break;
+		case LOW_13_WEEK:
+			// TODO
+			break;
+		case LOW_26_WEEK:
+			// TODO
+			break;
+		case LOW_52_WEEK:
+			// TODO
 			break;
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice: " + " -tickType " + tickType +
@@ -127,6 +154,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 //			marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
 			// Watchr.log(Level.INFO, ">Volume size " + m_volume + " for " + investment.toString());
 			break;
+		case AVG_VOLUME:
+			// TODO
+			break;
 		case OPTION_CALL_VOLUME:
 			// TODO
 			break;
@@ -157,24 +187,24 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case OPEN:
 			// TODO
 			break;
-		case HIGH_13_WEEK:
-			// TODO
-			break;
-		case HIGH_26_WEEK:
-			// TODO
-			break;
-		case HIGH_52_WEEK:
-			// TODO
-			break;
-		case LOW_13_WEEK:
-			// TODO
-			break;
-		case LOW_26_WEEK:
-			// TODO
-			break;
-		case LOW_52_WEEK:
-			// TODO
-			break;
+//		case HIGH_13_WEEK:
+//			// TODO
+//			break;
+//		case HIGH_26_WEEK:
+//			// TODO
+//			break;
+//		case HIGH_52_WEEK:
+//			// TODO
+//			break;
+//		case LOW_13_WEEK:
+//			// TODO
+//			break;
+//		case LOW_26_WEEK:
+//			// TODO
+//			break;
+//		case LOW_52_WEEK:
+//			// TODO
+//			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickSize:" + " -tickType: " + tickType +
 					" -for " + investment.toString());
