@@ -47,27 +47,34 @@ public class BrokerInteractive implements BrokerInterface  {
 		  this.streamName = StreamName.REALTIME;
 	  }
 	
+	  /**
+	   * Constructor for HISTORY dataStream
+	   * @param streamName
+	   * @param busIB
+	   */
 	  public BrokerInteractive(StreamName streamName, BusWallStInteractiveBrokers busIB) { 
 			
 		  	this.streamName = streamName;
 			this.busIB = busIB;
 			
 			connectToServices(busIB);
+			
+			quoteHistoryChain = new QuoteHistoryChain(busIB.controller);
+
 	  }
 	  
 	  /**
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
 	   */
-	  public BrokerInteractive(StreamName streamName, Portfolio marketPortfolio, BusWallStInteractiveBrokers bus) { 
+	  public BrokerInteractive(StreamName streamName, Portfolio marketPortfolio, BusWallStInteractiveBrokers busIB) { 
 		  
 		this.streamName = streamName;
 	    this.marketPortfolio = marketPortfolio;
-		this.busIB = bus;
+		this.busIB = busIB;
 		
-		connectToServices(bus);
-		quoteRealtimeChain = new QuoteRealtimeChain(bus.controller);
-		quoteHistoryChain = new QuoteHistoryChain(bus.controller);
+		connectToServices(busIB);
+		quoteRealtimeChain = new QuoteRealtimeChain(busIB.controller);
 	
 	    // create new underlying list, portfolio, then initialize the market
 	    this.underList = new ArrayList<Underlying>(); // TODO: get from portfolio?

@@ -50,7 +50,7 @@ public class SQS {
 	 */
 	public static String getHistoryQueueURL() {
 		
-		String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_DEVELOPMENT/" + QueueName.HISTORY_DEVELOPMENT.toString();
+		String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_DEVELOPMENT.toString();
 
 		if(!NetworkConfig.isMac()) {
 			
@@ -154,7 +154,7 @@ public class SQS {
 
 		try {
 			for (String queueUrl : sqs.listQueues().getQueueUrls()) {
-				log = "  QueueUrl: " + queueUrl;
+				log = "-- Listed Queue URL: " + queueUrl;
 				Watchr.log(Level.INFO, log);
 			    }
 		} catch (Exception e) {

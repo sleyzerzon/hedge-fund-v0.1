@@ -91,6 +91,7 @@ public class InitAmazon {
 	
 	// SQS
 	public static AmazonSQS getSQS() {
+		
 		return getSQS(defaultRegion);
 	}
 	
@@ -101,6 +102,7 @@ public class InitAmazon {
 
 		AmazonSQS sqs = new AmazonSQSClient();
 		sqs.setRegion(region);
+		sqs.setEndpoint("sqs.us-east-1.amazonaws.com");
 		
 		return sqs;
 	}
