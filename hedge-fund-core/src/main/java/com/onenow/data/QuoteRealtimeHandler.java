@@ -86,23 +86,23 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case AUCTION_PRICE:
 			// TODO
 			break;
-		case HIGH:
-			// TODO
-			break;
-		case LOW:
+		case INDEX_FUTURE_PREMIUM:
 			// TODO
 			break;
 		case OPTION_HISTORICAL_VOL:
-			// TODO
+			// TODO ********************
 //			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
 			break;
 		case OPTION_IMPLIED_VOL:
-			// TODO
+			// TODO ********************
 			break;
 		case RT_HISTORICAL_VOL:
-			// TODO!!!!!
+			// TODO!!!!! ********************
 			break;
 		case SHORTABLE:
+			// TODO
+			break;
+		case HIGH:
 			// TODO
 			break;
 		case HIGH_13_WEEK:
@@ -112,6 +112,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			// TODO
 			break;
 		case HIGH_52_WEEK:
+			// TODO
+			break;
+		case LOW:
 			// TODO
 			break;
 		case LOW_13_WEEK:
@@ -172,21 +175,22 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case LAST_SIZE:
 			// TODO
 			break;
-		case AUCTION_VOLUME:
-			// TODO
-			break;
-		case AUCTION_IMBALANCE:
-			// TODO
-			break;
 		case REGULATORY_IMBALANCE:
 			// TODO
 			break;
 		case AUCTION_PRICE:
 			// TODO
 			break;
-		case OPEN:
+		case AUCTION_VOLUME:
 			// TODO
 			break;
+		case AUCTION_IMBALANCE:
+			// TODO
+			break;
+
+//		case OPEN:
+//			// TODO
+//			break;
 //		case HIGH_13_WEEK:
 //			// TODO
 //			break;
@@ -246,6 +250,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			// TODO
 			break;
 		case ASK_EXCH:
+			// TODO
+			break;
+		case UNKNOWN:
 			// TODO
 			break;
         default:
