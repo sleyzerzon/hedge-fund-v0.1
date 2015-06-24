@@ -10,7 +10,7 @@ import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
 
-public class QuoteRealtimeOption extends QuoteSharedHandler implements IOptHandler {  
+public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandler {  
 
 	double m_impVol;
 	double m_delta;
@@ -21,15 +21,16 @@ public class QuoteRealtimeOption extends QuoteSharedHandler implements IOptHandl
 	// other
 	boolean m_done;
 
-	public QuoteRealtimeOption() {
+	public QuoteOptionHandler() {
 		
 	}
 	
-	public QuoteRealtimeOption(Investment inv, AbstractTableModel chainTable) {
+	public QuoteOptionHandler(Investment inv, AbstractTableModel chainTable) {
 		super(inv, chainTable);
 	}
 
 
+	// https://www.interactivebrokers.com/en/software/api/api_Left.htm#CSHID=apiguide%2Ftables%2Ftick_types.htm|StartTopic=apiguide%2Ftables%2Ftick_types.htm|SkinName=ibskin
 	@Override public void tickOptionComputation( TickType tickType, double impVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 			
 		// TODO: ASK_OPTION_COMPUTATION, BID_OPTION_COMPUTATION, LAST_OPTION_COMPUTATION, MODEL_OPTION_COMPUTATION

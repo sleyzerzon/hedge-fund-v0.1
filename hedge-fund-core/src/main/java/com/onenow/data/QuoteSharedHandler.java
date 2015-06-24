@@ -60,7 +60,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		return ContractFactory.getContract(investment);
 	}
 	
-
 	@Override
 	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
 			

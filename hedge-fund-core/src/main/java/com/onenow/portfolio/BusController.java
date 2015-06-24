@@ -34,7 +34,7 @@ import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.QuoteSharedHandler;
-import com.onenow.data.QuoteRealtimeOption;
+import com.onenow.data.QuoteOptionHandler;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentOption;
 
@@ -53,7 +53,7 @@ public class BusController implements EWrapper {
 	private int m_reqId;	// used for all requests except orders; designed not to conflict with m_orderId
 	private int m_orderId;
 
-	private final HashMap<Integer,QuoteRealtimeOption> m_optionCompMap = new HashMap<Integer,QuoteRealtimeOption>(); 
+	private final HashMap<Integer,QuoteOptionHandler> m_optionCompMap = new HashMap<Integer,QuoteOptionHandler>(); 
 	private final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
 
 	private final ConnectionHandler m_connectionHandler;
@@ -419,7 +419,7 @@ public class BusController implements EWrapper {
     	m_topMktDataMap.put( reqId, handler);
     	
     	if(handler.investment instanceof InvestmentOption) {
-    		m_optionCompMap.put( reqId, (QuoteRealtimeOption) handler);
+    		m_optionCompMap.put( reqId, (QuoteOptionHandler) handler);
     	}
     	
     	m_client.reqMktData( reqId, handler.getContract(), genericTickList, false, Collections.<TagValue>emptyList() );
@@ -449,7 +449,7 @@ public class BusController implements EWrapper {
 //		sendEOM();
     }
 
-    public void cancelOptionMktData(QuoteRealtimeOption handler) {
+    public void cancelOptionMktData(QuoteOptionHandler handler) {
     	cancelMktData( handler);
     	getAndRemoveKey( m_optionCompMap, handler);
     }
@@ -575,21 +575,21 @@ public class BusController implements EWrapper {
 	// ****************************************
 	// ****************************************
 
-	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, QuoteRealtimeOption handler) {
+	public void reqOptionVolatility(Contract c, double optPrice, double underPrice, QuoteOptionHandler handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);
 		m_client.calculateImpliedVolatility( reqId, c, optPrice, underPrice);
 		sendEOM();
 	}
 
-	public void reqOptionComputation( Contract c, double vol, double underPrice, QuoteRealtimeOption handler) {
+	public void reqOptionComputation( Contract c, double vol, double underPrice, QuoteOptionHandler handler) {
 		int reqId = m_reqId++;
 		m_optionCompMap.put( reqId, handler);
 		m_client.calculateOptionPrice(reqId, c, vol, underPrice);
 		sendEOM();
 	}
 
-	void cancelOptionComp( QuoteRealtimeOption handler) {
+	void cancelOptionComp( QuoteOptionHandler handler) {
 		Integer reqId = getAndRemoveKey( m_optionCompMap, handler);
 		if (reqId != null) {
 			m_client.cancelCalculateOptionPrice( reqId);
@@ -600,7 +600,7 @@ public class BusController implements EWrapper {
 	@Override public void tickOptionComputation(int reqId, int tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
 		
 		// Watchr.log(Level.FINEST, "tickOptionComputation:" + " -reqId " + reqId + " -tickType" + " -impliedVol " + impliedVol + " -delta " + delta + " -optPrice " + optPrice + " -pvDividend " + pvDividend + " -gamma " + gamma + " -vega " + vega + " -theta " + theta + " -undPrice " + undPrice);
-		QuoteRealtimeOption handler = m_optionCompMap.get( reqId);
+		QuoteOptionHandler handler = m_optionCompMap.get( reqId);
 		
 		if (handler != null) {
 			handler.tickOptionComputation( TickType.get( tickType), impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
