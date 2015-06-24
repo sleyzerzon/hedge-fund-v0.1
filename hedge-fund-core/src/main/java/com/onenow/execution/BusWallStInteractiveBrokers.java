@@ -127,13 +127,13 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				tickType = tickType + "104, ";	// Historical Volatility (currently for stocks)
 			}
 			
-			tickType = tickType + "105, ";  // 105(AVERAGE OPT VOLUME)
+			// tickType = tickType + "105, ";  // 105(AVERAGE OPT VOLUME)
 			
 			tickType = tickType + "106, ";	// Option Implied Volatility (currently for stocks)
 
-			tickType = tickType + "107, ";  // CLIMPVLT
+			// tickType = tickType + "107, ";  // CLIMPVLT
 			
-			tickType = tickType + "125, ";  // Bond Analytic Data
+			// tickType = tickType + "125, ";  // Bond Analytic Data
 			
 			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "162, ";	// Index Future Premium 
@@ -142,7 +142,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			tickType = tickType + "165, "; 	//  TickType.AVG_VOLUME
 											// Contains generic stats
 
-			tickType = tickType + "166, ";  // CSCREEN
+			// tickType = tickType + "166, ";  // CSCREEN
 			
 			tickType = tickType + "221, ";	// Mark Price (used in TWS P&L computations)
 			
@@ -151,7 +151,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			}										// TickType.AUCTION_VOLUME
 													// Contains auction values (volume, price and imbalance)
 			
-			tickType = tickType + "232, "; 	// Mark Price
+			// tickType = tickType + "232, "; 	// Mark Price
 			
 			tickType = tickType + "233, "; 	//  TickType.RT_VOLUME
 													// Contains the last trade price, last trade size, last trade time, 
@@ -159,7 +159,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 									
 			tickType = tickType + "236, "; 	// Shortable
 
-			tickType = tickType + "247, ";  // Fundamentals
+			// tickType = tickType + "47, ";  // Fundamentals
 			
 			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
 				tickType = tickType + "256, "; 	// Inventory
@@ -173,61 +173,38 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				tickType = tickType + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
 			}
 			
-			tickType = tickType + "293, "; 	// TRADECOUNT
-			
-			tickType = tickType + "294, ";	// TRADERATE
-
-			tickType = tickType + "295, "; 	// VOLUMERATE
-			
-			tickType = tickType + "318, "; 	// LASTRTHTRADE
-			
-			tickType = tickType + "370, ";	// PARTICIPATIONMONITOR
-			
-			tickType = tickType + "377, "; 	// CTTTICKTAG
-			
-			tickType = tickType + "381, "; 	// IB RATE
-			
-			tickType = tickType + "384, ";	// RFQTICKRESPTAG
-			
-			tickType = tickType + "387, "; 	// DMM
-			
-			tickType = tickType + "388, "; 	// ISSUER FUNDAMENTALS
-			
-			tickType = tickType + "391, "; 	// IBWARRANTIMPVOLCOMPETETICK
-			
-			tickType = tickType + "407, "; 	// FUTURESMARGINS
+			// tickType = tickType + "293, "; 	// TRADECOUNT
+			// tickType = tickType + "294, ";	// TRADERATE
+			// tickType = tickType + "295, "; 	// VOLUMERATE
+			// tickType = tickType + "318, "; 	// LASTRTHTRADE
+			// tickType = tickType + "370, ";	// PARTICIPATIONMONITOR
+			// tickType = tickType + "377, "; 	// CTTTICKTAG
+			// tickType = tickType + "381, "; 	// IB RATE
+			// tickType = tickType + "384, ";	// RFQTICKRESPTAG
+			// tickType = tickType + "387, "; 	// DMM
+			// tickType = tickType + "388, "; 	// ISSUER FUNDAMENTALS
+			// tickType = tickType + "391, "; 	// IBWARRANTIMPVOLCOMPETETICK
+			// tickType = tickType + "407, "; 	// FUTURESMARGINS
 			
 			tickType = tickType + "411, ";		// Real-time Historical Volatility
 			
-			tickType = tickType + "428, "; 	// MONETARY CLOSE PRICE
+			// tickType = tickType + "428, "; 	// MONETARY CLOSE PRICE
+			// tickType = tickType + "439, "; 	// MONITORTICKTAG
+			 
+			tickType = tickType + "456 ";	// IBDividend
 			
-			tickType = tickType + "439, "; 	// MONITORTICKTAG
-			
-			tickType = tickType + "456, ";			// IBDividends
-
-			tickType = tickType + "459, ";	// RTCLOSE
-			
-			tickType = tickType + "460, "; 	// BOND FACTOR MULTIPLIER
-			
-			tickType = tickType + "499, ";	// FEE AND REBATE RATE
-			
-			tickType = tickType + "506, "; 	// MIDPTIV
-			
-			tickType = tickType + "511, "; 	// HVOLRT10 (PER-UNDERLYING)
-			
-			tickType = tickType + "512, ";	// HVOLRT30 (PER-UNDERLYING)
-			
-			tickType = tickType + "513, "; 	// HVOLRT50 (PER-UNDERLYING)
-			
-			tickType = tickType + "514, ";	// HVOLRT75 (PER-UNDERLYING)
-			
-			tickType = tickType + "515, "; 	// HVOLRT100 (PER-UNDERLYING)
-			
-			tickType = tickType + "516, ";	// HVOLRT150 (PER-UNDERLYING)
-			
-			tickType = tickType + "517, "; 	// HVOLRT200 (PER-UNDERLYING)
-			
-			tickType = tickType + "545";	// VSIV
+			// tickType = tickType + "459, ";	// RTCLOSE
+			// tickType = tickType + "460, "; 	// BOND FACTOR MULTIPLIER
+			// tickType = tickType + "499, ";	// FEE AND REBATE RATE
+			// tickType = tickType + "506, "; 	// MIDPTIV
+			// tickType = tickType + "511, "; 	// HVOLRT10 (PER-UNDERLYING)
+			// tickType = tickType + "512, ";	// HVOLRT30 (PER-UNDERLYING)
+			// tickType = tickType + "513, "; 	// HVOLRT50 (PER-UNDERLYING)
+			// tickType = tickType + "514, ";	// HVOLRT75 (PER-UNDERLYING)
+			// tickType = tickType + "515, "; 	// HVOLRT100 (PER-UNDERLYING)
+			// tickType = tickType + "516, ";	// HVOLRT150 (PER-UNDERLYING)
+			// tickType = tickType + "517, "; 	// HVOLRT200 (PER-UNDERLYING)
+			// tickType = tickType + "545";	// VSIV
 			
 			return tickType;
 		} 
