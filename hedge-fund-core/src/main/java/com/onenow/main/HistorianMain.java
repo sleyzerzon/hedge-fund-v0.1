@@ -22,7 +22,6 @@ public class HistorianMain {
 	private static HistorianConfig config = new HistorianService().size30sec;
 	
 	private static SQS sqs = new SQS();
-	private static String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING";
 	
 	private static long lastQueryTime;
 
@@ -82,7 +81,7 @@ public class HistorianMain {
 			
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
-			sqs.sendMessage(message, queueURL);				
+			sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
 //		} else {
 //			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());

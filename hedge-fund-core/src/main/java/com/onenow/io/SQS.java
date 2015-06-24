@@ -20,6 +20,8 @@ import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.onenow.admin.InitAmazon;
+import com.onenow.admin.NetworkConfig;
+import com.onenow.constant.DBname;
 import com.onenow.constant.QueueName;
 import com.onenow.util.Watchr;
 
@@ -32,7 +34,7 @@ import com.onenow.util.Watchr;
  */
 public class SQS {
 	
-	AmazonSQS sqs = InitAmazon.getSQS();
+	static AmazonSQS sqs = InitAmazon.getSQS();
 	
 	public SQS() {
 		
@@ -42,6 +44,26 @@ public class SQS {
 		
     }
 
+	/** 
+	 * Each environment has its own queue
+	 * @return
+	 */
+	public static String getHistoryQueueURL() {
+		
+		String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_DEVELOPMENT/" + QueueName.HISTORY_DEVELOPMENT.toString();
+
+		if(!NetworkConfig.isMac()) {
+			
+			queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_STAGING.toString();
+			
+//			queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_PRODUCTION.toString();
+		} 
+		return queueURL;
+
+		
+	}
+	
+	
 	private void catchAWSClientException(AmazonClientException ace) {
 		String log = "Caught an AmazonClientException, which means the client encountered " +
 		"a serious internal problem while trying to communicate with SQS, such as not " +
@@ -70,7 +92,7 @@ public class SQS {
 		}
 	}
 
-	public void deleteMesssage(String myQueueUrl, List<Message> messages) {
+	public static void deleteMesssage(String myQueueUrl, List<Message> messages) {
 		
 		// String log = "Deleting a message list: " + messages + " FROM " + myQueueUrl;
     	// Watchr.log(Level.INFO, log);
@@ -82,7 +104,7 @@ public class SQS {
 		}
 	}
 
-	public List<Message> receiveMessages(String myQueueUrl) {
+	public static List<Message> receiveMessages(String myQueueUrl) {
 		
 		String log = "Receiving messages to " + myQueueUrl;
 		// Watchr.log(Level.INFO, "Receiving messages to " + myQueueUrl);
@@ -125,7 +147,7 @@ public class SQS {
 		}
 	}
 
-	public void listQueues() {
+	public static void listQueues() {
 
 		String log = "Listing all queues in your account.";
     	Watchr.log(Level.INFO, log);
@@ -140,7 +162,7 @@ public class SQS {
 		}
 	}
 
-	public String createQueue(QueueName name) {
+	public static String createQueue(QueueName name) {
 		
 		String log = "Creating a new SQS queue called MyQueue.";
     	Watchr.log(Level.INFO, log);

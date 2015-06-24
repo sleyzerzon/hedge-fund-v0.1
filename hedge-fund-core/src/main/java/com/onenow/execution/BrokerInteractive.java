@@ -2,37 +2,25 @@ package com.onenow.execution;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
 import com.amazonaws.services.sqs.model.Message;
 import com.onenow.alpha.BrokerInterface;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.InvType;
 import com.onenow.constant.QueueName;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
-import com.onenow.data.Channel;
-import com.onenow.data.EventActivityHistory;
-import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
-import com.onenow.io.Lookup;
 import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.Transaction;
 import com.onenow.risk.MarketAnalytics;
-import com.onenow.util.Piping;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
@@ -50,9 +38,6 @@ public class BrokerInteractive implements BrokerInterface  {
 	//  private List<Channel> channels = new ArrayList<Channel>();
 	  
 	  private BusWallStInteractiveBrokers busIB;
-
-	  private static SQS sqs = new SQS();
-	  private static String queueURL;
 
 	  private static QuoteRealtimeChain quoteRealtimeChain;
 	  private static QuoteHistoryChain quoteHistoryChain;
@@ -95,8 +80,8 @@ public class BrokerInteractive implements BrokerInterface  {
 		  
 	  private void connectToServices(BusWallStInteractiveBrokers bus) {
 		  bus.connectToServer();
-		  queueURL = sqs.createQueue(QueueName.HISTORY_STAGING);
-		  sqs.listQueues();
+		  SQS.createQueue(QueueName.HISTORY_STAGING);
+		  SQS.listQueues();
 	  }
 
 	
@@ -119,12 +104,12 @@ public class BrokerInteractive implements BrokerInterface  {
 	  public void procesHistoricalQuotesRequests() {
 		  		  
 		  while(true) {
-			  List<Message> serializedMessages = sqs.receiveMessages(queueURL);			  
+			  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
 			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {				  
 					  quoteHistoryChain.processHistoryOneRequest(message);
 				  }
-				  sqs.deleteMesssage(queueURL, serializedMessages);
+				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }
 			  TimeParser.wait(1); // pace requests for messages from queue 
 		  }
