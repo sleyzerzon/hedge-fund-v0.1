@@ -110,12 +110,19 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	@Override
 	public void marketDataType(MktDataType marketDataType) {
 	}	
-	
+
+	@Override
+	public void tickGeneric(TickType tickType, double value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	// PRINT
 	public String toString() {
 		String s = "";
 		s = s + quoteRows.toString();
 		return s;
 	}
+
 
 }

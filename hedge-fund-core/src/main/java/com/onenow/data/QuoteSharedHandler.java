@@ -13,10 +13,15 @@ import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BusController.ITopMktDataHandler;
 import com.onenow.util.Watchr;
 
-public class QuoteRealtimeHandler implements ITopMktDataHandler {
+/**
+ * 
+ * API Guide: https://www.interactivebrokers.com/en/software/api/api_Left.htm#CSHID=apiguide%2Ftables%2Ftick_types.htm|StartTopic=apiguide%2Ftables%2Ftick_types.htm|SkinName=ibskin
+ * @author pablo
+ *
+ */
+public class QuoteSharedHandler implements ITopMktDataHandler {
 	
-	// tickEFP
-	// tickSnapshotEnd
+	// tickGeneric()
 	
 	// time
 	long m_lastTime;
@@ -42,11 +47,11 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	protected AbstractTableModel chainTable;
 
 	
-	public QuoteRealtimeHandler() {
+	public QuoteSharedHandler() {
 		
 	}
 	
-	public QuoteRealtimeHandler(Investment inv, AbstractTableModel chainTable) {
+	public QuoteSharedHandler(Investment inv, AbstractTableModel chainTable) {
 		this.investment = inv;
 		this.chainTable = chainTable;
 	}
@@ -58,8 +63,10 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 
 	@Override
 	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
-				
-		switch( tickType) {
+			
+		// TODO bond contracts: BIDYIELD, ASKYIELD, LASTYIELD
+		
+		switch( tickType) {		
 		case BID:
 			m_bid = price;
 //			Watchr.log(Level.INFO, ">Bid " + m_bid + " for " + investment.toString());
@@ -69,7 +76,7 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			m_ask = price;
 //			Watchr.log(Level.INFO, ">Ask " + m_ask + " for " + investment.toString());
 			// marketPrice.writePriceNotRealTime(investment, m_ask, TradeType.BUY.toString());
-			break;
+			break;			
 		case LAST:
 			m_last = price;
 //			Watchr.log(Level.INFO, ">Last " + m_last + " for " + investment.toString());
@@ -86,46 +93,45 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case AUCTION_PRICE:
 			// TODO
 			break;
-		case INDEX_FUTURE_PREMIUM:
+		case MARK_PRICE: 
 			// TODO
 			break;
-		case OPTION_HISTORICAL_VOL:
-			// TODO ********************
-//			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
-			break;
-		case OPTION_IMPLIED_VOL:
-			// TODO ********************
-			break;
-		case RT_HISTORICAL_VOL:
+		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
 			// TODO!!!!! ********************
 			break;
 		case SHORTABLE:
 			// TODO
 			break;
+			
+
+		////////////////
+		//////// CALCULATE OWN
 		case HIGH:
-			// TODO
-			break;
-		case HIGH_13_WEEK:
-			// TODO
-			break;
-		case HIGH_26_WEEK:
-			// TODO
-			break;
-		case HIGH_52_WEEK:
-			// TODO
+			// Calculate own
 			break;
 		case LOW:
-			// TODO
+			// Calculate own
+			break;
+		case HIGH_13_WEEK:
+			// Calculate own
 			break;
 		case LOW_13_WEEK:
-			// TODO
+			// Calculate own
+			break;
+		case HIGH_26_WEEK:
+			// Calculate own
 			break;
 		case LOW_26_WEEK:
-			// TODO
+			// Calculate own
+			break;
+		case HIGH_52_WEEK:
+			// Calculate own
 			break;
 		case LOW_52_WEEK:
-			// TODO
+			// Calculate own
 			break;
+			
+		
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice: " + " -tickType " + tickType +
 					" -for " + investment.toString());
@@ -134,13 +140,43 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		
 		chainTable.fireTableDataChanged();
 	}
+	
+	@Override public void tickGeneric(TickType tickType, double value) {
 
+		switch( tickType) {			
+
+		case OPTION_HISTORICAL_VOL:
+			// TODO ********************
+//			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
+			break;
+		case OPTION_IMPLIED_VOL:
+			// TODO ********************
+			break;
+		case INDEX_FUTURE_PREMIUM:
+			// TODO
+			break;
+		case TRADE_COUNT:
+			// TODO
+			break;
+		case TRADE_RATE:
+			// TODO
+			break;
+		case VOLUME_RATE:
+			// TODO
+			break;
+
+		default:
+			Watchr.log(Level.WARNING, 	"$$$$$ tickGeneric: " + " -tickType " + tickType +
+					" -for " + investment.toString());
+			break;	
+		}
+
+	}
+	
+	
 	@Override
 	public void tickSize(TickType tickType, int size) {
 						
-		// TODO
-		// TICKSIZE: -TICKTYPE OPTION_CALL_OPEN_INTEREST -SIZE 0 FOR -UNDER SPX -TYPE PUT -EXPIRES 20150626 -STRIKE 2100.0  
-		
 		switch( tickType) {
 		case BID_SIZE:
 			m_bidSize = size;
@@ -152,6 +188,9 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 //			marketPrice.writeSizeNotRealTime(investment, m_askSize, InvDataType.ASKSIZE.toString());
 			// Watchr.log(Level.INFO, ">Ask size " + m_askSize + " for " + investment.toString());
 			break;
+		case LAST_SIZE:
+			// TODO
+			break;
 		case VOLUME:
 			m_volume = size;
 //			marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
@@ -160,25 +199,19 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case AVG_VOLUME:
 			// TODO
 			break;
-		case OPTION_CALL_VOLUME:
-			// TODO
-			break;
-		case OPTION_PUT_VOLUME:
-			// TODO
-			break;
 		case OPTION_CALL_OPEN_INTEREST:
 			// TODO
 			break;
 		case OPTION_PUT_OPEN_INTEREST:
 			// TODO
 			break;
-		case LAST_SIZE:
+		case OPTION_CALL_VOLUME:
+			// TODO
+			break;
+		case OPTION_PUT_VOLUME:
 			// TODO
 			break;
 		case REGULATORY_IMBALANCE:
-			// TODO
-			break;
-		case AUCTION_PRICE:
 			// TODO
 			break;
 		case AUCTION_VOLUME:
@@ -187,28 +220,6 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case AUCTION_IMBALANCE:
 			// TODO
 			break;
-
-//		case OPEN:
-//			// TODO
-//			break;
-//		case HIGH_13_WEEK:
-//			// TODO
-//			break;
-//		case HIGH_26_WEEK:
-//			// TODO
-//			break;
-//		case HIGH_52_WEEK:
-//			// TODO
-//			break;
-//		case LOW_13_WEEK:
-//			// TODO
-//			break;
-//		case LOW_26_WEEK:
-//			// TODO
-//			break;
-//		case LOW_52_WEEK:
-//			// TODO
-//			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickSize:" + " -tickType: " + tickType +
 					" -for " + investment.toString());
@@ -237,12 +248,7 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 			break;
 		case AUCTION_VOLUME:
 			// Watchr.log(Level.INFO, ">AUCTION_VOLUME " + value + " for " + investment.toString()); // subscribe to
-			break;
-		case RT_VOLUME:
-			Watchr.log(Level.INFO, ">>>>> RT_VOLUME " + value + " for " + investment.toString()); 
-			MarketPrice.parseAndWriteRealTime(investment, value);
-			// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
-			break;
+			break;			
 		case VOLUME_RATE:
 			// Watchr.log(Level.INFO, ">VOLUME_RATE " + value + " for " + investment.toString()); // not for indices
 			break;
@@ -252,9 +258,21 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 		case ASK_EXCH:
 			// TODO
 			break;
+		case FUNDAMENTAL_RATIOS:
+			// TODO
+			break;
 		case UNKNOWN:
 			// TODO
 			break;
+
+		////////////////
+		//////// REALTIME
+		case RT_VOLUME:
+			Watchr.log(Level.INFO, ">>>>> RT_VOLUME " + value + " for " + investment.toString()); 
+			MarketPrice.parseAndWriteRealTime(investment, value);
+			// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
+			break;
+
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickString: " + " -tickType " + tickType +
 					" -for " + investment.toString());
@@ -268,6 +286,7 @@ public class QuoteRealtimeHandler implements ITopMktDataHandler {
 	public void tickSnapshotEnd() {
 		Watchr.log(Level.SEVERE, "call to empty: tickSnapshotEnd" + " for " + investment.toString());		
 	}
+	
 
 	@Override
 	public void marketDataType(MktDataType marketDataType) {

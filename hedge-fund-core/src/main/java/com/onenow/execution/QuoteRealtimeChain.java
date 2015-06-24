@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.onenow.data.QuoteRealtimeHandler;
+import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.QuoteRealtimeChain;
 import com.onenow.instrument.Investment;
@@ -19,7 +19,7 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static ArrayList<QuoteRealtimeHandler> handlerRows = new ArrayList<QuoteRealtimeHandler>(); 
+	private static ArrayList<QuoteSharedHandler> handlerRows = new ArrayList<QuoteSharedHandler>(); 
 
 	private static BusController controller;
 	
@@ -34,12 +34,12 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 	
 	public void addRow(Investment investment) {
 		
-		QuoteRealtimeHandler quoteHandler = null;
+		QuoteSharedHandler quoteHandler = null;
 		
 		if(investment instanceof InvestmentOption) {
 			quoteHandler = new QuoteRealtimeOption(investment, this);						
 		} else {
-			quoteHandler = new QuoteRealtimeHandler(investment, this);			
+			quoteHandler = new QuoteSharedHandler(investment, this);			
 		}
 		handlerRows.add(quoteHandler);
 
@@ -48,7 +48,7 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 	}
 	
 	public void desubscribeAll() {
-		for (QuoteRealtimeHandler row : handlerRows) {
+		for (QuoteSharedHandler row : handlerRows) {
 			controller.cancelMktData( row);
 		}
 	}		

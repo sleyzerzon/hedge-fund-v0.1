@@ -33,7 +33,7 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
-import com.onenow.data.QuoteRealtimeHandler;
+import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteRealtimeOption;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentOption;
@@ -54,7 +54,7 @@ public class BusController implements EWrapper {
 	private int m_orderId;
 
 	private final HashMap<Integer,QuoteRealtimeOption> m_optionCompMap = new HashMap<Integer,QuoteRealtimeOption>(); 
-	private final HashMap<Integer,QuoteRealtimeHandler> m_topMktDataMap = new HashMap<Integer,QuoteRealtimeHandler>();
+	private final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
 
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
@@ -382,18 +382,26 @@ public class BusController implements EWrapper {
 	}
 
 	// ---------------------------------------- Top Market Data handling ----------------------------------------
+	
+	// generic
 	public interface ITopMktDataHandler {
 		void tickPrice(TickType tickType, double price, int canAutoExecute);
 		void tickSize(TickType tickType, int size);
 		void tickString(TickType tickType, String value);
 		void tickSnapshotEnd();
 		void marketDataType(MktDataType marketDataType);
+		
+		// added
+		void tickGeneric(TickType tickType, double value);
+
 	}
 
+	// futures
 	public interface IEfpHandler extends ITopMktDataHandler {
 		void tickEFP(int tickType, double basisPoints, String formattedBasisPoints, double impliedFuture, int holdDays, String futureExpiry, double dividendImpact, double dividendsToExpiry);
 	}
 
+	// options
 	public interface IOptHandler extends ITopMktDataHandler {
 		void tickOptionComputation( TickType tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice);
 	}
@@ -404,7 +412,7 @@ public class BusController implements EWrapper {
 	 * @param snapshot
 	 * @param handler
 	 */
-    public void requestData(String genericTickList, QuoteRealtimeHandler handler) { 
+    public void requestData(String genericTickList, QuoteSharedHandler handler) { 
     	
     	int reqId = m_reqId++;
     	
@@ -421,7 +429,7 @@ public class BusController implements EWrapper {
     public void reqEfpMktData(Contract contract, String genericTickList, boolean snapshot, IEfpHandler handler) {
     	int reqId = m_reqId++;
     	// TODO: is casting right?
-    	m_topMktDataMap.put( reqId, (QuoteRealtimeHandler) handler);
+    	m_topMktDataMap.put( reqId, (QuoteSharedHandler) handler);
     	m_efpMap.put( reqId, handler);
     	m_client.reqMktData( reqId, contract, genericTickList, snapshot, Collections.<TagValue>emptyList() );
 		sendEOM();
@@ -458,7 +466,7 @@ public class BusController implements EWrapper {
 
 	@Override public void tickPrice(int reqId, int tickType, double price, int canAutoExecute) {
 		// Watchr.log(Level.FINEST, "tickPrice:" + " -reqId " + reqId + " -tickType " + tickType + " -price " + price + " -autoExec " + canAutoExecute);
-		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
+		QuoteSharedHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickPrice( TickType.get( tickType), price, canAutoExecute);
 		} else {
@@ -468,9 +476,9 @@ public class BusController implements EWrapper {
 	}
 
 	@Override public void tickGeneric(int reqId, int tickType, double value) {
-		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
+		QuoteSharedHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
-			handler.tickPrice( TickType.get( tickType), value, 0);
+			handler.tickGeneric( TickType.get( tickType), value);
 		} else {
 			Watchr.log(Level.SEVERE, "tickPrice: useless handler");
 		}
@@ -479,7 +487,7 @@ public class BusController implements EWrapper {
 
 	@Override public void tickSize(int reqId, int tickType, int size) {
 		// Watchr.log(Level.FINEST, "TickSize:" + " -reqId " + reqId + " -tickType " + tickType + " -size " + size);
-		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
+		QuoteSharedHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickSize( TickType.get( tickType), size);
 		} else {
@@ -490,7 +498,7 @@ public class BusController implements EWrapper {
 
 	@Override public void tickString(int reqId, int tickType, String value) {
 		// Watchr.log(Level.FINEST, "tickString:" + " -reqId " + reqId + " -tickType " + tickType + " -value " + value);
-		QuoteRealtimeHandler handler = m_topMktDataMap.get( reqId);
+		QuoteSharedHandler handler = m_topMktDataMap.get( reqId);
 		if (handler != null) {
 			handler.tickString( TickType.get( tickType), value);
 		} else {

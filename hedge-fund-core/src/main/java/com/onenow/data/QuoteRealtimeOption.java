@@ -10,7 +10,7 @@ import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.util.Watchr;
 
-public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHandler {  
+public class QuoteRealtimeOption extends QuoteSharedHandler implements IOptHandler {  
 
 	double m_impVol;
 	double m_delta;
@@ -31,7 +31,9 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 
 
 	@Override public void tickOptionComputation( TickType tickType, double impVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
-				
+			
+		// TODO: ASK_OPTION_COMPUTATION, BID_OPTION_COMPUTATION, LAST_OPTION_COMPUTATION, MODEL_OPTION_COMPUTATION
+		
 		switch( tickType) {
 		case MODEL_OPTION:
 			m_impVol = impVol;
@@ -45,6 +47,9 @@ public class QuoteRealtimeOption extends QuoteRealtimeHandler implements IOptHan
 			//			" -for " + investment.toString());
 			
 			// TODO: WRITE TO DB
+			break;
+		case CUST_OPTION_COMPUTATION:
+			// TODO
 			break;
 		case ASK_OPTION: 
 			// TODO
