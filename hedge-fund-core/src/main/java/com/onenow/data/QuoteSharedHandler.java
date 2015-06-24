@@ -95,12 +95,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		case MARK_PRICE: 
 			// TODO
 			break;
-		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
-			// TODO!!!!! ********************
-			break;
-		case SHORTABLE:
-			// TODO
-			break;
 			
 
 		////////////////
@@ -144,6 +138,9 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		switch( tickType) {			
 
+		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
+			// TODO!!!!! ********************
+			break;
 		case OPTION_HISTORICAL_VOL:
 			// TODO ********************
 //			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
@@ -163,6 +160,10 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		case VOLUME_RATE:
 			// TODO
 			break;
+		case SHORTABLE:
+			// TODO
+			break;
+
 
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickGeneric: " + " -tickType " + tickType +
