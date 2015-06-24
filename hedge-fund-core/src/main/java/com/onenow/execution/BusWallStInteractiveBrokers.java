@@ -161,7 +161,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 			// tickType = tickType + "47, ";  // Fundamentals
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
+			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock) && !(inv instanceof InvestmentIndex)) {
 				tickType = tickType + "256, "; 	// Inventory
 			}
 			
