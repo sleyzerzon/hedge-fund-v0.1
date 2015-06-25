@@ -169,8 +169,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    if(errorCode==504 || errorCode==507) {
 	    	isConnected = false;
 	    	busController.disconnect();
-	    	TimeParser.wait(10);
-	    	Watchr.log(Level.WARNING, "Attempting to reconnect BusController");
+	    	TimeParser.wait(20);
+	    	Watchr.log(Level.SEVERE, "Attempting to reconnect BusController, code: " + errorMsg);
 	    	connectToServer();
 	    }
 	  }

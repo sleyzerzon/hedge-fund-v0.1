@@ -72,6 +72,7 @@ public class Kinesis {
         try {
         	kinesis.putRecord(putRecord);
         } catch (Exception e){
+        	success = false;
         	Watchr.log(Level.SEVERE, "Throughput exceeded");
         	e.printStackTrace();
         }

@@ -109,9 +109,13 @@ public class BusSystem {
 	}
 
 	public static void write(StreamName streamName, Object objToSend) {
-		validateStream(streamName);
-		createStreamIfNotExists(streamName);
-		getKinesis().sendObject(objToSend, streamName);
+		try {
+			validateStream(streamName);
+			createStreamIfNotExists(streamName);
+			getKinesis().sendObject(objToSend, streamName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 		
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
