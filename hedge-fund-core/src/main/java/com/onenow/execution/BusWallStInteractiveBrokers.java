@@ -34,11 +34,12 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	
 	private StreamName streamName;
 	
+	public boolean isConnected = false;
 	
 	public BusWallStInteractiveBrokers() {
 		// always local for now
-		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
-		this.streamName = StreamName.STREAMING;
+		// this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
+		// this.streamName = StreamName.STREAMING;
 	}
 
 	public BusWallStInteractiveBrokers(StreamName streamName) {
@@ -85,31 +86,38 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				TimeParser.wait(10);
 			}			
 		} // end try to connect
+	    
+	    isConnected = true;
 		Watchr.log(Level.INFO, "CONNECTED TO BUS!", "", "");
 	  }
 
 	  public Integer getClientID() {
 		  
-		  Integer id = null;
+		  Integer id = 0;
 		  
-		  if(streamName.equals(StreamName.PRIMARY)) {
-			  id = 0;
-		  }
-		  if(streamName.equals(StreamName.STANDBY)) {
-			  id = 1;
-		  }
-		  if(streamName.equals(StreamName.REALTIME)) {
-			  id = 2;
-		  }
-		  if(streamName.equals(StreamName.HISTORY)) {
-			  id = 3;
-		  }
-		  if(streamName.equals(StreamName.STREAMING)) {
-			  id = 4;
-		  }
-		  if(streamName.equals(StreamName.TESTING)) {
-			  id = 5;
-		  }
+		  try {
+			if(streamName.equals(StreamName.PRIMARY)) {
+				  id = 0;
+			  }
+			  if(streamName.equals(StreamName.STANDBY)) {
+				  id = 1;
+			  }
+			  if(streamName.equals(StreamName.REALTIME)) {
+				  id = 2;
+			  }
+			  if(streamName.equals(StreamName.HISTORY)) {
+				  id = 3;
+			  }
+			  if(streamName.equals(StreamName.STREAMING)) {
+				  id = 4;
+			  }
+			  if(streamName.equals(StreamName.TESTING)) {
+				  id = 5;
+			  }
+		} catch (Exception e) {
+			// ignore exception upon default initialization
+			// e.printStackTrace(); 
+		}
 
 		  return id;
 	  }
@@ -230,7 +238,12 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
   @Override
   public void disconnected() {
+	  
+	isConnected = false;
     show(ConnectionStatus.DISCONNECTED.toString());
+    
+    // re-connnect 
+    connectToServer();
 
   }
 

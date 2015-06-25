@@ -33,18 +33,12 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private MarketPrice marketPrices;
 	  private MarketAnalytics marketAnalytics;
 	  
-	  private StreamName streamName;
+	  private StreamName streamName = StreamName.REALTIME;
 	
-	//  private List<Channel> channels = new ArrayList<Channel>();
-	  
 	  private BusWallStInteractiveBrokers busIB;
 
-	  private static QuoteRealtimeChain quoteRealtimeChain;
-	  private static QuoteHistoryChain quoteHistoryChain;
-
-
 	  public BrokerInteractive() {
-		  this.streamName = StreamName.REALTIME;
+
 	  }
 	
 	  /**
@@ -57,10 +51,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  	this.streamName = streamName;
 			this.busIB = busIB;
 			
-			connectToServices(busIB);
-			
-			quoteHistoryChain = new QuoteHistoryChain(busIB.controller);
-
+			connectToServices(busIB);			
 	  }
 	  
 	  /**
@@ -74,8 +65,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		this.busIB = busIB;
 		
 		connectToServices(busIB);
-		quoteRealtimeChain = new QuoteRealtimeChain(busIB.controller);
-	
+		
 	    // create new underlying list, portfolio, then initialize the market
 	    this.underList = new ArrayList<Underlying>(); // TODO: get from portfolio?
 	
@@ -98,7 +88,11 @@ public class BrokerInteractive implements BrokerInterface  {
 	   * Quotes are in response to specific request, or real-time notifications
 	   */
 	  public void getLiveQuotes() {
+		  
 		  Watchr.log(marketPortfolio.toString());
+		  
+		  QuoteRealtimeChain quoteRealtimeChain = new QuoteRealtimeChain(busIB.controller);
+		  
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
 
@@ -110,23 +104,31 @@ public class BrokerInteractive implements BrokerInterface  {
 	  // GET HISTORICAL QUOTES
 	  public void procesHistoricalQuotesRequests() {
 		  		  
+		  QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.controller);
+		  
 		  while(true) {
-			  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
-			  if(serializedMessages.size()>0) {	
-				  for(Message message: serializedMessages) {				  
-					  quoteHistoryChain.processHistoryOneRequest(message);
+			  if(busIB.isConnected) {
+				  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
+				  if(serializedMessages.size()>0) {	
+					  for(Message message: serializedMessages) {
+						  quoteHistoryChain.processHistoryOneRequest(message);
+					  }
+					  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 				  }
-				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
+				  TimeParser.wait(1); // pace requests for messages from queue 
+			  } else {
+				  TimeParser.wait(10);
 			  }
-			  TimeParser.wait(1); // pace requests for messages from queue 
 		  }
 		}
 	  
 		@Override
 		public Integer readHistoricalQuotes(Investment inv, String end,
 				HistorianConfig config, QuoteHistoryInvestment history) {
-			return quoteHistoryChain.readHistoricalQuotes(inv, end,
-					config, history);
+			
+			QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.controller);
+			return quoteHistoryChain.readHistoricalQuotes(inv, end, config, history);
+			
 		}
 
 		
