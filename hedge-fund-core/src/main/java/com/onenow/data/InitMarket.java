@@ -41,7 +41,7 @@ public class InitMarket {
 		
 	public static Portfolio getPortfolio(	List<Underlying> stocks, List<Underlying> indices,
 											List<Underlying> futures, List<Underlying> options,
-											String toDashedDate) {
+											String toDashedDate, int maxTimeSeries) {
 		
 		marketPortfolio = new Portfolio();
 		
@@ -49,7 +49,7 @@ public class InitMarket {
 
 		addIndicesToPortfolio(indices);
 
-		addOptionsToPortfolio(options, toDashedDate);
+		addOptionsToPortfolio(options, toDashedDate, maxTimeSeries);
 
 		addFuturesToPortfolio(futures);
 		
@@ -59,38 +59,62 @@ public class InitMarket {
 		
 	}
 
-	public static Portfolio getSamplePortfolio() {	
+	public static Portfolio getHistoryPortfolio() {	
 		
 		String toDashedDate = TimeParser.getTodayDashed(); 
 
-		return getSamplePortfolio(toDashedDate);
+		return getHistoryPortfolio(toDashedDate);
 		
 	}
 	
-	public static Portfolio getSamplePortfolio(String toDashedDate) {	
-							
+	public static Portfolio getHistoryPortfolio(String toDashedDate) {	
+			
+		int maxTimeSeries = 3;
+
+		return getPortfolio(	new ArrayList<Underlying>(), 
+								InvestmentList.getUnderlying(InvestmentList.someIndices),
+								InvestmentList.getUnderlying(InvestmentList.futureNames), 
+								InvestmentList.getUnderlying(InvestmentList.optionNames),
+								toDashedDate, maxTimeSeries);
+	}
+	
+	public static Portfolio getRealtimePortfolio() {	
+		
+		String toDashedDate = TimeParser.getTodayDashed(); 
+
+		return getHistoryPortfolio(toDashedDate);
+		
+	}
+	
+	public static Portfolio getRealtimePortfolio(String toDashedDate) {	
+		
+		int maxTimeSeries = 10;
+
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
-								InvestmentList.getUnderlying(InvestmentList.futures), 
-								InvestmentList.getUnderlying(InvestmentList.options),
-								toDashedDate);
+								InvestmentList.getUnderlying(InvestmentList.futureNames), 
+								InvestmentList.getUnderlying(InvestmentList.optionNames),
+								toDashedDate, maxTimeSeries);
 	}
 
-	public static Portfolio getTestPortfolio() {	
+
+	public static Portfolio getPrimaryPortfolio() {	
 				
 		String toDashedDate = TimeParser.getTodayDashed(); 
 
-		return getNewTestPortfolio(toDashedDate);
+		return getPrimaryPortfolio(toDashedDate);
 		
 	}
 
-	public static Portfolio getNewTestPortfolio(String toDashedDate) {	
+	public static Portfolio getPrimaryPortfolio(String toDashedDate) {	
+		
+		int maxTimeSeries = 5;
 		
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.justApple), 
 								new ArrayList<Underlying>(),
 								new ArrayList<Underlying>(), 
 								new ArrayList<Underlying>(),
-								toDashedDate);
+								toDashedDate, maxTimeSeries);
 	}
 	
 
@@ -113,7 +137,7 @@ public class InitMarket {
 	 * Initialize options
 	 * @param unders
 	 */
-	private static void addOptionsToPortfolio(List<Underlying> unders, String toDashedDate) { 
+	private static void addOptionsToPortfolio(List<Underlying> unders, String toDashedDate, int maxTimeSeries) { 
 		ExpirationDate exps = new ExpirationDate();
 		exps.initIndexOptionExpList(); 
 		
@@ -124,37 +148,37 @@ public class InitMarket {
 			for(String expDate:exps.getValidOptionExpList(TimeParser.getTodayUndashed())) { 			
 				// TODO: seed lowprice and highprice automatically from market value range in the time window of interest
 				addOptionsToPortfolio(	under, expDate, 
-										lowPrice(under, fromDashedDate, toDashedDate), 
-										highPrice(under, fromDashedDate, toDashedDate));	
+										lowPrice(under, fromDashedDate, toDashedDate, maxTimeSeries), 
+										highPrice(under, fromDashedDate, toDashedDate, maxTimeSeries));	
 			}
 		}
 	}
-	
-	private static double lowPrice(Underlying index, String fromDate, String toDate) {
-		Double price=0.0;		
+
+	private static double getMarketPrice(Underlying index) {
+		Double price=0.0;
 		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
-			price = 2050.0;	
+			price = 2100.0;	
 		}
 		if(index.getTicker().equals("NDX")) {
-			price = 4450.0;
+			price = 4500.0;
 		}
 		if(index.getTicker().equals("RUT")) {
-			price = 1350.0;
-		}		
+			price = 1500.0;
+		}				
 		return price;
 	}
 	
-	private static double highPrice(Underlying index, String fromDate, String toDate) {
+	private static double lowPrice(Underlying index, String fromDate, String toDate, int maxTimeSeries) {
+		Double price=0.0;		
+		int increment = 5;
+		price = getMarketPrice(index) - increment*maxTimeSeries;
+		return price;
+	}
+	
+	private static double highPrice(Underlying index, String fromDate, String toDate, int maxTimeSeries) {
 		Double price=0.0;	
-		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
-			price = 2150.0;	
-		}
-		if(index.getTicker().equals("NDX")) {
-			price = 4450.0;
-		}
-		if(index.getTicker().equals("RUT")) {
-			price = 1350.0;
-		}
+		int increment = 5;
+		price = getMarketPrice(index) + increment*maxTimeSeries;		
 		return price;		
 	}
 	

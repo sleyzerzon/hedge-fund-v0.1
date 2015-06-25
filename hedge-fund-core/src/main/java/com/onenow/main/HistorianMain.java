@@ -29,16 +29,13 @@ public class HistorianMain {
 		
 		InitLogger.run("");
 
-		// queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/HISTORY_STAGING"; 
-		// sqs.deleteQueue(queueURL);
-		// sqs.createQueue(QueueName.HISTORY_STAGING);
 		sqs.listQueues();
 		
 		while(true) {
 			
 			Watchr.log(Level.WARNING, "HISTORIAN through: " + toDashedDate);
 
-			marketPortfolio = InitMarket.getSamplePortfolio(toDashedDate);	
+			marketPortfolio = InitMarket.getHistoryPortfolio(toDashedDate);	
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {

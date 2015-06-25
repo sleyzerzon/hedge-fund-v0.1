@@ -8,10 +8,11 @@ import com.onenow.instrument.Underlying;
 public class InvestmentList {
 	
 	// official
-	public static List<String> SNP500 = getSNP500();
-	public static List<String> mainIndices = getMainIndices();
-	public static List<String> futures = getFutures();
-	public static List<String> options = getOptions();	
+	public static List<String> snp500Names = getSNP500();
+	public static List<String> indexNames = getMainIndices();
+	public static List<String> futureNames = getFutures();
+	public static List<String> optionNames = getOptions();	
+
 	// subsets
 	public static List<String> someStocks = getSomeStocks();
 	public static List<String> justApple = getAAPLStock();
@@ -64,7 +65,7 @@ public class InvestmentList {
 		List<String> list = new ArrayList<String>();
 		int count = 0;
 		int maxNum = 3;
-		for(String stock:SNP500){
+		for(String stock:snp500Names){
 			list.add(stock);
 			count++;
 			if(count>maxNum) {

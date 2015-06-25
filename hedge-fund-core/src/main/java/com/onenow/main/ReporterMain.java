@@ -33,7 +33,7 @@ public class ReporterMain {
 
 		InitLogger.run("");
 				
-		Portfolio marketPortfolio = InitMarket.getTestPortfolio();
+		Portfolio marketPortfolio = InitMarket.getPrimaryPortfolio();
 
 		String bucketName = "hedge-reporter";
 		Bucket bucket = S3.createBucket(bucketName);

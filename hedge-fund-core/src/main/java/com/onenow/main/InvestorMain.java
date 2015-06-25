@@ -33,17 +33,18 @@ public class InvestorMain {
 
 		if(	streamName.equals(StreamName.PRIMARY)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
-																InitMarket.getTestPortfolio(), 
+																InitMarket.getPrimaryPortfolio(), 
 																bus); 
 			broker.getLiveQuotes(); 			
 		}
 		
 		if(streamName.equals(StreamName.STANDBY)) {
+			// TODO: passive role on same investments as primary
 		}
 
 		if(	streamName.equals(StreamName.REALTIME)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
-																InitMarket.getSamplePortfolio(), 
+																InitMarket.getRealtimePortfolio(), 
 																bus); 
 			broker.getLiveQuotes(); 			
 		}
