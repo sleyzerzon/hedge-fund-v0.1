@@ -30,16 +30,14 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
-	public NetworkService gateway;
+	public NetworkService gateway = NetworkConfig.getGateway(Topology.LOCAL);
 	
-	private StreamName streamName;
+	private StreamName streamName = StreamName.STREAMING;
 	
 	public boolean isConnected = false;
 	
 	public BusWallStInteractiveBrokers() {
-		// always local for now
-		// this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
-		// this.streamName = StreamName.STREAMING;
+
 	}
 
 	public BusWallStInteractiveBrokers(StreamName streamName) {
