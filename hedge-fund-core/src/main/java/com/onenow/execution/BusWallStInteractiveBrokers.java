@@ -27,14 +27,13 @@ import com.onenow.util.Watchr;
 public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	public BusController busController = new BusController(this);
-	
+	public boolean isConnected = false;	
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
+	// Default
 	public NetworkService gateway = NetworkConfig.getGateway(Topology.LOCAL);
-	
 	private StreamName streamName = StreamName.STREAMING;
 	
-	public boolean isConnected = false;
 	
 	public BusWallStInteractiveBrokers() {
 
@@ -46,16 +45,12 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		this.streamName = streamName;
 	}
 
-	// configurable topology for testing
+	// configurable topology 
 	public BusWallStInteractiveBrokers(StreamName streamName, Topology topo) {
 		
 		this.streamName = streamName;
 		this.gateway = NetworkConfig.getGateway(topo);
 		
-		// fixed gateway for production
-//		if(!NetworkConfig.isMac()) {
-//			this.gateway = NetworkConfig.getGateway(Topology.AWSLOCAL);
-//		}
 		
 	}
 	
@@ -143,10 +138,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  
 		isConnected = false;
 	    show(ConnectionStatus.DISCONNECTED.toString());
+	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
 	    
-	    // re-connnect 
-	    connectToServer();
-
 	  }
 
 	  @Override
@@ -168,10 +161,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    // 504 not connected, 507 BAD MESSAGE LENGTH NULL
 	    if(errorCode==504 || errorCode==507) {
 	    	isConnected = false;
-	    	busController.disconnect();
-	    	TimeParser.wait(20);
-	    	Watchr.log(Level.SEVERE, "Attempting to reconnect BusController, code: " + errorMsg);
-	    	connectToServer();
+	    	// busController.disconnect();
 	    }
 	  }
 

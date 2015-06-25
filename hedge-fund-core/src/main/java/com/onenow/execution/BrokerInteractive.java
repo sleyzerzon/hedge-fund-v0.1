@@ -117,8 +117,8 @@ public class BrokerInteractive implements BrokerInterface  {
 				  }
 				  TimeParser.wait(1); // pace requests for messages from queue 
 			  } else {
-				  TimeParser.wait(10);
-				  busIB.connectToServer();
+					TimeParser.wait(20);
+					busIB.connectToServer();
 			  }
 		  }
 		}
