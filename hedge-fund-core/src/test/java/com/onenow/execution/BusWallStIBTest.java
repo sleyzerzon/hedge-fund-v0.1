@@ -13,7 +13,7 @@ public class BusWallStIBTest {
 
 	  BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers();
 	  
-	  Assert.assertTrue(bus.controller!=null);
+	  Assert.assertTrue(bus.busController!=null);
   }
   
   @Test

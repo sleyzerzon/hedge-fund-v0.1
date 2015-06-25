@@ -26,7 +26,7 @@ import com.onenow.util.Watchr;
 
 public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
-	public BusController controller = new BusController(this);
+	public BusController busController = new BusController(this);
 	
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
@@ -72,10 +72,10 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				tryToConnect = false;
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				Watchr.log(Level.INFO, log, "\n", "");
-			    controller = new BusController((com.onenow.portfolio.BusController.ConnectionHandler) this);
+			    busController = new BusController((com.onenow.portfolio.BusController.ConnectionHandler) this);
 
 			    // controller.disconnect(); 
-			    controller.connect(		gateway.URI, Integer.parseInt(gateway.port), 
+			    busController.connect(		gateway.URI, Integer.parseInt(gateway.port), 
 			    						clientID, null);  
 			} catch (Exception e) {
 				tryToConnect = true;
@@ -120,6 +120,64 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  return id;
 	  }
 	
+	  @Override
+	  public void connected() {
+	    show(ConnectionStatus.CONNECTED.toString());
+
+	    busController.reqCurrentTime( new ITimeHandler() {
+	      @Override public void currentTime(long time) {
+	        show( "Server date/time is " + Formats.fmtDate(time * 1000) );
+	      }
+	    });
+
+	    busController.reqBulletins( true, new IBulletinHandler() {
+	      @Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
+	        String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
+	        show( str);
+	        show( message);
+	      }
+	    });
+	  }
+
+	  @Override
+	  public void disconnected() {
+		  
+		isConnected = false;
+	    show(ConnectionStatus.DISCONNECTED.toString());
+	    
+	    // re-connnect 
+	    connectToServer();
+
+	  }
+
+	  @Override
+	  public void accountList(ArrayList<String> list) {
+	    show( "Received account list");
+	    accountList.clear();
+	    accountList.addAll( list);
+	  }
+
+	  @Override
+	  public void error(Exception e) {
+	    show( e.toString() );
+	  }
+
+	  @Override
+	  public void message(int id, int errorCode, String errorMsg) {
+	    show( id + " " + errorCode + " " + errorMsg);
+	    
+	    // not connected
+	    if(errorCode==504) {
+	    	isConnected = false;
+	    	connectToServer();
+	    }
+	  }
+
+	  @Override
+	  public void show(String log) {
+	  	Watchr.log(Level.INFO, log);
+	  }
+	  
 	  // https://www.interactivebrokers.com/en/software/api/apiguide/tables/generic_tick_types.htm
 		public static String getTickList(Investment inv) {
 			String tickType = 	"";
@@ -214,59 +272,5 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			return tickType;
 		} 
-		
-  @Override
-  public void connected() {
-    show(ConnectionStatus.CONNECTED.toString());
-
-    controller.reqCurrentTime( new ITimeHandler() {
-      @Override public void currentTime(long time) {
-        show( "Server date/time is " + Formats.fmtDate(time * 1000) );
-      }
-    });
-
-    controller.reqBulletins( true, new IBulletinHandler() {
-      @Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
-        String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
-        show( str);
-        show( message);
-      }
-    });
-  }
-
-  @Override
-  public void disconnected() {
-	  
-	isConnected = false;
-    show(ConnectionStatus.DISCONNECTED.toString());
-    
-    // re-connnect 
-    connectToServer();
-
-  }
-
-  @Override
-  public void accountList(ArrayList<String> list) {
-    show( "Received account list");
-    accountList.clear();
-    accountList.addAll( list);
-  }
-
-  @Override
-  public void error(Exception e) {
-    show( e.toString() );
-  }
-
-  @Override
-  public void message(int id, int errorCode, String errorMsg) {
-    show( id + " " + errorCode + " " + errorMsg);
-  }
-
-  @Override
-  public void show(String log) {
-  	Watchr.log(Level.INFO, log);
-  }
-
-  
   
 }

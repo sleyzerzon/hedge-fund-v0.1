@@ -89,8 +89,9 @@ public class BusController implements EWrapper {
 	}
 	
 
-	public BusController( ConnectionHandler handler) {
-		m_connectionHandler = handler;
+	// connectionHandler -> apiConnection -> eReader -> eClientSocket
+	public BusController( ConnectionHandler connectionHandler) {
+		m_connectionHandler = connectionHandler;
 		m_client = new ApiConnection( this);
 
 	}

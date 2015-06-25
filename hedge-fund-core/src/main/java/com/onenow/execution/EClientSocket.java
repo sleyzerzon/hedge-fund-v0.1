@@ -3362,8 +3362,9 @@ public class EClientSocket {
     protected void notConnected() {
     	
     	Watchr.log(Level.INFO, "~ notConnected");
-
     	Watchr.log(Level.WARNING, "ERROR: NOT CONNECTED");
         error(EClientErrors.NO_VALID_ID, EClientErrors.NOT_CONNECTED, "");
+        
+        
     }
 }

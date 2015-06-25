@@ -1,6 +1,3 @@
-/* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
- * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
-
 package com.ib.controller;
 
 
@@ -30,25 +27,10 @@ import com.onenow.execution.EClientSocket;
 import com.onenow.execution.EReader;
 import com.onenow.util.Watchr;
 
-// NOTE: TWS 936 SERVER_VERSION is 67.
-
 public class ApiConnection extends EClientSocket {
 	
-//	public interface ILogger {
-//		void logReplace(String valueOf);
-//	}
-
 	public static final char EOL = 0;
 	public static final char LOG_EOL = '_';
-
-//	private final ILogger m_inLogger;
-//	private final ILogger m_outLogger;
-
-//	public ApiConnection(EWrapper wrapper, ILogger inLogger, ILogger outLogger) {
-//		super( wrapper);
-////		m_inLogger = inLogger;
-////		m_outLogger = outLogger;
-//	}
 
 	public ApiConnection(EWrapper wrapper) {
 		super( wrapper);

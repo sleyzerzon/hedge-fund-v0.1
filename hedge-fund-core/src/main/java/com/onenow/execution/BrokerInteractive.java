@@ -91,7 +91,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  
 		  Watchr.log(marketPortfolio.toString());
 		  
-		  QuoteRealtimeChain quoteRealtimeChain = new QuoteRealtimeChain(busIB.controller);
+		  QuoteRealtimeChain quoteRealtimeChain = new QuoteRealtimeChain(busIB.busController);
 		  
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
@@ -104,7 +104,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  // GET HISTORICAL QUOTES
 	  public void procesHistoricalQuotesRequests() {
 		  		  
-		  QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.controller);
+		  QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.busController);
 		  
 		  while(true) {
 			  if(busIB.isConnected) {
@@ -118,6 +118,7 @@ public class BrokerInteractive implements BrokerInterface  {
 				  TimeParser.wait(1); // pace requests for messages from queue 
 			  } else {
 				  TimeParser.wait(10);
+				  busIB.connectToServer();
 			  }
 		  }
 		}
@@ -126,7 +127,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		public Integer readHistoricalQuotes(Investment inv, String end,
 				HistorianConfig config, QuoteHistoryInvestment history) {
 			
-			QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.controller);
+			QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.busController);
 			return quoteHistoryChain.readHistoricalQuotes(inv, end, config, history);
 			
 		}
