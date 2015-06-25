@@ -70,18 +70,25 @@ public class Kinesis {
         putRecord.setSequenceNumberForOrdering(null);
 
         try {
-            kinesis.putRecord(putRecord);
-        } catch (ProvisionedThroughputExceededException ex) {
-        	success = false;
-        	Watchr.log(Level.SEVERE, "Throughput exceeded" + ex.getMessage());
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        } catch (AmazonClientException ex) {
-        	Watchr.log(Level.SEVERE, "Error sending record to Amazon Kinesis: " + ex.getMessage());
+        	kinesis.putRecord(putRecord);
+        } catch (Exception e){
+        	Watchr.log(Level.SEVERE, "Throughput exceeded");
+        	e.printStackTrace();
         }
+        
+//        try {
+//            kinesis.putRecord(putRecord);
+//        } catch (ProvisionedThroughputExceededException ex) {
+//        	success = false;
+//        	Watchr.log(Level.SEVERE, "Throughput exceeded" + ex.getMessage());
+//            try {
+//                Thread.sleep(10);
+//            } catch (InterruptedException e) {
+//                Thread.currentThread().interrupt();
+//            }
+//        } catch (AmazonClientException ex) {
+//        	Watchr.log(Level.SEVERE, "Error sending record to Amazon Kinesis: " + ex.getMessage());
+//        }
         
         if(success) {
         	String log = "&&&&&&&&&& INTO STREAM <" + streamName + "> WROTE: " + objectToSend;
