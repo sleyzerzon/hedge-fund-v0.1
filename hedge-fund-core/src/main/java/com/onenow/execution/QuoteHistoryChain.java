@@ -17,7 +17,7 @@ import com.onenow.util.Watchr;
 public class QuoteHistoryChain {
 
 	
-	private static BusController controller;
+	public static BusController controller;
 
 	private static HashMap<String, QuoteHistoryInvestment>		history = new HashMap<String, QuoteHistoryInvestment>();						// price history from L3
 

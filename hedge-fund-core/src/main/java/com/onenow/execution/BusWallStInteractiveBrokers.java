@@ -67,10 +67,10 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				tryToConnect = false;
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				Watchr.log(Level.INFO, log, "\n", "");
-			    busController = new BusController((com.onenow.portfolio.BusController.ConnectionHandler) this);
- 
-			    busController.connect(		gateway.URI, Integer.parseInt(gateway.port), 
-			    						clientID, null);  
+			    
+				busController = new BusController((com.onenow.portfolio.BusController.ConnectionHandler) this);
+			    busController.connect(		gateway.URI, Integer.parseInt(gateway.port), clientID, null); 
+			    
 			} catch (Exception e) {
 				tryToConnect = true;
 				Watchr.log(Level.WARNING, "...COULD NOT CONNECT TO BUS: " + e.getMessage(), "", "\n");

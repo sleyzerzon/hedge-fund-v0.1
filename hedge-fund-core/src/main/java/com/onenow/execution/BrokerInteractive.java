@@ -107,20 +107,22 @@ public class BrokerInteractive implements BrokerInterface  {
 		  QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.busController);
 		  
 		  while(true) {
-			  if(busIB.isConnected) {
-				  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
-				  if(serializedMessages.size()>0) {	
-					  for(Message message: serializedMessages) {
+			  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
+			  if(serializedMessages.size()>0) {	
+				  for(Message message: serializedMessages) {
+					  
+					  if(busIB.isConnected) {
 						  quoteHistoryChain.processHistoryOneRequest(message);
+					  } else {
+							TimeParser.wait(20);
+							busIB.connectToServer();
+							quoteHistoryChain.controller = busIB.busController; // get the new one
 					  }
-					  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 				  }
-				  TimeParser.wait(1); // pace requests for messages from queue 
-			  } else {
-					TimeParser.wait(20);
-					busIB.connectToServer();
+				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }
-		  }
+			  TimeParser.wait(1); // pace requests for messages from queue 
+			  } 
 		}
 	  
 		@Override
