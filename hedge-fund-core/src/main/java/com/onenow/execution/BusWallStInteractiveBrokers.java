@@ -73,8 +73,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				Watchr.log(Level.INFO, log, "\n", "");
 			    busController = new BusController((com.onenow.portfolio.BusController.ConnectionHandler) this);
-
-			    // controller.disconnect(); 
+ 
 			    busController.connect(		gateway.URI, Integer.parseInt(gateway.port), 
 			    						clientID, null);  
 			} catch (Exception e) {
@@ -166,9 +165,12 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  public void message(int id, int errorCode, String errorMsg) {
 	    show( id + " " + errorCode + " " + errorMsg);
 	    
-	    // not connected
-	    if(errorCode==504) {
+	    // 504 not connected, 507 BAD MESSAGE LENGTH NULL
+	    if(errorCode==504 || errorCode==507) {
 	    	isConnected = false;
+	    	busController.disconnect();
+	    	TimeParser.wait(10);
+	    	Watchr.log(Level.WARNING, "Attempting to reconnect BusController");
 	    	connectToServer();
 	    }
 	  }
