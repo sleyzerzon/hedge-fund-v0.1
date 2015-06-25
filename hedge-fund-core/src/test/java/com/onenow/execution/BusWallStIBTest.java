@@ -16,11 +16,11 @@ public class BusWallStIBTest {
 	  Assert.assertTrue(bus.controller!=null);
   }
   
-  @Test
-  public void BusWallSt() {
-	  BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers();
-	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.LOCAL)));
-  }
+//  @Test
+//  public void BusWallSt() {
+//	  BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers();
+//	  Assert.assertTrue(bus.gateway.equals(NetworkConfig.getGateway(Topology.LOCAL)));
+//  }
   
   @Test
   public void getClientId() {
