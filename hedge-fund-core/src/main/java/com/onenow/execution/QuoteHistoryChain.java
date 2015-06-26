@@ -43,6 +43,8 @@ public class QuoteHistoryChain {
 			  TimeParser.paceHistoricalQuery(lastQueryTime); 
 			  // look for SQS requests for history
 			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
+			  
+			  // TODO: request only if <x number of data points in the time series
 			  Integer reqId = readHistoricalQuotes(	request.getInvestment(), 
 													endDateTime, 
 													request.config, invHist);

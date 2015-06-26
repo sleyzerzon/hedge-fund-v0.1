@@ -64,15 +64,18 @@ public class ContractFactory {
 	}
 	
 	private static Contract getOptionToQuote(Investment inv) {
+		
 		String p_secType=SecType.OPT.toString();
+		String p_exchange="SMART";
 		
 		// TODO: include all future underlyings
 		if(inv.getUnder().getTicker().equals("ES")) {
-			p_secType=SecType.FOP.toString();	// sop			
+			p_secType=SecType.FOP.toString();	// sop	
+			p_exchange="GLOBEX";
 		} 
 		
 		String p_symbol=inv.getUnder().getTicker();
-		String p_exchange="SMART";		
+				
 		
 		int p_conId = 0;
 		
@@ -105,11 +108,11 @@ public class ContractFactory {
 	}
 
 	private static Contract getFutureToQuote(Investment inv) {
+		
 		String p_secType=SecType.FUT.toString();	
-
+		String p_exchange="GLOBEX";		
 
 		String p_symbol=inv.getUnder().getTicker();
-		String p_exchange="GLOBEX";		
 		
 		int p_conId = 0;
 		
