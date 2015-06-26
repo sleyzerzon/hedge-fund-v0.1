@@ -69,6 +69,7 @@ public class Kinesis {
         // Order is not important for this application so we do not send a SequenceNumberForOrdering
         putRecord.setSequenceNumberForOrdering(null);
 
+        // TODO: re-try here or in bus.write?
         try {
         	kinesis.putRecord(putRecord);
         } catch (Exception e){

@@ -60,8 +60,13 @@ public class ContractFactory {
 	}
 	
 	private static Contract getOptionToQuote(Investment inv) {
-		String p_secType=SecType.OPT.toString();	
-
+		String p_secType=SecType.OPT.toString();
+		
+		// TODO: include all future underlyings
+		if(inv.getUnder().getTicker().equals("ES")) {
+			p_secType=SecType.FOP.toString();	// sop			
+		} 
+		
 		String p_symbol=inv.getUnder().getTicker();
 		String p_exchange="SMART";		
 		

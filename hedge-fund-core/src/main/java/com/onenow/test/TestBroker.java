@@ -68,6 +68,7 @@ public class TestBroker implements Testable {
 	    // fill the market portfolio
 	    marketPortfolio = InitMarket.getPortfolio(	stocks, indices,
 	    											futures, options,
+	    											futures,
 	    											toDate, 5);
 
     	bus = new BusWallStInteractiveBrokers();

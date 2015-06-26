@@ -35,12 +35,14 @@ public class InitMarket {
 	 * @param portfolio
 	 */
 
-	public InitMarket() {	
+	public InitMarket() {
+		
 	}
 
 		
 	public static Portfolio getPortfolio(	List<Underlying> stocks, List<Underlying> indices,
 											List<Underlying> futures, List<Underlying> options,
+											List<Underlying> futureOptions,
 											String toDashedDate, int maxTimeSeries) {
 		
 		marketPortfolio = new Portfolio();
@@ -52,6 +54,8 @@ public class InitMarket {
 		addOptionsToPortfolio(options, toDashedDate, maxTimeSeries);
 
 		addFuturesToPortfolio(futures);
+		
+		addFutureoptionsToPortfolio(futureOptions, toDashedDate, maxTimeSeries);
 		
 		marketPortfolio.toString();
 
@@ -75,6 +79,7 @@ public class InitMarket {
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
 								InvestmentList.getUnderlying(InvestmentList.futureNames), 
 								InvestmentList.getUnderlying(InvestmentList.optionNames),
+								InvestmentList.getUnderlying(InvestmentList.futureNames),
 								toDashedDate, maxTimeSeries);
 	}
 	
@@ -88,12 +93,13 @@ public class InitMarket {
 	
 	public static Portfolio getRealtimePortfolio(String toDashedDate) {	
 		
-		int maxTimeSeries = 10;
+		int maxTimeSeries = 5;
 
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
 								InvestmentList.getUnderlying(InvestmentList.futureNames), 
 								InvestmentList.getUnderlying(InvestmentList.optionNames),
+								InvestmentList.getUnderlying(InvestmentList.futureNames),
 								toDashedDate, maxTimeSeries);
 	}
 
@@ -114,6 +120,7 @@ public class InitMarket {
 								new ArrayList<Underlying>(),
 								new ArrayList<Underlying>(), 
 								new ArrayList<Underlying>(),
+								new ArrayList<Underlying>(),
 								toDashedDate, maxTimeSeries);
 	}
 	
@@ -132,6 +139,34 @@ public class InitMarket {
 		}
 	}	
 	
+	// FUTURES
+	/**
+	 * Initialize all futures
+	 */
+	private static void addFuturesToPortfolio(List<Underlying> unders) {
+		ExpirationDate exps = new ExpirationDate();
+		exps.initFuturesExpList(); 
+		
+		for(Underlying under:unders) {
+			for(String expDate:exps.getValidFuturesExpList(TimeParser.getTodayUndashed())) {
+				initExpFutures(under, expDate);
+			}
+		}
+	}
+	private static void initExpFutures(Underlying under, String expDate) {
+		InvestmentFuture future = new InvestmentFuture(under, expDate);
+		Trade trade = new Trade(future, TradeType.BUY, 1, 0.0);
+		Transaction trans = new Transaction(trade);
+		marketPortfolio.enterTransaction(trans);		
+
+	}
+
+
+	// FUTURE OPTIONS
+	private static void addFutureoptionsToPortfolio(List<Underlying> unders, String toDashedDate, int maxTimeSeries) {
+		addOptionsToPortfolio(unders, toDashedDate, maxTimeSeries);
+	}
+
 	// OPTIONS
 	/**
 	 * Initialize options
@@ -151,6 +186,23 @@ public class InitMarket {
 										lowPrice(under, fromDashedDate, toDashedDate, maxTimeSeries), 
 										highPrice(under, fromDashedDate, toDashedDate, maxTimeSeries));	
 			}
+		}
+	}
+
+	/**
+	 * Generates all possible options that may have traded in history
+	 * @param under
+	 * @param expDate
+	 */
+	private static void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
+		Integer interval = 5;			// options interval
+		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+interval) {
+			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
+			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
+			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
+			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
+			Transaction trans = new Transaction(callTrade, putTrade); 
+			marketPortfolio.enterTransaction(trans);
 		}
 	}
 
@@ -182,45 +234,7 @@ public class InitMarket {
 		return price;		
 	}
 	
-	/**
-	 * Generates all possible options that may have traded in history
-	 * @param under
-	 * @param expDate
-	 */
-	private static void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
-		Integer interval = 5;			// options interval
-		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+interval) {
-			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
-			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
-			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
-			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
-			Transaction trans = new Transaction(callTrade, putTrade); 
-			marketPortfolio.enterTransaction(trans);
-		}
-	}
-
-	// FUTURES
-	/**
-	 * Initialize all futures
-	 */
-	private static void addFuturesToPortfolio(List<Underlying> unders) {
-		ExpirationDate exps = new ExpirationDate();
-		exps.initFuturesExpList(); 
-		
-		for(Underlying under:unders) {
-			for(String expDate:exps.getValidFuturesExpList(TimeParser.getTodayUndashed())) {
-				initExpFutures(under, expDate);
-			}
-		}
-	}
-	private static void initExpFutures(Underlying under, String expDate) {
-		InvestmentFuture future = new InvestmentFuture(under, expDate);
-		Trade trade = new Trade(future, TradeType.BUY, 1, 0.0);
-		Transaction trans = new Transaction(trade);
-		marketPortfolio.enterTransaction(trans);		
-
-	}
-
+	
 	// STOCKS
 	/**
 	 * Initialize all stocks

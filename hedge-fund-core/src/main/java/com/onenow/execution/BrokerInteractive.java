@@ -117,6 +117,9 @@ public class BrokerInteractive implements BrokerInterface  {
 							TimeParser.wait(20);
 							busIB.connectToServer();
 							quoteHistoryChain.controller = busIB.busController; // get the new one
+							
+							// Wait for OK on data farm
+							// 2104 MARKET DATA FARM CONNECTION IS OK:USFUTURE  
 					  }
 				  }
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);

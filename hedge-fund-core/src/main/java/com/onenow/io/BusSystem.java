@@ -109,6 +109,7 @@ public class BusSystem {
 	}
 
 	public static void write(StreamName streamName, Object objToSend) {
+		// TODO re-try if write fails
 		try {
 			validateStream(streamName);
 			createStreamIfNotExists(streamName);
