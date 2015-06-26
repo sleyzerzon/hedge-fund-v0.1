@@ -29,7 +29,13 @@ public class ContractFactory {
 		
 	}
 	
-	
+	/**
+	 * Instantiates an object that the wall street broker can transact on.
+	 * Translates application-native Investment objects into Contract
+	 * @param inv
+	 * @return
+	 */
+	// Exchanges https://www.interactivebrokers.com/en/index.php?f=1562
 	public static Contract getContract(Investment inv) {
 				
 		Contract contract = new Contract();
@@ -67,11 +73,13 @@ public class ContractFactory {
 		
 		String p_secType=SecType.OPT.toString();
 		String p_exchange="SMART";
+		String p_multiplier="100";
 		
 		// TODO: include all future underlyings
 		if(inv.getUnder().getTicker().equals("ES")) {
 			p_secType=SecType.FOP.toString();	// sop	
 			p_exchange="GLOBEX";
+			p_multiplier="50";
 		} 
 		
 		String p_symbol=inv.getUnder().getTicker();
@@ -88,7 +96,6 @@ public class ContractFactory {
 			p_right=inv.getInvType().toString(); 					
 		}
 		
-		String p_multiplier="100";
 		String p_currency="USD";
 		String p_localSymbol="";
 		String p_tradingClass="";
