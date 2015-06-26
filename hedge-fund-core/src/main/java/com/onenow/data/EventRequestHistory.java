@@ -1,8 +1,10 @@
 package com.onenow.data;
 
 import com.ib.client.Types.BarSize;
+import com.onenow.constant.TradeType;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentIndex;
 import com.onenow.util.TimeParser;
 
 // https://www.interactivebrokers.com/en/software/api/apiguide/tables/historical_data_limitations.htm
@@ -26,7 +28,12 @@ public class EventRequestHistory extends EventRequest {
 		this.source = config.source;
 		this.timing = config.timing;
 		this.sampling = config.sampling;
-		this.tradeType = config.tradeType; 		
+
+		// Indices don't trade themselves, are calculated from basket of equities
+		this.tradeType = TradeType.TRADED; 		
+		if(inv instanceof InvestmentIndex) {
+			this.tradeType = TradeType.CALCULATED;
+		} 
 
 	}
 
@@ -39,7 +46,8 @@ public class EventRequestHistory extends EventRequest {
 	public EventRequestHistory(EventActivity event, String timeGap, String endPoint) {
 		
 		setInvestment(event.getInvestment());
-		
+		this.tradeType = event.tradeType;
+
 		this.timeGap = timeGap;
 		this.endPoint = endPoint;
 		
@@ -48,7 +56,6 @@ public class EventRequestHistory extends EventRequest {
 		this.source = config.source;
 		this.timing = config.timing;
 		this.sampling = config.sampling;
-		this.tradeType = config.tradeType; 		
 							
 	}
 
@@ -60,7 +67,8 @@ public class EventRequestHistory extends EventRequest {
 	public EventRequestHistory(EventActivity event, String toDashedDate) {
 		
 		setInvestment(event.getInvestment());
-		
+		this.tradeType = event.tradeType;
+
 		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 		this.toDashedDate = toDashedDate;
 
@@ -69,7 +77,6 @@ public class EventRequestHistory extends EventRequest {
 		this.source = config.source;
 		this.timing = config.timing;
 		this.sampling = config.sampling;
-		this.tradeType = config.tradeType; 		
 							
 	}
 	
@@ -81,6 +88,7 @@ public class EventRequestHistory extends EventRequest {
 	public EventRequestHistory(EventActivity event, Long requestTime) {
 		
 		setInvestment(event.getInvestment());
+		this.tradeType = event.tradeType;
 		
 		this.time = requestTime;
 		
@@ -89,8 +97,6 @@ public class EventRequestHistory extends EventRequest {
 		this.source = config.source;
 		this.timing = config.timing;
 		this.sampling = config.sampling;
-		this.tradeType = config.tradeType; 		
-							
 	}
 	
 
