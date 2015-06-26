@@ -34,24 +34,28 @@ public class ContractFactory {
 				
 		Contract contract = new Contract();
 		
-		if(inv instanceof InvestmentIndex) { 
-			System.out.println("GET INDEX CONTRACT FOR " + inv.toString());
-			return getIndexToQuote(inv);
+		if(inv instanceof InvestmentIndex) {
+			contract = getIndexToQuote(inv);
+			System.out.println("GOT INDEX CONTRACT FOR " + contract.toString());
+			return contract;
 		}
 
 		if(inv instanceof InvestmentOption) {
-			System.out.println("GET OPTION CONTRACT FOR " + inv.toString());
-			return getOptionToQuote(inv);			
+			contract = getOptionToQuote(inv);
+			System.out.println("GOT OPTION CONTRACT FOR " + contract.toString());
+			return contract;			
 		}
 
 		if(inv instanceof InvestmentStock) {
-			System.out.println("GET STOCK CONTRACT FOR " + inv.toString());
-			return getStockToQuote(inv);			
+			contract = getStockToQuote(inv);
+			System.out.println("GOT STOCK CONTRACT FOR " + contract.toString());
+			return contract;			
 		}
 
 		if(inv instanceof InvestmentFuture) {
-			System.out.println("GET FUTURE CONTRACT FOR " + inv.toString());
-			return getFutureToQuote(inv);			
+			contract = getFutureToQuote(inv);
+			System.out.println("GOT FUTURE CONTRACT FOR " + contract.toString());
+			return contract;			
 		}
 		
 		Watchr.log(Level.SEVERE, "COULD NOT MATCH INVESTMENT TO CONTRACT");

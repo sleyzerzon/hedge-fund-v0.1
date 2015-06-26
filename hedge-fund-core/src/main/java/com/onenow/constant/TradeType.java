@@ -3,7 +3,7 @@ package com.onenow.constant;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum TradeType {
-	BUY, SELL, TRADED, CLOSE;
+	BUY, SELL, TRADED, CALCULATED, CLOSE;
 	
 	@JsonCreator
     public static TradeType forValue(String value) {
@@ -15,6 +15,9 @@ public enum TradeType {
 		}
 		if (value.toLowerCase().equals("traded")) {
 			return TRADED;
+		}
+		if (value.toLowerCase().equals("calculated")) {
+			return CALCULATED;
 		}
 		return CLOSE;
     }

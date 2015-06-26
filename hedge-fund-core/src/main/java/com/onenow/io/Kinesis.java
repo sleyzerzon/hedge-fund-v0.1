@@ -93,7 +93,7 @@ public class Kinesis {
 //        }
         
         if(success) {
-        	String log = "&&&&&&&&&& INTO STREAM <" + streamName + "> WROTE: " + objectToSend;
+        	String log = "&&&&&&&&&& INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
         	Watchr.log(Level.INFO, log, "\n", "");
         }
     }
