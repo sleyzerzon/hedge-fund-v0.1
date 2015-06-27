@@ -530,8 +530,10 @@ public class TimeParser implements Testable {
 	
 	// HISTORICAL QUERY
 	public static void paceHistoricalQuery(long lastHistQuery) {		
-		System.out.println("...pacing historical query: " + getSleepTime(lastHistQuery)/1000 + "s");
-	    try {
+		
+		Watchr.log("...pacing historical query: " + getSleepTime(lastHistQuery)/1000 + "s");
+	    
+		try {
 			Thread.sleep(getSleepTime(lastHistQuery));
 		} catch (InterruptedException e) {
 			e.printStackTrace();

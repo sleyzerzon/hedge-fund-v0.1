@@ -27,14 +27,13 @@ public class ClerkRealTimeMain {
 
 		TimeParser.wait(180); // boot sequence
 
-		IRecordProcessorFactory rtProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME);
 		BusSystem.read(	StreamName.REALTIME, 
-						rtProcessorFactory,
+						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME),
 						InitialPositionInStream.LATEST);
 		
 	}
 	
-	public static void writeRealtimeRTtoL2(EventActivityRealtime event) {
+	public static void writeRealtimeToL2(EventActivityRealtime event) {
 	
 		boolean success = false;
 		boolean retry = false;

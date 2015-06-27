@@ -1,6 +1,7 @@
 package com.onenow.main;
 
 import java.util.logging.Level;
+import java.util.List;
 
 import com.onenow.constant.MemoryLevel;
 import com.onenow.data.EventRequestHistory;
@@ -8,8 +9,10 @@ import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
+import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
+import com.onenow.research.Candle;
 import com.onenow.util.InitLogger;
 import com.onenow.util.Piping;
 import com.onenow.util.TimeParser;
@@ -42,9 +45,11 @@ public class HistorianMain {
 				
 				TimeParser.paceHistoricalQuery(lastQueryTime);
 				
-				updateL2HistoryFromL3(inv, toDashedDate);	
-								
-				lastQueryTime = TimeParser.getTimestampNow();		
+				// request update
+				if(updateL2HistoryFromL3(inv, toDashedDate)) {		
+					// only if request sent reset the query time
+					lastQueryTime = TimeParser.getTimestampNow();	
+				}
 			}
 									
 			// go back further in time
@@ -57,7 +62,9 @@ public class HistorianMain {
  * Continually augment L2 (TSDB) with data from L3 (3rd party DB)
  * @param inv
  */
-	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate) {
+	private static boolean updateL2HistoryFromL3(Investment inv, String toDashedDate) {
+		
+		boolean requestMade = false;
 		
 		// minimum number of price data points
 		int minPrices = 50;
@@ -68,21 +75,26 @@ public class HistorianMain {
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-//		List<Candle> storedPrices = databaseTimeSeries.readPriceFromDB(request);
+		List<Candle> storedPrices = DBTimeSeriesPrice.read(request);
 		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
-//		if ( storedPrices.size()<minPrices ) {	
+		if ( storedPrices.size()<minPrices ) {	
 
-//			Watchr.log(Level.INFO, "Request this! " + request.toString());
+			Watchr.log(Level.INFO, 	MemoryLevel.L2TSDB + " information incoomplete, request: " + request.toString() + 
+									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS");
 			
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
 			sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
-//		} else {
-//			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
-//		}
+			requestMade = false;
+			
+		} else {
+			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
+		}
+		
+		return requestMade;
 	}
 
 }

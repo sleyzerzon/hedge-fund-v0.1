@@ -124,7 +124,7 @@ public class Event {
 		
 		// s = s + origin.toString("EVENT") + " "; 
 		s =	s + getInvestment().toString() + " ";
-		s =	s + "source " + source + " "; 
+		s =	s + "-source " + source + " "; 
 		s =	s + "-timing " + timing + " "; 
 		s =	s + "-tradeType " + tradeType;
 		

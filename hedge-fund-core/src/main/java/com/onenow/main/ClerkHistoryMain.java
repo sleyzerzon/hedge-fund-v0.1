@@ -28,9 +28,9 @@ public class ClerkHistoryMain {
 		InitLogger.run("");
 
 		TimeParser.wait(180); // boot sequence
-		IRecordProcessorFactory recordProcessorFactory = BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.HISTORY);
+
 		BusSystem.read(	StreamName.HISTORY, 
-						recordProcessorFactory,
+						BusProcessingFactory.createProcessorFactoryEventHistory(StreamName.HISTORY),
 						InitialPositionInStream.LATEST);
 		
 	}
