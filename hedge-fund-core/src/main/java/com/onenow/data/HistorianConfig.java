@@ -14,7 +14,6 @@ public class HistorianConfig {
 	public InvDataTiming timing;
 	
 	public SamplingRate sampling;
-//	public TradeType tradeType; 
 
 	public Integer durations;
 	public DurationUnit durationUnit;
@@ -25,10 +24,6 @@ public class HistorianConfig {
 		
 	}
 
-//	public HistorianConfig(	InvDataSource source, InvDataTiming timing,
-//							int durations, DurationUnit durationUnit, BarSize barSize, WhatToShow whatToShow,
-//							TradeType tradeType, SamplingRate sampling) {
-
 	public HistorianConfig(	InvDataSource source, InvDataTiming timing,
 							int durations, DurationUnit durationUnit, BarSize barSize, WhatToShow whatToShow,
 							SamplingRate sampling) {
@@ -36,7 +31,6 @@ public class HistorianConfig {
 		this.source = source;
 		this.timing = timing;
 		
-//		this.tradeType = tradeType;
 		this.sampling = sampling;
 		
 		this.durations = durations;
@@ -50,7 +44,6 @@ public class HistorianConfig {
 		s = 	"-source " + source + " " +
 				"-timing " + timing + " " +
 				"-sampling " + sampling + " " +
-//				"-tradeType " + tradeType + " " +
 				"-durations " + durations.toString() + " " +
 				"-durationUnit " + durationUnit + " " +
 				"-barSize " + barSize + " " +
