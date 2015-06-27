@@ -88,7 +88,7 @@ public class HistorianMain {
 			String message = Piping.serialize((Object) request);
 			sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
-			requestMade = false;
+			requestMade = true;
 			
 		} else {
 			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
