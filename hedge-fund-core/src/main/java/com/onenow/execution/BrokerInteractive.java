@@ -111,29 +111,36 @@ public class BrokerInteractive implements BrokerInterface  {
 			  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
 			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {
-					  
-					  if(busIB.isConnectionBroken) {
-						  	TimeParser.wait(60);
+						
+					  int counter=0;
+					  do {
+						  TimeParser.wait(25);
+						  counter++;
+					  } while (busIB.isConnectionBroken && counter<2);
+						  
+				      if(busIB.isConnectionBroken) {
 							Watchr.log(Level.WARNING, "Connection Broken");
 							busIB.connectToServer();
 							quoteHistoryChain.controller = busIB.busController; // get the new one
+					  } 
+						  
+				      while(!busIB.isConnectionBroken && busIB.isConnectionInactive) {
+							Watchr.log(Level.WARNING, "Connection Inactive");
+							TimeParser.wait(15);
+				      } 
+				      
+					  // if connected and connection is active, finally request
+					  if(!busIB.isConnectionBroken && !busIB.isConnectionInactive) {
+						  quoteHistoryChain.processHistoryOneRequest(message);
 					  } else {
-						  while(!busIB.isConnectionBroken && busIB.isConnectionInactive) {
-							  Watchr.log(Level.WARNING, "Connection Inactive");
-							  TimeParser.wait(15);
-						  } 
-						  // if connected and connection is active, finally request
-						  if(!busIB.isConnectionBroken && !busIB.isConnectionInactive) {
-							  quoteHistoryChain.processHistoryOneRequest(message);
-						  } else {
-							  // TODO: re-try for that message, connection broke while inactive, in the meantime that message is lost
-						  }							  
-					  }
+						  // TODO: re-try for that message, connection broke while inactive, in the meantime that message is lost
+					  }	
 				  }
+				  
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }
 			  TimeParser.wait(1); // pace requests for messages from queue 
-			  } 
+		  } 
 		}
 	  
 		@Override

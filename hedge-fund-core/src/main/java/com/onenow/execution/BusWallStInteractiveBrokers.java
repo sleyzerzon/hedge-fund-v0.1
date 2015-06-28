@@ -160,10 +160,11 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	   */
 	  @Override
 	  public void message(int id, int errorCode, String errorMsg) {
+		  
 	    show( id + " " + errorCode + " " + errorMsg);
 	    
 	    if( isConnectionErrorMustReconnect(errorCode) || 
-	    	isMarketDataErrorMustReconnect(errorCode)) {
+	    	isMarketDataErrorConsiderReconnect(errorCode)) {
 	    	
 	    	isConnectionBroken = true;
 	    	// busController.disconnect();
@@ -187,13 +188,13 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				errorCode==1101						// Connectivity between IB and TWS has been restored- data lost.
 				) { 
 			  
-			  Watchr.log(Level.SEVERE, "Connection Error");
+			  Watchr.log(Level.SEVERE, "Connection Error: " + errorCode);
 			  return true;
 		  }
 		  return false;
 	  }
 	  
-	  private boolean isMarketDataErrorMustReconnect(int messageCode) {
+	  private boolean isMarketDataErrorConsiderReconnect(int messageCode) {
 		  
 		  if( 	messageCode==162 || messageCode==164 || messageCode==165 ||   
 				messageCode==354 || 
@@ -203,7 +204,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==1300 ||											// TWS socket port has been reset and this connection is being dropped
 				messageCode==2103 || messageCode==2105) {
 			  
-			  Watchr.log(Level.SEVERE, "Data Error");
+			  Watchr.log(Level.SEVERE, "Data Error: " + messageCode);
 			  return true;
 		  }
 		  return false;
@@ -217,7 +218,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2107 ||			// historic data inactive but should be available upon demand
 				messageCode==2108) {			// market data inactive but should be available upon demand
 			  
-			  Watchr.log(Level.WARNING, "Farm Active");
+			  Watchr.log(Level.WARNING, "Farm Active: " + messageCode);
 			  isConnectionInactive = false;
 		  }
 		  
@@ -226,7 +227,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2107 || 			// hmds data
 				messageCode==2110) {			// connection to server 
 			  
-			  Watchr.log(Level.WARNING, "Farm Inactive");
+			  Watchr.log(Level.WARNING, "Farm Inactive: " + messageCode);
 			  isConnectionInactive = true;
 		  }
 
