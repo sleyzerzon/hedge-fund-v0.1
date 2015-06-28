@@ -113,8 +113,8 @@ public class BrokerInteractive implements BrokerInterface  {
 				  for(Message message: serializedMessages) {
 					  
 					  if(busIB.isConnectionBroken) {
+						  	TimeParser.wait(60);
 							Watchr.log(Level.WARNING, "Connection Broken");
-							TimeParser.wait(20);
 							busIB.connectToServer();
 							quoteHistoryChain.controller = busIB.busController; // get the new one
 					  } else {
