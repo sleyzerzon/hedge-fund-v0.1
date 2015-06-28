@@ -25,13 +25,13 @@ public class TimeParser implements Testable {
 		}
 	}
 	
-	public static String getFormatedPacificDateTime(Long time) {
+	public static String getFormatedPacificDateTime(Long miliseconds) {
 		
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss zzzz MM-dd-yyyy");
 		TimeZone zone = TimeZone.getTimeZone("PST");
 		format.setTimeZone(zone);
 
-		return format.format(time);
+		return format.format(miliseconds);
 	}
 	
 

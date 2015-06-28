@@ -45,7 +45,7 @@ public class Event {
 	}
 	
 	public String getFormatedTime() {
-		return TimeParser.getFormatedPacificDateTime(time);
+		return TimeParser.getFormatedPacificDateTime(time*1000);
 	}
 
 	public void setInvestment(Investment inv) {
