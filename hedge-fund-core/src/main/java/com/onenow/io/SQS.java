@@ -164,7 +164,7 @@ public class SQS {
 
 	public static String createQueue(QueueName name) {
 		
-		String log = "Creating a new SQS queue called MyQueue.";
+		String log = "Creating a new SQS queue called: " + name;
     	Watchr.log(Level.INFO, log);
 
 		CreateQueueRequest createQueueRequest = new CreateQueueRequest(name.toString());

@@ -110,48 +110,65 @@ public class BrokerInteractive implements BrokerInterface  {
 		  while(true) {
 			  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
 			  if(serializedMessages.size()>0) {	
-				  for(Message message: serializedMessages) {
-						
-					  boolean reqSuccess = false;
-					  while (!reqSuccess) {
-						  
-						  int counter=0;
-						  do {
-						      Watchr.log(Level.WARNING, "Connection Broken/Inactive: " + counter);
-							  TimeParser.wait(25);
-							  counter++;
-						  } while (busIB.isConnectionBroken && counter<2);
-							  
-					      if(busIB.isConnectionBroken) {
-								busIB.connectToServer();
-								quoteHistoryChain.controller = busIB.busController; // get the new one
-						  } 
-							  
-					      counter=0;
-					      do {
-								Watchr.log(Level.WARNING, "Farm Unavailable: " + counter);
-								TimeParser.wait(15);
-								counter++;
-					      } while(!busIB.isFarmAvailable && counter <2);
-					      
-						  // if connected and connection is active, finally request
-						  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
-							  quoteHistoryChain.processHistoryOneRequest(message);
-							  reqSuccess = true;
-							  
-								// TODO: re-try when a particular request ID fails; print the investment involved
-								// 10000297 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA
-
-						  }
-						  
-				  	  } // end re-tries
-				  } // end for messages
+				  for(Message message: serializedMessages) {						
+					  processIndividualMessageUntilSuccessful(quoteHistoryChain, message);
+				  } 
 				  
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }
 			  TimeParser.wait(1); // pace requests for messages from queue 
 		  } 
 		}
+
+	private void processIndividualMessageUntilSuccessful(QuoteHistoryChain quoteHistoryChain, Message message) {
+		  boolean reqSuccess = false;
+		  while (!reqSuccess) {	// re-try if individual message does not get requested due to connection issues
+			  
+			  reqSuccess = processIndividualMessage(quoteHistoryChain, message);
+			  
+		  } 
+	}
+
+	private boolean processIndividualMessage(QuoteHistoryChain quoteHistoryChain, Message message) {
+		
+		  waitWhileConnectionBroken();
+			  
+		  if(busIB.isConnectionBroken) {
+				busIB.connectToServer();
+				quoteHistoryChain.controller = busIB.busController; // get the new one
+		  } 
+			  
+		  waitWhileFarmUnavailable();
+		  
+		  // if connected and connection is active, finally request
+		  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
+			  quoteHistoryChain.processHistoryOneRequest(message);
+			  return true;
+			  
+				// TODO: re-try when a particular request ID fails; print the investment involved
+				// 10000297 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA
+
+		  }
+		return false;
+	}
+
+	private void waitWhileFarmUnavailable() {
+		  int counter=0;
+		  while(!busIB.isFarmAvailable && counter <2) {
+				Watchr.log(Level.WARNING, "Farm Unavailable: " + counter);
+				TimeParser.wait(15);
+				counter++;
+		  }
+	}
+
+	private void waitWhileConnectionBroken() {
+		  int counter=0;
+		  while (busIB.isConnectionBroken && counter<2) {
+		      Watchr.log(Level.WARNING, "Connection Broken/Inactive: " + counter);
+			  TimeParser.wait(25);
+			  counter++;
+		  }
+	}
 	  
 		@Override
 		public Integer readHistoricalQuotes(Investment inv, String end,
