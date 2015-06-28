@@ -118,7 +118,7 @@ public class BrokerInteractive implements BrokerInterface  {
 							busIB.connectToServer();
 							quoteHistoryChain.controller = busIB.busController; // get the new one
 					  } else {
-						  if(!busIB.isConnectionActive) {
+						  if(busIB.isConnectionInactive) {
 							  Watchr.log(Level.WARNING, "Connection Inactive");
 							  TimeParser.wait(15);
 						  } else {

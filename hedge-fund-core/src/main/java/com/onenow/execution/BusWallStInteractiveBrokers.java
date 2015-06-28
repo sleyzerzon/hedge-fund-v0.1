@@ -28,7 +28,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	public BusController busController = new BusController(this);
 	public boolean isConnectionBroken = false;	
-	public boolean isConnectionActive = false;
+	public boolean isConnectionInactive = false;
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
 	// Default
@@ -74,13 +74,13 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			    
 			} catch (Exception e) {
 				tryToConnect = true;
-				Watchr.log(Level.WARNING, "...COULD NOT CONNECT TO BUS: " + e.getMessage(), "", "\n");
-				// e.printStackTrace();
-				TimeParser.wait(10);
+				Watchr.log(Level.WARNING, "...COULD NOT CONNECT TO BUS: ");
+				e.printStackTrace();
+				TimeParser.wait(30);
 			}			
 		} // end try to connect
 	    
-	    isConnectionBroken = true;
+	    isConnectionBroken = false;
 		Watchr.log(Level.INFO, "CONNECTED TO BUS!", "", "");
 	  }
 
@@ -165,7 +165,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    if( isConnectionErrorMustReconnect(errorCode) || 
 	    	isMarketDataErrorMustReconnect(errorCode)) {
 	    	
-	    	isConnectionBroken = false;
+	    	isConnectionBroken = true;
 	    	// busController.disconnect();
 	    }
 	    
@@ -218,7 +218,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2108) {			// market data inactive but should be available upon demand
 			  
 			  Watchr.log(Level.WARNING, "Farm Active");
-			  isConnectionActive = true;
+			  isConnectionInactive = false;
 		  }
 		  
 		  if(   messageCode==1100 ||			// Connectivity between IB and TWS has been lost
@@ -227,10 +227,10 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2110) {			// connection to server 
 			  
 			  Watchr.log(Level.WARNING, "Farm Inactive");
-			  isConnectionActive = false;
+			  isConnectionInactive = true;
 		  }
 
-		  return isConnectionActive;
+		  return isConnectionInactive;
 	  }
 	  
 	  
