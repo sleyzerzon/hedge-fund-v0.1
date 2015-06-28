@@ -131,6 +131,7 @@ public class BrokerInteractive implements BrokerInterface  {
 					      do {
 								Watchr.log(Level.WARNING, "Farm Unavailable: " + counter);
 								TimeParser.wait(15);
+								counter++;
 					      } while(!busIB.isFarmAvailable && counter <2);
 					      
 						  // if connected and connection is active, finally request
