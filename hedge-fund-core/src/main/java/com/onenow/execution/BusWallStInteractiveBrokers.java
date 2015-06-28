@@ -27,7 +27,8 @@ import com.onenow.util.Watchr;
 public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	public BusController busController = new BusController(this);
-	public boolean isConnected = false;	
+	public boolean isConnectionBroken = false;	
+	public boolean isConnectionActive = false;
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
 	// Default
@@ -79,7 +80,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			}			
 		} // end try to connect
 	    
-	    isConnected = true;
+	    isConnectionBroken = true;
 		Watchr.log(Level.INFO, "CONNECTED TO BUS!", "", "");
 	  }
 
@@ -136,7 +137,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  @Override
 	  public void disconnected() {
 		  
-		isConnected = false;
+		isConnectionBroken = false;
 	    show(ConnectionStatus.DISCONNECTED.toString());
 	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
 	    
@@ -154,16 +155,90 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    show( e.toString() );
 	  }
 
+	  /** 
+	   * Make decisions based on messaging from the API counterpart
+	   */
 	  @Override
 	  public void message(int id, int errorCode, String errorMsg) {
 	    show( id + " " + errorCode + " " + errorMsg);
 	    
-	    // 504 not connected, 507 BAD MESSAGE LENGTH NULL
-	    if(errorCode==504 || errorCode==507) {
-	    	isConnected = false;
+	    if( isConnectionErrorMustReconnect(errorCode) || 
+	    	isMarketDataErrorMustReconnect(errorCode)) {
+	    	
+	    	isConnectionBroken = false;
 	    	// busController.disconnect();
 	    }
+	    
+	    isDataFarmActive(errorCode);
+	    
+		// TODO: re-try when a particular request ID fails; print the investment involved
+		// 10000297 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA
+	    
+	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
+	    
+	    // TODO: look for IBmessage and IBerror in the log
+
 	  }
+	  
+
+	  private boolean isConnectionErrorMustReconnect(int errorCode) {
+		
+		  if(   errorCode==504 || errorCode==507 || 	// not connected or null message
+				errorCode==1101						// Connectivity between IB and TWS has been restored- data lost.
+				) { 
+			  
+			  Watchr.log(Level.SEVERE, "CONNECTION ERROR");
+			  return true;
+		  }
+		  return false;
+	  }
+	  
+	  private boolean isMarketDataErrorMustReconnect(int messageCode) {
+		  
+		  if( 	messageCode==162 || messageCode==164 || messageCode==165 ||   
+				messageCode==354 || 
+				messageCode==414 || 
+				messageCode==510 || messageCode==511 || 
+				messageCode==1101 ||											// Connectivity between IB and TWS has been restored- data lost
+				messageCode==1300 ||											// TWS socket port has been reset and this connection is being dropped
+				messageCode==2103 || messageCode==2105) {
+			  
+			  Watchr.log(Level.SEVERE, "Market Data Error");
+			  return true;
+		  }
+		  return false;
+	  }
+	  
+	  private boolean isDataFarmActive(int messageCode) {
+		  
+		  if(   messageCode==1102 || 			// Connectivity between IB and TWS has been restored- data maintained
+				messageCode==2104 || 			// market data farm connected
+				messageCode==2106 ||			// historic data farm connected
+				messageCode==2107 ||			// historic data inactive but should be available upon demand
+				messageCode==2108) {			// market data inactive but should be available upon demand
+			  
+			  isConnectionActive = true;
+		  }
+		  
+		  if(   messageCode==1100 ||			// Connectivity between IB and TWS has been lost
+				messageCode==2119 || 			// market data farm 
+				messageCode==2107 || 			// hmds data
+				messageCode==2110) {			// connection to server 
+			  
+			  isConnectionActive = false;
+		  }
+
+		  return isConnectionActive;
+	  }
+	  
+	  
+	  
+		// Wait for OK on data farm
+		// 2104 MARKET DATA FARM CONNECTION IS OK:USFUTURE
+		// -1 2106 HMDS DATA FARM CONNECTION IS OK:USHMDS.US
+		// -1 2107 HMDS DATA FARM CONNECTION IS INACTIVE BUT SHOULD BE AVAILABLE UPON DEMAND.USHMDS.US
+		
+
 
 	  @Override
 	  public void show(String log) {

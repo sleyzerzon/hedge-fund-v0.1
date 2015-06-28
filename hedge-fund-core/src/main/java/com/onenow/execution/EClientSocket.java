@@ -3262,21 +3262,21 @@ public class EClientSocket {
     /** @deprecated, never called. */
     public synchronized void error( String err) {
 
-		Watchr.log(Level.INFO, "~ error( String err)");
+		Watchr.log(Level.INFO, "~ IBerror: " + err);
 
         m_eWrapper.error( err);
     }
 
     public synchronized void message( int id, int code, String message) {
     	
-		Watchr.log(Level.INFO, "~ message( int id, int code, String message)", "\n", "");
+		Watchr.log(Level.WARNING, "~ IBmessage: " + "-ID " + id + " -CODE " + code + " -MESSAGE " +message);
 
         m_eWrapper.error( id, code, message);
     }
 
     protected void error(int id, EClientErrors.CodeMsgPair pair, String tail) {
     	
-    	Watchr.log(Level.INFO, "~ error(int id, EClientErrors.CodeMsgPair pair, String tail)");
+    	Watchr.log(Level.WARNING, "~ IBerror: " + "-ID " + id + " -PAIR " + pair.toString()  + " -TAIL " + tail);
 
         message(id, pair.code(), pair.msg() + tail);
     }

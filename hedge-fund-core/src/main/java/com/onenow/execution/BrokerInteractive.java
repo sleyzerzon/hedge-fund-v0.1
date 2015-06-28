@@ -102,6 +102,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  }	
 	  
 	  // GET HISTORICAL QUOTES
+	  // API https://www.interactivebrokers.com/en/software/api/apiguide/tables/api_message_codes.htm
 	  public void procesHistoricalQuotesRequests() {
 		  		  
 		  QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.busController);
@@ -111,15 +112,16 @@ public class BrokerInteractive implements BrokerInterface  {
 			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {
 					  
-					  if(busIB.isConnected) {
-						  quoteHistoryChain.processHistoryOneRequest(message);
-					  } else {
+					  if(busIB.isConnectionBroken) {
 							TimeParser.wait(20);
 							busIB.connectToServer();
 							quoteHistoryChain.controller = busIB.busController; // get the new one
-							
-							// Wait for OK on data farm
-							// 2104 MARKET DATA FARM CONNECTION IS OK:USFUTURE  
+					  } else {
+						  while(!busIB.isConnectionActive) {
+							TimeParser.wait(20);  
+						  } 
+						  // if connected and connection is active, then request
+						  quoteHistoryChain.processHistoryOneRequest(message);
 					  }
 				  }
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
