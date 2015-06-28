@@ -28,7 +28,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	public BusController busController = new BusController(this);
 	public boolean isConnectionBroken = false;	
-	public boolean isConnectionInactive = false;
+	public boolean isFarmAvailable = false;
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
 	// Default
@@ -170,7 +170,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    	// busController.disconnect();
 	    }
 	    
-	    isDataFarmActive(errorCode);
+	    isFarmAvailable(errorCode);
 	    	    
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
 	    
@@ -207,7 +207,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  return false;
 	  }
 	  
-	  private boolean isDataFarmActive(int messageCode) {
+	  private boolean isFarmAvailable(int messageCode) {
 		  
 		  if(   messageCode==1102 || 			// Connectivity between IB and TWS has been restored- data maintained
 				messageCode==2104 || 			// market data farm connected
@@ -215,20 +215,19 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2107 ||			// historic data inactive but should be available upon demand
 				messageCode==2108) {			// market data inactive but should be available upon demand
 			  
-			  Watchr.log(Level.WARNING, "Farm Active: " + messageCode);
-			  isConnectionInactive = false;
+			  Watchr.log(Level.WARNING, "Farm Available: " + messageCode);
+			  isFarmAvailable = true;
 		  }
 		  
 		  if(   messageCode==1100 ||			// Connectivity between IB and TWS has been lost
-				messageCode==2119 || 			// market data farm 
-				messageCode==2107 || 			// hmds data
-				messageCode==2110) {			// connection to server 
+				messageCode==2119 || 			// market data farm ...?
+				messageCode==2110) {			// Connectivity between TWS and server is broken 
 			  
 			  Watchr.log(Level.WARNING, "Farm Inactive: " + messageCode);
-			  isConnectionInactive = true;
+			  isFarmAvailable = false;
 		  }
 
-		  return isConnectionInactive;
+		  return isFarmAvailable;
 	  }
 	  		
 

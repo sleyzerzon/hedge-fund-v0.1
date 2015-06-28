@@ -120,7 +120,7 @@ public class BrokerInteractive implements BrokerInterface  {
 						      Watchr.log(Level.WARNING, "Connection Broken/Inactive");
 							  TimeParser.wait(25);
 							  counter++;
-						  } while (busIB.isConnectionBroken && busIB.isConnectionInactive && counter<2);
+						  } while (busIB.isConnectionBroken && !busIB.isFarmAvailable && counter<2);
 							  
 					      if(busIB.isConnectionBroken) {
 								busIB.connectToServer();
@@ -129,12 +129,12 @@ public class BrokerInteractive implements BrokerInterface  {
 							  
 					      counter=0;
 					      do {
-								Watchr.log(Level.WARNING, "Connection Inactive");
+								Watchr.log(Level.WARNING, "Farm Unavailable");
 								TimeParser.wait(15);
-					      } while(!busIB.isConnectionBroken && busIB.isConnectionInactive && counter <2);
+					      } while(!busIB.isConnectionBroken && !busIB.isFarmAvailable && counter <2);
 					      
 						  // if connected and connection is active, finally request
-						  if(!busIB.isConnectionBroken && !busIB.isConnectionInactive) {
+						  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
 							  quoteHistoryChain.processHistoryOneRequest(message);
 							  reqSuccess = true;
 							  
