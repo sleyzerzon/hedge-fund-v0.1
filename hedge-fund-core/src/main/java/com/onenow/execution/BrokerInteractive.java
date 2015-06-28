@@ -118,13 +118,12 @@ public class BrokerInteractive implements BrokerInterface  {
 							busIB.connectToServer();
 							quoteHistoryChain.controller = busIB.busController; // get the new one
 					  } else {
-						  if(busIB.isConnectionInactive) {
+						  while(!busIB.isConnectionBroken && busIB.isConnectionInactive) {
 							  Watchr.log(Level.WARNING, "Connection Inactive");
 							  TimeParser.wait(15);
-						  } else {
-							  quoteHistoryChain.processHistoryOneRequest(message);								  
-						  }
-						  // if connected and connection is active, then request
+						  } 
+						  // if connected and connection is active, finally request
+						  quoteHistoryChain.processHistoryOneRequest(message);		
 					  }
 				  }
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
