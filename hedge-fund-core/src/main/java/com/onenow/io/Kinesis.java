@@ -61,13 +61,7 @@ public class Kinesis {
     	
 		boolean success = true;
 		
-        byte[] bytes;
-        try {
-        	bytes = Piping.serialize(objectToSend).getBytes();        	
-        } catch (Exception e) {
-        	Watchr.log(Level.SEVERE, "Skipping pair. Unable to serialize: " + e.getMessage());
-            return;
-        }
+        byte[] bytes = Piping.serialize(objectToSend).getBytes();
 
         PutRecordRequest putRecord = new PutRecordRequest();
         putRecord.setStreamName(streamName.toString());
@@ -84,24 +78,10 @@ public class Kinesis {
         	kinesis.putRecord(putRecord);
         } catch (Exception e){
         	success = false;
-        	Watchr.log(Level.SEVERE, "Throughput exceeded");
+        	Watchr.log(Level.SEVERE, "Kinesis Exception. Throughput exceeded?");
         	e.printStackTrace();
         }
-        
-//        try {
-//            kinesis.putRecord(putRecord);
-//        } catch (ProvisionedThroughputExceededException ex) {
-//        	success = false;
-//        	Watchr.log(Level.SEVERE, "Throughput exceeded" + ex.getMessage());
-//            try {
-//                Thread.sleep(10);
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//            }
-//        } catch (AmazonClientException ex) {
-//        	Watchr.log(Level.SEVERE, "Error sending record to Amazon Kinesis: " + ex.getMessage());
-//        }
-        
+                
         if(!success) {
         	String log = "xxxxxxxxx FAILED INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
         	Watchr.log(Level.SEVERE, log, "\n", "");

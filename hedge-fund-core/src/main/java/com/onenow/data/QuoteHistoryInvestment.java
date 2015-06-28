@@ -72,7 +72,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		handleRow(row);
 	}
 
-	private void handleRow(EventActivityHistory row) {
+	private void handleRow(final EventActivityHistory row) {
 		
 		// Clarify provenance
 		row.setInvestment(investment);
@@ -80,8 +80,13 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		row.source = source;
 		row.timing = timing;
 				
-		// Write to history data stream
-		BusSystem.write(row, StreamName.HISTORY);
+		// Write to history data stream	
+		new Thread () {
+			@Override public void run () {
+				BusSystem.write(row, StreamName.HISTORY);
+			}
+		}.start();
+
 
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
 

@@ -24,9 +24,9 @@ import com.onenow.util.Watchr;
 
 public class CacheInProcess {
 	
-	private BrokerInteractive 					broker;
+	private BrokerInteractive 							broker;
 	private HashMap<String, EventActivityRealtime>		lastEventRT = new HashMap<String, EventActivityRealtime>(); 	// last set of price/size/etc
-	private HashMap<String, Chart>				charts = new HashMap<String, Chart>();			// price history in chart format from L1
+	private HashMap<String, Chart>						charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
 	public CacheInProcess() {
 		

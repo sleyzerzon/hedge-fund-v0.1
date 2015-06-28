@@ -1,5 +1,7 @@
 package com.onenow.util;
 
+import java.util.logging.Level;
+
 import com.google.gson.Gson;
 
 public class Piping {
@@ -16,6 +18,7 @@ public class Piping {
 			json = gson.toJson(obj);
 			// Watchr.log("Serialized " + obj.toString() + " into " + json);
 		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "Skipping object. Unable to serialize: " + obj.toString());
 			e.printStackTrace();
 		}
 		return json;
