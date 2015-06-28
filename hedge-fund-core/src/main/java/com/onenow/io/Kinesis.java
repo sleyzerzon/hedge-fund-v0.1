@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
+import com.onenow.data.EventActivity;
 import com.onenow.util.Piping;
 import com.onenow.util.StreamUtils;
 import com.onenow.util.TimeParser;
@@ -46,9 +47,18 @@ public class Kinesis {
     	Watchr.log(Level.FINE, log);
 
 	}
-	
-    public void sendObject(Object objectToSend, StreamName streamName) {
-		
+
+    public void sendObject(EventActivity activityToSend, StreamName streamName) {
+    	
+    	String log = "&&&&&&&&&& INTO STREAM <" + streamName + "> WRITING: " + activityToSend.toString();
+    	Watchr.log(Level.INFO, log);
+    	
+    	sendObject((Object) activityToSend, streamName) ;
+    	
+    }
+
+    public static void sendObject(Object objectToSend, StreamName streamName) {
+    	
 		boolean success = true;
 		
         byte[] bytes;
@@ -92,9 +102,9 @@ public class Kinesis {
 //        	Watchr.log(Level.SEVERE, "Error sending record to Amazon Kinesis: " + ex.getMessage());
 //        }
         
-        if(success) {
-        	String log = "&&&&&&&&&& INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
-        	Watchr.log(Level.INFO, log, "\n", "");
+        if(!success) {
+        	String log = "xxxxxxxxx FAILED INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
+        	Watchr.log(Level.SEVERE, log, "\n", "");
         }
     }
     
@@ -110,7 +120,7 @@ public class Kinesis {
 	public static void selfTest() {	
 		
 		// initialize to an incorrect value
-		BusSystem.write(StreamName.TESTING, TestValues.BOGUS.toString());
+		sendObject((Object) TestValues.BOGUS.toString(), StreamName.TESTING);
 		
 		new Thread () {
 			@Override public void run () {
@@ -129,7 +139,7 @@ public class Kinesis {
 		  	int maxTries=3;
 		  	while(true) {	
 		  		Watchr.log(Level.WARNING, "KINESIS SELF TEST: ");
-				BusSystem.write(StreamName.TESTING, TestValues.VALUE.toString());
+		  		sendObject((Object) TestValues.VALUE.toString(), StreamName.TESTING);
 				TimeParser.wait(15);
 				count ++;
 				if(count>maxTries) {

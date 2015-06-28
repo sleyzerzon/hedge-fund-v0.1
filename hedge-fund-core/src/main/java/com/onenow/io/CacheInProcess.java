@@ -85,7 +85,7 @@ public class CacheInProcess {
 		// Write to Real-Time datastream
 		StreamName stream = broker.getStream();
 		Watchr.log(Level.WARNING, "Writing into Stream " + "<" + stream + ">" + " OBJECT: " + event.toString());
-		BusSystem.write(stream, (Object) event);
+		BusSystem.write(event, stream);
 						
 	}
 

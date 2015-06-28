@@ -81,7 +81,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		row.timing = timing;
 				
 		// Write to history data stream
-		BusSystem.write(StreamName.HISTORY, row);
+		BusSystem.write(row, StreamName.HISTORY);
 
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
 

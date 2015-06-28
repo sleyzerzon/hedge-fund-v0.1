@@ -67,6 +67,7 @@ public class HistorianMain {
  * Continually augment L2 (TSDB) with data from L3 (3rd party DB)
  * @param inv
  */
+	// cat  com.onenow.main.InvestorMainHISTORY-Log.txt | grep -i "into stream" | grep -i "under es" | grep -i "call"
 	private static boolean updateL2HistoryFromL3(Investment inv, String toDashedDate) {
 		
 		boolean requestMade = false;

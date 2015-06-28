@@ -12,6 +12,7 @@ import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.StreamName;
+import com.onenow.data.EventActivity;
 import com.onenow.io.Lookup;
 
 public class BusSystem {
@@ -100,7 +101,8 @@ public class BusSystem {
 		Integer i=0;
 		while(true) {
 			s = s + i;
-			write(streamName, s);
+			// TODO validate / create the stream?
+			getKinesis().sendObject((Object) s, streamName);
 			TimeParser.wait(1);
 			i++;
 		}
@@ -108,12 +110,12 @@ public class BusSystem {
 //		return true;
 	}
 
-	public static void write(StreamName streamName, Object objToSend) {
+	public static void write(EventActivity activityToSend, StreamName streamName) {
 		// TODO re-try if write fails
 		try {
 			validateStream(streamName);
 			createStreamIfNotExists(streamName);
-			getKinesis().sendObject(objToSend, streamName);
+			getKinesis().sendObject(activityToSend, streamName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
