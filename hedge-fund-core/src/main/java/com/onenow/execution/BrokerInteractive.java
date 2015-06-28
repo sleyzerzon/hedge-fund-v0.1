@@ -117,10 +117,10 @@ public class BrokerInteractive implements BrokerInterface  {
 						  
 						  int counter=0;
 						  do {
-						      Watchr.log(Level.WARNING, "Connection Broken/Inactive");
+						      Watchr.log(Level.WARNING, "Connection Broken/Inactive: " + counter);
 							  TimeParser.wait(25);
 							  counter++;
-						  } while (busIB.isConnectionBroken && !busIB.isFarmAvailable && counter<2);
+						  } while (busIB.isConnectionBroken && counter<2);
 							  
 					      if(busIB.isConnectionBroken) {
 								busIB.connectToServer();
@@ -129,9 +129,9 @@ public class BrokerInteractive implements BrokerInterface  {
 							  
 					      counter=0;
 					      do {
-								Watchr.log(Level.WARNING, "Farm Unavailable");
+								Watchr.log(Level.WARNING, "Farm Unavailable: " + counter);
 								TimeParser.wait(15);
-					      } while(!busIB.isConnectionBroken && !busIB.isFarmAvailable && counter <2);
+					      } while(!busIB.isFarmAvailable && counter <2);
 					      
 						  // if connected and connection is active, finally request
 						  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {

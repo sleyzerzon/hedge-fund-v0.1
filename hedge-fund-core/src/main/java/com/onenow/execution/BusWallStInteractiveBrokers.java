@@ -223,7 +223,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2119 || 			// market data farm ...?
 				messageCode==2110) {			// Connectivity between TWS and server is broken 
 			  
-			  Watchr.log(Level.WARNING, "Farm Inactive: " + messageCode);
+			  Watchr.log(Level.WARNING, "Farm Unavailable: " + messageCode);
 			  isFarmAvailable = false;
 		  }
 
