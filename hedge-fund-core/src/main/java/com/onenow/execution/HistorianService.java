@@ -17,6 +17,10 @@ public class HistorianService {
 																	1, DurationUnit.DAY, BarSize._30_secs, WhatToShow.TRADES,
 																	SamplingRate.HFMEDIUM);   	    	
 
+    public static HistorianConfig size5min = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
+																	1, DurationUnit.DAY, BarSize._5_mins, WhatToShow.TRADES,
+																	SamplingRate.HFMEDIUM);   	    	
+
     public static HistorianConfig size1hr = new HistorianConfig(	InvDataSource.IB, InvDataTiming.HISTORICAL,
 																	1, DurationUnit.DAY, BarSize._1_hour, WhatToShow.TRADES,
 																	SamplingRate.HFMEDIUM);   	    	

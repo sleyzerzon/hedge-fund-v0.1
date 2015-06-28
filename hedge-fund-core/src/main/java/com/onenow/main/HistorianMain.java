@@ -22,7 +22,7 @@ public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
     private static String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
-	private static HistorianConfig config = new HistorianService().size30sec;
+	private static HistorianConfig config = new HistorianService().size5min;
 	
 	private static SQS sqs = new SQS();
 	
