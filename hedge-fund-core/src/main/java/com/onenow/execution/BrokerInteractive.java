@@ -112,30 +112,37 @@ public class BrokerInteractive implements BrokerInterface  {
 			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {
 						
-					  int counter=0;
-					  do {
-						  TimeParser.wait(25);
-						  counter++;
-					  } while (busIB.isConnectionBroken && counter<2);
+					  boolean reqSuccess = false;
+					  while (!reqSuccess) {
+						  int counter=0;
+						  do {
+						      Watchr.log(Level.WARNING, "Connection Broken/Inactive");
+							  TimeParser.wait(25);
+							  counter++;
+						  } while (busIB.isConnectionBroken && busIB.isConnectionInactive && counter<2);
+							  
+					      if(busIB.isConnectionBroken) {
+								busIB.connectToServer();
+								quoteHistoryChain.controller = busIB.busController; // get the new one
+						  } 
+							  
+					      while(!busIB.isConnectionBroken && busIB.isConnectionInactive) {
+								Watchr.log(Level.WARNING, "Connection Inactive");
+								TimeParser.wait(15);
+					      } 
+					      
+						  // if connected and connection is active, finally request
+						  if(!busIB.isConnectionBroken && !busIB.isConnectionInactive) {
+							  quoteHistoryChain.processHistoryOneRequest(message);
+							  reqSuccess = true;
+							  
+								// TODO: re-try when a particular request ID fails; print the investment involved
+								// 10000297 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA
+
+						  }
 						  
-				      if(busIB.isConnectionBroken) {
-							Watchr.log(Level.WARNING, "Connection Broken");
-							busIB.connectToServer();
-							quoteHistoryChain.controller = busIB.busController; // get the new one
-					  } 
-						  
-				      while(!busIB.isConnectionBroken && busIB.isConnectionInactive) {
-							Watchr.log(Level.WARNING, "Connection Inactive");
-							TimeParser.wait(15);
-				      } 
-				      
-					  // if connected and connection is active, finally request
-					  if(!busIB.isConnectionBroken && !busIB.isConnectionInactive) {
-						  quoteHistoryChain.processHistoryOneRequest(message);
-					  } else {
-						  // TODO: re-try for that message, connection broke while inactive, in the meantime that message is lost
-					  }	
-				  }
+				  	  } // end re-tries
+				  } // end for messages
 				  
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }

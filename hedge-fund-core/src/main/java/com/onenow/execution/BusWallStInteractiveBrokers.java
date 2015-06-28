@@ -171,10 +171,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    }
 	    
 	    isDataFarmActive(errorCode);
-	    
-		// TODO: re-try when a particular request ID fails; print the investment involved
-		// 10000297 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA
-	    
+	    	    
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
 	    
 	    // TODO: look for IBmessage and IBerror in the log
@@ -233,14 +230,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 		  return isConnectionInactive;
 	  }
-	  
-	  
-	  
-		// Wait for OK on data farm
-		// 2104 MARKET DATA FARM CONNECTION IS OK:USFUTURE
-		// -1 2106 HMDS DATA FARM CONNECTION IS OK:USHMDS.US
-		// -1 2107 HMDS DATA FARM CONNECTION IS INACTIVE BUT SHOULD BE AVAILABLE UPON DEMAND.USHMDS.US
-		
+	  		
 
 
 	  @Override
