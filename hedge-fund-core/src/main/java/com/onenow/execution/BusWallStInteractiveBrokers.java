@@ -187,7 +187,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				errorCode==1101						// Connectivity between IB and TWS has been restored- data lost.
 				) { 
 			  
-			  Watchr.log(Level.SEVERE, "CONNECTION ERROR");
+			  Watchr.log(Level.SEVERE, "Connection Error");
 			  return true;
 		  }
 		  return false;
@@ -203,7 +203,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==1300 ||											// TWS socket port has been reset and this connection is being dropped
 				messageCode==2103 || messageCode==2105) {
 			  
-			  Watchr.log(Level.SEVERE, "Market Data Error");
+			  Watchr.log(Level.SEVERE, "Data Error");
 			  return true;
 		  }
 		  return false;
@@ -217,6 +217,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2107 ||			// historic data inactive but should be available upon demand
 				messageCode==2108) {			// market data inactive but should be available upon demand
 			  
+			  Watchr.log(Level.WARNING, "Farm Active");
 			  isConnectionActive = true;
 		  }
 		  
@@ -225,6 +226,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2107 || 			// hmds data
 				messageCode==2110) {			// connection to server 
 			  
+			  Watchr.log(Level.WARNING, "Farm Inactive");
 			  isConnectionActive = false;
 		  }
 

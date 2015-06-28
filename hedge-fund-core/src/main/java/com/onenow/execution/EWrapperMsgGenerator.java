@@ -566,6 +566,7 @@ public class EWrapperMsgGenerator {
      * @return
      */
     public static String error( Exception ex) { return "Error - " + ex;}
+    
     public static String error( String str) { return str;}
 
 	public static String error(int id, int errorCode, String errorMsg) {

@@ -1,5 +1,9 @@
 package com.onenow.test;
 
+import java.util.logging.Level;
+
+import com.onenow.util.Watchr;
+
 public class ErrorLive {
 	
 	public ErrorLive() {
@@ -12,9 +16,9 @@ public class ErrorLive {
 		
 		s = s + error;
 		
-		System.out.println(s);
+		Watchr.log(Level.WARNING, s);
 		
-		// TODO: live error handling
+		// TODO: live error handling?
 	}
 
 }
