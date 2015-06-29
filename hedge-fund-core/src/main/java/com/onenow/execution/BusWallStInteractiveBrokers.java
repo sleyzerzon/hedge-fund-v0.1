@@ -20,6 +20,7 @@ import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.BusController;
 import com.onenow.portfolio.BusController.ConnectionHandler;
 import com.onenow.portfolio.BusController.IBulletinHandler;
+import com.onenow.portfolio.BusController.IHistoricalDataHandler;
 import com.onenow.portfolio.BusController.ITimeHandler;
 
 import java.util.logging.Level;
@@ -200,14 +201,21 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  }
 
 	private Investment getMessageInvestment(int id) {
-		QuoteSharedHandler handler = null;
+		QuoteSharedHandler rtHandler = null;
+		IHistoricalDataHandler histHandler = null;
 		Investment inv = new Investment();
 		try {
-			handler = busController.m_topMktDataMap.get(id);
-			inv = handler.investment; 
-		} catch (Exception e) {
-			Watchr.log(Level.WARNING, "Could not find investment for reqId: " + id);
+			rtHandler = busController.m_topMktDataMap.get(id);
+			inv = rtHandler.investment; 
+		} catch (Exception eRT) {
+			Watchr.log(Level.WARNING, "Could not find Market Data query investment for reqId: " + id);
 			// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
+			try {
+				histHandler = busController.m_historicalDataMap.get(id);
+			} catch (Exception eHIST){
+				Watchr.log(Level.WARNING, "Could not find Historic Data query investment for reqId: " + id);
+				// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error				
+			}
 		}
 		return inv;
 	}

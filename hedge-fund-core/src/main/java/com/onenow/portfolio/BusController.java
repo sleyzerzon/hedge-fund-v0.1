@@ -55,6 +55,7 @@ public class BusController implements EWrapper {
 
 	private final HashMap<Integer,QuoteOptionHandler> m_optionCompMap = new HashMap<Integer,QuoteOptionHandler>(); 
 	public final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
+	public final HashMap<Integer, IHistoricalDataHandler> m_historicalDataMap = new HashMap<Integer, IHistoricalDataHandler>();
 
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
@@ -66,8 +67,8 @@ public class BusController implements EWrapper {
 	private final HashMap<Integer,IEfpHandler> m_efpMap = new HashMap<Integer,IEfpHandler>();
 	private final HashMap<Integer,IDeepMktDataHandler> m_deepMktDataMap = new HashMap<Integer,IDeepMktDataHandler>();
 	private final HashMap<Integer, IScannerHandler> m_scannerMap = new HashMap<Integer, IScannerHandler>();
-	private final HashMap<Integer, IRealTimeBarHandler> m_realTimeBarMap = new HashMap<Integer, IRealTimeBarHandler>();
-	private final HashMap<Integer, IHistoricalDataHandler> m_historicalDataMap = new HashMap<Integer, IHistoricalDataHandler>();
+	private final HashMap<Integer, IRealTimeBarHandler> m_realTimeBarMap = new HashMap<Integer, IRealTimeBarHandler>();	
+	
 	private final HashMap<Integer, IFundamentalsHandler> m_fundMap = new HashMap<Integer, IFundamentalsHandler>();
 	private final HashMap<Integer, IOrderHandler> m_orderHandlers = new HashMap<Integer, IOrderHandler>();
 	private final HashMap<Integer,IAccountSummaryHandler> m_acctSummaryHandlers = new HashMap<Integer,IAccountSummaryHandler>();
