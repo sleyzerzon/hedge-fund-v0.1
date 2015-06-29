@@ -294,7 +294,7 @@ public static DBTimeIncrement seriesToIncrements(Serie serie, String s) {
 		s = s + "\n";
 	}
 	
-	Watchr.log(Level.FINEST, "INCREMENT FROM SERIE: " + increment.toString());
+	// Watchr.log(Level.FINEST, "INCREMENT FROM SERIE: " + increment.toString());
 	return increment;
 }
 

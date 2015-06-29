@@ -81,7 +81,7 @@ public class DBTimeSeriesPrice {
 	private static List<Candle> seriesToCandles(List<Serie> series) {
 		
 		List<Candle> candles = new ArrayList<Candle>();		
-		Watchr.log(Level.INFO, "SERIES TO CANDLE: " + series.toString());
+		// Watchr.log(Level.INFO, "SERIES TO CANDLE: " + series.toString());
 				
 		String s="";
 		
@@ -96,7 +96,7 @@ public class DBTimeSeriesPrice {
 			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
 			candles.add(incrementsToCandle(increment));
 		}
-		System.out.println("CANDLE FROM SERIES: " + s + "\n");	// full candle
+		// System.out.println("CANDLE FROM SERIES: " + s + "\n");	// full candle
 		return candles;
 	}
 	
@@ -123,7 +123,7 @@ public class DBTimeSeriesPrice {
 		candle.sumPrice = increment.sum;
 		candle.derivativePrice = increment.derivative;
 			
-		Watchr.log(Level.FINEST, "CANDLE FROM INCREMENT: " + candle.toString());
+		// Watchr.log(Level.FINEST, "CANDLE FROM INCREMENT: " + candle.toString());
 		return candle;
 	}
 

@@ -75,7 +75,7 @@ public class DBTimeSeriesSize {
 	private static List<Integer> seriesToSizes(List<Serie> series) {
 		
 		List<Integer> sizes = new ArrayList<Integer>();
-		Watchr.log(Level.INFO, "SERIES: " + series.toString());
+		// Watchr.log(Level.INFO, "SERIES: " + series.toString());
 
 		String s="";
 		
@@ -83,14 +83,14 @@ public class DBTimeSeriesSize {
 			
 			for (String col : serie.getColumns()) {
 				s = s + col + "\t";
-				System.out.println("column " + col); // column names
+				// System.out.println("column " + col); // column names
 			}
 			s = s + "\n";
 			
 			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
 			sizes.add(incrementToSize(increment));
 		}
-		System.out.println("SIZES: " + s + "\n");	// full series
+		// System.out.println("SIZES: " + s + "\n");	// full series
 		return sizes;
 	}
 	
