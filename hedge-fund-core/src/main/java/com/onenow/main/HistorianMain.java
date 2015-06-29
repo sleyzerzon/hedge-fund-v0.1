@@ -43,13 +43,7 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
 				
-//				TimeParser.paceHistoricalQuery(lastQueryTime);
-				TimeParser.wait(1);
-				
-				updateL2HistoryFromL3(inv, toDashedDate);
-				
-//				lastQueryTime = TimeParser.getTimestampNow();
-				
+				updateL2HistoryFromL3(inv, toDashedDate);							
 			}
 									
 			// go back further in time
@@ -82,12 +76,16 @@ public class HistorianMain {
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if ( storedPrices.size()<minPrices ) {	
 
+			TimeParser.paceHistoricalQuery(lastQueryTime);
+
 			Watchr.log(Level.INFO, 	MemoryLevel.L2TSDB + " information incomplete, thus will request: " + request.toString() + 
 									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS");
 			
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
 			sqs.sendMessage(message, SQS.getHistoryQueueURL());				
+
+			lastQueryTime = TimeParser.getTimestampNow();
 
 			requestMade = true;
 			
