@@ -168,9 +168,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		
 		boolean severe = false;
 		String errorSummary = "";
-		
-		Investment inv = getMessageInvestment(id);		
-		
+				
 	    if( isConnectionErrorMustReconnect(errorCode)) {	    	
 	    	errorSummary = "Connection Error: ";
 			severe = true;
@@ -189,10 +187,9 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
 	    String baseLog = "-id " + id + " -code " + errorCode + " -message " + errorMsg;
-	    if(errorCode!=-1) {
-	    	baseLog = baseLog + " ||| FOR " + inv.toString();
-	    }
-	    
+		String log = baseLog + getMessageContext(id);		
+
+		
 	    if(!severe) {
 	    	Watchr.log(Level.INFO, baseLog);
 	    } else {
@@ -205,7 +202,14 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  }
 
-	private Investment getMessageInvestment(int id) {
+	private String getMessageContext(int id) {
+		
+		if(id==-1) {
+			// sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
+			return "-1";
+		}
+		
+		String context = "";
 		QuoteSharedHandler rtHandler = null;
 		QuoteHistoryInvestment histHandler = null;
 		Investment inv = new Investment();
@@ -213,17 +217,15 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			rtHandler = busController.m_topMktDataMap.get(id);
 			inv = rtHandler.investment; 
 		} catch (Exception eRT) {
-			// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
 			try {
 				histHandler = busController.m_historicalDataMap.get(id);
-				inv = histHandler.investment; 
+				inv = histHandler.investment;
 			} catch (Exception eHIST){
-				if(id!=-1) {
-					Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
-				}
+				Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
 			}
 		}
-		return inv;
+		context = ContractFactory.getContract(inv).toString();
+		return context;
 	}
 	  
 
