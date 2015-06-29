@@ -168,8 +168,9 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 			 
 		String query = getQuery(columnName, request, serieName);
 						
-		Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
+		// Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
+		
 	} catch (Exception e) {
 		// e.printStackTrace(); // some series don't exist or have data 
 	}
