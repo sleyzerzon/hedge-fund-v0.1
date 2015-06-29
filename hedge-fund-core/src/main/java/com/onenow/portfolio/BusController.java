@@ -57,7 +57,8 @@ public class BusController implements EWrapper {
 	private final HashMap<Integer,QuoteOptionHandler> m_optionCompMap = new HashMap<Integer,QuoteOptionHandler>(); 
 	public final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
 	public final HashMap<Integer, QuoteHistoryInvestment> m_historicalDataMap = new HashMap<Integer, QuoteHistoryInvestment>();
-
+	public final HashMap<Integer, String> reqDetail = new HashMap<Integer, String>();
+	
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
 	private IAdvisorHandler m_advisorHandler;
@@ -879,6 +880,17 @@ public class BusController implements EWrapper {
     	String durationStr = duration + " " + durationUnit.toString().charAt( 0);
     	m_client.reqHistoricalData(reqId, contract, endDateTime, durationStr, barSize.toString(), whatToShow.toString(), rthOnly ? 1 : 0, 2, Collections.<TagValue>emptyList() );
 		sendEOM();
+		
+		
+		// TODO: save details of the request
+		String reqParams = 		"-END " + endDateTime + " " + 
+				  				"-DURATION " + duration + " " +
+				  				"-DURUNIT " + durationUnit.toString() + " " +
+				  				"-BARSIZE " + barSize.toString() + " " + 
+				  				"-WHATTOSHOW " + whatToShow.toString() + " " +
+				  				"-RTHONLY " + rthOnly;
+		reqDetail.put(reqId, reqParams);
+		
 		return reqId;
     }
 

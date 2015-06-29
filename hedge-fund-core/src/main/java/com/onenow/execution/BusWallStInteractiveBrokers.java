@@ -186,8 +186,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    isFarmAvailable = isFarmAvailable(errorCode);
 	    
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
-	    String baseLog = "-id " + id + " -code " + errorCode + " -message " + errorMsg;
-		String log = baseLog + getMessageContext(id);		
+	    String log = "-id " + id + " -code " + errorCode + " -message " + errorMsg + " " + getMessageContext(id);
 		
 	    if(!severe) {
 	    	Watchr.log(Level.INFO, log);
@@ -209,22 +208,27 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		}
 		
 		String context = "";
-		QuoteSharedHandler rtHandler = null;
-		QuoteHistoryInvestment histHandler = null;
 		Investment inv = new Investment();
+
 		try {
-			rtHandler = busController.m_topMktDataMap.get(id);
-			inv = rtHandler.investment; 
-			context = ContractFactory.getContract(inv).toString();
-		} catch (Exception eRT) {
+			QuoteSharedHandler rtHandler = busController.m_topMktDataMap.get(id);
+			inv = rtHandler.investment;
+		} catch (Exception e1) {
 			try {
-				histHandler = busController.m_historicalDataMap.get(id);
+				QuoteHistoryInvestment histHandler = busController.m_historicalDataMap.get(id);
 				inv = histHandler.investment;
-			} catch (Exception eHIST){
+			} catch (Exception e2){
 				Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
-				context = ContractFactory.getContract(inv).toString();
 			}
 		}
+
+		try {
+			context = context + " " + ContractFactory.getContract(inv).toString();
+			context = context + " " + busController.reqDetail.get(id);
+		} catch (Exception e3) {
+			Watchr.log(Level.WARNING, "Could not find query context for reqId: " + id);			
+		}
+						
 		return context;
 	}
 	  
