@@ -56,8 +56,13 @@ public class Investment {
 		String s = "";
 		
 //		s = s + origin.toString("INVESTMENT") + " ";
-		s = s + "-under " + getUnder().toString() + " ";
-		s = s +	"-type " + getInvType();
+
+		try {
+			s = s + "-under " + getUnder().toString() + " ";
+			s = s +	"-type " + getInvType();
+		} catch (Exception e) {
+			// e.printStackTrace(); // sometimes trying to print default contructed investment
+		}
 		
 		return s;
 	}
