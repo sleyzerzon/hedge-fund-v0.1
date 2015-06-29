@@ -186,7 +186,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    isFarmAvailable = isFarmAvailable(errorCode);
 	    
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
-	    String baseLog = "-id " + id + " -code " + errorCode + " -message " + errorMsg + " ||| FOR " + inv.toString();
+	    String baseLog = "-id " + id + " -code " + errorCode + " -message " + errorMsg + " ||| FOR ..." + inv.toString();
 	    if(!severe) {
 	    	Watchr.log(Level.INFO, baseLog);
 	    } else {
@@ -206,6 +206,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			handler = busController.m_topMktDataMap.get(id);
 			inv = handler.investment; 
 		} catch (Exception e) {
+			Watchr.log(Level.WARNING, "Could not find investment for reqId: " + id);
 			// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
 		}
 		return inv;

@@ -3269,7 +3269,7 @@ public class EClientSocket {
 
     public synchronized void message( int id, int code, String message) {
     	
-		Watchr.log(Level.WARNING, "~ IBmessage: " + "-ID " + id + " -CODE " + code + " -MESSAGE " +message);
+		// Watchr.log(Level.WARNING, "~ IBmessage: " + "-ID " + id + " -CODE " + code + " -MESSAGE " +message);
 
         m_eWrapper.error( id, code, message);
     }
