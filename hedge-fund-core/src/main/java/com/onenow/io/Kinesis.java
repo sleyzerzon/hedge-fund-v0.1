@@ -59,7 +59,7 @@ public class Kinesis {
 
     public static void sendObject(Object objectToSend, StreamName streamName) {
     	
-		boolean success = true;
+//		boolean success = true;
 		
         byte[] bytes = Piping.serialize(objectToSend).getBytes();
 
@@ -74,18 +74,18 @@ public class Kinesis {
         putRecord.setSequenceNumberForOrdering(null);
 
         // TODO: re-try here or in bus.write?
-        try {
+//        try {
         	kinesis.putRecord(putRecord);
-        } catch (Exception e){
-        	success = false;
-        	Watchr.log(Level.SEVERE, "Kinesis Exception. Throughput exceeded?");
-        	e.printStackTrace();
-        }
+//        } catch (Exception e){
+//        	success = false;
+//        	Watchr.log(Level.SEVERE, "Kinesis Exception. Throughput exceeded?");
+//        	e.printStackTrace();
+//        }
                 
-        if(!success) {
-        	String log = "xxxxxxxxx FAILED INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
-        	Watchr.log(Level.SEVERE, log, "\n", "");
-        }
+//        if(!success) {
+//        	String log = "xxxxxxxxx FAILED INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
+//        	Watchr.log(Level.SEVERE, log, "\n", "");
+//        }
     }
     
     
