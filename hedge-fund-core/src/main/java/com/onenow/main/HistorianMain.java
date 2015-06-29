@@ -43,18 +43,13 @@ public class HistorianMain {
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
 				
-				TimeParser.paceHistoricalQuery(lastQueryTime);
+//				TimeParser.paceHistoricalQuery(lastQueryTime);
+				TimeParser.wait(1);
 				
 				updateL2HistoryFromL3(inv, toDashedDate);
 				
-				lastQueryTime = TimeParser.getTimestampNow();
+//				lastQueryTime = TimeParser.getTimestampNow();
 				
-//				// request update
-//				if(updateL2HistoryFromL3(inv, toDashedDate)) {		
-//					// only if request sent reset the query time
-//					lastQueryTime = TimeParser.getTimestampNow();	
-//				}
-
 			}
 									
 			// go back further in time
@@ -97,7 +92,7 @@ public class HistorianMain {
 			requestMade = true;
 			
 		} else {
-			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
+			 Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // " found "  + storedPrices.size()
 		}
 		
 		return requestMade;
