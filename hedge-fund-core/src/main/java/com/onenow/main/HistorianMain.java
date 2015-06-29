@@ -73,19 +73,19 @@ public class HistorianMain {
 		boolean requestMade = false;
 		
 		// minimum number of price data points
-		int minPrices = 50;
+		int minPrices = 75;
 		
 		Watchr.log(Level.INFO, "READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
 		
 		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
-//		// See if data already in L2
-//		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-//		List<Candle> storedPrices = DBTimeSeriesPrice.read(request);
-//		
-//		// query L3 only if L2 data is incomplete
-//		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
-//		if ( storedPrices.size()<minPrices ) {	
+		// See if data already in L2
+		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
+		List<Candle> storedPrices = DBTimeSeriesPrice.read(request);
+		
+		// query L3 only if L2 data is incomplete
+		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
+		if ( storedPrices.size()<minPrices ) {	
 
 			Watchr.log(Level.INFO, 	MemoryLevel.L2TSDB + " information incomplete, thus will request: " + request.toString() + 
 									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS");
@@ -94,11 +94,11 @@ public class HistorianMain {
 			String message = Piping.serialize((Object) request);
 			sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
-//			requestMade = true;
-//			
-//		} else {
-//			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
-//		}
+			requestMade = true;
+			
+		} else {
+			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " found "  + storedPrices.size() + " prices for " + inv.toString());
+		}
 		
 		return requestMade;
 	}

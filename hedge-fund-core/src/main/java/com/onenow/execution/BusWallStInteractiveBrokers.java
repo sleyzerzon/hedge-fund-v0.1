@@ -175,6 +175,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			severe = true;
 	    }
 	    
+	    // TODO: re-try request when data error occurs
 	    if( isMarketDataErrorConsiderReconnect(errorCode)) {
 	    	errorSummary = "Data Error: ";
 	    	warning = true;
