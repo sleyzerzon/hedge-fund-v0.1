@@ -170,7 +170,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    	// busController.disconnect();
 	    }
 	    
-	    isFarmAvailable(errorCode);
+	    isFarmAvailable = isFarmAvailable(errorCode);
 	    	    
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
 	    
@@ -181,33 +181,33 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  private boolean isConnectionErrorMustReconnect(int errorCode) {
 		
-//		  if(   errorCode==504 || 			// not connected
-//				errorCode==507 || 	 		// null message
-//				errorCode==1101				// Connectivity between IB and TWS has been restored- data lost.
-//				) { 
-//			  
-//			  Watchr.log(Level.SEVERE, "Connection Error: " + errorCode);
+		  if(   errorCode==504 || 			// not connected
+				errorCode==507 || 	 		// null message
+				errorCode==1101				// Connectivity between IB and TWS has been restored- data lost.
+				) { 
+			  
+			  Watchr.log(Level.SEVERE, "Connection Error: " + errorCode);
 //			  return true;
-//		  }
+		  }
 		  return false;
 	  }
 	  
 	  private boolean isMarketDataErrorConsiderReconnect(int messageCode) {
 		  
-//		  if( 	messageCode==162 || 						// Historical market data Service error message
-//				messageCode==164 || 						// There is no market data to check price percent violations
-//				messageCode==165 ||   	  					// Historical market Data Service query message
-//				messageCode==354 || 						// Not subscribed to requested market data
-//				messageCode==414 || 						// Snapshot market data subscription is not applicable to generic ticks
-//				messageCode==510 || 						// Request market data - sending error
-//				messageCode==511 || 						// Cancel market data - sending error
-//				messageCode==1101 ||						// Connectivity between IB and TWS has been restored- data lost
-//				messageCode==1300							// TWS socket port has been reset and this connection is being dropped
-//				) {
-//			  
-//			  Watchr.log(Level.SEVERE, "Data Error: " + messageCode);
+		  if( 	messageCode==162 || 						// Historical market data Service error message
+				messageCode==164 || 						// There is no market data to check price percent violations
+				messageCode==165 ||   	  					// Historical market Data Service query message
+				messageCode==354 || 						// Not subscribed to requested market data
+				messageCode==414 || 						// Snapshot market data subscription is not applicable to generic ticks
+				messageCode==510 || 						// Request market data - sending error
+				messageCode==511 || 						// Cancel market data - sending error
+				messageCode==1101 ||						// Connectivity between IB and TWS has been restored- data lost
+				messageCode==1300							// TWS socket port has been reset and this connection is being dropped
+				) {
+			  
+			  Watchr.log(Level.SEVERE, "Data Error: " + messageCode);
 //			  return true;
-//		  }
+		  }
 		  return false;
 	  }
 	  
@@ -220,7 +220,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2108) {			// market data inactive but should be available upon demand
 			  
 			  Watchr.log(Level.WARNING, "Farm Available: " + messageCode);
-			  isFarmAvailable = true;
+			  return true;
 		  }
 		  
 		  if(   messageCode==1100 ||			// Connectivity between IB and TWS has been lost
@@ -230,10 +230,10 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2110) {			// Connectivity between TWS and server is broken 
 			  
 			  Watchr.log(Level.WARNING, "Farm Unavailable: " + messageCode);
-			  isFarmAvailable = false;
+			  return false;
 		  }
 
-		  return isFarmAvailable;
+		  return true;
 	  }
 	  		
 
