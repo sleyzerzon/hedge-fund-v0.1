@@ -134,6 +134,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  waitWhileConnectionBroken();
 			  
 		  if(busIB.isConnectionBroken) {
+			  	busIB.busController.disconnect();
 				busIB.connectToServer();
 				quoteHistoryChain.controller = busIB.busController; // get the new one
 		  } 
@@ -164,7 +165,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	private void waitWhileConnectionBroken() {
 		  int counter=0;
 		  while (busIB.isConnectionBroken && counter<2) {
-		      Watchr.log(Level.WARNING, "Connection Broken/Inactive: " + counter);
+		      Watchr.log(Level.WARNING, "Connection Broken: " + counter);
 			  TimeParser.wait(25);
 			  counter++;
 		  }

@@ -181,29 +181,33 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  private boolean isConnectionErrorMustReconnect(int errorCode) {
 		
-		  if(   errorCode==504 || errorCode==507 || 	// not connected or null message
-				errorCode==1101						// Connectivity between IB and TWS has been restored- data lost.
-				) { 
-			  
-			  Watchr.log(Level.SEVERE, "Connection Error: " + errorCode);
-			  return true;
-		  }
+//		  if(   errorCode==504 || 			// not connected
+//				errorCode==507 || 	 		// null message
+//				errorCode==1101				// Connectivity between IB and TWS has been restored- data lost.
+//				) { 
+//			  
+//			  Watchr.log(Level.SEVERE, "Connection Error: " + errorCode);
+//			  return true;
+//		  }
 		  return false;
 	  }
 	  
 	  private boolean isMarketDataErrorConsiderReconnect(int messageCode) {
 		  
-		  if( 	messageCode==162 || messageCode==164 || messageCode==165 ||   
-				messageCode==354 || 
-				messageCode==414 || 
-				messageCode==510 || messageCode==511 || 
-				messageCode==1101 ||											// Connectivity between IB and TWS has been restored- data lost
-				messageCode==1300 ||											// TWS socket port has been reset and this connection is being dropped
-				messageCode==2103 || messageCode==2105) {
-			  
-			  Watchr.log(Level.SEVERE, "Data Error: " + messageCode);
-			  return true;
-		  }
+//		  if( 	messageCode==162 || 						// Historical market data Service error message
+//				messageCode==164 || 						// There is no market data to check price percent violations
+//				messageCode==165 ||   	  					// Historical market Data Service query message
+//				messageCode==354 || 						// Not subscribed to requested market data
+//				messageCode==414 || 						// Snapshot market data subscription is not applicable to generic ticks
+//				messageCode==510 || 						// Request market data - sending error
+//				messageCode==511 || 						// Cancel market data - sending error
+//				messageCode==1101 ||						// Connectivity between IB and TWS has been restored- data lost
+//				messageCode==1300							// TWS socket port has been reset and this connection is being dropped
+//				) {
+//			  
+//			  Watchr.log(Level.SEVERE, "Data Error: " + messageCode);
+//			  return true;
+//		  }
 		  return false;
 	  }
 	  
@@ -220,6 +224,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  }
 		  
 		  if(   messageCode==1100 ||			// Connectivity between IB and TWS has been lost
+				messageCode==2103 || 			// A market data farm is disconnected
+				messageCode==2105 || 			// A historical data farm is disconnected
 				messageCode==2119 || 			// market data farm ...?
 				messageCode==2110) {			// Connectivity between TWS and server is broken 
 			  
