@@ -111,13 +111,25 @@ public class BusSystem {
 	}
 
 	public static void write(EventActivity activityToSend, StreamName streamName) {
-		// TODO re-try if write fails
-		try {
-			validateStream(streamName);
-			createStreamIfNotExists(streamName);
-			getKinesis().sendObject(activityToSend, streamName);
-		} catch (Exception e) {
-			e.printStackTrace();
+		boolean success = false;
+		int maxTries = 3;
+		
+		int tries = 0;
+		while(!success) {
+			try {
+				tries++;
+				success = true;
+				validateStream(streamName);
+				createStreamIfNotExists(streamName);
+				getKinesis().sendObject(activityToSend, streamName);
+			} catch (Exception e) {
+				success = false;
+				// SERVICE: AMAZONKINESIS; STATUS CODE: 400; ERROR CODE: LIMITEXCEEDEDEXCEPTION
+				if(tries>maxTries) {
+					Watchr.log(Level.SEVERE, "Write to Kinesis failed after re-tries");
+					return;
+				}
+			}
 		}
 	}
 		
