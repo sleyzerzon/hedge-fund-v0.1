@@ -9,6 +9,7 @@ import com.onenow.admin.NetworkService;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
+import com.onenow.data.QuoteSharedHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -121,7 +122,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	    busController.reqCurrentTime( new ITimeHandler() {
 	      @Override public void currentTime(long time) {
-	        show( "Server date/time is " + Formats.fmtDate(time * 1000) );
+	        show( "Server date/time is " + Formats.fmtDate(time * 1000) + " OR " + TimeParser.getFormatedPacificDateTime(time*1000));
 	      }
 	    });
 
@@ -160,23 +161,53 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	   */
 	  @Override
 	  public void message(int id, int errorCode, String errorMsg) {
-		  
-	    show( id + " " + errorCode + " " + errorMsg);
+		
+		boolean severe = false;
+		String errorSummary = "";
+		
+		Investment inv = getMessageInvestment(id);		
+		
+	    if( isConnectionErrorMustReconnect(errorCode)) {	    	
+	    	errorSummary = "Connection Error: ";
+			severe = true;
+	    }
 	    
-	    if( isConnectionErrorMustReconnect(errorCode) || 
-	    	isMarketDataErrorConsiderReconnect(errorCode)) {
-	    	
-	    	isConnectionBroken = true;
-	    	// busController.disconnect();
+	    if( isMarketDataErrorConsiderReconnect(errorCode)) {
+	    	errorSummary = "Data Error: ";
+	    	severe = true;
+	    }
+	    
+	    if(isConnectionErrorMustReconnect(errorCode) || isMarketDataErrorConsiderReconnect(errorCode)) {
+	    	// isConnectionBroken = true; // TODO? triggers re-connect
 	    }
 	    
 	    isFarmAvailable = isFarmAvailable(errorCode);
-	    	    
+	    
+		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
+	    String baseLog = "-id " + id + " -code " + errorCode + " -message " + errorMsg + " ||| FOR " + inv.toString();
+	    if(!severe) {
+	    	Watchr.log(Level.INFO, baseLog);
+	    } else {
+	    	Watchr.log(Level.SEVERE, errorSummary + baseLog);
+	    }
+	    
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
 	    
 	    // TODO: look for IBmessage and IBerror in the log
 
 	  }
+
+	private Investment getMessageInvestment(int id) {
+		QuoteSharedHandler handler = null;
+		Investment inv = new Investment();
+		try {
+			handler = busController.m_topMktDataMap.get(id);
+			inv = handler.investment; 
+		} catch (Exception e) {
+			// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
+		}
+		return inv;
+	}
 	  
 
 	  private boolean isConnectionErrorMustReconnect(int errorCode) {
@@ -184,10 +215,9 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  if(   errorCode==504 || 			// not connected
 				errorCode==507 || 	 		// null message
 				errorCode==1101				// Connectivity between IB and TWS has been restored- data lost.
-				) { 
+				  				) { 
 			  
-			  Watchr.log(Level.SEVERE, "Connection Error: " + errorCode);
-//			  return true;
+			  return true;
 		  }
 		  return false;
 	  }
@@ -205,8 +235,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==1300							// TWS socket port has been reset and this connection is being dropped
 				) {
 			  
-			  Watchr.log(Level.SEVERE, "Data Error: " + messageCode);
-//			  return true;
+			  return true;
 		  }
 		  return false;
 	  }

@@ -340,7 +340,7 @@ public class EClientSocket {
                     EClientErrors.ALREADY_CONNECTED.msg());
             return null;
         }
-        if( IsEmpty( host) ) {
+        if( IsEmpty(host) ) {
             host = "127.0.0.1";
         }
         return host;

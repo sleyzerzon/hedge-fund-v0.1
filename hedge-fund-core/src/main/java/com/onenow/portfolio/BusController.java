@@ -54,7 +54,7 @@ public class BusController implements EWrapper {
 	private int m_orderId;
 
 	private final HashMap<Integer,QuoteOptionHandler> m_optionCompMap = new HashMap<Integer,QuoteOptionHandler>(); 
-	private final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
+	public final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
 
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
@@ -126,13 +126,13 @@ public class BusController implements EWrapper {
 	}
 
 	@Override public void error(Exception e) {
-		m_connectionHandler.error( e);
+		m_connectionHandler.error(e);
 	}
 
 	@Override public void error(int id, int errorCode, String errorMsg) {
 		IOrderHandler handler = m_orderHandlers.get( id);
 		if (handler != null) {
-			handler.handle( errorCode, errorMsg);
+			handler.handle(errorCode, errorMsg);
 		}
 
 		for (ILiveOrderHandler liveHandler : m_liveOrderHandlers) {
@@ -147,7 +147,7 @@ public class BusController implements EWrapper {
 			}
 		}
 
-		m_connectionHandler.message( id, errorCode, errorMsg);
+		m_connectionHandler.message(id, errorCode, errorMsg);
 		recEOM();
 	}
 
