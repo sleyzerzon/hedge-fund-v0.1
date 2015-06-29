@@ -188,12 +188,11 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
 	    String baseLog = "-id " + id + " -code " + errorCode + " -message " + errorMsg;
 		String log = baseLog + getMessageContext(id);		
-
 		
 	    if(!severe) {
-	    	Watchr.log(Level.INFO, baseLog);
+	    	Watchr.log(Level.INFO, log);
 	    } else {
-	    	Watchr.log(Level.SEVERE, errorSummary + baseLog);
+	    	Watchr.log(Level.SEVERE, errorSummary + log);
 	    }
 	    
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
@@ -216,15 +215,16 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		try {
 			rtHandler = busController.m_topMktDataMap.get(id);
 			inv = rtHandler.investment; 
+			context = ContractFactory.getContract(inv).toString();
 		} catch (Exception eRT) {
 			try {
 				histHandler = busController.m_historicalDataMap.get(id);
 				inv = histHandler.investment;
 			} catch (Exception eHIST){
 				Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
+				context = ContractFactory.getContract(inv).toString();
 			}
 		}
-		context = ContractFactory.getContract(inv).toString();
 		return context;
 	}
 	  

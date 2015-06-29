@@ -61,6 +61,13 @@ public class QuoteHistoryChain {
 		  Integer reqId = controller.reqHistory(	contract, endDateTime, 
 	    											1, config.durationUnit, config.barSize, config.whatToShow, 
 	    											false, quoteHistory);
+		  
+		  // TODO: save details of the request
+		  String reqDetails = 	endDateTime + " " + 
+				  				config.durationUnit.toString() + " " +
+				  				config.barSize.toString() + " " + 
+				  				config.whatToShow.toString();
+		  
 		  String log = 	"||| REQUESTED HISTORY FOR: " + inv.toString() + " ||| CONTRACT " + contract.toString() + 
 				  		"||| ENDING " + endDateTime + " ||| REQID " + reqId + " ||| CONFIG " + config.toString();
 		  Watchr.log(Level.INFO, log);
