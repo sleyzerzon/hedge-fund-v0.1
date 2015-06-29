@@ -871,7 +871,7 @@ public class BusController implements EWrapper {
 
 	/** @param endDateTime format is YYYYMMDD HH:MM:SS [TMZ]
 	 *  @param duration is number of durationUnits */
-    public int reqHistoricalData( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, 
+    public int reqHistory( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, 
     		BarSize barSize, WhatToShow whatToShow, boolean rthOnly, IHistoricalDataHandler handler) {
     	int reqId = m_reqId++;
     	m_historicalDataMap.put( reqId, handler);
