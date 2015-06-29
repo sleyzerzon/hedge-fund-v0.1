@@ -12,6 +12,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
+import com.onenow.data.QuoteDepth;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentIndex;
@@ -186,10 +187,10 @@ public class BrokerInteractive implements BrokerInterface  {
 		   * No market depth for index/options
 		   */
 		  private void getMarketDepth() {
-		//    List<Investment> invs = getMarketPortfolio().investments;
-		//    for(Investment inv:invs) {
-		//      QuoteDepth resultPanel = new QuoteDepth(this, controller, inv);
-		//    }
+		    List<Investment> invs = getMarketPortfolio().investments;
+		    for(Investment inv:invs) {
+		      QuoteDepth resultPanel = new QuoteDepth(this, busIB.busController, inv);
+		    }
 		  }
 		  
 		  

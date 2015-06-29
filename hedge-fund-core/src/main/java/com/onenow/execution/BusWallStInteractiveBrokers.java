@@ -166,6 +166,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  @Override
 	  public void message(int id, int errorCode, String errorMsg) {
 		
+		boolean warning = false;
 		boolean severe = false;
 		String errorSummary = "";
 				
@@ -176,7 +177,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    
 	    if( isMarketDataErrorConsiderReconnect(errorCode)) {
 	    	errorSummary = "Data Error: ";
-	    	severe = true;
+	    	warning = true;
 	    }
 	    
 	    if(isConnectionErrorMustReconnect(errorCode) || isMarketDataErrorConsiderReconnect(errorCode)) {
@@ -188,10 +189,16 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
 	    String log = "-id " + id + " -code " + errorCode + " -message " + errorMsg + " " + getMessageContext(id);
 		
-	    if(!severe) {
+	    if(!severe && !warning) {
 	    	Watchr.log(Level.INFO, log);
-	    } else {
-	    	Watchr.log(Level.SEVERE, errorSummary + log);
+	    }
+	    else {
+	    	if(severe) {
+	    		Watchr.log(Level.SEVERE, errorSummary + log);
+	    	} 
+	    	if(warning) {
+	    		Watchr.log(Level.WARNING, errorSummary + log);
+	    	}
 	    }
 	    
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
