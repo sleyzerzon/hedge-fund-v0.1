@@ -33,6 +33,7 @@ import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import com.onenow.data.EventActivityHistory;
+import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteOptionHandler;
 import com.onenow.execution.Contract;
@@ -55,7 +56,7 @@ public class BusController implements EWrapper {
 
 	private final HashMap<Integer,QuoteOptionHandler> m_optionCompMap = new HashMap<Integer,QuoteOptionHandler>(); 
 	public final HashMap<Integer,QuoteSharedHandler> m_topMktDataMap = new HashMap<Integer,QuoteSharedHandler>();
-	public final HashMap<Integer, IHistoricalDataHandler> m_historicalDataMap = new HashMap<Integer, IHistoricalDataHandler>();
+	public final HashMap<Integer, QuoteHistoryInvestment> m_historicalDataMap = new HashMap<Integer, QuoteHistoryInvestment>();
 
 	private final ConnectionHandler m_connectionHandler;
 	private ITradeReportHandler m_tradeReportHandler;
@@ -872,7 +873,7 @@ public class BusController implements EWrapper {
 	/** @param endDateTime format is YYYYMMDD HH:MM:SS [TMZ]
 	 *  @param duration is number of durationUnits */
     public int reqHistory( Contract contract, String endDateTime, int duration, DurationUnit durationUnit, 
-    		BarSize barSize, WhatToShow whatToShow, boolean rthOnly, IHistoricalDataHandler handler) {
+    		BarSize barSize, WhatToShow whatToShow, boolean rthOnly, QuoteHistoryInvestment handler) {
     	int reqId = m_reqId++;
     	m_historicalDataMap.put( reqId, handler);
     	String durationStr = duration + " " + durationUnit.toString().charAt( 0);
@@ -881,7 +882,7 @@ public class BusController implements EWrapper {
 		return reqId;
     }
 
-    public void cancelHistoricalData( IHistoricalDataHandler handler) {
+    public void cancelHistoricalData( QuoteHistoryInvestment handler) {
     	Integer reqId = getAndRemoveKey( m_historicalDataMap, handler);
     	if (reqId != null) {
     		m_client.cancelHistoricalData( reqId);

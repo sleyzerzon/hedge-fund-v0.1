@@ -10,6 +10,7 @@ import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.InvType;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
+import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.data.QuoteSharedHandler;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
@@ -202,7 +203,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	private Investment getMessageInvestment(int id) {
 		QuoteSharedHandler rtHandler = null;
-		IHistoricalDataHandler histHandler = null;
+		QuoteHistoryInvestment histHandler = null;
 		Investment inv = new Investment();
 		try {
 			rtHandler = busController.m_topMktDataMap.get(id);
@@ -212,6 +213,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
 			try {
 				histHandler = busController.m_historicalDataMap.get(id);
+				inv = histHandler.investment; 
 			} catch (Exception eHIST){
 				Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
 				// e.printStackTrace();  // sometimes the id does not correspond to a handler, i.e. -1 to generically signify error				
