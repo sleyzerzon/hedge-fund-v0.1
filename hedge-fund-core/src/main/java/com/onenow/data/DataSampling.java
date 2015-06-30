@@ -76,7 +76,6 @@ public class DataSampling {
 				dbSamplingRate = "1w";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return dbSamplingRate;
 	}

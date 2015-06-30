@@ -66,15 +66,15 @@ public class ReporterMain {
 																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
 																	fromDashedDate, toDashedDate);
 		
-		try { // TODO: remove after exceptions identified
-			String key = Lookup.getEventKey(request);
-			String fileName = key+"-"+toDashedDate;
-			Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
-			List<Serie> series = DBTimeSeriesPrice.readSeries(request);				
+		String key = Lookup.getEventKey(request);
+		String fileName = key+"-"+toDashedDate;
+		Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
+		List<Serie> series;
+		try {
+			series = DBTimeSeriesPrice.readSeries(request);
 			S3.createObject(bucket, series.toString(), fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		}				
 	}
 
 }
