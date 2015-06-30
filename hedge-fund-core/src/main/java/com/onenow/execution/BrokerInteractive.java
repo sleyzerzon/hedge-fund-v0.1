@@ -34,7 +34,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private MarketPrice marketPrices;
 	  private MarketAnalytics marketAnalytics;
 	  
-	  private StreamName streamName = StreamName.REALTIME;
+	  private StreamName streamName = StreamName.REALTIME_STAGING;
 	
 	  private BusWallStInteractiveBrokers busIB;
 

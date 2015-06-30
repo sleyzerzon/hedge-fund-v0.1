@@ -18,6 +18,7 @@ import com.onenow.instrument.InvestmentIndex;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
+import com.onenow.io.BusSystem;
 import com.onenow.portfolio.BusController;
 import com.onenow.portfolio.BusController.ConnectionHandler;
 import com.onenow.portfolio.BusController.IBulletinHandler;
@@ -38,7 +39,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	// Default
 	public NetworkService gateway = NetworkConfig.getGateway(Topology.LOCAL);
-	private StreamName streamName = StreamName.STREAMING;
+	private StreamName streamName = StreamName.STREAMING_STAGING;
 	
 	
 	public BusWallStInteractiveBrokers() {
@@ -94,23 +95,20 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  Integer id = 0;
 		  
 		  try {
-			if(streamName.equals(StreamName.PRIMARY)) {
+			  if(BusSystem.isPrimaryStream(streamName)) {
 				  id = 0;
 			  }
-			  if(streamName.equals(StreamName.STANDBY)) {
+			  if(BusSystem.isStandbyStream(streamName)) {
 				  id = 1;
 			  }
-			  if(streamName.equals(StreamName.REALTIME)) {
+			  if(BusSystem.isRealtimeStream(streamName)) {
 				  id = 2;
 			  }
-			  if(streamName.equals(StreamName.HISTORY)) {
+			  if(BusSystem.isHistoryStream(streamName)) {
 				  id = 3;
 			  }
-			  if(streamName.equals(StreamName.STREAMING)) {
+			  if(BusSystem.isStreamingStream(streamName)) {
 				  id = 4;
-			  }
-			  if(streamName.equals(StreamName.TESTING)) {
-				  id = 5;
 			  }
 		} catch (Exception e) {
 			// ignore exception upon default initialization

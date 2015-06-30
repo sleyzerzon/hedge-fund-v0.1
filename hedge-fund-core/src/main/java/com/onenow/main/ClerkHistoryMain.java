@@ -29,8 +29,10 @@ public class ClerkHistoryMain {
 
 		TimeParser.wait(180); // boot sequence
 
-		BusSystem.read(	StreamName.HISTORY, 
-						BusProcessingFactory.createProcessorFactoryEventHistory(StreamName.HISTORY),
+		StreamName streamName = BusSystem.getStreamName("HISTORY");
+
+		BusSystem.read(	streamName, 
+						BusProcessingFactory.createProcessorFactoryEventHistory(streamName),
 						InitialPositionInStream.LATEST);
 		
 	}

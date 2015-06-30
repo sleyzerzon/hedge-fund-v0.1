@@ -48,7 +48,7 @@ public class Kinesis {
 
 	}
 
-    public void sendObject(EventActivity activityToSend, StreamName streamName) {
+    public void sendObject(EventActivity activityToSend, StreamName streamName) throws Exception {
     	
     	String log = "&&&&&&&&&& INTO STREAM <" + streamName + "> WRITING: " + activityToSend.toString();
     	Watchr.log(Level.INFO, log);
@@ -57,10 +57,8 @@ public class Kinesis {
     	
     }
 
-    public static void sendObject(Object objectToSend, StreamName streamName) {
+    public static void sendObject(Object objectToSend, StreamName streamName) throws Exception {
     	
-//		boolean success = true;
-		
         byte[] bytes = Piping.serialize(objectToSend).getBytes();
 
         PutRecordRequest putRecord = new PutRecordRequest();
@@ -73,26 +71,18 @@ public class Kinesis {
         // Order is not important for this application so we do not send a SequenceNumberForOrdering
         putRecord.setSequenceNumberForOrdering(null);
 
-        // TODO: re-try here or in bus.write?
-//        try {
-        	kinesis.putRecord(putRecord);
-//        } catch (Exception e){
-//        	success = false;
-//        	Watchr.log(Level.SEVERE, "Kinesis Exception. Throughput exceeded?");
-//        	e.printStackTrace();
-//        }
-                
-//        if(!success) {
-//        	String log = "xxxxxxxxx FAILED INTO STREAM <" + streamName + "> WROTE: " + objectToSend.toString();
-//        	Watchr.log(Level.SEVERE, log, "\n", "");
-//        }
+        kinesis.putRecord(putRecord);
+        
     }
     
     
     
+    
+    
     // TESTING
-	private static IRecordProcessorFactory testingProcessorFactory = 
-			BusProcessingFactory.createProcessorFactoryString(StreamName.TESTING);
+    // TODO: nullified after TESTING stream deprecated
+	private static IRecordProcessorFactory testingProcessorFactory = null;
+			// BusProcessingFactory.createProcessorFactoryString(StreamName.TESTING);
 
 	/**
 	 * Write repeatedly to a data stream.  Have record processor write to cache.  Then read and validate it write the right amount.
@@ -100,7 +90,11 @@ public class Kinesis {
 	public static void selfTest() {	
 		
 		// initialize to an incorrect value
-		sendObject((Object) TestValues.BOGUS.toString(), StreamName.TESTING);
+		try {
+			// sendObject((Object) TestValues.BOGUS.toString(), StreamName.TESTING);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		new Thread () {
 			@Override public void run () {
@@ -119,7 +113,12 @@ public class Kinesis {
 		  	int maxTries=3;
 		  	while(true) {	
 		  		Watchr.log(Level.WARNING, "KINESIS SELF TEST: ");
-		  		sendObject((Object) TestValues.VALUE.toString(), StreamName.TESTING);
+		  		try {
+		  			// TODO: commented after TESTING datastream deprecated
+					// sendObject((Object) TestValues.VALUE.toString(), StreamName.TESTING);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				TimeParser.wait(15);
 				count ++;
 				if(count>maxTries) {
@@ -132,7 +131,8 @@ public class Kinesis {
 	   * Reading processor will look for write-read matches in the cache
 	   */
 	  private static void readRepeatedly() {
-			BusSystem.read(StreamName.TESTING, testingProcessorFactory, InitialPositionInStream.LATEST);
+		  	// // TODO: commented after TESTING datastream deprecated
+			// BusSystem.read(StreamName.TESTING, testingProcessorFactory, InitialPositionInStream.LATEST);
 	  }
 
 }

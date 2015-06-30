@@ -66,6 +66,19 @@ public class HistorianMain {
 		requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
 			
 	}
+	
+	// select MEAN(PRICE) FROM "AAPL-STOCK-TRADED-IB-REALTIME" group by time(30m) where time > '2015-06-23' and time < '2015-06-24'
+	private static List<Candle> getL2TSDBStoredPrice(EventRequestHistory request) {
+		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
+		List<Candle> storedPrices = new ArrayList<Candle>();
+		try {
+			storedPrices = DBTimeSeriesPrice.read(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// some time series just don't exist or have data
+		}
+		return storedPrices;
+	}
 
 
 private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String toDashedDate, EventRequestHistory request, List<Candle> storedPrices) {
@@ -101,16 +114,5 @@ private static void requestL3PartnerPrice(String toDashedDate, EventRequestHisto
 }
 
 
-private static List<Candle> getL2TSDBStoredPrice(EventRequestHistory request) {
-	// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-	List<Candle> storedPrices = new ArrayList<Candle>();
-	try {
-		storedPrices = DBTimeSeriesPrice.read(request);
-	} catch (Exception e) {
-		e.printStackTrace();
-		// some time series just don't exist or have data
-	}
-	return storedPrices;
-}
 
 }

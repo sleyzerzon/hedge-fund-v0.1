@@ -33,6 +33,16 @@ public class ExpirationDate {
 		getIndexExpList().add("20150618"); // TODO monthly options
 		getIndexExpList().add("20150626");
 		getIndexExpList().add("20150630");
+		getIndexExpList().add("20150702");
+		getIndexExpList().add("20150710");
+		getIndexExpList().add("20150715");
+		getIndexExpList().add("20150724");
+		getIndexExpList().add("20150731");
+		getIndexExpList().add("20150807");
+		getIndexExpList().add("20150814");
+		getIndexExpList().add("20150815");
+		getIndexExpList().add("20150828");
+		getIndexExpList().add("20150831");
 
 	}	
 	

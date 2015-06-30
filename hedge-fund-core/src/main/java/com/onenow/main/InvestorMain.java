@@ -6,6 +6,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallStInteractiveBrokers;
+import com.onenow.io.BusSystem;
 import com.onenow.util.InitLogger;
 import com.onenow.util.Watchr;
 
@@ -31,30 +32,30 @@ public class InvestorMain {
 		// Kinesis.selfTest();
 
 
-		if(	streamName.equals(StreamName.PRIMARY)) {
+		if(BusSystem.isPrimaryStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getPrimaryPortfolio(), 
 																bus); 
 			broker.getLiveQuotes(); 			
 		}
 		
-		if(streamName.equals(StreamName.STANDBY)) {
+		if(BusSystem.isStandbyStream(streamName)) {
 			// TODO: passive role on same investments as primary
 		}
 
-		if(	streamName.equals(StreamName.REALTIME)) {
+		if(BusSystem.isRealtimeStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getRealtimePortfolio(), 
 																bus); 
 			broker.getLiveQuotes(); 			
 		}
 
-		if(streamName.equals(StreamName.HISTORY)) {
+		if(BusSystem.isHistoryStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, bus); 
 			broker.procesHistoricalQuotesRequests();
 		}
 
-		if(	streamName.equals(StreamName.STREAMING)) {
+		if(BusSystem.isStreamingStream(streamName)) {
 			// TODO: Do straming queries from SQS
 		}
 
@@ -64,32 +65,17 @@ public class InvestorMain {
 	}
 	
 	private static StreamName getArgument(String[] args) {
+		StreamName streamName = null;
+		
 		if(args.length>0) {
 			if(args[0]!=null) {
-				String s0 = args[0];
-				if(s0.equals("PRIMARY")) {
-					return StreamName.PRIMARY;
-				}
-				if(s0.equals("STANDBY")) {
-					return StreamName.STANDBY;
-				}
-				if(s0.equals("REALTIME")) {
-					return StreamName.REALTIME;
-				}
-				if(s0.equals("HISTORY")) {
-					return StreamName.HISTORY;
-				}
-				if(s0.equals("STREAMING")) {
-					return StreamName.STREAMING;
-				}
-				else {
-					Watchr.log(Level.SEVERE, "Invalid args[0], should be Investor StreamName");
-				}
-			} else {
-		    	Watchr.log(Level.SEVERE, "ERROR: mode is a required argument");
-			}
+				streamName = BusSystem.getStreamName(args[0]);
+			} 
+		} else {
+	    	Watchr.log(Level.SEVERE, "ERROR: mode is a required as a java process argument");
 		}
-		return null;
+		
+		return streamName;
 	}
 	
 	

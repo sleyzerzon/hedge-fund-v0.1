@@ -19,8 +19,10 @@ public class CatchupRealtimeMain {
 				
 		InitLogger.run("");
 
-		BusSystem.read(	StreamName.REALTIME, 
-						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME),
+		StreamName streamName = BusSystem.getStreamName("REALTIME");
+
+		BusSystem.read(	streamName, 
+						BusProcessingFactory.createProcessorFactoryEventRealTime(streamName),
 						InitialPositionInStream.TRIM_HORIZON);
 	}
 

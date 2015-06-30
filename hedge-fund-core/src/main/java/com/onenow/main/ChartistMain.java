@@ -51,9 +51,11 @@ public class ChartistMain {
 		InitLogger.run("");
 
 		testCache();
+		
+		StreamName streamName = BusSystem.getStreamName("PRIMARY");
 
-		BusSystem.read(	StreamName.PRIMARY, 
-						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.PRIMARY),
+		BusSystem.read(	streamName, 
+						BusProcessingFactory.createProcessorFactoryEventRealTime(streamName),
 						InitialPositionInStream.LATEST);
 
 	}

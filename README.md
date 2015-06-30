@@ -1,6 +1,6 @@
 # HEDGE 
 ## Open Source Hedge Fund Platform
-Sample visualization: http://snapshot.raintank.io/dashboard/snapshot/6oy4xhzPHDDUYM43lJerUk18aXwBO9bk
+Sample visualization: http://snapshot.raintank.io/dashboard/snapshot/BNjpoIoNkAN7B7PcrGTgoo1GhC0Ht2IH
 Best starting point: com.onenow.main  
 Contact: Pablo R. Bertorello (pablo.bertorello@gmail.com or Skype: pmrbertorello)
 

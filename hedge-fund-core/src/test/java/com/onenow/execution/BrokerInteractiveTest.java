@@ -14,7 +14,7 @@ public class BrokerInteractiveTest {
 
 		BrokerInteractive broker = new BrokerInteractive();
 
-		Assert.assertTrue(broker.getStream().equals(StreamName.REALTIME));
+		Assert.assertTrue(broker.getStream().equals(StreamName.REALTIME_STAGING));
 	  
 		
 	}

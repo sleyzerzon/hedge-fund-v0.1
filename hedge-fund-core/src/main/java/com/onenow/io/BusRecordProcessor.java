@@ -132,7 +132,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityRealtime<- " + event.toString(), "\n", "");
 				ClerkRealTimeMain.writeRealtimeToL2(event);
 				try {
-					if(streamName.equals(StreamName.PRIMARY) || streamName.equals(StreamName.STANDBY) ) {
+					if(streamName.equals(StreamName.PRIMARY_STAGING) || streamName.equals(StreamName.STANDBY_STAGING) ) {
 						ChartistMain.prefetchCharts(event);				
 					}
 				} catch (Exception e) {

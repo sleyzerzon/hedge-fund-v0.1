@@ -11,6 +11,7 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 import com.onenow.admin.InitAmazon;
+import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.StreamName;
 import com.onenow.data.EventActivity;
 import com.onenow.io.Lookup;
@@ -102,7 +103,11 @@ public class BusSystem {
 		while(true) {
 			s = s + i;
 			// TODO validate / create the stream?
-			getKinesis().sendObject((Object) s, streamName);
+			try {
+				getKinesis().sendObject((Object) s, streamName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			TimeParser.wait(1);
 			i++;
 		}
@@ -169,14 +174,95 @@ public class BusSystem {
 	}
 
 	private static void validateStream(StreamName streamName) {
-		if(	!streamName.equals(StreamName.HISTORY) && 
-			!streamName.equals(StreamName.PRIMARY) &&
-			!streamName.equals(StreamName.REALTIME) &&
-			!streamName.equals(StreamName.STREAMING) && 
-			!streamName.equals(StreamName.TESTING)) {
-			Watchr.log(Level.SEVERE, "Empty stream name in kinesis bus read");
+		if(	!isPrimaryStream(streamName) && 
+			!isStandbyStream(streamName) &&
+			!isRealtimeStream(streamName) &&
+			!isHistoryStream(streamName) && 
+			!isStreamingStream(streamName)) {
+			Watchr.log(Level.SEVERE, "Invalid stream name in kinesis bus read");
 		}
 	}
+	
+	public static boolean isPrimaryStream(StreamName name) {
+		if (name.equals(StreamName.PRIMARY_STAGING) || name.equals(StreamName.PRIMARY_PRODUCTION) || name.equals(StreamName.PRIMARY_DEVELOPMENT)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isStandbyStream(StreamName name) {
+		if (name.equals(StreamName.STANDBY_STAGING) || name.equals(StreamName.STANDBY_PRODUCTION) || name.equals(StreamName.STANDBY_DEVELOPMENT)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isRealtimeStream(StreamName name) {
+		if (name.equals(StreamName.REALTIME_STAGING) || name.equals(StreamName.REALTIME_PRODUCTION) || name.equals(StreamName.REALTIME_DEVELOPMENT)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isHistoryStream(StreamName name) {
+		if (name.equals(StreamName.HISTORY_STAGING) || name.equals(StreamName.HISTORY_PRODUCTION) || name.equals(StreamName.HISTORY_DEVELOPMENT)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isStreamingStream(StreamName name) {
+		if (name.equals(StreamName.STREAMING_STAGING) || name.equals(StreamName.STREAMING_PRODUCTION) || name.equals(StreamName.STREAMING_DEVELOPMENT)) {
+			return true;
+		}
+		return false;
+	}
+
+	// TODO: break down non-mac into staging / production
+    public static StreamName getStreamName(String key) {
+    	
+    	StreamName stream = null;
+    	
+		if(key.equals("PRIMARY")) {
+			stream = StreamName.PRIMARY_DEVELOPMENT; 
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.PRIMARY_STAGING;
+			}
+		}
+		if(key.equals("STANDBY")) {
+			stream = StreamName.STANDBY_DEVELOPMENT;
+				if(!NetworkConfig.isMac()) {
+					stream = StreamName.STANDBY_STAGING;
+				}
+		}
+		if(key.equals("REALTIME")) {
+			stream = StreamName.REALTIME_DEVELOPMENT;
+					if(!NetworkConfig.isMac()) {
+						stream = StreamName.REALTIME_STAGING;
+					}
+		}
+		if(key.equals("HISTORY")) {
+			stream = StreamName.HISTORY_DEVELOPMENT;
+					if(!NetworkConfig.isMac()) {
+						stream = StreamName.HISTORY_STAGING;
+					}
+		}
+		if(key.equals("STREAMING")) {
+			stream = StreamName.STREAMING_DEVELOPMENT;
+					if(!NetworkConfig.isMac()) {
+						stream = StreamName.STREAMING_STAGING;
+					}
+		}
+		
+		Watchr.log(Level.INFO, "The chosen stream name: " + stream);
+		
+		if(stream==null) {
+			Watchr.log(Level.SEVERE, "Invalid Key to StreamName");
+		}
+		
+		return stream;
+
+    }
 
 	private static boolean runProcessor(Worker kinesysWorker) {
 		try {

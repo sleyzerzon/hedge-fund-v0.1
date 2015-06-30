@@ -27,8 +27,10 @@ public class ClerkRealTimeMain {
 
 		TimeParser.wait(180); // boot sequence
 
-		BusSystem.read(	StreamName.REALTIME, 
-						BusProcessingFactory.createProcessorFactoryEventRealTime(StreamName.REALTIME),
+		StreamName streamName = BusSystem.getStreamName("REALTIME");
+
+		BusSystem.read(	streamName, 
+						BusProcessingFactory.createProcessorFactoryEventRealTime(streamName),
 						InitialPositionInStream.LATEST);
 		
 	}

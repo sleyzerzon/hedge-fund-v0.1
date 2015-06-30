@@ -83,7 +83,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		// Write to history data stream	
 		new Thread () {
 			@Override public void run () {
-				BusSystem.write(row, StreamName.HISTORY);
+				BusSystem.write(row, BusSystem.getStreamName("HISTORY"));
 			}
 		}.start();
 
