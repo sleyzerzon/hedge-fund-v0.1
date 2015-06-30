@@ -52,7 +52,7 @@ public class DBTimeSeriesPrice {
 
 
 		
-		public static List<Candle> read(EventRequest request) {
+		public static List<Candle> read(EventRequest request) throws Exception {
 			
 			List<Candle> candles = new ArrayList<Candle>();
 					

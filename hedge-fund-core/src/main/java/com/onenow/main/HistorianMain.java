@@ -65,7 +65,7 @@ public class HistorianMain {
 		// minimum number of price data points
 		int minPrices = 75;
 		
-		Watchr.log(Level.INFO, "READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
+		// Watchr.log(Level.INFO, "READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
 		
 		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
@@ -75,9 +75,9 @@ public class HistorianMain {
 		try {
 			storedPrices = DBTimeSeriesPrice.read(request);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// some time series just don't exist or have data
 		}
-		
+
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'
 		if ( storedPrices.size()<minPrices ) {	
@@ -85,7 +85,7 @@ public class HistorianMain {
 			TimeParser.paceHistoricalQuery(lastQueryTime);
 
 			Watchr.log(Level.INFO, 	MemoryLevel.L2TSDB + " information incomplete, thus will request: " + request.toString() + 
-									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS");
+									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS TIL" + toDashedDate);
 			
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);

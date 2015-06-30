@@ -1,5 +1,6 @@
 package com.onenow.io;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +102,12 @@ public class databaseTimeSeriesTest {
 		
 		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, "-1m" ,"now()");
 
-		List<Candle> candles = DBTimeSeriesPrice.read(requestHistory);
+		List<Candle> candles = new ArrayList<Candle>();
+		try {
+			candles = DBTimeSeriesPrice.read(requestHistory);
+		} catch (Exception e) {
+		}
+		
 		Watchr.info("READ CANDLES " + candles);
 		
 		int lastCandle = candles.size()-1;

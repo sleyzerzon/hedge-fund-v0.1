@@ -47,7 +47,7 @@ public class DBTimeSeriesSize {
 	}
 
 
-	public static List<Integer> read(EventRequest request) {
+	public static List<Integer> read(EventRequest request) throws Exception {
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		
