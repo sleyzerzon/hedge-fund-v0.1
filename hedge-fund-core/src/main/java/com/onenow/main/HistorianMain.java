@@ -30,8 +30,6 @@ public class HistorianMain {
 	public static void main(String[] args) {
 		
 		InitLogger.run("");
-
-		sqs.listQueues();
 		
 		while(true) {
 			
@@ -58,60 +56,48 @@ public class HistorianMain {
 	// cat  com.onenow.main.InvestorMainHISTORY-Log.txt | grep -i "into stream" | grep -i "under es" | grep -i "call"
 	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate) {
 				
-		try {
-			Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
+		Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
 
-			EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
-				
-			// List<Candle> storedPrices = getL2TSDBStoredPrice(request);
-			List<Candle> storedPrices = new ArrayList<Candle>();
-					
-			requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
+		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-
+		// List<Candle> storedPrices = getL2TSDBStoredPrice(request);
+		List<Candle> storedPrices = new ArrayList<Candle>();
+				
+		requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
+			
 	}
 
 
 private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String toDashedDate, EventRequestHistory request, List<Candle> storedPrices) {
-	try {
-		// query L3 only if L2 data is incomplete
-		int minPrices = 75;
-//		if ( storedPrices.size()<minPrices ) {	
-		if (true) {
-			Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
 
-			// NOTE: gets today's data by requesting 'by end of today'
-			requestL3PartnerPrice(toDashedDate, request);
-			
-		} else {
-			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
-		}
-	} catch (Exception e) {
-		e.printStackTrace();
+	// query L3 only if L2 data is incomplete
+	int minPrices = 75;
+//		if ( storedPrices.size()<minPrices ) {	
+	if (true) {
+		Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
+
+		// NOTE: gets today's data by requesting 'by end of today'
+		requestL3PartnerPrice(toDashedDate, request);
+		
+	} else {
+		Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
 	}
 }
 
 
 private static void requestL3PartnerPrice(String toDashedDate, EventRequestHistory request) {
 	
-	try { // TODO: remove after exceptions identified
-		TimeParser.paceHistoricalQuery(lastQueryTime);
+	TimeParser.paceHistoricalQuery(lastQueryTime);
 
-		Watchr.log(Level.INFO, 	"Found incomplete information, thus will request: " + request.toString() + 
-								" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS, THROUGH " + toDashedDate);
-		
-		// Send SQS request to broker
-		String message = Piping.serialize((Object) request);
-		sqs.sendMessage(message, SQS.getHistoryQueueURL());				
+	Watchr.log(Level.INFO, 	"Found incomplete information, thus will request: " + request.toString() + 
+							" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS, THROUGH " + toDashedDate);
+	
+	// Send SQS request to broker
+	String message = Piping.serialize((Object) request);
+	sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
-		lastQueryTime = TimeParser.getTimestampNow();
+	lastQueryTime = TimeParser.getTimestampNow();
 		
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
 }
 
 
