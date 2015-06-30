@@ -22,7 +22,7 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 	boolean m_done;
 
 	public QuoteOptionHandler() {
-		
+		super();
 	}
 	
 	public QuoteOptionHandler(Investment inv, AbstractTableModel chainTable) {
