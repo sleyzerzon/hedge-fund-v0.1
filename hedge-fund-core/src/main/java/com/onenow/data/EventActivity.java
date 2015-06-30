@@ -8,7 +8,7 @@ public class EventActivity extends Event {
 		
 	
 	public EventActivity() {
-		
+		super();
 	}
 		
 	public String toString() {

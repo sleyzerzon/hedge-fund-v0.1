@@ -66,6 +66,7 @@ public class HistorianMain {
 			List<Candle> storedPrices = getL2TSDBStoredPrice(request);
 
 			requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		

@@ -8,7 +8,7 @@ import com.onenow.instrument.Investment;
 public class EventActivityRealtime extends EventActivity {
 	
 	public EventActivityRealtime() {
-		
+		super();
 	}
 	
 	/** Set real-time price/size/etc 
@@ -22,6 +22,8 @@ public class EventActivityRealtime extends EventActivity {
 	public EventActivityRealtime(	Long timeActivity, Investment inv, TradeType tradeType, Double price, long size,
 									InvDataSource source, InvDataTiming timing) {
 
+		super();
+		
 		setInvestment(inv);
 		super.tradeType = tradeType;		
 		super.source = source;

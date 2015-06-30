@@ -13,11 +13,13 @@ public class EventRequestHistory extends EventRequest {
 	public HistorianConfig config;
 	
 	public EventRequestHistory() {
-		
+		super();
 	}
 
 	public EventRequestHistory(Investment inv, String toDashedDate, HistorianConfig config) {
 
+		super();
+		
 		this.config = config;
 
 		setInvestment(inv);

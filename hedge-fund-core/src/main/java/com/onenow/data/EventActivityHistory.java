@@ -1,5 +1,10 @@
 package com.onenow.data;
 
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.TradeType;
+import com.onenow.instrument.Investment;
+
 
 public class EventActivityHistory extends EventActivity {
 	
@@ -27,6 +32,9 @@ public class EventActivityHistory extends EventActivity {
 	// TODO: what time zone is this time?
 	public EventActivityHistory( 	int reqId, 
 							long timeActivity, double high, double low, double open, double close, double wap, long volume, int count) {
+		
+		
+		super();
 		
 		// super
 		super.time = timeActivity;

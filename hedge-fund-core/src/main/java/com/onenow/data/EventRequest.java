@@ -18,12 +18,14 @@ public class EventRequest extends Event {
 	
 
 	public EventRequest() {
-		
+		super();
 	}
 	
 	public EventRequest(	Investment inv, TradeType tradeType, SamplingRate sampling, 
 							String fromDashedDate, String toDashedDate,
 							InvDataSource source, InvDataTiming timing) {
+		
+		super();
 		
 		setInvestment(inv);
 

@@ -10,13 +10,15 @@ public class EventRequestRealtime extends EventRequest {
 	
 	
 	public EventRequestRealtime() {
-		
+		super();
 	}
 
 	public EventRequestRealtime(	Investment inv,
 									InvDataSource source, InvDataTiming timing, 
 									SamplingRate sampling, TradeType tradeType,
 									String fromDashedDate, String toDashedDate) {
+		
+		super();
 		
 		setInvestment(inv);
 
