@@ -18,21 +18,21 @@ public class EventRequestHistory extends EventRequest {
 
 	public EventRequestHistory(Investment inv, String toDashedDate, HistorianConfig config) {
 
-		setInvestment(inv);
-
-		this.toDashedDate = toDashedDate;
-		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
-		
 		this.config = config;
 
-		this.source = config.source;
-		this.timing = config.timing;
-		this.sampling = config.sampling;
+		setInvestment(inv);
+
+		super.toDashedDate = toDashedDate;
+		super.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
+		
+		super.source = config.source;
+		super.timing = config.timing;
+		super.sampling = config.sampling;
 
 		// Indices don't trade themselves, are calculated from basket of equities
-		this.tradeType = TradeType.TRADED; 		
+		super.tradeType = TradeType.TRADED; 		
 		if(inv instanceof InvestmentIndex) {
-			this.tradeType = TradeType.CALCULATED;
+			super.tradeType = TradeType.CALCULATED;
 		} 
 
 	}
@@ -44,19 +44,18 @@ public class EventRequestHistory extends EventRequest {
 	 * @param timeGap
 	 */
 	public EventRequestHistory(EventActivity event, String timeGap, String endPoint) {
-		
+
+		this.config = HistorianService.getConfig(BarSize._30_secs, event);
+
 		setInvestment(event.getInvestment());
 		this.tradeType = event.tradeType;
 
-		this.timeGap = timeGap;
-		this.endPoint = endPoint;
+		super.timeGap = timeGap;
+		super.endPoint = endPoint;
 		
-		this.config = HistorianService.getConfig(BarSize._30_secs, event);
-
-		this.source = config.source;
-		this.timing = config.timing;
-		this.sampling = config.sampling;
-							
+		super.source = config.source;
+		super.timing = config.timing;
+		super.sampling = config.sampling;				
 	}
 
 	/**
@@ -65,19 +64,18 @@ public class EventRequestHistory extends EventRequest {
 	 * @param toDashedDate
 	 */
 	public EventRequestHistory(EventActivity event, String toDashedDate) {
-		
-		setInvestment(event.getInvestment());
-		this.tradeType = event.tradeType;
-
-		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
-		this.toDashedDate = toDashedDate;
 
 		this.config = HistorianService.getConfig(BarSize._30_secs, event);
 
-		this.source = config.source;
-		this.timing = config.timing;
-		this.sampling = config.sampling;
-							
+		setInvestment(event.getInvestment());
+
+		super.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
+		super.toDashedDate = toDashedDate;
+
+		super.source = config.source;
+		super.timing = config.timing;
+		super.sampling = config.sampling;
+		super.tradeType = event.tradeType;							
 	}
 	
 	/**
@@ -86,17 +84,18 @@ public class EventRequestHistory extends EventRequest {
 	 * @param requestTime
 	 */
 	public EventRequestHistory(EventActivity event, Long requestTime) {
-		
-		setInvestment(event.getInvestment());
-		this.tradeType = event.tradeType;
-		
-		this.time = requestTime;
-		
+
 		this.config = HistorianService.getConfig(BarSize._30_secs, event);
 
-		this.source = config.source;
-		this.timing = config.timing;
-		this.sampling = config.sampling;
+		setInvestment(event.getInvestment());
+		
+		super.time = requestTime;		
+
+		super.source = config.source;
+		super.timing = config.timing;
+		super.sampling = config.sampling;
+		super.tradeType = event.tradeType;
+
 	}
 	
 

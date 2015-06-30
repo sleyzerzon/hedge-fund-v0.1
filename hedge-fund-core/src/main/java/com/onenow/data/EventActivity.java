@@ -5,8 +5,7 @@ public class EventActivity extends Event {
 	
 	public Double price;
 	public Long size; 
-	
-	
+		
 	
 	public EventActivity() {
 		
@@ -17,16 +16,6 @@ public class EventActivity extends Event {
 		
 		s = super.toString() + " ";
 		
-		try {
-			s = s + "-time " + time + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-date " + getFormatedTime() + " ";
-		} catch (Exception e) {
-		}
-
 		try {
 			s = s + "-price " + price + " ";
 		} catch (Exception e) {

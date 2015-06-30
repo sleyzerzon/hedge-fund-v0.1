@@ -9,7 +9,6 @@ import com.onenow.instrument.Investment;
 public class EventRequest extends Event {
 	
 	public SamplingRate sampling;
-
 	public String toDashedDate;
 	public String fromDashedDate;
 	
@@ -27,12 +26,15 @@ public class EventRequest extends Event {
 							InvDataSource source, InvDataTiming timing) {
 		
 		setInvestment(inv);
-		this.tradeType = tradeType;
+
+		super.source = source;
+		super.timing = timing;		
+		super.tradeType = tradeType;
+
 		this.sampling = sampling;
 		this.fromDashedDate = fromDashedDate;
-		this.toDashedDate = toDashedDate;
-		this.source = source;
-		this.timing = timing;		
+		this.toDashedDate = toDashedDate;		
+
 	}
 
 	public EventRequest(	Investment inv, TradeType tradeType, SamplingRate sampling, 
@@ -40,11 +42,12 @@ public class EventRequest extends Event {
 							String timeGap, String endPoint) {
 
 		setInvestment(inv);
-		this.tradeType = tradeType;
-		this.sampling = sampling;
-		this.source = source;
-		this.timing = timing;
 		
+		super.source = source;
+		super.timing = timing;
+		super.tradeType = tradeType;
+		
+		this.sampling = sampling;
 		this.timeGap = timeGap;
 		this.endPoint = endPoint;
 
@@ -53,13 +56,22 @@ public class EventRequest extends Event {
 	public String toString() {
 		String s = "";
 		
+		s = s + super.toString() + " ";
+		
 		try {
-			s = 	super.toString() + " " +
-					"-sampling " + sampling + " " +
-					"-from " + fromDashedDate + " " +
-					"-to " + toDashedDate;
+			s = s + "-sampling " + sampling + " ";
 		} catch (Exception e) {
 		}
+		
+		try {
+			s = s + "-from " + fromDashedDate + " ";
+		} catch (Exception e) {
+		}
+				
+		try {
+			s = s + "-to " + toDashedDate;
+		} catch (Exception e) {
+		}	
 		
 		return s;
 	}

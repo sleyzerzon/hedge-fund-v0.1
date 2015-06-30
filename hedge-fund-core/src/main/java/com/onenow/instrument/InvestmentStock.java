@@ -23,7 +23,6 @@ public class InvestmentStock extends Investment {
 	public String toString() {
 		String s = "";
 		s = super.toString();
-//		System.out.println("Investment Stock: " + s);
 		return s;
 	}
 	

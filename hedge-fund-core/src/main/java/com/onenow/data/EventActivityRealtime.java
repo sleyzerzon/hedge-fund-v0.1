@@ -23,13 +23,13 @@ public class EventActivityRealtime extends EventActivity {
 									InvDataSource source, InvDataTiming timing) {
 
 		setInvestment(inv);
-		this.tradeType = tradeType;		
-		this.source = source;
-		this.timing = timing;
+		super.tradeType = tradeType;		
+		super.source = source;
+		super.timing = timing;
 
-		this.time = timeActivity;
-		this.price = price;
-		this.size = size;
+		super.time = timeActivity;
+		super.price = price;
+		super.size = size;
 
 	}
 	

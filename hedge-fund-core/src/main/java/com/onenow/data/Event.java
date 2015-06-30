@@ -139,7 +139,19 @@ public class Event {
 		} 
 		
 		try {
-			s =	s + "-tradeType " + tradeType;
+			s =	s + "-tradeType " + tradeType + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			if(time!=null) {
+				s = s + "-time " + time + " ";
+			}
+		} catch (Exception e) {
+		}
+
+		try {
+		s = s + "-date " + getFormatedTime() + " ";
 		} catch (Exception e) {
 		}
 		

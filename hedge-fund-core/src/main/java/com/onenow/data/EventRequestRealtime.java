@@ -8,12 +8,7 @@ import com.onenow.instrument.Investment;
 
 public class EventRequestRealtime extends EventRequest {
 	
-	public InvDataSource source;
-	public InvDataTiming timing;
 	
-	public SamplingRate sampling;
-	public TradeType tradeType; 
-
 	public EventRequestRealtime() {
 		
 	}
@@ -25,38 +20,19 @@ public class EventRequestRealtime extends EventRequest {
 		
 		setInvestment(inv);
 
-		this.source = source;
-		this.timing = timing;
-		this.sampling = sampling;
-		this.tradeType = tradeType;
-		this.fromDashedDate = fromDashedDate;
-		this.toDashedDate = toDashedDate;
+		super.source = source;
+		super.timing = timing;
+		super.sampling = sampling;
+		super.tradeType = tradeType;
+		
+		super.fromDashedDate = fromDashedDate;
+		super.toDashedDate = toDashedDate;
 	}
 
 	public String toString() {
 		String s = "";
 		
 		s = s +	super.toString() + " ";
-
-		try {
-			s = s + "-source " + source + " ";
-		} catch (Exception e) {
-		} 
-
-		try {
-			s = s + "-timing " + timing + " ";
-		} catch (Exception e) {
-		}
-		
-		try {
-			s = s + "-sampling " + sampling + " ";
-		} catch (Exception e) {
-		}
-		
-		try {
-			s = s + "-tradeType " + tradeType;
-		} catch (Exception e) {
-		}
 		
 		return s;
 	}

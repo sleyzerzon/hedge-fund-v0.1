@@ -65,10 +65,12 @@ public class ReporterMain {
 		EventRequestRealtime request = new EventRequestRealtime(	inv, InvDataSource.IB, InvDataTiming.REALTIME,
 																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
 																	fromDashedDate, toDashedDate);
+		// REQUEST: -UNDER AAPL -TYPE STOCK -SOURCE NULL -TIMING NULL -TRADETYPE NULL -SAMPLING NULL -FROM 2015-06-26 -TO 2015-06-27 -SOURCE IB -TIMING REALTIME -SAMPLING SCALPMEDIUM -TRADETYPE TRADE
+		
 		
 		String key = Lookup.getEventKey(request);
 		String fileName = key+"-"+toDashedDate;
-		Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
+		Watchr.log(Level.INFO, "working on: " + fileName + " for request: " + request.toString());
 		List<Serie> series;
 		try {
 			series = DBTimeSeriesPrice.readSeries(request);
