@@ -63,8 +63,9 @@ public class HistorianMain {
 
 			EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
 				
-			List<Candle> storedPrices = getL2TSDBStoredPrice(request);
-
+			// List<Candle> storedPrices = getL2TSDBStoredPrice(request);
+			List<Candle> storedPrices = new ArrayList<Candle>();
+					
 			requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
 			
 		} catch (Exception e) {
@@ -78,8 +79,8 @@ private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String to
 	try {
 		// query L3 only if L2 data is incomplete
 		int minPrices = 75;
-		if ( storedPrices.size()<minPrices ) {	
-			
+//		if ( storedPrices.size()<minPrices ) {	
+		if (true) {
 			Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
 
 			// NOTE: gets today's data by requesting 'by end of today'
