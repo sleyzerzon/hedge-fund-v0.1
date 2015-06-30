@@ -102,8 +102,14 @@ public class EventRequestHistory extends EventRequest {
 
 	public String toString() {
 		String s = "";
-		s = 	super.toString() + 
-				"-config " + config.toString(); 
+		
+		s = s + super.toString();
+				
+		try {
+			s = s + "-config " + config.toString();
+		} catch (Exception e) {
+		}
+		
 		return s;
 	}
 	

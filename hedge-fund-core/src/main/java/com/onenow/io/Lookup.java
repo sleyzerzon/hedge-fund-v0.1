@@ -39,15 +39,18 @@ public class Lookup {
 	 */
 	public static String getEventTimedKey(EventRequest event) {
 		String s = "";
+		
 		try {
 			s = s + event.toDashedDate.toString(); // time -> toDashedDate
-			s = s + "-" + getEventKey(event);
-			return s;
 		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, e.toString());
-			e.printStackTrace();
-			return "";
 		}
+			
+		try {
+			s = s + "-" + getEventKey(event);
+		} catch (Exception e) {
+		}
+			
+		return s;
 	}
 	
 	/**
@@ -59,19 +62,38 @@ public class Lookup {
 	public static String getEventKey(Event event) {
 		String s = ""; 
 	
-		Underlying under = event.getInvestment().getUnder();
-		s = s + under.getTicker() + "-" + event.getInvestment().getInvType();		
-		if (event.getInvestment() instanceof InvestmentOption) {
-			String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
-			Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
-			s = s + "-" + exp + "-" + strike; 
+		try {
+			Underlying under = event.getInvestment().getUnder();
+			s = s + under.getTicker() + "-" + event.getInvestment().getInvType();
+		} catch (Exception e) {
+		}		
+		
+		try {
+			if (event.getInvestment() instanceof InvestmentOption) {
+				String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
+				Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
+				s = s + "-" + exp + "-" + strike; 
+			}
+		} catch (Exception e) {
 		}
-		if (event.getInvestment() instanceof InvestmentFuture) {
-			String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
-			s = s + "-" + exp;
+		
+		try {
+			if (event.getInvestment() instanceof InvestmentFuture) {
+				String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
+				s = s + "-" + exp;
+			}
+		} catch (Exception e) {
 		}
-		s = s + "-" + event.tradeType.toString();
-		s = s + "-" + event.source.toString() + "-" + event.timing.toString();
+
+		try {
+			s = s + "-" + event.tradeType.toString();
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
+		} catch (Exception e) {
+		}
 	
 		return (s);
 	}
@@ -85,21 +107,43 @@ public class Lookup {
 	 */
 	public static String getTimestampKey(Investment inv, TradeType tradeType, Long timeStamp) {
 		String s = "";
+		
 		s = inv.toString();
+		
 		s = s + "-" + tradeType.toString();
+		
 		return s;
 	}
 
 	
 	public static String getChartKey(EventRequest request) {
 		String s = "";
-		s = s + request.getInvestment().toString();
-		s = s + "-" + request.tradeType.toString();
-		s = s + "-" + request.sampling.toString();
-//		s = s + "-" + fromDate + "-" + toDate;
-		s = s + "-" + request.toDashedDate;
-		s = s + "-" + request.source.toString() + "-" + request.timing.toString();
-//		System.out.println("key " + s);
+
+		try {
+			s = s + request.getInvestment().toString();
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-" + request.tradeType.toString();
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-" + request.sampling.toString();
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-" + request.toDashedDate;
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-" + request.source.toString() + "-" + request.timing.toString();
+		} catch (Exception e) {
+		}
+		
 		return s;
 	}
 	

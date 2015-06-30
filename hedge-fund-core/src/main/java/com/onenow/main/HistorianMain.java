@@ -82,18 +82,23 @@ private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String to
 }
 
 
-private static void requestL3PartnerPrice(String toDashedDate,EventRequestHistory request) {
+private static void requestL3PartnerPrice(String toDashedDate, EventRequestHistory request) {
 	
-	TimeParser.paceHistoricalQuery(lastQueryTime);
+	try { // TODO: remove after exceptions identified
+		TimeParser.paceHistoricalQuery(lastQueryTime);
 
-	Watchr.log(Level.INFO, 	"Found incomplete information, thus will request: " + request.toString() + 
-							" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS, THROUGH " + toDashedDate);
-	
-	// Send SQS request to broker
-	String message = Piping.serialize((Object) request);
-	sqs.sendMessage(message, SQS.getHistoryQueueURL());				
+		Watchr.log(Level.INFO, 	"Found incomplete information, thus will request: " + request.toString() + 
+								" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS, THROUGH " + toDashedDate);
+		
+		// Send SQS request to broker
+		String message = Piping.serialize((Object) request);
+		sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
-	lastQueryTime = TimeParser.getTimestampNow();
+		lastQueryTime = TimeParser.getTimestampNow();
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 }
 
 

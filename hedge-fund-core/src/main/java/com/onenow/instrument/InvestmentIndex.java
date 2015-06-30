@@ -22,8 +22,9 @@ public class InvestmentIndex extends Investment {
 	// PRINT
 	public String toString() {
 		String s = "";
+		
 		s = super.toString();
-//		System.out.println("Investment Stock: " + s);
+		
 		return s;
 	}
 	

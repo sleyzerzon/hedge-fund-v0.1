@@ -35,11 +35,28 @@ public class EventRequestRealtime extends EventRequest {
 
 	public String toString() {
 		String s = "";
-		s = 	super.toString() + " " +
-				"-source " + source + " " + 
-				"-timing " + timing + " " +
-				"-sampling " + sampling + " " +
-				"-tradeType " + tradeType;
+		
+		s = s +	super.toString() + " ";
+
+		try {
+			s = s + "-source " + source + " ";
+		} catch (Exception e) {
+		} 
+
+		try {
+			s = s + "-timing " + timing + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			s = s + "-sampling " + sampling + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			s = s + "-tradeType " + tradeType;
+		} catch (Exception e) {
+		}
 		
 		return s;
 	}

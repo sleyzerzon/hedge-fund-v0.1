@@ -47,12 +47,32 @@ public class EventActivityHistory extends EventActivity {
 	@Override public String toString() {
 		String s = "";
 		
-		s = String.format(	super.toString() + " " +
-							"-reqID " + reqId + " " + 
-							"-open " + open + " " +
-							"-high " +  high + " " +
-							"-low " + low + " " +
-							"-close " + close );
+		s = s  + super.toString() + " ";
+		
+		try {
+			s = s + "-reqID " + reqId + " ";
+		} catch (Exception e) {
+		} 
+							
+		try {
+			s = s + "-open " + open + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			s = s + "-high " +  high + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			s = s + "-low " + low + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			s = s + "-close " + close;
+		} catch (Exception e) {
+		}
 
 		return s;
 	}

@@ -16,10 +16,26 @@ public class EventActivity extends Event {
 		String s = "";
 		
 		s = super.toString() + " ";
-		s = s + "-time " + time + " ";
-		s = s + "-date " + getFormatedTime() + " ";
-		s = s + "-price " + price + " ";
-		s = s + "-size " + size;
+		
+		try {
+			s = s + "-time " + time + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-date " + getFormatedTime() + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-price " + price + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-size " + size;
+		} catch (Exception e) {
+		}
 		
 		return s;
 	}

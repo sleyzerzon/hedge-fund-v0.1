@@ -59,9 +59,12 @@ public class Investment {
 
 		try {
 			s = s + "-under " + getUnder().toString() + " ";
+		} catch (Exception e) {
+		}
+
+		try {
 			s = s +	"-type " + getInvType();
 		} catch (Exception e) {
-			// e.printStackTrace(); // sometimes trying to print default contructed investment
 		}
 		
 		return s;

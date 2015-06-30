@@ -52,10 +52,15 @@ public class EventRequest extends Event {
 
 	public String toString() {
 		String s = "";
-		s = 	super.toString() + " " +
-				"-sampling " + sampling + " " +
-				"-from " + fromDashedDate + " " +
-				"-to " + toDashedDate;
+		
+		try {
+			s = 	super.toString() + " " +
+					"-sampling " + sampling + " " +
+					"-from " + fromDashedDate + " " +
+					"-to " + toDashedDate;
+		} catch (Exception e) {
+		}
+		
 		return s;
 	}
 

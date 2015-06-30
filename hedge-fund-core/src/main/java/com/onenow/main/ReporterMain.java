@@ -43,13 +43,10 @@ public class ReporterMain {
 		String toDate = TimeParser.getTodayDashed();
 		Integer numDays = 30;
 		
-		writeInvestmentPriceIntoBucket(marketPortfolio, bucket, toDate,
-				numDays);
+		writeInvestmentPriceIntoBucket(marketPortfolio, bucket, toDate, numDays);
 	}
 
-	private static void writeInvestmentPriceIntoBucket(
-		Portfolio marketPortfolio, Bucket bucket, String toDate,
-		Integer numDays) {
+	private static void writeInvestmentPriceIntoBucket(Portfolio marketPortfolio, Bucket bucket, String toDate, Integer numDays) {
 		for(int days=0; days<numDays; days++) {
 			String fromDate = TimeParser.getDateMinusDashed(toDate, 1);
 			for (Investment inv:marketPortfolio.investments) {				
@@ -69,17 +66,14 @@ public class ReporterMain {
 																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
 																	fromDashedDate, toDashedDate);
 		
-		try{	 			
-			
+		try { // TODO: remove after exceptions identified
 			String key = Lookup.getEventKey(request);
 			String fileName = key+"-"+toDashedDate;
 			Watchr.log(Level.INFO, "working on: " + fileName + "for request: " + request.toString());
 			List<Serie> series = DBTimeSeriesPrice.readSeries(request);				
 			S3.createObject(bucket, series.toString(), fileName);
-			
 		} catch (Exception e) {
-			// some time series just don't exist or have data
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
