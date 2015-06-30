@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.onenow.constant.MemoryLevel;
 import com.onenow.data.EventRequestHistory;
-import com.onenow.data.HistorianConfig;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
@@ -59,13 +58,17 @@ public class HistorianMain {
 	// cat  com.onenow.main.InvestorMainHISTORY-Log.txt | grep -i "into stream" | grep -i "under es" | grep -i "call"
 	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate) {
 				
-		Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
+		try {
+			Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
 
-		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
-			
-		List<Candle> storedPrices = getL2TSDBStoredPrice(request);
+			EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
+				
+			List<Candle> storedPrices = getL2TSDBStoredPrice(request);
 
-		requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);		
+			requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 
 	}
 
@@ -75,10 +78,14 @@ private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String to
 		// query L3 only if L2 data is incomplete
 		int minPrices = 75;
 		if ( storedPrices.size()<minPrices ) {	
+			
+			Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
+
 			// NOTE: gets today's data by requesting 'by end of today'
 			requestL3PartnerPrice(toDashedDate, request);
+			
 		} else {
-			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // " found "  + storedPrices.size()
+			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
 		}
 	} catch (Exception e) {
 		e.printStackTrace();

@@ -72,7 +72,21 @@ public class EventRequest extends Event {
 			s = s + "-to " + toDashedDate;
 		} catch (Exception e) {
 		}	
-		
+
+		try {
+			if(timeGap!=null) {
+				s = s + "-timeGap " + timeGap;
+			}
+		} catch (Exception e) {
+		}	
+
+		try {
+			if(endPoint!=null) {
+				s = s + "-endPoint " + endPoint;
+			}
+		} catch (Exception e) {
+		}	
+
 		return s;
 	}
 

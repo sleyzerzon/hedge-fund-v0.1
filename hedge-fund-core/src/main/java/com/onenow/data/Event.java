@@ -20,17 +20,17 @@ public class Event {
 	
 	public Long time; // for activities and also for specific time queries, instead of to/from range
 
-	// investments to facilitate serialization / deserialization
-	public InvestmentIndex index = null;
-	public InvestmentOption option = null;
-	public InvestmentStock stock = null;
-	public InvestmentFuture future = null;
-	
 	public InvDataSource source;
 	public InvDataTiming timing;
 	public TradeType tradeType; 
 
 	// public ObjectOrigination origin = new ObjectOrigination();
+
+	// investments to facilitate serialization / deserialization
+	public InvestmentIndex index = null;
+	public InvestmentOption option = null;
+	public InvestmentStock stock = null;
+	public InvestmentFuture future = null;	
 
 	public Event() {
 	}	
