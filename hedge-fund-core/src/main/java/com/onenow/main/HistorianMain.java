@@ -65,8 +65,8 @@ public class HistorianMain {
 		// minimum number of price data points
 		int minPrices = 75;
 		
-		// Watchr.log(Level.INFO, "READ: " + MemoryLevel.L3PARTNER.toString() + " (augment data) "  + inv.toString());
-		
+		Watchr.log(Level.INFO, 	"Looking for " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
+
 		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 			
 		// See if data already in L2
@@ -84,8 +84,8 @@ public class HistorianMain {
 
 			TimeParser.paceHistoricalQuery(lastQueryTime);
 
-			Watchr.log(Level.INFO, 	MemoryLevel.L2TSDB + " information incomplete, thus will request: " + request.toString() + 
-									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS TIL" + toDashedDate);
+			Watchr.log(Level.INFO, 	"Found incomplete information, thus will request: " + request.toString() + 
+									" FROM " + MemoryLevel.L3PARTNER + " VIA InvestorMain SQS, THROUGH " + toDashedDate);
 			
 			// Send SQS request to broker
 			String message = Piping.serialize((Object) request);
