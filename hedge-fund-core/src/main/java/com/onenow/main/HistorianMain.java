@@ -1,6 +1,7 @@
 package com.onenow.main;
 
 import java.util.logging.Level;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.constant.MemoryLevel;
@@ -70,7 +71,12 @@ public class HistorianMain {
 			
 		// See if data already in L2
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
-		List<Candle> storedPrices = DBTimeSeriesPrice.read(request);
+		List<Candle> storedPrices = new ArrayList<Candle>();
+		try {
+			storedPrices = DBTimeSeriesPrice.read(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// query L3 only if L2 data is incomplete
 		// NOTE: readHistoricalQuotes gets today's data by requesting 'by end of today'

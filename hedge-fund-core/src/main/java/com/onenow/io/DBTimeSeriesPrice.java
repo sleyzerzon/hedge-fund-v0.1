@@ -89,7 +89,7 @@ public class DBTimeSeriesPrice {
 			
 			for (String col : serie.getColumns()) {
 				s = s + col + "\t";
-				System.out.println("column " + col); // column names
+				// System.out.println("column " + col); // column names
 			}
 			s = s + "\n";
 
