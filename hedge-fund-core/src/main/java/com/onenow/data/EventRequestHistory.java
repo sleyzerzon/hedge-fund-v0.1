@@ -20,8 +20,8 @@ public class EventRequestHistory extends EventRequest {
 
 		setInvestment(inv);
 
-		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
 		this.toDashedDate = toDashedDate;
+		this.fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
 		
 		this.config = config;
 

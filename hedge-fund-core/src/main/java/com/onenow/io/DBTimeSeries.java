@@ -167,8 +167,9 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 		String serieName = Lookup.getEventKey(request);
 			 
 		String query = getQuery(columnName, request, serieName);
-						
-		// Watchr.log(Level.FINEST, "DATABASE " + dbName + " QUERY " + query + " RETURNED " + series.toString());  
+			
+		String log = "DATABASE <" + dbName + "> QUERY " + query + " RETURNED with size: " + series.size(); // + " RETURNED " + series.toString();
+		Watchr.log(Level.INFO, log);  
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 		
 	} catch (Exception e) {
