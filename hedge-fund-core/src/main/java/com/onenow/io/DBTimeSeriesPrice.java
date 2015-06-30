@@ -68,8 +68,8 @@ public class DBTimeSeriesPrice {
 
 	public static List<Serie> readSeries(EventRequest request) {
 		DBname dbName = DBTimeSeries.getPriceDatabaseName(); 
+		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
 		List<Serie> series = DBTimeSeries.query(ColumnName.PRICE, dbName, request);
-		Watchr.log(Level.FINEST, "REQUESTING " + dbName + " FOR " + request.toString());
 		return series;
 	}
 

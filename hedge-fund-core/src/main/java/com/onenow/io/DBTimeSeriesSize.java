@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import org.influxdb.dto.Serie;
 
 import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBname;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequest;
 import com.onenow.util.Watchr;
@@ -63,7 +64,10 @@ public class DBTimeSeriesSize {
 
 	private static List<Serie> readSeries(EventRequest request) {
 		
-		List<Serie> series = DBTimeSeries.query(ColumnName.SIZE, DBTimeSeries.getSizeDatabaseName(), request);
+		DBname dbName = DBTimeSeries.getSizeDatabaseName(); 
+		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
+		List<Serie> series = DBTimeSeries.query(ColumnName.SIZE, dbName, request);
+
 		return series;
 	}
 

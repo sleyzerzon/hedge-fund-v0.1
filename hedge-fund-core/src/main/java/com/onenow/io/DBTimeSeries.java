@@ -109,8 +109,10 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
  */
 public static DBname getPriceDatabaseName() {
 	
-	DBname name = DBname.PRICE_DEVELOPMENT;
+	// DBname name = DBname.PRICE_DEVELOPMENT;
 	
+	DBname name = DBname.PRICE_STAGING;
+			
 	if(!NetworkConfig.isMac()) {
 		name = DBname.PRICE_STAGING;
 	} 
