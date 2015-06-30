@@ -71,13 +71,17 @@ public class HistorianMain {
 
 
 private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String toDashedDate, EventRequestHistory request, List<Candle> storedPrices) {
-	// query L3 only if L2 data is incomplete
-	int minPrices = 75;
-	if ( storedPrices.size()<minPrices ) {	
-		// NOTE: gets today's data by requesting 'by end of today'
-		requestL3PartnerPrice(toDashedDate, request);
-	} else {
-		Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // " found "  + storedPrices.size()
+	try {
+		// query L3 only if L2 data is incomplete
+		int minPrices = 75;
+		if ( storedPrices.size()<minPrices ) {	
+			// NOTE: gets today's data by requesting 'by end of today'
+			requestL3PartnerPrice(toDashedDate, request);
+		} else {
+			Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // " found "  + storedPrices.size()
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
 	}
 }
 

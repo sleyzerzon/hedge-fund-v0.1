@@ -66,8 +66,8 @@ public class S3 {
 		        for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
 		        	Watchr.log(Level.INFO, 	bucket.getName() + " CONTAINS: " +   
 		        							objectSummary.getKey() + "\t" +
-        									"modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
-		                					"size " + objectSummary.getSize() + "\t"
+        									"-modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
+		                					"-size " + objectSummary.getSize() + "\t"
 		                					);
 		        }
 		        objects = connection.listNextBatchOfObjects(objects);
