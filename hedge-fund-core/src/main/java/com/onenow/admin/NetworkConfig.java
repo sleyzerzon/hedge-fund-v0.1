@@ -7,9 +7,11 @@ public class NetworkConfig {
 	
 	private static String OS = System.getProperty("os.name").toLowerCase();
 	
+	//  cusomters.influxdb.com 
 	private static NetworkService tsdbInfluxSAAS = new NetworkService(	"root", "b45547741dd1709b",
 																		"http", "calvinklein-fluxcapacitor-1.c.influxdb.com", "8086",
 																		"");
+															
 	private static NetworkService gatewayAWSIB = new NetworkService(	"", "",
 																		"", "ec2-54-86-144-36.compute-1.amazonaws.com", "4001",
 																		"");

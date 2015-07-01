@@ -63,7 +63,7 @@ public class HistorianMain {
 		// List<Candle> storedPrices = getL2TSDBStoredPrice(request);
 		List<Candle> storedPrices = new ArrayList<Candle>();
 				
-		requestL3PartnerDataIfL2Incomplete(inv, toDashedDate, request, storedPrices);
+		requestL3PartnerDataIfL2Incomplete(request, storedPrices);
 			
 	}
 	
@@ -81,24 +81,24 @@ public class HistorianMain {
 	}
 
 
-private static void requestL3PartnerDataIfL2Incomplete(Investment inv, String toDashedDate, EventRequestHistory request, List<Candle> storedPrices) {
+private static void requestL3PartnerDataIfL2Incomplete(EventRequestHistory request, List<Candle> storedPrices) {
 
 	// query L3 only if L2 data is incomplete
 	int minPrices = 75;
 //		if ( storedPrices.size()<minPrices ) {	
 	if (true) {
-		Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
+		Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 
 		// NOTE: gets today's data by requesting 'by end of today'
-		requestL3PartnerPrice(toDashedDate, request);
+		requestL3PartnerPrice(request);
 		
 	} else {
-		Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + inv.toString()); // 
+		Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 	}
 }
 
 
-private static void requestL3PartnerPrice(String toDashedDate, EventRequestHistory request) {
+private static void requestL3PartnerPrice(EventRequestHistory request) {
 	
 	TimeParser.paceHistoricalQuery(lastQueryTime);
 
