@@ -7,6 +7,7 @@ import org.influxdb.dto.Serie;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.DBname;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
@@ -219,8 +220,8 @@ public static String getQueryTime(EventRequest request) {
 
 public static String getThoroughSelect(String columnName) {
 	String s = "";
-	s = 	"FIRST(" + columnName + ")" + ", " +			//  1
-			"LAST("  + columnName + ")" + ", " +			//  2
+	s = s + DBQuery.FIRST.toString() + "(" + columnName + ")" + ", "; //  1
+	s = s + "LAST("  + columnName + ")" + ", " +			//  2
 			// "DIFFERENCE(" + columnName + ")" + ", " +							
 			"MIN("  + columnName + ")" + ", " +				//  3	
 			"MAX(" +  columnName + ")" + ", " +				//  4

@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import org.influxdb.dto.Serie;
 
 import com.amazonaws.services.s3.model.Bucket;
+import com.onenow.admin.NetworkConfig;
+import com.onenow.constant.DeployEnvironment;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -33,50 +35,63 @@ public class ReporterMain {
 
 		InitLogger.run("");
 				
-		Portfolio marketPortfolio = InitMarket.getPrimaryPortfolio();
+		Portfolio marketPortfolio = InitMarket.getHistoryPortfolio();
 
-		String bucketName = "hedge-reporter";
+		String bucketName = "hedge-reporter-"+getBucketSubfolder().toString().toLowerCase();
 		Bucket bucket = S3.createBucket(bucketName);
 		
 		List<Bucket> buckets = S3.listBuckets();
 		
-		String toDate = TimeParser.getTodayDashed();
-		Integer numDays = 30;
+		String toDate = "2015-06-30";
+		Integer numDays = 3;
 		
 		writeInvestmentPriceIntoBucket(marketPortfolio, bucket, toDate, numDays);
 	}
 
-	private static void writeInvestmentPriceIntoBucket(Portfolio marketPortfolio, Bucket bucket, String toDate, Integer numDays) {
+	private static void writeInvestmentPriceIntoBucket(Portfolio marketPortfolio, Bucket bucket, String toDashedDate, Integer numDays) {
+		
 		for(int days=0; days<numDays; days++) {
-			String fromDate = TimeParser.getDateMinusDashed(toDate, 1);
+
 			for (Investment inv:marketPortfolio.investments) {				
-				writeInvestmentDayPriceIntoBucket(inv, bucket, fromDate, toDate);
+				writeInvestmentDayPriceIntoBucket(inv, bucket, toDashedDate);
 			}
-			toDate = TimeParser.getDateMinusDashed(toDate, 1);
+			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			
 			TimeParser.wait(1); // TODO: pace
 		}
-		S3.listObjects(bucket);
+		// S3.listObjects(bucket);
 	}
 
-	private static void writeInvestmentDayPriceIntoBucket(Investment inv, Bucket bucket, String fromDashedDate, String toDashedDate) {
+	private static void writeInvestmentDayPriceIntoBucket(Investment inv, Bucket bucket, String toDashedDate) {
 		
+		String fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 		
 		EventRequestRealtime request = new EventRequestRealtime(	inv, InvDataSource.IB, InvDataTiming.REALTIME,
 																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
 																	fromDashedDate, toDashedDate);
-		// REQUEST: -UNDER AAPL -TYPE STOCK -SOURCE NULL -TIMING NULL -TRADETYPE NULL -SAMPLING NULL -FROM 2015-06-26 -TO 2015-06-27 -SOURCE IB -TIMING REALTIME -SAMPLING SCALPMEDIUM -TRADETYPE TRADE
-		
-		
+				
 		String key = Lookup.getEventKey(request);
 		String fileName = key+"-"+toDashedDate;
 		Watchr.log(Level.INFO, "working on: " + fileName + " for request: " + request.toString());
+		
 		List<Serie> series;
 		try {
 			series = DBTimeSeriesPrice.readSeries(request);
 			S3.createObject(bucket, series.toString(), fileName);
 		} catch (Exception e) {
 		}				
+	}
+
+	private static DeployEnvironment getBucketSubfolder() {
+		
+		DeployEnvironment subfolder = DeployEnvironment.DEVELOPMENT;
+		
+		if(!NetworkConfig.isMac()) {
+			// TODO handling for production environment
+			subfolder = DeployEnvironment.STAGING;
+		}
+		
+		return subfolder;
 	}
 
 }

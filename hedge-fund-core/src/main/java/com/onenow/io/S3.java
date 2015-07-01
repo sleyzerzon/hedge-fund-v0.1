@@ -38,17 +38,25 @@ public class S3 {
 	public static List<Bucket> listBuckets() {
 		List<Bucket> buckets = connection.listBuckets();
 		for (Bucket bucket : buckets) {
-		       Watchr.log(Level.INFO, bucket.getName() + "\t\t" + StringUtils.fromDate(bucket.getCreationDate()));
+			String s = "-created " + StringUtils.fromDate(bucket.getCreationDate()) + "\t" + "-name " + bucket.getName();
+		       Watchr.log(Level.INFO, s);
 		}
 		return buckets;
 	}
 	
 	public static Bucket createBucket(String name) {
 		Bucket bucket = null;
+		boolean success = false;
 		try {
 			bucket = connection.createBucket(name);
+			success = true;
 		} catch (Exception e) {
-			Watchr.log(Level.SEVERE, "Cannot create bucket");
+			success = false;
+			Watchr.log(Level.SEVERE, "Could not create bucket: " + name);
+			e.printStackTrace();
+		}
+		if(success) {
+			Watchr.log(Level.INFO, "Created bucket: " + name);
 		}
 		return bucket;
 	}

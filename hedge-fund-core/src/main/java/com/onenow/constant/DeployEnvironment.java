@@ -1,5 +1,5 @@
 package com.onenow.constant;
 
-public enum DevOps {
+public enum DeployEnvironment {
 	DEVELOPMENT, STAGING, PRODUCTION
 }
