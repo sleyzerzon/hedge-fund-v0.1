@@ -91,7 +91,7 @@ public class DBTimeSeriesSize {
 			}
 			s = s + "\n";
 			
-			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
+			DBTimeIncrement increment = DBTimeSeries.thoroughSeriesToIncrements(serie, s);
 			sizes.add(incrementToSize(increment));
 		}
 		// System.out.println("SIZES: " + s + "\n");	// full series

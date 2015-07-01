@@ -93,7 +93,7 @@ public class DBTimeSeriesPrice {
 			}
 			s = s + "\n";
 
-			DBTimeIncrement increment = DBTimeSeries.seriesToIncrements(serie, s);
+			DBTimeIncrement increment = DBTimeSeries.thoroughSeriesToIncrements(serie, s);
 			candles.add(incrementsToCandle(increment));
 		}
 		// System.out.println("CANDLE FROM SERIES: " + s + "\n");	// full candle

@@ -1,5 +1,6 @@
 package com.onenow.constant;
 
 public enum DBQuery {
+	SELECT, FROM, GROUP, BY, TIME, WHERE, AND,
 	FIRST, LAST, DIFFERENCE, MIN, MAX, MEAN, MODE, MEDIAN, STDDEV, DISTINCT, COUNT, SUM, DERIVATIVE
 }

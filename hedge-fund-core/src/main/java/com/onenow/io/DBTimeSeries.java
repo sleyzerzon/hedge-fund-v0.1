@@ -196,10 +196,11 @@ private static String getQuery(ColumnName columnName, EventRequest request, Stri
 	// select mean(PRICE) from /^AAPL-STOCK.*/i  where $timeFilter group by time($interval) order asc	
 	String query = "";
 	
-	query = query + "SELECT " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
-	query = query + "FROM " + "\"" + serieName + "\" ";
-	query = query + "GROUP BY " + "time" + "(" + DataSampling.getGroupByTimeString(request.sampling) + ") ";
-	query = query + "WHERE " + getQueryTime(request);
+	query = query + DBQuery.SELECT.toString() + " " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
+	query = query + DBQuery.FROM.toString() + " " + "\"" + serieName + "\"" + " ";
+	query = query + DBQuery.GROUP.toString() + " " + DBQuery.BY.toString() + " " + DBQuery.TIME.toString() + 
+					"(" + DataSampling.getGroupByTimeString(request.sampling) + ")" + " ";
+	query = query + DBQuery.WHERE.toString() + " " + getQueryTime(request);
 	
 	return query;
 }
@@ -208,33 +209,67 @@ public static String getQueryTime(EventRequest request) {
 	String s = "";
 	
 	if(request.toDashedDate!=null) {
-		s = s + "time > " + "'" + request.fromDashedDate + "' "; 
-		s = s + "AND ";
-		s = s + "time < " + "'" + request.toDashedDate + "' ";
+		s = s + DBQuery.TIME.toString() + " > " + "'" + request.fromDashedDate + "'" + " "; 
+		s = s + DBQuery.AND.toString() + " ";
+		s = s + DBQuery.TIME.toString() + " < " + "'" + request.toDashedDate + "'" + " ";
 	} else {
-		s = s + "time > " + request.endPoint + " " + request.timeGap; 
+		s = s + DBQuery.TIME.toString() + " > " + request.endPoint + " " + request.timeGap; 
 	}
 	
 	return s;
 }
 
+public static String getSelect(DBQuery queryValue, String columnName) {
+	String s = "";
+	s = s + queryValue + "(" + columnName + ")"; 			
+	return s;
+}
+
 public static String getThoroughSelect(String columnName) {
 	String s = "";
-	s = s + DBQuery.FIRST.toString() + "(" + columnName + ")" + ", "; //  1
-	s = s + "LAST("  + columnName + ")" + ", " +			//  2
-			// "DIFFERENCE(" + columnName + ")" + ", " +							
-			"MIN("  + columnName + ")" + ", " +				//  3	
-			"MAX(" +  columnName + ")" + ", " +				//  4
-			"MEAN(" + columnName + ")" + ", " +				//  5
-			"MODE(" + columnName + ")" + ", " +				//  6
-			"MEDIAN(" +  columnName + ")" + ", " +			//  7		
-			"STDDEV(" +  columnName + ")" + ", " +			//  8			
-			"DISTINCT(" + columnName + ")" + ", " +			// 9		
-			"COUNT("  + columnName + ")" + ", " +			// 10
-			"SUM("  + columnName + ")";						// 11
-			// "DERIVATIVE(" + columnName + ")" + " ";	    // 12			  
+	
+	s = s + DBQuery.FIRST.toString() + "(" + columnName + ")" + ", "; 		//  1
+	s = s + DBQuery.LAST.toString() + "("  + columnName + ")" + ", ";		//  2
+	s = s + DBQuery.MIN.toString() + "("  + columnName + ")" + ", ";		//  3	
+	s = s + DBQuery.MAX.toString() + "(" +  columnName + ")" + ", ";		//  4
+	s = s + DBQuery.MEAN.toString() + "(" + columnName + ")" + ", ";		//  5
+	s = s + DBQuery.MODE.toString() + "(" + columnName + ")" + ", ";		//  6
+	s = s + DBQuery.MEDIAN.toString() + "(" +  columnName + ")" + ", ";		//  7		
+	s = s + DBQuery.STDDEV.toString() + "(" +  columnName + ")" + ", ";		//  8			
+	s = s + DBQuery.DISTINCT.toString() + "(" + columnName + ")" + ", ";	// 9		
+	s = s + DBQuery.COUNT.toString() + "("  + columnName + ")" + ", ";		// 10
+	s = s + DBQuery.SUM.toString() + "("  + columnName + ")";				// 11
+	
+	// "DIFFERENCE(" + columnName + ")" + ", " +							
+	// "DERIVATIVE(" + columnName + ")" + " ";	  
 
 	return s;
+}
+
+public static DBTimeIncrement individualSeriesToIncrements(Serie serie, String s) { 
+	
+	DBTimeIncrement increment = new DBTimeIncrement();;
+	
+	for (Map<String, Object> rowMap : serie.getRows()) {
+				
+		Integer i=0;
+		
+		for (String column : serie.getColumns()) {	// iterate columns to create candle
+
+			s = s + rowMap.get(column) + "\t";
+			// System.out.println("row " + row + " " + row.get(col)); // full row
+
+			// Column 0 is time stamp
+			if(i.equals(1)) {
+				increment.first = new Double(extractQueryString(rowMap, column));
+			}	
+			i++;
+		}
+		s = s + "\n";
+	}
+	
+	// Watchr.log(Level.FINEST, "INCREMENT FROM SERIE: " + increment.toString());
+	return increment;
 }
 
 /**
@@ -243,7 +278,7 @@ public static String getThoroughSelect(String columnName) {
  * @param s
  * @return
  */
-public static DBTimeIncrement seriesToIncrements(Serie serie, String s) {
+public static DBTimeIncrement thoroughSeriesToIncrements(Serie serie, String s) {
 	
 	DBTimeIncrement increment = new DBTimeIncrement();;
 	
