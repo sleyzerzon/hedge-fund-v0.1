@@ -5,7 +5,9 @@ import java.util.logging.Level;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
+import com.amazonaws.services.s3.model.Bucket;
 import com.onenow.alpha.WordCount;
+import com.onenow.io.S3;
 import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
 import com.onenow.util.SysProperties;
@@ -19,8 +21,8 @@ public class AnalystMain {
 		
 		Watchr.log(Level.INFO, "checking");
 		
-		
-		// SQS q = new SQS(Regions.US_EAST_1);
+		Bucket bucket = S3.getBucket(ReporterMain.getReporterBucketName());
+		S3.listObjects(bucket);
 		
 		// countWordsInFile(args);
 		

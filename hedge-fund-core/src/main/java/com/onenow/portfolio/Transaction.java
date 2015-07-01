@@ -37,15 +37,15 @@ public class Transaction {
 	public Double getNetPremium() {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
-			sum+=trade.getNetPremium();
+			sum+=trade.netPremium;
 		}
 		return sum;		
 	}
 	public Double getNetPremium(InvType invType) {
 		Double sum=0.0;
 		for(Trade trade:getTrades()){
-			if(trade.getInvestment().getInvType().equals(invType)){
-				sum+=trade.getNetPremium();
+			if(trade.investment.getInvType().equals(invType)){
+				sum+=trade.netPremium;
 			}
 		}
 		return sum;		
@@ -55,11 +55,11 @@ public class Transaction {
 		Double prob=0.0;
 		
 		for(Trade trade:getTrades()) {
-			if(	trade.getInvestment().getInvType().equals(InvType.CALL) || 
-				trade.getInvestment().getInvType().equals(InvType.PUT)) {  
-					if(trade.getTradeType().equals(TradeType.SELL)) {
+			if(	trade.investment.getInvType().equals(InvType.CALL) || 
+				trade.investment.getInvType().equals(InvType.PUT)) {  
+					if(trade.tradeType.equals(TradeType.SELL)) {
 					
-						Investment inv = trade.getInvestment();
+						Investment inv = trade.investment;
 						prob += ((InvestmentOption) inv).getProbabilityOfProfit();
 					}	
 			}
@@ -114,8 +114,8 @@ public class Transaction {
 	private Double getStrike(Enum invType, Enum tradeType) {
 		Double strike=0.0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(invType) &&
-			   trade.getTradeType().equals(tradeType)) {
+			if(trade.investment.getInvType().equals(invType) &&
+			   trade.tradeType.equals(tradeType)) {
 					strike = trade.getStrike();
 					return strike;
 				}
@@ -126,10 +126,10 @@ public class Transaction {
 	private Integer getCallSoldContracts() { 
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			Investment inv = trade.getInvestment();
-			if(trade.getInvestment().getInvType().equals(InvType.CALL) &&
-			   trade.getTradeType().equals(TradeType.SELL)) {
-				contracts=trade.getQuantity();
+			Investment inv = trade.investment;
+			if(trade.investment.getInvType().equals(InvType.CALL) &&
+			   trade.tradeType.equals(TradeType.SELL)) {
+				contracts=trade.quantity;
 			}
 		}
 		return contracts;
@@ -138,9 +138,9 @@ public class Transaction {
 	private Integer getPutSoldContracts() {
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
-			if(trade.getInvestment().getInvType().equals(InvType.PUT) &&
-			   trade.getTradeType().equals(TradeType.SELL)) {
-				contracts=trade.getQuantity();
+			if(trade.investment.getInvType().equals(InvType.PUT) &&
+			   trade.tradeType.equals(TradeType.SELL)) {
+				contracts=trade.quantity;
 			}			
 		}		
 		return contracts;		

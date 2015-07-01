@@ -59,7 +59,7 @@ public class Strategy {
 		
 		for(Transaction trans:transactions) {		
 			for (Trade trade:trans.getTrades()) {
-				netPremium += trade.getNetPremium();
+				netPremium += trade.netPremium;
 			}
 		}
 		return  netPremium;

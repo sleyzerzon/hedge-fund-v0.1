@@ -133,7 +133,7 @@ public class InitMarket {
 	private static void addIndicesToPortfolio(List<Underlying> unders) {
 		for(Underlying under:unders) {
 			InvestmentIndex index = new InvestmentIndex(under);
-			Trade indexTrade = new Trade(index, TradeType.BUY, 1, 0.0);
+			Trade indexTrade = new Trade(index, TradeType.CALCULATED, 1, 0.0);
 			Transaction indexTrans = new Transaction(indexTrade);
 			marketPortfolio.enterTransaction(indexTrans);
 		}

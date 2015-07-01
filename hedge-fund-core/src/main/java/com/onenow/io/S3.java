@@ -28,7 +28,19 @@ public class S3 {
 
 	}
 
-	/** 
+	public static Bucket getBucket(String bucketName) {
+		List<Bucket> buckets = connection.listBuckets();
+
+		for (Bucket bucket : buckets) {
+			if(bucket.getName().equals(bucketName)) {
+				return bucket;
+			}
+		}
+		
+		return null;
+	}
+	
+ 	/** 
 	 * Output example:
 	 * 		mahbuckat1   2011-04-21T18:05:39.000Z
 	 * 		mahbuckat2   2011-04-21T18:05:48.000Z
@@ -73,9 +85,9 @@ public class S3 {
 		do {
 		        for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
 		        	Watchr.log(Level.INFO, 	bucket.getName() + " CONTAINS: " +   
-		        							objectSummary.getKey() + "\t" +
         									"-modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
-		                					"-size " + objectSummary.getSize() + "\t"
+		                					"-size " + objectSummary.getSize() + "\t" +
+		                					"-name " + objectSummary.getKey()
 		                					);
 		        }
 		        objects = connection.listNextBatchOfObjects(objects);

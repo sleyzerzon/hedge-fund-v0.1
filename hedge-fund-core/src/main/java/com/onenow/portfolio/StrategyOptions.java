@@ -18,8 +18,8 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getInvestment().getInvType().equals(InvType.CALL))
-				net += trade.getNetPremium();
+				if(trade.investment.getInvType().equals(InvType.CALL))
+				net += trade.netPremium;
 			}
 		}
 		return net;
@@ -29,8 +29,8 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getInvestment().getInvType().equals(InvType.PUT))
-				net += trade.getNetPremium();
+				if(trade.investment.getInvType().equals(InvType.PUT))
+				net += trade.netPremium;
 			}
 		}
 		return net;
@@ -40,8 +40,8 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getTradeType().equals(TradeType.BUY)) {
-				net += trade.getNetPremium();
+				if(trade.tradeType.equals(TradeType.BUY)) {
+				net += trade.netPremium;
 				}
 			}
 		}
@@ -52,8 +52,8 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.getTradeType().equals(TradeType.SELL)) {
-				net += trade.getNetPremium();
+				if(trade.tradeType.equals(TradeType.SELL)) {
+				net += trade.netPremium;
 				}
 			}
 		}
@@ -117,8 +117,8 @@ public class StrategyOptions extends Strategy {
 		Double netDelta=0.0;
 		Transaction trans=getTransactions().get(0); // first transaction only
 		for(Trade trade:trans.getTrades()){
-			if(trade.getTradeType().equals(tradeType)) {
-				Investment inv = trade.getInvestment();		
+			if(trade.tradeType.equals(tradeType)) {
+				Investment inv = trade.investment;		
 				InvestmentOption opt = (InvestmentOption) inv;
 				// TODO: go get from broker
 				// Double delta = opt.getGreeks().getDelta(); 
@@ -134,8 +134,8 @@ public class StrategyOptions extends Strategy {
 		Integer counter=0;
 		Transaction trans=getTransactions().get(0); // first transaction only
 		for(Trade trade:trans.getTrades()) {
-			if(trade.getTradeType().equals(tradeType)) {
-				Investment inv = trade.getInvestment();
+			if(trade.tradeType.equals(tradeType)) {
+				Investment inv = trade.investment;
 				InvestmentOption opt = (InvestmentOption) inv;
 				// TODO: go get from broker
 				// Double delta = opt.getGreeks().getDelta();

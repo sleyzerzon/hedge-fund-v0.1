@@ -1,10 +1,8 @@
 package com.onenow.portfolio;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.logging.Level;
 
 import com.onenow.constant.InvTerm;
 import com.onenow.constant.InvType;
@@ -16,12 +14,11 @@ import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.InvestmentReserved;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
-import com.onenow.util.Watchr;
 
 public class Portfolio {
 
 	public List<Investment> investments = new ArrayList<Investment>();
-	private Hashtable<Investment, Integer> quantity = new Hashtable<Investment, Integer>();
+	private Hashtable<Investment, Integer> quantityMap = new Hashtable<Investment, Integer>();
 
 	// CONSTRUCT
 	public Portfolio() {
@@ -45,18 +42,18 @@ public class Portfolio {
 	}
 	
 	private void enterInvestment(Trade trade) {
-		Investment invToEnter = trade.getInvestment();
-		Integer quantity = trade.getQuantity();
+		Investment invToEnter = trade.investment;
+		Integer quant = trade.quantity;
 
-		if(getQuantity().get(invToEnter) == null) { // not there
+		if(quantityMap.get(invToEnter) == null) { // not there
 			investments.add(invToEnter);
-			getQuantity().put(invToEnter, quantity);
+			quantityMap.put(invToEnter, quant);
 		} else { // increment
-				Integer init = getQuantity().get(invToEnter);
-				if (trade.getTradeType().equals(TradeType.BUY)) {
-					getQuantity().put(invToEnter,  init + trade.getQuantity());								
+				Integer init = quantityMap.get(invToEnter);
+				if (trade.tradeType.equals(TradeType.BUY)) {
+					quantityMap.put(invToEnter,  init + trade.quantity);								
 				} else {
-					getQuantity().put(invToEnter, init - trade.getQuantity());								
+					quantityMap.put(invToEnter, init - trade.quantity);								
 				}				
 		}
 	}
@@ -64,7 +61,7 @@ public class Portfolio {
 	public Integer getAbsQuantity() {
 		Integer sum = 0;
 			for(Investment inv:investments) {
-				sum += Math.abs(getQuantity().get(inv));
+				sum += Math.abs(quantityMap.get(inv));
 			}
 		return sum;
 	}
@@ -183,7 +180,7 @@ public class Portfolio {
 		s = s + "***INDICES";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentIndex) {
-				s = s + "   [[" +getQuantity().get(inv) + "]]" + " ";
+				s = s + "   [[" +quantityMap.get(inv) + "]]" + " ";
 				s = s + investments.get(i);
 			}
 			i++;
@@ -196,7 +193,7 @@ public class Portfolio {
 		s = s + "***OPTIONS";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentOption) {
-				s = s + "   [[" + getQuantity().get(inv) + "]]" + " ";
+				s = s + "   [[" + quantityMap.get(inv) + "]]" + " ";
 				s = s + investments.get(i);
 			}
 			i++;
@@ -209,7 +206,7 @@ public class Portfolio {
 		s = s + "***STOCKS";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentStock) {
-				s = s + "   [[" + getQuantity().get(inv) + "]]" + " ";
+				s = s + "   [[" + quantityMap.get(inv) + "]]" + " ";
 				s = s + investments.get(i);
 			}
 			i++;
@@ -222,7 +219,7 @@ public class Portfolio {
 		s = s + "***FUTURES";
 		for(Investment inv:investments) {
 			if(inv instanceof InvestmentFuture) {
-				s = s + "   [[" + getQuantity().get(inv) + "]]" + " ";				
+				s = s + "   [[" + quantityMap.get(inv) + "]]" + " ";				
 				s = s + investments.get(i);
 			}
 			i++;
@@ -230,13 +227,9 @@ public class Portfolio {
 		return s;
 	}
 
-	// GET SET
-	public Hashtable<Investment, Integer> getQuantity() {
-		return quantity;
-	}
 
 	public void setQuantity(Hashtable<Investment, Integer> quantity) {
-		this.quantity = quantity;
+		this.quantityMap = quantity;
 	}
 
 }

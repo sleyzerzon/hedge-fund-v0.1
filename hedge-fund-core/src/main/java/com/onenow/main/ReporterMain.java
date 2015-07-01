@@ -10,6 +10,7 @@ import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.DeployEnvironment;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityHistory;
@@ -17,6 +18,7 @@ import com.onenow.data.EventRequestHistory;
 import com.onenow.data.EventRequestRealtime;
 import com.onenow.data.InitMarket;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentIndex;
 import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.Lookup;
 import com.onenow.io.S3;
@@ -34,40 +36,50 @@ public class ReporterMain {
 	public static void main(String[] args) {
 
 		InitLogger.run("");
-				
-		Portfolio marketPortfolio = InitMarket.getHistoryPortfolio();
 
-		String bucketName = "hedge-reporter-"+getBucketSubfolder().toString().toLowerCase();
-		Bucket bucket = S3.createBucket(bucketName);
-		
-		List<Bucket> buckets = S3.listBuckets();
-		
+		// init
+		Bucket bucket = S3.createBucket(getReporterBucketName());
+		S3.listBuckets();
+
+		// get set of investments to report
+		Portfolio marketPortfolio = InitMarket.getHistoryPortfolio();	
 		String toDate = "2015-06-30";
 		Integer numDays = 3;
 		
-		writeInvestmentPriceIntoBucket(marketPortfolio, bucket, toDate, numDays);
+		writeInvestmentPriceIntoBucket(marketPortfolio, InvDataTiming.REALTIME, toDate, numDays, bucket);
+		
+		S3.listObjects(bucket);
+
 	}
 
-	private static void writeInvestmentPriceIntoBucket(Portfolio marketPortfolio, Bucket bucket, String toDashedDate, Integer numDays) {
+	public static String getReporterBucketName() {
+		return "hedge-reporter-"+getBucketSubfolder().toString().toLowerCase();
+	}
+	
+	private static void writeInvestmentPriceIntoBucket(Portfolio marketPortfolio, InvDataTiming timing, String toDashedDate, Integer numDays, Bucket bucket) {
 		
 		for(int days=0; days<numDays; days++) {
 
-			for (Investment inv:marketPortfolio.investments) {				
-				writeInvestmentDayPriceIntoBucket(inv, bucket, toDashedDate);
+			for (Investment inv:marketPortfolio.investments) {	
+				writeInvestmentDayPriceIntoBucket(inv, timing, toDashedDate, bucket);
 			}
-			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			
+			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 			TimeParser.wait(1); // TODO: pace
 		}
-		// S3.listObjects(bucket);
 	}
 
-	private static void writeInvestmentDayPriceIntoBucket(Investment inv, Bucket bucket, String toDashedDate) {
+	private static void writeInvestmentDayPriceIntoBucket(Investment inv, InvDataTiming timing, String toDashedDate, Bucket bucket) {
 		
 		String fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 		
-		EventRequestRealtime request = new EventRequestRealtime(	inv, InvDataSource.IB, InvDataTiming.REALTIME,
-																	SamplingRate.SCALPMEDIUM, TradeType.TRADED, 
+		TradeType tradeType = TradeType.TRADED;
+		if(inv instanceof InvestmentIndex) {
+			tradeType = TradeType.CALCULATED;
+		}
+		
+		EventRequestRealtime request = new EventRequestRealtime(	inv, InvDataSource.IB, timing,
+																	SamplingRate.SCALPMEDIUM, tradeType, 
 																	fromDashedDate, toDashedDate);
 				
 		String key = Lookup.getEventKey(request);
@@ -75,11 +87,15 @@ public class ReporterMain {
 		Watchr.log(Level.INFO, "working on: " + fileName + " for request: " + request.toString());
 		
 		List<Serie> series;
+		boolean success = false;
 		try {
 			series = DBTimeSeriesPrice.readSeries(request);
 			S3.createObject(bucket, series.toString(), fileName);
+			success=true;
 		} catch (Exception e) {
+			success=false;
 		}				
+		Watchr.log(Level.INFO, "created: " + fileName);
 	}
 
 	private static DeployEnvironment getBucketSubfolder() {
