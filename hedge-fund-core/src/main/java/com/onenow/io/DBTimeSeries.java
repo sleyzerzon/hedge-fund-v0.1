@@ -93,7 +93,7 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 		}
 		Long after = TimeParser.getTimestampNow();
 	
-		Watchr.log(Level.INFO, 	"TSDB WRITE: "+ "<" + dbName + ">" + " INTO " + "(((" + serie.getName() + ")))" + " " + 
+		Watchr.log(Level.INFO, 	"TSDB WRITE: "+ "<" + dbName + ">" + " INTO " + "[" + serie.getName() + "]" + " " + 
 								"EVENT " + event.toString() + " " +  
 								"-ELAPSED " + (after-before) + "ms ",
 								// "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
@@ -170,7 +170,7 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 			 
 		String query = getQuery(columnName, request, serieName);
 			
-		String log = "DATABASE <" + dbName + "> QUERY " + query + " RETURNED with size: " + series.size(); // + " RETURNED " + series.toString();
+		String log = "DATABASE <" + dbName + "> QUERY " + query + " RETURNED with length: " + series.size(); // + " RETURNED " + series.toString();
 		Watchr.log(Level.INFO, log);  
 		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 		
@@ -196,11 +196,11 @@ private static String getQuery(ColumnName columnName, EventRequest request, Stri
 	// select mean(PRICE) from /^AAPL-STOCK.*/i  where $timeFilter group by time($interval) order asc	
 	String query = "";
 	
-	query = query + DBQuery.SELECT.toString() + " " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
-	query = query + DBQuery.FROM.toString() + " " + "\"" + serieName + "\"" + " ";
-	query = query + DBQuery.GROUP.toString() + " " + DBQuery.BY.toString() + " " + DBQuery.TIME.toString() + 
+	query = query + DBQuery.SELECT.toString().toLowerCase() + " " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
+	query = query + DBQuery.FROM.toString().toLowerCase() + " " + "\"" + serieName + "\"" + " ";
+	query = query + DBQuery.GROUP.toString().toLowerCase() + " " + DBQuery.BY.toString() + " " + DBQuery.TIME.toString().toLowerCase() + 
 					"(" + DataSampling.getGroupByTimeString(request.sampling) + ")" + " ";
-	query = query + DBQuery.WHERE.toString() + " " + getQueryTime(request);
+	query = query + DBQuery.WHERE.toString().toLowerCase() + " " + getQueryTime(request);
 	
 	return query;
 }
@@ -209,11 +209,11 @@ public static String getQueryTime(EventRequest request) {
 	String s = "";
 	
 	if(request.toDashedDate!=null) {
-		s = s + DBQuery.TIME.toString() + " > " + "'" + request.fromDashedDate + "'" + " "; 
+		s = s + DBQuery.TIME.toString().toLowerCase() + " > " + "'" + request.fromDashedDate + "'" + " "; 
 		s = s + DBQuery.AND.toString() + " ";
 		s = s + DBQuery.TIME.toString() + " < " + "'" + request.toDashedDate + "'" + " ";
 	} else {
-		s = s + DBQuery.TIME.toString() + " > " + request.endPoint + " " + request.timeGap; 
+		s = s + DBQuery.TIME.toString().toLowerCase() + " > " + request.endPoint + " " + request.timeGap; 
 	}
 	
 	return s;

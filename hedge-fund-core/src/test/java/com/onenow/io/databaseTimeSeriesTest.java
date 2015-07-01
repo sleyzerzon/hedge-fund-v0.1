@@ -43,7 +43,7 @@ public class databaseTimeSeriesTest {
   private EventActivityHistory getHistoryActivity() {
 	  
 	  int reqId = 123; 
-	  long time = TimeParser.getTimestampNow()*1000; 
+	  long time = TimeParser.getTimestampNow()/1000; 
 	  double high = 0.23; 
 	  double low = 0.19; 
 	  double open = 0.12; 

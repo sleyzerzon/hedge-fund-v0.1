@@ -71,20 +71,20 @@ public class EventRequest extends Event {
 		}
 				
 		try {
-			s = s + "-to " + toDashedDate;
+			s = s + "-to " + toDashedDate + " ";
 		} catch (Exception e) {
 		}	
 
 		try {
 			if(timeGap!=null) {
-				s = s + "-timeGap " + timeGap;
+				s = s + "-timeGap " + timeGap + " ";
 			}
 		} catch (Exception e) {
 		}	
 
 		try {
 			if(endPoint!=null) {
-				s = s + "-endPoint " + endPoint;
+				s = s + "-endPoint " + endPoint + " "; 
 			}
 		} catch (Exception e) {
 		}	
