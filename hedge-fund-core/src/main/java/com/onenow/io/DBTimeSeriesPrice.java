@@ -8,8 +8,15 @@ import org.influxdb.dto.Serie;
 
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBname;
+import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.InvType;
+import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivity;
+import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventRequest;
+import com.onenow.instrument.Underlying;
 import com.onenow.research.Candle;
 import com.onenow.util.Watchr;
 
@@ -19,31 +26,100 @@ public class DBTimeSeriesPrice {
 		
 	}
 	
-	static Serie getWriteSerie(final EventActivity event, String serieName) {
+	static List<Serie> getWriteSerie(final EventActivity event, String serieName) {
+		
+		List<Serie> series = new ArrayList<Serie>();
+		
+		InvDataSource source = event.source;
+		InvDataTiming timing = event.timing;
+		TradeType tradeType = event.tradeType;
+		Underlying under = event.getUnder();
+		InvType invType = event.getInvType();
+		Double strikePrice = event.getOptionStrikePrice();
+		String optionExpDate = event.getOptionExpirationDate(); 
+		String futureExpDate = event.getFutureExpirationDate();
+		
+		if(event instanceof EventActivityRealtime) {
+			Serie serie = getWriteSingleSerie(		serieName, 
+													event.time, event.price,
+													source, timing, tradeType,
+													under, invType,
+													strikePrice, optionExpDate,
+													futureExpDate);
+			series.add(serie);
+		} 
+		
+		if(event instanceof EventActivityHistory) {
+			// TODO: use the actual interval size to place the four data points in time
+			Serie serieOpen = getWriteSingleSerie(	serieName, 
+													event.time, ((EventActivityHistory) event).open,
+													source, timing, tradeType,
+													under, invType,
+													strikePrice, optionExpDate,
+													futureExpDate);
+			Serie serieHigh = getWriteSingleSerie(	serieName, 
+													event.time, ((EventActivityHistory) event).high,
+													source, timing, tradeType,
+													under, invType,
+													strikePrice, optionExpDate,
+													futureExpDate);
+			Serie serieLow = getWriteSingleSerie(	serieName, 
+													event.time, ((EventActivityHistory) event).low,
+													source, timing, tradeType,
+													under, invType,
+													strikePrice, optionExpDate,
+													futureExpDate);
+			Serie serieClose = getWriteSingleSerie(	serieName, 
+													event.time, ((EventActivityHistory) event).close,
+													source, timing, tradeType,
+													under, invType,
+													strikePrice, optionExpDate,
+													futureExpDate);
+
+			series.add(serieOpen);
+			series.add(serieHigh);
+			series.add(serieLow);
+			series.add(serieClose);
+		}
+		
+		return series;
+	}
+
+	private static Serie getWriteSingleSerie(	String serieName, 
+												Long time, Double price,
+												InvDataSource source, InvDataTiming timing, TradeType tradeType,
+												Underlying under, InvType invType,
+												Double strikePrice, String optionExpDate, 
+												String futureExpDate) {
+		
 		final Serie serie = new Serie.Builder(serieName)
 		.columns(	ColumnName.TIME.toString(), ColumnName.PRICE.toString(), 
 					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(), 
 					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
 					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
 					ColumnName.FUTUREEXP.toString())
-		.values(event.time, event.price, 																		// basic columns
-				"\""+ event.source + "\"", "\""+ event.timing +"\"", "\""+ event.tradeType +"\"",					// event origination
-				"\""+ event.getUnder() + "\"", "\""+ event.getInvType() +"\"", 								// investment
-				"\""+ event.getOptionStrikePrice() +"\"", "\""+ event.getOptionExpirationDate() +"\"",		// option
-				"\""+ event.getFutureExpirationDate() +"\""													// if future, expiration
+		.values(time, price, 																		// basic columns
+				"\""+ source + "\"", "\""+ timing +"\"", "\""+ tradeType +"\"",					// event origination
+				"\""+ under + "\"", "\""+ invType +"\"", 								// investment
+				"\""+ strikePrice +"\"", "\""+ optionExpDate +"\"",		// option
+				"\""+ futureExpDate +"\""													// if future, expiration
 				) 
 
 		.build();
 		return serie;
 	}
 
-	public static void write( EventActivity event) {
+	/**
+	 * Write each price point.  In the case of real-time it's one, in the case of historic it is high/low/open/close for the interval
+	 * @param event
+	 */
+	public static void write(EventActivity event) {
 		
 		String name = Lookup.getEventKey(event);		
-		final Serie serie = getWriteSerie(event, name);
 		
-		writeThread(event, serie);
-		
+		for(Serie serie : getWriteSerie(event, name)) {
+			writeThread(event, serie);			
+		}
 	}
 
 	public static void writeThread(EventActivity event, Serie serie) {

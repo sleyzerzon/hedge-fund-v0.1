@@ -44,10 +44,12 @@ public class databaseTimeSeriesTest {
 	  
 	  int reqId = 123; 
 	  long time = TimeParser.getTimestampNow()/1000; 
-	  double high = 0.23; 
-	  double low = 0.19; 
+	  // price
+	  double high = 0.33; 
+	  double low = 0.09; 
 	  double open = 0.12; 
 	  double close = 0.28; 
+	  // etc
 	  double wap = 0.0; 
 	  long volume = 3; 
 	  int count = 23;		
@@ -68,10 +70,37 @@ public class databaseTimeSeriesTest {
 	  EventActivityHistory historyActivity = getHistoryActivity();
 
 	  String serieName = Lookup.getEventKey(historyActivity);
-	  Serie serie = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);
-	 
-	  Watchr.log("WRITE INTO " + serieName + " SERIE " + serie.toString());
+	  List<Serie> series = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);
+	  
+	  testColumns(serieName, series);
 
+	  	// write
+		DBTimeSeriesPrice.write(historyActivity);
+		
+		TimeParser.wait(5); // wait for write thread to complete
+		
+		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, "-1m" ,"now()");
+
+		List<Candle> candles = new ArrayList<Candle>();
+		try {
+			candles = DBTimeSeriesPrice.read(requestHistory);
+		} catch (Exception e) {
+		}
+		
+		Watchr.info("READ CANDLES " + candles);
+		
+		int lastCandle = candles.size()-1;
+//		Assert.assertTrue(candles.get(lastCandle).openPrice.equals(historyActivity.open));
+//		Assert.assertTrue(candles.get(lastCandle).closePrice.equals(historyActivity.close));
+		Assert.assertTrue(candles.get(lastCandle).highPrice.equals(historyActivity.high));
+		Assert.assertTrue(candles.get(lastCandle).lowPrice.equals(historyActivity.low));
+		
+			
+  }
+
+private void testColumns(String serieName, List<Serie> series) {
+	Serie serie = series.get(0);
+	  
 	  String columns = "";
 	  for(String column:serie.getColumns()) {
 		  columns = columns + column.toString() + " ";
@@ -94,27 +123,8 @@ public class databaseTimeSeriesTest {
 		Assert.assertNotNull(serie.getRows());
 		Assert.assertEquals(serie.getRows().size(), 1);
 		Assert.assertEquals(serie.getRows().get(0).size(), 10);
-
 		
-		DBTimeSeriesPrice.writeThread(historyActivity, serie);
-		
-		TimeParser.wait(5); // wait for write thread to complete
-		
-		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, "-1m" ,"now()");
-
-		List<Candle> candles = new ArrayList<Candle>();
-		try {
-			candles = DBTimeSeriesPrice.read(requestHistory);
-		} catch (Exception e) {
-		}
-		
-		Watchr.info("READ CANDLES " + candles);
-		
-		int lastCandle = candles.size()-1;
-		Assert.assertTrue(candles.get(lastCandle).openPrice.equals(historyActivity.open));
-		
-			
-  }
+}
   
   @Test
   public void writeSize() {
