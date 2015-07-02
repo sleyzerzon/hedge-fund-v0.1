@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.constant.MemoryLevel;
+import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.HistorianService;
@@ -58,9 +59,10 @@ public class HistorianMain {
 				
 		Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
 
-		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
+		EventRequest request = new EventRequest();
+		// EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
 			
-		// List<Candle> storedPrices = getL2TSDBStoredPrice(request);
+		//List<Candle> storedPrices = getL2TSDBStoredPrice(request);
 		List<Candle> storedPrices = new ArrayList<Candle>();
 				
 		requestL3PartnerDataIfL2Incomplete(request, storedPrices);
@@ -68,7 +70,7 @@ public class HistorianMain {
 	}
 	
 	// select MEAN(PRICE) FROM "AAPL-STOCK-TRADED-IB-REALTIME" group by time(30m) where time > '2015-06-23' and time < '2015-06-24'
-	private static List<Candle> getL2TSDBStoredPrice(EventRequestHistory request) {
+	private static List<Candle> getL2TSDBStoredPrice(EventRequest request) {
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> storedPrices = new ArrayList<Candle>();
 		try {
@@ -81,7 +83,7 @@ public class HistorianMain {
 	}
 
 
-private static void requestL3PartnerDataIfL2Incomplete(EventRequestHistory request, List<Candle> storedPrices) {
+private static void requestL3PartnerDataIfL2Incomplete(EventRequest request, List<Candle> storedPrices) {
 
 	// query L3 only if L2 data is incomplete
 	int minPrices = 75;
@@ -98,7 +100,7 @@ private static void requestL3PartnerDataIfL2Incomplete(EventRequestHistory reque
 }
 
 
-private static void requestL3PartnerPrice(EventRequestHistory request) {
+private static void requestL3PartnerPrice(EventRequest request) {
 	
 	TimeParser.paceHistoricalQuery(lastQueryTime);
 
