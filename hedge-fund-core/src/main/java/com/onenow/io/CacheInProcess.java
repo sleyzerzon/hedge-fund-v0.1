@@ -3,6 +3,8 @@ package com.onenow.io;
 import java.util.HashMap;
 import java.util.List;
 
+import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -139,7 +141,8 @@ public class CacheInProcess {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
-		EventRequest request = new EventRequest(	inv, tradeType, scalping, 
+		EventRequest request = new EventRequest(	DBQuery.MEAN, ColumnName.PRICE, 
+													inv, tradeType, scalping, 
 													today, today, 					// TODO: repeat today?
 													source, timing);
 		

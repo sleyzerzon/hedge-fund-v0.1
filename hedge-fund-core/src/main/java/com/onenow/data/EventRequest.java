@@ -1,5 +1,7 @@
 package com.onenow.data;
 
+import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -7,6 +9,9 @@ import com.onenow.constant.TradeType;
 import com.onenow.instrument.Investment;
 
 public class EventRequest extends Event {
+	
+	public DBQuery dbQuery; 
+	public ColumnName columnName;
 	
 	public SamplingRate sampling;
 	public String toDashedDate;
@@ -21,7 +26,25 @@ public class EventRequest extends Event {
 		super();
 	}
 	
-	public EventRequest(	Investment inv, TradeType tradeType, SamplingRate sampling, 
+	public EventRequest(	DBQuery dbQuery, ColumnName columnName, SamplingRate sampling, String timeGap, String endPoint, EventActivityHistory event) {
+
+		this.dbQuery = dbQuery;
+		this.columnName = columnName;
+
+		this.sampling = sampling;
+		this.timeGap = timeGap;
+		this.endPoint = endPoint;
+		
+		setInvestment(event.getInvestment());
+		
+		super.source = event.source;
+		super.timing = event.timing;		
+		super.tradeType = event.tradeType;
+
+	}
+	
+	public EventRequest(	DBQuery dbQuery, ColumnName columnName,
+							Investment inv, TradeType tradeType, SamplingRate sampling, 
 							String fromDashedDate, String toDashedDate,
 							InvDataSource source, InvDataTiming timing) {
 		
@@ -33,13 +56,16 @@ public class EventRequest extends Event {
 		super.timing = timing;		
 		super.tradeType = tradeType;
 
+		this.dbQuery = dbQuery;
+		this.columnName = columnName;
 		this.sampling = sampling;
 		this.fromDashedDate = fromDashedDate;
 		this.toDashedDate = toDashedDate;		
 
 	}
 
-	public EventRequest(	Investment inv, TradeType tradeType, SamplingRate sampling, 
+	public EventRequest(	DBQuery dbQuery, ColumnName columnName,
+							Investment inv, TradeType tradeType, SamplingRate sampling, 
 							InvDataSource source, InvDataTiming timing,
 							String timeGap, String endPoint) {
 
@@ -49,6 +75,8 @@ public class EventRequest extends Event {
 		super.timing = timing;
 		super.tradeType = tradeType;
 		
+		this.dbQuery = dbQuery;
+		this.columnName = columnName;
 		this.sampling = sampling;
 		this.timeGap = timeGap;
 		this.endPoint = endPoint;
@@ -59,7 +87,17 @@ public class EventRequest extends Event {
 		String s = "";
 		
 		s = s + super.toString() + " ";
-		
+
+		try {
+			s = s + "-dbQuery " + dbQuery + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-columnName " + columnName + " ";
+		} catch (Exception e) {
+		}
+
 		try {
 			s = s + "-sampling " + sampling + " ";
 		} catch (Exception e) {

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import org.influxdb.dto.Serie;
 
 import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
@@ -145,7 +146,7 @@ public class DBTimeSeriesPrice {
 	public static List<Serie> readSeries(EventRequest request) {
 		DBname dbName = DBTimeSeries.getPriceDatabaseName(); 
 		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
-		List<Serie> series = DBTimeSeries.query(ColumnName.PRICE, dbName, request);
+		List<Serie> series = DBTimeSeries.query(dbName, request);
 		return series;
 	}
 

@@ -1,6 +1,8 @@
 package com.onenow.data;
 
 import com.ib.client.Types.BarSize;
+import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.TradeType;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
@@ -51,7 +53,7 @@ public class EventRequestHistory extends EventRequest {
 
 		setInvestment(event.getInvestment());
 		this.tradeType = event.tradeType;
-
+		
 		super.timeGap = timeGap;
 		super.endPoint = endPoint;
 		

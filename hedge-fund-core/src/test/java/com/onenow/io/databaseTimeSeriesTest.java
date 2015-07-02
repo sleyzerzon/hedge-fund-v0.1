@@ -13,11 +13,14 @@ import backtype.storm.event__init;
 
 import com.ib.client.Types.BarSize;
 import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.SamplingRate;
 import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.InvestmentStock;
@@ -79,22 +82,38 @@ public class databaseTimeSeriesTest {
 		
 		TimeParser.wait(5); // wait for write thread to complete
 		
-		EventRequestHistory requestHistory = new EventRequestHistory(historyActivity, "-1m" ,"now()");
+		EventRequest requestHigh = new EventRequest(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequest requestLow = new EventRequest(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequest requestOpen = new EventRequest(DBQuery.FIRST, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequest requestClose = new EventRequest(DBQuery.LAST, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
 
-		List<Candle> candles = new ArrayList<Candle>();
+		List<Candle> candlesHigh = new ArrayList<Candle>();
+		List<Candle> candlesLow = new ArrayList<Candle>();
+		List<Candle> candlesOpen = new ArrayList<Candle>();
+		List<Candle> candlesClose = new ArrayList<Candle>();
+
 		try {
-			candles = DBTimeSeriesPrice.read(requestHistory);
+			candlesHigh = DBTimeSeriesPrice.read(requestHigh);
+			candlesLow = DBTimeSeriesPrice.read(requestLow);
+			candlesOpen = DBTimeSeriesPrice.read(requestOpen);
+			candlesClose = DBTimeSeriesPrice.read(requestClose);
 		} catch (Exception e) {
 		}
 		
-		Watchr.info("READ CANDLES " + candles);
+		Watchr.info("READ CANDLES " + candlesHigh);
+		Watchr.info("READ CANDLES " + candlesLow);
+		Watchr.info("READ CANDLES " + candlesOpen);
+		Watchr.info("READ CANDLES " + candlesClose);
 		
-		int lastCandle = candles.size()-1;
-//		Assert.assertTrue(candles.get(lastCandle).openPrice.equals(historyActivity.open));
-//		Assert.assertTrue(candles.get(lastCandle).closePrice.equals(historyActivity.close));
-		Assert.assertTrue(candles.get(lastCandle).highPrice.equals(historyActivity.high));
-		Assert.assertTrue(candles.get(lastCandle).lowPrice.equals(historyActivity.low));
+//		int lastCandleHigh = candlesHigh.size()-1;
+//		int lastCandleLow = candlesLow.size()-1;
+//		int lastCandleOpen = candlesOpen.size()-1;
+//		int lastCandleClose = candlesClose.size()-1;
 		
+		Assert.assertTrue(candlesHigh.get(0).openPrice.equals(historyActivity.high));
+		Assert.assertTrue(candlesLow.get(0).openPrice.equals(historyActivity.low));
+		Assert.assertTrue(candlesOpen.get(0).openPrice.equals(historyActivity.open));
+		Assert.assertTrue(candlesClose.get(0).openPrice.equals(historyActivity.close));		
 			
   }
 

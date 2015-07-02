@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.alpha.BrokerInterface;
+import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
@@ -92,7 +94,8 @@ public class PortfolioFactory {
 		String toDashedDate = "2015-02-28";
 		for(SamplingRate sampling:getSampling().getList(SamplingRate.SCALPSHORT)) { // TODO: what rates?
 			for(Investment inv:getMarketPortfolio().investments) {
-				EventRequest request = new EventRequest(	inv, TradeType.TRADED, sampling, fromDashedDate, toDashedDate, 
+				EventRequest request = new EventRequest(	DBQuery.MEAN, ColumnName.PRICE,
+															inv, TradeType.TRADED, sampling, fromDashedDate, toDashedDate, 
 															InvDataSource.IB, InvDataTiming.REALTIME); 
 				getInvestmentChart(request);
 			}

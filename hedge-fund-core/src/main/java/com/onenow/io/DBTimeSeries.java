@@ -160,18 +160,18 @@ public static DBname getGreekDatabaseName() {
  * @param toDate
  * @return
  */
-public static List<Serie> query(ColumnName columnName, DBname dbName, EventRequest request) {
+public static List<Serie> query(DBname dbName, EventRequest request) {
 
 	List<Serie> series = new ArrayList<Serie>();
 
 	try {
 		String serieName = Lookup.getEventKey(request);
 			 
-		String query = getQuery(columnName, request, serieName);
+		String query = getQuery(request, serieName);
 			
+		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 		String log = "DATABASE <" + dbName + "> QUERY " + query + " RETURNED with length: " + series.size(); // + " RETURNED " + series.toString();
 		Watchr.log(Level.INFO, log);  
-		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
 		
 	} catch (Exception e) {
 		// e.printStackTrace(); // some series don't exist or have data 
@@ -190,12 +190,12 @@ public static List<Serie> query(ColumnName columnName, DBname dbName, EventReque
 //"FILL(0) " +
 
 
-private static String getQuery(ColumnName columnName, EventRequest request, String serieName) {
+private static String getQuery(EventRequest request, String serieName) {
 	// select mean(PRICE) from AAPL-STOCK-TRADED-IB-REALTIME group by TIME(1h) WHERE time > -1h AND time < now() order asc
 	// select mean(PRICE) from /^AAPL-STOCK.*/i  where $timeFilter group by time($interval) order asc	
 	String query = "";
 	
-	query = query + DBQuery.SELECT.toString().toLowerCase() + " " + DBTimeSeries.getThoroughSelect(columnName.toString()) + " "; 						
+	query = query + DBQuery.SELECT.toString().toLowerCase() + " " + DBTimeSeries.getSelect(request) + " "; 						
 	query = query + DBQuery.FROM.toString().toLowerCase() + " " + "\"" + serieName + "\"" + " ";
 	query = query + DBQuery.GROUP.toString().toLowerCase() + " " + DBQuery.BY.toString() + " " + DBQuery.TIME.toString().toLowerCase() + 
 					"(" + DataSampling.getGroupByTimeString(request.sampling) + ")" + " ";
@@ -218,9 +218,9 @@ public static String getQueryTime(EventRequest request) {
 	return s;
 }
 
-public static String getSelect(DBQuery queryValue, String columnName) {
+public static String getSelect(EventRequest request) {
 	String s = "";
-	s = s + queryValue + "(" + columnName + ")"; 			
+	s = s + request.dbQuery + "(" + request.columnName + ")"; 			
 	return s;
 }
 

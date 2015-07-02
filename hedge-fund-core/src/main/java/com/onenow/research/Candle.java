@@ -40,22 +40,58 @@ public class Candle {
 	// PRINT
 	public String toString() {
 		String s = "";
-		s = s + "open=" + openPrice + " ";
-		s = s + "close=" + closePrice + " ";
-		s = s + "difference=" + difference + " ";
-				
-		s = s + "low=" + lowPrice + " ";
-		s = s + "high=" + highPrice + " ";
 		
-		s = s + "mean=" + meanPrice + " ";
-		s = s + "mode=" + modePrice + " ";
-		s = s + "median=" + medianPrice + " ";		
-		s = s + "stddev" + stddevPrice + " ";
+		if(openPrice!=null) {
+			s = s + "open=" + openPrice + " ";
+		}
+		
+		if(closePrice!=null) {
+			s = s + "close=" + closePrice + " ";
+		}
+		
+		if(difference!=null) {
+			s = s + "difference=" + difference + " ";
+		}
+			
+		if(lowPrice!=null) {
+			s = s + "low=" + lowPrice + " ";
+		}
+		
+		if(highPrice!=null) {
+			s = s + "high=" + highPrice + " ";
+		}
+		
+		if(meanPrice!=null) {
+			s = s + "mean=" + meanPrice + " ";
+		}
+		
+		if(modePrice!=null) {
+			s = s + "mode=" + modePrice + " ";			
+		}
+		
+		if(medianPrice!=null) {
+			s = s + "median=" + medianPrice + " ";
+		}
+		
+		if(stddevPrice!=null) {
+			s = s + "stddev" + stddevPrice + " ";
+		}
 
-		s = s + "distinct" + distinctPrice + " ";
-		s = s + "count=" + countPrice + " ";
-		s = s + "sum=" + sumPrice + " ";
-		s = s + "derivative=" + derivativePrice + " ";		
+		if(distinctPrice!=null) {
+			s = s + "distinct" + distinctPrice + " ";
+		}
+		
+		if(countPrice!=null) {
+			s = s + "count=" + countPrice + " ";
+		}
+		
+		if(sumPrice!=null) {
+			s = s + "sum=" + sumPrice + " ";
+		}
+		
+		if(derivativePrice!=null) {
+			s = s + "derivative=" + derivativePrice + " ";
+		}
 		
 		s = s + "\n";
 
