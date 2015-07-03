@@ -75,8 +75,6 @@ public class databaseTimeSeriesTest {
 	  String serieName = Lookup.getEventKey(historyActivity);
 	  List<Serie> series = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);
 	  
-	  testColumns(serieName, series);
-
 	  	// write
 		DBTimeSeriesPrice.write(historyActivity);
 		
@@ -84,66 +82,34 @@ public class databaseTimeSeriesTest {
 		
 		EventRequest requestHigh = new EventRequest(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
 		EventRequest requestLow = new EventRequest(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequest requestOpen = new EventRequest(DBQuery.FIRST, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequest requestClose = new EventRequest(DBQuery.LAST, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequest requestMean = new EventRequest(DBQuery.MEAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequest requestMedian = new EventRequest(DBQuery.MEDIAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
 
 		List<Candle> candlesHigh = new ArrayList<Candle>();
 		List<Candle> candlesLow = new ArrayList<Candle>();
-		List<Candle> candlesOpen = new ArrayList<Candle>();
-		List<Candle> candlesClose = new ArrayList<Candle>();
+		List<Candle> candlesMean = new ArrayList<Candle>();
+		List<Candle> candlesMedian = new ArrayList<Candle>();
 
 		try {
 			candlesHigh = DBTimeSeriesPrice.read(requestHigh);
 			candlesLow = DBTimeSeriesPrice.read(requestLow);
-			candlesOpen = DBTimeSeriesPrice.read(requestOpen);
-			candlesClose = DBTimeSeriesPrice.read(requestClose);
+			candlesMean = DBTimeSeriesPrice.read(requestMean);
+			candlesMedian = DBTimeSeriesPrice.read(requestMedian);
 		} catch (Exception e) {
 		}
 		
-		Watchr.info("READ CANDLES " + candlesHigh);
-		Watchr.info("READ CANDLES " + candlesLow);
-		Watchr.info("READ CANDLES " + candlesOpen);
-		Watchr.info("READ CANDLES " + candlesClose);
-		
-//		int lastCandleHigh = candlesHigh.size()-1;
-//		int lastCandleLow = candlesLow.size()-1;
-//		int lastCandleOpen = candlesOpen.size()-1;
-//		int lastCandleClose = candlesClose.size()-1;
+		Watchr.info("READ HIGH: " + candlesHigh.get(0).openPrice + " FROM CANDLES " + candlesHigh);
+		Watchr.info("READ LOW: " + candlesLow.get(0).openPrice + " FROM CANDLES "+ candlesLow);
+		Watchr.info("READ MEAN: " + candlesMean.get(0).openPrice + " FROM CANDLES" + candlesMean);
+		Watchr.info("READ MEDIAN: " + candlesMedian.get(0).openPrice + " FROM CANDLES " + candlesMedian);
 		
 		Assert.assertTrue(candlesHigh.get(0).openPrice.equals(historyActivity.high));
 		Assert.assertTrue(candlesLow.get(0).openPrice.equals(historyActivity.low));
-		Assert.assertTrue(candlesOpen.get(0).openPrice.equals(historyActivity.open));
-		Assert.assertTrue(candlesClose.get(0).openPrice.equals(historyActivity.close));		
+		Assert.assertTrue(candlesMean.get(0).openPrice.equals(0.20500000000000002));
+		Assert.assertTrue(candlesMedian.get(0).openPrice.equals(0.12));		
 			
   }
 
-private void testColumns(String serieName, List<Serie> series) {
-	Serie serie = series.get(0);
-	  
-	  String columns = "";
-	  for(String column:serie.getColumns()) {
-		  columns = columns + column.toString() + " ";
-	  }
-	  Watchr.log("WRITE SERIES COLUMNS: " + columns.toString());		  
-	 	  
-		Assert.assertNotNull(serie.getColumns());	
-		Assert.assertEquals(serie.getColumns().length, 10);
-		Assert.assertEquals(serie.getColumns()[0], ColumnName.TIME.toString());
-		Assert.assertEquals(serie.getColumns()[1], ColumnName.PRICE.toString());
-		Assert.assertEquals(serie.getColumns()[2], ColumnName.SOURCE.toString());
-		Assert.assertEquals(serie.getColumns()[3], ColumnName.TIMING.toString());
-		Assert.assertEquals(serie.getColumns()[4], ColumnName.TRADETYPE.toString());
-		Assert.assertEquals(serie.getColumns()[5], ColumnName.UNDERLYING.toString());
-		Assert.assertEquals(serie.getColumns()[6], ColumnName.INVTYPE.toString());
-		Assert.assertEquals(serie.getColumns()[7], ColumnName.OPTIONSTRIKE.toString());
-		Assert.assertEquals(serie.getColumns()[8], ColumnName.OPTIONEXP.toString());
-		Assert.assertEquals(serie.getColumns()[9], ColumnName.FUTUREEXP.toString());
-
-		Assert.assertNotNull(serie.getRows());
-		Assert.assertEquals(serie.getRows().size(), 1);
-		Assert.assertEquals(serie.getRows().get(0).size(), 10);
-		
-}
   
   @Test
   public void writeSize() {

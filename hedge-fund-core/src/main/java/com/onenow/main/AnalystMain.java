@@ -5,12 +5,13 @@ import java.util.logging.Level;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
+import java.util.List;
+
 import com.amazonaws.services.s3.model.Bucket;
 import com.onenow.alpha.WordCount;
 import com.onenow.io.S3;
-import com.onenow.util.FlexibleLogger;
 import com.onenow.util.InitLogger;
-import com.onenow.util.SysProperties;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class AnalystMain {
@@ -22,13 +23,24 @@ public class AnalystMain {
 		Watchr.log(Level.INFO, "checking");
 		
 		Bucket bucket = S3.getBucket(ReporterMain.getReporterBucketName());
-		S3.listObjects(bucket);
+		List<String> files = S3.listObjects(bucket);
+		String objectName = files.get(0);
+		
+		String folderName = "/tmp/";
+		String outFile = folderName+objectName+".txt";
+		S3.object2File(bucket, objectName, outFile);
+		
+		TimeParser.wait(10);
+		countWordsInFile(outFile);
 		
 		// countWordsInFile(args);
-		
+
 	}
 	
-	
+	private static void countWordsInFile(String arg) {
+		String args[] = {arg};
+		countWordsInFile(args);
+	}
 
 	private static void countWordsInFile(String[] args) {
 		

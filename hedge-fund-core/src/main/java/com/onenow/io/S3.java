@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -79,19 +80,24 @@ public class S3 {
 	 * 		myphoto2.jpg 262518  2011-08-08T21:38:01.000Z
 	 * @param bucket
 	 */
-	public static void listObjects(Bucket bucket) {
+	public static List<String> listObjects(Bucket bucket) {
 
 		ObjectListing objects = connection.listObjects(bucket.getName());
+		List<String> objectNames = new ArrayList<String>();
 		do {
 		        for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
+		        	String name = objectSummary.getKey();
+		        	objectNames.add(name);
 		        	Watchr.log(Level.INFO, 	bucket.getName() + " CONTAINS: " +   
         									"-modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
 		                					"-size " + objectSummary.getSize() + "\t" +
-		                					"-name " + objectSummary.getKey()
+		                					"-name " + name
 		                					);
 		        }
 		        objects = connection.listNextBatchOfObjects(objects);
 		 } while (objects.isTruncated());
+		
+		return objectNames;
 	}
 	
 	private static void deleteBucket(Bucket bucket) {
@@ -120,7 +126,7 @@ public class S3 {
 	/**
 	 * This downloads the object (i.e. "perl_poetry.pdf") and saves it in the file (i.e. "/home/larry/documents/perl_poetry.pdf")
 	 */
-	private static void object2File(Bucket bucket, String objectName, String fileName) {
+	public static void object2File(Bucket bucket, String objectName, String fileName) {
 		connection.getObject(
 		        				new GetObjectRequest(bucket.getName(), objectName),
 		        				new File(fileName)
