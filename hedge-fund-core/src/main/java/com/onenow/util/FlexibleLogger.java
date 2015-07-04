@@ -89,7 +89,9 @@ public class FlexibleLogger {
 	    // Start logging
 	    System.out.println("Will log to: " + base + "*");
 	    // System.getProperties().list(System.out);
-	    Watchr.log("SYSTEM PROPERTIES: " + System.getProperties().toString());
+	    Watchr.log("LOG PROPERTIES: " + System.getProperties().toString());
+		Watchr.log(Level.INFO, "WHOLE ENVIRONMENT: " + RuntimeEnvironment.getEnv());
+
 	  }
     catch (IOException e) {
     	success = false;

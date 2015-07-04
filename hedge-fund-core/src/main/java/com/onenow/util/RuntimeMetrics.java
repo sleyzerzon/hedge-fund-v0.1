@@ -31,7 +31,7 @@ public class RuntimeMetrics {
 								value + " " + seconds.toString() + " " +
 								stamp + " " + "2015-06-12T12:00:00.000Z";
 		
-		RuntimeEnvironment.message(message);
+		RuntimeEnvironment.execute(message);
 
 	}
 

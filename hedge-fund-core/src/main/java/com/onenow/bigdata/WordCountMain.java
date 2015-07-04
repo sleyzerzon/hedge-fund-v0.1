@@ -1,4 +1,4 @@
-package bigdata;
+package com.onenow.bigdata;
 
 import java.util.List;
 
