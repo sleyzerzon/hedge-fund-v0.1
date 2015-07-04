@@ -14,10 +14,9 @@ import scala.Tuple2;
 
 public class WordCount {
 
-	public static InitSpark spark;
+	public static InitSpark spark = new InitSpark("local", "wordCount");
 	
 	public WordCount() {
-		spark = new InitSpark("local", "wordCount");
 	}
 	
 	public WordCount(String master) {
@@ -40,6 +39,12 @@ public class WordCount {
 		return wordsRDD;
 	}
 	
+	/** 
+	 * Transform into pairs and count
+	 * 
+	 * @param wordsRDD
+	 * @return
+	 */
 	public static JavaPairRDD<String, Integer> countWords(
 			JavaRDD<String> wordsRDD) {
 		

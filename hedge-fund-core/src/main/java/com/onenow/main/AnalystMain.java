@@ -27,27 +27,39 @@ public class AnalystMain {
 		String objectName = files.get(0);
 		
 		String folderName = "/tmp/";
-		String outFile = folderName+objectName+".txt";
-		S3.object2File(bucket, objectName, outFile);
+		String downloadedFile = folderName+objectName;
+		S3.object2File(bucket, objectName, downloadedFile+".txt");
 		
-		TimeParser.wait(10);
-		countWordsInFile(outFile);
+		countWordsInFile(downloadedFile+".txt", downloadedFile+".out");
 		
 		// countWordsInFile(args);
 
 	}
 	
-	private static void countWordsInFile(String arg) {
-		String args[] = {arg};
+	private static void countWordsInFile(String inputFile, String outputFolder) {
+		String args[] = {inputFile, outputFolder};
 		countWordsInFile(args);
 	}
 
+	// export SPARK_HOME=/Users/pablo/spark-1.3.1-bin-hadoop2.4
+	// export PATH=$PATH:$SPARK_HOME/bin
+	// export MAVEN_HOME=/Users/pablo/apache-maven-3.3.3
+	// export PATH=$PATH:$MAVEN_HOME/bin
+	// cd /Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent
+	// mvn -N clean install
+	// mvn -Pdist -f hedge-fund-core/pom.xml clean package
+	// export JARS=/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/target/
+	// spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar
 	private static void countWordsInFile(String[] args) {
-		
-		WordCount counter = new WordCount();
-		
+				
 		// load input data
 		String inputFile = args[0];
+		String outputFile = args[1];
+
+		Watchr.info("Counting words from " + inputFile + " into " + outputFile);
+
+		WordCount counter = new WordCount();
+
 		// String inputFile = "/users/Shared/HedgeFundLog.txt";
 		JavaRDD<String> inputRDD = counter.loadInputData(inputFile);
 		
@@ -58,8 +70,6 @@ public class AnalystMain {
 		JavaPairRDD<String, Integer> countsRDD = counter.countWords(wordsRDD);
 		
 		// save the word count back out to a text file, causing evaluation
-		String outputFile = args[1];
-		// String outputFile = "";
 		countsRDD.saveAsTextFile(outputFile);
 	}
 }
