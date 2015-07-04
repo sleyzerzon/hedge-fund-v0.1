@@ -2,7 +2,7 @@
 
 export set JAVA_OPTS="-Xms256m -Xmx1024m"
 
-export SPARK_HOME=/Users/pablo/spark-1.3.1-bin-hadoop2.4
+export SPARK_HOME=/opt/spark/
 export PATH=$PATH:$SPARK_HOME/bin
 
 printenv
