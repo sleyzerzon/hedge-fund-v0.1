@@ -29,7 +29,7 @@ public class AnalystMain {
 		// spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar
 
 		
-		RuntimeEnvironment.message("printenv");
+		RuntimeEnvironment.message("printenv > /tmp/env.txt");
 		
 		String message = "spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar";
 		
