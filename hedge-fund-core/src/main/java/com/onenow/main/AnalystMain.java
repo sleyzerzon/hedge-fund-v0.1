@@ -28,6 +28,9 @@ public class AnalystMain {
 		// export JARS=/opt/hedge-fund/$VERSION/lib/
 		// spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar
 
+		
+		RuntimeEnvironment.message("printenv");
+		
 		String message = "spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar";
 		
 		RuntimeEnvironment.message(message);
