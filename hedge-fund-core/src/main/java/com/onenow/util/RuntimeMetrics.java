@@ -31,21 +31,9 @@ public class RuntimeMetrics {
 								value + " " + seconds.toString() + " " +
 								stamp + " " + "2015-06-12T12:00:00.000Z";
 		
-		messageRuntime(message);
+		RuntimeEnvironment.message(message);
 
 	}
 
 
-	private static void messageRuntime(final String message) {
-		new Thread () {
-			@Override public void run () {
-
-			try {
-				Runtime.getRuntime().exec(message);
-			} catch (IOException e) {
-				Watchr.log(Level.WARNING, e.toString());
-			}
-			}
-		}.start();
-	}
 }
