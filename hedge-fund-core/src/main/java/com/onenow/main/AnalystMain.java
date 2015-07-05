@@ -59,6 +59,7 @@ public class AnalystMain {
 	
 	private static String getWordCountCommand() {
 		
+		String theClass = "com.onenow.bigdata.WordCountMain";
 		String jarPath = "";
 		String jarName = "";
 		String sparkBin = "";
@@ -68,13 +69,14 @@ public class AnalystMain {
 			jarName = "hedge-fund-core-null.jar"; 
 			sparkBin = "/Users/pablo/spark-1.3.1-bin-hadoop2.4/bin/";
 		} else {
-			jarPath = "";
-			jarName = "";
-			sparkBin = "";
+			String version = "";	// CI_COMMIT_ID
+			jarPath = "/opt/hedge-fund/" + version + "/lib/";
+			jarName = "hedge-fund-core-" + version + ".jar";
+			sparkBin = "/opt/spark/bin/";
 		}
 			
 		String command = 	sparkBin + "spark-submit" + " " +
-							"--class" + " " + "com.onenow.bigdata.WordCountMain" + " " +
+							"--class" + " " + theClass + " " +
 							jarPath+jarName;
 			
 		Watchr.log(Level.INFO, "Spark command: " + command);

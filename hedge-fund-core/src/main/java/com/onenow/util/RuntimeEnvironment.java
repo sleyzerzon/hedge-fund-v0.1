@@ -47,7 +47,7 @@ public class RuntimeEnvironment {
 		String s = "";
         Map<String, String> env = System.getenv();
         for (String envName : env.keySet()) {
-            System.out.format("%s=%s%n", envName, env.get(envName));
+        	s = s + envName + " " + env.get(envName) + "\t";
         }
         return s;
 	}
