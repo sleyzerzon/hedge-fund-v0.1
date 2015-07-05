@@ -31,6 +31,7 @@ public class WordCount {
 		JavaRDD<String> rdd = null;
 		try {
 			rdd = spark.sc.textFile(file);
+			Watchr.info("LOADED RDD: " + rdd.toString());
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, "could not load input data");
 			e.printStackTrace();
@@ -47,7 +48,9 @@ public class WordCount {
 					new FlatMapFunction<String, String>() {
 						@Override
 						public Iterable<String> call(String x) throws Exception {
-							return Arrays.asList(x.split(" "));
+							Iterable<String> list = Arrays.asList(x.split(" "));
+							Watchr.info("SPLIT: " + list);
+							return list;
 						}
 					});
 		} catch (Exception e) {
@@ -74,11 +77,15 @@ public class WordCount {
 					new PairFunction<String, String, Integer>() {
 						@Override
 						public Tuple2<String, Integer> call(String t) throws Exception {
-							return new Tuple2(t, 1);
+							Tuple2 tuple = new Tuple2(t, 1);
+							Watchr.info("TUPLE: " + tuple.toString());
+							return tuple;
 						}
 					}).reduceByKey(
 							new Function2<Integer, Integer, Integer>() {
 								public Integer call(Integer x, Integer y) {
+									Integer sum = x+y;
+									Watchr.info("SUM: " + sum);
 									return x+y;
 								}
 					});
