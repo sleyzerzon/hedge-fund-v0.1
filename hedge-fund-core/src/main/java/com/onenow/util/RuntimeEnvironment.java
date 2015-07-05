@@ -9,6 +9,16 @@ public class RuntimeEnvironment {
 	public RuntimeEnvironment() {
 		
 	}
+	
+	public static void startProcess() {
+		
+		String[] command = {"CMD", "/C", "dir"};
+        ProcessBuilder probuilder = new ProcessBuilder( command );
+        //You can set up your work directory
+        //probuilder.directory(new File("c:\\xyzwsdemo"));
+        
+        //Process process = probuilder.start();
+	}
 
 	public static void executeNoThread(final String messageToExecute) {
 		try {
@@ -54,4 +64,5 @@ public class RuntimeEnvironment {
         }
         return s;
 	}
+	
 }
