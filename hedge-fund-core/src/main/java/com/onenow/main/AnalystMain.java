@@ -28,12 +28,9 @@ public class AnalystMain {
 
 		InitLogger.run("");		
 		
-		Watchr.log(Level.INFO, RuntimeEnvironment.getEnv());
-				
-		String message = "spark-submit --class com.onenow.bigdata.WordCountMain $JARS/hedge-fund-core-null.jar";
-						
 		runCommand(getWordCountCommand(args));
 
+		System.exit(0);
 	}
 
 	private static void runCommand(String message) {
@@ -79,7 +76,6 @@ public class AnalystMain {
 							"--class" + " " + theClass + " " +
 							jarPath+jarName;
 			
-		Watchr.log(Level.INFO, "Spark command: " + command);
 		return command;
 	}
 	

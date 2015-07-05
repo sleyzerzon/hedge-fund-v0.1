@@ -71,7 +71,8 @@ public class Watchr {
 		
 		String upperCase = "";
 		try {
-			upperCase = message.toUpperCase();
+			// upperCase = message.toUpperCase();
+			upperCase = message;
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
