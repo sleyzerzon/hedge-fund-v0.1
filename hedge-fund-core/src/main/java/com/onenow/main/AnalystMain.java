@@ -1,10 +1,14 @@
 package com.onenow.main;
 
+import java.util.List;
 import java.util.logging.Level;
 
+import com.amazonaws.services.sqs.model.Message;
 import com.onenow.admin.NetworkConfig;
+import com.onenow.io.SQS;
 import com.onenow.util.InitLogger;
 import com.onenow.util.RuntimeEnvironment;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 
@@ -30,7 +34,18 @@ public class AnalystMain {
 		
 		runCommand(getWordCountCommand(args));
 
-		System.exit(0);
+		
+	  while(true) {
+		  List<Message> serializedMessages = SQS.receiveMessages(SQS.getAnalystQueueURL());			  
+		  if(serializedMessages.size()>0) {	
+			  for(Message message: serializedMessages) {						
+				  // TODO
+			  } 
+			  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
+		  }
+		  TimeParser.wait(1); // pace requests for messages from queue 
+	  }		  
+		  
 	}
 
 	private static void runCommand(String message) {

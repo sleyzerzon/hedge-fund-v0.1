@@ -53,15 +53,25 @@ public class SQS {
 		String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_DEVELOPMENT.toString();
 
 		if(!NetworkConfig.isMac()) {
-			
-			queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_STAGING.toString();
-			
+			// TODO: production
+			queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_STAGING.toString();	
 //			queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/" + QueueName.HISTORY_PRODUCTION.toString();
 		} 
 		return queueURL;
-
 		
 	}
+	
+	public static String getAnalystQueueURL() {
+		
+		String queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/ANALYST_DEVELOPMENT";
+		
+		if(!NetworkConfig.isMac()) {
+			// TODO: production
+			queueURL = "https://sqs.us-east-1.amazonaws.com/355035832413/ANALYST_STAGING";
+		}
+		
+		return queueURL;
+ 	}
 	
 	
 	private void catchAWSClientException(AmazonClientException ace) {
