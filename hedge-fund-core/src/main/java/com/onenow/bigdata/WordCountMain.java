@@ -1,6 +1,7 @@
 package com.onenow.bigdata;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -52,7 +53,7 @@ public class WordCountMain {
 		String inputFile = args[0];
 		String outputFolder = args[1];
 
-		Watchr.info("Counting words from " + inputFile + " into " + outputFolder);
+		Watchr.log(Level.WARNING, "Counting words from " + inputFile + " into " + outputFolder);
 
 		WordCount counter = new WordCount();
 

@@ -32,6 +32,7 @@ public class WordCount {
 		try {
 			rdd = spark.sc.textFile(file);
 		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "could not load input data");
 			e.printStackTrace();
 		}
 		
@@ -50,6 +51,7 @@ public class WordCount {
 						}
 					});
 		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "could not split RDD into words");
 			e.printStackTrace();
 		}
 		return wordsRDD;
@@ -81,6 +83,7 @@ public class WordCount {
 								}
 					});
 		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, "could not count words");
 			e.printStackTrace();
 		}
 		return countsRDD;
