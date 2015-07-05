@@ -32,7 +32,7 @@ public class AnalystMain {
 				
 		String message = "spark-submit --class com.onenow.bigdata.WordCountMain $JARS/hedge-fund-core-null.jar";
 						
-		runCommand(getWordCountCommand());
+		runCommand(getWordCountCommand(args));
 
 	}
 
@@ -57,7 +57,7 @@ public class AnalystMain {
 		return build;
 	}
 	
-	private static String getWordCountCommand() {
+	private static String getWordCountCommand(String[] args) {
 		
 		String theClass = "com.onenow.bigdata.WordCountMain";
 		String jarPath = "";
@@ -69,7 +69,7 @@ public class AnalystMain {
 			jarName = "hedge-fund-core-null.jar"; 
 			sparkBin = "/Users/pablo/spark-1.3.1-bin-hadoop2.4/bin/";
 		} else {
-			String version = "";	// CI_COMMIT_ID
+			String version = args[0];	// CI_COMMIT_ID
 			jarPath = "/opt/hedge-fund/" + version + "/lib/";
 			jarName = "hedge-fund-core-" + version + ".jar";
 			sparkBin = "/opt/spark/bin/";
