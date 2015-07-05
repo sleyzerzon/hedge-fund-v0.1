@@ -43,7 +43,7 @@ public class AnalystMain {
 			  } 
 			  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 		  }
-		  TimeParser.wait(1); // pace requests for messages from queue 
+		  TimeParser.wait(1000); // pace requests for messages from queue 
 	  }		  
 		  
 	}
@@ -51,10 +51,10 @@ public class AnalystMain {
 	private static void runCommand(String message) {
 		try {
 			if(!NetworkConfig.isMac()) {
-				RuntimeEnvironment.execute(message);
+				RuntimeEnvironment.executeNoThread(message);
 			} else {
 				buildTheJar();
-				RuntimeEnvironment.execute(message);
+				RuntimeEnvironment.executeNoThread(message);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

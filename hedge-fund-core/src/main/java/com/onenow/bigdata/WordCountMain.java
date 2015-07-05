@@ -10,6 +10,7 @@ import com.onenow.alpha.WordCount;
 import com.onenow.io.S3;
 import com.onenow.main.ReporterMain;
 import com.onenow.util.InitLogger;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 
@@ -20,6 +21,10 @@ public class WordCountMain {
 		InitLogger.run("");		
 		
 		countWordsInBucket();
+		
+		while(true) {
+			TimeParser.wait(1000);
+		}
 		
 	}
 
@@ -32,7 +37,7 @@ public class WordCountMain {
 		String downloadedFile = folderName+objectName;
 		S3.object2File(bucket, objectName, downloadedFile+".txt");
 		
-		countWordsInFile(downloadedFile+".txt", downloadedFile+".out");
+		countWordsInFile(downloadedFile+".txt", downloadedFile+"-"+TimeParser.getTimestampNow()+".out");
 	}
 	
 	private static void countWordsInFile(String inputFile, String outputFolder) {
@@ -45,9 +50,9 @@ public class WordCountMain {
 				
 		// load input data
 		String inputFile = args[0];
-		String outputFile = args[1];
+		String outputFolder = args[1];
 
-		Watchr.info("Counting words from " + inputFile + " into " + outputFile);
+		Watchr.info("Counting words from " + inputFile + " into " + outputFolder);
 
 		WordCount counter = new WordCount();
 
@@ -61,6 +66,6 @@ public class WordCountMain {
 		JavaPairRDD<String, Integer> countsRDD = counter.countWords(wordsRDD);
 		
 		// save the word count back out to a text file, causing evaluation
-		countsRDD.saveAsTextFile(outputFile);
+		countsRDD.saveAsTextFile(outputFolder);
 	}
 }

@@ -10,16 +10,19 @@ public class RuntimeEnvironment {
 		
 	}
 
-	public static void execute(final String messageToExecute) {
+	public static void executeNoThread(final String messageToExecute) {
+		try {
+			Watchr.log("Will execute: " + messageToExecute);
+			Runtime.getRuntime().exec(messageToExecute);
+		} catch (Exception e) {
+			Watchr.log(Level.SEVERE, e.toString());
+		}
+	}
+
+	public static void executeThread(final String messageToExecute) {
 		new Thread () {
 			@Override public void run () {
-
-			try {
-				Watchr.log("Will execute: " + messageToExecute);
-				Runtime.getRuntime().exec(messageToExecute);
-			} catch (Exception e) {
-				Watchr.log(Level.SEVERE, e.toString());
-			}
+				executeNoThread(messageToExecute);
 			}
 		}.start();
 	}
