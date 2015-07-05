@@ -18,14 +18,15 @@ public class InitSpark {
 
 		private void setContext(String master, String appName) {
 			try {
-				SparkConf conf = new SparkConf().setMaster(master).setAppName(appName);
-				 InitSpark.sc = new JavaSparkContext(conf);
+//				SparkConf conf = new SparkConf().setMaster(master).setAppName(appName);
+//				 InitSpark.sc = new JavaSparkContext(conf);
+				 
+				this.sc = new JavaSparkContext(	master, appName, 
+												System.getenv("SPARK_HOME"), System.getenv("JARS"));
+						 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-//		this.sc = new JavaSparkContext(	master, 
-//										name, 
-//										System.getenv("SPARK_HOME"), System.getenv("JARS"));
 		}
 }

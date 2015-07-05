@@ -53,7 +53,7 @@ public class WordCountMain {
 		String inputFile = args[0];
 		String outputFolder = args[1];
 
-		Watchr.log(Level.WARNING, "Counting words from " + inputFile + " into " + outputFolder);
+		Watchr.warning("Counting words from " + inputFile + " into " + outputFolder);
 
 		WordCount counter = new WordCount();
 

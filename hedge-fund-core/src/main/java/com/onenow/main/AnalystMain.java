@@ -28,10 +28,14 @@ import com.onenow.util.Watchr;
 // spark-submit --class com.onenow.main.AnalystMain $JARS/hedge-fund-core-null.jar
 public class AnalystMain {
 	
+	static String version;
+			
 	public static void main(String[] args) throws Exception {
 
 		InitLogger.run("");		
 		
+		version = args[0];	// CI_COMMIT_ID
+				
 		runCommand(getWordCountCommand(args));
 
 		
@@ -70,22 +74,11 @@ public class AnalystMain {
 	}
 	
 	private static String getWordCountCommand(String[] args) {
-		
+
+		String sparkBin = getSparkHome() + "bin/";
 		String theClass = "com.onenow.bigdata.WordCountMain";
-		String jarPath = "";
-		String jarName = "";
-		String sparkBin = "";
-		
-		if(NetworkConfig.isMac()) {
-			jarPath = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/target/";
-			jarName = "hedge-fund-core-null.jar"; 
-			sparkBin = "/Users/pablo/spark-1.3.1-bin-hadoop2.4/bin/";
-		} else {
-			String version = args[0];	// CI_COMMIT_ID
-			jarPath = "/opt/hedge-fund/" + version + "/lib/";
-			jarName = "hedge-fund-core-" + version + ".jar";
-			sparkBin = "/opt/spark/bin/";
-		}
+		String jarPath = getJarPath();
+		String jarName = getJarName();
 			
 		String command = 	sparkBin + "spark-submit" + " " +
 							"--class" + " " + theClass + " " +
@@ -94,6 +87,42 @@ public class AnalystMain {
 		return command;
 	}
 	
+	public static String getSparkHome() {
+		String home = "";
+		
+		if(NetworkConfig.isMac()) {
+			home = "/Users/pablo/spark-1.3.1-bin-hadoop2.4/";
+		} else {
+			home = "/opt/spark/";
+		}
+		
+		return home;
+		
+	}
 	
+	public static String getJarPath() {
+		String jarPath = "";
+
+		if(NetworkConfig.isMac()) {
+			jarPath = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/target/";
+		} else {
+			jarPath = "/opt/hedge-fund/" + version + "/lib/";
+		}
+		
+		return jarPath;
+	}
+
+	public static String getJarName() {
+		String jarName = "";
+		
+		if(NetworkConfig.isMac()) {
+			jarName = "hedge-fund-core-null.jar"; 
+		} else {
+			jarName = "hedge-fund-core-" + version + ".jar";
+		}
+		
+		return jarName;
+	}
 
 }
+

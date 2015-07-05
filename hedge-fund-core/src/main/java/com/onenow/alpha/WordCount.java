@@ -26,12 +26,12 @@ public class WordCount {
 	}
 
 	public static JavaRDD<String> loadInputData(String file) {
-		Watchr.log(Level.WARNING, "loading input data: " + file);
+		Watchr.warning("loading input data: " + file);
 		
 		JavaRDD<String> rdd = null;
 		try {
 			rdd = spark.sc.textFile(file);
-			Watchr.info("LOADED RDD: " + rdd.toString());
+			Watchr.warning("LOADED RDD: " + rdd.toString());
 		} catch (Exception e) {
 			Watchr.log(Level.SEVERE, "could not load input data");
 			e.printStackTrace();
@@ -41,7 +41,7 @@ public class WordCount {
 	}
 
 	public static JavaRDD<String> splitIntoWords(JavaRDD<String> inputRDD) {
-		Watchr.log(Level.WARNING, "split RDD into words: " + inputRDD.toString());		
+		Watchr.warning("split RDD into words: " + inputRDD.toString());		
 		JavaRDD<String> wordsRDD = null;
 		try {
 			wordsRDD = inputRDD.flatMap(
@@ -49,7 +49,7 @@ public class WordCount {
 						@Override
 						public Iterable<String> call(String x) throws Exception {
 							Iterable<String> list = Arrays.asList(x.split(" "));
-							Watchr.info("SPLIT: " + list);
+							Watchr.warning("SPLIT: " + list);
 							return list;
 						}
 					});
@@ -69,7 +69,7 @@ public class WordCount {
 	public static JavaPairRDD<String, Integer> countWords(
 			JavaRDD<String> wordsRDD) {
 		
-		Watchr.log(Level.WARNING, "counting words: " + wordsRDD.toString());		
+		Watchr.warning("counting words: " + wordsRDD.toString());		
 
 		JavaPairRDD<String, Integer> countsRDD = null;
 		try {
@@ -78,14 +78,14 @@ public class WordCount {
 						@Override
 						public Tuple2<String, Integer> call(String t) throws Exception {
 							Tuple2 tuple = new Tuple2(t, 1);
-							Watchr.info("TUPLE: " + tuple.toString());
+							Watchr.warning("TUPLE: " + tuple.toString());
 							return tuple;
 						}
 					}).reduceByKey(
 							new Function2<Integer, Integer, Integer>() {
 								public Integer call(Integer x, Integer y) {
 									Integer sum = x+y;
-									Watchr.info("SUM: " + sum);
+									Watchr.warning("SUM: " + sum);
 									return x+y;
 								}
 					});

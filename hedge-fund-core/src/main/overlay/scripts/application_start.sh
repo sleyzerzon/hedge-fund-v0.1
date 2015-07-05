@@ -5,6 +5,9 @@ export set JAVA_OPTS="-Xms256m -Xmx1024m"
 export SPARK_HOME=/opt/spark/
 export PATH=$PATH:$SPARK_HOME/bin
 
+export VERSION=${env.CI_COMMIT_ID}
+
+
 printenv
 
 for i in /etc/init/hedge-*.conf ; do

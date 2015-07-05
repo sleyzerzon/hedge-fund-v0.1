@@ -45,7 +45,11 @@ public class Watchr {
 	public static void info(String log) {
 		log(Level.INFO, log);
 	}
-	
+
+	public static void warning(String log) {
+		log(Level.WARNING, log);
+	}
+
 	public static void severe(String log) {
 		log(Level.SEVERE, log);
 	}
