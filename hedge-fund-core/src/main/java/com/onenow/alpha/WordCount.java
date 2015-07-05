@@ -1,6 +1,7 @@
 package com.onenow.alpha;
 
 import java.util.Arrays;
+import java.util.logging.Level;
 
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -9,6 +10,7 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 
 import com.onenow.admin.InitSpark;
+import com.onenow.util.Watchr;
 
 import scala.Tuple2;
 
@@ -24,18 +26,32 @@ public class WordCount {
 	}
 
 	public static JavaRDD<String> loadInputData(String file) {
-		return spark.sc.textFile(file);
+		Watchr.log(Level.WARNING, "loading input data: " + file);
+		
+		JavaRDD<String> rdd = null;
+		try {
+			rdd = spark.sc.textFile(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return rdd;
 	}
 
 	public static JavaRDD<String> splitIntoWords(JavaRDD<String> inputRDD) {
-		
-		JavaRDD<String> wordsRDD = inputRDD.flatMap(
-				new FlatMapFunction<String, String>() {
-					@Override
-					public Iterable<String> call(String x) throws Exception {
-						return Arrays.asList(x.split(" "));
-					}
-				});
+		Watchr.log(Level.WARNING, "split RDD into words: " + inputRDD.toString());		
+		JavaRDD<String> wordsRDD = null;
+		try {
+			wordsRDD = inputRDD.flatMap(
+					new FlatMapFunction<String, String>() {
+						@Override
+						public Iterable<String> call(String x) throws Exception {
+							return Arrays.asList(x.split(" "));
+						}
+					});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return wordsRDD;
 	}
 	
@@ -48,18 +64,25 @@ public class WordCount {
 	public static JavaPairRDD<String, Integer> countWords(
 			JavaRDD<String> wordsRDD) {
 		
-		JavaPairRDD<String, Integer> countsRDD = wordsRDD.mapToPair(			
-				new PairFunction<String, String, Integer>() {
-					@Override
-					public Tuple2<String, Integer> call(String t) throws Exception {
-						return new Tuple2(t, 1);
-					}
-				}).reduceByKey(
-						new Function2<Integer, Integer, Integer>() {
-							public Integer call(Integer x, Integer y) {
-								return x+y;
-							}
-				});
+		Watchr.log(Level.WARNING, "counting words: " + wordsRDD.toString());		
+
+		JavaPairRDD<String, Integer> countsRDD = null;
+		try {
+			countsRDD = wordsRDD.mapToPair(			
+					new PairFunction<String, String, Integer>() {
+						@Override
+						public Tuple2<String, Integer> call(String t) throws Exception {
+							return new Tuple2(t, 1);
+						}
+					}).reduceByKey(
+							new Function2<Integer, Integer, Integer>() {
+								public Integer call(Integer x, Integer y) {
+									return x+y;
+								}
+					});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return countsRDD;
 	}
 	

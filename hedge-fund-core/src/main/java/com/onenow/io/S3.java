@@ -88,11 +88,11 @@ public class S3 {
 		        for (S3ObjectSummary objectSummary : objects.getObjectSummaries()) {
 		        	String name = objectSummary.getKey();
 		        	objectNames.add(name);
-		        	Watchr.log(Level.INFO, 	bucket.getName() + " CONTAINS: " +   
-        									"-modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
-		                					"-size " + objectSummary.getSize() + "\t" +
-		                					"-name " + name
-		                					);
+//		        	Watchr.log(Level.INFO, 	bucket.getName() + " CONTAINS: " +   
+//        									"-modified " + StringUtils.fromDate(objectSummary.getLastModified()) + "\t" +
+//		                					"-size " + objectSummary.getSize() + "\t" +
+//		                					"-name " + name
+//		                					);
 		        }
 		        objects = connection.listNextBatchOfObjects(objects);
 		 } while (objects.isTruncated());
