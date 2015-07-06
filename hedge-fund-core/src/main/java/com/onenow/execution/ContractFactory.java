@@ -64,7 +64,11 @@ public class ContractFactory {
 			return contract;			
 		}
 		
-		Watchr.log(Level.SEVERE, "COULD NOT MATCH INVESTMENT TO CONTRACT: " + inv.toString());
+		try {
+			Watchr.log(Level.SEVERE, "COULD NOT MATCH INVESTMENT TO CONTRACT: " + inv.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return contract;
 	}
