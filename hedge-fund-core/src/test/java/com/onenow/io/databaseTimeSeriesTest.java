@@ -111,6 +111,7 @@ public class databaseTimeSeriesTest {
 			
   }
 
+  // TODO: tests for Read History, Read Realtime
   
   @Test
   public void writeSize() {

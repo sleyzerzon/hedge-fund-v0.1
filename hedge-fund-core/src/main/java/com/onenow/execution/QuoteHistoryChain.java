@@ -58,9 +58,14 @@ public class QuoteHistoryChain {
 	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistoryInvestment quoteHistory) {
 	
 		  Contract contract = ContractFactory.getContract(inv);
-		  Integer reqId = controller.reqHistory(	contract, endDateTime, 
-	    											1, config.durationUnit, config.barSize, config.whatToShow, 
-	    											false, quoteHistory);
+		  Integer reqId = null;
+		try {
+			reqId = controller.reqHistory(	contract, endDateTime, 
+														1, config.durationUnit, config.barSize, config.whatToShow, 
+														false, quoteHistory);
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
 		  		  
 		  String log = 	"||| REQUESTED HISTORY FOR: " + inv.toString() + " ||| CONTRACT " + contract.toString() + 
 				  		"||| ENDING " + endDateTime + " ||| REQID " + reqId + " ||| CONFIG " + config.toString();
