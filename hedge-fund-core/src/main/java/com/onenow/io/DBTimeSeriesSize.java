@@ -11,6 +11,7 @@ import com.onenow.constant.DBQuery;
 import com.onenow.constant.DBname;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequest;
+import com.onenow.data.EventRequestRaw;
 import com.onenow.util.Watchr;
 
 public class DBTimeSeriesSize {
@@ -49,7 +50,7 @@ public class DBTimeSeriesSize {
 	}
 
 
-	public static List<Integer> read(EventRequest request) throws Exception {
+	public static List<Integer> read(EventRequestRaw request) throws Exception {
 		
 		List<Integer> sizes = new ArrayList<Integer>();
 		
@@ -63,7 +64,7 @@ public class DBTimeSeriesSize {
 		return sizes;
 	}
 
-	private static List<Serie> readSeries(EventRequest request) {
+	private static List<Serie> readSeries(EventRequestRaw request) {
 		
 		DBname dbName = DBTimeSeries.getSizeDatabaseName(); 
 		Watchr.log(Level.FINEST, "REQUEST " + request.toString());

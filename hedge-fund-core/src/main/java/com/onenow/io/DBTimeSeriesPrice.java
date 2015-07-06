@@ -17,6 +17,7 @@ import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventRequest;
+import com.onenow.data.EventRequestRaw;
 import com.onenow.instrument.Underlying;
 import com.onenow.research.Candle;
 import com.onenow.util.Watchr;
@@ -129,7 +130,7 @@ public class DBTimeSeriesPrice {
 
 
 		
-		public static List<Candle> read(EventRequest request) throws Exception {
+		public static List<Candle> read(EventRequestRaw request) throws Exception {
 			
 			List<Candle> candles = new ArrayList<Candle>();
 					
@@ -143,7 +144,7 @@ public class DBTimeSeriesPrice {
 			return candles;
 		}
 
-	public static List<Serie> readSeries(EventRequest request) {
+	public static List<Serie> readSeries(EventRequestRaw request) {
 		DBname dbName = DBTimeSeries.getPriceDatabaseName(); 
 		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
 		List<Serie> series = DBTimeSeries.query(dbName, request);

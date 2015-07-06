@@ -12,6 +12,7 @@ import com.onenow.constant.DBname;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequest;
+import com.onenow.data.EventRequestRaw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +161,7 @@ public static DBname getGreekDatabaseName() {
  * @param toDate
  * @return
  */
-public static List<Serie> query(DBname dbName, EventRequest request) {
+public static List<Serie> query(DBname dbName, EventRequestRaw request) {
 
 	List<Serie> series = new ArrayList<Serie>();
 
@@ -190,7 +191,7 @@ public static List<Serie> query(DBname dbName, EventRequest request) {
 //"FILL(0) " +
 
 
-private static String getQuery(EventRequest request, String serieName) {
+private static String getQuery(EventRequestRaw request, String serieName) {
 	// select mean(PRICE) from AAPL-STOCK-TRADED-IB-REALTIME group by TIME(1h) WHERE time > -1h AND time < now() order asc
 	// select mean(PRICE) from /^AAPL-STOCK.*/i  where $timeFilter group by time($interval) order asc	
 	String query = "";
@@ -218,7 +219,7 @@ public static String getQueryTime(EventRequest request) {
 	return s;
 }
 
-public static String getSelect(EventRequest request) {
+public static String getSelect(EventRequestRaw request) {
 	String s = "";
 	s = s + request.dbQuery + "(" + request.columnName + ")"; 			
 	return s;

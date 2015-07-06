@@ -13,6 +13,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
+import com.onenow.data.EventRequestRaw;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
 import com.onenow.research.Candle;
@@ -141,7 +142,7 @@ public class CacheInProcess {
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
 				
-		EventRequest request = new EventRequest(	DBQuery.MEAN, ColumnName.PRICE, 
+		EventRequest request = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE, 
 													inv, tradeType, scalping, 
 													today, today, 					// TODO: repeat today?
 													source, timing);

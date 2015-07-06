@@ -89,8 +89,9 @@ public class ReporterMain {
 		List<Serie> series;
 		boolean success = false;
 		try {
-			series = DBTimeSeriesPrice.readSeries(request);
-			S3.createObject(bucket, series.toString(), fileName);
+			// TODO: convert request type
+			// series = DBTimeSeriesPrice.readSeries(request);
+			// S3.createObject(bucket, series.toString(), fileName);
 			success=true;
 		} catch (Exception e) {
 			success=false;

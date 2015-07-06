@@ -22,6 +22,7 @@ import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
+import com.onenow.data.EventRequestRaw;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.InvestmentStock;
 import com.onenow.instrument.Underlying;
@@ -80,10 +81,10 @@ public class databaseTimeSeriesTest {
 		
 		TimeParser.wait(5); // wait for write thread to complete
 		
-		EventRequest requestHigh = new EventRequest(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequest requestLow = new EventRequest(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequest requestMean = new EventRequest(DBQuery.MEAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequest requestMedian = new EventRequest(DBQuery.MEDIAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequestRaw requestHigh = new EventRequestRaw(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequestRaw requestLow = new EventRequestRaw(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequestRaw requestMean = new EventRequestRaw(DBQuery.MEAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequestRaw requestMedian = new EventRequestRaw(DBQuery.MEDIAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
 
 		List<Candle> candlesHigh = new ArrayList<Candle>();
 		List<Candle> candlesLow = new ArrayList<Candle>();

@@ -10,9 +10,6 @@ import com.onenow.instrument.Investment;
 
 public class EventRequest extends Event {
 	
-	public DBQuery dbQuery; 
-	public ColumnName columnName;
-	
 	public SamplingRate sampling;
 	public String toDashedDate;
 	public String fromDashedDate;
@@ -26,77 +23,12 @@ public class EventRequest extends Event {
 		super();
 	}
 	
-	public EventRequest(	DBQuery dbQuery, ColumnName columnName, SamplingRate sampling, String timeGap, String endPoint, EventActivityHistory event) {
 
-		this.dbQuery = dbQuery;
-		this.columnName = columnName;
-
-		this.sampling = sampling;
-		this.timeGap = timeGap;
-		this.endPoint = endPoint;
-		
-		setInvestment(event.getInvestment());
-		
-		super.source = event.source;
-		super.timing = event.timing;		
-		super.tradeType = event.tradeType;
-
-	}
-	
-	public EventRequest(	DBQuery dbQuery, ColumnName columnName,
-							Investment inv, TradeType tradeType, SamplingRate sampling, 
-							String fromDashedDate, String toDashedDate,
-							InvDataSource source, InvDataTiming timing) {
-		
-		super();
-		
-		setInvestment(inv);
-
-		super.source = source;
-		super.timing = timing;		
-		super.tradeType = tradeType;
-
-		this.dbQuery = dbQuery;
-		this.columnName = columnName;
-		this.sampling = sampling;
-		this.fromDashedDate = fromDashedDate;
-		this.toDashedDate = toDashedDate;		
-
-	}
-
-	public EventRequest(	DBQuery dbQuery, ColumnName columnName,
-							Investment inv, TradeType tradeType, SamplingRate sampling, 
-							InvDataSource source, InvDataTiming timing,
-							String timeGap, String endPoint) {
-
-		setInvestment(inv);
-		
-		super.source = source;
-		super.timing = timing;
-		super.tradeType = tradeType;
-		
-		this.dbQuery = dbQuery;
-		this.columnName = columnName;
-		this.sampling = sampling;
-		this.timeGap = timeGap;
-		this.endPoint = endPoint;
-
-	}
 
 	public String toString() {
 		String s = "";
 		
 		s = s + super.toString() + " ";
-
-		try {
-			s = s + "-dbQuery " + dbQuery + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-columnName " + columnName + " ";
-		} catch (Exception e) {
-		}
 
 		try {
 			s = s + "-sampling " + sampling + " ";

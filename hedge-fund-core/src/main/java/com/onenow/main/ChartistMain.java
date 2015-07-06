@@ -16,6 +16,7 @@ import com.onenow.constant.TradeType;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.EventRequest;
+import com.onenow.data.EventRequestRaw;
 import com.onenow.data.EventRequestRealtime;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusProcessingFactory;
@@ -105,7 +106,8 @@ public class ChartistMain {
 																	samplingRate, event.tradeType, 
 																	fromDate, toDashedDate);
 			
-			readChartToL1FromRTL2(request);
+			// TODO convert Request type
+			// readChartToL1FromRTL2(request);
 			
 			lastQueryStamp.put(samplingRate, TimeParser.getTimestampNow()); 
 
@@ -132,7 +134,7 @@ public class ChartistMain {
 	 * @param timing
 	 * @return
 	 */
-	private static Chart readChartToL1FromRTL2(EventRequest request) {		
+	private static Chart readChartToL1FromRTL2(EventRequestRaw request) {		
 		Chart chart = new Chart();
 		
 		try{	// some time series just don't exist or have data 			

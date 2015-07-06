@@ -59,8 +59,7 @@ public class HistorianMain {
 				
 		Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
 
-		EventRequest request = new EventRequest();
-		// EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
+		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
 			
 		//List<Candle> storedPrices = getL2TSDBStoredPrice(request);
 		List<Candle> storedPrices = new ArrayList<Candle>();
@@ -74,7 +73,8 @@ public class HistorianMain {
 		// NOTE: readPriceFromDB gets today data by requesting 'by tomorrow'
 		List<Candle> storedPrices = new ArrayList<Candle>();
 		try {
-			storedPrices = DBTimeSeriesPrice.read(request);
+			// TODO: convert request type
+			// storedPrices = DBTimeSeriesPrice.read(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// some time series just don't exist or have data
