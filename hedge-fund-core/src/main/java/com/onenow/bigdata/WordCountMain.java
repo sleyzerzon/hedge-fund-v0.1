@@ -68,5 +68,7 @@ public class WordCountMain {
 		
 		// save the word count back out to a text file, causing evaluation
 		countsRDD.saveAsTextFile(outputFolder);
+		
+//		counter.spark.sc.stop();
 	}
 }

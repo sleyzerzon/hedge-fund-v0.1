@@ -34,7 +34,9 @@ public class AnalystMain {
 
 		InitLogger.run("");		
 		
-		version = args[0];	// CI_COMMIT_ID
+		if(!NetworkConfig.isMac()) {
+			version = args[0];	// CI_COMMIT_ID
+		}
 				
 		runCommand(getWordCountCommand(args));
 
@@ -64,14 +66,6 @@ public class AnalystMain {
 			e.printStackTrace();
 		}
 	}
-
-	private static String buildTheJar() {
-		String project = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/pom.xml";
-		String mavenBin =  "/Users/pablo/apache-maven-3.3.3/bin/";
-		String build = mavenBin + "mvn" + " " + "-Pdist -f" + " " + project + " " + "clean package";
-		Watchr.log(Level.INFO, "To build, run this first: " + build);
-		return build;
-	}
 	
 	private static String getWordCountCommand(String[] args) {
 
@@ -83,10 +77,19 @@ public class AnalystMain {
 		String command = 	sparkBin + "spark-submit" + " " +
 							"--class" + " " + theClass + " " +
 							jarPath+jarName;
-			
+		
 		return command;
 	}
-	
+
+
+	private static String buildTheJar() {
+		String project = "/Users/pablo/Documents/EclipseWorkspaceMaven/hedge-fund-parent/hedge-fund-core/pom.xml";
+		String mavenBin =  "/Users/pablo/apache-maven-3.3.3/bin/";
+		String build = mavenBin + "mvn" + " " + "-Pdist -f" + " " + project + " " + "clean package";
+		Watchr.log(Level.INFO, "To build, run this first: " + build);
+		return build;
+	}
+		
 	public static String getSparkHome() {
 		String home = "";
 		
