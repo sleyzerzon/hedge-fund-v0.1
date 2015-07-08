@@ -49,7 +49,6 @@ public class InvestmentList {
 
 	private static List<String> getOptions() {
 		List<String> list = new ArrayList<String>();
-//		options.add("ES");
 		list.add("SPX");
 		return list;
 	}
