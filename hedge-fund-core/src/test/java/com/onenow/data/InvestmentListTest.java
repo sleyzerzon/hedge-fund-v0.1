@@ -28,7 +28,7 @@ public class InvestmentListTest {
   
   @Test
   public void getSomeStocks() {	  
-		Assert.assertTrue(InvestmentList.someStocks.size()>0);
+		Assert.assertTrue(InvestmentList.getSomeStocks().size()>0);
   }
   
   @Test

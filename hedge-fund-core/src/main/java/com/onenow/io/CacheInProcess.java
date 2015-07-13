@@ -10,6 +10,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TradeType;
+import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
@@ -41,47 +42,56 @@ public class CacheInProcess {
 
 	
 	// REAL-TIME from broker
-	public boolean writeEventRT(final EventActivityRealtime event) {
+	public boolean writeEventRT(final EventActivity event) {		
+		boolean success = writeToMem(event);
+		writeThreadActivityThroughRing(event);
+		return success; // useful in testing
+	}
 
-		String key = Lookup.getEventKey(event);
+	// TODO: add re-try if it fails?
+	private boolean writeToMem(EventActivity event) {
 		
+		String key = Lookup.getEventKey(event);
 		boolean success = false;
 		
 		Boolean writeToMem=false;
 		// keep last in memory
-		if(lastEventRT.get(key) == null) { 	// never written before
-			writeToMem = true;
-		} else {
-			if( event.time > lastEventRT.get(key).time ) {
+		if(event instanceof EventActivityRealtime) {
+			if(lastEventRT.get(key) == null) { 	// never written before
 				writeToMem = true;
+			} else {
+				if( event.time > lastEventRT.get(key).time ) {
+					writeToMem = true;
+				}
 			}
-		}
-		
-		if(writeToMem) {
-			Watchr.log(key + " " + event.toString());
-			lastEventRT.put(key, event);
-			success = true;
-		}
-		
-		// CRITICAL PATH
-		
-		new Thread () {
-			@Override public void run () {
-				writeEventThroughRing(event);
-			}
-		}.start();
-
 			
-		RuntimeMetrics.notifyWallstLatency((Long) TimeParser.getTimestampNow()/1000-event.time, broker.getStream());
+			if(writeToMem) {
+				Watchr.log(key + " " + event.toString());
+				lastEventRT.put(key, (EventActivityRealtime) event);
+				success = true;
+			}
+		}
+		
+		// TODO: fix calculation
+		RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimestampNow()/1000-event.time), broker.getStream());
 		
 		return success;
+	}
+
+	// CRITICAL PATH
+	private void writeThreadActivityThroughRing(final EventActivity event) {
+		new Thread () {
+			@Override public void run () {
+				writeActivityThroughRing(event);
+			}
+		}.start();
 	}
 		
 	/** Upon writing every event to the ring, asynchronous update all charts in L0 from RTL1
 	 * 
 	 * @param event
 	 */
-	public void writeEventThroughRing(EventActivityRealtime event) {
+	public void writeActivityThroughRing(EventActivity event) {
 
 		// TODO: FAST WRITE TO RING		
 

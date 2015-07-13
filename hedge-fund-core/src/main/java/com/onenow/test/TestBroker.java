@@ -59,7 +59,7 @@ public class TestBroker implements Testable {
 
 		// choose investments
 		Portfolio marketPortfolio = new Portfolio();
-	    List<Underlying> stocks = InvestmentList.getUnderlying(InvestmentList.someStocks);
+	    List<Underlying> stocks = InvestmentList.getUnderlying(InvestmentList.getSomeStocks());
 	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.someIndices);
 	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.futureNames);
 	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.optionNames);

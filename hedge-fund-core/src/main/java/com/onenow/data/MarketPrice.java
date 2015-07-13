@@ -35,8 +35,8 @@ public class MarketPrice {
 	
 	// WRITE REAL-TIME 
 	private static void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
-								Integer volume, Double VWAP, boolean splitFlag,
-								InvDataSource source, InvDataTiming timing) {
+										Integer volume, Double VWAP, boolean splitFlag,
+										InvDataSource source, InvDataTiming timing) {
 
 		if(lastSize>0) { 
 			

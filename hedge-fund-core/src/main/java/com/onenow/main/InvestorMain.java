@@ -32,32 +32,33 @@ public class InvestorMain {
 		// Kinesis.selfTest();
 
 
+		// LIVE QUOTES
 		if(BusSystem.isPrimaryStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getPrimaryPortfolio(), 
 																bus); 
 			broker.getLiveQuotes(); 			
-		}
-		
-		if(BusSystem.isStandbyStream(streamName)) {
-			// TODO: passive role on same investments as primary
-		}
-
+		}	
 		if(BusSystem.isRealtimeStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getRealtimePortfolio(), 
 																bus); 
 			broker.getLiveQuotes(); 			
 		}
+		if(BusSystem.isStandbyStream(streamName)) {
+			// TODO: passive role on same investments as primary
+		}
 
+
+		// HISTORIC QUOTES
 		if(BusSystem.isHistoryStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, bus); 
 			broker.procesHistoricalQuotesRequests();
 		}
 
-		if(BusSystem.isStreamingStream(streamName)) {
-			// TODO: Do straming queries from SQS
-		}
+//		if(BusSystem.isStreamingStream(streamName)) {
+//			// TODO
+//		}
 
 //		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
 //		portfolioFactory.launch();							

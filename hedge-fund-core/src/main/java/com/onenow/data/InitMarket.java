@@ -75,7 +75,7 @@ public class InitMarket {
 			
 		int maxTimeSeries = 3;
 
-		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.getSomeStocks()), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
 								InvestmentList.getUnderlying(InvestmentList.futureNames), 
 								InvestmentList.getUnderlying(InvestmentList.optionNames),
@@ -95,7 +95,7 @@ public class InitMarket {
 		
 		int maxTimeSeries = 5;
 
-		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+		return getPortfolio(	new ArrayList<Underlying>(), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
 								InvestmentList.getUnderlying(InvestmentList.futureNames), 
 								InvestmentList.getUnderlying(InvestmentList.optionNames),
@@ -116,7 +116,7 @@ public class InitMarket {
 		
 		int maxTimeSeries = 5;
 		
-		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.someStocks), 
+		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.getSomeStocks()), 
 								new ArrayList<Underlying>(),
 								new ArrayList<Underlying>(), 
 								new ArrayList<Underlying>(),
