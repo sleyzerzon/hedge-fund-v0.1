@@ -1,7 +1,7 @@
 package com.onenow.portfolio;
 
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 
@@ -40,7 +40,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.tradeType.equals(TradeType.BUY)) {
+				if(trade.tradeType.equals(PriceType.BID)) {
 				net += trade.netPremium;
 				}
 			}
@@ -52,7 +52,7 @@ public class StrategyOptions extends Strategy {
 		double net = 0.0;
 		for(Transaction trans:getTransactions()) {
 			for(Trade trade:trans.getTrades()) {
-				if(trade.tradeType.equals(TradeType.SELL)) {
+				if(trade.tradeType.equals(PriceType.ASK)) {
 				net += trade.netPremium;
 				}
 			}
@@ -99,8 +99,8 @@ public class StrategyOptions extends Strategy {
 	
 	// RULE 2: DELTA NEUTRALITY
 	public boolean isDeltaNeutral() { // across BUY TYPE
-		boolean buyDeltaNeutral=isDeltaNeutral(TradeType.BUY);
-		boolean sellDeltaNeutral=isDeltaNeutral(TradeType.SELL);
+		boolean buyDeltaNeutral=isDeltaNeutral(PriceType.BID);
+		boolean sellDeltaNeutral=isDeltaNeutral(PriceType.ASK);
 		return buyDeltaNeutral&&sellDeltaNeutral;
 	}
 	

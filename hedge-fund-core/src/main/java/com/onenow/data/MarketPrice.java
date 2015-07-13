@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
 import com.onenow.io.CacheInProcess;
@@ -40,10 +40,10 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventActivityRealtime event = new EventActivityRealtime(	timeStamp, inv, TradeType.TRADED, 
+			EventActivityRealtime event = new EventActivityRealtime(	timeStamp, inv, PriceType.TRADED, 
 																		lastPrice, lastSize,
 																		source, timing);
-			cache.writeEventRT(event);
+			cache.writeEvent(event);
 			
 			
 //			// TODO: ignore busts with negative size
@@ -56,6 +56,8 @@ public class MarketPrice {
 //			// writePriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 //			
 //			 cache.writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);			
+		} else {
+			Watchr.info("RT Volume without size");
 		}
 	}
 	
@@ -66,7 +68,7 @@ public class MarketPrice {
 	 * @param inv
 	 * @param tradeType
 	 */
-	public double readPrice(Investment inv, TradeType tradeType) {
+	public double readPrice(Investment inv, PriceType tradeType) {
 		return cache.readPrice(inv, tradeType);
 	}
 	

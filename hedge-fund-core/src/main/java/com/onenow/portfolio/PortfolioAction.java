@@ -3,7 +3,7 @@ package com.onenow.portfolio;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentIndex;
@@ -101,7 +101,7 @@ public class PortfolioAction {
 	// PRIVATE
 	private void lookupIndexPrice() {
 		InvestmentIndex index = new InvestmentIndex(getUnder());
-		Double price = broker.getPrice(index, TradeType.TRADED);
+		Double price = broker.getPrice(index, PriceType.TRADED);
 		setUnderPrice(price);
 	}
 
@@ -126,25 +126,25 @@ public class PortfolioAction {
 	}
 	
 	private Trade getCallBuy() {
-		Trade trade = getInv(InvType.CALL, TradeType.BUY); 	
+		Trade trade = getInv(InvType.CALL, PriceType.BID); 	
 		return trade;
 	}
 	private Trade getCallSell() {
-		Trade trade = getInv(InvType.CALL, TradeType.SELL); 			
+		Trade trade = getInv(InvType.CALL, PriceType.ASK); 			
 		return trade;
 	}
 
 	private Trade getPutBuy() {
-		Trade trade = getInv(InvType.PUT, TradeType.BUY); 	
+		Trade trade = getInv(InvType.PUT, PriceType.BID); 	
 		return trade;
 	}
 
 	private Trade getPutSell() {
-		Trade trade = getInv(InvType.PUT, TradeType.SELL); 	
+		Trade trade = getInv(InvType.PUT, PriceType.ASK); 	
 		return trade;
 	}
 	
-	private Trade getInv(InvType invType, TradeType tradeType) {
+	private Trade getInv(InvType invType, PriceType tradeType) {
 		
 		InvestmentOption inv = 	new InvestmentOption(getUnder(), invType, getExp(), getStrike(invType, tradeType));
 		
@@ -186,18 +186,18 @@ public class PortfolioAction {
 		return mQuant;
 	}
 
-	private Double getStrike(InvType invType, TradeType tradeType) {
+	private Double getStrike(InvType invType, PriceType tradeType) {
 		Double strike=0.0;
-		if(invType.equals(InvType.CALL) && tradeType.equals(TradeType.BUY)) { 
+		if(invType.equals(InvType.CALL) && tradeType.equals(PriceType.BID)) { 
 			strike = getCallBuyStrike(); 
 		}
-		if(invType.equals(InvType.CALL) && tradeType.equals(TradeType.SELL)) { 
+		if(invType.equals(InvType.CALL) && tradeType.equals(PriceType.ASK)) { 
 			strike = getCallSellStrike(); 
 		}
-		if(invType.equals(InvType.PUT) && tradeType.equals(TradeType.BUY)) { 
+		if(invType.equals(InvType.PUT) && tradeType.equals(PriceType.BID)) { 
 			strike = getPutBuyStrike(); 
 		}
-		if(invType.equals(InvType.PUT) && tradeType.equals(TradeType.SELL)) { 
+		if(invType.equals(InvType.PUT) && tradeType.equals(PriceType.ASK)) { 
 			strike = getPutSellStrike(); 
 		}
 		return strike;
@@ -346,10 +346,10 @@ public class PortfolioAction {
 		Double putStrike =  callStrike + 2*separation;
 		// look at extremes
 		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
-		Double putMid = ((BrokerActivityImpl) broker).getBestBid(TradeType.BUY, putExt, 0.50);
+		Double putMid = ((BrokerActivityImpl) broker).getBestBid(PriceType.BID, putExt, 0.50);
 		Double estClosingPut = putStrike-putMid;
 		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
-		Double callMid = ((BrokerActivityImpl) broker).getBestBid(TradeType.BUY, callExt, 0.50);	
+		Double callMid = ((BrokerActivityImpl) broker).getBestBid(PriceType.BID, callExt, 0.50);	
 		Double estClosingCall = callStrike+callMid;
 		
 		Double estClosing = (estClosingPut+estClosingCall)/2;

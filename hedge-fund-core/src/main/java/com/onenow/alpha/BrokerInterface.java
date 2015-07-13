@@ -3,7 +3,7 @@ package com.onenow.alpha;
 import java.util.List;
 
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
@@ -16,7 +16,7 @@ public  interface BrokerInterface {
 	public abstract List<Underlying> getUnderlying();
 	public abstract Portfolio getMarketPortfolio();
 	public abstract Portfolio getMyPortfolio();
-	public abstract Double getPrice(Investment inv, TradeType type);
+	public abstract Double getPrice(Investment inv, PriceType type);
 	public abstract List<Trade> getTrades();
 	public abstract void enterTransaction(Transaction trans); 
 	public abstract Integer readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistoryInvestment history);

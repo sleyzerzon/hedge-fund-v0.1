@@ -7,7 +7,7 @@ import java.util.List;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvType;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.QuoteHistoryInvestment;
@@ -65,7 +65,7 @@ public class BrokerEmulator implements BrokerInterface {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
+	public Double getPrice(Investment inv, PriceType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -89,11 +89,11 @@ public class BrokerEmulator implements BrokerInterface {
 //		getMarketPrices().setPrice(put1, 9.50, 9.49);
 //		getMarketPrices().setPrice(put2, 8.33, 8.32);
 		// create trades based on market price
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 75, getMarketPrices().readPrice(stock, TradeType.BUY));
-		Trade stockCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().readPrice(call1, TradeType.BUY));
-		Trade stockCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().readPrice(call2, TradeType.BUY));
-		Trade stockPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().readPrice(put1, TradeType.BUY));
-		Trade stockPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().readPrice(put2, TradeType.BUY));
+		Trade stockTrade = new Trade(stock, PriceType.BID, 75, getMarketPrices().readPrice(stock, PriceType.BID));
+		Trade stockCall1 = new Trade(call1, PriceType.BID, 75, getMarketPrices().readPrice(call1, PriceType.BID));
+		Trade stockCall2 = new Trade(call2, PriceType.BID, 75, getMarketPrices().readPrice(call2, PriceType.BID));
+		Trade stockPut1 = new Trade(put1, PriceType.BID, 75, getMarketPrices().readPrice(put1, PriceType.BID));
+		Trade stockPut2 = new Trade(put2, PriceType.BID, 75, getMarketPrices().readPrice(put2, PriceType.BID));
 		// transact it
 		Transaction trans = new Transaction(stockTrade, stockCall1, stockCall2, stockPut1, stockPut2);
 		marketPortfolio.enterTransaction(trans);
@@ -135,21 +135,21 @@ public class BrokerEmulator implements BrokerInterface {
 //		getMarketPrices().setPrice(call0, 0.05, 0.05);
 		
 		// create trades based on market price
-		Trade indexTrade = new Trade(index, TradeType.BUY, 75, getMarketPrices().readPrice(index, TradeType.TRADED));
-		Trade indexPut0 = new Trade(put0, TradeType.BUY, 75, getMarketPrices().readPrice(put0, TradeType.BUY));
-		Trade indexPut1 = new Trade(put1, TradeType.BUY, 75, getMarketPrices().readPrice(put1, TradeType.BUY));
-		Trade indexPut2 = new Trade(put2, TradeType.BUY, 75, getMarketPrices().readPrice(put2, TradeType.BUY));
-		Trade indexPut3 = new Trade(put3, TradeType.BUY, 75, getMarketPrices().readPrice(put3, TradeType.BUY));
-		Trade indexPut4 = new Trade(put4, TradeType.BUY, 75, getMarketPrices().readPrice(put4, TradeType.BUY));
-		Trade indexPut5 = new Trade(put5, TradeType.BUY, 75, getMarketPrices().readPrice(put5, TradeType.BUY));
-		Trade indexPut6 = new Trade(put6, TradeType.BUY, 75, getMarketPrices().readPrice(put6, TradeType.BUY));
+		Trade indexTrade = new Trade(index, PriceType.BID, 75, getMarketPrices().readPrice(index, PriceType.TRADED));
+		Trade indexPut0 = new Trade(put0, PriceType.BID, 75, getMarketPrices().readPrice(put0, PriceType.BID));
+		Trade indexPut1 = new Trade(put1, PriceType.BID, 75, getMarketPrices().readPrice(put1, PriceType.BID));
+		Trade indexPut2 = new Trade(put2, PriceType.BID, 75, getMarketPrices().readPrice(put2, PriceType.BID));
+		Trade indexPut3 = new Trade(put3, PriceType.BID, 75, getMarketPrices().readPrice(put3, PriceType.BID));
+		Trade indexPut4 = new Trade(put4, PriceType.BID, 75, getMarketPrices().readPrice(put4, PriceType.BID));
+		Trade indexPut5 = new Trade(put5, PriceType.BID, 75, getMarketPrices().readPrice(put5, PriceType.BID));
+		Trade indexPut6 = new Trade(put6, PriceType.BID, 75, getMarketPrices().readPrice(put6, PriceType.BID));
 
-		Trade indexCall0 = new Trade(call0, TradeType.BUY, 75, getMarketPrices().readPrice(call0, TradeType.BUY));
-		Trade indexCall1 = new Trade(call1, TradeType.BUY, 75, getMarketPrices().readPrice(call1, TradeType.BUY));
-		Trade indexCall2 = new Trade(call2, TradeType.BUY, 75, getMarketPrices().readPrice(call2, TradeType.BUY));
-		Trade indexCall3 = new Trade(call3, TradeType.BUY, 75, getMarketPrices().readPrice(call3, TradeType.BUY));
-		Trade indexCall4 = new Trade(call4, TradeType.BUY, 75, getMarketPrices().readPrice(call4, TradeType.BUY));
-		Trade indexCall5 = new Trade(call5, TradeType.BUY, 75, getMarketPrices().readPrice(call5, TradeType.BUY));
+		Trade indexCall0 = new Trade(call0, PriceType.BID, 75, getMarketPrices().readPrice(call0, PriceType.BID));
+		Trade indexCall1 = new Trade(call1, PriceType.BID, 75, getMarketPrices().readPrice(call1, PriceType.BID));
+		Trade indexCall2 = new Trade(call2, PriceType.BID, 75, getMarketPrices().readPrice(call2, PriceType.BID));
+		Trade indexCall3 = new Trade(call3, PriceType.BID, 75, getMarketPrices().readPrice(call3, PriceType.BID));
+		Trade indexCall4 = new Trade(call4, PriceType.BID, 75, getMarketPrices().readPrice(call4, PriceType.BID));
+		Trade indexCall5 = new Trade(call5, PriceType.BID, 75, getMarketPrices().readPrice(call5, PriceType.BID));
 
 		
 		// transact it

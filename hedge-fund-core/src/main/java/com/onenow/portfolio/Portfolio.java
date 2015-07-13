@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.onenow.constant.InvTerm;
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -50,7 +50,7 @@ public class Portfolio {
 			quantityMap.put(invToEnter, quant);
 		} else { // increment
 				Integer init = quantityMap.get(invToEnter);
-				if (trade.tradeType.equals(TradeType.BUY)) {
+				if (trade.tradeType.equals(PriceType.BID)) {
 					quantityMap.put(invToEnter,  init + trade.quantity);								
 				} else {
 					quantityMap.put(invToEnter, init - trade.quantity);								

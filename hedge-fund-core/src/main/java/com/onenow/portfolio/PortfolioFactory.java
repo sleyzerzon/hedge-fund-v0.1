@@ -10,7 +10,7 @@ import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.Channel;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestRaw;
@@ -96,7 +96,7 @@ public class PortfolioFactory {
 		for(SamplingRate sampling:getSampling().getList(SamplingRate.SCALPSHORT)) { // TODO: what rates?
 			for(Investment inv:getMarketPortfolio().investments) {
 				EventRequest request = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE,
-															inv, TradeType.TRADED, sampling, fromDashedDate, toDashedDate, 
+															inv, PriceType.TRADED, sampling, fromDashedDate, toDashedDate, 
 															InvDataSource.IB, InvDataTiming.REALTIME); 
 				getInvestmentChart(request);
 			}

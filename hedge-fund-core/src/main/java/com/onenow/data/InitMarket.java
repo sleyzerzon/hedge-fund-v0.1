@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -133,7 +133,7 @@ public class InitMarket {
 	private static void addIndicesToPortfolio(List<Underlying> unders) {
 		for(Underlying under:unders) {
 			InvestmentIndex index = new InvestmentIndex(under);
-			Trade indexTrade = new Trade(index, TradeType.CALCULATED, 1, 0.0);
+			Trade indexTrade = new Trade(index, PriceType.CALCULATED, 1, 0.0);
 			Transaction indexTrans = new Transaction(indexTrade);
 			marketPortfolio.enterTransaction(indexTrans);
 		}
@@ -155,7 +155,7 @@ public class InitMarket {
 	}
 	private static void initExpFutures(Underlying under, String expDate) {
 		InvestmentFuture future = new InvestmentFuture(under, expDate);
-		Trade trade = new Trade(future, TradeType.BUY, 1, 0.0);
+		Trade trade = new Trade(future, PriceType.BID, 1, 0.0);
 		Transaction trans = new Transaction(trade);
 		marketPortfolio.enterTransaction(trans);		
 
@@ -199,8 +199,8 @@ public class InitMarket {
 		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+interval) {
 			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
 			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
-			Trade callTrade = new Trade(call, TradeType.BUY, 1, 0.0);
-			Trade putTrade = new Trade(put, TradeType.BUY, 1, 0.0);
+			Trade callTrade = new Trade(call, PriceType.BID, 1, 0.0);
+			Trade putTrade = new Trade(put, PriceType.BID, 1, 0.0);
 			Transaction trans = new Transaction(callTrade, putTrade); 
 			marketPortfolio.enterTransaction(trans);
 		}
@@ -251,7 +251,7 @@ public class InitMarket {
 
 	private static void setStock(Underlying under) {
 		InvestmentStock stock = new InvestmentStock(under);
-		Trade stockTrade = new Trade(stock, TradeType.BUY, 1, 0.0);
+		Trade stockTrade = new Trade(stock, PriceType.BID, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);
 		marketPortfolio.enterTransaction(stockTrans);		
 	}

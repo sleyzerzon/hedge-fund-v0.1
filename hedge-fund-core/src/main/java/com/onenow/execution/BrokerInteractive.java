@@ -9,7 +9,7 @@ import com.amazonaws.services.sqs.model.Message;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.QueueName;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.QuoteDepth;
@@ -88,31 +88,31 @@ public class BrokerInteractive implements BrokerInterface  {
 	   * For every currently-traded investment: request quotes
 	   * Quotes are in response to specific request, or real-time notifications
 	   */
-	  public void getLiveQuotes() {
+	  public void getLiveData() {
 		  
 		  Watchr.log(marketPortfolio.toString());
 		  
-		  QuoteRealtimeChain quoteRealtimeChain = new QuoteRealtimeChain(busIB.busController);
+		  DataRealtimeChain dataRealtimeChain = new DataRealtimeChain(busIB.busController);
 		  
 		  List<Investment> invs = getMarketPortfolio().investments;
 		  for(Investment inv:invs) {
 
 			  Watchr.log(Level.INFO, "SUBSCRIBING TO LIVE QUOTE FOR: " + inv.toString());
-			  quoteRealtimeChain.addRow(inv);
+			  dataRealtimeChain.addRow(inv);
 		  }
 	  }	
 	  
 	  // GET HISTORICAL QUOTES
 	  // API https://www.interactivebrokers.com/en/software/api/apiguide/tables/api_message_codes.htm
-	  public void procesHistoricalQuotesRequests() {
+	  public void getHistoricalData() {
 		  		  
-		  QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.busController);
+		  DataHistoryChain dataHistoryChain = new DataHistoryChain(busIB.busController);
 		  
 		  while(true) {
 			  List<Message> serializedMessages = SQS.receiveMessages(SQS.getHistoryQueueURL());			  
 			  if(serializedMessages.size()>0) {	
 				  for(Message message: serializedMessages) {						
-					  processIndividualMessageUntilSuccessful(quoteHistoryChain, message);
+					  processIndividualMessageUntilSuccessful(dataHistoryChain, message);
 				  } 
 				  
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
@@ -121,7 +121,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  } 
 		}
 
-	private void processIndividualMessageUntilSuccessful(QuoteHistoryChain quoteHistoryChain, Message message) {
+	private void processIndividualMessageUntilSuccessful(DataHistoryChain quoteHistoryChain, Message message) {
 		  boolean reqSuccess = false;
 		  while (!reqSuccess) {	// re-try if individual message does not get requested due to connection issues
 			  
@@ -130,7 +130,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  } 
 	}
 
-	private boolean processIndividualMessage(QuoteHistoryChain quoteHistoryChain, Message message) {
+	private boolean processIndividualMessage(DataHistoryChain quoteHistoryChain, Message message) {
 		
 		  waitWhileConnectionBroken();
 			  
@@ -176,8 +176,8 @@ public class BrokerInteractive implements BrokerInterface  {
 		public Integer readHistoricalQuotes(Investment inv, String end,
 				HistorianConfig config, QuoteHistoryInvestment history) {
 			
-			QuoteHistoryChain quoteHistoryChain = new QuoteHistoryChain(busIB.busController);
-			return quoteHistoryChain.readHistoricalQuotes(inv, end, config, history);
+			DataHistoryChain quoteHistoryChain = new DataHistoryChain(busIB.busController);
+			return quoteHistoryChain.requestHistoricalData(inv, end, config, history);
 			
 		}
 
@@ -222,7 +222,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		}
 	
 		@Override
-		public Double getPrice(Investment inv, TradeType tradeType) {
+		public Double getPrice(Investment inv, PriceType tradeType) {
 			Double price=0.0;
 	
 			price = marketPrices.readPrice(inv, tradeType);
@@ -249,22 +249,22 @@ public class BrokerInteractive implements BrokerInterface  {
 	    Integer notDone=0;
 	    for(Investment inv:invs) {
 	      if(inv instanceof InvestmentIndex) { // only check the index
-	        Double buyPrice = marketPrices.readPrice(inv, TradeType.BUY);
+	        Double buyPrice = marketPrices.readPrice(inv, PriceType.BID);
 	        if(buyPrice==null) {
 	          notDone++;
 	          return false;
 	        }
-	        Double sellPrice = marketPrices.readPrice(inv, TradeType.SELL);
+	        Double sellPrice = marketPrices.readPrice(inv, PriceType.ASK);
 	        if(sellPrice==null) {
 	          notDone++;
 	          return false;
 	        }
-	        Double closePrice = marketPrices.readPrice(inv, TradeType.CLOSE);
-	        if(closePrice==null) {
-	          notDone++;
-	          return false;
-	        }
-	        Double lastPrice = marketPrices.readPrice(inv, TradeType.TRADED);
+//	        Double closePrice = marketPrices.readPrice(inv, TradeType.CLOSE);
+//	        if(closePrice==null) {
+//	          notDone++;
+//	          return false;
+//	        }
+	        Double lastPrice = marketPrices.readPrice(inv, PriceType.TRADED);
 	        if(lastPrice==null) {
 	          notDone++;
 	          return false;

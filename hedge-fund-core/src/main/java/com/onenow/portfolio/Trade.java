@@ -1,7 +1,7 @@
 package com.onenow.portfolio;
 
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.risk.Reward;
@@ -10,7 +10,7 @@ import com.onenow.risk.Risk;
 public class Trade {
 
 	public Investment investment; // INTC, option, call
-	public TradeType tradeType; // ie. buy
+	public PriceType tradeType; // ie. buy
 	public int quantity; // 50 shares
 	public Double netPremium; // +$10 net, -$23 net
 	private Double unitPrice; // $7.50 per share
@@ -19,7 +19,7 @@ public class Trade {
 		// TODO
 	}
 
-	public Trade(Investment inv, TradeType tradeType, int quantity, Double unitPrice) {
+	public Trade(Investment inv, PriceType tradeType, int quantity, Double unitPrice) {
 			setInvestment(inv);
 			setTradeType(tradeType);
 			setQuantity(quantity);
@@ -45,7 +45,7 @@ public class Trade {
 			InvestmentOption option = (InvestmentOption) investment;
 			value = option.getValue(marketPrice) * quantity;
 		}
-		if (tradeType.equals(TradeType.SELL)) {
+		if (tradeType.equals(PriceType.ASK)) {
 			value = -value;
 		}
 		return value;
@@ -67,7 +67,7 @@ public class Trade {
 	private void setNetPremium() {
 		Double cost = quantity * unitPrice;
 
-		if (tradeType.equals(TradeType.BUY)) {
+		if (tradeType.equals(PriceType.BID)) {
 			setNetPremium(-cost);
 		} else {
 			setNetPremium(cost);
@@ -88,7 +88,7 @@ public class Trade {
 		this.investment = inv;
 	}
 
-	private void setTradeType(TradeType tradeType) {
+	private void setTradeType(PriceType tradeType) {
 		this.tradeType = tradeType;
 	}
 

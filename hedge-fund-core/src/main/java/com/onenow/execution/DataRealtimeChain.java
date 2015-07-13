@@ -6,13 +6,13 @@ import javax.swing.table.AbstractTableModel;
 
 import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteOptionHandler;
-import com.onenow.execution.QuoteRealtimeChain;
+import com.onenow.execution.DataRealtimeChain;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 import com.onenow.portfolio.BusController;
 
 
-public class QuoteRealtimeChain extends AbstractTableModel {
+public class DataRealtimeChain extends AbstractTableModel {
 
 	/**
 	 * 
@@ -24,12 +24,12 @@ public class QuoteRealtimeChain extends AbstractTableModel {
 	private static BusController controller;
 	
 	
-	public QuoteRealtimeChain() {
+	public DataRealtimeChain() {
 
 	}
 	
-	public QuoteRealtimeChain(BusController controller) {
-		QuoteRealtimeChain.controller = controller;
+	public DataRealtimeChain(BusController controller) {
+		DataRealtimeChain.controller = controller;
 	}
 	
 	public void addRow(Investment investment) {

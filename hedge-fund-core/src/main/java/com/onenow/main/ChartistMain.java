@@ -12,7 +12,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.EventRequest;
@@ -103,7 +103,7 @@ public class ChartistMain {
 			String fromDate = TimeParser.getDateMinusDashed(toDashedDate, 1);		
 
 			EventRequestRealtime request = new EventRequestRealtime(event.getInvestment(), event.source, event.timing, 
-																	samplingRate, event.tradeType, 
+																	samplingRate, event.priceType, 
 																	fromDate, toDashedDate);
 			
 			// TODO convert Request type
@@ -126,7 +126,7 @@ public class ChartistMain {
 	 * Called periodically (and on L0 misses) to update charts in L0 from L1, 
 	 * this method also progressively builds out the L1 from the L2
 	 * @param inv
-	 * @param tradeType
+	 * @param priceType
 	 * @param samplingRate
 	 * @param fromDate
 	 * @param toDate

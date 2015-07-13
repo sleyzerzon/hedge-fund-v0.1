@@ -17,7 +17,7 @@ import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.EventRequest;
@@ -61,7 +61,7 @@ public class databaseTimeSeriesTest {
 	  EventActivityHistory event = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
 
 	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
-	  event.tradeType = TradeType.BUY;
+	  event.priceType = PriceType.BID;
 	  event.source = InvDataSource.AMERITRADE;
 	  event.timing = InvDataTiming.HISTORICAL;
 	  

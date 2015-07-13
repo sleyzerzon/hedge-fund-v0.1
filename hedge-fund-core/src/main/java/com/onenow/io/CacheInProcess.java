@@ -9,7 +9,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.Event;
@@ -41,40 +41,55 @@ public class CacheInProcess {
 	}
 
 	
-	// REAL-TIME from broker
-	public boolean writeEventRT(final EventActivity event) {		
+/**
+ * Call back from the broker to write events (Realtime, Streaming)
+ * @param event
+ * @return
+ */
+	public boolean writeEvent(final EventActivity event) {		
 		boolean success = writeToMem(event);
 		writeThreadActivityThroughRing(event);
-		return success; // useful in testing
+		return success; 
 	}
 
-	// TODO: add re-try if it fails?
+/**
+ * Keep the last event of the kind in memory
+ * @param event
+ * @return
+ */
 	private boolean writeToMem(EventActivity event) {
 		
 		String key = Lookup.getEventKey(event);
-		boolean success = false;
+		boolean success = false;	// useful to test for initialization
 		
 		Boolean writeToMem=false;
 		// keep last in memory
 		if(event instanceof EventActivityRealtime) {
-			if(lastEventRT.get(key) == null) { 	// never written before
-				writeToMem = true;
-			} else {
-				if( event.time > lastEventRT.get(key).time ) {
-					writeToMem = true;
-				}
-			}
+			success = writeRealtimeToMem(event, key, success, writeToMem);
 			
-			if(writeToMem) {
-				Watchr.log(key + " " + event.toString());
-				lastEventRT.put(key, (EventActivityRealtime) event);
-				success = true;
+			// TODO: fix calculation
+			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimestampNow()/1000-event.time), broker.getStream());
+		}
+		
+		
+		return success;
+	}
+
+	private boolean writeRealtimeToMem(EventActivity event, String key,
+			boolean success, Boolean writeToMem) {
+		if(lastEventRT.get(key) == null) { 	// never written before
+			writeToMem = true;
+		} else {
+			if( event.time > lastEventRT.get(key).time ) {
+				writeToMem = true;
 			}
 		}
 		
-		// TODO: fix calculation
-		RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimestampNow()/1000-event.time), broker.getStream());
-		
+		if(writeToMem) {
+			Watchr.log(key + " " + event.toString());
+			lastEventRT.put(key, (EventActivityRealtime) event);
+			success = true;
+		}
 		return success;
 	}
 
@@ -112,7 +127,7 @@ public class CacheInProcess {
 	 * @param tradeType
 	 * @return
 	 */
-	public double readPrice(Investment inv, TradeType tradeType) {
+	public double readPrice(Investment inv, PriceType tradeType) {
 
 		// HIT
 		Double price = readPriceFromL0(inv, tradeType);
@@ -128,7 +143,7 @@ public class CacheInProcess {
 		return price;
 	}
 
-	private Double readPriceFromL0(Investment inv, TradeType tradeType) {
+	private Double readPriceFromL0(Investment inv, PriceType tradeType) {
 		
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
@@ -144,7 +159,7 @@ public class CacheInProcess {
 		return price;
 	}
 
-	private Double readPriceFromChart(Investment inv, TradeType tradeType) {
+	private Double readPriceFromChart(Investment inv, PriceType tradeType) {
 		
 		Double price;
 		SamplingRate scalping = SamplingRate.TREND;
@@ -175,7 +190,7 @@ public class CacheInProcess {
 	/**
 	 * One-off chart read creates a chart from size and price information from the memory/database
 	 * @param inv
-	 * @param tradeType
+	 * @param priceType
 	 * @param fromDate
 	 * @param toDate
 	 * @param sampling

@@ -198,6 +198,13 @@ public class ContractFactory {
 	private static Contract getStockToQuote(Investment inv) {	
 		String p_secType=SecType.STK.toString();	
 		String p_symbol=inv.getUnder().getTicker();
+		String p_exchange="SMART";
+		String p_primaryExch="";
+		if(inv.getUnder().getTicker().equals("SPY")) { 
+			p_primaryExch="ARCA"; 
+		} else {
+			p_primaryExch="ISLAND";
+		}
 
 		int p_conId = 0;
 		
@@ -206,8 +213,6 @@ public class ContractFactory {
 		String p_right=""; 	
 		
 		String p_multiplier=""; 
-		String p_exchange="SMART";		
-		String p_primaryExch="ISLAND";
 		String p_currency="USD";
 		String p_localSymbol="";
 		String p_tradingClass="";

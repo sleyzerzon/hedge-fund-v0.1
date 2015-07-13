@@ -24,8 +24,9 @@ public class EventActivityHistory extends EventActivity {
 //	}
 
 	// TODO: what time zone is this time?
-	public EventActivityHistory( 	int reqId, 
-							long timeActivity, double high, double low, double open, double close, double wap, long volume, int count) {
+	public EventActivityHistory( 	int reqId, long timeActivity, 
+									double high, double low, double open, double close, 
+									double wap, long volume, int count) {
 		
 		
 		super();

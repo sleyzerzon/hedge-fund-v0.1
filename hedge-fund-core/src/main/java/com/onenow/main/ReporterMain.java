@@ -12,7 +12,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivityHistory;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.EventRequestRealtime;
@@ -73,9 +73,9 @@ public class ReporterMain {
 		
 		String fromDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 		
-		TradeType tradeType = TradeType.TRADED;
+		PriceType tradeType = PriceType.TRADED;
 		if(inv instanceof InvestmentIndex) {
-			tradeType = TradeType.CALCULATED;
+			tradeType = PriceType.CALCULATED;
 		}
 		
 		EventRequestRealtime request = new EventRequestRealtime(	inv, InvDataSource.IB, timing,

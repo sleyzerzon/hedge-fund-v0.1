@@ -4,6 +4,9 @@ import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ib.client.Types.BarSize;
+import com.ib.client.Types.WhatToShow;
+import com.onenow.constant.InvDataSource;
 import com.onenow.constant.MemoryLevel;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
@@ -40,8 +43,14 @@ public class HistorianMain {
 
 			// updates historical L1 from L2
 			for(Investment inv:marketPortfolio.investments) {
-				
-				updateL2HistoryFromL3(inv, toDashedDate);							
+				// To be saved to prices database
+				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.TRADES);							
+				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);							
+				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID);		
+				// To be saved to Greeks database
+//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
+//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.HISTORICAL_VOLATILITY);							
+//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.OPTION_IMPLIED_VOLATILITY);											
 			}
 									
 			// go back further in time
@@ -55,12 +64,15 @@ public class HistorianMain {
  * @param inv
  */
 	// cat  com.onenow.main.InvestorMainHISTORY-Log.txt | grep -i "into stream" | grep -i "under es" | grep -i "call"
-	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate) {
+	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate, WhatToShow whatToShow) {
 				
 		Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
 
-		EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, new HistorianService().size5min);
+		// TODO: get full range of WhatToShow
+		EventRequestHistory request = new EventRequestHistory(	inv, toDashedDate,  
+																HistorianService.getConfig(InvDataSource.IB, BarSize._5_mins, whatToShow));
 			
+		
 		//List<Candle> storedPrices = getL2TSDBStoredPrice(request);
 		List<Candle> storedPrices = new ArrayList<Candle>();
 				

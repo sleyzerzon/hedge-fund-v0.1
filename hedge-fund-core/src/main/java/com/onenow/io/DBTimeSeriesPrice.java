@@ -12,7 +12,7 @@ import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.data.EventActivityHistory;
@@ -34,7 +34,7 @@ public class DBTimeSeriesPrice {
 		
 		InvDataSource source = event.source;
 		InvDataTiming timing = event.timing;
-		TradeType tradeType = event.tradeType;
+		PriceType tradeType = event.priceType;
 		Underlying under = event.getUnder();
 		InvType invType = event.getInvType();
 		Double strikePrice = event.getOptionStrikePrice();
@@ -89,7 +89,7 @@ public class DBTimeSeriesPrice {
 
 	private static Serie getWriteSingleSerie(	String serieName, 
 												Long time, Double price,
-												InvDataSource source, InvDataTiming timing, TradeType tradeType,
+												InvDataSource source, InvDataTiming timing, PriceType tradeType,
 												Underlying under, InvType invType,
 												Double strikePrice, String optionExpDate, 
 												String futureExpDate) {

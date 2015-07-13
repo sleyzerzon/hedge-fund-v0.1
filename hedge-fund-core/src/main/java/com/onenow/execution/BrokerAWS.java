@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
@@ -46,7 +46,7 @@ public class BrokerAWS implements BrokerInterface {
 	}
 
 	@Override
-	public Double getPrice(Investment inv, TradeType type) {
+	public Double getPrice(Investment inv, PriceType type) {
 		// TODO Auto-generated method stub
 		return null;
 	}

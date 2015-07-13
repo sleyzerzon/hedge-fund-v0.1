@@ -9,7 +9,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
 import com.onenow.data.Event;
@@ -34,7 +34,7 @@ public class Lookup {
 	 * Key to find, for a specific point in time, the price/size for an investment
 	 * @param time
 	 * @param inv
-	 * @param tradeType
+	 * @param priceType
 	 * @return
 	 */
 	public static String getEventTimedKey(EventRequest event) {
@@ -56,7 +56,7 @@ public class Lookup {
 	/**
 	 * Key to find price/size values for specific investments
 	 * @param inv
-	 * @param tradeType
+	 * @param priceType
 	 * @return
 	 */	
 	public static String getEventKey(Event event) {
@@ -86,7 +86,7 @@ public class Lookup {
 		}
 
 		try {
-			s = s + "-" + event.tradeType.toString();
+			s = s + "-" + event.priceType.toString();
 		} catch (Exception e) {
 		}
 
@@ -105,7 +105,7 @@ public class Lookup {
 	 * @param timeStamp
 	 * @return
 	 */
-	public static String getTimestampKey(Investment inv, TradeType tradeType, Long timeStamp) {
+	public static String getTimestampKey(Investment inv, PriceType tradeType, Long timeStamp) {
 		String s = "";
 		
 		s = inv.toString();
@@ -125,7 +125,7 @@ public class Lookup {
 		}
 
 		try {
-			s = s + "-" + request.tradeType.toString();
+			s = s + "-" + request.priceType.toString();
 		} catch (Exception e) {
 		}
 

@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivityRealtime;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.InvestmentIndex;
@@ -18,7 +18,7 @@ public class PriceSizeCacheTest {
 	CacheInProcess cache = new CacheInProcess(broker);
 
 	EventActivityRealtime event = new EventActivityRealtime(	(long) 1234, new InvestmentIndex(new Underlying("ON")), 
-																TradeType.BUY, 
+																PriceType.BID, 
 																2.34, 5, 
 																InvDataSource.AMERITRADE, InvDataTiming.REALTIME);
 	
@@ -26,7 +26,7 @@ public class PriceSizeCacheTest {
   // test for initialization of in process cache
   public void writeEventRT() {
 	  
-	  Assert.assertTrue(cache.writeEventRT(event));
+	  Assert.assertTrue(cache.writeEvent(event));
 	  
   }
 }

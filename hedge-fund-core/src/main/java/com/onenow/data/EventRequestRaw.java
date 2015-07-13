@@ -5,7 +5,7 @@ import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 
 public class EventRequestRaw extends EventRequest {
@@ -32,12 +32,12 @@ public class EventRequestRaw extends EventRequest {
 		
 		super.source = event.source;
 		super.timing = event.timing;		
-		super.tradeType = event.tradeType;
+		super.priceType = event.priceType;
 
 	}
 	
 	public EventRequestRaw(	DBQuery dbQuery, ColumnName columnName,
-							Investment inv, TradeType tradeType, SamplingRate sampling, 
+							Investment inv, PriceType tradeType, SamplingRate sampling, 
 							String fromDashedDate, String toDashedDate,
 							InvDataSource source, InvDataTiming timing) {
 		
@@ -49,7 +49,7 @@ public class EventRequestRaw extends EventRequest {
 
 		super.source = source;
 		super.timing = timing;		
-		super.tradeType = tradeType;
+		super.priceType = tradeType;
 
 		super.sampling = sampling;
 		super.fromDashedDate = fromDashedDate;
@@ -58,7 +58,7 @@ public class EventRequestRaw extends EventRequest {
 	}
 
 	public EventRequestRaw(	DBQuery dbQuery, ColumnName columnName,
-							Investment inv, TradeType tradeType, SamplingRate sampling, 
+							Investment inv, PriceType tradeType, SamplingRate sampling, 
 							InvDataSource source, InvDataTiming timing,
 							String timeGap, String endPoint) {
 
@@ -70,7 +70,7 @@ public class EventRequestRaw extends EventRequest {
 		
 		super.source = source;
 		super.timing = timing;
-		super.tradeType = tradeType;
+		super.priceType = tradeType;
 		
 		super.sampling = sampling;
 		super.timeGap = timeGap;

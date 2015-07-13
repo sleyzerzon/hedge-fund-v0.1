@@ -3,6 +3,9 @@ package com.onenow.util;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.ib.client.Types.BarSize;
+import com.ib.client.Types.WhatToShow;
+import com.onenow.constant.InvDataSource;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.execution.HistorianService;
@@ -14,7 +17,7 @@ public class SerializerTest {
 	
 	Investment inv = new InvestmentStock(new Underlying("AAPL"));
 	String toDashedDate = TimeParser.getTodayDashed();
-	HistorianConfig config = new HistorianService().size30sec;
+	HistorianConfig config = HistorianService.getConfig(InvDataSource.IB, BarSize._5_mins, WhatToShow.TRADES);
 
 	EventRequestHistory request = new EventRequestHistory(inv, toDashedDate, config);
 	

@@ -8,7 +8,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.io.BusSystem;
 import com.onenow.portfolio.BusController.IHistoricalDataHandler;
@@ -28,7 +28,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	public ArrayList<EventActivityHistory> quoteRows = new ArrayList<EventActivityHistory>();
 	
 	public Investment investment;
-	private TradeType tradeType;
+	private PriceType priceType; // maps to IB "WhatToShow
 	private InvDataSource source;
 	private InvDataTiming timing;
 	
@@ -39,7 +39,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	
 	public QuoteHistoryInvestment(EventRequestHistory request) {
 		this.investment = request.getInvestment();
-		this.tradeType = request.tradeType;
+		this.priceType = request.priceType;
 		this.source = request.source;
 		this.timing = request.timing;
 	}
@@ -76,7 +76,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		
 		// Clarify provenance
 		row.setInvestment(investment);
-		row.tradeType = tradeType;
+		row.priceType = priceType;
 		row.source = source;
 		row.timing = timing;
 				

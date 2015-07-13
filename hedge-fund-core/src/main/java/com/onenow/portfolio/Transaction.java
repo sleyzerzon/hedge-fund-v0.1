@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.onenow.constant.InvType;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentOption;
 
@@ -57,7 +57,7 @@ public class Transaction {
 		for(Trade trade:getTrades()) {
 			if(	trade.investment.getInvType().equals(InvType.CALL) || 
 				trade.investment.getInvType().equals(InvType.PUT)) {  
-					if(trade.tradeType.equals(TradeType.SELL)) {
+					if(trade.tradeType.equals(PriceType.ASK)) {
 					
 						Investment inv = trade.investment;
 						prob += ((InvestmentOption) inv).getProbabilityOfProfit();
@@ -98,15 +98,15 @@ public class Transaction {
 
 	// PRIVATE
 	private Double getCallSpread() { // assumes up to two call
-		Double sellCallStrike=getStrike(InvType.CALL, TradeType.SELL);
-		Double buyCallStrike=getStrike(InvType.CALL, TradeType.BUY);
+		Double sellCallStrike=getStrike(InvType.CALL, PriceType.ASK);
+		Double buyCallStrike=getStrike(InvType.CALL, PriceType.BID);
 		Double spread = buyCallStrike - sellCallStrike;
 		return spread;
 	}
 
 	private Double getPutSpread() { // assumes up to two puts
-		Double sellPutStrike=getStrike(InvType.PUT, TradeType.SELL);
-		Double buyPutStrike=getStrike(InvType.PUT, TradeType.BUY);
+		Double sellPutStrike=getStrike(InvType.PUT, PriceType.ASK);
+		Double buyPutStrike=getStrike(InvType.PUT, PriceType.BID);
 		Double spread = sellPutStrike - buyPutStrike;
 		return spread;
 	}
@@ -128,7 +128,7 @@ public class Transaction {
 		for(Trade trade:getTrades()) {
 			Investment inv = trade.investment;
 			if(trade.investment.getInvType().equals(InvType.CALL) &&
-			   trade.tradeType.equals(TradeType.SELL)) {
+			   trade.tradeType.equals(PriceType.ASK)) {
 				contracts=trade.quantity;
 			}
 		}
@@ -139,7 +139,7 @@ public class Transaction {
 		Integer contracts=0;
 		for(Trade trade:getTrades()) {
 			if(trade.investment.getInvType().equals(InvType.PUT) &&
-			   trade.tradeType.equals(TradeType.SELL)) {
+			   trade.tradeType.equals(PriceType.ASK)) {
 				contracts=trade.quantity;
 			}			
 		}		

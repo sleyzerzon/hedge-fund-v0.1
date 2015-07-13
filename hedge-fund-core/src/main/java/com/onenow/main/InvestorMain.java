@@ -37,13 +37,13 @@ public class InvestorMain {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getPrimaryPortfolio(), 
 																bus); 
-			broker.getLiveQuotes(); 			
+			broker.getLiveData(); 			
 		}	
 		if(BusSystem.isRealtimeStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, 
 																InitMarket.getRealtimePortfolio(), 
 																bus); 
-			broker.getLiveQuotes(); 			
+			broker.getLiveData(); 			
 		}
 		if(BusSystem.isStandbyStream(streamName)) {
 			// TODO: passive role on same investments as primary
@@ -53,7 +53,7 @@ public class InvestorMain {
 		// HISTORIC QUOTES
 		if(BusSystem.isHistoryStream(streamName)) {
 			BrokerInteractive broker = new BrokerInteractive(	streamName, bus); 
-			broker.procesHistoricalQuotesRequests();
+			broker.getHistoricalData();
 		}
 
 //		if(BusSystem.isStreamingStream(streamName)) {

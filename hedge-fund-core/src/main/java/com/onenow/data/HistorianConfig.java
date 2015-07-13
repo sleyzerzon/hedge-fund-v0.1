@@ -6,7 +6,7 @@ import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 
 public class HistorianConfig {
 

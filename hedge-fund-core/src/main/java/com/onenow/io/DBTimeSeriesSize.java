@@ -28,7 +28,7 @@ public class DBTimeSeriesSize {
 					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
 					ColumnName.FUTUREEXP.toString())
 		.values(event.time, event.size, 																		// basic columns
-				"\""+ event.source +"\"", "\""+ event.timing +"\"", "\""+ event.tradeType +"\"",					// event origination
+				"\""+ event.source +"\"", "\""+ event.timing +"\"", "\""+ event.priceType +"\"",					// event origination
 				"\""+ event.getUnder() +"\"", "\""+ event.getInvType() +"\"", 								// investment
 				"\""+ event.getOptionStrikePrice() +"\"", "\""+ event.getOptionExpirationDate() +"\"",		// option
 				"\""+ event.getFutureExpirationDate() +"\""													// if future, expiration

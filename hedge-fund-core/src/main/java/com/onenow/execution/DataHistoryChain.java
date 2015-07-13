@@ -14,7 +14,7 @@ import com.onenow.util.Piping;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
-public class QuoteHistoryChain {
+public class DataHistoryChain {
 
 	
 	public static BusController controller;
@@ -23,11 +23,11 @@ public class QuoteHistoryChain {
 
 	private static long lastQueryTime;
 
-	public QuoteHistoryChain() {
+	public DataHistoryChain() {
 		
 	}
 	
-	public QuoteHistoryChain(BusController controller) {
+	public DataHistoryChain(BusController controller) {
 		this.controller = controller;
 	}
 
@@ -41,31 +41,34 @@ public class QuoteHistoryChain {
 			  QuoteHistoryInvestment invHist = lookupInvHistory(request);
 			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
 			  TimeParser.paceHistoricalQuery(lastQueryTime); 
-			  // look for SQS requests for history
-			  String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
 			  
 			  // TODO: request only if <x number of data points in the time series
-			  Integer reqId = readHistoricalQuotes(	request.getInvestment(), 
-													endDateTime, 
-													request.config, invHist);
+			  Integer reqId = requestHistoricalData(	request.getInvestment(), 
+					  									getEndDateTime(request), 
+														request.config, invHist);
 			  lastQueryTime = TimeParser.getTimestampNow();		
 		  }
+	}
+
+	private String getEndDateTime(EventRequestHistory request) {
+		String endDateTime = TimeParser.getClose(TimeParser.getDateUndashed(TimeParser.getDateMinusDashed(request.toDashedDate, 1)));
+		return endDateTime;
 	}
 				  
 	  /**
 	   * Returns reference to object where history will be stored, upon asynchronous return
 	   */
-	  public Integer readHistoricalQuotes(Investment inv, String endDateTime, HistorianConfig config, QuoteHistoryInvestment quoteHistory) {
+	  public Integer requestHistoricalData(Investment inv, String endDateTime, HistorianConfig config, QuoteHistoryInvestment quoteHistory) {
 	
 		  Contract contract = ContractFactory.getContract(inv);
 		  Integer reqId = null;
-		try {
-			reqId = controller.reqHistory(	contract, endDateTime, 
-														1, config.durationUnit, config.barSize, config.whatToShow, 
-														false, quoteHistory);
-		} catch (Exception e) {
-			 e.printStackTrace();
-		}
+ 		  try {
+ 			  reqId = controller.reqHistory(	contract, endDateTime, 
+												1, config.durationUnit, config.barSize, config.whatToShow, 
+												false, quoteHistory);
+		  } catch (Exception e) {
+			  e.printStackTrace();
+		  }
 		  		  
 		  String log = 	"||| REQUESTED HISTORY FOR: " + inv.toString() + " ||| CONTRACT " + contract.toString() + 
 				  		"||| ENDING " + endDateTime + " ||| REQID " + reqId + " ||| CONFIG " + config.toString();

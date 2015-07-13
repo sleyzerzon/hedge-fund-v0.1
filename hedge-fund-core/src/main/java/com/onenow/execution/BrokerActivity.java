@@ -8,7 +8,7 @@ import com.amazonaws.services.simpleworkflow.flow.annotations.Activity;
 import com.amazonaws.services.simpleworkflow.flow.annotations.ActivityRegistrationOptions;
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.ConstantsWorkflow;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
@@ -28,8 +28,8 @@ public interface BrokerActivity extends BrokerInterface {
 	public List<Underlying> getUnderlying();
 	public Portfolio getMarketPortfolio();
 	public Portfolio getMyPortfolio();
-	public Double getBestBid(TradeType type, Investment inv, Double agression); // the extension
-	public Double getPrice(Investment inv, TradeType type);
+	public Double getBestBid(PriceType type, Investment inv, Double agression); // the extension
+	public Double getPrice(Investment inv, PriceType type);
 	public List<Trade> getTrades();
 	public void enterTransaction(Transaction trans);
 }

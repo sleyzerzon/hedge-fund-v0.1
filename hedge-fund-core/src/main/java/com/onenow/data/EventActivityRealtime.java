@@ -2,7 +2,7 @@ package com.onenow.data;
 
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 
 public class EventActivityRealtime extends EventActivity {
@@ -19,13 +19,13 @@ public class EventActivityRealtime extends EventActivity {
 	 * @param price
 	 * @param size
 	 */
-	public EventActivityRealtime(	Long timeActivity, Investment inv, TradeType tradeType, Double price, long size,
+	public EventActivityRealtime(	Long timeActivity, Investment inv, PriceType tradeType, Double price, long size,
 									InvDataSource source, InvDataTiming timing) {
 
 		super();
 		
 		setInvestment(inv);
-		super.tradeType = tradeType;		
+		super.priceType = tradeType;		
 		super.source = source;
 		super.timing = timing;
 

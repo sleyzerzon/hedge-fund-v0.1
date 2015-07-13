@@ -6,7 +6,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.TradeType;
+import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -22,7 +22,7 @@ public class Event {
 
 	public InvDataSource source;
 	public InvDataTiming timing;
-	public TradeType tradeType; 
+	public PriceType priceType; 
 
 	// public ObjectOrigination origin = new ObjectOrigination();
 
@@ -35,11 +35,11 @@ public class Event {
 	public Event() {
 	}	
 	
-	public Event(Investment investment, InvDataSource source, InvDataTiming timing, TradeType tradeType) {
+	public Event(Investment investment, InvDataSource source, InvDataTiming timing, PriceType priceType) {
 		setInvestment(investment);
 		this.source = source;
 		this.timing = timing;
-		this.tradeType = tradeType; 
+		this.priceType = priceType; 
 
 	}
 	
@@ -139,7 +139,7 @@ public class Event {
 		} 
 		
 		try {
-			s =	s + "-tradeType " + tradeType + " ";
+			s =	s + "-tradeType " + priceType + " ";
 		} catch (Exception e) {
 		}
 		
