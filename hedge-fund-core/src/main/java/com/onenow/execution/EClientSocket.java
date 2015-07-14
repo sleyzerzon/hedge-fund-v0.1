@@ -918,16 +918,16 @@ public class EClientSocket {
     	Watchr.log(Level.INFO, "~ reqHistoricalData");
 
     	String req = "";
-    	req = req + "== " + "Requesting Historical Data" + "\n";
-    	req = req + "- Ticker Id " + tickerId + "\n";
-    	req = req + "- Contract: " + "\n" + contract.toString();
-    	req = req + "- EndDate Time " + endDateTime + "\n";
-    	req = req + "- DurationStr " + durationStr + "\n";
-    	req = req + "- Bar Size Setting " + barSizeSetting + "\n";
-    	req = req + "- What To Show " + whatToShow + "\n";
-    	req = req + "- Use RTH " + useRTH + "\n";
-    	req = req + "- Format Date " + formatDate + "\n";
-    	req = req + "- Chart Options " + chartOptions.toString();
+    	req = req + "==" + "Requesting Historical Data" + "\n";
+    	req = req + "-TickerId " + tickerId + "\n";
+    	req = req + " ||| " + "Contract: " + "\n" + contract.toString() + " ||| ";
+    	req = req + "-EndDateTime " + endDateTime + "\n";
+    	req = req + "-DurationStr " + durationStr + "\n";
+    	req = req + "-BarSize " + barSizeSetting + "\n";
+    	req = req + "-WhatToShow " + whatToShow + "\n";
+    	req = req + "-UseRTH " + useRTH + "\n";
+    	req = req + "-FormatDate " + formatDate + "\n";
+    	req = req + "-ChartOptions " + chartOptions.toString();
 		Watchr.log(Level.INFO, req);
 
     	

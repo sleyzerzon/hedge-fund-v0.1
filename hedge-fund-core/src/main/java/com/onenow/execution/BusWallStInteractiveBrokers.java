@@ -241,7 +241,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  private boolean isConnectionErrorMustReconnect(int errorCode) {
 		
-		  if(   errorCode==504 || 			// not connected
+		  if(   
+				errorCode==504 || 			// not connected
 				errorCode==507 || 	 		// null message
 				errorCode==1101				// Connectivity between IB and TWS has been restored- data lost.
 				  				) { 
@@ -273,15 +274,17 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  
 		  if(   messageCode==1102 || 			// Connectivity between IB and TWS has been restored- data maintained
 				messageCode==2104 || 			// market data farm connected
-				messageCode==2106 ||			// historic data farm connected
-				messageCode==2107 ||			// historic data inactive but should be available upon demand
-				messageCode==2108) {			// market data inactive but should be available upon demand
+				messageCode==2108 || 			// market data inactive but should be available upon demand
+				messageCode==2106 ||			// historic data farm connected (HMDS)
+				messageCode==2107 				// historic data inactive but should be available upon demand
+				  				) {			
 			  
 			  Watchr.log(Level.WARNING, "Farm Available: " + messageCode);
 			  return true;
 		  }
 		  
-		  if(   messageCode==1100 ||			// Connectivity between IB and TWS has been lost
+		  if(   messageCode==322 || 			// Only 50 simultaneous API historical data requests allowed
+				messageCode==1100 ||			// Connectivity between IB and TWS has been lost
 				messageCode==2103 || 			// A market data farm is disconnected
 				messageCode==2105 || 			// A historical data farm is disconnected
 				messageCode==2119 || 			// market data farm ...?
