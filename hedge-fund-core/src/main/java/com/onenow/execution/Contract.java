@@ -240,25 +240,100 @@ public class Contract implements Cloneable {
     }
 
     @Override public String toString() {
-        StringBuilder sb = new StringBuilder();
+        
+    	// StringBuilder sb = new StringBuilder();
+    	
+    	String s = "";
+    	
+		try {
+			s = s + "-conid " + m_conid + " ";
+		} catch (Exception e) {
+		}
 
-        add( sb, "-conid ", m_conid);
-        add( sb, "-symbol ", m_symbol);
-        add( sb, "-secType ", m_secType);
-        add( sb, "-expiry ", m_expiry);
-        add( sb, "-strike ", m_strike);
-        add( sb, "-right ", m_right);
-        add( sb, "-multiplier ", m_multiplier);
-        add( sb, "-exchange ", m_exchange);
-        add( sb, "-currency ", m_currency);
-        add( sb, "-localSymbol ", m_localSymbol);
-        add( sb, "-tradingClass ", m_tradingClass);
-        add( sb, "-primaryExch ", m_primaryExch);
-        add( sb, "-secIdType ", m_secIdType);
-        add( sb, "-secId ", m_secId);
+		try {
+			s = s + "-symbol " + m_symbol + " ";
+		} catch (Exception e) {
+		}
 
-        return sb.toString();
+		try {
+			s = s + "-secType " + m_secType + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-expiry " + m_expiry + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-strike " + m_strike + " ";
+		} catch (Exception e) {
+		}
+		
+		try {
+			s = s + "-right " + m_right + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-multiplier " + m_multiplier + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-exchange " + m_exchange + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-currency " + m_currency + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-localSymbol " + m_localSymbol + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-tradingClass " + m_tradingClass + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-primaryExch " + m_primaryExch + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-secIdType " + m_secIdType + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-secId " + m_secId + " ";
+		} catch (Exception e) {
+		}
+
+//        add( sb, "-conid ", m_conid);
+//        add( sb, "-symbol ", m_symbol);
+//        add( sb, "-secType ", m_secType);
+//        add( sb, "-expiry ", m_expiry);
+//        add( sb, "-strike ", m_strike);
+//        add( sb, "-right ", m_right);
+//        add( sb, "-multiplier ", m_multiplier);
+//        add( sb, "-exchange ", m_exchange);
+//        add( sb, "-currency ", m_currency);
+//        add( sb, "-localSymbol ", m_localSymbol);
+//        add( sb, "-tradingClass ", m_tradingClass);
+//        add( sb, "-primaryExch ", m_primaryExch);
+//        add( sb, "-secIdType ", m_secIdType);
+//        add( sb, "-secId ", m_secId);
+//        return sb.toString();
+		
+        return s;
     }
+    
 
     public static void add(StringBuilder sb, String tag, Object val) {
         if (	val == null || 
