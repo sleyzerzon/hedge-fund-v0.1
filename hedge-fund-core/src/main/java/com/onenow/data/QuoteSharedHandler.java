@@ -81,14 +81,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 //			Watchr.log(Level.INFO, ">Last " + m_last + " for " + investment.toString());
 			// marketPrice.writePriceNotRealTime(investment, m_last, TradeType.TRADED.toString());
 			break;
-		case OPEN:
-			// TODO
-			break;
-		case CLOSE:
-			m_close = price;
-//			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
-			// marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
-			break;
 		case AUCTION_PRICE:
 			// TODO
 			break;
@@ -99,6 +91,14 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		////////////////
 		//////// CALCULATE OWN
+		case OPEN:
+			// TODO
+			break;
+		case CLOSE:
+			m_close = price;
+//			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
+			// marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
+			break;
 		case HIGH:
 			// Calculate own
 			break;

@@ -32,9 +32,6 @@ public class Lookup {
 
 	/**
 	 * Key to find, for a specific point in time, the price/size for an investment
-	 * @param time
-	 * @param inv
-	 * @param priceType
 	 * @return
 	 */
 	public static String getEventTimedKey(EventRequest event) {

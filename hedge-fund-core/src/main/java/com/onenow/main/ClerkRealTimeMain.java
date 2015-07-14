@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.constant.StreamName;
-import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.DBTimeSeriesPrice;
@@ -35,7 +35,7 @@ public class ClerkRealTimeMain {
 		
 	}
 	
-	public static void writeRealtimeToL2(EventActivityRealtime event) {
+	public static void writeRealtimePriceSizeToL2(EventActivityPriceSizeRealtime event) {
 	
 		boolean success = false;
 		boolean retry = false;

@@ -25,7 +25,7 @@ import com.onenow.util.Watchr;
  */
 public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
 
-	public ArrayList<EventActivityHistory> quoteRows = new ArrayList<EventActivityHistory>();
+	public ArrayList<EventActivityPriceHistory> quoteRows = new ArrayList<EventActivityPriceHistory>();
 	
 	public Investment investment;
 	private PriceType priceType; // maps to IB "WhatToShow
@@ -49,7 +49,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	}
 	
 	// INTERFACE: IHistoricalDataHandler
-	@Override public void historicalData(EventActivityHistory row, boolean hasGaps) {
+	@Override public void historicalData(EventActivityPriceHistory row, boolean hasGaps) {
 		
 		quoteRows.add(row);
 		handleRow(row);
@@ -65,14 +65,14 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		return size;
 	}	
 	
-	@Override public void realtimeBar(EventActivityHistory row) {		
+	@Override public void realtimeBar(EventActivityPriceHistory row) {		
 
 		quoteRows.add(row); 
 		
 		handleRow(row);
 	}
 
-	private void handleRow(final EventActivityHistory row) {
+	private void handleRow(final EventActivityPriceHistory row) {
 		
 		// Clarify provenance
 		row.setInvestment(investment);

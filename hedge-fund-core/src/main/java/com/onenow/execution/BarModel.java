@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityPriceHistory;
 
 public class BarModel extends AbstractTableModel {
 
-	ArrayList<EventActivityHistory> m_rows;
+	ArrayList<EventActivityPriceHistory> m_rows;
 	
 	public BarModel() {
 		
 	}
 
-	public BarModel(ArrayList<EventActivityHistory> rows) {
+	public BarModel(ArrayList<EventActivityPriceHistory> rows) {
 		m_rows = rows;
 	}
 
@@ -40,7 +40,7 @@ public class BarModel extends AbstractTableModel {
 	}
 
 	@Override public Object getValueAt(int rowIn, int col) {
-		EventActivityHistory row = m_rows.get( rowIn);
+		EventActivityPriceHistory row = m_rows.get( rowIn);
 		switch( col) {
 //			case 0: return row.formattedTime();
 			case 1: return row.open;

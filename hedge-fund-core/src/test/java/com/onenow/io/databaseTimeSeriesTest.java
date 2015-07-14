@@ -18,8 +18,8 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
-import com.onenow.data.EventActivityHistory;
-import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventActivityPriceHistory;
+import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.EventRequestRaw;
@@ -32,9 +32,9 @@ import com.onenow.util.Watchr;
 
 public class databaseTimeSeriesTest {
 
-	EventActivityRealtime realtimeActivity = new EventActivityRealtime();	
+	EventActivityPriceSizeRealtime realtimeActivity = new EventActivityPriceSizeRealtime();	
 	
-	EventActivityRealtime greekActivity;
+	EventActivityPriceSizeRealtime greekActivity;
 	
 	// EventActivitySize;
 	
@@ -44,7 +44,7 @@ public class databaseTimeSeriesTest {
 	  Assert.assertTrue(db!=null);
   }
   
-  private EventActivityHistory getHistoryActivity() {
+  private EventActivityPriceHistory getHistoryActivity() {
 	  
 	  int reqId = 123; 
 	  long time = TimeParser.getTimestampNow()/1000; 
@@ -58,7 +58,7 @@ public class databaseTimeSeriesTest {
 	  long volume = 3; 
 	  int count = 23;		
 		
-	  EventActivityHistory event = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);	
+	  EventActivityPriceHistory event = new EventActivityPriceHistory(reqId, time, high, low, open, close, wap, volume, count);	
 
 	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
 	  event.priceType = PriceType.BID;
@@ -71,7 +71,7 @@ public class databaseTimeSeriesTest {
   @Test
   public void writePrice() {
 	  	  
-	  EventActivityHistory historyActivity = getHistoryActivity();
+	  EventActivityPriceHistory historyActivity = getHistoryActivity();
 
 	  String serieName = Lookup.getEventKey(historyActivity);
 	  List<Serie> series = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);

@@ -18,7 +18,7 @@ public class EventRequestRaw extends EventRequest {
 		
 	}
 	
-	public EventRequestRaw(	DBQuery dbQuery, ColumnName columnName, SamplingRate sampling, String timeGap, String endPoint, EventActivityHistory event) {
+	public EventRequestRaw(	DBQuery dbQuery, ColumnName columnName, SamplingRate sampling, String timeGap, String endPoint, EventActivityPriceHistory event) {
 
 		super();
 		this.dbQuery = dbQuery;

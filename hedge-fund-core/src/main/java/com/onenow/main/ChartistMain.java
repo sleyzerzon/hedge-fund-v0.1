@@ -14,7 +14,7 @@ import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.constant.PriceType;
 import com.onenow.data.DataSampling;
-import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestRaw;
 import com.onenow.data.EventRequestRealtime;
@@ -81,7 +81,7 @@ public class ChartistMain {
 	}
 	
 	// TODO: continuous queries http://influxdb.com/docs/v0.8/api/continuous_queries.html
-	public static void prefetchCharts(EventActivityRealtime event) {		
+	public static void prefetchCharts(EventActivityPriceSizeRealtime event) {		
 			
 		for(SamplingRate samplr:DataSampling.getList(SamplingRate.SCALP)) { // TODO: what sampling?
 
@@ -89,7 +89,7 @@ public class ChartistMain {
 		}		
 	}
 
-	private static void prefetchPacedCharts(EventActivityRealtime event, SamplingRate samplingRate) {
+	private static void prefetchPacedCharts(EventActivityPriceSizeRealtime event, SamplingRate samplingRate) {
 		
 		Long lastStamp = getLastStamp(samplingRate);
 		Long elapsedTime = TimeParser.getTimestampNow()-lastStamp;

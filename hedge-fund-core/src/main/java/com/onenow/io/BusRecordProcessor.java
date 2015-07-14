@@ -9,8 +9,12 @@ import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.model.Record;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
-import com.onenow.data.EventActivityHistory;
-import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventActivitySizeStreaming;
+import com.onenow.data.EventActivityGreekHistory;
+import com.onenow.data.EventActivityPriceHistory;
+import com.onenow.data.EventActivityPriceSizeRealtime;
+import com.onenow.data.EventActivityPriceStreaming;
+import com.onenow.data.EventActivityGreekStreaming;
 import com.onenow.main.ChartistMain;
 import com.onenow.main.ClerkHistoryMain;
 import com.onenow.main.ClerkRealTimeMain;
@@ -115,22 +119,26 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			}
 		}
 		
-		if(recordType.equals(EventActivityHistory.class)) {
+		if(recordType.equals(EventActivityPriceHistory.class)) {
 			try {
-				EventActivityHistory event = (EventActivityHistory) recordObject;
+				EventActivityPriceHistory event = (EventActivityPriceHistory) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityHistory<- " + event.toString(), "\n", "");
-				ClerkHistoryMain.writeHistoryToL2(event);
+				ClerkHistoryMain.writeHistoryPriceToL2(event);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		if(recordType.equals(EventActivityGreekHistory.class)) {
+			// TODO
+		}
 
-		if(recordType.equals(EventActivityRealtime.class)) {			
+		if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
 			try {
-				EventActivityRealtime event = (EventActivityRealtime) recordObject;
+				EventActivityPriceSizeRealtime event = (EventActivityPriceSizeRealtime) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityRealtime<- " + event.toString(), "\n", "");
-				ClerkRealTimeMain.writeRealtimeToL2(event);
+				ClerkRealTimeMain.writeRealtimePriceSizeToL2(event);
 				try {
 					if(streamName.equals(StreamName.PRIMARY_STAGING) || streamName.equals(StreamName.STANDBY_STAGING) ) {
 						ChartistMain.prefetchCharts(event);				
@@ -144,6 +152,18 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			}
 		}
 
+		if(recordType.equals(EventActivityPriceStreaming.class)) {			
+			// TODO
+		}
+
+		if(recordType.equals(EventActivitySizeStreaming.class)) {			
+			// TODO
+		}
+
+		if(recordType.equals(EventActivityGreekStreaming.class)) {			
+			// TODO
+		}
+		
+		
 	}
-	
 }

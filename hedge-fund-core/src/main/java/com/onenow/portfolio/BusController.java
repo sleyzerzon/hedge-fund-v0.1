@@ -32,7 +32,7 @@ import com.ib.controller.Group;
 import com.ib.controller.MarketValueTag;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
-import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteOptionHandler;
@@ -867,7 +867,7 @@ public class BusController implements EWrapper {
 
 	// ----------------------------------------- Historical data handling ----------------------------------------
 	public interface IHistoricalDataHandler {
-		void historicalData(EventActivityHistory bar, boolean hasGaps);
+		void historicalData(EventActivityPriceHistory bar, boolean hasGaps);
 		void historicalDataEnd();
 	}
 
@@ -920,7 +920,7 @@ public class BusController implements EWrapper {
 				else {
 					longDate = Long.parseLong( date);
 				}
-				EventActivityHistory bar = new EventActivityHistory(reqId, longDate, high, low, open, close, wap, volume, count);
+				EventActivityPriceHistory bar = new EventActivityPriceHistory(reqId, longDate, high, low, open, close, wap, volume, count);
 				handler.historicalData(bar, hasGaps); // *********** HERE 
 			}
 		}
@@ -930,7 +930,7 @@ public class BusController implements EWrapper {
 
 	//----------------------------------------- Real-time bars --------------------------------------
 	public interface IRealTimeBarHandler {
-		void realtimeBar(EventActivityHistory bar); // time is in seconds since epoch
+		void realtimeBar(EventActivityPriceHistory bar); // time is in seconds since epoch
 	}
 
     public void reqRealTimeBars(Contract contract, WhatToShow whatToShow, boolean rthOnly, 
@@ -954,7 +954,7 @@ public class BusController implements EWrapper {
     @Override public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
     	IRealTimeBarHandler handler = m_realTimeBarMap.get( reqId);
 		if (handler != null) {
-			EventActivityHistory bar = new EventActivityHistory(reqId, time, high, low, open, close, wap, volume, count);
+			EventActivityPriceHistory bar = new EventActivityPriceHistory(reqId, time, high, low, open, close, wap, volume, count);
 			handler.realtimeBar( bar);
 		}
 		recEOM();

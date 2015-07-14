@@ -11,7 +11,7 @@ import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivity;
-import com.onenow.data.EventActivityRealtime;
+import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestRaw;
@@ -29,7 +29,7 @@ import com.onenow.util.Watchr;
 public class CacheInProcess {
 	
 	private BrokerInteractive 							broker;
-	private HashMap<String, EventActivityRealtime>		lastEventRT = new HashMap<String, EventActivityRealtime>(); 	// last set of price/size/etc
+	private HashMap<String, EventActivityPriceSizeRealtime>		lastEventRT = new HashMap<String, EventActivityPriceSizeRealtime>(); 	// last set of price/size/etc
 	private HashMap<String, Chart>						charts = new HashMap<String, Chart>();			// price history in chart format from L1
 
 	public CacheInProcess() {
@@ -64,7 +64,7 @@ public class CacheInProcess {
 		
 		Boolean writeToMem=false;
 		// keep last in memory
-		if(event instanceof EventActivityRealtime) {
+		if(event instanceof EventActivityPriceSizeRealtime) {
 			success = writeRealtimeToMem(event, key, success, writeToMem);
 			
 			// TODO: fix calculation
@@ -87,7 +87,7 @@ public class CacheInProcess {
 		
 		if(writeToMem) {
 			Watchr.log(key + " " + event.toString());
-			lastEventRT.put(key, (EventActivityRealtime) event);
+			lastEventRT.put(key, (EventActivityPriceSizeRealtime) event);
 			success = true;
 		}
 		return success;
@@ -151,7 +151,7 @@ public class CacheInProcess {
 		
 		Event event = new Event(inv, source, timing, tradeType);
 		String key = Lookup.getEventKey(event);
-		EventActivityRealtime eventRT = lastEventRT.get(key); 
+		EventActivityPriceSizeRealtime eventRT = lastEventRT.get(key); 
 		Double price = eventRT.price;
 		
 		Watchr.log(Level.INFO, "Cache PRICE READ: L0 " + price);

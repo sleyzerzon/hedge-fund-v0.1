@@ -1,6 +1,6 @@
 package com.onenow.data;
 
-public class EventActivityHistory extends EventActivity {
+public class EventActivityPriceHistory extends EventActivity {
 	
 	// meta
 	private int reqId = 0;
@@ -24,7 +24,7 @@ public class EventActivityHistory extends EventActivity {
 //	}
 
 	// TODO: what time zone is this time?
-	public EventActivityHistory( 	int reqId, long timeActivity, 
+	public EventActivityPriceHistory( 	int reqId, long timeActivity, 
 									double high, double low, double open, double close, 
 									double wap, long volume, int count) {
 		

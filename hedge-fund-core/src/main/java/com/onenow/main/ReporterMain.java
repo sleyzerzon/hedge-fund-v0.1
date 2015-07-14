@@ -13,7 +13,7 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
-import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.EventRequestRealtime;
 import com.onenow.data.InitMarket;

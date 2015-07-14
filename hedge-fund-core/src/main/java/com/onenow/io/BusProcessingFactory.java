@@ -5,8 +5,8 @@ import kinesis.CountingRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.StreamName;
 import com.onenow.data.DynamoDBCountPersister;
-import com.onenow.data.EventActivityRealtime;
-import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityPriceSizeRealtime;
+import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.HttpReferrerPair;
 
 
@@ -26,14 +26,14 @@ public class BusProcessingFactory {
 
 	public static IRecordProcessorFactory createProcessorFactoryEventRealTime(StreamName streamName) {
 		
-        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventActivityRealtime>(EventActivityRealtime.class, streamName);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventActivityPriceSizeRealtime>(EventActivityPriceSizeRealtime.class, streamName);
 
         return processorFactory;
 	}
 
 	public static IRecordProcessorFactory createProcessorFactoryEventHistory(StreamName streamName) {
 		
-        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventActivityHistory>(EventActivityHistory.class, streamName);
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventActivityPriceHistory>(EventActivityPriceHistory.class, streamName);
 
         return processorFactory;
 	}

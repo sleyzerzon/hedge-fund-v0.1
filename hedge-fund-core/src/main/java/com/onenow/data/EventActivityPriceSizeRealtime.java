@@ -5,9 +5,9 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
 
-public class EventActivityRealtime extends EventActivity {
+public class EventActivityPriceSizeRealtime extends EventActivity {
 	
-	public EventActivityRealtime() {
+	public EventActivityPriceSizeRealtime() {
 		super();
 	}
 	
@@ -19,7 +19,7 @@ public class EventActivityRealtime extends EventActivity {
 	 * @param price
 	 * @param size
 	 */
-	public EventActivityRealtime(	Long timeActivity, Investment inv, PriceType tradeType, Double price, long size,
+	public EventActivityPriceSizeRealtime(	Long timeActivity, Investment inv, PriceType tradeType, Double price, long size,
 									InvDataSource source, InvDataTiming timing) {
 
 		super();

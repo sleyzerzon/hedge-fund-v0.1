@@ -28,7 +28,7 @@ import apidemo.util.VerticalPanel.StackPanel;
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.WhatToShow;
-import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ApiController.IHistoricalDataHandler;
 import com.onenow.execution.ApiController.IRealTimeBarHandler;
@@ -44,7 +44,7 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 	final private OrdersModel m_ordersModel = new OrdersModel();
 	final private TCombo<BarSize> m_barSize = new TCombo<BarSize>( BarSize.values() );
 	final private UpperField m_bars = new UpperField();
-	final private ArrayList<EventActivityHistory> m_rows = new ArrayList<EventActivityHistory>();
+	final private ArrayList<EventActivityPriceHistory> m_rows = new ArrayList<EventActivityPriceHistory>();
 	final private Chart m_chart = new Chart( m_rows);
 	private boolean m_req;
 	
@@ -116,7 +116,7 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 		ApiDemo.INSTANCE.controller().reqRealTimeBars(m_contract, WhatToShow.TRADES, false, this);
 	}
 
-	@Override public void realtimeBar(EventActivityHistory bar) {
+	@Override public void realtimeBar(EventActivityPriceHistory bar) {
 		if (!m_req) {
 			BarSize barSize = m_barSize.getSelectedItem();
 			QueryLength queryLength = getQueryLength( barSize);
@@ -130,14 +130,14 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 		m_chart.repaint();
 	}
 	
-	TreeMap<Long,EventActivityHistory> m_map = new TreeMap<Long,EventActivityHistory>();
+	TreeMap<Long,EventActivityPriceHistory> m_map = new TreeMap<Long,EventActivityPriceHistory>();
 	
-	@Override public void historicalData(EventActivityHistory bar, boolean hasGaps) {
+	@Override public void historicalData(EventActivityPriceHistory bar, boolean hasGaps) {
 		System.out.println( bar);
 		addBar( bar);
 	}
 
-	private void addBar( EventActivityHistory bar) {
+	private void addBar( EventActivityPriceHistory bar) {
 		m_map.put( bar.time, bar);
 		m_rows.clear();
 		m_rows.addAll( m_map.values() );

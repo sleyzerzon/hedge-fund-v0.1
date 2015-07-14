@@ -2,7 +2,10 @@ package com.onenow.data;
 
 import java.util.logging.Level;
 
+import org.apache.derby.iapi.types.DataType;
+
 import com.onenow.alpha.BrokerInterface;
+import com.onenow.constant.ColumnName;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.PriceType;
@@ -40,7 +43,7 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventActivityRealtime event = new EventActivityRealtime(	timeStamp, inv, PriceType.TRADED, 
+			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeStamp, inv, PriceType.TRADED, 
 																		lastPrice, lastSize,
 																		source, timing);
 			cache.writeEvent(event);
@@ -55,10 +58,18 @@ public class MarketPrice {
 //			// writeSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
 //			// writePriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
 //			
-//			 cache.writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);			
+//			 cache.writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);
+			
 		} else {
 			Watchr.info("RT Volume without size");
+			
 		}
+	}
+	
+	private static void writeStreaming() {
+		
+		ColumnName dataType = ColumnName.DELTA;
+		
 	}
 	
 	

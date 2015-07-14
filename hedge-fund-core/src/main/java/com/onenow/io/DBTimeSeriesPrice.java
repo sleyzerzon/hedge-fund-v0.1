@@ -14,8 +14,8 @@ import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivity;
-import com.onenow.data.EventActivityRealtime;
-import com.onenow.data.EventActivityHistory;
+import com.onenow.data.EventActivityPriceSizeRealtime;
+import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestRaw;
 import com.onenow.instrument.Underlying;
@@ -41,7 +41,7 @@ public class DBTimeSeriesPrice {
 		String optionExpDate = event.getOptionExpirationDate(); 
 		String futureExpDate = event.getFutureExpirationDate();
 		
-		if(event instanceof EventActivityRealtime) {
+		if(event instanceof EventActivityPriceSizeRealtime) {
 			Serie serie = getWriteSingleSerie(		serieName, 
 													event.time, event.price,
 													source, timing, tradeType,
@@ -51,28 +51,28 @@ public class DBTimeSeriesPrice {
 			series.add(serie);
 		} 
 		
-		if(event instanceof EventActivityHistory) {
+		if(event instanceof EventActivityPriceHistory) {
 			// TODO: use the actual interval size to place the four data points in time
 			Serie serieOpen = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityHistory) event).open,
+													event.time, ((EventActivityPriceHistory) event).open,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
 													futureExpDate);
 			Serie serieHigh = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityHistory) event).high,
+													event.time, ((EventActivityPriceHistory) event).high,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
 													futureExpDate);
 			Serie serieLow = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityHistory) event).low,
+													event.time, ((EventActivityPriceHistory) event).low,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
 													futureExpDate);
 			Serie serieClose = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityHistory) event).close,
+													event.time, ((EventActivityPriceHistory) event).close,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
