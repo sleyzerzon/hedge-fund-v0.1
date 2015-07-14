@@ -79,10 +79,6 @@ public class DataHistoryChain {
 
 		/**
 		 * Every investment has it's own history from L3
-		 * @param inv
-		 * @param tradeType
-		 * @param source
-		 * @param timing
 		 * @return
 		 */
 	  	private static QuoteHistoryInvestment lookupInvHistory(EventRequestHistory request) {

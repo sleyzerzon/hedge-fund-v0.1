@@ -139,7 +139,7 @@ public class Event {
 		} 
 		
 		try {
-			s =	s + "-tradeType " + priceType + " ";
+			s =	s + "-priceType " + priceType + " ";
 		} catch (Exception e) {
 		}
 		

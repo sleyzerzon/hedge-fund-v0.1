@@ -46,7 +46,7 @@ public class EventRequestHistory extends EventRequest {
 		if(whatToShow.equals(WhatToShow.TRADES)) {
 			return PriceType.TRADED;
 		}
-
+		// default
 		return PriceType.CALCULATED;
 	}	
 
