@@ -1,17 +1,7 @@
 package com.onenow.io;
 
-import java.util.logging.Level;
-
-import javax.sql.DataSource;
-
 import com.amazonaws.regions.Region;
-import com.onenow.constant.StreamName;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
-import com.onenow.data.DataSampling;
-import com.onenow.data.EventActivity;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
 import com.onenow.instrument.Investment;
@@ -25,6 +15,8 @@ import com.onenow.util.Watchr;
  *
  */
 public class Lookup {
+	
+	static String separator = "-";
 	
 	public Lookup() {
 		
@@ -43,7 +35,7 @@ public class Lookup {
 		}
 			
 		try {
-			s = s + "-" + getEventKey(event);
+			s = s + separator + getEventKey(event);
 		} catch (Exception e) {
 		}
 			
@@ -58,56 +50,90 @@ public class Lookup {
 	 */	
 	public static String getEventKey(Event event) {
 		String s = ""; 
+
+		s = lookupGeneral(event, s);		
+		
+		s = lookupOptions(event, s);
+		
+		s = lookupFutures(event, s);
+
+		s = lookupPriceType(event, s);
+		
+		s = lookupSourceTiming(event, s);
 	
+		return (s);
+	}
+
+	private static String lookupGeneral(Event event, String s) {
 		// GENERAL
 		try {
 			Underlying under = event.getInvestment().getUnder();
-			s = s + under.getTicker() + "-" + event.getInvestment().getInvType();
+			s = s + under.getTicker() + separator + event.getInvestment().getInvType();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Watchr.severe("LOOKUP TICKER EXCEPTION: " + event.toString());
-		}		
-		
+		}
+		return s;
+	}
+
+	private static String lookupOptions(Event event, String s) {
 		// OPTIONS
 		try {
 			if (event.getInvestment() instanceof InvestmentOption) {
 				String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
 				Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
-				s = s + "-" + exp + "-" + strike; 
+				s = s + separator + exp + separator + strike; 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Watchr.severe("LOOKUP OPTIONS EXCEPTION: " + event.toString());
 		}
-		
+		return s;
+	}
+
+	private static String lookupFutures(Event event, String s) {
 		// FUTURES
 		try {
 			if (event.getInvestment() instanceof InvestmentFuture) {
 				String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
-				s = s + "-" + exp;
+				s = s + separator + exp;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Watchr.severe("LOOKUP FUTURES EXCEPTION: " + event.toString());
 		}
+		return s;
+	}
 
+	private static String lookupPriceType(Event event, String s) {
 		// PRICE TYPE
 		try {
-			s = s + "-" + event.priceType.toString();
+			String priceType = separator + event.priceType.toString();
+			s = s + priceType;
+			if(priceType.equals(separator)) {
+				Watchr.severe("LOOKUP PRICE TYPE EMPTY");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Watchr.severe("LOOKUP PRICE TYPE EXCEPTION: " + event.toString());
 		}
-		
+		return s;
+	}
+
+	private static String lookupSourceTiming(Event event, String s) {
 		// SOURCE AND TIMING
 		try {
-			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
+			String source = separator + event.source.toString();
+			String timing = separator + event.timing.toString();
+			s = s + source + timing;
+			if(source.equals(separator) || timing.equals(separator)) {
+				Watchr.severe("LOOKUP PRICE SOURCE / TIMING EMPTY");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Watchr.severe("LOOKUP SOURCE / TIMING EXCEPTION: " + event.toString());
 		}
-	
-		return (s);
+		return s;
 	}
 	
 	/**
@@ -122,7 +148,7 @@ public class Lookup {
 		
 		s = inv.toString();
 		
-		s = s + "-" + tradeType.toString();
+		s = s + separator + tradeType.toString();
 		
 		return s;
 	}
@@ -137,22 +163,22 @@ public class Lookup {
 		}
 
 		try {
-			s = s + "-" + request.priceType.toString();
+			s = s + separator + request.priceType.toString();
 		} catch (Exception e) {
 		}
 
 		try {
-			s = s + "-" + request.sampling.toString();
+			s = s + separator + request.sampling.toString();
 		} catch (Exception e) {
 		}
 
 		try {
-			s = s + "-" + request.toDashedDate;
+			s = s + separator + request.toDashedDate;
 		} catch (Exception e) {
 		}
 
 		try {
-			s = s + "-" + request.source.toString() + "-" + request.timing.toString();
+			s = s + separator + request.source.toString() + separator + request.timing.toString();
 		} catch (Exception e) {
 		}
 		
