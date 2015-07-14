@@ -93,7 +93,7 @@ public class InitMarket {
 	
 	public static Portfolio getRealtimePortfolio(String toDashedDate) {	
 		
-		int maxTimeSeries = 5;
+		int maxTimeSeries = 3;
 
 		return getPortfolio(	new ArrayList<Underlying>(), 
 								InvestmentList.getUnderlying(InvestmentList.someIndices),
@@ -114,7 +114,7 @@ public class InitMarket {
 
 	public static Portfolio getPrimaryPortfolio(String toDashedDate) {	
 		
-		int maxTimeSeries = 5;
+		int maxTimeSeries = 3;
 		
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.getSomeStocks()), 
 								new ArrayList<Underlying>(),

@@ -241,107 +241,44 @@ public class Contract implements Cloneable {
 
     @Override public String toString() {
         
-    	// StringBuilder sb = new StringBuilder();
-    	
-    	String s = "";
-    	
-		try {
-			s = s + "-conid " + m_conid + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-symbol " + m_symbol + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-secType " + m_secType + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-expiry " + m_expiry + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-strike " + m_strike + " ";
-		} catch (Exception e) {
-		}
-		
-		try {
-			s = s + "-right " + m_right + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-multiplier " + m_multiplier + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-exchange " + m_exchange + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-currency " + m_currency + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-localSymbol " + m_localSymbol + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-tradingClass " + m_tradingClass + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-primaryExch " + m_primaryExch + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-secIdType " + m_secIdType + " ";
-		} catch (Exception e) {
-		}
-
-		try {
-			s = s + "-secId " + m_secId + " ";
-		} catch (Exception e) {
-		}
-
-//        add( sb, "-conid ", m_conid);
-//        add( sb, "-symbol ", m_symbol);
-//        add( sb, "-secType ", m_secType);
-//        add( sb, "-expiry ", m_expiry);
-//        add( sb, "-strike ", m_strike);
-//        add( sb, "-right ", m_right);
-//        add( sb, "-multiplier ", m_multiplier);
-//        add( sb, "-exchange ", m_exchange);
-//        add( sb, "-currency ", m_currency);
-//        add( sb, "-localSymbol ", m_localSymbol);
-//        add( sb, "-tradingClass ", m_tradingClass);
-//        add( sb, "-primaryExch ", m_primaryExch);
-//        add( sb, "-secIdType ", m_secIdType);
-//        add( sb, "-secId ", m_secId);
-//        return sb.toString();
-		
-        return s;
+    	StringBuilder s = new StringBuilder();		
+        addToString( s, "-conid ", m_conid);
+        addToString( s, "-symbol ", m_symbol);
+        addToString( s, "-secType ", m_secType);
+        addToString( s, "-expiry ", m_expiry);
+        addToString( s, "-strike ", m_strike);
+        addToString( s, "-right ", m_right);
+        addToString( s, "-multiplier ", m_multiplier);
+        addToString( s, "-exchange ", m_exchange);
+        addToString( s, "-currency ", m_currency);
+        addToString( s, "-localSymbol ", m_localSymbol);
+        addToString( s, "-tradingClass ", m_tradingClass);
+        addToString( s, "-primaryExch ", m_primaryExch);
+        addToString( s, "-secIdType ", m_secIdType);
+        addToString( s, "-secId ", m_secId);
+        return s.toString();
+        
     }
     
 
-    public static void add(StringBuilder sb, String tag, Object val) {
-        if (	val == null || 
-        		val.equals(0.0)  ||
-        		val instanceof String && ((String)val).length() == 0) {
+    public static void addToString(StringBuilder sb, String tag, Object val) {
+
+    	// do'nt add trivial cases
+    	boolean skip = false;
+		try {
+			skip = (val == null || 
+					val.equals(0.0)  ||
+					val instanceof String && ((String)val).length() == 0);
+		} catch (Exception e) {
+			skip = true;
+			e.printStackTrace();
+		}
+    			
+    	if(skip) {
             return;
         }
-
+    	
+    	// do add initialized data
         sb.append( tag);
         sb.append( val);
         sb.append(" ");
