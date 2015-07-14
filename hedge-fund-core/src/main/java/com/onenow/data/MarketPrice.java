@@ -37,15 +37,15 @@ public class MarketPrice {
 	
 	
 	// WRITE REAL-TIME 
-	private static void writeRealTime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
-										Integer volume, Double VWAP, boolean splitFlag,
-										InvDataSource source, InvDataTiming timing) {
+	private static void writePriceSizeRealtime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
+												Integer volume, Double VWAP, boolean splitFlag,
+												InvDataSource source, InvDataTiming timing) {
 
 		if(lastSize>0) { 
 			
 			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeStamp, inv, PriceType.TRADED, 
-																		lastPrice, lastSize,
-																		source, timing);
+																						lastPrice, lastSize,
+																						source, timing);
 			cache.writeEvent(event);
 			
 			
@@ -149,7 +149,7 @@ public class MarketPrice {
 		
 		InvDataSource source = InvDataSource.IB;
 		InvDataTiming timing = InvDataTiming.REALTIME;
-		writeRealTime(	time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
+		writePriceSizeRealtime(	time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
 									Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
 									source, timing);
 		return;

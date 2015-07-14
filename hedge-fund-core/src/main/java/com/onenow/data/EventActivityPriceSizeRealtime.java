@@ -19,13 +19,13 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 	 * @param price
 	 * @param size
 	 */
-	public EventActivityPriceSizeRealtime(	Long timeActivity, Investment inv, PriceType tradeType, Double price, long size,
-									InvDataSource source, InvDataTiming timing) {
+	public EventActivityPriceSizeRealtime(	Long timeActivity, Investment inv, PriceType priceType, Double price, long size,
+											InvDataSource source, InvDataTiming timing) {
 
 		super();
 		
 		setInvestment(inv);
-		super.priceType = tradeType;		
+		super.priceType = priceType;		
 		super.source = source;
 		super.timing = timing;
 

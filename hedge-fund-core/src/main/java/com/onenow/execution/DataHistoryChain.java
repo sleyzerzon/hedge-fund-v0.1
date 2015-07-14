@@ -39,7 +39,9 @@ public class DataHistoryChain {
 			  Watchr.log(Level.FINE, "Received request object: " + requestObject.toString());
 			  EventRequestHistory request = (EventRequestHistory) requestObject;
 			  QuoteHistoryInvestment invHist = lookupInvHistory(request);	// one history per investment
-			  TimeParser.paceHistoricalQuery(lastQueryTime);	// avoid over-running IB
+			  
+			  // TODO: count number of outstanding requests, must be < 50
+			  TimeParser.paceHistoricalQuery(lastQueryTime);				// avoid over-running IB
 			  
 			  Integer reqId = requestHistoricalData(	request.getInvestment(), 
 					  									getEndDateTime(request), 

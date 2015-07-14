@@ -74,22 +74,33 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 
 	private void handleRow(final EventActivityPriceHistory row) {
 		
+		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
+
 		// Clarify provenance
 		row.setInvestment(investment);
 		row.priceType = priceType;
 		row.source = source;
 		row.timing = timing;
+		
+		if( !priceType.equals(PriceType.ASK) &&
+			!priceType.equals(PriceType.BID) &&
+			!priceType.equals(PriceType.TRADED) &&
+			!priceType.equals(PriceType.CALCULATED)
+			) {
+			writeBusThread(row);			
+		} else {
+			Watchr.severe("INVALID PRICE TYPE: " + row.toString());
+		}
 				
+	}
+
+	private void writeBusThread(final EventActivityPriceHistory row) {
 		// Write to history data stream	
 		new Thread () {
 			@Override public void run () {
 				BusSystem.write(row, BusSystem.getStreamName("HISTORY"));
 			}
 		}.start();
-
-
-		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
-
 	}
 
 	@Override public void historicalDataEnd() {
