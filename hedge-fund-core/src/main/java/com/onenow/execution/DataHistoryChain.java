@@ -35,14 +35,12 @@ public class DataHistoryChain {
 	public void processHistoryOneRequest(Message message) {
 		Object requestObject = Piping.deserialize(message.getBody(), EventRequestHistory.class);
 		  if(requestObject!=null) {
+			  
 			  Watchr.log(Level.FINE, "Received request object: " + requestObject.toString());
 			  EventRequestHistory request = (EventRequestHistory) requestObject;
-			  // get the history reference for the specific investment 
-			  QuoteHistoryInvestment invHist = lookupInvHistory(request);
-			  // TODO: handle the case of many requests with no response, which over-runs IB (50 max at a time) 
-			  TimeParser.paceHistoricalQuery(lastQueryTime); 
+			  QuoteHistoryInvestment invHist = lookupInvHistory(request);	// one history per investment
+			  TimeParser.paceHistoricalQuery(lastQueryTime);	// avoid over-running IB
 			  
-			  // TODO: request only if <x number of data points in the time series
 			  Integer reqId = requestHistoricalData(	request.getInvestment(), 
 					  									getEndDateTime(request), 
 														request.config, invHist);

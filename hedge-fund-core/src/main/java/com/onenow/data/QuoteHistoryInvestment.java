@@ -28,7 +28,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	public ArrayList<EventActivityPriceHistory> quoteRows = new ArrayList<EventActivityPriceHistory>();
 	
 	public Investment investment;
-	private PriceType priceType; // maps to IB "WhatToShow
+	private PriceType priceType; 
 	private InvDataSource source;
 	private InvDataTiming timing;
 	

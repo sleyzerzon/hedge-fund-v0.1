@@ -59,12 +59,16 @@ public class Lookup {
 	public static String getEventKey(Event event) {
 		String s = ""; 
 	
+		// GENERAL
 		try {
 			Underlying under = event.getInvestment().getUnder();
 			s = s + under.getTicker() + "-" + event.getInvestment().getInvType();
 		} catch (Exception e) {
+			e.printStackTrace();
+			Watchr.severe("LOOKUP TICKER EXCEPTION: " + event.toString());
 		}		
 		
+		// OPTIONS
 		try {
 			if (event.getInvestment() instanceof InvestmentOption) {
 				String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
@@ -72,24 +76,35 @@ public class Lookup {
 				s = s + "-" + exp + "-" + strike; 
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			Watchr.severe("LOOKUP OPTIONS EXCEPTION: " + event.toString());
 		}
 		
+		// FUTURES
 		try {
 			if (event.getInvestment() instanceof InvestmentFuture) {
 				String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
 				s = s + "-" + exp;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			Watchr.severe("LOOKUP FUTURES EXCEPTION: " + event.toString());
 		}
 
+		// PRICE TYPE
 		try {
 			s = s + "-" + event.priceType.toString();
 		} catch (Exception e) {
+			e.printStackTrace();
+			Watchr.severe("LOOKUP PRICE TYPE EXCEPTION: " + event.toString());
 		}
-
+		
+		// SOURCE AND TIMING
 		try {
 			s = s + "-" + event.source.toString() + "-" + event.timing.toString();
 		} catch (Exception e) {
+			e.printStackTrace();
+			Watchr.severe("LOOKUP SOURCE / TIMING EXCEPTION: " + event.toString());
 		}
 	
 		return (s);
