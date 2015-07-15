@@ -93,10 +93,10 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 
 		// TODO: potential to crash from ever-growing number of threads while waiting to connect
 		while(!connected) {
-			restaureDBconnection();
-			TimeParser.wait(10);
+			Watchr.warning("Waiting for TSDB to be connected");
+			TimeParser.wait(1);
 		}
-
+			
 		Long before = TimeParser.getTimestampNow();
 		try {
 			DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
@@ -112,13 +112,6 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 								"\n", "");
 		}
 
-		private void restaureDBconnection() {
-			Watchr.warning("Trying to write to disconnected TSDB");
-			if(!tryingToConnect) {
-				tryingToConnect = true;
-				dbConnect();				
-			} 
-		}
 	}.start();
 	
 }
