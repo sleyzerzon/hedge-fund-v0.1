@@ -95,15 +95,15 @@ public class DBTimeSeriesPrice {
 												String futureExpDate) {
 		
 		final Serie serie = new Serie.Builder(serieName)
-		.columns(	ColumnName.TIME.toString(), ColumnName.PRICE.toString(), 
+		.columns(	ColumnName.TIME.toString().toLowerCase(), ColumnName.PRICE.toString(), 
 					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(), 
 					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
 					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
 					ColumnName.FUTUREEXP.toString())
-		.values(time, price, 																		// basic columns
-				"\""+ source + "\"", "\""+ timing +"\"", "\""+ tradeType +"\"",					// event origination
-				"\""+ under + "\"", "\""+ invType +"\"", 								// investment
-				"\""+ strikePrice +"\"", "\""+ optionExpDate +"\"",		// option
+		.values(time*1000, price, 															// basic columns
+				"\""+ source + "\"", "\""+ timing +"\"", "\""+ tradeType +"\"",				// event origination
+				"\""+ under + "\"", "\""+ invType +"\"", 									// investment
+				"\""+ strikePrice +"\"", "\""+ optionExpDate +"\"",							// option
 				"\""+ futureExpDate +"\""													// if future, expiration
 				) 
 

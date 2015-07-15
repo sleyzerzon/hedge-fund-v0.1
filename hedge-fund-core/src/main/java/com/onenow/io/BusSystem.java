@@ -12,6 +12,7 @@ import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 import com.onenow.admin.InitAmazon;
 import com.onenow.admin.NetworkConfig;
+import com.onenow.constant.PriceType;
 import com.onenow.constant.StreamName;
 import com.onenow.data.EventActivity;
 import com.onenow.io.Lookup;
@@ -116,6 +117,11 @@ public class BusSystem {
 	}
 
 	public static void write(EventActivity activityToSend, StreamName streamName) {
+		
+		if(!validActivity(activityToSend)) {
+			return;
+		}
+		
 		boolean success = false;
 		int maxTries = 3;
 		
@@ -136,6 +142,21 @@ public class BusSystem {
 				}
 			}
 		}
+	}
+	
+	private static boolean validActivity(EventActivity activity) {
+		boolean valid = true;
+		
+		if( !activity.priceType.equals(PriceType.ASK) && 
+			!activity.priceType.equals(PriceType.BID) &&
+			!activity.priceType.equals(PriceType.TRADED) &&
+			!activity.priceType.equals(PriceType.CALCULATED)
+				) {
+			Watchr.severe("ATTEMPT TO WRITE INVALID ACTIVITY TO BUS: PRICETYPE");
+			valid = false;
+		}
+				
+		return valid;
 	}
 		
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
