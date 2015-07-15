@@ -18,7 +18,7 @@ import com.onenow.util.Watchr;
 
 public class Event {
 	
-	public Long time; // for activities and also for specific time queries, instead of to/from range
+	public Long timeInMilisec; // for activities and also for specific time queries, instead of to/from range
 
 	public InvDataSource source;
 	public InvDataTiming timing;
@@ -44,7 +44,7 @@ public class Event {
 	}
 	
 	public String getFormatedTime() {
-		return TimeParser.getFormatedPacificDateTime(time*1000);
+		return TimeParser.getFormatedPacificDateTime(timeInMilisec*1000);
 	}
 
 	public void setInvestment(Investment inv) {
@@ -144,8 +144,8 @@ public class Event {
 		}
 		
 		try {
-			if(time!=null) {
-				s = s + "-time " + time + " ";
+			if(timeInMilisec!=null) {
+				s = s + "-time " + timeInMilisec + " ";
 			}
 		} catch (Exception e) {
 		}

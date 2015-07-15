@@ -24,7 +24,7 @@ public class EventActivityPriceHistory extends EventActivity {
 //	}
 
 	// TODO: what time zone is this time?
-	public EventActivityPriceHistory( 	int reqId, long timeActivity, 
+	public EventActivityPriceHistory( 	int reqId, long timeInSec, 
 										double high, double low, double open, double close, 
 										double wap, long volume, int count) {
 		
@@ -32,7 +32,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		super();
 		
 		// super
-		super.time = timeActivity;
+		super.timeInMilisec = timeInSec*1000;
 		super.price = open;
 		super.size = volume;
 

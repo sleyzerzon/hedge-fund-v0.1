@@ -6,10 +6,16 @@ import java.util.List;
 
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.WhatToShow;
+import com.onenow.constant.ColumnName;
+import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.MemoryLevel;
+import com.onenow.constant.PriceType;
+import com.onenow.constant.SamplingRate;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
+import com.onenow.data.EventRequestRaw;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
@@ -73,10 +79,10 @@ public class HistorianMain {
 																HistorianService.getConfig(InvDataSource.IB, BarSize._5_mins, whatToShow));
 			
 		
-		//List<Candle> storedPrices = getL2TSDBStoredPrice(request);
-		List<Candle> storedPrices = new ArrayList<Candle>();
+		List<Candle> storedPriceSample = getL2TSDBStoredPrice(request);
+		// List<Candle> storedPrices = new ArrayList<Candle>();
 				
-		requestL3PartnerDataIfL2Incomplete(request, storedPrices);
+		requestL3PartnerDataIfL2Incomplete(request, storedPriceSample);
 			
 	}
 	
@@ -86,7 +92,12 @@ public class HistorianMain {
 		List<Candle> storedPrices = new ArrayList<Candle>();
 		try {
 			// TODO: convert request type
-			// storedPrices = DBTimeSeriesPrice.read(request);
+			String fromDashedDate = TimeParser.getDateMinusDashed(request.toDashedDate, 1);
+			EventRequestRaw rawReq = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE,
+															request.getInvestment(), PriceType.ASK, SamplingRate.UHFSHORT,
+															fromDashedDate, request.toDashedDate,
+															InvDataSource.IB, InvDataTiming.HISTORICAL);
+			storedPrices = DBTimeSeriesPrice.read(rawReq);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// some time series just don't exist or have data
@@ -98,9 +109,9 @@ public class HistorianMain {
 private static void requestL3PartnerDataIfL2Incomplete(EventRequest request, List<Candle> storedPrices) {
 
 	// query L3 only if L2 data is incomplete
-	int minPrices = 75;
-//		if ( storedPrices.size()<minPrices ) {	
-	if (true) {
+	int minPrices = 25;
+	if ( storedPrices.size()<minPrices ) {	
+//	if (true) {
 		Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 
 		// NOTE: gets today's data by requesting 'by end of today'

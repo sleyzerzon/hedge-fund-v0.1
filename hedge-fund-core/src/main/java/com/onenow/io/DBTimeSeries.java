@@ -27,6 +27,9 @@ public class DBTimeSeries {
 	
 	public static InfluxDB influxDB = dbConnect();
 	
+	private static boolean connected = false;
+	private static boolean tryingToConnect = true;
+
 	/**
 	 * Default constructor connects to database
 	 */
@@ -36,17 +39,18 @@ public class DBTimeSeries {
 // INI
 public static InfluxDB dbConnect() { 
 	InfluxDB db  = null;
-	boolean tryToConnect = true;
-	while(tryToConnect) {		
+	tryingToConnect = true;
+	
+	while(tryingToConnect) {		
 		try {	
-			tryToConnect = false;
 			Watchr.log(Level.INFO, "CONNECTING TO TSDB...", "\n", "");
 			NetworkService tsdbService = NetworkConfig.getTSDB();
 			db = InfluxDBFactory.connect(	tsdbService.protocol+"://"+tsdbService.URI+":"+tsdbService.port, 
 											tsdbService.user, tsdbService.pass);	
 			dbCreateAndConnect();	
+			tryingToConnect = false;
 		} catch (Exception e) {
-			tryToConnect = true;
+			tryingToConnect = true;
 			Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO TSDB: ", "\n", "");
 			e.printStackTrace();
 			try {
@@ -56,6 +60,7 @@ public static InfluxDB dbConnect() {
 			}
 		}
 	} 
+	connected = true;
 	Watchr.log(Level.INFO, "CONNECTED TO TSDB!");
 	return db;
 }
@@ -86,10 +91,17 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 	new Thread () {
 		@Override public void run () {
 
+		// TODO: potential to crash from ever-growing number of threads while waiting to connect
+		while(!connected) {
+			restaureDBconnection();
+			TimeParser.wait(10);
+		}
+
 		Long before = TimeParser.getTimestampNow();
 		try {
 			DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
 		} catch (Exception e) {
+			// TODO: why causing exceptions?
 			e.printStackTrace();
 		}
 		Long after = TimeParser.getTimestampNow();
@@ -98,6 +110,14 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 								" INTO " + "[" + serie.getName() + "]" + " " + "SERIE " + serie.toString() + " " +  
 								"-ELAPSED " + (after-before) + "ms ", // "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
+		}
+
+		private void restaureDBconnection() {
+			Watchr.warning("Trying to write to disconnected TSDB");
+			if(!tryingToConnect) {
+				tryingToConnect = true;
+				dbConnect();				
+			} 
 		}
 	}.start();
 	

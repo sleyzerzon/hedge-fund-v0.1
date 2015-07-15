@@ -43,7 +43,7 @@ public class DBTimeSeriesPrice {
 		
 		if(event instanceof EventActivityPriceSizeRealtime) {
 			Serie serie = getWriteSingleSerie(		serieName, 
-													event.time, event.price,
+													event.timeInMilisec, event.price,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
@@ -54,25 +54,25 @@ public class DBTimeSeriesPrice {
 		if(event instanceof EventActivityPriceHistory) {
 			// TODO: use the actual interval size to place the four data points in time
 			Serie serieOpen = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityPriceHistory) event).open,
+													event.timeInMilisec, ((EventActivityPriceHistory) event).open,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
 													futureExpDate);
 			Serie serieHigh = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityPriceHistory) event).high,
+													event.timeInMilisec, ((EventActivityPriceHistory) event).high,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
 													futureExpDate);
 			Serie serieLow = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityPriceHistory) event).low,
+													event.timeInMilisec, ((EventActivityPriceHistory) event).low,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
 													futureExpDate);
 			Serie serieClose = getWriteSingleSerie(	serieName, 
-													event.time, ((EventActivityPriceHistory) event).close,
+													event.timeInMilisec, ((EventActivityPriceHistory) event).close,
 													source, timing, tradeType,
 													under, invType,
 													strikePrice, optionExpDate,
@@ -87,8 +87,9 @@ public class DBTimeSeriesPrice {
 		return series;
 	}
 
+	// TODO: change signature to "final EventActivity event, String serieName"
 	private static Serie getWriteSingleSerie(	String serieName, 
-												Long time, Double price,
+												Long timeInMilisec, Double price,
 												InvDataSource source, InvDataTiming timing, PriceType tradeType,
 												Underlying under, InvType invType,
 												Double strikePrice, String optionExpDate, 
@@ -100,7 +101,7 @@ public class DBTimeSeriesPrice {
 					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
 					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
 					ColumnName.FUTUREEXP.toString())
-		.values(time*1000, price, 															// basic columns
+		.values(timeInMilisec, price, 															// basic columns
 				"\""+ source + "\"", "\""+ timing +"\"", "\""+ tradeType +"\"",				// event origination
 				"\""+ under + "\"", "\""+ invType +"\"", 									// investment
 				"\""+ strikePrice +"\"", "\""+ optionExpDate +"\"",							// option
