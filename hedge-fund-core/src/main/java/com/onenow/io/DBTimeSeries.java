@@ -27,7 +27,6 @@ public class DBTimeSeries {
 	
 	public static InfluxDB influxDB = dbConnect();
 	
-	private static boolean connected = false;
 	private static boolean tryingToConnect = true;
 
 	/**
@@ -53,14 +52,9 @@ public static InfluxDB dbConnect() {
 			tryingToConnect = true;
 			Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO TSDB: ", "\n", "");
 			e.printStackTrace();
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e1) {
-				// nothing to do
-			}
+			TimeParser.wait(10);
 		}
 	} 
-	connected = true;
 	Watchr.log(Level.INFO, "CONNECTED TO TSDB!");
 	return db;
 }
@@ -91,13 +85,18 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 	new Thread () {
 		@Override public void run () {
 			
+		boolean tryToWrite = true;
+
 		Long before = TimeParser.getTimestampNow();
-		try {
-			waitForDBconnection();
-			DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
-		} catch (Exception e) {
-			// TODO: why causing exceptions?
-			e.printStackTrace();
+		while(tryToWrite) {
+			try {
+				DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
+				tryToWrite = false;
+			} catch (Exception e) {
+				tryToWrite = true;
+				e.printStackTrace();
+				TimeParser.wait(1);
+			}
 		}
 		Long after = TimeParser.getTimestampNow();
 	
@@ -105,17 +104,8 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 								" INTO " + "[" + serie.getName() + "]" + " " + "SERIE " + serie.toString() + " " +  
 								"-ELAPSED " + (after-before) + "ms ", // "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
+		
 		}
-
-		private void waitForDBconnection() {
-			// TODO: potential to crash from ever-growing number of threads while waiting to connect
-			while(!connected) {
-				Watchr.warning("Waiting for TSDB to be connected");
-				TimeParser.wait(1);
-			}
-			Watchr.info("DONE Waiting: TSDB now connected");
-		}
-
 	}.start();
 	
 }
