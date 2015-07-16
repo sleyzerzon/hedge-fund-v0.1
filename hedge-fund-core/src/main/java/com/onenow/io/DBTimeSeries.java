@@ -96,6 +96,7 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 			Watchr.warning("Waiting for TSDB to be connected");
 			TimeParser.wait(1);
 		}
+		Watchr.info("DONE Waiting: TSDB now connected");
 			
 		Long before = TimeParser.getTimestampNow();
 		try {
