@@ -231,7 +231,10 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		context = context + " " + ContractFactory.getContract(inv).toString();
 
 		try {
-			context = context + " " + busController.reqDetail.get(id);
+			String detail = busController.reqDetail.get(id);
+			if(detail!=null) {
+			context = context + " " + detail;
+			}
 		} catch (Exception e3) {
 			Watchr.log(Level.WARNING, "Could not fill query context for reqId: " + id);			
 		}

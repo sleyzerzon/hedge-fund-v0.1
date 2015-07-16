@@ -47,7 +47,7 @@ public class databaseTimeSeriesTest {
   private EventActivityPriceHistory getHistoryActivity() {
 	  
 	  int reqId = 123; 
-	  long time = TimeParser.getTimeMilisecondsNow()/1000; 
+	  long timeSeconds = TimeParser.getTimeMilisecondsNow()/1000; 
 	  // price
 	  double high = 0.33; 
 	  double low = 0.09; 
@@ -58,7 +58,7 @@ public class databaseTimeSeriesTest {
 	  long volume = 3; 
 	  int count = 23;		
 		
-	  EventActivityPriceHistory event = new EventActivityPriceHistory(reqId, time, high, low, open, close, wap, volume, count);	
+	  EventActivityPriceHistory event = new EventActivityPriceHistory(reqId, timeSeconds, high, low, open, close, wap, volume, count);	
 
 	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
 	  event.priceType = PriceType.BID;
