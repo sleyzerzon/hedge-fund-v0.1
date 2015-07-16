@@ -96,7 +96,7 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 				tryToWrite = false;
 			} catch (Exception e) {
 				tryToWrite = true;
-				e.printStackTrace();
+				// e.printStackTrace();
 				TimeParser.wait(1);
 				count++;
 			}
