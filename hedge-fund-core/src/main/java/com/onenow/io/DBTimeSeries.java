@@ -90,16 +90,10 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 	
 	new Thread () {
 		@Override public void run () {
-
-		// TODO: potential to crash from ever-growing number of threads while waiting to connect
-		while(!connected) {
-			Watchr.warning("Waiting for TSDB to be connected");
-			TimeParser.wait(1);
-		}
-		Watchr.info("DONE Waiting: TSDB now connected");
 			
 		Long before = TimeParser.getTimestampNow();
 		try {
+			waitForDBconnection();
 			DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
 		} catch (Exception e) {
 			// TODO: why causing exceptions?
@@ -111,6 +105,15 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 								" INTO " + "[" + serie.getName() + "]" + " " + "SERIE " + serie.toString() + " " +  
 								"-ELAPSED " + (after-before) + "ms ", // "ELAPSED TOTAL " + (after-event.origin.start) + "ms ", // TODO: CloudWatch
 								"\n", "");
+		}
+
+		private void waitForDBconnection() {
+			// TODO: potential to crash from ever-growing number of threads while waiting to connect
+			while(!connected) {
+				Watchr.warning("Waiting for TSDB to be connected");
+				TimeParser.wait(1);
+			}
+			Watchr.info("DONE Waiting: TSDB now connected");
 		}
 
 	}.start();
