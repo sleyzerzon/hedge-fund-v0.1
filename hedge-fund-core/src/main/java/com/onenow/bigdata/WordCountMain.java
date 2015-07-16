@@ -38,7 +38,7 @@ public class WordCountMain {
 		String downloadedFile = folderName+objectName;
 		S3.object2File(bucket, objectName, downloadedFile+".txt");
 		
-		countWordsInFile(downloadedFile+".txt", downloadedFile+"-"+TimeParser.getTimestampNow()+".out");
+		countWordsInFile(downloadedFile+".txt", downloadedFile+"-"+TimeParser.getTimeMilisecondsNow()+".out");
 	}
 	
 	private static void countWordsInFile(String inputFile, String outputFolder) {

@@ -167,7 +167,7 @@ public class BusSystem {
 		validateStream(streamName);
 		
 		String applicationName = "Investor" + "-" + streamName;
-		Long workerId = TimeParser.getTimestampNow();  //  String workerId = String.valueOf(UUID.randomUUID());
+		Long workerId = TimeParser.getTimeMilisecondsNow();  //  String workerId = String.valueOf(UUID.randomUUID());
 
        
 		KinesisClientLibConfiguration readClientConfig = null;

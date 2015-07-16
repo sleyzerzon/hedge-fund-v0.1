@@ -47,7 +47,7 @@ public class databaseTimeSeriesTest {
   private EventActivityPriceHistory getHistoryActivity() {
 	  
 	  int reqId = 123; 
-	  long time = TimeParser.getTimestampNow()/1000; 
+	  long time = TimeParser.getTimeMilisecondsNow()/1000; 
 	  // price
 	  double high = 0.33; 
 	  double low = 0.09; 

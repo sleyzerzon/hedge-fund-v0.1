@@ -261,17 +261,17 @@ public class Contract implements Cloneable {
     }
     
 
-    public static void addToString(StringBuilder sb, String tag, Object val) {
+    public static void addToString(StringBuilder s, String tag, Object val) {
 
     	// do'nt add trivial cases
     	boolean skip = false;
 		try {
 			skip = (val == null || 
 					val.equals(0.0)  ||
-					val instanceof String && ((String)val).length() == 0);
+					(val instanceof String && ((String)val).length() == 0));
 		} catch (Exception e) {
 			skip = true;
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
     			
     	if(skip) {
@@ -279,8 +279,8 @@ public class Contract implements Cloneable {
         }
     	
     	// do add initialized data
-        sb.append( tag);
-        sb.append( val);
-        sb.append(" ");
+        s.append(tag);
+        s.append(val);
+        s.append(" ");
     }
 }

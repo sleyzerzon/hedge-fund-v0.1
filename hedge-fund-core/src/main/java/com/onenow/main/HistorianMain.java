@@ -134,7 +134,7 @@ private static void requestL3PartnerPrice(EventRequest request) {
 	String message = Piping.serialize((Object) request);
 	sqs.sendMessage(message, SQS.getHistoryQueueURL());				
 
-	lastQueryTime = TimeParser.getTimestampNow();
+	lastQueryTime = TimeParser.getTimeMilisecondsNow();
 		
 }
 

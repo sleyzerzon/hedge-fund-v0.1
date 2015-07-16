@@ -46,7 +46,7 @@ public class DataHistoryChain {
 			  Integer reqId = requestHistoricalData(	request.getInvestment(), 
 					  									getEndDateTime(request), 
 														request.config, invHist);
-			  lastQueryTime = TimeParser.getTimestampNow();		
+			  lastQueryTime = TimeParser.getTimeMilisecondsNow();		
 		  }
 	}
 

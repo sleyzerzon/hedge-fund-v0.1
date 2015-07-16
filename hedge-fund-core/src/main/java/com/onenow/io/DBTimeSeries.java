@@ -87,7 +87,9 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 			
 		boolean tryToWrite = true;
 
-		Long before = TimeParser.getTimestampNow();
+		Long before = TimeParser.getTimeMilisecondsNow();
+		int count = 0;
+		int maxCount = 10;
 		while(tryToWrite) {
 			try {
 				DBTimeSeries.influxDB.write(dbName.toString(), TimeUnit.MILLISECONDS, serie);
@@ -96,9 +98,14 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 				tryToWrite = true;
 				e.printStackTrace();
 				TimeParser.wait(1);
+				count++;
+			}
+			if(count>maxCount) {
+				Watchr.severe("TSDB WRITE: Failed after attempts");
+				return;
 			}
 		}
-		Long after = TimeParser.getTimestampNow();
+		Long after = TimeParser.getTimeMilisecondsNow();
 	
 		Watchr.log(Level.INFO, 	"TSDB WRITE: "+ "<" + dbName + ">" + 
 								" INTO " + "[" + serie.getName() + "]" + " " + "SERIE " + serie.toString() + " " +  

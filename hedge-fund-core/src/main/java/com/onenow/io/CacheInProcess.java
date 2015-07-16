@@ -68,7 +68,7 @@ public class CacheInProcess {
 			success = writeRealtimeToMem(event, key, success, writeToMem);
 			
 			// TODO: fix calculation
-			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimestampNow()/1000-event.timeInMilisec), broker.getStream());
+			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimeMilisecondsNow()/1000-event.timeInMilisec), broker.getStream());
 		}
 		
 		

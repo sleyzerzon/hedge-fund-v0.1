@@ -9,7 +9,7 @@ import com.onenow.util.Watchr;
 public class ObjectOrigination {
 
 	public final String id = String.valueOf(UUID.randomUUID());
-	public final Long start = TimeParser.getTimestampNow();
+	public final Long start = TimeParser.getTimeMilisecondsNow();
 
 	public ObjectOrigination() {
 		

@@ -92,7 +92,7 @@ public class ChartistMain {
 	private static void prefetchPacedCharts(EventActivityPriceSizeRealtime event, SamplingRate samplingRate) {
 		
 		Long lastStamp = getLastStamp(samplingRate);
-		Long elapsedTime = TimeParser.getTimestampNow()-lastStamp;
+		Long elapsedTime = TimeParser.getTimeMilisecondsNow()-lastStamp;
 		Watchr.log(Level.WARNING, "ELAPSED " + elapsedTime + " FOR " + samplingRate);
 
 		if( elapsedTime > 10000 ) {
@@ -109,7 +109,7 @@ public class ChartistMain {
 			// TODO convert Request type
 			// readChartToL1FromRTL2(request);
 			
-			lastQueryStamp.put(samplingRate, TimeParser.getTimestampNow()); 
+			lastQueryStamp.put(samplingRate, TimeParser.getTimeMilisecondsNow()); 
 
 		}
 	}

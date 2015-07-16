@@ -228,17 +228,19 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			}
 		}
 
+		context = context + " " + ContractFactory.getContract(inv).toString();
+
 		try {
-			context = context + " " + ContractFactory.getContract(inv).toString();
 			context = context + " " + busController.reqDetail.get(id);
 		} catch (Exception e3) {
-			Watchr.log(Level.WARNING, "Could not find query context for reqId: " + id);			
+			Watchr.log(Level.WARNING, "Could not fill query context for reqId: " + id);			
 		}
 						
 		return context;
 	}
 	  
 
+	  // -id 10000132 -code 101 -message Max number of tickers has been reached -conid 0 -symbol ES -secType FOP -expiry 20150807 -strike 2095.0 -right CALL -multiplier 50 -exchange GLOBEX -currency USD null
 	  private boolean isConnectionErrorMustReconnect(int errorCode) {
 		
 		  if(   

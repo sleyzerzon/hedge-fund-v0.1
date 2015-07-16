@@ -64,7 +64,7 @@ public class TimeParser implements Testable {
 		return sdf.format(today);
 	}
 
-	public static long getTimestampNow() {
+	public static long getTimeMilisecondsNow() {
 
 		long timeStamp=0;
 		
@@ -80,7 +80,7 @@ public class TimeParser implements Testable {
 	
 	public static long getElapsedStamps(long oldStamp) {
 		long elapsed = 0;
-		elapsed = getTimestampNow() - oldStamp;
+		elapsed = getTimeMilisecondsNow() - oldStamp;
 		return elapsed;
 	}
 	
