@@ -40,14 +40,14 @@ public class HistorianMain {
 		
 		InitLogger.run("");
 		
-		String toDashedDate = getHistorianToday();
+		String toDashedDate = getThroughToday();
 		
 		boolean updateToday = false;
 		
 		while(true) {
 			
 			if(updateToday) {
-				String todayDashed = getHistorianToday();
+				String todayDashed = getThroughToday();
 				updatePortfolioL2HistoryFromL3(todayDashed);
 				updateToday = false;
 			}
@@ -65,9 +65,8 @@ public class HistorianMain {
 	}
 
 	// TODO: it's weird to ask for today + 1 to get a date historian thinks is today
-	private static String getHistorianToday() {
-//		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
-		String toDashedDate = TimeParser.getTodayDashed();
+	private static String getThroughToday() {
+		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 		return toDashedDate;
 	}
 

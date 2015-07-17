@@ -180,16 +180,18 @@ public static List<Serie> query(DBname dbName, EventRequestRaw request) {
 	List<Serie> series = new ArrayList<Serie>();
 
 	try {
-		String serieName = Lookup.getEventKey(request);
-			 
+		String serieName = Lookup.getEventKey(request);		 
 		String query = getQuery(request, serieName);
-			
-		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
-		String log = "DATABASE <" + dbName + "> QUERY " + query + " RETURNED with length: " + series.size(); // + " RETURNED " + series.toString();
+
+		String log = "DATABASE <" + dbName + "> QUERY " + query; 
 		Watchr.log(Level.INFO, log);  
+
+		series = DBTimeSeries.influxDB.query(dbName.toString(), query, TimeUnit.MILLISECONDS);
+		// String log2 = log " RETURNED with length: " + series.size(); // + " RETURNED " + series.toString();
+		// Watchr.log(Level.INFO, log);  
 		
 	} catch (Exception e) {
-		e.printStackTrace(); // some series don't exist or have data 
+		// e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }
