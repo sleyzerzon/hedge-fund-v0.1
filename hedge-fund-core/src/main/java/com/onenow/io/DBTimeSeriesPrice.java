@@ -12,6 +12,7 @@ import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
+import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.PriceType;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityPriceSizeRealtime;
@@ -139,7 +140,7 @@ public class DBTimeSeriesPrice {
 
 			candles = seriesToCandles(series); 
 			 
-//			String log = "TSDB Cache Chart/Price READ: " + MemoryLevel.L2TSDB + "HISTORY " + request.toString() + " " + " for " + key + " Prices: " + candles.toString();
+//			String log = "TSDB Cache Chart/Price READ: " + MemoryLevel.L2TSDB + "HISTORY " + request.toString() + " " + " Prices: " + candles.toString();
 //			Watchr.log(Level.INFO, log, "\n", "");
 
 			return candles;

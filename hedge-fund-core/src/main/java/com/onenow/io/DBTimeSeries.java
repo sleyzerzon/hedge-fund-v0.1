@@ -189,7 +189,7 @@ public static List<Serie> query(DBname dbName, EventRequestRaw request) {
 		Watchr.log(Level.INFO, log);  
 		
 	} catch (Exception e) {
-		// e.printStackTrace(); // some series don't exist or have data 
+		e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
 }
@@ -225,7 +225,7 @@ public static String getQueryTime(EventRequest request) {
 	if(request.toDashedDate!=null) {
 		s = s + DBQuery.TIME.toString().toLowerCase() + " > " + "'" + request.fromDashedDate + "'" + " "; 
 		s = s + DBQuery.AND.toString() + " ";
-		s = s + DBQuery.TIME.toString() + " < " + "'" + request.toDashedDate + "'" + " ";
+		s = s + DBQuery.TIME.toString().toLowerCase() + " < " + "'" + request.toDashedDate + "'" + " ";
 	} else {
 		s = s + DBQuery.TIME.toString().toLowerCase() + " > " + request.endPoint + " " + request.timeGap; 
 	}

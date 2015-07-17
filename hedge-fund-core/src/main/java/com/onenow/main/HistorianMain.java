@@ -31,7 +31,6 @@ import com.onenow.util.Watchr;
 public class HistorianMain {
 
 	private static Portfolio marketPortfolio = new Portfolio();
-    private static String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 	
 	private static SQS sqs = new SQS();
 	
@@ -41,26 +40,52 @@ public class HistorianMain {
 		
 		InitLogger.run("");
 		
+		String toDashedDate = getHistorianToday();
+		
+		boolean updateToday = false;
+		
 		while(true) {
 			
-			Watchr.log(Level.WARNING, "HISTORIAN through: " + toDashedDate);
-
-			marketPortfolio = InitMarket.getHistoryPortfolio(toDashedDate);	
-
-			// updates historical L1 from L2
-			for(Investment inv:marketPortfolio.investments) {
-				// To be saved to prices database
-				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.TRADES);							
-				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);							
-				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID);		
-				// To be saved to Greeks database
-//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
-//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.HISTORICAL_VOLATILITY);							
-//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.OPTION_IMPLIED_VOLATILITY);											
+			if(updateToday) {
+				String todayDashed = getHistorianToday();
+				updatePortfolioL2HistoryFromL3(todayDashed);
+				updateToday = false;
 			}
+			
+			updatePortfolioL2HistoryFromL3(toDashedDate);
 									
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
+
+			// every other cycle, update today's data through current time
+			if(!updateToday) {
+				updateToday = true;
+			}
+		}
+	}
+
+	// TODO: it's weird to ask for today + 1 to get a date historian thinks is today
+	private static String getHistorianToday() {
+//		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
+		String toDashedDate = TimeParser.getTodayDashed();
+		return toDashedDate;
+	}
+
+
+	private static void updatePortfolioL2HistoryFromL3(String toDashedDate) {
+		Watchr.log(Level.WARNING, "HISTORIAN through: " + toDashedDate);
+		marketPortfolio = InitMarket.getHistoryPortfolio(toDashedDate);	
+
+		// updates historical L1 from L2
+		for(Investment inv:marketPortfolio.investments) {
+			// To be saved to prices database
+			updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.TRADES);							
+			updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);							
+			updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID);		
+			// To be saved to Greeks database
+//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
+//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.HISTORICAL_VOLATILITY);							
+//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.OPTION_IMPLIED_VOLATILITY);											
 		}
 	}
 
@@ -82,7 +107,7 @@ public class HistorianMain {
 		List<Candle> storedPriceSample = getL2TSDBStoredPrice(request);
 		// List<Candle> storedPrices = new ArrayList<Candle>();
 				
-		requestL3PartnerDataIfL2Incomplete(request, storedPriceSample);
+		requestL3PartnerDataIfL2Incomplete(request, storedPriceSample, toDashedDate);
 			
 	}
 	
@@ -94,7 +119,7 @@ public class HistorianMain {
 			// TODO: convert request type
 			String fromDashedDate = TimeParser.getDateMinusDashed(request.toDashedDate, 1);
 			EventRequestRaw rawReq = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE,
-															request.getInvestment(), PriceType.ASK, SamplingRate.UHFSHORT,
+															request.getInvestment(), PriceType.ASK, SamplingRate.HIFREQ,
 															fromDashedDate, request.toDashedDate,
 															InvDataSource.IB, InvDataTiming.HISTORICAL);
 			storedPrices = DBTimeSeriesPrice.read(rawReq);
@@ -106,24 +131,23 @@ public class HistorianMain {
 	}
 
 
-private static void requestL3PartnerDataIfL2Incomplete(EventRequest request, List<Candle> storedPrices) {
+private static void requestL3PartnerDataIfL2Incomplete(EventRequest request, List<Candle> storedPrices, String toDashedDate) {
 
 	// query L3 only if L2 data is incomplete
 	int minPrices = 25;
 	if ( storedPrices.size()<minPrices ) {	
-//	if (true) {
-		Watchr.log(Level.INFO, "HISTORIC MISS: " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
+		Watchr.log(Level.INFO, "HISTORIC MISS" + "(" + storedPrices.size() + ")" + " " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 
 		// NOTE: gets today's data by requesting 'by end of today'
-		requestL3PartnerPrice(request);
+		requestL3PartnerPrice(request, toDashedDate);
 		
 	} else {
-		Watchr.log(Level.INFO, "HISTORIC HIT: " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
+		Watchr.log(Level.INFO, "HISTORIC HIT" + "(" + storedPrices.size() + ")" + " " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 	}
 }
 
 
-private static void requestL3PartnerPrice(EventRequest request) {
+private static void requestL3PartnerPrice(EventRequest request, String toDashedDate) {
 	
 	TimeParser.paceHistoricalQuery(lastQueryTime);
 
