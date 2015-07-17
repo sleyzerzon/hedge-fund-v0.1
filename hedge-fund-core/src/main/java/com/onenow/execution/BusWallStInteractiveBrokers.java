@@ -33,7 +33,7 @@ import com.onenow.util.Watchr;
 public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	public BusController busController = new BusController(this);
-	public boolean isConnectionBroken = false;	
+	public boolean isConnectionBroken = true;	
 	public boolean isFarmAvailable = false;
 	private final ArrayList<String> accountList = new ArrayList<String>();
 
@@ -140,9 +140,15 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  @Override
 	  public void disconnected() {
 		  
-		isConnectionBroken = false;
+		isConnectionBroken = true;
 	    show(ConnectionStatus.DISCONNECTED.toString());
 	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
+	    
+	    // reconnect if remained disconnected for a while
+	    TimeParser.wait(30);
+	    if(isConnectionBroken) {
+	    	connectToServer();
+	    }
 	    
 	  }
 
@@ -180,7 +186,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    }
 	    
 	    if(isConnectionErrorMustReconnect(errorCode) || isMarketDataErrorConsiderReconnect(errorCode)) {
-	    	// isConnectionBroken = true; // TODO? triggers re-connect
+	    	isConnectionBroken = true; // TODO? triggers re-connect
 	    }
 	    
 	    isFarmAvailable = isFarmAvailable(errorCode);
@@ -285,6 +291,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				  				) {			
 			  
 			  Watchr.log(Level.WARNING, "Farm Available: " + messageCode);
+			  isConnectionBroken = false; // TODO: in what other situations do we know it's not broken/anymore
 			  return true;
 		  }
 		  

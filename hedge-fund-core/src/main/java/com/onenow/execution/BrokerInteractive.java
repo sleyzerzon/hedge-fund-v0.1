@@ -167,7 +167,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  int counter=0;
 		  while (busIB.isConnectionBroken && counter<2) {
 		      Watchr.log(Level.WARNING, "Connection Broken: " + counter);
-			  TimeParser.wait(25);
+			  TimeParser.wait(60);
 			  counter++;
 		  }
 	}
