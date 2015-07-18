@@ -25,6 +25,7 @@ import com.onenow.data.EventRequestRaw;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentFuture;
 import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
@@ -46,6 +47,19 @@ public class HistorianMain {
 		
 		InitLogger.run("");
 		
+		String toDashedDate = getToDate(args);
+		
+		while(true) {
+
+			updatePortfolioL2HistoryFromL3(toDashedDate);
+									
+			// go back further in time
+			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
+
+		}
+	}
+
+	private static String getToDate(String[] args) {
 		String toDashedDate = getThroughToday();
 		try {
 			if(args[0]!=null) {
@@ -54,38 +68,7 @@ public class HistorianMain {
 		} catch (Exception e) {
 			// it's ok if args is empty
 		}
-		
-		while(true) {
-
-			updateTodaysData();
-			
-			updatePreviousDayData(toDashedDate);
-									
-			// go back further in time
-			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
-
-		}
-	}
-
-	// every cycle update today
-	private static void updateTodaysData() {
-		
-		String today = getThroughToday();
-		if(TimeParser.isWeekDay(today)) {
-			updatePortfolioL2HistoryFromL3(today);
-		} else {
-			Watchr.log("Skipping: " + today);
-		}
-	}
-
-	private static void updatePreviousDayData(String toDashedDate) {
-		
-		// avoid checking for today twice
-		if(!toDashedDate.equals(getThroughToday()) && TimeParser.isWeekDay(toDashedDate)) {
-			updatePortfolioL2HistoryFromL3(toDashedDate);				
-		} else {
-			Watchr.log("Skipping: " + toDashedDate);
-		}
+		return toDashedDate;
 	}
 	
 	// TODO: it's weird to ask for today + 1 to get a date historian thinks is today
@@ -93,24 +76,58 @@ public class HistorianMain {
 		return TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 	}
 
-
+	/**
+	 * Updates history for previous day, and for today
+	 * Runs week days; except for Futures it runs every day
+	 * @param toDashedDate
+	 */
 	private static void updatePortfolioL2HistoryFromL3(String toDashedDate) {
 		Watchr.log(Level.WARNING, "HISTORIAN through: " + toDashedDate);
 		marketPortfolio = InitMarket.getHistoryPortfolio(toDashedDate);	
 
 		// updates historical L1 from L2
 		for(Investment inv:marketPortfolio.investments) {
-			// To be saved to prices database
-			updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.TRADES);							
-			updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);							
-			updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID);		
-			// To be saved to Greeks database
-//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
-//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.HISTORICAL_VOLATILITY);							
-//				updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.OPTION_IMPLIED_VOLATILITY);											
+			
+			updateBackDataL2HistoryFromL3(toDashedDate, inv);			
+			updateTodayDataL2HistoryFromL3(inv);
 		}
 	}
 
+	private static void updateTodayDataL2HistoryFromL3(Investment inv) {
+		String todayDateOf = TimeParser.getDateMinusDashed(getThroughToday(), 1);
+		if(TimeParser.isWeekDay(todayDateOf) || inv instanceof InvestmentFuture) {
+			updateDataL2HistoryFromL3(getThroughToday(), inv);
+		}
+	}
+
+	private static void updateBackDataL2HistoryFromL3(String toDashedDate, Investment inv) {
+		String backDayOf = TimeParser.getDateMinusDashed(toDashedDate, 1);			
+		if(TimeParser.isWeekDay(backDayOf) || inv instanceof InvestmentFuture) {
+			updateDataL2HistoryFromL3(toDashedDate, inv);
+		}
+	}
+
+	private static void updateDataL2HistoryFromL3(String toDashedDate, Investment inv) {
+
+		updatePricesL2HistoryFromL3(toDashedDate, inv);
+		updateGreeksL2HistoryFromL3(toDashedDate, inv);
+		
+	}
+
+	private static void updatePricesL2HistoryFromL3(String toDashedDate, Investment inv) {
+		// To be saved to prices database
+		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.TRADES);							
+		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);							
+		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID);
+	}
+
+	private static void updateGreeksL2HistoryFromL3(String toDashedDate, Investment inv) {
+		// To be saved to Greeks database
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.HISTORICAL_VOLATILITY);							
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.OPTION_IMPLIED_VOLATILITY);													
+	}
+	
 	
 /**
  * Continually augment L2 (TSDB) with data from L3 (3rd party DB)

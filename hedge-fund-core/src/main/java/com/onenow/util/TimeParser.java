@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+// http://stackoverflow.com/questions/4216745/java-string-to-date-conversion
 public class TimeParser implements Testable {
 
 	public TimeParser() {
