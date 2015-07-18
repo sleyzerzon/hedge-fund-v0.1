@@ -143,17 +143,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		isConnectionBroken = true;
 	    show(ConnectionStatus.DISCONNECTED.toString());
 	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
-	    
-//	    // reconnect if remained disconnected for a while
-//		new Thread () {
-//			@Override public void run () {
-//			    TimeParser.sleep(120);
-//			    if(isConnectionBroken) {
-//			    	connectToServer();
-//			    }
-//			}
-//		}.start();	
-	    
+	    	    
 	  }
 
 	  @Override

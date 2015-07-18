@@ -124,51 +124,62 @@ public class BrokerInteractive implements BrokerInterface  {
 	private void processIndividualMessageUntilSuccessful(DataHistoryChain quoteHistoryChain, Message message) {
 		  boolean reqSuccess = false;
 		  while (!reqSuccess) {	// re-try if individual message does not get requested due to connection issues
-			  
 			  reqSuccess = processIndividualMessage(quoteHistoryChain, message);
-			  
+			  TimeParser.sleep(1);
 		  } 
 	}
 
-	private boolean processIndividualMessage(DataHistoryChain quoteHistoryChain, Message message) {
+	private boolean processIndividualMessage(final DataHistoryChain quoteHistoryChain, Message message) {
 		
-		  waitWhileConnectionBroken();
+		  boolean success = false;
+		
+		  // waitWhileBrokerConnectionBroken();
 			  
 		  if(busIB.isConnectionBroken) {
-			  	busIB.busController.disconnect();
-				busIB.connectToServer();
-				quoteHistoryChain.controller = busIB.busController; // get the new one
+			    // reconnect if remains broken for a while
+				new Thread () {
+					@Override public void run () {
+					  	confirmAndReplaceBusController(quoteHistoryChain);
+					}
+				}.start();	
+
 		  } 
 		
-		  waitWhileFarmUnavailable();
+		  // waitWhileFarmUnavailable();
 		  
 		  // if connected and connection is active, finally request
 		  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
 			  quoteHistoryChain.processHistoryOneRequest(message);
-			  return true;
+			  success = true;
 			  
-				// TODO: re-try when a particular request ID fails; print the investment involved
-				// 10000297 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA
-
 		  }
-		return false;
+		return success;
+	}
+
+	private void confirmAndReplaceBusController(DataHistoryChain quoteHistoryChain) {
+	    TimeParser.sleep(120);
+	    if(busIB.isConnectionBroken) {
+			busIB.busController.disconnect();
+			busIB.connectToServer();
+			quoteHistoryChain.controller = busIB.busController; // get the new one
+	    }
+	}
+
+	private void waitWhileBrokerConnectionBroken() {
+		  int counter=0;
+		  while (busIB.isConnectionBroken && counter<2) {
+		      Watchr.log(Level.WARNING, "Connection Broken ");
+			  // TimeParser.sleep(60);
+			  counter++;
+		  }
 	}
 
 	private void waitWhileFarmUnavailable() {
 		  int counter=0;
 		  while(!busIB.isFarmAvailable && counter <2) {
-				Watchr.log(Level.WARNING, "Farm Unavailable: " + counter);
-				TimeParser.sleep(15);
+				Watchr.log(Level.WARNING, "Farm Unavailable");
+				// TimeParser.sleep(15);
 				counter++;
-		  }
-	}
-
-	private void waitWhileConnectionBroken() {
-		  int counter=0;
-		  while (busIB.isConnectionBroken && counter<2) {
-		      Watchr.log(Level.WARNING, "Connection Broken: " + counter);
-			  TimeParser.sleep(60);
-			  counter++;
 		  }
 	}
 	  
