@@ -287,7 +287,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==1101 ||						// Connectivity between IB and TWS has been restored- data lost
 				messageCode==1300							// TWS socket port has been reset and this connection is being dropped
 				) {
-			  
+
+	    	  isConnectionBroken = false;
 			  return true;
 		  }
 		  return false;

@@ -1,7 +1,10 @@
 package com.onenow.main;
 
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.ib.client.Types.BarSize;
@@ -50,10 +53,14 @@ public class HistorianMain {
 		}
 		
 		while(true) {
-			
+
 			// every cycle update today
-			updatePortfolioL2HistoryFromL3(toDashedDate);
 			updatePortfolioL2HistoryFromL3(getThroughToday());
+			
+			// avoid checking for today twice
+			if(!toDashedDate.equals(getThroughToday())) {
+				updatePortfolioL2HistoryFromL3(toDashedDate);				
+			}
 									
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
@@ -100,7 +107,6 @@ public class HistorianMain {
 			
 		
 		List<Candle> storedPriceSample = getL2TSDBStoredPrice(request);
-		// List<Candle> storedPrices = new ArrayList<Candle>();
 				
 		requestL3PartnerDataIfL2Incomplete(request, storedPriceSample, toDashedDate);
 			
@@ -130,7 +136,13 @@ private static void requestL3PartnerDataIfL2Incomplete(EventRequest request, Lis
 
 	// query L3 only if L2 data is incomplete
 	int minPrices = 1;
-	if ( storedPrices.size()<minPrices ) {	
+	if ( storedPrices.size()<minPrices ) {
+		
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE"); // the day of the week spelled out completely
+//		Date date = new Date(toDashedDate); 
+//		String day = dateFormat.format(toDashedDate);		
+//		if(request.getInvestment().getUnder().equals("ES") || new SimpleDateFormat("EEEE").)
+			
 		Watchr.log(Level.INFO, "HISTORIC MISS" + "(" + storedPrices.size() + ")" + " " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 
 		// NOTE: gets today's data by requesting 'by end of today'
