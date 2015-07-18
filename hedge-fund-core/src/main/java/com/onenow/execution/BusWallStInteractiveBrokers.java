@@ -199,25 +199,29 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	   * Make decisions based on messaging from the API counterpart
 	   */
 	  @Override
-	  public void message(int id, int errorCode, String errorMsg) {
+	  public void message(int id, int code, String message) {
 		
 		boolean warning = false;
 		boolean severe = false;
 		String errorSummary = "";
 				
-	    if( isConnectionErrorMustReconnect(errorCode)) {	    	
+	    if( isConnectionErrorMustReconnect(code)) {	    	
 	    	errorSummary = "Connection Error: ";
 			severe = true;
 	    }
 	    
 	    // TODO: re-try request when data error occurs
-	    if( isMarketDataError(errorCode) || !isFarmAvailable(errorCode)) {
+	    if( isMarketDataError(code) || !isFarmAvailable(code)) {
 	    	errorSummary = "Data Error: ";
 	    	warning = true;
 	    }
-	    	    
+	    	 
+	    if( isGeneralMessage(code) ) {
+	    	
+	    }
+	    
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
-	    String log = "-id " + id + " -code " + errorCode + " -message " + errorMsg + " " + getMessageContext(id);
+	    String log = "-id " + id + " -code " + code + " -message " + message + " " + getMessageContext(id);
 		
 	    if(!severe && !warning) {
 	    	Watchr.log(Level.INFO, log);
@@ -230,11 +234,16 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    		Watchr.log(Level.WARNING, errorSummary + log);
 	    	}
 	    }
-	    
-	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
-	    
+	    	    
 	    // TODO: look for IBmessage and IBerror in the log
 
+	  }
+
+	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
+	  private boolean isGeneralMessage(int code) {
+		  boolean general = false;
+		  
+		  return general;
 	  }
 	  
 
