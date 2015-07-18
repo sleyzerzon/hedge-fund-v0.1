@@ -133,55 +133,16 @@ public class BrokerInteractive implements BrokerInterface  {
 		
 		  boolean success = false;
 		
-		  // waitWhileBrokerConnectionBroken();
-			  
-//		  if(busIB.isConnectionBroken) {
-//			    // reconnect if remains broken for a while
-//				new Thread () {
-//					@Override public void run () {
-//					  	confirmAndReplaceBusController(quoteHistoryChain);
-//					}
-//				}.start();	
-//
-//		  } 
-		
-		  // waitWhileFarmUnavailable();
-		  
 		  // if connected and connection is active, finally request
 		  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
 			  quoteHistoryChain.processHistoryOneRequest(message);
 			  success = true;
 		  } else {
-			  confirmAndReplaceBusController(quoteHistoryChain);
+				// busIB.busController.disconnect();
+				// busIB.connectToServer();
+				// quoteHistoryChain.controller = busIB.busController; // get the new one
 		  }
 		return success;
-	}
-
-	private void confirmAndReplaceBusController(DataHistoryChain quoteHistoryChain) {
-	    // TimeParser.sleep(120);
-	    // if(busIB.isConnectionBroken) {
-			busIB.busController.disconnect();
-			busIB.connectToServer();
-			quoteHistoryChain.controller = busIB.busController; // get the new one
-	    // }
-	}
-
-	private void waitWhileBrokerConnectionBroken() {
-		  int counter=0;
-		  while (busIB.isConnectionBroken && counter<2) {
-		      Watchr.log(Level.WARNING, "Connection Broken ");
-			  // TimeParser.sleep(60);
-			  counter++;
-		  }
-	}
-
-	private void waitWhileFarmUnavailable() {
-		  int counter=0;
-		  while(!busIB.isFarmAvailable && counter <2) {
-				Watchr.log(Level.WARNING, "Farm Unavailable");
-				// TimeParser.sleep(15);
-				counter++;
-		  }
 	}
 	  
 		@Override
