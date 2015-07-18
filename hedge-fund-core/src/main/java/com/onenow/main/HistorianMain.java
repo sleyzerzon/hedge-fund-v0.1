@@ -97,6 +97,8 @@ public class HistorianMain {
 		String todayDateOf = TimeParser.getDateMinusDashed(getThroughToday(), 1);
 		if(TimeParser.isWeekDay(todayDateOf) || inv instanceof InvestmentFuture) {
 			updateDataL2HistoryFromL3(getThroughToday(), inv);
+		} else {
+			Watchr.log("Skipping " + todayDateOf + " FOR " + inv.toString());
 		}
 	}
 
@@ -104,6 +106,8 @@ public class HistorianMain {
 		String backDayOf = TimeParser.getDateMinusDashed(toDashedDate, 1);			
 		if(TimeParser.isWeekDay(backDayOf) || inv instanceof InvestmentFuture) {
 			updateDataL2HistoryFromL3(toDashedDate, inv);
+		} else {
+			Watchr.log("Skipping " + backDayOf + " FOR " + inv.toString());
 		}
 	}
 
@@ -136,7 +140,7 @@ public class HistorianMain {
 	// cat  com.onenow.main.InvestorMainHISTORY-Log.txt | grep -i "into stream" | grep -i "under es" | grep -i "call"
 	private static void updateL2HistoryFromL3(Investment inv, String toDashedDate, WhatToShow whatToShow) {
 				
-		Watchr.log(Level.INFO, 	"LOOKING FOR " + MemoryLevel.L2TSDB + " incomplete information for " + inv.toString() + " TIL " + toDashedDate);
+		Watchr.log(Level.INFO, 	"CHECKING FOR " + MemoryLevel.L2TSDB + " complete information for " + inv.toString() + " TIL " + toDashedDate);
 
 		// TODO: get full range of WhatToShow
 		EventRequestHistory request = new EventRequestHistory(	inv, toDashedDate,  
