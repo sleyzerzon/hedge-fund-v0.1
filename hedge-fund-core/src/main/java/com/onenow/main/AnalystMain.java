@@ -49,7 +49,7 @@ public class AnalystMain {
 			  } 
 			  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 		  }
-		  TimeParser.wait(1000); // pace requests for messages from queue 
+		  TimeParser.sleep(1000); // pace requests for messages from queue 
 	  }		  
 		  
 	}

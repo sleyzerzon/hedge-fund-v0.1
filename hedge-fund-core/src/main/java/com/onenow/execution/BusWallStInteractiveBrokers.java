@@ -82,7 +82,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				tryToConnect = true;
 				Watchr.log(Level.WARNING, "...COULD NOT CONNECT TO BUS: ");
 				e.printStackTrace();
-				TimeParser.wait(30);
+				TimeParser.sleep(30);
 			}			
 		} // end try to connect
 	    
@@ -144,15 +144,15 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    show(ConnectionStatus.DISCONNECTED.toString());
 	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
 	    
-	    // reconnect if remained disconnected for a while
-		new Thread () {
-			@Override public void run () {
-			    TimeParser.wait(120);
-			    if(isConnectionBroken) {
-			    	connectToServer();
-			    }
-			}
-		}.start();	
+//	    // reconnect if remained disconnected for a while
+//		new Thread () {
+//			@Override public void run () {
+//			    TimeParser.sleep(120);
+//			    if(isConnectionBroken) {
+//			    	connectToServer();
+//			    }
+//			}
+//		}.start();	
 	    
 	  }
 

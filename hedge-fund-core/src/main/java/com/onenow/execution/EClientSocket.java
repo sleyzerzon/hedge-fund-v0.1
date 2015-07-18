@@ -317,7 +317,7 @@ public class EClientSocket {
 	            connectionError(); 
 	        	e.printStackTrace();
 	        	eDisconnect();
-	        	TimeParser.wait(10);
+	        	TimeParser.sleep(10);
 	        }
         }        
     }

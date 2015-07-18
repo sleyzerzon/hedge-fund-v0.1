@@ -52,7 +52,7 @@ public static InfluxDB dbConnect() {
 			tryingToConnect = true;
 			Watchr.log(Level.SEVERE, "...COULD NOT CONNECT TO TSDB: ", "\n", "");
 			e.printStackTrace();
-			TimeParser.wait(10);
+			TimeParser.sleep(10);
 		}
 	} 
 	Watchr.log(Level.INFO, "CONNECTED TO TSDB!");
@@ -97,7 +97,7 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
 			} catch (Exception e) {
 				tryToWrite = true;
 				// e.printStackTrace();
-				TimeParser.wait(1);
+				TimeParser.sleep(1);
 				count++;
 			}
 			if(count>maxCount) {

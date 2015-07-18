@@ -119,7 +119,7 @@ public class Kinesis {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				TimeParser.wait(15);
+				TimeParser.sleep(15);
 				count ++;
 				if(count>maxTries) {
 					return;

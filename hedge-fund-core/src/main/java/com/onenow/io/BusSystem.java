@@ -109,7 +109,7 @@ public class BusSystem {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			TimeParser.wait(1);
+			TimeParser.sleep(1);
 			i++;
 		}
 		

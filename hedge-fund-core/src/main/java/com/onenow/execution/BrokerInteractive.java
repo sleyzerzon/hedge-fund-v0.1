@@ -117,7 +117,7 @@ public class BrokerInteractive implements BrokerInterface  {
 				  
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }
-			  TimeParser.wait(1); // pace requests for messages from queue 
+			  TimeParser.sleep(1); // pace requests for messages from queue 
 		  } 
 		}
 
@@ -139,7 +139,7 @@ public class BrokerInteractive implements BrokerInterface  {
 				busIB.connectToServer();
 				quoteHistoryChain.controller = busIB.busController; // get the new one
 		  } 
-			  
+		
 		  waitWhileFarmUnavailable();
 		  
 		  // if connected and connection is active, finally request
@@ -158,7 +158,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  int counter=0;
 		  while(!busIB.isFarmAvailable && counter <2) {
 				Watchr.log(Level.WARNING, "Farm Unavailable: " + counter);
-				TimeParser.wait(15);
+				TimeParser.sleep(15);
 				counter++;
 		  }
 	}
@@ -167,7 +167,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  int counter=0;
 		  while (busIB.isConnectionBroken && counter<2) {
 		      Watchr.log(Level.WARNING, "Connection Broken: " + counter);
-			  TimeParser.wait(60);
+			  TimeParser.sleep(60);
 			  counter++;
 		  }
 	}

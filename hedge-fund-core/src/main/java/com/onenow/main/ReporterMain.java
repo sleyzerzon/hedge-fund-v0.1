@@ -65,7 +65,7 @@ public class ReporterMain {
 			}
 			
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
-			TimeParser.wait(1); // TODO: pace
+			TimeParser.sleep(1); // TODO: pace
 		}
 	}
 

@@ -79,7 +79,7 @@ public class databaseTimeSeriesTest {
 	  	// write
 		DBTimeSeriesPrice.write(historyActivity);
 		
-		TimeParser.wait(5); // wait for write thread to complete
+		TimeParser.sleep(5); // wait for write thread to complete
 		
 		EventRequestRaw requestHigh = new EventRequestRaw(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
 		EventRequestRaw requestLow = new EventRequestRaw(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);

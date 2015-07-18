@@ -27,7 +27,7 @@ public class ClerkHistoryMain {
 
 		InitLogger.run("");
 
-		TimeParser.wait(180); // boot sequence
+		TimeParser.sleep(180); // boot sequence
 
 		StreamName streamName = BusSystem.getStreamName("HISTORY");
 

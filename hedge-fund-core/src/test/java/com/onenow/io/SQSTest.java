@@ -23,7 +23,7 @@ public class SQSTest {
 		String sentMessage = Piping.serialize((Object) requestSent);
 		sqs.sendMessage(sentMessage, queueURL);
 		
-		TimeParser.wait(5);
+		TimeParser.sleep(5);
 
 		// TODO: flush queue first
 		List<Message> serializedMessages = sqs.receiveMessages(queueURL);

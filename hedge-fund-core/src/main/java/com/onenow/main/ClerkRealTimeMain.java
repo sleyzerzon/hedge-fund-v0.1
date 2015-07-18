@@ -25,7 +25,7 @@ public class ClerkRealTimeMain {
 
 		InitLogger.run("");
 
-		TimeParser.wait(180); // boot sequence
+		TimeParser.sleep(180); // boot sequence
 
 		StreamName streamName = BusSystem.getStreamName("REALTIME");
 

@@ -65,9 +65,9 @@ public class ChartistMain {
 		
 		if(!NetworkConfig.isMac()) {
 		  CacheElastic.write(TestValues.KEY.toString(), (Object) TestValues.VALUE.toString());
-		  TimeParser.wait(5);
+		  TimeParser.sleep(5);
 		  String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
-		  TimeParser.wait(5);
+		  TimeParser.sleep(5);
 
 		  try {
 			if(testValue.equals(TestValues.VALUE.toString())) {

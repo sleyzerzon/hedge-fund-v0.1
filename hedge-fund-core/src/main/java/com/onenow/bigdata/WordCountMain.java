@@ -24,7 +24,7 @@ public class WordCountMain {
 		countWordsInBucket();
 		
 		while(true) {
-			TimeParser.wait(1000);
+			TimeParser.sleep(1000);
 		}
 		
 	}
