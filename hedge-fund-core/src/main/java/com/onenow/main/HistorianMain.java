@@ -41,8 +41,12 @@ public class HistorianMain {
 		InitLogger.run("");
 		
 		String toDashedDate = getThroughToday();
-		if(args[0]!=null) {
-			toDashedDate = args[0]; // for testability
+		try {
+			if(args[0]!=null) {
+				toDashedDate = args[0]; // for testability
+			}
+		} catch (Exception e) {
+			// it's ok if args is empty
 		}
 		
 		while(true) {
