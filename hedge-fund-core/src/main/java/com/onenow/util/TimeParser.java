@@ -4,6 +4,8 @@ import com.onenow.test.Testable;
 
 import org.testng.Assert;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -655,9 +657,34 @@ public class TimeParser implements Testable {
 		return result;
 	}
 	
-	// PRINT
+	public static boolean isWeekDay(String dateString) {
+		
+		boolean weekday = false;
+						
+		// 07-18-2015
+		DateFormat existingFormat = new SimpleDateFormat("MM-dd-yyyy");
+		Date date = new Date();
+		try {
+			date = existingFormat.parse(dateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		SimpleDateFormat getDayOfWeekFormat = new SimpleDateFormat("EEEE"); // the day of the week spelled out completely
+		String day = getDayOfWeekFormat.format(date);	
+		
+		if(	day.equals("Monday") || 
+			day.equals("Tuesday") || 
+			day.equals("Wednesday") || 
+			day.equals("Thursday") || 
+			day.equals("Friday")) {
+			
+			weekday = true;
+		}
+			
+		return weekday;
+	}
 	
-	// SET GET
 }
 
 

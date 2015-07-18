@@ -24,4 +24,23 @@ public class ParseDateTest {
 //		System.out.println("testDate2 " + actualDateOut2);
 //		System.out.println("testDate3 " + actualDateOut3);
 		}
+
+  @Test
+  public void isWeekDay() {
+	  String date1 = "07-18-2015";
+	  String date2 = "07-19-2015";
+	  String date3 = "07-20-2015";
+	  String date4 = "07-21-2015";
+	  String date5 = "07-22-2015";
+	  String date6 = "07-23-2015";
+	  String date7 = "07-24-2015";
+
+	  Assert.assertTrue(!TimeParser.isWeekDay(date1));
+	  Assert.assertTrue(!TimeParser.isWeekDay(date2));
+	  Assert.assertTrue(TimeParser.isWeekDay(date3));
+	  Assert.assertTrue(TimeParser.isWeekDay(date4));
+	  Assert.assertTrue(TimeParser.isWeekDay(date5));
+	  Assert.assertTrue(TimeParser.isWeekDay(date6));
+	  Assert.assertTrue(TimeParser.isWeekDay(date7));
+  }
 }
