@@ -138,11 +138,25 @@ public class BrokerInteractive implements BrokerInterface  {
 			  quoteHistoryChain.processHistoryOneRequest(message);
 			  success = true;
 		  } else {
-				// busIB.busController.disconnect();
-				// busIB.connectToServer();
-				// quoteHistoryChain.controller = busIB.busController; // get the new one
+			  	// TODO: wait to see failure mode
+				// evaluateForReconnection(quoteHistoryChain);
 		  }
 		return success;
+	}
+
+	private void evaluateForReconnection(
+			final DataHistoryChain quoteHistoryChain) {
+		new Thread () {
+			@Override public void run () {
+				TimeParser.sleep(60);
+				// received anything in the last seconds to indicate the connection is not broken anymore?
+				if(busIB.isConnectionBroken) {
+					busIB.busController.disconnect();
+					busIB.connectToServer();
+					quoteHistoryChain.controller = busIB.busController; // get the new one
+				}
+			}
+		}.start();
 	}
 	  
 		@Override

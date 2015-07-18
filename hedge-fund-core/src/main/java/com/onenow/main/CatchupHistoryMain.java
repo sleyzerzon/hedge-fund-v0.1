@@ -10,7 +10,7 @@ import com.onenow.util.SysProperties;
 
 
 /**
-* Re-process the entire data stream (24hs) in kinesis
+* At re-start of this service, re-process the entire data stream (24hs) in kinesis
 * @author pablo
 *
 */

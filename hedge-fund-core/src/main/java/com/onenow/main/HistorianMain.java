@@ -41,33 +41,25 @@ public class HistorianMain {
 		InitLogger.run("");
 		
 		String toDashedDate = getThroughToday();
-		
-		boolean updateToday = false;
+		if(args[0]!=null) {
+			toDashedDate = args[0]; // for testability
+		}
 		
 		while(true) {
 			
-			if(updateToday) {
-				String todayDashed = getThroughToday();
-				updatePortfolioL2HistoryFromL3(todayDashed);
-				updateToday = false;
-			}
-			
+			// every cycle update today
+			updatePortfolioL2HistoryFromL3(getThroughToday());
 			updatePortfolioL2HistoryFromL3(toDashedDate);
 									
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
 
-			// every other cycle, update today's data through current time
-			if(!updateToday) {
-				updateToday = true;
-			}
 		}
 	}
 
 	// TODO: it's weird to ask for today + 1 to get a date historian thinks is today
 	private static String getThroughToday() {
-		String toDashedDate = TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
-		return toDashedDate;
+		return TimeParser.getDatePlusDashed(TimeParser.getTodayDashed(), 1);
 	}
 
 
@@ -133,7 +125,7 @@ public class HistorianMain {
 private static void requestL3PartnerDataIfL2Incomplete(EventRequest request, List<Candle> storedPrices, String toDashedDate) {
 
 	// query L3 only if L2 data is incomplete
-	int minPrices = 25;
+	int minPrices = 1;
 	if ( storedPrices.size()<minPrices ) {	
 		Watchr.log(Level.INFO, "HISTORIC MISS" + "(" + storedPrices.size() + ")" + " " + MemoryLevel.L2TSDB + " for " + request.toString()); // 
 

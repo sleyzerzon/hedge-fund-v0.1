@@ -68,10 +68,10 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		 
 		int clientID = getClientID();
 		  
-		boolean tryToConnect = true;
-	    while(tryToConnect) {		    		
+		boolean tryingToConnect = true;
+	    while(tryingToConnect) {		    		
 			try {				
-				tryToConnect = false;
+				tryingToConnect = false;
 				String log = "CONNECTING TO BUS..." + gateway.URI + ":" + gateway.port;
 				Watchr.log(Level.INFO, log, "\n", "");
 			    
@@ -79,7 +79,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			    busController.connect(		gateway.URI, Integer.parseInt(gateway.port), clientID, null); 
 			    
 			} catch (Exception e) {
-				tryToConnect = true;
+				isConnectionBroken = true;
+				tryingToConnect = true;
 				Watchr.log(Level.WARNING, "...COULD NOT CONNECT TO BUS: ");
 				e.printStackTrace();
 				TimeParser.sleep(30);
@@ -120,6 +121,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	
 	  @Override
 	  public void connected() {
+		isConnectionBroken = false;
 	    show(ConnectionStatus.CONNECTED.toString());
 
 	    busController.reqCurrentTime( new ITimeHandler() {
@@ -139,7 +141,6 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  @Override
 	  public void disconnected() {
-		  
 		isConnectionBroken = true;
 	    show(ConnectionStatus.DISCONNECTED.toString());
 	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
@@ -158,6 +159,42 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    show( e.toString() );
 	  }
 
+		private String getMessageContext(int id) {
+			
+			if(id==-1) {
+				// sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
+				return "-1";
+			}
+			
+			String context = "";
+			Investment inv = new Investment();
+
+			try {
+				QuoteSharedHandler rtHandler = busController.m_topMktDataMap.get(id);
+				inv = rtHandler.investment;
+			} catch (Exception e1) {
+				try {
+					QuoteHistoryInvestment histHandler = busController.m_historicalDataMap.get(id);
+					inv = histHandler.investment;
+				} catch (Exception e2){
+					Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
+				}
+			}
+
+			context = context + " " + ContractFactory.getContract(inv).toString();
+
+			try {
+				String detail = busController.reqDetail.get(id);
+				if(detail!=null) {
+				context = context + " " + detail;
+				}
+			} catch (Exception e3) {
+				Watchr.log(Level.WARNING, "Could not fill query context for reqId: " + id);			
+			}
+							
+			return context;
+		}
+		
 	  /** 
 	   * Make decisions based on messaging from the API counterpart
 	   */
@@ -199,48 +236,12 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    // TODO: look for IBmessage and IBerror in the log
 
 	  }
-
-	private String getMessageContext(int id) {
-		
-		if(id==-1) {
-			// sometimes the id does not correspond to a handler, i.e. -1 to generically signify error
-			return "-1";
-		}
-		
-		String context = "";
-		Investment inv = new Investment();
-
-		try {
-			QuoteSharedHandler rtHandler = busController.m_topMktDataMap.get(id);
-			inv = rtHandler.investment;
-		} catch (Exception e1) {
-			try {
-				QuoteHistoryInvestment histHandler = busController.m_historicalDataMap.get(id);
-				inv = histHandler.investment;
-			} catch (Exception e2){
-				Watchr.log(Level.WARNING, "Could not find query investment for reqId: " + id);
-			}
-		}
-
-		context = context + " " + ContractFactory.getContract(inv).toString();
-
-		try {
-			String detail = busController.reqDetail.get(id);
-			if(detail!=null) {
-			context = context + " " + detail;
-			}
-		} catch (Exception e3) {
-			Watchr.log(Level.WARNING, "Could not fill query context for reqId: " + id);			
-		}
-						
-		return context;
-	}
 	  
 
 	  // -id 10000132 -code 101 -message Max number of tickers has been reached -conid 0 -symbol ES -secType FOP -expiry 20150807 -strike 2095.0 -right CALL -multiplier 50 -exchange GLOBEX -currency USD null
 	  private boolean isConnectionErrorMustReconnect(int errorCode) {
 		
-		  if(   
+		  if(   errorCode==502 ||			// -message Couldn't connect to TWS... or their server is down
 				errorCode==504 || 			// not connected
 				errorCode==507  	 		// null message
 				  				) { 
