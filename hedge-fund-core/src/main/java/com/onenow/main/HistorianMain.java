@@ -69,6 +69,7 @@ public class HistorianMain {
 
 	// every cycle update today
 	private static void updateTodaysData() {
+		
 		String today = getThroughToday();
 		if(TimeParser.isWeekDay(today)) {
 			updatePortfolioL2HistoryFromL3(today);
@@ -78,6 +79,7 @@ public class HistorianMain {
 	}
 
 	private static void updatePreviousDayData(String toDashedDate) {
+		
 		// avoid checking for today twice
 		if(!toDashedDate.equals(getThroughToday()) && TimeParser.isWeekDay(toDashedDate)) {
 			updatePortfolioL2HistoryFromL3(toDashedDate);				
