@@ -198,28 +198,36 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  /** 
 	   * Make decisions based on messaging from the API counterpart
 	   */
+	    // TODO: look for IBmessage and IBerror in the log
 	  @Override
 	  public void message(int id, int code, String message) {
 		
 		boolean warning = false;
 		boolean severe = false;
-		String errorSummary = "";
+		String summary = "";
 				
-	    if( isConnectionErrorMustReconnect(code)) {	    	
-	    	errorSummary = "Connection Error: ";
+	    if( isConnectionError(code)) {	    	
+	    	summary = "Connection Error: ";
 			severe = true;
 	    }
 	    
 	    // TODO: re-try request when data error occurs
-	    if( isMarketDataError(code) || !isFarmAvailable(code)) {
-	    	errorSummary = "Data Error: ";
+	    if( isMarketDataError(code) || isFarmUnavailable(code)) {
+	    	summary = "Data Warning: ";
 	    	warning = true;
 	    }
 	    	 
 	    if( isGeneralMessage(code) ) {
-	    	
+	    	summary = "General Message: ";
+	    	warning = true;
 	    }
 	    
+		logCategorizedMessage(id, code, message, warning, severe, summary);
+	    	    
+	  }
+
+	private void logCategorizedMessage(int id, int code, String message,
+			boolean warning, boolean severe, String summary) {
 		// 10000021 162 HISTORICAL MARKET DATA SERVICE ERROR MESSAGE:HMDS QUERY RETURNED NO DATA: EWM5 C2105@GLOBEX TRADES
 	    String log = "-id " + id + " -code " + code + " -message " + message + " " + getMessageContext(id);
 		
@@ -228,27 +236,33 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    }
 	    else {
 	    	if(severe) {
-	    		Watchr.log(Level.SEVERE, errorSummary + log);
+	    		Watchr.log(Level.SEVERE, summary + log);
 	    	} 
 	    	if(warning) {
-	    		Watchr.log(Level.WARNING, errorSummary + log);
+	    		Watchr.log(Level.WARNING, summary + log);
 	    	}
 	    }
-	    	    
-	    // TODO: look for IBmessage and IBerror in the log
-
-	  }
+	}
 
 	    // TODO: 2100, 2101, 2102, 2109, the whole 10000 series, most of the 501 series, as well as 1/2/3/4 series
 	  private boolean isGeneralMessage(int code) {
 		  boolean general = false;
 		  
+		  if(     !isConnectionError(code) &&
+				  !isMarketDataError(code) &&
+				  !isFarmAvailable(code) &&
+				  !isFarmUnavailable(code)
+				  ) {
+			  
+	    	  isConnectionBroken = false;
+			  general = true;
+		  }
 		  return general;
 	  }
 	  
 
 	  // -id 10000132 -code 101 -message Max number of tickers has been reached -conid 0 -symbol ES -secType FOP -expiry 20150807 -strike 2095.0 -right CALL -multiplier 50 -exchange GLOBEX -currency USD null
-	  private boolean isConnectionErrorMustReconnect(int errorCode) {
+	  private boolean isConnectionError(int errorCode) {
 		
 		  if(   errorCode==502 ||			// -message Couldn't connect to TWS... or their server is down
 				errorCode==504 || 			// not connected
@@ -280,7 +294,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  }
 	  
 	  private boolean isFarmAvailable(int messageCode) {
-		  
+		  		  
 		  if(   messageCode==1102 || 			// Connectivity between IB and TWS has been restored- data maintained
 				messageCode==2104 || 			// market data farm connected
 				messageCode==2108 || 			// market data inactive but should be available upon demand
@@ -292,8 +306,13 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			  isConnectionBroken = false; // TODO: in what other situations do we know it's not broken/anymore
 
 			  Watchr.log(Level.WARNING, "Farm Available: " + messageCode);
-			  return true;
 		  }
+		  
+		  return isFarmAvailable;
+	  }
+		  
+
+	  private boolean isFarmUnavailable(int messageCode) {
 		  
 		  if(   messageCode==322 || 			// Only 50 simultaneous API historical data requests allowed
 				messageCode==1100 ||			// Connectivity between IB and TWS has been lost
@@ -301,15 +320,15 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 				messageCode==2105 || 			// A historical data farm is disconnected
 				messageCode==2119 || 			// market data farm ...?
 				messageCode==2110) {			// Connectivity between TWS and server is broken 
-			  
-			  isFarmAvailable = false;
 
+			  isFarmAvailable = false;
+			  isConnectionBroken = false; // TODO: in what other situations do we know it's not broken/anymore
+			  
 			  Watchr.log(Level.WARNING, "Farm Unavailable: " + messageCode);
 			  
-			  return false;
 		  }
 
-		  return true;
+		  return !isFarmAvailable;
 	  }
 	  		
 
