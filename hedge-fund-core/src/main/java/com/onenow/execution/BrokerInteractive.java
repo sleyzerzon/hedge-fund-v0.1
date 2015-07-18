@@ -135,15 +135,15 @@ public class BrokerInteractive implements BrokerInterface  {
 		
 		  // waitWhileBrokerConnectionBroken();
 			  
-		  if(busIB.isConnectionBroken) {
-			    // reconnect if remains broken for a while
-				new Thread () {
-					@Override public void run () {
-					  	confirmAndReplaceBusController(quoteHistoryChain);
-					}
-				}.start();	
-
-		  } 
+//		  if(busIB.isConnectionBroken) {
+//			    // reconnect if remains broken for a while
+//				new Thread () {
+//					@Override public void run () {
+//					  	confirmAndReplaceBusController(quoteHistoryChain);
+//					}
+//				}.start();	
+//
+//		  } 
 		
 		  // waitWhileFarmUnavailable();
 		  
@@ -151,18 +151,19 @@ public class BrokerInteractive implements BrokerInterface  {
 		  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
 			  quoteHistoryChain.processHistoryOneRequest(message);
 			  success = true;
-			  
+		  } else {
+			  confirmAndReplaceBusController(quoteHistoryChain);
 		  }
 		return success;
 	}
 
 	private void confirmAndReplaceBusController(DataHistoryChain quoteHistoryChain) {
-	    TimeParser.sleep(120);
-	    if(busIB.isConnectionBroken) {
+	    // TimeParser.sleep(120);
+	    // if(busIB.isConnectionBroken) {
 			busIB.busController.disconnect();
 			busIB.connectToServer();
 			quoteHistoryChain.controller = busIB.busController; // get the new one
-	    }
+	    // }
 	}
 
 	private void waitWhileBrokerConnectionBroken() {
