@@ -48,8 +48,8 @@ public class HistorianMain {
 		while(true) {
 			
 			// every cycle update today
-			updatePortfolioL2HistoryFromL3(getThroughToday());
 			updatePortfolioL2HistoryFromL3(toDashedDate);
+			updatePortfolioL2HistoryFromL3(getThroughToday());
 									
 			// go back further in time
 			toDashedDate = TimeParser.getDateMinusDashed(toDashedDate, 1);
