@@ -98,7 +98,7 @@ public class HistorianMain {
 		if(TimeParser.isWeekDay(todayDateOf) || inv instanceof InvestmentFuture) {
 			updateDataL2HistoryFromL3(getThroughToday(), inv);
 		} else {
-			Watchr.log("Skipping " + todayDateOf + " FOR " + inv.toString());
+			Watchr.log("Skipping today's data " + todayDateOf + " FOR " + inv.toString());
 		}
 	}
 
@@ -107,7 +107,7 @@ public class HistorianMain {
 		if(TimeParser.isWeekDay(backDayOf) || inv instanceof InvestmentFuture) {
 			updateDataL2HistoryFromL3(toDashedDate, inv);
 		} else {
-			Watchr.log("Skipping " + backDayOf + " FOR " + inv.toString());
+			Watchr.log("Skipping back data " + backDayOf + " FOR " + inv.toString());
 		}
 	}
 
