@@ -35,10 +35,12 @@ public class DBTimeSeriesPrice {
 	}
 		
 		public static List<Candle> read(EventRequestRaw request) throws Exception {
-			
+
+			Watchr.log(Level.FINEST, "REQUEST " + request.toString());
+
 			List<Candle> candles = new ArrayList<Candle>();
 					
-			List<Serie> series = readSeries(request);
+			List<Serie> series = DBTimeSeries.query(DBTimeSeries.getPriceDatabaseName(), request);
 
 			candles = seriesToCandles(series); 
 			 
@@ -48,12 +50,6 @@ public class DBTimeSeriesPrice {
 			return candles;
 		}
 
-	public static List<Serie> readSeries(EventRequestRaw request) {
-		DBname dbName = DBTimeSeries.getPriceDatabaseName(); 
-		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
-		List<Serie> series = DBTimeSeries.query(dbName, request);
-		return series;
-	}
 
 	/**
 	 * A serie contains a list of increments
@@ -71,7 +67,7 @@ public class DBTimeSeriesPrice {
 			
 			for (String col : serie.getColumns()) {
 				s = s + col + "\t";
-				// System.out.println("column " + col); // column names
+				System.out.println("column " + col); // column names
 			}
 			s = s + "\n";
 

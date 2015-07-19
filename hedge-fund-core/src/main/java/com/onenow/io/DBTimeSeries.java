@@ -75,10 +75,10 @@ public static Serie getWriteSerie(final EventActivity event, String serieName, C
 	
 	final Serie serie = new Serie.Builder(serieName)
 	.columns(	ColumnName.TIME.toString().toLowerCase(), columnName.toString(), 
-				ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString()
+				ColumnName.SOURCE.toString(), ColumnName.TIMING.toString()
 				)					
-	.values(event.timeInMilisec, getValue(event, columnName), 											// basic columns
-			"\""+ event.source +"\"", "\""+ event.timing +"\"", "\""+ event.priceType +"\""				// event origination				
+	.values(event.timeInMilisec, getValue(event, columnName), 				// basic columns
+			"\""+ event.source +"\"", "\""+ event.timing +"\""				// event origination				
 			) 
 
 	.build();

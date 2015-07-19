@@ -8,6 +8,7 @@ import org.influxdb.dto.Serie;
 
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBname;
+import com.onenow.constant.MemoryLevel;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventRequestRaw;
 import com.onenow.util.Watchr;
@@ -30,26 +31,20 @@ public class DBTimeSeriesSize {
 	
 	public static List<Integer> read(EventRequestRaw request) throws Exception {
 		
+		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
+
 		List<Integer> sizes = new ArrayList<Integer>();
 		
-		List<Serie> series = readSeries(request);
-		
+		List<Serie> series = DBTimeSeries.query(DBTimeSeries.getSizeDatabaseName(), request);
+
 		sizes = seriesToSizes(series); 
 		
-//		String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
-//		Watchr.log(Level.INFO, log, "\n", "");
+		// String log = "TSDB Cache Chart/Size READ: " + MemoryLevel.L2TSDB + " SIZE " + " for " + request.toString() + " Returned Sizes: " + sizes.toString();
+		// Watchr.log(Level.INFO, log, "\n", "");
 
 		return sizes;
 	}
 
-	private static List<Serie> readSeries(EventRequestRaw request) {
-		
-		DBname dbName = DBTimeSeries.getSizeDatabaseName(); 
-		Watchr.log(Level.FINEST, "REQUEST " + request.toString());
-		List<Serie> series = DBTimeSeries.query(dbName, request);
-
-		return series;
-	}
 
 	/**
 	 * A serie contains a list of increments
@@ -59,7 +54,7 @@ public class DBTimeSeriesSize {
 	private static List<Integer> seriesToSizes(List<Serie> series) {
 		
 		List<Integer> sizes = new ArrayList<Integer>();
-		// Watchr.log(Level.INFO, "SERIES: " + series.toString());
+		Watchr.log(Level.INFO, "SERIES: " + series.toString());
 
 		String s="";
 		
@@ -71,6 +66,7 @@ public class DBTimeSeriesSize {
 			}
 			s = s + "\n";
 			
+			// TODO: not working
 			DBTimeIncrement increment = DBTimeSeries.thoroughSeriesToIncrements(serie, s);
 			sizes.add(incrementToSize(increment));
 		}
