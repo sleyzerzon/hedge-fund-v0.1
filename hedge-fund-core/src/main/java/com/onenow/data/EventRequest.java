@@ -1,12 +1,6 @@
 package com.onenow.data;
 
-import com.onenow.constant.ColumnName;
-import com.onenow.constant.DBQuery;
-import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
-import com.onenow.constant.PriceType;
-import com.onenow.instrument.Investment;
 
 public class EventRequest extends Event {
 	

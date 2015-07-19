@@ -2,11 +2,13 @@ package com.onenow.data;
 
 import java.util.logging.Level;
 
+import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
+import com.onenow.constant.SizeType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -22,7 +24,11 @@ public class Event {
 
 	public InvDataSource source;
 	public InvDataTiming timing;
+	
 	public PriceType priceType; 
+	public SizeType sizeType; 
+	public GreekType greekType; 
+	public GenericType genericType; 
 
 	// public ObjectOrigination origin = new ObjectOrigination();
 

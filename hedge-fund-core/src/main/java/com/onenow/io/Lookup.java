@@ -106,8 +106,9 @@ public class Lookup {
 		return s;
 	}
 
+	// TODO type subcases
+	// TYPE: PRICE, SIZE, VOLATILITY, GENERIC 
 	private static String lookupPriceType(Event event, String s) {
-		// PRICE TYPE
 		try {
 			String priceType = separator + event.priceType.toString();
 			s = s + priceType;
