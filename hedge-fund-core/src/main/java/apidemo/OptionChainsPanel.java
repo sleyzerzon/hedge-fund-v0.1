@@ -118,7 +118,7 @@ public class OptionChainsPanel extends JPanel {
 		Timer m_timer = new Timer( 800, this);
 	    JLabel m_labUnderPrice = new JLabel();
 	    TopMktDataAdapter m_stockListener = new TopMktDataAdapter() {
-            @Override public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+            @Override public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
                 if (tickType == TickType.LAST) {
                     m_labUnderPrice.setText( "" + price);
                 }
@@ -276,7 +276,7 @@ public class OptionChainsPanel extends JPanel {
 					m_c = contract;
 				}
 		
-				@Override public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+				@Override public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
 					switch( tickType) {
 						case BID:
 							m_bid = price;
@@ -288,7 +288,7 @@ public class OptionChainsPanel extends JPanel {
 					}
 				}
 		
-				@Override public void tickOptionComputation( TickType tickType, double impVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
+				@Override public void tickOptionComputation( TickType tickType, Double impVol, Double delta, Double optPrice, Double pvDividend, Double gamma, Double vega, Double theta, Double undPrice) {
 					if (tickType == TickType.MODEL_OPTION) {
 						m_impVol = impVol;
 						m_delta = delta;

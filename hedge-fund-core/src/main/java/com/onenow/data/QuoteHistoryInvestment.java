@@ -99,11 +99,11 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 
 	// INTERFACE: ITopMktDataHandler 
 	@Override
-	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+	public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
 	}
 
 	@Override
-	public void tickSize(TickType tickType, int size) {
+	public void tickSize(TickType tickType, Integer size) {
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	}	
 
 	@Override
-	public void tickGeneric(TickType tickType, double value) {
+	public void tickGeneric(TickType tickType, Double value) {
 		// TODO Auto-generated method stub
 		
 	}

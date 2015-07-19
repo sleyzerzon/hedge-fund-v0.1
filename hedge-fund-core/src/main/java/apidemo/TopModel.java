@@ -110,7 +110,7 @@ public class TopModel extends AbstractTableModel {
 			return m_close == 0	? null : fmtPct( (m_last - m_close) / m_close);
 		}
 
-		@Override public void tickPrice( TickType tickType, double price, int canAutoExecute) {
+		@Override public void tickPrice( TickType tickType, Double price, Integer canAutoExecute) {
 			switch( tickType) {
 				case BID:
 					m_bid = price;
@@ -129,7 +129,7 @@ public class TopModel extends AbstractTableModel {
 			m_model.fireTableDataChanged(); // should use a timer to be more efficient
 		}
 
-		@Override public void tickSize( TickType tickType, int size) {
+		@Override public void tickSize( TickType tickType, Integer size) {
 			switch( tickType) {
 				case BID_SIZE:
 					m_bidSize = size;

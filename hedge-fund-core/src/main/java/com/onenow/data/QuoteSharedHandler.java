@@ -6,11 +6,16 @@ import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
+import com.onenow.constant.GenericType;
+import com.onenow.constant.OptionVolatility;
+import com.onenow.constant.SizeType;
 import com.onenow.constant.InvType;
+import com.onenow.constant.PriceType;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
 import com.onenow.portfolio.BusController.ITopMktDataHandler;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 /**
@@ -61,69 +66,96 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 	}
 	
 	@Override
-	public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+	public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
 			
 		// TODO bond contracts: BIDYIELD, ASKYIELD, LASTYIELD
 		
-		switch( tickType) {		
+		switch( tickType) {	
+		
+		// BID
 		case BID:
 			m_bid = price;
-//			Watchr.log(Level.INFO, ">Bid " + m_bid + " for " + investment.toString());
-			// marketPrice.writePriceNotRealTime(investment, m_bid, TradeType.SELL.toString());
+			Watchr.log(Level.INFO, ">>>>> Bid " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.BID);
 			break;
-		case ASK:
-			m_ask = price;
-//			Watchr.log(Level.INFO, ">Ask " + m_ask + " for " + investment.toString());
-			// marketPrice.writePriceNotRealTime(investment, m_ask, TradeType.BUY.toString());
-			break;			
-		case LAST:
-			m_last = price;
-//			Watchr.log(Level.INFO, ">Last " + m_last + " for " + investment.toString());
-			// marketPrice.writePriceNotRealTime(investment, m_last, TradeType.TRADED.toString());
+		case BID_EXCH:
+			Watchr.log(Level.INFO, ">>>>> Bid Exchange " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.BID_EXCH);
 			break;
-		case AUCTION_PRICE:
-			// TODO
-			break;
-		case MARK_PRICE: 
-			// TODO
+		case BID_OPTION:
+			Watchr.log(Level.INFO, ">>>>> Bid Option " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.BID_OPTION);
 			break;
 			
+		// ASK	
+		case ASK:
+			m_ask = price;
+			Watchr.log(Level.INFO, ">>>>> Ask " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.ASK);
+			break;	
+		case ASK_EXCH:
+			Watchr.log(Level.INFO, ">>>>> Ask Exchange " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.ASK_EXCH);
+			break;
+		case ASK_OPTION: 
+			Watchr.log(Level.INFO, ">>>>> Ask Option " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.ASK_OPTION);
+			break;
+
+		// LAST
+		case LAST:
+			m_last = price;
+			Watchr.log(Level.INFO, ">>>>> Last " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.TRADED);
+			break;
+		case LAST_OPTION:
+			Watchr.log(Level.INFO, ">>>>> Last Option " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.TRADED_OPTION);
+			break;
+
+		case AUCTION_PRICE:
+			Watchr.log(Level.INFO, ">>>>> Auction Price " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.AUCTION_PRICE);
+			break;
+		case MARK_PRICE: 
+			Watchr.log(Level.INFO, ">>>>> Mark Price " + price + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.MARK_PRICE);
+			break;
+		
+
 
 		////////////////
 		//////// CALCULATE OWN
 		case OPEN:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Open Price " + price + " for " + investment.toString());
 			break;
 		case CLOSE:
-			m_close = price;
-//			Watchr.log(Level.INFO, ">Close " + m_close + " for " + investment.toString());
-			// marketPrice.writePriceNotRealTime(investment, m_close, TradeType.CLOSE.toString());
+			Watchr.log(Level.INFO, ">>>>> Close Price " + price + " for " + investment.toString());
 			break;
 		case HIGH:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> High Price " + price + " for " + investment.toString());
 			break;
 		case LOW:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> Low Price " + price + " for " + investment.toString());
 			break;
 		case HIGH_13_WEEK:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> High 13 Weeks Price " + price + " for " + investment.toString());
 			break;
 		case LOW_13_WEEK:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> Low Price " + price + " for " + investment.toString());
 			break;
 		case HIGH_26_WEEK:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> High 26 Weeks Price " + price + " for " + investment.toString());
 			break;
 		case LOW_26_WEEK:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> Low 26 Weeks Price " + price + " for " + investment.toString());
 			break;
 		case HIGH_52_WEEK:
-			// Calculate own
+			Watchr.log(Level.INFO, ">>>>> Low 52 Price " + price + " for " + investment.toString());
 			break;
 		case LOW_52_WEEK:
-			// Calculate own
-			break;
-			
+			Watchr.log(Level.INFO, ">>>>> Low 52 Price " + price + " for " + investment.toString());
+			break;			
 		
 		default:
 			Watchr.log(Level.WARNING, 	"$$$$$ tickPrice: " + " -tickType " + tickType +
@@ -134,34 +166,37 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		chainTable.fireTableDataChanged();
 	}
 	
-	@Override public void tickGeneric(TickType tickType, double value) {
+	@Override public void tickGeneric(TickType tickType, Double value) {
 
 		switch( tickType) {			
 
 		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
-			// TODO!!!!! ********************
+			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
+			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.RT_HISTORICAL_VOL);			
 			break;
 		case OPTION_HISTORICAL_VOL:
-			// TODO ********************
-//			Watchr.log(Level.INFO, ">HistoricalVolatility " + m_close + " for " + investment.toString());
+			Watchr.log(Level.INFO, ">>>>> Option Historical Volatility " + value + " for " + investment.toString());
+			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_HISTORICAL_VOL);			
 			break;
 		case OPTION_IMPLIED_VOL:
-			// TODO ********************
+			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
+			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_IMPLIED_VOL);			
 			break;
 		case INDEX_FUTURE_PREMIUM:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, PriceType.INDEX_FUTURE_PREMIUM);
 			break;
 		case TRADE_COUNT:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Trade Count " + value + " for " + investment.toString());
+			MarketPrice.writeGeneric(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_COUNT);			
 			break;
 		case TRADE_RATE:
-			// TODO
-			break;
-		case VOLUME_RATE:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Trade Rate " + value + " for " + investment.toString());
+			MarketPrice.writeGeneric(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_RATE);			
 			break;
 		case SHORTABLE:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Shortable " + value + " for " + investment.toString());
+			MarketPrice.writeGeneric(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.SHORTABLE);			
 			break;
 
 
@@ -175,50 +210,63 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 	
 	
 	@Override
-	public void tickSize(TickType tickType, int size) {
+	public void tickSize(TickType tickType, Integer size) {
 						
 		switch( tickType) {
 		case BID_SIZE:
 			m_bidSize = size;
-//			marketPrice.writeSizeNotRealTime(investment, m_bidSize, InvDataType.BIDSIZE.toString());
-			// Watchr.log(Level.INFO, ">Bid size " + m_bidSize + " for " + investment.toString());
+			Watchr.log(Level.INFO, ">>>>> Bid Size " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.BID_SIZE);
 			break;
 		case ASK_SIZE:
 			m_askSize = size;
-//			marketPrice.writeSizeNotRealTime(investment, m_askSize, InvDataType.ASKSIZE.toString());
-			// Watchr.log(Level.INFO, ">Ask size " + m_askSize + " for " + investment.toString());
+			Watchr.log(Level.INFO, ">>>>> Ask Size " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.ASK_SIZE);
 			break;
 		case LAST_SIZE:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Last Size " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.TRADED_SIZE);
 			break;
 		case VOLUME:
 			m_volume = size;
-//			marketPrice.writeSizeNotRealTime(investment, m_volume, InvDataType.VOLUME.toString());
-			// Watchr.log(Level.INFO, ">Volume size " + m_volume + " for " + investment.toString());
+			Watchr.log(Level.INFO, ">>>>> Volume " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.VOLUME);
 			break;
 		case AVG_VOLUME:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Average Volume " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.AVG_VOLUME);
+			break;
+		case VOLUME_RATE:
+			Watchr.log(Level.INFO, ">>>>> Volume Rate " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.VOLUME_RATE);
 			break;
 		case OPTION_CALL_OPEN_INTEREST:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Call Open Interest " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_CALL_OPEN_INTEREST);
 			break;
 		case OPTION_PUT_OPEN_INTEREST:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Put Open Interest " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_PUT_OPEN_INTEREST);
 			break;
 		case OPTION_CALL_VOLUME:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Call Volume " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_CALL_VOLUME);
 			break;
 		case OPTION_PUT_VOLUME:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Put Volume " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_PUT_VOLUME);
 			break;
 		case REGULATORY_IMBALANCE:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Regulatory Imbalance " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.REGULATORY_IMBALANCE);
 			break;
 		case AUCTION_VOLUME:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Auction Volume " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.AUCTION_VOLUME);
 			break;
 		case AUCTION_IMBALANCE:
-			// TODO
+			Watchr.log(Level.INFO, ">>>>> Auction Imbalance " + size + " for " + investment.toString());
+			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.AUCTION_IMBALANCE);
 			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickSize:" + " -tickType: " + tickType +
@@ -234,32 +282,11 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 					
 		switch( tickType) {
 		case LAST_TIMESTAMP:
+			// TODO: what should be the use of this stamp? instead of getting our own for other ticks?
 			m_lastTime = Long.parseLong(value);
-			// Watchr.log(Level.INFO, ">LAST_TIMESTAMP " + m_lastTime + " for " + investment.toString());
-			break;
-		case AVG_VOLUME:
-			// Watchr.log(Level.INFO, ">AVG_VOLUME " + value + " for " + investment.toString()); // not for indices
-			break;
-		case OPTION_CALL_VOLUME:
-			// Watchr.log(Level.INFO, ">OPTION_CALL_VOLUME " + value + " for " + investment.toString()); // stocks 
-			break;
-		case OPTION_PUT_VOLUME:
-			// Watchr.log(Level.INFO, ">OPTION_PUT_VOLUME " + value + " for " + investment.toString()); // stocks
-			break;
-		case AUCTION_VOLUME:
-			// Watchr.log(Level.INFO, ">AUCTION_VOLUME " + value + " for " + investment.toString()); // subscribe to
-			break;			
-		case VOLUME_RATE:
-			// Watchr.log(Level.INFO, ">VOLUME_RATE " + value + " for " + investment.toString()); // not for indices
-			break;
-		case BID_EXCH:
-			// TODO
-			break;
-		case ASK_EXCH:
-			// TODO
 			break;
 		case FUNDAMENTAL_RATIOS:
-			// TODO
+			MarketPrice.parseAndWriteFundamentalRatios(investment, value);
 			break;
 		case UNKNOWN:
 			// TODO
@@ -269,7 +296,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		//////// REALTIME
 		case RT_VOLUME:
 			Watchr.log(Level.INFO, ">>>>> RT_VOLUME " + value + " for " + investment.toString()); 
-			MarketPrice.parseAndWriteRealTime(investment, value);
+			MarketPrice.parseAndWriteRealTimePriceSize(investment, value);
 			// Example: RT_VOLUME 0.60;1;1424288913903;551;0.78662433;true
 			break;
 

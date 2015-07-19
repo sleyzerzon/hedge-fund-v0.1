@@ -98,7 +98,6 @@ public class HistorianMain {
 		String todayDateOf = TimeParser.getDateMinusDashed(getThroughToday(), 1);
 		
 		if(TimeParser.isWeekDay(todayDateOf) || (inv instanceof InvestmentFuture)) {
-			Watchr.log("BOOLEAN " + todayDateOf + " IS WEEKDAY OR THIS IS A FUTURE: " + (inv instanceof InvestmentFuture));
 			updateDataL2HistoryFromL3(getThroughToday(), inv);
 		} else {
 			Watchr.log("Skipping today's data " + todayDateOf + " FOR " + inv.toString());
@@ -110,7 +109,6 @@ public class HistorianMain {
 		String backDayOf = TimeParser.getDateMinusDashed(toDashedDate, 1);	
 		
 		if(TimeParser.isWeekDay(backDayOf) || (inv instanceof InvestmentFuture)) {
-			Watchr.log("BOOLEAN " + backDayOf + " IS WEEKDAY OR THIS IS A FUTURE: " + (inv instanceof InvestmentFuture));
 			updateDataL2HistoryFromL3(toDashedDate, inv);
 		} else {
 			Watchr.log("Skipping back data " + backDayOf + " FOR " + inv.toString());

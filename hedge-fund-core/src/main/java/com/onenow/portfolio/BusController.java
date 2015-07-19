@@ -389,14 +389,12 @@ public class BusController implements EWrapper {
 	
 	// generic
 	public interface ITopMktDataHandler {
-		void tickPrice(TickType tickType, double price, int canAutoExecute);
-		void tickSize(TickType tickType, int size);
+		void tickPrice(TickType tickType, Double price, Integer canAutoExecute);
+		void tickSize(TickType tickType, Integer size);
 		void tickString(TickType tickType, String value);
 		void tickSnapshotEnd();
 		void marketDataType(MktDataType marketDataType);
-		
-		// added
-		void tickGeneric(TickType tickType, double value);
+		void tickGeneric(TickType tickType, Double value);
 
 	}
 

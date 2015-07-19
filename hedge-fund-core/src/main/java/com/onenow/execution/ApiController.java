@@ -388,8 +388,8 @@ public class ApiController implements EWrapper {
 
 	// ---------------------------------------- Top Market Data handling ----------------------------------------
 	public interface ITopMktDataHandler {
-		void tickPrice(TickType tickType, double price, int canAutoExecute);
-		void tickSize(TickType tickType, int size);
+		void tickPrice(TickType tickType, Double price, Integer canAutoExecute);
+		void tickSize(TickType tickType, Integer size);
 		void tickString(TickType tickType, String value);
 		void tickSnapshotEnd();
 		void marketDataType(MktDataType marketDataType);
@@ -400,13 +400,13 @@ public class ApiController implements EWrapper {
 	}
 
 	public interface IOptHandler extends ITopMktDataHandler {
-		void tickOptionComputation( TickType tickType, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice);
+		void tickOptionComputation( TickType tickType, Double impliedVol, Double delta, Double optPrice, Double pvDividend, Double gamma, Double vega, Double theta, Double undPrice);
 	}
 
 	public static class TopMktDataAdapter implements ITopMktDataHandler {
-		@Override public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+		@Override public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
 		}
-		@Override public void tickSize(TickType tickType, int size) {
+		@Override public void tickSize(TickType tickType, Integer size) {
 		}
 		@Override public void tickString(TickType tickType, String value) {
 		}

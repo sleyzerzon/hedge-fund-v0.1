@@ -6,14 +6,18 @@ import org.apache.derby.iapi.types.DataType;
 
 import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.ColumnName;
+import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.OptionVolatility;
 import com.onenow.constant.PriceType;
+import com.onenow.constant.SizeType;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
 import com.onenow.io.CacheInProcess;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Chart;
+import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 
 public class MarketPrice {
@@ -37,41 +41,58 @@ public class MarketPrice {
 	
 	
 	// WRITE REAL-TIME 
-	private static void writePriceSizeRealtime(	Long timeStamp, Investment inv, Double lastPrice, Integer lastSize, 
+	// TODO: handle VWAP & VOLUME, SPLITFLAG
+	private static void writePriceSizeRealtime(	Long timeInMilisec, Investment inv, Double lastPrice, Integer lastSize, 
 												Integer volume, Double VWAP, boolean splitFlag,
 												InvDataSource source, InvDataTiming timing) {
 
 		if(lastSize>0) { 
 			
-			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeStamp, inv, PriceType.TRADED, 
+			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeInMilisec, inv, PriceType.TRADED, 
 																						lastPrice, lastSize,
 																						source, timing);
 			cache.writeEvent(event);
 			
-			
-//			// TODO: ignore busts with negative size
-//			// TODO: IMPORTANT write both size and price or none
-//			cache.writeSize(timeStamp, inv, TradeType.TRADED.toString(), lastSize);		
-//			cache.writePrice(timeStamp, inv, TradeType.TRADED.toString(), lastPrice);
-//			
-//			// TODO: create these time series: VWAP & VOLUME
-//			// writeSizeDB(lastTradeTime, inv, DataType.VOLUME.toString(), volume);		
-//			// writePriceDB(lastTradeTime, inv, DataType.VWAP.toString(), VWAP);
-//			
-//			 cache.writeFlag(timeStamp, inv, DataType.TRADEFLAG.toString(), splitFlag);
-			
 		} else {
-			Watchr.info("RT Volume without size");
-			
+			Watchr.info("RT Volume without size");	
 		}
 	}
 	
-	private static void writeStreaming() {
+	public static void writePriceStreaming(Long timeInMilisec, Investment inv, Double price, PriceType priceType) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
-	
+
+	public static void writeSizeStreaming(Long timeInMilisec, Investment inv, Integer size, SizeType sizeType) {
+		
+		ColumnName dataType = ColumnName.DELTA;
+		
+	}
+
+	public static void writeGreekStreaming(Long timeInMilisec, Investment inv, Double greek, GreekType greekType) {
+		
+		ColumnName dataType = ColumnName.DELTA;
+		
+	}
+
+	public static void writeOptionComputationStreaming(Long timeInMilisec, Investment inv, Double computation, OptionVolatility greekType) {
+		
+		ColumnName dataType = ColumnName.DELTA;
+		
+	}
+
+	public static void writeGeneric(Long timeInMilisec, Investment inv, Double computation, GenericType generic) {
+		
+		ColumnName dataType = ColumnName.DELTA;
+		
+	}
+
+
+	public static void parseAndWriteFundamentalRatios(Investment inv, String value) {
+		
+		
+	}
 	
 	// READ PRICE READ
 	/**
@@ -97,7 +118,7 @@ public class MarketPrice {
 		
 	
 	// PRIVATE
-	public static void parseAndWriteRealTime(Investment inv, String rtvolume) {
+	public static void parseAndWriteRealTimePriceSize(Investment inv, String rtvolume) {
 		String lastTradedPrice="";
 		String lastTradeSize="";
 		String lastTradeTime="";
