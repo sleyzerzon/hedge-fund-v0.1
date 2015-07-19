@@ -662,8 +662,8 @@ public class TimeParser implements Testable {
 		
 		boolean weekday = false;
 						
-		// 07-18-2015
-		DateFormat existingFormat = new SimpleDateFormat("MM-dd-yyyy");
+		// 2015-07-19
+		DateFormat existingFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		try {
 			date = existingFormat.parse(dateString);

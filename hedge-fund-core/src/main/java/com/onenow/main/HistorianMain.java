@@ -94,7 +94,9 @@ public class HistorianMain {
 	}
 
 	private static void updateTodayDataL2HistoryFromL3(Investment inv) {
+		
 		String todayDateOf = TimeParser.getDateMinusDashed(getThroughToday(), 1);
+		
 		if(TimeParser.isWeekDay(todayDateOf) || (inv instanceof InvestmentFuture)) {
 			Watchr.log("BOOLEAN " + todayDateOf + " IS WEEKDAY OR THIS IS A FUTURE: " + (inv instanceof InvestmentFuture));
 			updateDataL2HistoryFromL3(getThroughToday(), inv);
@@ -104,7 +106,9 @@ public class HistorianMain {
 	}
 
 	private static void updateBackDataL2HistoryFromL3(String toDashedDate, Investment inv) {
-		String backDayOf = TimeParser.getDateMinusDashed(toDashedDate, 1);			
+		
+		String backDayOf = TimeParser.getDateMinusDashed(toDashedDate, 1);	
+		
 		if(TimeParser.isWeekDay(backDayOf) || (inv instanceof InvestmentFuture)) {
 			Watchr.log("BOOLEAN " + backDayOf + " IS WEEKDAY OR THIS IS A FUTURE: " + (inv instanceof InvestmentFuture));
 			updateDataL2HistoryFromL3(toDashedDate, inv);
