@@ -7,10 +7,8 @@ import java.util.logging.Level;
 import org.influxdb.dto.Serie;
 
 import com.onenow.constant.ColumnName;
-import com.onenow.constant.DBQuery;
 import com.onenow.constant.DBname;
 import com.onenow.data.EventActivity;
-import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestRaw;
 import com.onenow.util.Watchr;
 
@@ -20,40 +18,16 @@ public class DBTimeSeriesSize {
 		
 	}
 	
-	static Serie getWriteSerie(final EventActivity event, String serieName) {
-		final Serie serie = new Serie.Builder(serieName)
-		.columns(	ColumnName.TIME.toString().toLowerCase(), ColumnName.SIZE.toString(), 
-					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString()
-					)
-					
-					// TODO: remove these? they don't vary across data points in a time series
-//					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
-//					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
-//					ColumnName.FUTUREEXP.toString())
-		.values(event.timeInMilisec, event.size, 															// basic columns
-				"\""+ event.source +"\"", "\""+ event.timing +"\"", "\""+ event.priceType +"\""				// event origination
-				
-//				"\""+ event.getUnder() +"\"", "\""+ event.getInvType() +"\"", 								// investment
-//				"\""+ event.getOptionStrikePrice() +"\"", "\""+ event.getOptionExpirationDate() +"\"",		// option
-//				"\""+ event.getFutureExpirationDate() +"\""													// if future, expiration
-				) 
-
-		.build();
-		return serie;
-	}
-
 	public static void write(EventActivity event) {
+		
 		String name = Lookup.getEventKey(event);
-		final Serie serie = getWriteSerie(event, name);
+		
+		final Serie serie = DBTimeSeries.getWriteSerie(event, name, ColumnName.SIZE);
 
-		writeThread(event, serie);
+		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getSizeDatabaseName());
+
 	}
 	
-	public static void writeThread(EventActivity event, Serie serie) {
-		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getSizeDatabaseName());
-	}
-
-
 	public static List<Integer> read(EventRequestRaw request) throws Exception {
 		
 		List<Integer> sizes = new ArrayList<Integer>();

@@ -33,7 +33,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		// super
 		super.timeInMilisec = timeInSec*1000;
-		super.price = open;
+		super.price = close;  	// simplifies to only capture open in the EventActivity
 		super.size = volume;
 
 		// this

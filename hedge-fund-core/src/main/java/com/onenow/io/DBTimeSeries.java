@@ -66,23 +66,35 @@ private static void dbCreateAndConnect() {
 		influxDB.createDatabase(DBname.STAGING.toString());
 		influxDB.createDatabase(DBname.PRODUCTION.toString());
 
-//		influxDB.createDatabase(DBname.PRICE_DEVELOPMENT.toString());
-//		influxDB.createDatabase(DBname.PRICE_STAGING.toString());
-//		influxDB.createDatabase(DBname.PRICE_PRODUCTION.toString());
-//
-//		influxDB.createDatabase(DBname.SIZE_DEVELOPMENT.toString());
-//		influxDB.createDatabase(DBname.SIZE_STAGING.toString());
-//		influxDB.createDatabase(DBname.SIZE_PRODUCTION.toString());
-//
-//		influxDB.createDatabase(DBname.GREEK_DEVELOPMENT.toString());
-//		influxDB.createDatabase(DBname.GREEK_STAGING.toString());
-//		influxDB.createDatabase(DBname.GREEK_PRODUCTION.toString());
-
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
 	}
 }
 
+public static Serie getWriteSerie(final EventActivity event, String serieName, ColumnName columnName) {
+	
+	final Serie serie = new Serie.Builder(serieName)
+	.columns(	ColumnName.TIME.toString().toLowerCase(), columnName.toString(), 
+				ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString()
+				)					
+	.values(event.timeInMilisec, getValue(event, columnName), 															// basic columns
+			"\""+ event.source +"\"", "\""+ event.timing +"\"", "\""+ event.priceType +"\""				// event origination				
+			) 
+
+	.build();
+	return serie;
+}
+
+private static Object getValue(final EventActivity event, ColumnName columnName) {
+	Object value = null;
+	if(columnName.equals(ColumnName.PRICE)) {
+		value = (Object) event.price;
+	}
+	if(columnName.equals(ColumnName.SIZE)) {
+		value = (Object) event.size;
+	}
+	return value;
+}
 
 
 public static void writeThread(final EventActivity event, final Serie serie, final DBname dbName) {
@@ -132,7 +144,7 @@ public static DBname getPriceDatabaseName() {
 	DBname name = DBname.DEVELOPMENT;
 			
 	if(!NetworkConfig.isMac()) {
-		name = DBname.DEVELOPMENT;
+		name = DBname.STAGING;
 	} 
 	return name;
 }

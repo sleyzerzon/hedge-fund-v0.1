@@ -14,6 +14,7 @@ import backtype.storm.event__init;
 import com.ib.client.Types.BarSize;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBQuery;
+import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
@@ -36,7 +37,6 @@ public class databaseTimeSeriesTest {
 	
 	EventActivityPriceSizeRealtime greekActivity;
 	
-	// EventActivitySize;
 	
   @Test
   public void dbConnect() {
@@ -73,8 +73,8 @@ public class databaseTimeSeriesTest {
 	  	  
 	  EventActivityPriceHistory historyActivity = getHistoryActivity();
 
-	  String serieName = Lookup.getEventKey(historyActivity);
-	  List<Serie> series = DBTimeSeriesPrice.getWriteSerie(historyActivity, serieName);
+//	  String serieName = Lookup.getEventKey(historyActivity);
+//	  Serie series = DBTimeSeries.getWriteSerie(historyActivity, serieName, ColumnName.PRICE);
 	  
 	  	// write
 		DBTimeSeriesPrice.write(historyActivity);
@@ -104,10 +104,11 @@ public class databaseTimeSeriesTest {
 		Watchr.info("READ MEAN: " + candlesMean.get(0).openPrice + " FROM CANDLES" + candlesMean);
 		Watchr.info("READ MEDIAN: " + candlesMedian.get(0).openPrice + " FROM CANDLES " + candlesMedian);
 		
-		Assert.assertTrue(candlesHigh.get(0).openPrice.equals(historyActivity.high));
-		Assert.assertTrue(candlesLow.get(0).openPrice.equals(historyActivity.low));
+		// now only writing the opening price, not open/close/high/low from history at every increment
+		Assert.assertTrue(candlesHigh.get(0).openPrice.equals(historyActivity.close));
+		// Assert.assertTrue(candlesLow.get(0).openPrice.equals(historyActivity.open));
 		// Assert.assertTrue(candlesMean.get(0).openPrice.equals(0.20500000000000002)); // precision issue in CodeShip
-		Assert.assertTrue(candlesMedian.get(0).openPrice.equals(0.12));		
+		// Assert.assertTrue(candlesMedian.get(0).openPrice.equals(0.12));		
 			
   }
 
