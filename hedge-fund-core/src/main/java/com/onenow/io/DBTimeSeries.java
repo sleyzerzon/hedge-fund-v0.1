@@ -77,7 +77,7 @@ public static Serie getWriteSerie(final EventActivity event, String serieName, C
 	.columns(	ColumnName.TIME.toString().toLowerCase(), columnName.toString(), 
 				ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString()
 				)					
-	.values(event.timeInMilisec, getValue(event, columnName), 															// basic columns
+	.values(event.timeInMilisec, getValue(event, columnName), 											// basic columns
 			"\""+ event.source +"\"", "\""+ event.timing +"\"", "\""+ event.priceType +"\""				// event origination				
 			) 
 
@@ -195,9 +195,8 @@ public static List<Serie> query(DBname dbName, EventRequestRaw request) {
 
 	List<Serie> series = new ArrayList<Serie>();
 
-	try {
-		String serieName = Lookup.getEventKey(request);		 
-		String query = getQuery(request, serieName);
+	try {				 
+		String query = getQuery(request, getSerieName(request));
 
 		String log = "DATABASE <" + dbName + "> QUERY " + query; 
 		Watchr.log(Level.INFO, log);  
@@ -210,6 +209,23 @@ public static List<Serie> query(DBname dbName, EventRequestRaw request) {
 		// e.printStackTrace(); // some series don't exist or have data 
 	}
 	return series;
+}
+
+private static String getSerieName(EventRequestRaw request) {
+	String serieName = null;
+	try {
+		if(request.priceType!=null) {
+			serieName =  Lookup.getPriceEventKey(request);
+		}
+	} catch (Exception e) {
+	}
+	try {
+		if(request.sizeType!=null) {
+			serieName = Lookup.getSizeEventKey(request);
+		}
+	} catch (Exception e) {
+	}
+	return serieName;
 }
 
 // TODO The where clause supports comparisons against regexes, strings, booleans, floats, integers, and the times listed before. 

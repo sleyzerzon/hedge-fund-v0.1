@@ -82,7 +82,7 @@ public class ReporterMain {
 																	SamplingRate.SCALPMEDIUM, tradeType, 
 																	fromDashedDate, toDashedDate);
 				
-		String key = Lookup.getEventKey(request);
+		String key = Lookup.getPriceEventKey(request);
 		String fileName = key+"-"+toDashedDate;
 		Watchr.log(Level.INFO, "working on: " + fileName + " for request: " + request.toString());
 		

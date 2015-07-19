@@ -19,6 +19,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
+import com.onenow.constant.SizeType;
 import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventRequest;
@@ -61,9 +62,10 @@ public class databaseTimeSeriesTest {
 	  EventActivityPriceHistory event = new EventActivityPriceHistory(reqId, timeSeconds, high, low, open, close, wap, volume, count);	
 
 	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
-	  event.priceType = PriceType.BID;
 	  event.source = InvDataSource.AMERITRADE;
 	  event.timing = InvDataTiming.HISTORICAL;
+	  event.priceType = PriceType.BID;
+	  event.sizeType = SizeType.BID_SIZE;
 	  
 	  return event;
   }
@@ -71,20 +73,15 @@ public class databaseTimeSeriesTest {
   @Test
   public void writePrice() {
 	  	  
-	  EventActivityPriceHistory historyActivity = getHistoryActivity();
-
-//	  String serieName = Lookup.getEventKey(historyActivity);
-//	  Serie series = DBTimeSeries.getWriteSerie(historyActivity, serieName, ColumnName.PRICE);
-	  
 	  	// write
-		DBTimeSeriesPrice.write(historyActivity);
+		DBTimeSeriesPrice.write(getHistoryActivity());
 		
 		TimeParser.sleep(5); // wait for write thread to complete
 		
-		EventRequestRaw requestHigh = new EventRequestRaw(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequestRaw requestLow = new EventRequestRaw(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequestRaw requestMean = new EventRequestRaw(DBQuery.MEAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
-		EventRequestRaw requestMedian = new EventRequestRaw(DBQuery.MEDIAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", historyActivity);
+		EventRequestRaw requestHigh = new EventRequestRaw(DBQuery.MAX, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", getHistoryActivity());
+		EventRequestRaw requestLow = new EventRequestRaw(DBQuery.MIN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", getHistoryActivity());
+		EventRequestRaw requestMean = new EventRequestRaw(DBQuery.MEAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", getHistoryActivity());
+		EventRequestRaw requestMedian = new EventRequestRaw(DBQuery.MEDIAN, ColumnName.PRICE, SamplingRate.SCALP, "-1m" ,"now()", getHistoryActivity());
 
 		List<Candle> candlesHigh = new ArrayList<Candle>();
 		List<Candle> candlesLow = new ArrayList<Candle>();
@@ -105,7 +102,7 @@ public class databaseTimeSeriesTest {
 		Watchr.info("READ MEDIAN: " + candlesMedian.get(0).openPrice + " FROM CANDLES " + candlesMedian);
 		
 		// now only writing the opening price, not open/close/high/low from history at every increment
-		Assert.assertTrue(candlesHigh.get(0).openPrice.equals(historyActivity.close));
+		Assert.assertTrue(candlesHigh.get(0).openPrice.equals(getHistoryActivity().close));
 		// Assert.assertTrue(candlesLow.get(0).openPrice.equals(historyActivity.open));
 		// Assert.assertTrue(candlesMean.get(0).openPrice.equals(0.20500000000000002)); // precision issue in CodeShip
 		// Assert.assertTrue(candlesMedian.get(0).openPrice.equals(0.12));		
@@ -117,8 +114,24 @@ public class databaseTimeSeriesTest {
   
   @Test
   public void writeSize() {
-	  // contextualizeEvent(realtimeActivity);
+	  
+	  	// write
+		DBTimeSeriesSize.write(getHistoryActivity());
 
+		TimeParser.sleep(5); // wait for write thread to complete
+
+		EventRequestRaw request = new EventRequestRaw(DBQuery.MAX, ColumnName.SIZE, SamplingRate.SCALP, "-1m" ,"now()", getHistoryActivity());
+
+		List<Integer> ints = new ArrayList<Integer>();
+
+		try {
+			ints = DBTimeSeriesSize.read(request);
+		} catch (Exception e) {
+		}
+		
+		Watchr.info("READ: " + ints.get(0) + " FROM INTS " + ints);
+
+		Assert.assertTrue(ints.get(0).equals(getHistoryActivity().volume));
 
   }
   

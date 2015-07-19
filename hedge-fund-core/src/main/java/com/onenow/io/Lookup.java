@@ -42,13 +42,25 @@ public class Lookup {
 		return s;
 	}
 	
+	public static String getPriceEventKey(Event event) {
+		String s = "";
+		s = getEventKey(event) + lookupPriceType(event, s);		
+		return s;
+	}
+
+	public static String getSizeEventKey(Event event) {
+		String s = "";
+		s = getEventKey(event) + lookupSizeType(event, s);
+		return s;
+	}
+
 	/**
 	 * Key to find price/size values for specific investments
 	 * @param inv
 	 * @param priceType
 	 * @return
 	 */	
-	public static String getEventKey(Event event) {
+	private static String getEventKey(Event event) {
 		String s = ""; 
 
 		s = lookupGeneral(event, s);		
@@ -57,7 +69,7 @@ public class Lookup {
 		
 		s = lookupFutures(event, s);
 
-		s = lookupPriceType(event, s);
+		// s = lookupPriceType(event, s);
 		
 		// source/timing vary by datapoint, and are thus now columns in the time series
 		// s = lookupSourceTiming(event, s);
@@ -106,8 +118,6 @@ public class Lookup {
 		return s;
 	}
 
-	// TODO type subcases
-	// TYPE: PRICE, SIZE, VOLATILITY, GENERIC 
 	private static String lookupPriceType(Event event, String s) {
 		try {
 			String priceType = separator + event.priceType.toString();
@@ -118,6 +128,20 @@ public class Lookup {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Watchr.severe("LOOKUP PRICE TYPE EXCEPTION: " + event.toString());
+		}
+		return s;
+	}
+
+	private static String lookupSizeType(Event event, String s) {
+		try {
+			String sizeType = separator + event.sizeType.toString();
+			s = s + sizeType;
+			if(sizeType.equals(separator)) {
+				Watchr.severe("LOOKUP SIZE TYPE EMPTY");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Watchr.severe("LOOKUP SIZE TYPE EXCEPTION: " + event.toString());
 		}
 		return s;
 	}

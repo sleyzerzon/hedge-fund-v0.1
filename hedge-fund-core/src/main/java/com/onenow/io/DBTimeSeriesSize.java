@@ -20,7 +20,7 @@ public class DBTimeSeriesSize {
 	
 	public static void write(EventActivity event) {
 		
-		String name = Lookup.getEventKey(event);
+		String name = Lookup.getSizeEventKey(event);
 		
 		final Serie serie = DBTimeSeries.getWriteSerie(event, name, ColumnName.SIZE);
 

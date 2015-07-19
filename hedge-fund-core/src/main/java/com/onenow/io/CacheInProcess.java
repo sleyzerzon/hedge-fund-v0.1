@@ -59,7 +59,7 @@ public class CacheInProcess {
  */
 	private boolean writeToMem(EventActivity event) {
 		
-		String key = Lookup.getEventKey(event);
+		String key = Lookup.getPriceEventKey(event);
 		boolean success = false;	// useful to test for initialization
 		
 		Boolean writeToMem=false;
@@ -150,7 +150,7 @@ public class CacheInProcess {
 		
 		
 		Event event = new Event(inv, source, timing, tradeType);
-		String key = Lookup.getEventKey(event);
+		String key = Lookup.getPriceEventKey(event);
 		EventActivityPriceSizeRealtime eventRT = lastEventRT.get(key); 
 		Double price = eventRT.price;
 		

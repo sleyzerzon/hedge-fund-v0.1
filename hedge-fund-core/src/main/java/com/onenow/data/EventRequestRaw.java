@@ -31,8 +31,11 @@ public class EventRequestRaw extends EventRequest {
 		setInvestment(event.getInvestment());
 		
 		super.source = event.source;
-		super.timing = event.timing;		
+		super.timing = event.timing;	
+		
+		// whichever is not null is the type in question
 		super.priceType = event.priceType;
+		super.sizeType = event.sizeType;
 
 	}
 	
