@@ -173,15 +173,15 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
 			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.RT_HISTORICAL_VOL);			
+			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.RT_HISTORICAL_VOL);			
 			break;
 		case OPTION_HISTORICAL_VOL:
 			Watchr.log(Level.INFO, ">>>>> Option Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_HISTORICAL_VOL);			
+			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_HISTORICAL_VOL);			
 			break;
 		case OPTION_IMPLIED_VOL:
 			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_IMPLIED_VOL);			
+			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_IMPLIED_VOL);			
 			break;
 		case INDEX_FUTURE_PREMIUM:
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
@@ -189,15 +189,15 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			break;
 		case TRADE_COUNT:
 			Watchr.log(Level.INFO, ">>>>> Trade Count " + value + " for " + investment.toString());
-			MarketPrice.writeGeneric(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_COUNT);			
+			MarketPrice.writeGenericStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_COUNT);			
 			break;
 		case TRADE_RATE:
 			Watchr.log(Level.INFO, ">>>>> Trade Rate " + value + " for " + investment.toString());
-			MarketPrice.writeGeneric(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_RATE);			
+			MarketPrice.writeGenericStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_RATE);			
 			break;
 		case SHORTABLE:
 			Watchr.log(Level.INFO, ">>>>> Shortable " + value + " for " + investment.toString());
-			MarketPrice.writeGeneric(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.SHORTABLE);			
+			MarketPrice.writeGenericStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.SHORTABLE);			
 			break;
 
 
@@ -288,7 +288,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			MarketPrice.lastTimeMilisecMap.put(investment, Long.valueOf(value));
 			break;
 		case FUNDAMENTAL_RATIOS:
-			MarketPrice.parseAndWriteFundamentalRatios(investment, value);
+			MarketPrice.parseAndWriteFundamentalsStreaming(investment, value);
 			break;
 		case UNKNOWN:
 			// TODO

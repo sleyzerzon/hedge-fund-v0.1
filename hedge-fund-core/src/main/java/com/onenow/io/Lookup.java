@@ -59,7 +59,8 @@ public class Lookup {
 
 		s = lookupPriceType(event, s);
 		
-		s = lookupSourceTiming(event, s);
+		// source/timing vary by datapoint, and are thus now columns in the time series
+		// s = lookupSourceTiming(event, s);
 	
 		return (s);
 	}

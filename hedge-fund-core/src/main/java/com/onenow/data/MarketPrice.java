@@ -78,20 +78,20 @@ public class MarketPrice {
 		
 	}
 
-	public static void writeOptionComputationStreaming(Long timeInMilisec, Investment inv, Double computation, OptionVolatility greekType) {
+	public static void writeVolatilityStreaming(Long timeInMilisec, Investment inv, Double computation, OptionVolatility volatilityType) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
-	public static void writeGeneric(Long timeInMilisec, Investment inv, Double computation, GenericType generic) {
+	public static void writeGenericStreaming(Long timeInMilisec, Investment inv, Double computation, GenericType generic) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
 
-	public static void parseAndWriteFundamentalRatios(Investment inv, String value) {
+	public static void parseAndWriteFundamentalsStreaming(Investment inv, String value) {
 		
 		
 	}

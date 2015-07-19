@@ -98,17 +98,19 @@ public class DBTimeSeriesPrice {
 		
 		final Serie serie = new Serie.Builder(serieName)
 		.columns(	ColumnName.TIME.toString().toLowerCase(), ColumnName.PRICE.toString(), 
-					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(),
+					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString()
 					
-					// TODO: remove these?
-					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
-					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
-					ColumnName.FUTUREEXP.toString())
+//					// TODO: remove these? they don't vary across data points in a time series
+//					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
+//					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
+//					ColumnName.FUTUREEXP.toString()
+					)
 		.values(timeInMilisec, price, 															// basic columns
-				"\""+ source + "\"", "\""+ timing +"\"", "\""+ tradeType +"\"",				// event origination
-				"\""+ under + "\"", "\""+ invType +"\"", 									// investment
-				"\""+ strikePrice +"\"", "\""+ optionExpDate +"\"",							// option
-				"\""+ futureExpDate +"\""													// if future, expiration
+				"\""+ source + "\"", "\""+ timing +"\"", "\""+ tradeType +"\""				// event origination
+
+				//				"\""+ under + "\"", "\""+ invType +"\"", 									// investment
+//				"\""+ strikePrice +"\"", "\""+ optionExpDate +"\"",							// option
+//				"\""+ futureExpDate +"\""													// if future, expiration
 				) 
 
 		.build();

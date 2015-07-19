@@ -44,7 +44,7 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 			// implied volatility
 			m_impVol = impVol;
 			Watchr.log(Level.INFO, ">>>>> Option Model Implied Volatility Computation " + impVol + " for " + investment.toString());
-			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, impVol, OptionVolatility.MODEL_OPTION);			
+			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, impVol, OptionVolatility.MODEL_OPTION);			
 
 			// delta
 			m_delta = delta;
@@ -68,7 +68,7 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 		// OptionComputationType
 		case CUST_OPTION_COMPUTATION:
 			Watchr.log(Level.INFO, ">>>>> Option Custom Implied Volatility Computation " + impVol + " for " + investment.toString());
-			MarketPrice.writeOptionComputationStreaming(TimeParser.getTimeMilisecondsNow(), investment, impVol, OptionVolatility.CUST_OPTION_COMPUTATION);			
+			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, impVol, OptionVolatility.CUST_OPTION_COMPUTATION);			
 			break;
 			
         default:
