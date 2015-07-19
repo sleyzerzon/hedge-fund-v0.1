@@ -61,17 +61,22 @@ public static InfluxDB dbConnect() {
 
 private static void dbCreateAndConnect() {
 	try {
-		influxDB.createDatabase(DBname.PRICE_DEVELOPMENT.toString());
-		influxDB.createDatabase(DBname.PRICE_STAGING.toString());
-		influxDB.createDatabase(DBname.PRICE_PRODUCTION.toString());
+		
+		influxDB.createDatabase(DBname.DEVELOPMENT.toString());
+		influxDB.createDatabase(DBname.STAGING.toString());
+		influxDB.createDatabase(DBname.PRODUCTION.toString());
 
-		influxDB.createDatabase(DBname.SIZE_DEVELOPMENT.toString());
-		influxDB.createDatabase(DBname.SIZE_STAGING.toString());
-		influxDB.createDatabase(DBname.SIZE_PRODUCTION.toString());
-
-		influxDB.createDatabase(DBname.GREEK_DEVELOPMENT.toString());
-		influxDB.createDatabase(DBname.GREEK_STAGING.toString());
-		influxDB.createDatabase(DBname.GREEK_PRODUCTION.toString());
+//		influxDB.createDatabase(DBname.PRICE_DEVELOPMENT.toString());
+//		influxDB.createDatabase(DBname.PRICE_STAGING.toString());
+//		influxDB.createDatabase(DBname.PRICE_PRODUCTION.toString());
+//
+//		influxDB.createDatabase(DBname.SIZE_DEVELOPMENT.toString());
+//		influxDB.createDatabase(DBname.SIZE_STAGING.toString());
+//		influxDB.createDatabase(DBname.SIZE_PRODUCTION.toString());
+//
+//		influxDB.createDatabase(DBname.GREEK_DEVELOPMENT.toString());
+//		influxDB.createDatabase(DBname.GREEK_STAGING.toString());
+//		influxDB.createDatabase(DBname.GREEK_PRODUCTION.toString());
 
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
@@ -124,11 +129,10 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
  */
 public static DBname getPriceDatabaseName() {
 	
-	DBname name = DBname.PRICE_DEVELOPMENT;
-	// DBname name = DBname.PRICE_STAGING;
+	DBname name = DBname.DEVELOPMENT;
 			
 	if(!NetworkConfig.isMac()) {
-		name = DBname.PRICE_STAGING;
+		name = DBname.DEVELOPMENT;
 	} 
 	return name;
 }
@@ -139,10 +143,10 @@ public static DBname getPriceDatabaseName() {
  */
 public static DBname getSizeDatabaseName() {
 	
-	DBname name = DBname.SIZE_DEVELOPMENT;
+	DBname name = DBname.DEVELOPMENT;
 	
 	if(!NetworkConfig.isMac()) {
-		name = DBname.SIZE_STAGING;
+		name = DBname.STAGING;
 	} 
 	return name;
 
@@ -154,10 +158,10 @@ public static DBname getSizeDatabaseName() {
  */
 public static DBname getGreekDatabaseName() {
 
-	DBname name = DBname.GREEK_DEVELOPMENT;
+	DBname name = DBname.DEVELOPMENT;
 
 	if(!NetworkConfig.isMac()) {
-		name = DBname.GREEK_STAGING;
+		name = DBname.STAGING;
 	} 
 	
 	return name;

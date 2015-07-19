@@ -1,5 +1,6 @@
 package com.onenow.data;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.apache.derby.iapi.types.DataType;
@@ -27,7 +28,8 @@ public class MarketPrice {
 	private DataSampling sampling;
 	private BrokerInteractive broker;
 	
-	
+	public static HashMap<Investment, Long> lastTimeMilisecMap = new HashMap<Investment, Long>();
+		
 	public MarketPrice() {
 		
 	}

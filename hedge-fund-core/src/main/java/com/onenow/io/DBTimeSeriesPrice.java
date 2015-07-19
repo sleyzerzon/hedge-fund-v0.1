@@ -98,7 +98,9 @@ public class DBTimeSeriesPrice {
 		
 		final Serie serie = new Serie.Builder(serieName)
 		.columns(	ColumnName.TIME.toString().toLowerCase(), ColumnName.PRICE.toString(), 
-					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(), 
+					ColumnName.SOURCE.toString(), ColumnName.TIMING.toString(), ColumnName.TRADETYPE.toString(),
+					
+					// TODO: remove these?
 					ColumnName.UNDERLYING.toString(), ColumnName.INVTYPE.toString(), 
 					ColumnName.OPTIONSTRIKE.toString(), ColumnName.OPTIONEXP.toString(), 
 					ColumnName.FUTUREEXP.toString())

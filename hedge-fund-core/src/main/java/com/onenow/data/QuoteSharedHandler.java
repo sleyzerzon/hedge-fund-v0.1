@@ -66,6 +66,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 	}
 	
 	@Override
+	// TODO: FROZEN, MARKETDEPTH
 	public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
 			
 		// TODO bond contracts: BIDYIELD, ASKYIELD, LASTYIELD
@@ -284,6 +285,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		case LAST_TIMESTAMP:
 			// TODO: what should be the use of this stamp? instead of getting our own for other ticks?
 			m_lastTime = Long.parseLong(value);
+			MarketPrice.lastTimeMilisecMap.put(investment, Long.valueOf(value));
 			break;
 		case FUNDAMENTAL_RATIOS:
 			MarketPrice.parseAndWriteFundamentalRatios(investment, value);
