@@ -5,8 +5,8 @@ import com.onenow.constant.ColumnName;
 
 public class EventActivity extends Event {
 	
-	public static Double price;
-	public static Long size; 
+	public Double price;
+	public Long size; 
 		
 	
 	public EventActivity() {
@@ -14,12 +14,18 @@ public class EventActivity extends Event {
 	}
 		
 	public Object getValue(ColumnName columnName) {
+		// default
 		Object value = null;
-		if(columnName.equals(ColumnName.PRICE)) {
+		try {
 			value = (Object) price;
+		} catch (Exception e) {
 		}
-		if(columnName.equals(ColumnName.SIZE)) {
-			value = (Object) size;
+		
+		try {
+			if(columnName.equals(ColumnName.SIZE)) {
+				value = (Object) size;
+			}
+		} catch (Exception e) {
 		}
 		return value;
 	}

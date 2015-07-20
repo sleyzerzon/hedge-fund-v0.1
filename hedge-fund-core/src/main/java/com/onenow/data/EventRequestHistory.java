@@ -30,6 +30,7 @@ public class EventRequestHistory extends EventRequest {
 		super.timing = config.timing;
 		super.sampling = config.sampling;
 
+		// TODO: assumes that all that is requested in history is prices; there are also greeks/etc
 		super.priceType = getPriceTypeToSet(config.whatToShow); 		
 
 	}
