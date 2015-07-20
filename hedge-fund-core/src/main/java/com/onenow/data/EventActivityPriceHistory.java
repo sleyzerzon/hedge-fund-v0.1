@@ -35,6 +35,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		super.timeInMilisec = timeInSec*1000;
 		super.price = close;  	// simplifies to only capture open in the EventActivity
 		super.size = volume;
+		// super.priceType is set after construction, accessing the variable
 
 		// this
 		this.reqId = reqId;

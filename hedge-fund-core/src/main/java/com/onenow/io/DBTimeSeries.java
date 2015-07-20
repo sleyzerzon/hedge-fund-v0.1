@@ -77,23 +77,12 @@ public static Serie getWriteSerie(final EventActivity event, String serieName, C
 	.columns(	ColumnName.TIME.toString().toLowerCase(), columnName.toString(), 
 				ColumnName.SOURCE.toString(), ColumnName.TIMING.toString()
 				)					
-	.values(event.timeInMilisec, getValue(event, columnName), 				// basic columns
+	.values(event.timeInMilisec, event.getValue(columnName), 				// basic columns
 			"\""+ event.source +"\"", "\""+ event.timing +"\""				// event origination				
 			) 
 
 	.build();
 	return serie;
-}
-
-private static Object getValue(final EventActivity event, ColumnName columnName) {
-	Object value = null;
-	if(columnName.equals(ColumnName.PRICE)) {
-		value = (Object) event.price;
-	}
-	if(columnName.equals(ColumnName.SIZE)) {
-		value = (Object) event.size;
-	}
-	return value;
 }
 
 

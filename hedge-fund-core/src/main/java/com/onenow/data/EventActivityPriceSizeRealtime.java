@@ -3,6 +3,7 @@ package com.onenow.data;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.PriceType;
+import com.onenow.constant.SizeType;
 import com.onenow.instrument.Investment;
 
 public class EventActivityPriceSizeRealtime extends EventActivity {
@@ -19,13 +20,14 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 	 * @param price
 	 * @param size
 	 */
-	public EventActivityPriceSizeRealtime(	Long timeInMilisec, Investment inv, PriceType priceType, Double price, long size,
+	public EventActivityPriceSizeRealtime(	Long timeInMilisec, Investment inv,  Double price, long size,
 											InvDataSource source, InvDataTiming timing) {
 
 		super();
 		
 		setInvestment(inv);
-		super.priceType = priceType;		
+		super.priceType = PriceType.TRADED; // by definition of RTVolume the priceType is TRADED
+		super.sizeType = SizeType.TRADED_SIZE; // by definition of RTVolume the priceType is TRADED
 		super.source = source;
 		super.timing = timing;
 

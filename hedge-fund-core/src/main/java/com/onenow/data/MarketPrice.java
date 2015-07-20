@@ -50,7 +50,7 @@ public class MarketPrice {
 
 		if(lastSize>0) { 
 			
-			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeInMilisec, inv, PriceType.TRADED, 
+			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeInMilisec, inv, 
 																						lastPrice, lastSize,
 																						source, timing);
 			cache.writeEvent(event);

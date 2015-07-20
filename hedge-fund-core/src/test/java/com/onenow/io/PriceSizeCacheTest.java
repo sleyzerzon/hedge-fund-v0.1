@@ -18,7 +18,6 @@ public class PriceSizeCacheTest {
 	CacheInProcess cache = new CacheInProcess(broker);
 
 	EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	(long) 1234, new InvestmentIndex(new Underlying("ON")), 
-																PriceType.BID, 
 																2.34, 5, 
 																InvDataSource.AMERITRADE, InvDataTiming.REALTIME);
 	
