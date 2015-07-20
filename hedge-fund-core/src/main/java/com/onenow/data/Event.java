@@ -128,9 +128,7 @@ public class Event {
 
 	public String toString() {
 		String s = "";
-		
-		// s = s + origin.toString("EVENT") + " "; 
-		
+				
 		try {
 			s =	s + getInvestment().toString() + " ";
 		} catch (Exception e) {

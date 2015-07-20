@@ -13,7 +13,7 @@ public class EventActivity extends Event {
 		super();
 	}
 		
-	public static Object getValue(ColumnName columnName) {
+	public Object getValue(ColumnName columnName) {
 		Object value = null;
 		if(columnName.equals(ColumnName.PRICE)) {
 			value = (Object) price;
