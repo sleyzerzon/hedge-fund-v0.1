@@ -2,6 +2,7 @@ package com.onenow.data;
 
 import java.util.logging.Level;
 
+import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
@@ -95,7 +96,7 @@ public class Event {
 		Watchr.log(Level.SEVERE, "Trying to get investment type not handled: ");
 		return null;
 	}
-	
+
 	public Underlying getUnder() {
 		return getInvestment().getUnder();
 	}

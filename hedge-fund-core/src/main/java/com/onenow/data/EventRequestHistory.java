@@ -3,6 +3,7 @@ package com.onenow.data;
 import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
+import com.onenow.instrument.InvestmentIndex;
 import com.onenow.util.TimeParser;
 
 // https://www.interactivebrokers.com/en/software/api/apiguide/tables/historical_data_limitations.htm
@@ -29,27 +30,35 @@ public class EventRequestHistory extends EventRequest {
 		super.timing = config.timing;
 		super.sampling = config.sampling;
 
-		super.priceType = getPriceType(config.whatToShow); 		
+		super.priceType = getPriceTypeToSet(config.whatToShow); 		
 
 	}
 	
-	private PriceType getPriceType(WhatToShow whatToShow) {
+	private PriceType getPriceTypeToSet(WhatToShow whatToShow) {
+
+		// default
+		PriceType type = PriceType.CALCULATED;
 
 		if(whatToShow.equals(WhatToShow.ASK)) {
-			return PriceType.ASK;
+			type = PriceType.ASK;
 		}
 		
 		if(whatToShow.equals(WhatToShow.BID)) {
-			return PriceType.BID;
+			type = PriceType.BID;
 		}
 
 		if(whatToShow.equals(WhatToShow.TRADES)) {
-			return PriceType.TRADED;
+			type = PriceType.TRADED;
 		}
-		// default
-		return PriceType.CALCULATED;
-	}	
+		
+		// override for indices that don't trade themselves
+		if(getInvestment() instanceof InvestmentIndex) {
+			type = PriceType.CALCULATED;
+		}
 
+		return type;
+	}	
+	
 	public String toString() {
 		String s = "";
 		
