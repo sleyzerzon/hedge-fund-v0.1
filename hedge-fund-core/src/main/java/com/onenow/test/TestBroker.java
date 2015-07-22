@@ -60,16 +60,16 @@ public class TestBroker implements Testable {
 		// choose investments
 		Portfolio marketPortfolio = new Portfolio();
 	    List<Underlying> stocks = InvestmentList.getUnderlying(InvestmentList.getSomeStocks());
-	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.someIndices);
-	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.futureNames);
-	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.optionNames);
+	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.getSomeIndices());
+	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.getFutures());
+	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.getOptions());
 	    String toDate = TimeParser.getTodayDashed();
 
 	    // fill the market portfolio
 	    marketPortfolio = InitMarket.getPortfolio(	stocks, indices,
 	    											futures, options,
 	    											futures,
-	    											toDate, 5);
+	    											toDate);
 
     	bus = new BusWallStInteractiveBrokers();
 

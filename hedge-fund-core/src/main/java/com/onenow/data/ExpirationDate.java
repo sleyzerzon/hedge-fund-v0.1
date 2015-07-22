@@ -11,6 +11,13 @@ public class ExpirationDate {
 	List<String> indexCompleteExpList = new ArrayList<String>();
 	List<String> futuresExpList = new ArrayList<String>();
 	List<String> futuresCompleteExpList = new ArrayList<String>();
+	
+	private int optionsMaxTimeRange = 45; // from 90
+	private int optionsMinTimeRange = 0;
+
+	private int futuresMaxTimeRange = 120; 
+	private int futuresMinTimeRange = 0; // from -30
+
 		
 	public ExpirationDate() {
 
@@ -76,8 +83,8 @@ public class ExpirationDate {
 		// TODO: rule out current month dates with days in the past
 		for(String basisDate:indexExpList) {
 			// System.out.println("OPTIONS " + "date " + date + " basis " + basisDate + " delta " + TimeParser.getMonthDelta(date, basisDate));
-			if(	TimeParser.getElapsedDaysUndashed(date, basisDate)<90 && 
-				TimeParser.getElapsedDaysUndashed(date, basisDate)>=0
+			if(	TimeParser.getElapsedDaysUndashed(date, basisDate)<optionsMaxTimeRange && 
+				TimeParser.getElapsedDaysUndashed(date, basisDate)>=optionsMinTimeRange
 				) {
 				validIndexExp.add(basisDate);
 			}
@@ -90,8 +97,8 @@ public class ExpirationDate {
 		for(String basisDate:futuresExpList) {
 			// System.out.println("FUTURES " + "date " + date + " basis " + basisDate + " delta " + TimeParser.getElapsedUndashedDays(date, basisDate));
 			// future expire at end of the month designated
-			if(	TimeParser.getElapsedDaysUndashed(date, basisDate)<120 && 
-				TimeParser.getElapsedDaysUndashed(date, basisDate)>=-30
+			if(	TimeParser.getElapsedDaysUndashed(date, basisDate)<futuresMaxTimeRange && 
+				TimeParser.getElapsedDaysUndashed(date, basisDate)>=futuresMinTimeRange
 				) {
 				validExp.add(basisDate);
 			}

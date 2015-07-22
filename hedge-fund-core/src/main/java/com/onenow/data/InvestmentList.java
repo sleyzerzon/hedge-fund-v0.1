@@ -7,17 +7,6 @@ import com.onenow.instrument.Underlying;
 
 public class InvestmentList {
 	
-	// official
-	public static List<String> snp500Names = getSNP500();
-	public static List<String> indexNames = getMainIndices();
-	public static List<String> futureNames = getFutures();
-	public static List<String> optionNames = getOptions();	
-
-	// subsets
-//	public static List<String> someStocks = getSomeStocks();
-	public static List<String> justApple = getAAPLStock();
-	public static List<String> someIndices = getSomeIndices();
-
 	public InvestmentList() {
 	}
 	
@@ -33,7 +22,7 @@ public class InvestmentList {
 		return unders;
 	}
 	
-	private static List<String> getMainIndices() {
+	public static List<String> getMainIndices() {
 		List<String> list = new ArrayList<String>();
 		list.add("SPX");
 		list.add("NDX");
@@ -41,19 +30,19 @@ public class InvestmentList {
 		return list;
 	}
 	
-	private static List<String> getFutures() {
+	public static List<String> getFutures() {
 		List<String> list = new ArrayList<String>();
 		list.add("ES");
 		return list;
 	}
 
-	private static List<String> getOptions() {
+	public static List<String> getOptions() {
 		List<String> list = new ArrayList<String>();
 		list.add("SPX");
 		return list;
 	}
 
-	private static List<String> getSomeIndices() {
+	public static List<String> getSomeIndices() {
 		List<String> list = new ArrayList<String>();
 		list.add("SPX");
 		return list;
@@ -67,7 +56,7 @@ public class InvestmentList {
 		
 		list.add("SPY");
 		
-		for(String stock:snp500Names){
+		for(String stock:getSNP500()){
 			list.add(stock);
 			count++;
 			if(count>maxNum) {

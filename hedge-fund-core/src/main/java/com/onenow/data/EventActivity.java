@@ -14,9 +14,10 @@ public class EventActivity extends Event {
 	}
 		
 	public Object getValue(ColumnName columnName) {
-		// default
 		Object value = null;
+		
 		try {
+			// default to price
 			value = (Object) price;
 		} catch (Exception e) {
 		}
@@ -27,6 +28,7 @@ public class EventActivity extends Event {
 			}
 		} catch (Exception e) {
 		}
+		
 		return value;
 	}
 

@@ -125,13 +125,23 @@ public class HistorianMain {
 	private static void updatePricesL2HistoryFromL3(String toDashedDate, Investment inv) {
 		// To be saved to prices database
 		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.TRADES);							
-		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);							
+		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.ASK);
 		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID);
+		
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.BID_ASK); // spread?
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
+
+		// TODO
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.YIELD_ASK);							
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.YIELD_BID);							
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.YIELD_BID_ASK);							
+//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.YIELD_LAST);							
+
 	}
+	
 
 	private static void updateGreeksL2HistoryFromL3(String toDashedDate, Investment inv) {
 		// To be saved to Greeks database
-//		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.MIDPOINT);							
 //		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.HISTORICAL_VOLATILITY);							
 //		updateL2HistoryFromL3(inv, toDashedDate, WhatToShow.OPTION_IMPLIED_VOLATILITY);													
 	}

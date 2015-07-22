@@ -28,6 +28,12 @@ public class InitMarket {
 	
 	private List<String> indices = new ArrayList<String>();
 	
+	private static double spxEsPriceCenter = 2110.0;
+	private static double ndxPriceCenter = 4500.0;
+	private static double rutPriceCenter = 1500.0;
+	
+	private static double strikeIncrement = 5.0;
+	private static int maxTimeSeries = 2;
 
 	/**
 	 * Initialize market instruments: indices, stocks, futures
@@ -43,7 +49,7 @@ public class InitMarket {
 	public static Portfolio getPortfolio(	List<Underlying> stocks, List<Underlying> indices,
 											List<Underlying> futures, List<Underlying> options,
 											List<Underlying> futureOptions,
-											String toDashedDate, int maxTimeSeries) {
+											String toDashedDate) {
 		
 		marketPortfolio = new Portfolio();
 		
@@ -51,11 +57,11 @@ public class InitMarket {
 
 		addIndicesToPortfolio(indices);
 
-		addOptionsToPortfolio(options, toDashedDate, maxTimeSeries);
+		addOptionsToPortfolio(options, toDashedDate);
 
 		addFuturesToPortfolio(futures);
 		
-		addFutureoptionsToPortfolio(futureOptions, toDashedDate, maxTimeSeries);
+		addFutureoptionsToPortfolio(futureOptions, toDashedDate);
 		
 		marketPortfolio.toString();
 
@@ -73,14 +79,12 @@ public class InitMarket {
 	
 	public static Portfolio getHistoryPortfolio(String toDashedDate) {	
 			
-		int maxTimeSeries = 3;
-
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.getSomeStocks()), 
-								InvestmentList.getUnderlying(InvestmentList.someIndices),
-								InvestmentList.getUnderlying(InvestmentList.futureNames), 
-								InvestmentList.getUnderlying(InvestmentList.optionNames),
-								InvestmentList.getUnderlying(InvestmentList.futureNames),
-								toDashedDate, maxTimeSeries);
+								InvestmentList.getUnderlying(InvestmentList.getSomeIndices()),
+								InvestmentList.getUnderlying(InvestmentList.getFutures()), 
+								InvestmentList.getUnderlying(InvestmentList.getOptions()),
+								InvestmentList.getUnderlying(InvestmentList.getFutures()),
+								toDashedDate);
 	}
 	
 	public static Portfolio getRealtimePortfolio() {	
@@ -93,14 +97,12 @@ public class InitMarket {
 	
 	public static Portfolio getRealtimePortfolio(String toDashedDate) {	
 		
-		int maxTimeSeries = 3;
-
 		return getPortfolio(	new ArrayList<Underlying>(), 
-								InvestmentList.getUnderlying(InvestmentList.someIndices),
-								InvestmentList.getUnderlying(InvestmentList.futureNames), 
-								InvestmentList.getUnderlying(InvestmentList.optionNames),
-								InvestmentList.getUnderlying(InvestmentList.futureNames),
-								toDashedDate, maxTimeSeries);
+								InvestmentList.getUnderlying(InvestmentList.getSomeIndices()),
+								InvestmentList.getUnderlying(InvestmentList.getFutures()), 
+								InvestmentList.getUnderlying(InvestmentList.getOptions()),
+								InvestmentList.getUnderlying(InvestmentList.getFutures()),
+								toDashedDate);
 	}
 
 
@@ -114,14 +116,12 @@ public class InitMarket {
 
 	public static Portfolio getPrimaryPortfolio(String toDashedDate) {	
 		
-		int maxTimeSeries = 3;
-		
 		return getPortfolio(	InvestmentList.getUnderlying(InvestmentList.getSomeStocks()), 
 								new ArrayList<Underlying>(),
 								new ArrayList<Underlying>(), 
 								new ArrayList<Underlying>(),
 								new ArrayList<Underlying>(),
-								toDashedDate, maxTimeSeries);
+								toDashedDate);
 	}
 	
 
@@ -163,8 +163,8 @@ public class InitMarket {
 
 
 	// FUTURE OPTIONS
-	private static void addFutureoptionsToPortfolio(List<Underlying> unders, String toDashedDate, int maxTimeSeries) {
-		addOptionsToPortfolio(unders, toDashedDate, maxTimeSeries);
+	private static void addFutureoptionsToPortfolio(List<Underlying> unders, String toDashedDate) {
+		addOptionsToPortfolio(unders, toDashedDate);
 	}
 
 	// OPTIONS
@@ -172,7 +172,7 @@ public class InitMarket {
 	 * Initialize options
 	 * @param unders
 	 */
-	private static void addOptionsToPortfolio(List<Underlying> unders, String toDashedDate, int maxTimeSeries) { 
+	private static void addOptionsToPortfolio(List<Underlying> unders, String toDashedDate) { 
 		ExpirationDate exps = new ExpirationDate();
 		exps.initIndexOptionExpList(); 
 		
@@ -195,8 +195,8 @@ public class InitMarket {
 	 * @param expDate
 	 */
 	private static void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
-		Integer interval = 5;			// options interval
-		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+interval) {
+		
+		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+strikeIncrement) {
 			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
 			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
 			Trade callTrade = new Trade(call, PriceType.BID, 1, 0.0);
@@ -208,32 +208,27 @@ public class InitMarket {
 
 	private static double getMarketPrice(Underlying index) {
 		Double price=0.0;
-		if(index.getTicker().equals("ES")) {
-			price = 2060.0;	
-		}
 		if(index.getTicker().equals("SPX") || index.getTicker().equals("ES")) {
-			price = 2100.0;	
+			price = spxEsPriceCenter;	
 		}
 		if(index.getTicker().equals("NDX")) {
-			price = 4500.0;
+			price = ndxPriceCenter;
 		}
 		if(index.getTicker().equals("RUT")) {
-			price = 1500.0;
+			price = rutPriceCenter;
 		}				
 		return price;
 	}
 	
 	private static double lowPrice(Underlying index, String fromDate, String toDate, int maxTimeSeries) {
 		Double price=0.0;		
-		int increment = 5;
-		price = getMarketPrice(index) - increment*maxTimeSeries;
+		price = getMarketPrice(index) - strikeIncrement*maxTimeSeries;
 		return price;
 	}
 	
 	private static double highPrice(Underlying index, String fromDate, String toDate, int maxTimeSeries) {
 		Double price=0.0;	
-		int increment = 5;
-		price = getMarketPrice(index) + increment*maxTimeSeries;		
+		price = getMarketPrice(index) + strikeIncrement*maxTimeSeries;		
 		return price;		
 	}
 	
