@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import javax.swing.table.AbstractTableModel;
 
 import com.ib.client.TickType;
+import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvType;
 import com.onenow.constant.OptionVolatility;
 import com.onenow.constant.SizeType;
@@ -44,20 +45,20 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 			// implied volatility
 			m_impVol = impVol;
 			Watchr.log(Level.INFO, ">>>>> Option Model Implied Volatility Computation " + impVol + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, impVol, OptionVolatility.MODEL_OPTION);			
+			MarketPrice.writeVolatilityStreaming(investment, impVol, OptionVolatility.MODEL_OPTION, InvDataSource.IB);			
 
 			// delta
 			m_delta = delta;
-			MarketPrice.writeGreekStreaming(TimeParser.getTimeMilisecondsNow(), investment, delta, GreekType.DELTA);
+			MarketPrice.writeGreekStreaming(investment, delta, GreekType.DELTA, InvDataSource.IB);
 
 			m_gamma = gamma;
-			MarketPrice.writeGreekStreaming(TimeParser.getTimeMilisecondsNow(), investment, gamma, GreekType.GAMMA);
+			MarketPrice.writeGreekStreaming(investment, gamma, GreekType.GAMMA, InvDataSource.IB);
 
 			m_vega = vega;
-			MarketPrice.writeGreekStreaming(TimeParser.getTimeMilisecondsNow(), investment, vega, GreekType.VEGA);
+			MarketPrice.writeGreekStreaming(investment, vega, GreekType.VEGA, InvDataSource.IB);
 
 			m_theta = theta;
-			MarketPrice.writeGreekStreaming(TimeParser.getTimeMilisecondsNow(), investment, theta, GreekType.THETA);			
+			MarketPrice.writeGreekStreaming(investment, theta, GreekType.THETA, InvDataSource.IB);			
 
 			Watchr.log(	Level.INFO,
 						"-modeloption: " + 
@@ -68,7 +69,7 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 		// OptionComputationType
 		case CUST_OPTION_COMPUTATION:
 			Watchr.log(Level.INFO, ">>>>> Option Custom Implied Volatility Computation " + impVol + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, impVol, OptionVolatility.CUST_OPTION_COMPUTATION);			
+			MarketPrice.writeVolatilityStreaming(investment, impVol, OptionVolatility.CUST_OPTION_COMPUTATION, InvDataSource.IB);			
 			break;
 			
         default:

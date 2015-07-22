@@ -28,7 +28,7 @@ public class InitMarket {
 	
 	private List<String> indices = new ArrayList<String>();
 	
-	private static double spxEsPriceCenter = 2110.0;
+	private static double spxEsPriceCenter = 2115.0;
 	private static double ndxPriceCenter = 4500.0;
 	private static double rutPriceCenter = 1500.0;
 	

@@ -46,13 +46,13 @@ public class MarketPrice {
 	// TODO: handle VWAP & VOLUME, SPLITFLAG
 	private static void writePriceSizeRealtime(	Long timeInMilisec, Investment inv, Double lastPrice, Integer lastSize, 
 												Integer volume, Double VWAP, boolean splitFlag,
-												InvDataSource source, InvDataTiming timing) {
+												InvDataSource source) {
 
 		if(lastSize>0) { 
 			
 			EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	timeInMilisec, inv, 
 																						lastPrice, lastSize,
-																						source, timing);
+																						source);
 			cache.writeEvent(event);
 			
 		} else {
@@ -60,38 +60,45 @@ public class MarketPrice {
 		}
 	}
 	
-	public static void writePriceStreaming(Long timeInMilisec, Investment inv, Double price, PriceType priceType) {
+	public static void writePriceStreaming(Investment inv, Double price, PriceType priceType, InvDataSource source) {
+		
+		EventActivityPriceStreaming event = new EventActivityPriceStreaming(	TimeParser.getTimeMilisecondsNow(), inv,  
+																				price, priceType, source);
+				
+		cache.writeEvent(event);
+		
+	}
+
+	public static void writeSizeStreaming(Investment inv, Integer size, SizeType sizeType, InvDataSource source) {
+		
+		EventActivitySizeStreaming event = new EventActivitySizeStreaming(	TimeParser.getTimeMilisecondsNow(), inv,  
+																			size, sizeType, source);
+
+		cache.writeEvent(event);
+		
+	}
+
+	public static void writeGreekStreaming(Investment inv, Double greek, GreekType greekType, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
-	public static void writeSizeStreaming(Long timeInMilisec, Investment inv, Integer size, SizeType sizeType) {
+	public static void writeVolatilityStreaming(Investment inv, Double computation, 
+												OptionVolatility volatilityType, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
-	public static void writeGreekStreaming(Long timeInMilisec, Investment inv, Double greek, GreekType greekType) {
-		
-		ColumnName dataType = ColumnName.DELTA;
-		
-	}
-
-	public static void writeVolatilityStreaming(Long timeInMilisec, Investment inv, Double computation, OptionVolatility volatilityType) {
-		
-		ColumnName dataType = ColumnName.DELTA;
-		
-	}
-
-	public static void writeGenericStreaming(Long timeInMilisec, Investment inv, Double computation, GenericType generic) {
+	public static void writeGenericStreaming(Investment inv, Double computation, GenericType generic, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
 
-	public static void parseAndWriteFundamentalsStreaming(Investment inv, String value) {
+	public static void parseAndWriteFundamentalsStreaming(Investment inv, String value, InvDataSource source) {
 		
 		
 	}
@@ -171,10 +178,9 @@ public class MarketPrice {
 		Long time = Long.parseLong(lastTradeTime); 	
 		
 		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.REALTIME;
 		writePriceSizeRealtime(	time, inv, Double.parseDouble(lastTradedPrice), Integer.parseInt(lastTradeSize),  
 									Integer.parseInt(totalVolume), Double.parseDouble(VWAP), Boolean.parseBoolean(splitFlag),
-									source, timing);
+									source);
 		return;
 	}
 	

@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.constant.GenericType;
+import com.onenow.constant.InvDataSource;
 import com.onenow.constant.OptionVolatility;
 import com.onenow.constant.SizeType;
 import com.onenow.constant.InvType;
@@ -77,50 +78,50 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		case BID:
 			m_bid = price;
 			Watchr.log(Level.INFO, ">>>>> Bid " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.BID);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.BID, InvDataSource.IB);
 			break;
 		case BID_EXCH:
 			Watchr.log(Level.INFO, ">>>>> Bid Exchange " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.BID_EXCH);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.BID_EXCH, InvDataSource.IB);
 			break;
 		case BID_OPTION:
 			Watchr.log(Level.INFO, ">>>>> Bid Option " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.BID_OPTION);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.BID_OPTION, InvDataSource.IB);
 			break;
 			
 		// ASK	
 		case ASK:
 			m_ask = price;
 			Watchr.log(Level.INFO, ">>>>> Ask " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.ASK);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK, InvDataSource.IB);
 			break;	
 		case ASK_EXCH:
 			Watchr.log(Level.INFO, ">>>>> Ask Exchange " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.ASK_EXCH);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK_EXCH, InvDataSource.IB);
 			break;
 		case ASK_OPTION: 
 			Watchr.log(Level.INFO, ">>>>> Ask Option " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.ASK_OPTION);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK_OPTION, InvDataSource.IB);
 			break;
 
 		// LAST
 		case LAST:
 			m_last = price;
 			Watchr.log(Level.INFO, ">>>>> Last " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.TRADED);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED, InvDataSource.IB);
 			break;
 		case LAST_OPTION:
 			Watchr.log(Level.INFO, ">>>>> Last Option " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.TRADED_OPTION);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED_OPTION, InvDataSource.IB);
 			break;
 
 		case AUCTION_PRICE:
 			Watchr.log(Level.INFO, ">>>>> Auction Price " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.AUCTION_PRICE);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.AUCTION_PRICE, InvDataSource.IB);
 			break;
 		case MARK_PRICE: 
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, price, PriceType.MARK_PRICE);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.MARK_PRICE, InvDataSource.IB);
 			break;
 		
 
@@ -173,31 +174,31 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
 			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.RT_HISTORICAL_VOL);			
+			MarketPrice.writeVolatilityStreaming(investment, value, OptionVolatility.RT_HISTORICAL_VOL, InvDataSource.IB);			
 			break;
 		case OPTION_HISTORICAL_VOL:
 			Watchr.log(Level.INFO, ">>>>> Option Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_HISTORICAL_VOL);			
+			MarketPrice.writeVolatilityStreaming(investment, value, OptionVolatility.OPTION_HISTORICAL_VOL, InvDataSource.IB);			
 			break;
 		case OPTION_IMPLIED_VOL:
 			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, OptionVolatility.OPTION_IMPLIED_VOL);			
+			MarketPrice.writeVolatilityStreaming(investment, value, OptionVolatility.OPTION_IMPLIED_VOL, InvDataSource.IB);			
 			break;
 		case INDEX_FUTURE_PREMIUM:
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, PriceType.INDEX_FUTURE_PREMIUM);
+			MarketPrice.writePriceStreaming(investment, value, PriceType.INDEX_FUTURE_PREMIUM, InvDataSource.IB);
 			break;
 		case TRADE_COUNT:
 			Watchr.log(Level.INFO, ">>>>> Trade Count " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_COUNT);			
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_COUNT, InvDataSource.IB);			
 			break;
 		case TRADE_RATE:
 			Watchr.log(Level.INFO, ">>>>> Trade Rate " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.TRADE_RATE);			
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_RATE, InvDataSource.IB);			
 			break;
 		case SHORTABLE:
 			Watchr.log(Level.INFO, ">>>>> Shortable " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(TimeParser.getTimeMilisecondsNow(), investment, value, GenericType.SHORTABLE);			
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.SHORTABLE, InvDataSource.IB);			
 			break;
 
 
@@ -212,62 +213,62 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 	
 	@Override
 	public void tickSize(TickType tickType, Integer size) {
-						
+		
 		switch( tickType) {
 		case BID_SIZE:
 			m_bidSize = size;
 			Watchr.log(Level.INFO, ">>>>> Bid Size " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.BID_SIZE);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.BID_SIZE, InvDataSource.IB);
 			break;
 		case ASK_SIZE:
 			m_askSize = size;
 			Watchr.log(Level.INFO, ">>>>> Ask Size " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.ASK_SIZE);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.ASK_SIZE, InvDataSource.IB);
 			break;
 		case LAST_SIZE:
 			Watchr.log(Level.INFO, ">>>>> Last Size " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.TRADED_SIZE);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.TRADED_SIZE, InvDataSource.IB);
 			break;
 		case VOLUME:
 			m_volume = size;
 			Watchr.log(Level.INFO, ">>>>> Volume " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.VOLUME);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.VOLUME, InvDataSource.IB);
 			break;
 		case AVG_VOLUME:
 			Watchr.log(Level.INFO, ">>>>> Average Volume " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.AVG_VOLUME);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.AVG_VOLUME, InvDataSource.IB);
 			break;
 		case VOLUME_RATE:
 			Watchr.log(Level.INFO, ">>>>> Volume Rate " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.VOLUME_RATE);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.VOLUME_RATE, InvDataSource.IB);
 			break;
 		case OPTION_CALL_OPEN_INTEREST:
 			Watchr.log(Level.INFO, ">>>>> Call Open Interest " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_CALL_OPEN_INTEREST);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.OPTION_CALL_OPEN_INTEREST, InvDataSource.IB);
 			break;
 		case OPTION_PUT_OPEN_INTEREST:
 			Watchr.log(Level.INFO, ">>>>> Put Open Interest " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_PUT_OPEN_INTEREST);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.OPTION_PUT_OPEN_INTEREST, InvDataSource.IB);
 			break;
 		case OPTION_CALL_VOLUME:
 			Watchr.log(Level.INFO, ">>>>> Call Volume " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_CALL_VOLUME);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.OPTION_CALL_VOLUME, InvDataSource.IB);
 			break;
 		case OPTION_PUT_VOLUME:
 			Watchr.log(Level.INFO, ">>>>> Put Volume " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.OPTION_PUT_VOLUME);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.OPTION_PUT_VOLUME, InvDataSource.IB);
 			break;
 		case REGULATORY_IMBALANCE:
 			Watchr.log(Level.INFO, ">>>>> Regulatory Imbalance " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.REGULATORY_IMBALANCE);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.REGULATORY_IMBALANCE, InvDataSource.IB);
 			break;
 		case AUCTION_VOLUME:
 			Watchr.log(Level.INFO, ">>>>> Auction Volume " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.AUCTION_VOLUME);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.AUCTION_VOLUME, InvDataSource.IB);
 			break;
 		case AUCTION_IMBALANCE:
 			Watchr.log(Level.INFO, ">>>>> Auction Imbalance " + size + " for " + investment.toString());
-			MarketPrice.writeSizeStreaming(TimeParser.getTimeMilisecondsNow(), investment, size, SizeType.AUCTION_IMBALANCE);
+			MarketPrice.writeSizeStreaming(investment, size, SizeType.AUCTION_IMBALANCE, InvDataSource.IB);
 			break;
         default:
     		Watchr.log(Level.WARNING, 	"$$$$$ tickSize:" + " -tickType: " + tickType +
@@ -288,7 +289,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			MarketPrice.lastTimeMilisecMap.put(investment, Long.valueOf(value));
 			break;
 		case FUNDAMENTAL_RATIOS:
-			MarketPrice.parseAndWriteFundamentalsStreaming(investment, value);
+			MarketPrice.parseAndWriteFundamentalsStreaming(investment, value, InvDataSource.IB);
 			break;
 		case UNKNOWN:
 			// TODO

@@ -19,7 +19,7 @@ public class PriceSizeCacheTest {
 
 	EventActivityPriceSizeRealtime event = new EventActivityPriceSizeRealtime(	(long) 1234, new InvestmentIndex(new Underlying("ON")), 
 																2.34, 5, 
-																InvDataSource.AMERITRADE, InvDataTiming.REALTIME);
+																InvDataSource.AMERITRADE);
 	
   @Test
   // test for initialization of in process cache

@@ -5,7 +5,10 @@ import java.util.logging.Level;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.constant.StreamName;
+import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityPriceSizeRealtime;
+import com.onenow.data.EventActivityPriceStreaming;
+import com.onenow.data.EventActivitySizeStreaming;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.io.DBTimeSeriesPrice;
@@ -35,7 +38,7 @@ public class ClerkRealTimeMain {
 		
 	}
 	
-	public static void writeRealtimePriceSizeToL2(EventActivityPriceSizeRealtime event) {
+	public static void writeToL2(EventActivity event) {
 	
 		boolean success = false;
 		boolean retry = false;
@@ -48,12 +51,18 @@ public class ClerkRealTimeMain {
 			try {
 				tries++;
 				success = true;
-				DBTimeSeriesPrice.write(event);				
-				DBTimeSeriesSize.write(event);
+				if( (	event instanceof EventActivityPriceSizeRealtime) ||
+						event instanceof EventActivityPriceStreaming) {
+					DBTimeSeriesPrice.write(event);				
+				}
+				if( (	event instanceof EventActivityPriceSizeRealtime) ||
+						event instanceof EventActivitySizeStreaming) {
+					DBTimeSeriesSize.write(event);
+				}
 			} catch (Exception e) {
 				success = false;
 				retry = true;
-				Watchr.log(Level.SEVERE, "TSDB RT TRANSACTION WRITE FAILED: " + event.toString() + " " + e.toString());	
+				Watchr.log(Level.SEVERE, "TSDB WRITE FAILED: " + event.toString() + " " + e.toString());	
 				e.printStackTrace();
 				if(tries>maxTries) {
 					return;
@@ -64,7 +73,7 @@ public class ClerkRealTimeMain {
 			}
 		}
 		if(retry) {
-			Watchr.log(Level.WARNING, "> TSDB RT TRANSACTION WRITE *RE-TRY* SUCCEEDED: " + event.timeInMilisec + " " + event.getInvestment().toString());
+			Watchr.log(Level.WARNING, "> TSDB WRITE *RE-TRY* SUCCEEDED: " + event.timeInMilisec + " " + event.getInvestment().toString());
 		}
 	}
 

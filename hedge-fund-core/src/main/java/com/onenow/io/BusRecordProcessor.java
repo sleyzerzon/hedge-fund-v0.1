@@ -119,6 +119,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			}
 		}
 		
+		// HISTORY
 		if(recordType.equals(EventActivityPriceHistory.class)) {
 			try {
 				EventActivityPriceHistory event = (EventActivityPriceHistory) recordObject;
@@ -134,11 +135,12 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			// TODO
 		}
 
+		// REALTIME OR STREAMING
 		if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
 			try {
 				EventActivityPriceSizeRealtime event = (EventActivityPriceSizeRealtime) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceSizeRealtime<- " + event.toString(), "\n", "");
-				ClerkRealTimeMain.writeRealtimePriceSizeToL2(event);
+				ClerkRealTimeMain.writeToL2(event);
 				try {
 					if(streamName.equals(StreamName.PRIMARY_STAGING) || streamName.equals(StreamName.STANDBY_STAGING) ) {
 						ChartistMain.prefetchCharts(event);				
@@ -147,17 +149,28 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 					// e.printStackTrace();
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
 		if(recordType.equals(EventActivityPriceStreaming.class)) {			
-			// TODO
+			try {
+				EventActivityPriceStreaming event = (EventActivityPriceStreaming) recordObject;
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceStreaming<- " + event.toString(), "\n", "");
+				// ClerkRealTimeMain.writeStreamingPriceToL2(event);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		if(recordType.equals(EventActivitySizeStreaming.class)) {			
-			// TODO
+			try {
+				EventActivitySizeStreaming event = (EventActivitySizeStreaming) recordObject;
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivitySizeStreaming<- " + event.toString(), "\n", "");
+				// ClerkRealTimeMain.writeStreamingSizeToL2(event);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		if(recordType.equals(EventActivityGreekStreaming.class)) {			

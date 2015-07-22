@@ -21,7 +21,7 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 	 * @param size
 	 */
 	public EventActivityPriceSizeRealtime(	Long timeInMilisec, Investment inv,  Double price, long size,
-											InvDataSource source, InvDataTiming timing) {
+											InvDataSource source) {
 
 		super();
 		
@@ -29,7 +29,7 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 		super.priceType = PriceType.TRADED; // by definition of RTVolume the priceType is TRADED
 		super.sizeType = SizeType.TRADED_SIZE; // by definition of RTVolume the priceType is TRADED
 		super.source = source;
-		super.timing = timing;
+		super.timing = InvDataTiming.REALTIME;
 
 		super.timeInMilisec = timeInMilisec;
 		super.price = price;
