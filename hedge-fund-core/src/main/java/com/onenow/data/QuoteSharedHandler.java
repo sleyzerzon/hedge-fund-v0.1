@@ -82,7 +82,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			break;
 		case BID_EXCH:
 			Watchr.log(Level.INFO, ">>>>> Bid Exchange " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.BID_EXCH, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.BID, InvDataSource.IB);		// BID_EXCH
 			break;
 			
 		// ASK	
@@ -93,7 +93,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			break;	
 		case ASK_EXCH:
 			Watchr.log(Level.INFO, ">>>>> Ask Exchange " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK_EXCH, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK, InvDataSource.IB);		// ASK_EXCH
 			break;
 
 		// LAST
@@ -102,13 +102,15 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Last " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED, InvDataSource.IB);
 			break;
+			
+		// TODO: other? or also LAST
 		case AUCTION_PRICE:
 			Watchr.log(Level.INFO, ">>>>> Auction Price " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.AUCTION_PRICE, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.AUCTION_PRICE, InvDataSource.IB);		// AUCTION_PRICE
 			break;
 		case MARK_PRICE: 
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.MARK_PRICE, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, price, PriceType.MARK_PRICE, InvDataSource.IB);			// MARK_PRICE
 			break;
 
 
@@ -201,6 +203,8 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 	public void tickSize(TickType tickType, Integer size) {
 		
 		switch( tickType) {
+
+		// SIZE
 		case BID_SIZE:
 			m_bidSize = size;
 			Watchr.log(Level.INFO, ">>>>> Bid Size " + size + " for " + investment.toString());
@@ -215,6 +219,8 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Last Size " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.TRADED_SIZE, InvDataSource.IB);
 			break;
+			
+		// VOLUME
 		case VOLUME:
 			m_volume = size;
 			Watchr.log(Level.INFO, ">>>>> Volume " + size + " for " + investment.toString());
@@ -228,6 +234,8 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Volume Rate " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.VOLUME_RATE, InvDataSource.IB);
 			break;
+			
+		// OPEN INTEREST
 		case OPTION_CALL_OPEN_INTEREST:
 			Watchr.log(Level.INFO, ">>>>> Call Open Interest " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.OPTION_CALL_OPEN_INTEREST, InvDataSource.IB);
@@ -244,6 +252,8 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Put Volume " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.OPTION_PUT_VOLUME, InvDataSource.IB);
 			break;
+			
+		// OTHER
 		case REGULATORY_IMBALANCE:
 			Watchr.log(Level.INFO, ">>>>> Regulatory Imbalance " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.REGULATORY_IMBALANCE, InvDataSource.IB);
