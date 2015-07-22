@@ -84,10 +84,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Bid Exchange " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.BID_EXCH, InvDataSource.IB);
 			break;
-		case BID_OPTION:
-			Watchr.log(Level.INFO, ">>>>> Bid Option " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.BID_OPTION, InvDataSource.IB);
-			break;
 			
 		// ASK	
 		case ASK:
@@ -99,10 +95,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Ask Exchange " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK_EXCH, InvDataSource.IB);
 			break;
-		case ASK_OPTION: 
-			Watchr.log(Level.INFO, ">>>>> Ask Option " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK_OPTION, InvDataSource.IB);
-			break;
 
 		// LAST
 		case LAST:
@@ -110,11 +102,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Last " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED, InvDataSource.IB);
 			break;
-		case LAST_OPTION:
-			Watchr.log(Level.INFO, ">>>>> Last Option " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED_OPTION, InvDataSource.IB);
-			break;
-
 		case AUCTION_PRICE:
 			Watchr.log(Level.INFO, ">>>>> Auction Price " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.AUCTION_PRICE, InvDataSource.IB);
@@ -123,7 +110,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.MARK_PRICE, InvDataSource.IB);
 			break;
-		
 
 
 		////////////////

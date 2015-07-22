@@ -8,6 +8,7 @@ import com.ib.client.TickType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvType;
 import com.onenow.constant.OptionVolatility;
+import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.execution.ApiController.IOptHandler;
 import com.onenow.instrument.Investment;
@@ -41,6 +42,19 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 		
 		switch( tickType) {
 		
+		case ASK_OPTION: 
+			Watchr.log(Level.INFO, ">>>>> Ask Option " + optPrice + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.ASK_OPTION, InvDataSource.IB);
+			break;	
+		case BID_OPTION:
+			Watchr.log(Level.INFO, ">>>>> Bid Option " + optPrice + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.BID_OPTION, InvDataSource.IB);
+			break;
+		case LAST_OPTION:
+			Watchr.log(Level.INFO, ">>>>> Last Option " + optPrice + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.TRADED_OPTION, InvDataSource.IB);
+			break;
+
 		case MODEL_OPTION:
 			// implied volatility
 			m_impVol = impVol;
