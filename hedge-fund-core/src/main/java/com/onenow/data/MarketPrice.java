@@ -10,7 +10,7 @@ import com.onenow.constant.ColumnName;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.OptionVolatility;
+import com.onenow.constant.VolatilityType;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.execution.BrokerInteractive;
@@ -85,7 +85,7 @@ public class MarketPrice {
 	}
 
 	public static void writeVolatilityStreaming(Investment inv, Double computation, 
-												OptionVolatility volatilityType, InvDataSource source) {
+												VolatilityType volatilityType, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
@@ -98,7 +98,7 @@ public class MarketPrice {
 	}
 
 
-	public static void parseAndWriteFundamentalsStreaming(Investment inv, String value, InvDataSource source) {
+	public static void parseAndWriteStrings(Investment inv, String value, InvDataSource source) {
 		
 		
 	}

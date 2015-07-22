@@ -9,7 +9,7 @@ public enum TickType {
     BID( 1, "bidPrice" ),
     ASK( 2, "askPrice" ),
     ASK_SIZE( 3, "askSize" ),
-    LAST( 4, "lastPrice" ),
+    LAST_PRICE( 4, "lastPrice" ),
     LAST_SIZE( 5, "lastSize" ),
     HIGH( 6, "high" ),
     LOW( 7, "low" ),

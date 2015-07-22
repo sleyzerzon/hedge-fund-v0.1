@@ -118,7 +118,7 @@ public class TopModel extends AbstractTableModel {
 				case ASK:
 					m_ask = price;
 					break;
-				case LAST:
+				case LAST_PRICE:
 					m_last = price;
 					break;
 				case CLOSE:

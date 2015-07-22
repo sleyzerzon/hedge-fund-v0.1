@@ -119,7 +119,7 @@ public class OptionChainsPanel extends JPanel {
 	    JLabel m_labUnderPrice = new JLabel();
 	    TopMktDataAdapter m_stockListener = new TopMktDataAdapter() {
             @Override public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
-                if (tickType == TickType.LAST) {
+                if (tickType == TickType.LAST_PRICE) {
                     m_labUnderPrice.setText( "" + price);
                 }
             }

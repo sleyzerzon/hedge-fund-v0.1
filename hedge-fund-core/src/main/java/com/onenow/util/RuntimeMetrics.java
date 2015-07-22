@@ -17,7 +17,7 @@ public class RuntimeMetrics {
 	// http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html
 	public static void notifyWallstLatency(Long miliSeconds, StreamName streamName) {
 
-		Watchr.log(Level.WARNING, streamName + " READY TO INVEST IN: " + miliSeconds + "ms");
+		Watchr.log(Level.WARNING, streamName + " READY TO INVEST IN: " + miliSeconds/1000 + "sec");
 
 		String app = "aws cloudwatch put-metric-data";
 		String metric = "--metric-name";

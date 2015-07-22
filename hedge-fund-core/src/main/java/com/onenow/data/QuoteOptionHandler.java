@@ -7,7 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import com.ib.client.TickType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvType;
-import com.onenow.constant.OptionVolatility;
+import com.onenow.constant.VolatilityType;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.execution.ApiController.IOptHandler;
@@ -59,7 +59,7 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 			// implied volatility
 			m_impVol = impVol;
 			Watchr.log(Level.INFO, ">>>>> Option Model Implied Volatility Computation " + impVol + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, impVol, OptionVolatility.MODEL_OPTION, InvDataSource.IB);			
+			MarketPrice.writeVolatilityStreaming(investment, impVol, VolatilityType.MODEL_OPTION, InvDataSource.IB);			
 
 			// delta
 			m_delta = delta;
@@ -83,7 +83,7 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 		// OptionComputationType
 		case CUST_OPTION_COMPUTATION:
 			Watchr.log(Level.INFO, ">>>>> Option Custom Implied Volatility Computation " + impVol + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, impVol, OptionVolatility.CUST_OPTION_COMPUTATION, InvDataSource.IB);			
+			MarketPrice.writeVolatilityStreaming(investment, impVol, VolatilityType.CUST_OPTION_COMPUTATION, InvDataSource.IB);			
 			break;
 			
         default:

@@ -268,7 +268,10 @@ public static DBTimeIncrement individualSeriesToIncrements(Serie serie, String s
 
 			// Column 0 is time stamp
 			if(i.equals(1)) {
-				increment.first = new Double(extractQueryString(rowMap, column));
+				String queryString = extractQueryString(rowMap, column);
+				if(queryString!=null) {
+					increment.first = new Double(queryString);
+				}
 			}	
 			i++;
 		}
@@ -344,11 +347,10 @@ public static DBTimeIncrement thoroughSeriesToIncrements(Serie serie, String s) 
 }
 
 public static String extractQueryString(Map<String, Object> row, String col) {
-	String s = "";
+	String s = null;
 	try {
 		s = row.get(col).toString();
 	} catch (Exception e) {
-		s = "-1.0";
 		Watchr.log(Level.FINE, "TSDB NULL query result for ROW " + row + " " + row.get(col));
 	}
 	return s;

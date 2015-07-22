@@ -1,6 +1,6 @@
 package com.onenow.constant;
 
-public enum OptionVolatility {
+public enum VolatilityType {
 	// implied
 	OPTION_IMPLIED_VOL,
 	MODEL_OPTION, MODEL_OPTION_COMPUTATION, 

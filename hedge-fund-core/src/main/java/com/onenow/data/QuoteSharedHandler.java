@@ -8,7 +8,7 @@ import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.OptionVolatility;
+import com.onenow.constant.VolatilityType;
 import com.onenow.constant.SizeType;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
@@ -80,10 +80,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Bid " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.BID, InvDataSource.IB);
 			break;
-		case BID_EXCH:
-			Watchr.log(Level.INFO, ">>>>> Bid Exchange " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.BID, InvDataSource.IB);		// BID_EXCH
-			break;
 			
 		// ASK	
 		case ASK:
@@ -91,18 +87,14 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Ask " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK, InvDataSource.IB);
 			break;	
-		case ASK_EXCH:
-			Watchr.log(Level.INFO, ">>>>> Ask Exchange " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK, InvDataSource.IB);		// ASK_EXCH
-			break;
-
+						
 		// LAST
-		case LAST:
+		case LAST_PRICE:	// last trade at which the contract traded
 			m_last = price;
 			Watchr.log(Level.INFO, ">>>>> Last " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED, InvDataSource.IB);
 			break;
-			
+						
 		// TODO: other? or also LAST
 		case AUCTION_PRICE:
 			Watchr.log(Level.INFO, ">>>>> Auction Price " + price + " for " + investment.toString());
@@ -162,15 +154,15 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
 			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, value, OptionVolatility.RT_HISTORICAL_VOL, InvDataSource.IB);			
+			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.RT_HISTORICAL_VOL, InvDataSource.IB);			
 			break;
 		case OPTION_HISTORICAL_VOL:
 			Watchr.log(Level.INFO, ">>>>> Option Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, value, OptionVolatility.OPTION_HISTORICAL_VOL, InvDataSource.IB);			
+			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_HISTORICAL_VOL, InvDataSource.IB);			
 			break;
 		case OPTION_IMPLIED_VOL:
 			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, value, OptionVolatility.OPTION_IMPLIED_VOL, InvDataSource.IB);			
+			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_IMPLIED_VOL, InvDataSource.IB);			
 			break;
 		case INDEX_FUTURE_PREMIUM:
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
@@ -187,6 +179,10 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		case SHORTABLE:
 			Watchr.log(Level.INFO, ">>>>> Shortable " + value + " for " + investment.toString());
 			MarketPrice.writeGenericStreaming(investment, value, GenericType.SHORTABLE, InvDataSource.IB);			
+			break;
+		case HALTED:
+			Watchr.log(Level.INFO, ">>>>> Halted " + value + " for " + investment.toString());
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.HALTED, InvDataSource.IB);			
 			break;
 
 
@@ -279,13 +275,23 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 	public void tickString(TickType tickType, String value) {
 					
 		switch( tickType) {
-		case LAST_TIMESTAMP:
+		
+		case BID_EXCH:
+			Watchr.log(Level.INFO, ">>>>> Best Bid Exchange " + value + " for " + investment.toString());
+			MarketPrice.parseAndWriteStrings(investment, value, InvDataSource.IB);		// BID_EXCH: options exchange hosting the best bid price
+			break;
+		case ASK_EXCH:
+			Watchr.log(Level.INFO, ">>>>> Best Ask Exchange " + value + " for " + investment.toString());
+			MarketPrice.parseAndWriteStrings(investment, value, InvDataSource.IB);		// ASK_EXCH
+			break;
+
+		case LAST_TIMESTAMP:	// timestamp for the last trade
 			// TODO: what should be the use of this stamp? instead of getting our own for other ticks?
 			m_lastTime = Long.parseLong(value);
 			MarketPrice.lastTimeMilisecMap.put(investment, Long.valueOf(value));
 			break;
 		case FUNDAMENTAL_RATIOS:
-			MarketPrice.parseAndWriteFundamentalsStreaming(investment, value, InvDataSource.IB);
+			MarketPrice.parseAndWriteStrings(investment, value, InvDataSource.IB);
 			break;
 		case UNKNOWN:
 			// TODO
