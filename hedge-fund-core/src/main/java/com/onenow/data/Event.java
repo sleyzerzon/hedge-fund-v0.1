@@ -145,10 +145,33 @@ public class Event {
 		} 
 		
 		try {
-			s =	s + "-priceType " + priceType + " ";
+			if(priceType!=null) {
+				s =	s + "-priceType " + priceType + " ";
+			}
 		} catch (Exception e) {
 		}
-		
+
+		try {
+			if(sizeType!=null) {
+				s =	s + "-sizeType " + sizeType + " ";
+			}
+		} catch (Exception e) {
+		}
+
+		try {
+			if(greekType!=null) {
+				s =	s + "-greekType " + greekType + " ";
+			}
+		} catch (Exception e) {
+		}
+
+		try {
+			if(genericType!=null) {
+				s =	s + "-genericType " + genericType + " ";
+			}
+		} catch (Exception e) {
+		}
+
 		try {
 			if(timeInMilisec!=null) {
 				s = s + "-time " + timeInMilisec + " ";

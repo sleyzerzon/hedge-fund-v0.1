@@ -26,8 +26,8 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 		super();
 		
 		setInvestment(inv);
-		super.priceType = PriceType.TRADED; // by definition of RTVolume the priceType is TRADED
-		super.sizeType = SizeType.TRADED_SIZE; // by definition of RTVolume the priceType is TRADED
+		super.priceType = PriceType.TRADED; 		// by definition of RTVolume the priceType is TRADED
+		super.sizeType = SizeType.TRADED_SIZE; 		// by definition of RTVolume the priceType is TRADED
 		super.source = source;
 		super.timing = InvDataTiming.REALTIME;
 

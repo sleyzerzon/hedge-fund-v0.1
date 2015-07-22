@@ -170,6 +170,8 @@ public static List<Serie> query(DBname dbName, EventRequestRaw request) {
 
 private static String getSerieName(EventRequestRaw request) {
 	String serieName = null;
+	
+	// TODO: could both not be null at the same time? i.e. RTVolume
 	try {
 		if(request.priceType!=null) {
 			serieName =  Lookup.getPriceEventKey(request);

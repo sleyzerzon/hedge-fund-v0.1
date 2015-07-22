@@ -59,12 +59,12 @@ public class CacheInProcess {
  */
 	private boolean writeToMem(EventActivity event) {
 		
-		String key = Lookup.getPriceEventKey(event);
 		boolean success = false;	// useful to test for initialization
 		
 		Boolean writeToMem=false;
 		// keep last in memory
 		if(event instanceof EventActivityPriceSizeRealtime) {
+			String key = Lookup.getPriceEventKey(event);
 			success = writeRealtimeToMem(event, key, success, writeToMem);
 			
 			// TODO: fix calculation
