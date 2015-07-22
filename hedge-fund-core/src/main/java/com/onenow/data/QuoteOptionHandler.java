@@ -44,15 +44,15 @@ public class QuoteOptionHandler extends QuoteSharedHandler implements IOptHandle
 		
 		case ASK_OPTION: 
 			Watchr.log(Level.INFO, ">>>>> Ask Option " + optPrice + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.ASK_OPTION, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.ASK, InvDataSource.IB);		// ASK_OPTION
 			break;	
 		case BID_OPTION:
 			Watchr.log(Level.INFO, ">>>>> Bid Option " + optPrice + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.BID_OPTION, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.BID, InvDataSource.IB);		// BID_OPTION
 			break;
 		case LAST_OPTION:
 			Watchr.log(Level.INFO, ">>>>> Last Option " + optPrice + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.TRADED_OPTION, InvDataSource.IB);
+			MarketPrice.writePriceStreaming(investment, optPrice, PriceType.TRADED, InvDataSource.IB);	// TRADED_OPTION
 			break;
 
 		case MODEL_OPTION:
