@@ -11,6 +11,7 @@ import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
+import com.onenow.constant.VolatilityType;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.InvestmentFuture;
 import com.onenow.instrument.InvestmentIndex;
@@ -30,6 +31,7 @@ public class Event {
 	public PriceType priceType; 
 	public SizeType sizeType; 
 	public GreekType greekType; 
+	public VolatilityType volatilityType; 
 	public GenericType genericType; 
 
 	// public ObjectOrigination origin = new ObjectOrigination();

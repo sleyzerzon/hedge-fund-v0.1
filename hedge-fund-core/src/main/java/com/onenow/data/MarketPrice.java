@@ -28,7 +28,7 @@ public class MarketPrice {
 	private DataSampling sampling;
 	private BrokerInteractive broker;
 	
-	public static HashMap<Investment, Long> lastTimeMilisecMap = new HashMap<Investment, Long>();
+	public static HashMap<Investment, Long> lastTradeMilisecMap = new HashMap<Investment, Long>();
 		
 	public MarketPrice() {
 		
@@ -59,7 +59,8 @@ public class MarketPrice {
 			Watchr.info("RT Volume without size");	
 		}
 	}
-	
+
+	// PRICE
 	public static void writePriceStreaming(Investment inv, Double price, PriceType priceType, InvDataSource source) {
 		
 		EventActivityPriceStreaming event = new EventActivityPriceStreaming(	TimeParser.getTimeMilisecondsNow(), inv,  
@@ -69,6 +70,7 @@ public class MarketPrice {
 		
 	}
 
+	// SIZE
 	public static void writeSizeStreaming(Investment inv, Integer size, SizeType sizeType, InvDataSource source) {
 		
 		EventActivitySizeStreaming event = new EventActivitySizeStreaming(	TimeParser.getTimeMilisecondsNow(), inv,  
@@ -78,26 +80,29 @@ public class MarketPrice {
 		
 	}
 
+	// GREEKS
 	public static void writeGreekStreaming(Investment inv, Double greek, GreekType greekType, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
+	// VOLATILITY
 	public static void writeVolatilityStreaming(Investment inv, Double computation, 
 												VolatilityType volatilityType, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
-
+	
+	// GENERIC
 	public static void writeGenericStreaming(Investment inv, Double computation, GenericType generic, InvDataSource source) {
 		
 		ColumnName dataType = ColumnName.DELTA;
 		
 	}
 
-
+	// STRINGS
 	public static void parseAndWriteStrings(Investment inv, String value, InvDataSource source) {
 		
 		

@@ -27,29 +27,9 @@ import com.onenow.util.Watchr;
  */
 public class QuoteSharedHandler implements ITopMktDataHandler {
 	
-	// tickGeneric()
-	
-	// time
-	long m_lastTime;
-
-	// price
-	double m_bid;
-	double m_ask;
-	double m_last;
-	double m_close;
-	
-	// size
-	int m_askSize;
-	int m_bidSize;
-	int m_volume;
-
-	// added:
 	public Investment investment;
 	
-	// other
 	boolean m_frozen;
-
-	// table
 	protected AbstractTableModel chainTable;
 
 	
@@ -74,23 +54,15 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		
 		switch( tickType) {	
 		
-		// BID
 		case BID:
-			m_bid = price;
 			Watchr.log(Level.INFO, ">>>>> Bid " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.BID, InvDataSource.IB);
 			break;
-			
-		// ASK	
 		case ASK:
-			m_ask = price;
 			Watchr.log(Level.INFO, ">>>>> Ask " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.ASK, InvDataSource.IB);
 			break;	
-						
-		// LAST
 		case LAST_PRICE:	// last trade at which the contract traded
-			m_last = price;
 			Watchr.log(Level.INFO, ">>>>> Last " + price + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, price, PriceType.TRADED, InvDataSource.IB);
 			break;
@@ -98,11 +70,11 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		// TODO: other? or also LAST
 		case AUCTION_PRICE:
 			Watchr.log(Level.INFO, ">>>>> Auction Price " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.AUCTION_PRICE, InvDataSource.IB);		// AUCTION_PRICE
+			MarketPrice.writePriceStreaming(investment, price, PriceType.AUCTION_PRICE, InvDataSource.IB);		
 			break;
 		case MARK_PRICE: 
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + price + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, price, PriceType.MARK_PRICE, InvDataSource.IB);			// MARK_PRICE
+			MarketPrice.writePriceStreaming(investment, price, PriceType.MARK_PRICE, InvDataSource.IB);			
 			break;
 
 
@@ -148,52 +120,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		chainTable.fireTableDataChanged();
 	}
 	
-	@Override public void tickGeneric(TickType tickType, Double value) {
-
-		switch( tickType) {			
-
-		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
-			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.RT_HISTORICAL_VOL, InvDataSource.IB);			
-			break;
-		case OPTION_HISTORICAL_VOL:
-			Watchr.log(Level.INFO, ">>>>> Option Historical Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_HISTORICAL_VOL, InvDataSource.IB);			
-			break;
-		case OPTION_IMPLIED_VOL:
-			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
-			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_IMPLIED_VOL, InvDataSource.IB);			
-			break;
-		case INDEX_FUTURE_PREMIUM:
-			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
-			MarketPrice.writePriceStreaming(investment, value, PriceType.INDEX_FUTURE_PREMIUM, InvDataSource.IB);
-			break;
-		case TRADE_COUNT:
-			Watchr.log(Level.INFO, ">>>>> Trade Count " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_COUNT, InvDataSource.IB);			
-			break;
-		case TRADE_RATE:
-			Watchr.log(Level.INFO, ">>>>> Trade Rate " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_RATE, InvDataSource.IB);			
-			break;
-		case SHORTABLE:
-			Watchr.log(Level.INFO, ">>>>> Shortable " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(investment, value, GenericType.SHORTABLE, InvDataSource.IB);			
-			break;
-		case HALTED:
-			Watchr.log(Level.INFO, ">>>>> Halted " + value + " for " + investment.toString());
-			MarketPrice.writeGenericStreaming(investment, value, GenericType.HALTED, InvDataSource.IB);			
-			break;
-
-
-		default:
-			Watchr.log(Level.WARNING, 	"$$$$$ tickGeneric: " + " -tickType " + tickType +
-					" -for " + investment.toString());
-			break;	
-		}
-
-	}
-	
 	
 	@Override
 	public void tickSize(TickType tickType, Integer size) {
@@ -202,12 +128,10 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		// SIZE
 		case BID_SIZE:
-			m_bidSize = size;
 			Watchr.log(Level.INFO, ">>>>> Bid Size " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.BID_SIZE, InvDataSource.IB);
 			break;
 		case ASK_SIZE:
-			m_askSize = size;
 			Watchr.log(Level.INFO, ">>>>> Ask Size " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.ASK_SIZE, InvDataSource.IB);
 			break;
@@ -218,7 +142,6 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			
 		// VOLUME
 		case VOLUME:
-			m_volume = size;
 			Watchr.log(Level.INFO, ">>>>> Volume " + size + " for " + investment.toString());
 			MarketPrice.writeSizeStreaming(investment, size, SizeType.VOLUME, InvDataSource.IB);
 			break;
@@ -271,6 +194,53 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 		chainTable.fireTableDataChanged();
 	}
 
+	@Override public void tickGeneric(TickType tickType, Double value) {
+
+		switch( tickType) {			
+
+		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
+			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
+			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.RT_HISTORICAL_VOL, InvDataSource.IB);			
+			break;
+		case OPTION_HISTORICAL_VOL:
+			Watchr.log(Level.INFO, ">>>>> Option Historical Volatility " + value + " for " + investment.toString());
+			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_HISTORICAL_VOL, InvDataSource.IB);			
+			break;
+		case OPTION_IMPLIED_VOL:
+			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
+			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_IMPLIED_VOL, InvDataSource.IB);			
+			break;
+		case INDEX_FUTURE_PREMIUM:
+			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
+			MarketPrice.writePriceStreaming(investment, value, PriceType.INDEX_FUTURE_PREMIUM, InvDataSource.IB);
+			break;
+		case TRADE_COUNT:
+			Watchr.log(Level.INFO, ">>>>> Trade Count " + value + " for " + investment.toString());
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_COUNT, InvDataSource.IB);			
+			break;
+		case TRADE_RATE:
+			Watchr.log(Level.INFO, ">>>>> Trade Rate " + value + " for " + investment.toString());
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_RATE, InvDataSource.IB);			
+			break;
+		case SHORTABLE:
+			Watchr.log(Level.INFO, ">>>>> Shortable " + value + " for " + investment.toString());
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.SHORTABLE, InvDataSource.IB);			
+			break;
+		case HALTED:
+			Watchr.log(Level.INFO, ">>>>> Halted " + value + " for " + investment.toString());
+			MarketPrice.writeGenericStreaming(investment, value, GenericType.HALTED, InvDataSource.IB);			
+			break;
+
+
+		default:
+			Watchr.log(Level.WARNING, 	"$$$$$ tickGeneric: " + " -tickType " + tickType +
+					" -for " + investment.toString());
+			break;	
+		}
+
+	}
+	
+	
 	@Override
 	public void tickString(TickType tickType, String value) {
 					
@@ -285,10 +255,8 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			MarketPrice.parseAndWriteStrings(investment, value, InvDataSource.IB);		// ASK_EXCH
 			break;
 
-		case LAST_TIMESTAMP:	// timestamp for the last trade
-			// TODO: what should be the use of this stamp? instead of getting our own for other ticks?
-			m_lastTime = Long.parseLong(value);
-			MarketPrice.lastTimeMilisecMap.put(investment, Long.valueOf(value));
+		case LAST_TIMESTAMP:	
+			MarketPrice.lastTradeMilisecMap.put(investment, Long.valueOf(value));
 			break;
 		case FUNDAMENTAL_RATIOS:
 			MarketPrice.parseAndWriteStrings(investment, value, InvDataSource.IB);
@@ -332,19 +300,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 	public String toString() {
 		String s = "";
-
-		s = s + "*** QUOTE HANDLER " + " ";
-		s = s + "-lastTime " + m_lastTime + " ";
-		s = s + "-investment " + investment + " ";
-		s = s + "-bid " + m_bid + " ";
-		s = s + "-ask " + m_ask + " ";
-		s = s + "-last " + m_last + " ";
-		s = s + "-close " + m_close + " ";
-		s = s + "-askSize " + m_askSize + " ";
-		s = s + "-bidSize " + m_bidSize + " ";
-		s = s + "-volume " + m_volume + " ";
-		s = s + "-frozen " + m_frozen;
-
+		s = s + investment.toString();
 		return s;
 	}
 }
