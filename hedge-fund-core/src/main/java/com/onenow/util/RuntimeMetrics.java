@@ -15,9 +15,9 @@ public class RuntimeMetrics {
 	// http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/publishingMetrics.html
 	// https://aws.amazon.com/blogs/aws/amazon-cloudwatch-user-defined-metrics/
 	// http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html
-	public static void notifyWallstLatency(Long seconds, StreamName streamName) {
+	public static void notifyWallstLatency(Long miliSeconds, StreamName streamName) {
 
-		Watchr.log(Level.WARNING, streamName + " READY TO INVEST IN: " + seconds + "ms");
+		Watchr.log(Level.WARNING, streamName + " READY TO INVEST IN: " + miliSeconds + "ms");
 
 		String app = "aws cloudwatch put-metric-data";
 		String metric = "--metric-name";
@@ -28,7 +28,7 @@ public class RuntimeMetrics {
 		final String message = 	app + " " + "Investor" + streamName + " " +
 								metric + " " + "READY-TO-INVEST-IN" + " " +
 								nameSpace + " " + "\"General\"" + " " +
-								value + " " + seconds.toString() + " " +
+								value + " " + miliSeconds.toString() + " " +
 								stamp + " " + "2015-06-12T12:00:00.000Z";
 		
 		RuntimeEnvironment.executeThread(message);

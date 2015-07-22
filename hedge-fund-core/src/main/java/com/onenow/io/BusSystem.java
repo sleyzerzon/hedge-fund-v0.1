@@ -118,10 +118,6 @@ public class BusSystem {
 
 	public static void write(EventActivity activityToSend, StreamName streamName) {
 		
-		if(!validActivity(activityToSend)) {
-			return;
-		}
-		
 		boolean success = false;
 		int maxTries = 3;
 		
@@ -143,22 +139,7 @@ public class BusSystem {
 			}
 		}
 	}
-	
-	private static boolean validActivity(EventActivity activity) {
-		boolean valid = true;
-		
-		if( !activity.priceType.equals(PriceType.ASK) && 
-			!activity.priceType.equals(PriceType.BID) &&
-			!activity.priceType.equals(PriceType.TRADED) &&
-			!activity.priceType.equals(PriceType.CALCULATED)
-				) {
-			Watchr.severe("ATTEMPT TO WRITE INVALID ACTIVITY TO BUS: PRICETYPE");
-			valid = false;
-		}
-				
-		return valid;
-	}
-		
+			
 	// http://blogs.aws.amazon.com/bigdata/blog/author/Ian+Meyers
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
 	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
