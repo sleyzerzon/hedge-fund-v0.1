@@ -30,7 +30,7 @@ public class DBTimeSeriesPrice {
 		
 		Serie serie = DBTimeSeries.getWriteSerie(	event, name, ColumnName.PRICE );
 
-		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getPriceDatabaseName());
+		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getDatabaseName());
 		
 	}
 		
@@ -40,7 +40,7 @@ public class DBTimeSeriesPrice {
 
 			List<Candle> candles = new ArrayList<Candle>();
 					
-			List<Serie> series = DBTimeSeries.query(DBTimeSeries.getPriceDatabaseName(), request);
+			List<Serie> series = DBTimeSeries.query(DBTimeSeries.getDatabaseName(), request);
 
 			candles = seriesToCandles(series); 
 			 

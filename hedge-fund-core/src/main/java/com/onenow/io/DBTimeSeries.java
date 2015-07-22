@@ -128,7 +128,7 @@ public static void writeThread(final EventActivity event, final Serie serie, fin
  * Each environment has its own database
  * @return
  */
-public static DBname getPriceDatabaseName() {
+public static DBname getDatabaseName() {
 	
 	DBname name = DBname.DEVELOPMENT;
 			
@@ -137,38 +137,6 @@ public static DBname getPriceDatabaseName() {
 	} 
 	return name;
 }
-
-/** 
- * Each environment has its own database
- * @return
- */
-public static DBname getSizeDatabaseName() {
-	
-	DBname name = DBname.DEVELOPMENT;
-	
-	if(!NetworkConfig.isMac()) {
-		name = DBname.STAGING;
-	} 
-	return name;
-
-}
-
-/** 
- * Each environment has its own database
- * @return
- */
-public static DBname getGreekDatabaseName() {
-
-	DBname name = DBname.DEVELOPMENT;
-
-	if(!NetworkConfig.isMac()) {
-		name = DBname.STAGING;
-	} 
-	
-	return name;
-
-}
-
 
 
 /**

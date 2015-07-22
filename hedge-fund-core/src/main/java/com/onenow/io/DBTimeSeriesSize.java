@@ -25,7 +25,7 @@ public class DBTimeSeriesSize {
 		
 		final Serie serie = DBTimeSeries.getWriteSerie(event, name, ColumnName.SIZE);
 
-		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getSizeDatabaseName());
+		DBTimeSeries.writeThread(event, serie, DBTimeSeries.getDatabaseName());
 
 	}
 	
@@ -35,7 +35,7 @@ public class DBTimeSeriesSize {
 
 		List<Integer> sizes = new ArrayList<Integer>();
 		
-		List<Serie> series = DBTimeSeries.query(DBTimeSeries.getSizeDatabaseName(), request);
+		List<Serie> series = DBTimeSeries.query(DBTimeSeries.getDatabaseName(), request);
 
 		sizes = seriesToSizes(series); 
 		
