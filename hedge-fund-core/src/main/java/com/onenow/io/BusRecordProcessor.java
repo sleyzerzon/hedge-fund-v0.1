@@ -9,6 +9,7 @@ import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.model.Record;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
+import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityGenericStreaming;
 import com.onenow.data.EventActivitySizeStreaming;
 import com.onenow.data.EventActivityGreekHistory;
@@ -93,99 +94,77 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
                 
 	}
 
+	
 	/** 
 	 * Handle records in Kinesis, in some cases with multiple consumers
 	 * @param recordObject
 	 */
-	private void handleByRecordType(Object recordObject) {
-				
-		if(recordType.equals(String.class)) {
+	private void handleByRecordType(Object recordObject) {		
+		EventActivity event = getEventActivity(recordObject);
+    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
+		ClerkMain.writeToL2(event);				
+	}
+	
+	private EventActivity getEventActivity(Object recordObject) {
+		EventActivity event = new EventActivity();
 			
-			try {
-				// Kinesis + Elasticache Test
-				// Read to see if the cache already has the test value
-				String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->String<- " + testValue.toString(), "\n", "");
-
-				boolean valuesMatch = testValue.equals(TestValues.VALUE.toString()); 
-				if(valuesMatch) {
-					Watchr.log(Level.WARNING, "Kinesis test PASS");
-					return;
-				} else {
-					Watchr.log(Level.WARNING, "Kinesis test FAIL");
-				}
-				// TODO 
-				// Write the last one to cache to validate the stream works
-				// CacheElastic.write(TestValues.KEY.toString(), (Object) recordObject);
-				
-			} catch (Exception e) {
-				// e.printStackTrace();
+		try {
+			// STRING
+			if(recordType.equals(String.class)) {			
+				runStringTest();
 			}
-		}
-		
-		// HISTORY
-		if(recordType.equals(EventActivityPriceHistory.class)) {
-			try {
-				EventActivityPriceHistory event = (EventActivityPriceHistory) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
-				
-		    	// TODO: refactor to use writeToL2
-		    	ClerkMain.writeToL2(event);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			// HISTORY
+			if(recordType.equals(EventActivityPriceHistory.class)) {
+				event = (EventActivityPriceHistory) recordObject;
 			}
-		}
-		
-		if(recordType.equals(EventActivityGreekHistory.class)) {
-			// TODO
-		}
-
-		// REALTIME OR STREAMING
-		if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
-			try {
-				EventActivityPriceSizeRealtime event = (EventActivityPriceSizeRealtime) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
-				ClerkMain.writeToL2(event);
-				try {
-					// TODO: prefetch
-					// ChartistMain.prefetchCharts(event);				
-				} catch (Exception e) {
-					// e.printStackTrace();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			if(recordType.equals(EventActivityGreekHistory.class)) {
+				event = (EventActivityGreekHistory) recordObject;
 			}
-		}
-
-		if(recordType.equals(EventActivityPriceStreaming.class)) {			
-			try {
-				EventActivityPriceStreaming event = (EventActivityPriceStreaming) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
-				ClerkMain.writeToL2(event);
-			} catch (Exception e) {
-				e.printStackTrace();
+			// REALTIME
+			if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
+				event = (EventActivityPriceSizeRealtime) recordObject;
 			}
-		}
-
-		if(recordType.equals(EventActivitySizeStreaming.class)) {			
-			try {
-				EventActivitySizeStreaming event = (EventActivitySizeStreaming) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
-				ClerkMain.writeToL2(event);
-			} catch (Exception e) {
-				e.printStackTrace();
+			// STREAMING
+			if(recordType.equals(EventActivityPriceStreaming.class)) {			
+				event = (EventActivityPriceStreaming) recordObject;
 			}
+			if(recordType.equals(EventActivitySizeStreaming.class)) {			
+				event = (EventActivitySizeStreaming) recordObject;
+			}
+			if(recordType.equals(EventActivityGreekStreaming.class)) {
+				event = (EventActivityGreekStreaming) recordObject;
+			}		
+			if(recordType.equals(EventActivityVolatilityStreaming.class)) {
+				event = (EventActivityVolatilityStreaming) recordObject;
+			}
+			if(recordType.equals(EventActivityGenericStreaming.class)) {
+				event = (EventActivityGenericStreaming) recordObject;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return event;
+	}
 
-		if(recordType.equals(EventActivityGreekStreaming.class)) {			
+	private void runStringTest() {
+		try {
+			// Kinesis + Elasticache Test
+			// Read to see if the cache already has the test value
+			String testValue = (String) CacheElastic.readAsync(TestValues.KEY.toString());
+			Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->String<- " + testValue.toString(), "\n", "");
+
+			boolean valuesMatch = testValue.equals(TestValues.VALUE.toString()); 
+			if(valuesMatch) {
+				Watchr.log(Level.WARNING, "Kinesis test PASS");
+			} else {
+				Watchr.log(Level.WARNING, "Kinesis test FAIL");
+			}
+			// TODO 
+			// Write the last one to cache to validate the stream works
+			// CacheElastic.write(TestValues.KEY.toString(), (Object) recordObject);
+			
+		} catch (Exception e) {
+			// e.printStackTrace();
 		}
-		
-		if(recordType.equals(EventActivityVolatilityStreaming.class)) {			
-		}
-		
-		if(recordType.equals(EventActivityGenericStreaming.class)) {			
-		}
-		
 	}
 }
