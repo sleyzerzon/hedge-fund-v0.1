@@ -172,13 +172,13 @@ public class BusSystem {
 		readClientConfig.withRegionName(InitAmazon.defaultRegion.getName());
 		readClientConfig.withInitialPositionInStream(initPosition);		
 		
-		Worker kinesysWorker = new Worker(recordProcessorFactory, readClientConfig);
-		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + kinesysWorker.toString() + " " + 
+		Worker recordProcessor = new Worker(recordProcessorFactory, readClientConfig);
+		Watchr.log(Level.INFO, 	"Created kinesis read worker: " + recordProcessor.toString() + " " + 
 								"for kinesis: " + getKinesis());
 		
 		// TODO: start only when the stream is created & active
 		// isActive(kinesis.describeStream(streamName)
-		runProcessor(kinesysWorker);
+		runProcessor(recordProcessor);
 		
         return true;
 
