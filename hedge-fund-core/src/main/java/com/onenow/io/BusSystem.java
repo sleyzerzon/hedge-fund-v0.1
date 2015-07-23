@@ -184,6 +184,70 @@ public class BusSystem {
 
 	}
 	
+	// ALL
+	public static void readAllStreams(InitialPositionInStream initialPosition) {
+		BusSystem.readPriceHistory(initialPosition);
+		BusSystem.readGreekHistory(initialPosition);
+		BusSystem.readPriceSizeRealtime(initialPosition);
+		BusSystem.readPriceStreaming(initialPosition);
+		BusSystem.readSizeStreaming(initialPosition);
+		BusSystem.readGreekStreaming(initialPosition);
+		BusSystem.readVolatilityStreaming(initialPosition);
+		BusSystem.readGenericStreaming(initialPosition);
+	}
+
+	// HISTORY
+	public static void readPriceHistory(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_HISTORY), 
+						BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
+						initialPosition);		
+	}
+
+	public static void readGreekHistory(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_HISTORY), 
+						BusProcessingFactory.createProcessorFactoryEventGreekHistory(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
+						initialPosition);
+	}
+
+	// REALTIME
+	public static void readPriceSizeRealtime(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICESIZE_REALTIME), 
+						BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.PRICESIZE_REALTIME)),
+						initialPosition);
+	}
+
+	// STREAMING
+	public static void readPriceStreaming(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_STREAMING), 
+						BusProcessingFactory.createProcessorFactoryEventPriceStreaming(BusSystem.getStreamName(StreamingData.PRICE_STREAMING)),
+						initialPosition);		
+	}
+
+	public static void readSizeStreaming(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.SIZE_STREAMING), 
+						BusProcessingFactory.createProcessorFactoryEventSizeStreaming(BusSystem.getStreamName(StreamingData.SIZE_STREAMING)),
+						initialPosition);
+	}
+	
+	public static void readGreekStreaming(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_STREAMING), 
+						BusProcessingFactory.createProcessorFactoryEventGreekStreaming(BusSystem.getStreamName(StreamingData.GREEK_STREAMING)),
+						initialPosition);
+	}
+
+	public static void readVolatilityStreaming(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.VOLATILITY_STREAMING), 
+						BusProcessingFactory.createProcessorFactoryEventVolatilityStreaming(BusSystem.getStreamName(StreamingData.VOLATILITY_STREAMING)),
+						initialPosition);
+	}
+
+	public static void readGenericStreaming(InitialPositionInStream initialPosition) {
+		BusSystem.read(	BusSystem.getStreamName(StreamingData.GENERIC_STREAMING), 
+						BusProcessingFactory.createProcessorFactoryEventGenericStreaming(BusSystem.getStreamName(StreamingData.GENERIC_STREAMING)),
+						initialPosition);
+	}
+	
+	
 	// TODO: break down non-mac into staging / production
     public static StreamName getStreamName(StreamingData key) {
     	

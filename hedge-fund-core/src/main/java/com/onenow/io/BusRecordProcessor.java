@@ -125,7 +125,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventActivityPriceHistory.class)) {
 			try {
 				EventActivityPriceHistory event = (EventActivityPriceHistory) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceHistory<- " + event.toString(), "\n", "");
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
 				
 		    	// TODO: refactor to use writeToL2
 		    	ClerkMain.writeHistoryPriceToL2(event);
@@ -143,7 +143,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
 			try {
 				EventActivityPriceSizeRealtime event = (EventActivityPriceSizeRealtime) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceSizeRealtime<- " + event.toString(), "\n", "");
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
 				ClerkMain.writeToL2(event);
 				try {
 					// TODO: prefetch
@@ -159,7 +159,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventActivityPriceStreaming.class)) {			
 			try {
 				EventActivityPriceStreaming event = (EventActivityPriceStreaming) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceStreaming<- " + event.toString(), "\n", "");
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
 				ClerkMain.writeToL2(event);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -169,7 +169,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		if(recordType.equals(EventActivitySizeStreaming.class)) {			
 			try {
 				EventActivitySizeStreaming event = (EventActivitySizeStreaming) recordObject;
-		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivitySizeStreaming<- " + event.toString(), "\n", "");
+		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
 				ClerkMain.writeToL2(event);
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -32,40 +32,7 @@ public class ClerkMain {
 
 		TimeParser.sleep(180); // boot sequence
 
-		// HISTORY
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_HISTORY), 
-				BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
-				InitialPositionInStream.LATEST);
-
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_HISTORY), 
-				BusProcessingFactory.createProcessorFactoryEventGreekHistory(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
-				InitialPositionInStream.LATEST);
-
-		// REALTIME
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICESIZE_REALTIME), 
-						BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.PRICESIZE_REALTIME)),
-						InitialPositionInStream.LATEST);
-
-		// STREAMING
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventPriceStreaming(BusSystem.getStreamName(StreamingData.PRICE_STREAMING)),
-						InitialPositionInStream.LATEST);
-
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.SIZE_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventSizeStreaming(BusSystem.getStreamName(StreamingData.SIZE_STREAMING)),
-						InitialPositionInStream.LATEST);
-
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventGreekStreaming(BusSystem.getStreamName(StreamingData.GREEK_STREAMING)),
-						InitialPositionInStream.LATEST);
-
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.VOLATILITY_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventVolatilityStreaming(BusSystem.getStreamName(StreamingData.VOLATILITY_STREAMING)),
-						InitialPositionInStream.LATEST);
-
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.GENERIC_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventGenericStreaming(BusSystem.getStreamName(StreamingData.GENERIC_STREAMING)),
-						InitialPositionInStream.LATEST);
+		BusSystem.readAllStreams(InitialPositionInStream.LATEST);
 
 	}
 	

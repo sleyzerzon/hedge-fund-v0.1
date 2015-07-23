@@ -38,7 +38,7 @@ public class EventActivity extends Event {
 	public String toString() {
 		String s = "";
 		
-		s = s + "-streamingData " + streamingData.toString();
+		s = s + "->streamingData " + streamingData.toString() + " ";
 				
 		try {
 			if(price!=null) {
