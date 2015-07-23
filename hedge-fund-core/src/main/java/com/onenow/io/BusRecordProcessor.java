@@ -102,7 +102,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	private void handleByRecordType(Object recordObject) {		
 		EventActivity event = getEventActivity(recordObject);
     	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
-		ClerkMain.writeToL2(event);				
+    	DBTimeSeries.writeToL2(event);				
 	}
 	
 	private EventActivity getEventActivity(Object recordObject) {

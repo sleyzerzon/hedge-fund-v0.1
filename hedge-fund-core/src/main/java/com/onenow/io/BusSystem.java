@@ -196,55 +196,55 @@ public class BusSystem {
 		BusSystem.readGenericStreaming(initialPosition);
 	}
 
+	private static void readStreamingData(final StreamingData data, final InitialPositionInStream initialPosition) {	
+		new Thread () {
+			@Override public void run () {
+				try {
+					Watchr.info("Will read <" + data + "> from " + initialPosition.toString());
+					BusSystem.read(	BusSystem.getStreamName(data), 
+									BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(data)),
+									initialPosition);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+	}
+
 	// HISTORY
 	public static void readPriceHistory(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_HISTORY), 
-						BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
-						initialPosition);		
+		readStreamingData(StreamingData.PRICE_HISTORY, initialPosition);		
 	}
 
 	public static void readGreekHistory(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_HISTORY), 
-						BusProcessingFactory.createProcessorFactoryEventGreekHistory(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
-						initialPosition);
+		readStreamingData(StreamingData.GREEK_HISTORY, initialPosition);		
 	}
 
 	// REALTIME
 	public static void readPriceSizeRealtime(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICESIZE_REALTIME), 
-						BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.PRICESIZE_REALTIME)),
-						initialPosition);
+		readStreamingData(StreamingData.PRICESIZE_REALTIME, initialPosition);		
 	}
 
 	// STREAMING
 	public static void readPriceStreaming(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventPriceStreaming(BusSystem.getStreamName(StreamingData.PRICE_STREAMING)),
-						initialPosition);		
+		readStreamingData(StreamingData.PRICE_STREAMING, initialPosition);		
 	}
 
 	public static void readSizeStreaming(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.SIZE_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventSizeStreaming(BusSystem.getStreamName(StreamingData.SIZE_STREAMING)),
-						initialPosition);
+		readStreamingData(StreamingData.SIZE_STREAMING, initialPosition);		
 	}
 	
 	public static void readGreekStreaming(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventGreekStreaming(BusSystem.getStreamName(StreamingData.GREEK_STREAMING)),
-						initialPosition);
+		readStreamingData(StreamingData.GREEK_STREAMING, initialPosition);		
 	}
 
 	public static void readVolatilityStreaming(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.VOLATILITY_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventVolatilityStreaming(BusSystem.getStreamName(StreamingData.VOLATILITY_STREAMING)),
-						initialPosition);
+		readStreamingData(StreamingData.VOLATILITY_STREAMING, initialPosition);		
 	}
 
 	public static void readGenericStreaming(InitialPositionInStream initialPosition) {
-		BusSystem.read(	BusSystem.getStreamName(StreamingData.GENERIC_STREAMING), 
-						BusProcessingFactory.createProcessorFactoryEventGenericStreaming(BusSystem.getStreamName(StreamingData.GENERIC_STREAMING)),
-						initialPosition);
+		readStreamingData(StreamingData.GENERIC_STREAMING, initialPosition);		
 	}
 	
 	

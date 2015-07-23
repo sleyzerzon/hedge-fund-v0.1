@@ -11,6 +11,13 @@ import com.onenow.constant.DBQuery;
 import com.onenow.constant.DBname;
 import com.onenow.data.DataSampling;
 import com.onenow.data.EventActivity;
+import com.onenow.data.EventActivityGenericStreaming;
+import com.onenow.data.EventActivityGreekStreaming;
+import com.onenow.data.EventActivityPriceHistory;
+import com.onenow.data.EventActivityPriceSizeRealtime;
+import com.onenow.data.EventActivityPriceStreaming;
+import com.onenow.data.EventActivitySizeStreaming;
+import com.onenow.data.EventActivityVolatilityStreaming;
 import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestRaw;
 
@@ -68,6 +75,57 @@ private static void dbCreateAndConnect() {
 
 	} catch (Exception e) {
 		// Throws exception if the DB already exists
+	}
+}
+
+public static void writeToL2(EventActivity event) {
+	
+	boolean success = false;
+	boolean retry = false;
+	
+	int tries = 0;
+	int maxTries = 3;
+	
+	while(!success) {
+		// handle as a transaction, both price+size write or nothing
+		try {
+			tries++;
+			success = true;
+			if(	event instanceof EventActivityPriceHistory ||
+				event instanceof EventActivityPriceSizeRealtime ||
+				event instanceof EventActivityPriceStreaming) {
+				
+				DBTimeSeriesPrice.write(event);				
+			}
+			if( event instanceof EventActivityPriceSizeRealtime ||
+				event instanceof EventActivitySizeStreaming) {
+				
+				DBTimeSeriesSize.write(event);
+			}
+			if( event instanceof EventActivityGreekStreaming ) {
+				DBTimeSeriesGreek.write(event);
+			}
+			if ( event instanceof EventActivityVolatilityStreaming ) {
+				DBTimeSeriesVolatility.write(event);
+			}
+			if ( event instanceof EventActivityGenericStreaming ) {
+				DBTimeSeriesGeneric.write(event);
+			}
+		} catch (Exception e) {
+			success = false;
+			retry = true;
+			Watchr.log(Level.SEVERE, "TSDB WRITE FAILED: " + event.toString() + " " + e.toString());	
+			e.printStackTrace();
+			if(tries>maxTries) {
+				return;
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {}
+		}
+	}
+	if(retry) {
+		Watchr.log(Level.WARNING, "> TSDB WRITE *RE-TRY* SUCCEEDED: " + event.timeInMilisec + " " + event.getInvestment().toString());
 	}
 }
 
