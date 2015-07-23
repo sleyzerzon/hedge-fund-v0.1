@@ -198,6 +198,7 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 
 		switch( tickType) {			
 
+		// VOLATILITY
 		case RT_HISTORICAL_VOL: 	// Streaming historical volatility, w/o time stamp
 			Watchr.log(Level.INFO, ">>>>> Option RT Historical Volatility " + value + " for " + investment.toString());
 			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.RT_HISTORICAL_VOL, InvDataSource.IB);			
@@ -210,10 +211,12 @@ public class QuoteSharedHandler implements ITopMktDataHandler {
 			Watchr.log(Level.INFO, ">>>>> Option Implied Volatility " + value + " for " + investment.toString());
 			MarketPrice.writeVolatilityStreaming(investment, value, VolatilityType.OPTION_IMPLIED_VOL, InvDataSource.IB);			
 			break;
-		case INDEX_FUTURE_PREMIUM:
+			
+		// GENERIC
+		case INDEX_FUTURE_PREMIUM: // TODO: Price?
 			Watchr.log(Level.INFO, ">>>>> Mark Price " + value + " for " + investment.toString());
 			MarketPrice.writePriceStreaming(investment, value, PriceType.INDEX_FUTURE_PREMIUM, InvDataSource.IB);
-			break;
+			break;			
 		case TRADE_COUNT:
 			Watchr.log(Level.INFO, ">>>>> Trade Count " + value + " for " + investment.toString());
 			MarketPrice.writeGenericStreaming(investment, value, GenericType.TRADE_COUNT, InvDataSource.IB);			

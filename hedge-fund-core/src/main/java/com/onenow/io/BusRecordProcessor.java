@@ -15,9 +15,7 @@ import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventActivityPriceStreaming;
 import com.onenow.data.EventActivityGreekStreaming;
-import com.onenow.main.ChartistMain;
-import com.onenow.main.ClerkHistoryMain;
-import com.onenow.main.ClerkRealTimeMain;
+import com.onenow.main.ClerkMain;
 import com.onenow.util.Piping;
 import com.onenow.util.Watchr;
 
@@ -72,7 +70,11 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
   			
         		new Thread () {
         			@Override public void run () {
-        				handleByRecordType(activityObject);
+        				try {
+							handleByRecordType(activityObject);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
         			}
         		}.start();
                 
@@ -124,7 +126,9 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			try {
 				EventActivityPriceHistory event = (EventActivityPriceHistory) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceHistory<- " + event.toString(), "\n", "");
-				ClerkHistoryMain.writeHistoryPriceToL2(event);
+				
+		    	// TODO: refactor to use writeToL2
+		    	ClerkMain.writeHistoryPriceToL2(event);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -140,11 +144,10 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			try {
 				EventActivityPriceSizeRealtime event = (EventActivityPriceSizeRealtime) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceSizeRealtime<- " + event.toString(), "\n", "");
-				ClerkRealTimeMain.writeToL2(event);
+				ClerkMain.writeToL2(event);
 				try {
-					if(streamName.equals(StreamName.PRIMARY_STAGING) || streamName.equals(StreamName.STANDBY_STAGING) ) {
-						ChartistMain.prefetchCharts(event);				
-					}
+					// TODO: prefetch
+					// ChartistMain.prefetchCharts(event);				
 				} catch (Exception e) {
 					// e.printStackTrace();
 				}
@@ -157,7 +160,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			try {
 				EventActivityPriceStreaming event = (EventActivityPriceStreaming) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivityPriceStreaming<- " + event.toString(), "\n", "");
-				// ClerkRealTimeMain.writeStreamingPriceToL2(event);
+				ClerkMain.writeToL2(event);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -167,7 +170,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 			try {
 				EventActivitySizeStreaming event = (EventActivitySizeStreaming) recordObject;
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: ->EventActivitySizeStreaming<- " + event.toString(), "\n", "");
-				// ClerkRealTimeMain.writeStreamingSizeToL2(event);
+				ClerkMain.writeToL2(event);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

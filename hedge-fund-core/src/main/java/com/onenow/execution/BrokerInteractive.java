@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import com.amazonaws.services.sqs.model.Message;
 import com.onenow.alpha.BrokerInterface;
+import com.onenow.constant.InvestorRole;
 import com.onenow.constant.QueueName;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.PriceType;
@@ -34,7 +35,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	  private MarketPrice marketPrices;
 	  private MarketAnalytics marketAnalytics;
 	  
-	  private StreamName streamName = StreamName.REALTIME_STAGING;
+	  private InvestorRole investorRole = InvestorRole.REALTIME;
 	
 	  private BusWallStInteractiveBrokers busIB;
 
@@ -44,12 +45,12 @@ public class BrokerInteractive implements BrokerInterface  {
 	
 	  /**
 	   * Constructor for HISTORY dataStream
-	   * @param streamName
+	   * @param investorRole
 	   * @param busIB
 	   */
-	  public BrokerInteractive(StreamName streamName, BusWallStInteractiveBrokers busIB) { 
+	  public BrokerInteractive(InvestorRole investorRole, BusWallStInteractiveBrokers busIB) { 
 			
-		  	this.streamName = streamName;
+		  	this.investorRole = investorRole;
 			this.busIB = busIB;
 			
 			connectToServices(busIB);			
@@ -59,9 +60,9 @@ public class BrokerInteractive implements BrokerInterface  {
 	   * Get quotes after initializing overall market and my portfolio
 	   * @throws ConnectException
 	   */
-	  public BrokerInteractive(StreamName streamName, Portfolio marketPortfolio, BusWallStInteractiveBrokers busIB) { 
+	  public BrokerInteractive(InvestorRole streamName, Portfolio marketPortfolio, BusWallStInteractiveBrokers busIB) { 
 		  
-		this.streamName = streamName;
+		this.investorRole = streamName;
 	    this.marketPortfolio = marketPortfolio;
 		this.busIB = busIB;
 		
@@ -281,8 +282,8 @@ public class BrokerInteractive implements BrokerInterface  {
 	  }
 
 	@Override
-	public StreamName getStream() {
-		return streamName;
+	public InvestorRole getRole() {
+		return investorRole;
 	}
 
 }

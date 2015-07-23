@@ -1,5 +1,7 @@
 package com.onenow.data;
 
+import com.onenow.constant.StreamingData;
+
 public class EventActivityPriceHistory extends EventActivity {
 	
 	// meta
@@ -30,7 +32,8 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		
 		super();
-		
+		super.streamingData = StreamingData.PRICE_HISTORY;
+
 		// super
 		super.timeInMilisec = timeInSec*1000;
 		super.price = close;  	// simplifies to only capture open in the EventActivity

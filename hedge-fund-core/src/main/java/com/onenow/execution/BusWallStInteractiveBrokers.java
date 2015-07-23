@@ -8,6 +8,7 @@ import com.onenow.admin.NetworkConfig;
 import com.onenow.admin.NetworkService;
 import com.onenow.constant.ConnectionStatus;
 import com.onenow.constant.InvType;
+import com.onenow.constant.InvestorRole;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.Topology;
 import com.onenow.data.QuoteHistoryInvestment;
@@ -39,23 +40,23 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	// Default
 	public NetworkService gateway = NetworkConfig.getGateway(Topology.LOCAL);
-	private StreamName streamName = StreamName.STREAMING_STAGING;
+	private InvestorRole investorRole = InvestorRole.REALTIME;
 	
 	
 	public BusWallStInteractiveBrokers() {
 
 	}
 
-	public BusWallStInteractiveBrokers(StreamName streamName) {
+	public BusWallStInteractiveBrokers(InvestorRole investorRole) {
 		// always local for now
 		this.gateway = NetworkConfig.getGateway(Topology.LOCAL);
-		this.streamName = streamName;
+		this.investorRole = investorRole;
 	}
 
 	// configurable topology 
-	public BusWallStInteractiveBrokers(StreamName streamName, Topology topo) {
+	public BusWallStInteractiveBrokers(InvestorRole investorRole, Topology topo) {
 		
-		this.streamName = streamName;
+		this.investorRole = investorRole;
 		this.gateway = NetworkConfig.getGateway(topo);
 		
 		
@@ -96,20 +97,17 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  Integer id = 0;
 		  
 		  try {
-			  if(BusSystem.isPrimaryStream(streamName)) {
+			  if(investorRole.equals(InvestorRole.PRIMARY)) {
 				  id = 0;
 			  }
-			  if(BusSystem.isStandbyStream(streamName)) {
+			  if(investorRole.equals(InvestorRole.STANDBY)) {
 				  id = 1;
 			  }
-			  if(BusSystem.isRealtimeStream(streamName)) {
+			  if(investorRole.equals(InvestorRole.REALTIME)) {
 				  id = 2;
 			  }
-			  if(BusSystem.isHistoryStream(streamName)) {
+			  if(investorRole.equals(InvestorRole.HISTORY)) {
 				  id = 3;
-			  }
-			  if(BusSystem.isStreamingStream(streamName)) {
-				  id = 4;
 			  }
 		} catch (Exception e) {
 			// ignore exception upon default initialization

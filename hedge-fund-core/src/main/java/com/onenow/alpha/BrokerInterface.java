@@ -2,7 +2,7 @@ package com.onenow.alpha;
 
 import java.util.List;
 
-import com.onenow.constant.StreamName;
+import com.onenow.constant.InvestorRole;
 import com.onenow.constant.PriceType;
 import com.onenow.data.HistorianConfig;
 import com.onenow.data.QuoteHistoryInvestment;
@@ -20,5 +20,5 @@ public  interface BrokerInterface {
 	public abstract List<Trade> getTrades();
 	public abstract void enterTransaction(Transaction trans); 
 	public abstract Integer readHistoricalQuotes(Investment inv, String end, HistorianConfig config, QuoteHistoryInvestment history);
-	public abstract StreamName getStream();
+	public abstract InvestorRole getRole();
 }

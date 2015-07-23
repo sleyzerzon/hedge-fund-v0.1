@@ -2,6 +2,7 @@ package com.onenow.main;
 
 import java.util.logging.Level;
 
+import com.onenow.constant.InvestorRole;
 import com.onenow.constant.StreamName;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.BrokerInteractive;
@@ -23,60 +24,65 @@ public class InvestorMain {
  	
 	public static void main(String[] args) {
 		
-		StreamName streamName = getArgument(args);
-		InitLogger.run(streamName.toString());
-		Watchr.log(Level.INFO, "Starting for STREAM: " + streamName);
+		InvestorRole role = getArgument(args);
+		InitLogger.run(role.toString());
+		Watchr.log(Level.INFO, "Starting for STREAM: " + role);
 
-		BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers(streamName);
+		BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers(role);
 
 		// Kinesis.selfTest();
 
 
 		// LIVE QUOTES
-		if(BusSystem.isPrimaryStream(streamName)) {
-			BrokerInteractive broker = new BrokerInteractive(	streamName, 
+		if(role.equals(InvestorRole.PRIMARY)) {
+			BrokerInteractive broker = new BrokerInteractive(	role, 
 																InitMarket.getPrimaryPortfolio(), 
 																bus); 
 			broker.getLiveData(); 			
 		}	
-		if(BusSystem.isRealtimeStream(streamName)) {
-			BrokerInteractive broker = new BrokerInteractive(	streamName, 
+		if(role.equals(InvestorRole.REALTIME)) {
+			BrokerInteractive broker = new BrokerInteractive(	role, 
 																InitMarket.getRealtimePortfolio(), 
 																bus); 
 			broker.getLiveData(); 			
 		}
-		if(BusSystem.isStandbyStream(streamName)) {
+		if(role.equals(InvestorRole.STANDBY)) {
 			// TODO: passive role on same investments as primary
 		}
 
-
 		// HISTORIC QUOTES
-		if(BusSystem.isHistoryStream(streamName)) {
-			BrokerInteractive broker = new BrokerInteractive(	streamName, bus); 
+		if(role.equals(InvestorRole.HISTORY)) {
+			BrokerInteractive broker = new BrokerInteractive(	role, bus); 
 			broker.getHistoricalData();
 		}
 
-//		if(BusSystem.isStreamingStream(streamName)) {
-//			// TODO
-//		}
-
+		
 //		PortfolioFactory portfolioFactory = new PortfolioFactory(broker, marketPortfolio);
 //		portfolioFactory.launch();							
 
 	}
 	
-	private static StreamName getArgument(String[] args) {
-		StreamName streamName = null;
+	private static InvestorRole getArgument(String[] args) {
+		
+		InvestorRole investorRole = InvestorRole.REALTIME;
 		
 		if(args.length>0) {
 			if(args[0]!=null) {
-				streamName = BusSystem.getStreamName(args[0]);
+				if(args[0].equals(InvestorRole.HISTORY.toString())) {
+					investorRole = InvestorRole.HISTORY;
+				}
+				if(args[0].equals(InvestorRole.PRIMARY.toString())) {
+					investorRole = InvestorRole.PRIMARY;
+				}
+				if(args[0].equals(InvestorRole.STANDBY.toString())) {
+					investorRole = InvestorRole.STANDBY;
+				}
 			} 
 		} else {
-	    	Watchr.log(Level.SEVERE, "ERROR: mode is a required as a java process argument");
+	    	Watchr.log(Level.SEVERE, "ERROR: investor role is a required as a java process argument");
 		}
 		
-		return streamName;
+		return investorRole;
 	}
 	
 	

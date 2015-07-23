@@ -17,7 +17,6 @@ import com.onenow.data.EventRequestRaw;
 import com.onenow.data.InitMarket;
 import com.onenow.data.MarketPrice;
 import com.onenow.data.DataSampling;
-import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
@@ -73,19 +72,19 @@ public class PortfolioFactory {
 	}
 	
 	// LONG AND SHORT
-	public void goLong(Underlying under) {
-		String expDate = "20150319"; // TODO: generate dynamically
-		PortfolioAction spxExocet = new PortfolioAction(100, under, expDate, broker);
-		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
-		System.out.println(swingCall.toString());
-	}
+//	public void goLong(Underlying under) {
+//		String expDate = "20150319"; // TODO: generate dynamically
+//		PortfolioAction spxExocet = new PortfolioAction(100, under, expDate, broker);
+//		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+//		System.out.println(swingCall.toString());
+//	}
 
-	public void goShort(Underlying index) {
-		String expDate = "20150319"; // TODO: generate dynamically
-		PortfolioAction spxExocet = new PortfolioAction(100, index, expDate, broker);
-		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
-		System.out.println(swingCall.toString());
-	}
+//	public void goShort(Underlying index) {
+//		String expDate = "20150319"; // TODO: generate dynamically
+//		PortfolioAction spxExocet = new PortfolioAction(100, index, expDate, broker);
+//		StrategyCallBuy swingCall = (StrategyCallBuy) spxExocet.getCall(InvApproach.SWING, TradeRatio.NONE, 0.50);
+//		System.out.println(swingCall.toString());
+//	}
 
 	
 	// CHARTS

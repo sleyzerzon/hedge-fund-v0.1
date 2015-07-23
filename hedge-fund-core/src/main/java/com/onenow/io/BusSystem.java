@@ -14,7 +14,16 @@ import com.onenow.admin.InitAmazon;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.StreamName;
+import com.onenow.constant.StreamingData;
 import com.onenow.data.EventActivity;
+import com.onenow.data.EventActivityGenericStreaming;
+import com.onenow.data.EventActivityGreekHistory;
+import com.onenow.data.EventActivityGreekStreaming;
+import com.onenow.data.EventActivityPriceHistory;
+import com.onenow.data.EventActivityPriceSizeRealtime;
+import com.onenow.data.EventActivityPriceStreaming;
+import com.onenow.data.EventActivitySizeStreaming;
+import com.onenow.data.EventActivityVolatilityStreaming;
 import com.onenow.io.Lookup;
 
 public class BusSystem {
@@ -116,8 +125,11 @@ public class BusSystem {
 //		return true;
 	}
 
-	public static void write(EventActivity activityToSend, StreamName streamName) {
+	public static void write(EventActivity activityToSend) {
 		
+		StreamName streamName = getStreamName(activityToSend.streamingData);
+		Watchr.log(Level.INFO, "Cache writing into Stream " + "<" + streamName + ">" + " OBJECT: " + activityToSend.toString());
+
 		boolean success = false;
 		int maxTries = 3;
 		
@@ -126,7 +138,6 @@ public class BusSystem {
 			try {
 				tries++;
 				success = true;
-				validateStream(streamName);
 				createStreamIfNotExists(streamName);
 				getKinesis().sendObject(activityToSend, streamName);
 			} catch (Exception e) {
@@ -144,9 +155,7 @@ public class BusSystem {
 	// http://docs.aws.amazon.com/general/latest/gr/rande.html
 	public static boolean read(		StreamName streamName, IRecordProcessorFactory recordProcessorFactory,
 									InitialPositionInStream initPosition) {
-		
-		validateStream(streamName);
-		
+				
 		String applicationName = "Investor" + "-" + streamName;
 		Long workerId = TimeParser.getTimeMilisecondsNow();  //  String workerId = String.valueOf(UUID.randomUUID());
 
@@ -174,88 +183,62 @@ public class BusSystem {
         return true;
 
 	}
-
-	private static void validateStream(StreamName streamName) {
-		if(	!isPrimaryStream(streamName) && 
-			!isStandbyStream(streamName) &&
-			!isRealtimeStream(streamName) &&
-			!isHistoryStream(streamName) && 
-			!isStreamingStream(streamName)) {
-			Watchr.log(Level.SEVERE, "Invalid stream name in kinesis bus read");
-		}
-	}
 	
-	public static boolean isPrimaryStream(StreamName name) {
-		if (name.equals(StreamName.PRIMARY_STAGING) || name.equals(StreamName.PRIMARY_PRODUCTION) || name.equals(StreamName.PRIMARY_DEVELOPMENT)) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean isStandbyStream(StreamName name) {
-		if (name.equals(StreamName.STANDBY_STAGING) || name.equals(StreamName.STANDBY_PRODUCTION) || name.equals(StreamName.STANDBY_DEVELOPMENT)) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean isRealtimeStream(StreamName name) {
-		if (name.equals(StreamName.REALTIME_STAGING) || name.equals(StreamName.REALTIME_PRODUCTION) || name.equals(StreamName.REALTIME_DEVELOPMENT)) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean isHistoryStream(StreamName name) {
-		if (name.equals(StreamName.HISTORY_STAGING) || name.equals(StreamName.HISTORY_PRODUCTION) || name.equals(StreamName.HISTORY_DEVELOPMENT)) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean isStreamingStream(StreamName name) {
-		if (name.equals(StreamName.STREAMING_STAGING) || name.equals(StreamName.STREAMING_PRODUCTION) || name.equals(StreamName.STREAMING_DEVELOPMENT)) {
-			return true;
-		}
-		return false;
-	}
-
 	// TODO: break down non-mac into staging / production
-    public static StreamName getStreamName(String key) {
+    public static StreamName getStreamName(StreamingData key) {
     	
     	StreamName stream = null;
-    	
-		if(key.equals("PRIMARY")) {
-			stream = StreamName.PRIMARY_DEVELOPMENT; 
-			if(!NetworkConfig.isMac()) {
-				stream = StreamName.PRIMARY_STAGING;
-			}
-		}
-		if(key.equals("STANDBY")) {
-			stream = StreamName.STANDBY_DEVELOPMENT;
+
+		// HISTORY
+		if(key.equals(StreamingData.PRICE_HISTORY)) {
 				if(!NetworkConfig.isMac()) {
-					stream = StreamName.STANDBY_STAGING;
+					stream = StreamName.PRICE_HISTORY_STAGING;		
 				}
 		}
-		if(key.equals("REALTIME")) {
-			stream = StreamName.REALTIME_DEVELOPMENT;
-					if(!NetworkConfig.isMac()) {
-						stream = StreamName.REALTIME_STAGING;
-					}
+
+		if(key.equals(StreamingData.GREEK_HISTORY)) {
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.GREEK_HISTORY_STAGING;
+			}
 		}
-		if(key.equals("HISTORY")) {
-			stream = StreamName.HISTORY_DEVELOPMENT;
-					if(!NetworkConfig.isMac()) {
-						stream = StreamName.HISTORY_STAGING;
-					}
+
+		// REALTIME
+		if(key.equals(StreamingData.PRICESIZE_REALTIME)) {
+				if(!NetworkConfig.isMac()) {
+					stream = StreamName.PRICESIZE_REALTIME_STAGING;
+				}
 		}
-		if(key.equals("STREAMING")) {
-			stream = StreamName.STREAMING_DEVELOPMENT;
-					if(!NetworkConfig.isMac()) {
-						stream = StreamName.STREAMING_STAGING;
-					}
+
+		if(key.equals(StreamingData.PRICE_STREAMING)) {
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.PRICE_STREAMING_STAGING;
+			}
 		}
-		
+
+		if(key.equals(StreamingData.SIZE_STREAMING)) {
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.SIZE_STREAMING_STAGING;
+			}
+		}
+
+		if(key.equals(StreamingData.GREEK_STREAMING)) {
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.GREEK_STREAMING_STAGING;
+			}
+		}
+
+		if(key.equals(StreamingData.VOLATILITY_STREAMING)) {
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.VOLATILITY_STREAMING_STAGING;
+			}
+		}
+
+		if(key.equals(StreamingData.GENERIC_STREAMING)) {
+			if(!NetworkConfig.isMac()) {
+				stream = StreamName.GENERIC_STREAMING_STAGING;
+			}
+		}
+				
 		Watchr.log(Level.INFO, "The chosen stream name: " + stream);
 		
 		if(stream==null) {

@@ -4,10 +4,8 @@ import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
-import com.onenow.execution.BrokerActivityImpl;
 import com.onenow.execution.Contract;
 import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
 import com.onenow.instrument.Underlying;
 
 public class PortfolioAction {
@@ -39,64 +37,64 @@ public class PortfolioAction {
 		setBroker(broker);
 	}
 
-	public StrategyCallBuy getCall(				InvApproach approach, TradeRatio ratio, Double agression) {
-		setApproach(approach);
-		setRatio(ratio);
-		setAgression(agression);
-		
-		lookupIndexPrice();		
-		setStrategy(new StrategyCallBuy(getCallBuy())); // no put
-
-		setCheckpoints();
-		return (StrategyCallBuy) getStrategy();
-	}
+//	public StrategyCallBuy getCall(				InvApproach approach, TradeRatio ratio, Double agression) {
+//		setApproach(approach);
+//		setRatio(ratio);
+//		setAgression(agression);
+//		
+//		lookupIndexPrice();		
+//		setStrategy(new StrategyCallBuy(getCallBuy())); // no put
+//
+//		setCheckpoints();
+//		return (StrategyCallBuy) getStrategy();
+//	}
 	
-	public StrategyPutBuy getPut(					InvApproach approach, TradeRatio ratio, Double agression) {
-		setApproach(approach);
-		setRatio(ratio);
-		setAgression(agression);
-		
-		lookupIndexPrice();		
-		setStrategy(new StrategyPutBuy(getPutBuy())); // no call
-
-		setCheckpoints();
-		return (StrategyPutBuy) getStrategy();
-	}
+//	public StrategyPutBuy getPut(					InvApproach approach, TradeRatio ratio, Double agression) {
+//		setApproach(approach);
+//		setRatio(ratio);
+//		setAgression(agression);
+//		
+//		lookupIndexPrice();		
+//		setStrategy(new StrategyPutBuy(getPutBuy())); // no call
+//
+//		setCheckpoints();
+//		return (StrategyPutBuy) getStrategy();
+//	}
 	
-	public StrategyCallSpread getCallSpread(	InvApproach approach, TradeRatio ratio, Double agression) {
-		setApproach(approach);
-		setRatio(ratio);
-		setAgression(agression);
-		
-		lookupIndexPrice();		
-		setStrategy(new StrategyCallSpread(getCallBuy(), getCallSell()));
-		
-		setCheckpoints();
-		return (StrategyCallSpread) getStrategy();
-	}
+//	public StrategyCallSpread getCallSpread(	InvApproach approach, TradeRatio ratio, Double agression) {
+//		setApproach(approach);
+//		setRatio(ratio);
+//		setAgression(agression);
+//		
+//		lookupIndexPrice();		
+//		setStrategy(new StrategyCallSpread(getCallBuy(), getCallSell()));
+//		
+//		setCheckpoints();
+//		return (StrategyCallSpread) getStrategy();
+//	}
 	
-	public StrategyPutSpread getPutSpread(		InvApproach approach, TradeRatio ratio, Double agression) {
-		setApproach(approach);
-		setRatio(ratio);
-		setAgression(agression);
-		
-		lookupIndexPrice();
-		setStrategy(new StrategyPutSpread(getPutBuy(), getPutSell()));
-		setCheckpoints();
-		return (StrategyPutSpread) getStrategy();	
-	}
+//	public StrategyPutSpread getPutSpread(		InvApproach approach, TradeRatio ratio, Double agression) {
+//		setApproach(approach);
+//		setRatio(ratio);
+//		setAgression(agression);
+//		
+//		lookupIndexPrice();
+//		setStrategy(new StrategyPutSpread(getPutBuy(), getPutSell()));
+//		setCheckpoints();
+//		return (StrategyPutSpread) getStrategy();	
+//	}
 	
-	public StrategyIronCondor getIronCondor(	InvApproach approach, TradeRatio ratio, Double agression) {
-		setApproach(approach);
-		setRatio(ratio);
-		setAgression(agression);
-		
-		lookupIndexPrice();
-		setStrategy(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
-											getPutBuy(), getPutSell()));
-		setCheckpoints();
-		return (StrategyIronCondor) getStrategy();
-	}
+//	public StrategyIronCondor getIronCondor(	InvApproach approach, TradeRatio ratio, Double agression) {
+//		setApproach(approach);
+//		setRatio(ratio);
+//		setAgression(agression);
+//		
+//		lookupIndexPrice();
+//		setStrategy(new StrategyIronCondor(	getCallBuy(), getCallSell(), 
+//											getPutBuy(), getPutSell()));
+//		setCheckpoints();
+//		return (StrategyIronCondor) getStrategy();
+//	}
 		
 	// PRIVATE
 	private void lookupIndexPrice() {
@@ -125,42 +123,42 @@ public class PortfolioAction {
 		getStrategy().addNewCheckpoint(num-5.0);
 	}
 	
-	private Trade getCallBuy() {
-		Trade trade = getInv(InvType.CALL, PriceType.BID); 	
-		return trade;
-	}
-	private Trade getCallSell() {
-		Trade trade = getInv(InvType.CALL, PriceType.ASK); 			
-		return trade;
-	}
-
-	private Trade getPutBuy() {
-		Trade trade = getInv(InvType.PUT, PriceType.BID); 	
-		return trade;
-	}
-
-	private Trade getPutSell() {
-		Trade trade = getInv(InvType.PUT, PriceType.ASK); 	
-		return trade;
-	}
+//	private Trade getCallBuy() {
+//		Trade trade = getInv(InvType.CALL, PriceType.BID); 	
+//		return trade;
+//	}
+//	private Trade getCallSell() {
+//		Trade trade = getInv(InvType.CALL, PriceType.ASK); 			
+//		return trade;
+//	}
+//
+//	private Trade getPutBuy() {
+//		Trade trade = getInv(InvType.PUT, PriceType.BID); 	
+//		return trade;
+//	}
+//
+//	private Trade getPutSell() {
+//		Trade trade = getInv(InvType.PUT, PriceType.ASK); 	
+//		return trade;
+//	}
 	
-	private Trade getInv(InvType invType, PriceType tradeType) {
-		
-		InvestmentOption inv = 	new InvestmentOption(getUnder(), invType, getExp(), getStrike(invType, tradeType));
-		
-		Integer mQuant=getQuant();
-				
-//		if(tradeType.equals(TradeType.BUY)) { // ratio protection
-//			mQuant=getMQuant();		
-//			boolean onlyUpper = getProb().equals(InvApproach.LOWER_STRANGLE) || getProb().equals(InvApproach.LEFT);
-//			if(invType.equals(InvType.PUT) && onlyUpper) { 
-//			   mQuant=getQuant(); // protect only upside on strangles
-//			} 
-//		} 
-		
-		Trade trade = new Trade(inv, tradeType, mQuant, ((BrokerActivityImpl) broker).getBestBid(tradeType, inv, getAgression()));
-		return trade;
-	}
+//	private Trade getInv(InvType invType, PriceType tradeType) {
+//		
+//		InvestmentOption inv = 	new InvestmentOption(getUnder(), invType, getExp(), getStrike(invType, tradeType));
+//		
+//		Integer mQuant=getQuant();
+//				
+////		if(tradeType.equals(TradeType.BUY)) { // ratio protection
+////			mQuant=getMQuant();		
+////			boolean onlyUpper = getProb().equals(InvApproach.LOWER_STRANGLE) || getProb().equals(InvApproach.LEFT);
+////			if(invType.equals(InvType.PUT) && onlyUpper) { 
+////			   mQuant=getQuant(); // protect only upside on strangles
+////			} 
+////		} 
+//		
+//		Trade trade = new Trade(inv, tradeType, mQuant, ((BrokerActivityImpl) broker).getBestBid(tradeType, inv, getAgression()));
+//		return trade;
+//	}
 	
 	private Integer getMQuant() {
 		Integer mQuant=getQuant()*1; // default "none" ratio
@@ -340,21 +338,21 @@ public class PortfolioAction {
 		Double estClosing=priceNow+velocity*hsLeft; 
 		return estClosing;
 	}
-	private Double bakedClosing() { // based on ITM option mid value
-		Integer separation=10; // TODO: increase
-		Double callStrike = Math.round(getUnderPrice()/getSpread())*getSpread()-separation; 
-		Double putStrike =  callStrike + 2*separation;
-		// look at extremes
-		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
-		Double putMid = ((BrokerActivityImpl) broker).getBestBid(PriceType.BID, putExt, 0.50);
-		Double estClosingPut = putStrike-putMid;
-		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
-		Double callMid = ((BrokerActivityImpl) broker).getBestBid(PriceType.BID, callExt, 0.50);	
-		Double estClosingCall = callStrike+callMid;
-		
-		Double estClosing = (estClosingPut+estClosingCall)/2;
-		return estClosing;
-	}
+//	private Double bakedClosing() { // based on ITM option mid value
+//		Integer separation=10; // TODO: increase
+//		Double callStrike = Math.round(getUnderPrice()/getSpread())*getSpread()-separation; 
+//		Double putStrike =  callStrike + 2*separation;
+//		// look at extremes
+//		InvestmentOption putExt = new InvestmentOption(getUnder(), InvType.PUT, getExp(), putStrike);
+//		Double putMid = ((BrokerActivityImpl) broker).getBestBid(PriceType.BID, putExt, 0.50);
+//		Double estClosingPut = putStrike-putMid;
+//		InvestmentOption callExt = new InvestmentOption(getUnder(), InvType.CALL, getExp(), callStrike);
+//		Double callMid = ((BrokerActivityImpl) broker).getBestBid(PriceType.BID, callExt, 0.50);	
+//		Double estClosingCall = callStrike+callMid;
+//		
+//		Double estClosing = (estClosingPut+estClosingCall)/2;
+//		return estClosing;
+//	}
 
 	
 	// PRINT

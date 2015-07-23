@@ -1,8 +1,13 @@
 package com.onenow.data;
 
-public class EventActivityVolatilityStreaming {
+import com.onenow.constant.StreamingData;
+
+public class EventActivityVolatilityStreaming  extends EventActivity {
 
 	public EventActivityVolatilityStreaming() {
 		
+		super();
+		super.streamingData = StreamingData.VOLATILITY_STREAMING;
+
 	}
 }

@@ -68,7 +68,7 @@ public class CacheInProcess {
 			success = writeRealtimeToMem(event, key, success, writeToMem);
 			
 			// TODO: fix calculation
-			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimeMilisecondsNow()-event.timeInMilisec), broker.getStream());
+			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimeMilisecondsNow()-event.timeInMilisec), broker.getRole());
 		}
 		
 		
@@ -113,11 +113,7 @@ public class CacheInProcess {
 	public void writeActivityThroughRing(EventActivity event) {
 
 		// TODO: FAST WRITE TO RING		
-
-		// Write RTVolume+Streaming to Real-Time datastream
-		StreamName stream = broker.getStream();
-		Watchr.log(Level.INFO, "Cache writing into Stream " + "<" + stream + ">" + " OBJECT: " + event.toString());
-		BusSystem.write(event, stream);
+		BusSystem.write(event);
 						
 	}
 

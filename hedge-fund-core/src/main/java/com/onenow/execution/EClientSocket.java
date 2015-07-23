@@ -333,7 +333,7 @@ public class EClientSocket {
 
     protected String checkConnected(String host) {
     	String s = "CHECKING IF CONNECTED WITH GATEWAY/TWS";
-		Watchr.log(Level.SEVERE, s, "", "");
+		Watchr.log(Level.INFO, s);
 
         if( m_connected) {
             m_eWrapper.error(EClientErrors.NO_VALID_ID, EClientErrors.ALREADY_CONNECTED.code(),

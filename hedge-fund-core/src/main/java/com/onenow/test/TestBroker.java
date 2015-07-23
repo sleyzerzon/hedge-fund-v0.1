@@ -5,11 +5,6 @@ import java.util.List;
 import com.onenow.admin.DatabaseSystemActivityImpl;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
-import com.onenow.constant.StreamName;
-import com.onenow.data.InitMarket;
-import com.onenow.data.InvestmentList;
-import com.onenow.execution.BrokerActivityImpl;
-import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.BusWallStInteractiveBrokers;
 import com.onenow.instrument.Investment;
 import com.onenow.instrument.Underlying;
@@ -20,13 +15,11 @@ import com.onenow.portfolio.StrategyIronCondor;
 import com.onenow.portfolio.StrategyPutSpread;
 import com.onenow.portfolio.Trade;
 import com.onenow.portfolio.TradeRatio;
-import com.onenow.portfolio.Transaction;
-import com.onenow.util.TimeParser;
 
 public class TestBroker implements Testable {
 
 	private DatabaseSystemActivityImpl logDB;
-	private BrokerActivityImpl broker;
+//	private BrokerActivityImpl broker;
 	private BusWallStInteractiveBrokers bus;
 	private List<Underlying> unders;
 	private Portfolio market;
@@ -53,41 +46,41 @@ public class TestBroker implements Testable {
 
 	}
 	
-	public TestBroker (DatabaseSystemActivityImpl logDB) {
-		
-		this.logDB = logDB;
-
-		// choose investments
-		Portfolio marketPortfolio = new Portfolio();
-	    List<Underlying> stocks = InvestmentList.getUnderlying(InvestmentList.getSomeStocks());
-	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.getSomeIndices());
-	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.getFutures());
-	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.getOptions());
-	    String toDate = TimeParser.getTodayDashed();
-
-	    // fill the market portfolio
-	    marketPortfolio = InitMarket.getPortfolio(	stocks, indices,
-	    											futures, options,
-	    											futures,
-	    											toDate);
-
-    	bus = new BusWallStInteractiveBrokers();
-
-	    try {
-			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
-			this.broker = new BrokerActivityImpl(new BrokerInteractive(StreamName.STANDBY_STAGING, marketPortfolio, bus));
-			this.unders = broker.getUnderlying();
-			this.market = broker.getMarketPortfolio();
-			setUnders(getBroker().getUnderlying());
-			setMarket(getBroker().getMarketPortfolio());
-			setUnders(getBroker().getUnderlying());
-			setMarket(getBroker().getMarketPortfolio());
-
-		} catch (Exception e) {
-			System.out.println("ERROR initializing BrokerActivityImpl");
-			e.printStackTrace();
-		}
-	}
+//	public TestBroker (DatabaseSystemActivityImpl logDB) {
+//		
+//		this.logDB = logDB;
+//
+//		// choose investments
+//		Portfolio marketPortfolio = new Portfolio();
+//	    List<Underlying> stocks = InvestmentList.getUnderlying(InvestmentList.getSomeStocks());
+//	    List<Underlying> indices = InvestmentList.getUnderlying(InvestmentList.getSomeIndices());
+//	    List<Underlying> futures = InvestmentList.getUnderlying(InvestmentList.getFutures());
+//	    List<Underlying> options = InvestmentList.getUnderlying(InvestmentList.getOptions());
+//	    String toDate = TimeParser.getTodayDashed();
+//
+//	    // fill the market portfolio
+//	    marketPortfolio = InitMarket.getPortfolio(	stocks, indices,
+//	    											futures, options,
+//	    											futures,
+//	    											toDate);
+//
+//    	bus = new BusWallStInteractiveBrokers();
+//
+//	    try {
+//			// this.broker = new BrokerActivityImpl(new BrokerEmulator()); 
+//			this.broker = new BrokerInteractive(new BrokerInteractive(InvestorRole.REALTIME, marketPortfolio, bus));
+//			this.unders = broker.getUnderlying();
+//			this.market = broker.getMarketPortfolio();
+//			setUnders(getBroker().getUnderlying());
+//			setMarket(getBroker().getMarketPortfolio());
+//			setUnders(getBroker().getUnderlying());
+//			setMarket(getBroker().getMarketPortfolio());
+//
+//		} catch (Exception e) {
+//			System.out.println("ERROR initializing BrokerActivityImpl");
+//			e.printStackTrace();
+//		}
+//	}
 
 	// PUBLIC
 	public boolean test() {
@@ -124,45 +117,45 @@ public class TestBroker implements Testable {
 		}
 	}
 	
-	private boolean testExocet() {
-		PortfolioAction ex = new PortfolioAction(100, new Underlying("spx"), getExpDate(), getBroker());
-		
-		StrategyIronCondor hp = ex.getIronCondor(InvApproach.HIGH, TradeRatio.NONE, 0.60);
-		System.out.println(ex.toString());
-
-		StrategyIronCondor ic = ex.getIronCondor(InvApproach.LOW, TradeRatio.NONE, 0.50);
-		testIronCondor(ex, ic); 
-		
-		StrategyCallSpread cs = ex.getCallSpread(InvApproach.LOW, TradeRatio.NONE, 0.45);
-		testCallSpread(ex, cs); 
-
-		StrategyPutSpread ps = ex.getPutSpread(InvApproach.LOW, TradeRatio.NONE, 0.55);
-		testPutSpread(ex, ps); 
-		
-		StrategyIronCondor stL = ex.getIronCondor(InvApproach.LOWER_STRANGLE, TradeRatio.NONE, 0.50);
-		System.out.println(ex.toString());
-
-		StrategyIronCondor ratioed = ex.getIronCondor(InvApproach.LOWER_STRANGLE, TradeRatio.HIGH, 0.50);
-		System.out.println(ex.toString());
-
-		StrategyIronCondor stH = ex.getIronCondor(InvApproach.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
-		System.out.println(ex.toString());
-
-		StrategyIronCondor ratioleft = ex.getIronCondor(InvApproach.LEFT, TradeRatio.VHIGH, 0.50);
-		System.out.println(ex.toString());
-
-
-		if(cs.getMaxProfit()<(0.2*ic.getMaxProfit())) {
-			System.out.println("RUN only put spread with " + 
-								Math.round(ps.getMaxROI()) + "% ROI");
-		}
-		if(ps.getMaxProfit()<(0.2*ic.getMaxProfit())) {
-			System.out.println("RUN only call spread with "  + 
-								Math.round(cs.getMaxROI()) + "% ROI");			
-		}
-		
-		return true;
-	}
+//	private boolean testExocet() {
+//		PortfolioAction ex = new PortfolioAction(100, new Underlying("spx"), getExpDate(), getBroker());
+//		
+//		StrategyIronCondor hp = ex.getIronCondor(InvApproach.HIGH, TradeRatio.NONE, 0.60);
+//		System.out.println(ex.toString());
+//
+//		StrategyIronCondor ic = ex.getIronCondor(InvApproach.LOW, TradeRatio.NONE, 0.50);
+//		testIronCondor(ex, ic); 
+//		
+//		StrategyCallSpread cs = ex.getCallSpread(InvApproach.LOW, TradeRatio.NONE, 0.45);
+//		testCallSpread(ex, cs); 
+//
+//		StrategyPutSpread ps = ex.getPutSpread(InvApproach.LOW, TradeRatio.NONE, 0.55);
+//		testPutSpread(ex, ps); 
+//		
+//		StrategyIronCondor stL = ex.getIronCondor(InvApproach.LOWER_STRANGLE, TradeRatio.NONE, 0.50);
+//		System.out.println(ex.toString());
+//
+//		StrategyIronCondor ratioed = ex.getIronCondor(InvApproach.LOWER_STRANGLE, TradeRatio.HIGH, 0.50);
+//		System.out.println(ex.toString());
+//
+//		StrategyIronCondor stH = ex.getIronCondor(InvApproach.UPPER_STRANGLE, TradeRatio.NONE, 0.50);
+//		System.out.println(ex.toString());
+//
+//		StrategyIronCondor ratioleft = ex.getIronCondor(InvApproach.LEFT, TradeRatio.VHIGH, 0.50);
+//		System.out.println(ex.toString());
+//
+//
+//		if(cs.getMaxProfit()<(0.2*ic.getMaxProfit())) {
+//			System.out.println("RUN only put spread with " + 
+//								Math.round(ps.getMaxROI()) + "% ROI");
+//		}
+//		if(ps.getMaxProfit()<(0.2*ic.getMaxProfit())) {
+//			System.out.println("RUN only call spread with "  + 
+//								Math.round(cs.getMaxROI()) + "% ROI");			
+//		}
+//		
+//		return true;
+//	}
 
 	private boolean testPutSpread(PortfolioAction ex, StrategyPutSpread strat) {
 		String s="";
@@ -196,76 +189,76 @@ public class TestBroker implements Testable {
 		return true;
 	}
 
-	private boolean testIronCondor(PortfolioAction ex, StrategyIronCondor strat) {
-		String s="";
-		s = s + ex.toString();
-		System.out.println(s);
-
-		if(!strat.getPutNetPremium().equals(122.5)) {
-			System.out.println("ERROR ic put net premium " + strat.getPutNetPremium());
-			return false;
-		} 
-		if(!strat.getCallNetPremium().equals(87.5)) {
-			System.out.println("ERROR ic call net premium " + strat.getCallNetPremium());
-			return false;
-		} 
-		if(!strat.getMaxProfit().equals(210.0)) {
-			System.out.println("ERROR ic max profit " + strat.getMaxProfit());
-			return false;
-		} 
-		if(!strat.getMaxLoss().equals(-290.0)) {
-			System.out.println("ERROR ic max loss " + strat.getMaxLoss());
-			return false;
-		} 
-		if(!strat.getBoughtNetPremium().equals(-37.5)) {
-			System.out.println("ERROR ic bought net " + strat.getBoughtNetPremium());
-			return false;
-		} 
-		if(!strat.getSoldNetPremium().equals(247.5)) {
-			System.out.println("ERROR ic sold net " + strat.getSoldNetPremium());
-			return false;
-		}
-		// now more aggressive
-		strat = ex.getIronCondor(InvApproach.LOW, TradeRatio.LOW, 0.75); 
-		if(!strat.getMaxProfit().equals(245.0)) {
-			System.out.println("ERROR ic+ max profit " + strat.getMaxProfit());
-			return false;
-		} 
-		if(!strat.getMaxLoss().equals(-255.0)) {
-			System.out.println("ERROR ic+ max loss " + strat.getMaxLoss());
-			return false;
-		} 
-		return true;
-	}
+//	private boolean testIronCondor(PortfolioAction ex, StrategyIronCondor strat) {
+//		String s="";
+//		s = s + ex.toString();
+//		System.out.println(s);
+//
+//		if(!strat.getPutNetPremium().equals(122.5)) {
+//			System.out.println("ERROR ic put net premium " + strat.getPutNetPremium());
+//			return false;
+//		} 
+//		if(!strat.getCallNetPremium().equals(87.5)) {
+//			System.out.println("ERROR ic call net premium " + strat.getCallNetPremium());
+//			return false;
+//		} 
+//		if(!strat.getMaxProfit().equals(210.0)) {
+//			System.out.println("ERROR ic max profit " + strat.getMaxProfit());
+//			return false;
+//		} 
+//		if(!strat.getMaxLoss().equals(-290.0)) {
+//			System.out.println("ERROR ic max loss " + strat.getMaxLoss());
+//			return false;
+//		} 
+//		if(!strat.getBoughtNetPremium().equals(-37.5)) {
+//			System.out.println("ERROR ic bought net " + strat.getBoughtNetPremium());
+//			return false;
+//		} 
+//		if(!strat.getSoldNetPremium().equals(247.5)) {
+//			System.out.println("ERROR ic sold net " + strat.getSoldNetPremium());
+//			return false;
+//		}
+//		// now more aggressive
+//		strat = ex.getIronCondor(InvApproach.LOW, TradeRatio.LOW, 0.75); 
+//		if(!strat.getMaxProfit().equals(245.0)) {
+//			System.out.println("ERROR ic+ max profit " + strat.getMaxProfit());
+//			return false;
+//		} 
+//		if(!strat.getMaxLoss().equals(-255.0)) {
+//			System.out.println("ERROR ic+ max loss " + strat.getMaxLoss());
+//			return false;
+//		} 
+//		return true;
+//	}
 	
-	private boolean testBuy() {
-
-		// chose underlying
-		Underlying theUnder = getUnders().get(0);
-		// construct all possible investments
-		setAllInv(theUnder);
-		// then get ready to trade them
-		setAllTrade();
-		
-		Transaction tx = new Transaction(tradeStock1, tradeStock2, tradeCall1, tradeCall2, tradePut1, tradePut2);
-		getBroker().enterTransaction(tx);
-						
-		Portfolio myPortfolio = getBroker().getMyPortfolio();		
-		getBroker().toString();
-
-		
-		if(!myPortfolio.getAbsQuantity().equals(500)) {
-			System.out.println("ERROR total shares " + myPortfolio.getAbsQuantity());
-			return false;
-		}
-		
-		if(!tx.getNetPremium().equals(39709.0)) {
-			System.out.println("ERROR net premium " + tx.getNetPremium());
-			return false;
-		}
-		
-		return true;	
-	}
+//	private boolean testBuy() {
+//
+//		// chose underlying
+//		Underlying theUnder = getUnders().get(0);
+//		// construct all possible investments
+//		setAllInv(theUnder);
+//		// then get ready to trade them
+//		setAllTrade();
+//		
+//		Transaction tx = new Transaction(tradeStock1, tradeStock2, tradeCall1, tradeCall2, tradePut1, tradePut2);
+//		getBroker().enterTransaction(tx);
+//						
+//		Portfolio myPortfolio = getBroker().getMyPortfolio();		
+//		getBroker().toString();
+//
+//		
+//		if(!myPortfolio.getAbsQuantity().equals(500)) {
+//			System.out.println("ERROR total shares " + myPortfolio.getAbsQuantity());
+//			return false;
+//		}
+//		
+//		if(!tx.getNetPremium().equals(39709.0)) {
+//			System.out.println("ERROR net premium " + tx.getNetPremium());
+//			return false;
+//		}
+//		
+//		return true;	
+//	}
 
 	private void setAllTrade() {
 		// get ready to buy something
@@ -299,13 +292,13 @@ public class TestBroker implements Testable {
 		this.logDB = logDB;
 	}
 
-	private BrokerActivityImpl getBroker() {
-		return broker;
-	}
-
-	private void setBroker(BrokerActivityImpl broker) {
-		this.broker = broker;
-	}
+//	private BrokerActivityImpl getBroker() {
+//		return broker;
+//	}
+//
+//	private void setBroker(BrokerActivityImpl broker) {
+//		this.broker = broker;
+//	}
 
 	private List<Underlying> getUnders() {
 		return unders;

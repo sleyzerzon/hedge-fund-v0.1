@@ -53,10 +53,8 @@ public class ChartistMain {
 
 		testCache();
 		
-		StreamName streamName = BusSystem.getStreamName("PRIMARY");
-
-		BusSystem.read(	streamName, 
-						BusProcessingFactory.createProcessorFactoryEventRealTime(streamName),
+		BusSystem.read(	StreamName.PRICESIZE_REALTIME_STAGING, 
+						BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(StreamName.PRICESIZE_REALTIME_STAGING),
 						InitialPositionInStream.LATEST);
 
 	}
