@@ -9,12 +9,14 @@ import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.model.Record;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
+import com.onenow.data.EventActivityGenericStreaming;
 import com.onenow.data.EventActivitySizeStreaming;
 import com.onenow.data.EventActivityGreekHistory;
 import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventActivityPriceStreaming;
 import com.onenow.data.EventActivityGreekStreaming;
+import com.onenow.data.EventActivityVolatilityStreaming;
 import com.onenow.main.ClerkMain;
 import com.onenow.util.Piping;
 import com.onenow.util.Watchr;
@@ -128,7 +130,7 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		    	Watchr.log(Level.INFO, "********** READ RECORD FROM STREAM: " + event.toString(), "\n", "");
 				
 		    	// TODO: refactor to use writeToL2
-		    	ClerkMain.writeHistoryPriceToL2(event);
+		    	ClerkMain.writeToL2(event);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -177,9 +179,13 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 		}
 
 		if(recordType.equals(EventActivityGreekStreaming.class)) {			
-			// TODO
 		}
 		
+		if(recordType.equals(EventActivityVolatilityStreaming.class)) {			
+		}
+		
+		if(recordType.equals(EventActivityGenericStreaming.class)) {			
+		}
 		
 	}
 }

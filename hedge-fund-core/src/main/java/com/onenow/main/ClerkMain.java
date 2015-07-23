@@ -7,14 +7,20 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionIn
 import com.onenow.constant.StreamName;
 import com.onenow.constant.StreamingData;
 import com.onenow.data.EventActivity;
+import com.onenow.data.EventActivityGenericStreaming;
+import com.onenow.data.EventActivityGreekStreaming;
 import com.onenow.data.EventActivityPriceHistory;
 import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventActivityPriceStreaming;
 import com.onenow.data.EventActivitySizeStreaming;
+import com.onenow.data.EventActivityVolatilityStreaming;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
+import com.onenow.io.DBTimeSeriesGeneric;
+import com.onenow.io.DBTimeSeriesGreek;
 import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.DBTimeSeriesSize;
+import com.onenow.io.DBTimeSeriesVolatility;
 import com.onenow.util.InitLogger;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -49,13 +55,25 @@ public class ClerkMain {
 			try {
 				tries++;
 				success = true;
-				if( (	event instanceof EventActivityPriceSizeRealtime) ||
-						event instanceof EventActivityPriceStreaming) {
+				if(	event instanceof EventActivityPriceHistory ||
+					event instanceof EventActivityPriceSizeRealtime ||
+					event instanceof EventActivityPriceStreaming) {
+					
 					DBTimeSeriesPrice.write(event);				
 				}
-				if( (	event instanceof EventActivityPriceSizeRealtime) ||
-						event instanceof EventActivitySizeStreaming) {
+				if( event instanceof EventActivityPriceSizeRealtime ||
+					event instanceof EventActivitySizeStreaming) {
+					
 					DBTimeSeriesSize.write(event);
+				}
+				if( event instanceof EventActivityGreekStreaming ) {
+					DBTimeSeriesGreek.write(event);
+				}
+				if ( event instanceof EventActivityVolatilityStreaming ) {
+					DBTimeSeriesVolatility.write(event);
+				}
+				if ( event instanceof EventActivityGenericStreaming ) {
+					DBTimeSeriesGeneric.write(event);
 				}
 			} catch (Exception e) {
 				success = false;
@@ -73,33 +91,5 @@ public class ClerkMain {
 		if(retry) {
 			Watchr.log(Level.WARNING, "> TSDB WRITE *RE-TRY* SUCCEEDED: " + event.timeInMilisec + " " + event.getInvestment().toString());
 		}
-	}
-
-	/**
-	 * Write one row of quote history to TSDB, upon receiving it from a data stream
-	 * @param event
-	 */
-	public static void writeHistoryPriceToL2(EventActivityPriceHistory event) {
-
-		// System.out.println("Cache History WRITE: L2 (from L3 via L0) "  + inv.toString() + " " + invHistory.toString());
-		boolean success = false;
-		boolean retry = false;
-		while (!success) {
-			try {
-				success = true;
-				DBTimeSeriesPrice.write(event);
-			} catch (Exception e) {
-				success = false;
-				retry = true;
-				// e.printStackTrace();
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {}
-			}				
-		}
-		if(retry) {
-			Watchr.log(Level.INFO, "> TSDB HISTORY WRITE *RE-TRY* SUCCESS: " + event.getInvestment().toString());
-		}
-				
 	}
 }
