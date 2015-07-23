@@ -38,8 +38,8 @@ public class EventActivity extends Event {
 	public String toString() {
 		String s = "";
 		
-		s = super.toString() + " ";
-		
+		s = s + "-streamingData " + streamingData.toString();
+				
 		try {
 			if(price!=null) {
 				s = s + "-price " + price + " ";
@@ -54,6 +54,8 @@ public class EventActivity extends Event {
 		} catch (Exception e) {
 		}
 		
+		s = s + super.toString() + " ";
+
 		return s;
 	}
 

@@ -22,11 +22,11 @@ public class CatchupMain {
 		
 		// HISTORY
 		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_HISTORY), 
-				BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
+				BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
 				InitialPositionInStream.TRIM_HORIZON);
 
 		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_HISTORY), 
-				BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
+				BusProcessingFactory.createProcessorFactoryEventGreekHistory(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
 				InitialPositionInStream.TRIM_HORIZON);
 
 		

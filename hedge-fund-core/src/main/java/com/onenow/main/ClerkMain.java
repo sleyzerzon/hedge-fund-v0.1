@@ -34,11 +34,11 @@ public class ClerkMain {
 
 		// HISTORY
 		BusSystem.read(	BusSystem.getStreamName(StreamingData.PRICE_HISTORY), 
-				BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
+				BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(StreamingData.PRICE_HISTORY)),
 				InitialPositionInStream.LATEST);
 
 		BusSystem.read(	BusSystem.getStreamName(StreamingData.GREEK_HISTORY), 
-				BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
+				BusProcessingFactory.createProcessorFactoryEventGreekHistory(BusSystem.getStreamName(StreamingData.GREEK_HISTORY)),
 				InitialPositionInStream.LATEST);
 
 		// REALTIME

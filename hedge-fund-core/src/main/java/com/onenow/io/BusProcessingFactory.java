@@ -12,6 +12,7 @@ import com.onenow.data.EventActivityPriceSizeRealtime;
 import com.onenow.data.EventActivityPriceStreaming;
 import com.onenow.data.EventActivitySizeStreaming;
 import com.onenow.data.EventActivityGreekStreaming;
+import com.onenow.data.EventActivityGreekHistory;
 import com.onenow.data.EventActivityVolatilityStreaming;
 
 
@@ -31,9 +32,16 @@ public class BusProcessingFactory {
 	}
 
 	// HISTORY
-	public static IRecordProcessorFactory createProcessorFactoryEventHistory(StreamName streamName) {
+	public static IRecordProcessorFactory createProcessorFactoryEventPriceHistory(StreamName streamName) {
 		
         IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventActivityPriceHistory>(EventActivityPriceHistory.class, streamName);
+
+        return processorFactory;
+	}
+
+	public static IRecordProcessorFactory createProcessorFactoryEventGreekHistory(StreamName streamName) {
+		
+        IRecordProcessorFactory processorFactory = new BusRecordProcessorFactory<EventActivityGreekHistory>(EventActivityGreekHistory.class, streamName);
 
         return processorFactory;
 	}

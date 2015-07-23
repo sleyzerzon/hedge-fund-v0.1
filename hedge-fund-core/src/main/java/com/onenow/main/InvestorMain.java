@@ -26,7 +26,7 @@ public class InvestorMain {
 		
 		InvestorRole role = getArgument(args);
 		InitLogger.run(role.toString());
-		Watchr.log(Level.INFO, "Starting for STREAM: " + role);
+		Watchr.log(Level.INFO, "Starting with ROLE: " + role);
 
 		BusWallStInteractiveBrokers bus = new BusWallStInteractiveBrokers(role);
 
