@@ -100,52 +100,66 @@ public class BusRecordProcessor<T> implements IRecordProcessor {
 	 * @param recordObject
 	 */
 	private void handleByRecordType(Object recordObject) {		
-		EventActivity event = getEventActivity(recordObject);
-    	Watchr.log(Level.INFO, "********** RECORD PROCESSOR <" + recordType.toString() + "> READ RECORD: " + event.toString(), "\n", "");
-    	DBTimeSeries.writeToL2(event);				
-	}
-	
-	private EventActivity getEventActivity(Object recordObject) {
 		EventActivity event = new EventActivity();
-			
+		boolean success = true;
 		try {
-			// STRING
-			if(recordType.equals(String.class)) {			
-				runStringTest();
-			}
-			// HISTORY
-			if(recordType.equals(EventActivityPriceHistory.class)) {
-				event = (EventActivityPriceHistory) recordObject;
-			}
-			if(recordType.equals(EventActivityGreekHistory.class)) {
-				event = (EventActivityGreekHistory) recordObject;
-			}
-			// REALTIME
-			if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
-				event = (EventActivityPriceSizeRealtime) recordObject;
-			}
-			// STREAMING
-			if(recordType.equals(EventActivityPriceStreaming.class)) {			
-				event = (EventActivityPriceStreaming) recordObject;
-			}
-			if(recordType.equals(EventActivitySizeStreaming.class)) {			
-				event = (EventActivitySizeStreaming) recordObject;
-			}
-			if(recordType.equals(EventActivityGreekStreaming.class)) {
-				event = (EventActivityGreekStreaming) recordObject;
-			}		
-			if(recordType.equals(EventActivityVolatilityStreaming.class)) {
-				event = (EventActivityVolatilityStreaming) recordObject;
-			}
-			if(recordType.equals(EventActivityGenericStreaming.class)) {
-				event = (EventActivityGenericStreaming) recordObject;
-			}
+			event = getEvent(recordObject, event);
 		} catch (Exception e) {
+			success = false;
 			e.printStackTrace();
+		}
+		
+		if(success) {
+	    	Watchr.log(Level.INFO, "********** RECORD PROCESSOR <" + recordType.toString() + "> READ RECORD: " + event.toString(), "\n", "");
+	    	DBTimeSeries.writeToL2(event);				
+		}
+	}
+
+	/**
+	 * Casts objects incoming in data streams.  
+	 * It is possible that the wrong kind of object arrives, causing exceptions that must be handled.
+	 * Only if there are no exceptions then the events are handled fully.
+	 * @param recordObject
+	 * @param event
+	 * @return
+	 * @throws Exception
+	 */
+	private EventActivity getEvent(Object recordObject, EventActivity event) throws Exception {
+		
+		// STRING
+		if(recordType.equals(String.class)) {			
+			runStringTest();
+		}
+		// HISTORY
+		if(recordType.equals(EventActivityPriceHistory.class)) {
+			event = (EventActivityPriceHistory) recordObject;
+		}
+		if(recordType.equals(EventActivityGreekHistory.class)) {
+			event = (EventActivityGreekHistory) recordObject;
+		}
+		// REALTIME
+		if(recordType.equals(EventActivityPriceSizeRealtime.class)) {			
+			event = (EventActivityPriceSizeRealtime) recordObject;
+		}
+		// STREAMING
+		if(recordType.equals(EventActivityPriceStreaming.class)) {			
+			event = (EventActivityPriceStreaming) recordObject;
+		}
+		if(recordType.equals(EventActivitySizeStreaming.class)) {			
+			event = (EventActivitySizeStreaming) recordObject;
+		}
+		if(recordType.equals(EventActivityGreekStreaming.class)) {
+			event = (EventActivityGreekStreaming) recordObject;
+		}		
+		if(recordType.equals(EventActivityVolatilityStreaming.class)) {
+			event = (EventActivityVolatilityStreaming) recordObject;
+		}
+		if(recordType.equals(EventActivityGenericStreaming.class)) {
+			event = (EventActivityGenericStreaming) recordObject;
 		}
 		return event;
 	}
-
+	
 	private void runStringTest() {
 		try {
 			// Kinesis + Elasticache Test
