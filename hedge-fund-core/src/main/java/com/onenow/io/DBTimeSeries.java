@@ -87,46 +87,55 @@ public static void writeToL2(EventActivity event) {
 	int maxTries = 3;
 	
 	while(!success) {
-		// handle as a transaction, both price+size write or nothing
-		try {
-			tries++;
+		// TODO handle as a transaction for RTVolume, both price+size write or nothing
+		tries++;
+		
+		if(event.priceType!=null) {
+			DBTimeSeriesPrice.write(event);
 			success = true;
-			if(	event instanceof EventActivityPriceHistory ||
-				event instanceof EventActivityPriceSizeRealtime ||
-				event instanceof EventActivityPriceStreaming) {
-				
-				DBTimeSeriesPrice.write(event);				
-			}
-			if( event instanceof EventActivityPriceSizeRealtime ||
-				event instanceof EventActivitySizeStreaming) {
-				
-				DBTimeSeriesSize.write(event);
-			}
-			if( event instanceof EventActivityGreekStreaming ) {
-				DBTimeSeriesGreek.write(event);
-			}
-			if ( event instanceof EventActivityVolatilityStreaming ) {
-				DBTimeSeriesVolatility.write(event);
-			}
-			if ( event instanceof EventActivityGenericStreaming ) {
-				DBTimeSeriesGeneric.write(event);
-			}
-		} catch (Exception e) {
-			success = false;
-			retry = true;
-			Watchr.log(Level.SEVERE, "TSDB WRITE FAILED: " + event.toString() + " " + e.toString());	
-			e.printStackTrace();
-			if(tries>maxTries) {
-				return;
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {}
 		}
+
+		if(event.sizeType!=null) {
+			DBTimeSeriesSize.write(event);
+			success = true;
+		}
+
+		if(event.greekType!=null) {
+			DBTimeSeriesGreek.write(event);
+			success = true;
+		}
+
+		if (event.volatilityType!=null) {
+			DBTimeSeriesVolatility.write(event);
+			success = true;
+		}
+
+		if (event.genericType!=null) {
+			DBTimeSeriesGeneric.write(event);
+			success = true;
+		}
+
+		if(tries>maxTries) {
+			return;
+		}
+
 	}
-	if(retry) {
-		Watchr.log(Level.WARNING, "> TSDB WRITE *RE-TRY* SUCCEEDED: " + event.timeInMilisec + " " + event.getInvestment().toString());
-	}
+
+//			success = false;
+//			retry = true;
+//			Watchr.log(Level.SEVERE, "TSDB WRITE FAILED: " + event.toString() + " " + e.toString());	
+//			e.printStackTrace();
+//			if(tries>maxTries) {
+//				return;
+//			}
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e1) {}
+//	}
+//	if(retry) {
+//		Watchr.log(Level.WARNING, "> TSDB WRITE *RE-TRY* SUCCEEDED: " + event.timeInMilisec + " " + event.getInvestment().toString());
+//	}
+	
 }
 
 public static Serie getWriteSerie(final EventActivity event, String serieName, ColumnName columnName) {
