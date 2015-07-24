@@ -1,5 +1,6 @@
 package com.onenow.data;
 
+import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.StreamingData;
 
 public class EventActivityPriceHistory extends EventActivity {
@@ -33,6 +34,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		super();
 		super.streamingData = StreamingData.PRICE_HISTORY;
+		super.timing = InvDataTiming.HISTORICAL;
 
 		// super
 		super.timeInMilisec = timeInSec*1000;
@@ -56,7 +58,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		String s = "";
 		
 		s = s  + super.toString() + " ";
-		
+
 		try {
 			s = s + "-high " +  high + " ";
 		} catch (Exception e) {
@@ -66,11 +68,6 @@ public class EventActivityPriceHistory extends EventActivity {
 			s = s + "-low " + low + " ";
 		} catch (Exception e) {
 		}
-
-		try {
-			s = s + "-reqID " + reqId + " ";
-		} catch (Exception e) {
-		} 
 							
 		try {
 			s = s + "-open " + open + " ";
@@ -81,6 +78,11 @@ public class EventActivityPriceHistory extends EventActivity {
 			s = s + "-close " + close;
 		} catch (Exception e) {
 		}
+
+		try {
+			s = s + "-reqID " + reqId + " ";
+		} catch (Exception e) {
+		} 
 
 		return s;
 	}

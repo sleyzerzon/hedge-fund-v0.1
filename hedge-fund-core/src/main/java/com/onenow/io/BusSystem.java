@@ -196,22 +196,6 @@ public class BusSystem {
 		BusSystem.readGenericStreaming(initialPosition);
 	}
 
-	private static void readStreamingData(final StreamingData data, final InitialPositionInStream initialPosition) {	
-		new Thread () {
-			@Override public void run () {
-				try {
-					Watchr.info("Will read <" + data + "> from " + initialPosition.toString());
-					BusSystem.read(	BusSystem.getStreamName(data), 
-									BusProcessingFactory.createProcessorFactoryEventPriceHistory(BusSystem.getStreamName(data)),
-									initialPosition);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
-
-	}
-
 	// HISTORY
 	public static void readPriceHistory(InitialPositionInStream initialPosition) {
 		readStreamingData(StreamingData.PRICE_HISTORY, initialPosition);		
@@ -247,6 +231,55 @@ public class BusSystem {
 		readStreamingData(StreamingData.GENERIC_STREAMING, initialPosition);		
 	}
 	
+	
+	private static void readStreamingData(	final StreamingData streamingData, 
+											final InitialPositionInStream initialPosition) {	
+		new Thread () {
+			@Override public void run () {
+				try {
+					Watchr.info("Will read <" + streamingData + "> from " + initialPosition.toString());
+					BusSystem.read(	getStreamName(streamingData), 
+									getRecordProcessorFactory(streamingData),
+									initialPosition);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+	}
+	
+	private static IRecordProcessorFactory getRecordProcessorFactory(StreamingData streamingData) {
+		IRecordProcessorFactory factory = null;
+		StreamName streamName = getStreamName(streamingData);
+
+		// HISTORY
+		if(streamName.equals(StreamName.PRICE_HISTORY_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventPriceHistory(streamName);
+		}
+		if(streamName.equals(StreamName.GREEK_HISTORY_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventGreekHistory(streamName);
+		}
+		// REALTIME
+		if(streamName.equals(StreamName.PRICESIZE_REALTIME_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventPriceSizeRealtime(streamName);
+		}
+		// STREAMING
+		if(streamName.equals(StreamName.PRICE_STREAMING_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventPriceStreaming(streamName);
+		}
+		if(streamName.equals(StreamName.SIZE_STREAMING_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventSizeStreaming(streamName);
+		}
+		if(streamName.equals(StreamName.GREEK_STREAMING_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventGreekStreaming(streamName);
+		}
+		if(streamName.equals(StreamName.GENERIC_STREAMING_STAGING)) {
+			factory = BusProcessingFactory.createProcessorFactoryEventGenericStreaming(streamName);
+		}
+		
+		return factory;
+	}
 	
 	// TODO: break down non-mac into staging / production
     public static StreamName getStreamName(StreamingData key) {

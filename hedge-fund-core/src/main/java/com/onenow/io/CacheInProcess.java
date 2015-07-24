@@ -98,7 +98,8 @@ public class CacheInProcess {
 		new Thread () {
 			@Override public void run () {
 				try {
-					writeActivityThroughRing(event);
+					// TODO: FAST WRITE TO RING		
+					BusSystem.write(event);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -106,19 +107,6 @@ public class CacheInProcess {
 		}.start();
 	}
 		
-	/** Upon writing every event to the ring, asynchronous update all charts in L0 from RTL1
-	 * 
-	 * @param event
-	 */
-	public void writeActivityThroughRing(EventActivity event) {
-
-		// TODO: FAST WRITE TO RING		
-		BusSystem.write(event);
-						
-	}
-
-
-
 	
 	// READ PRICE
 	/**
