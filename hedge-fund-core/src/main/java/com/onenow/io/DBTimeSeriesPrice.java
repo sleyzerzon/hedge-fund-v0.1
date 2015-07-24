@@ -26,6 +26,10 @@ public class DBTimeSeriesPrice {
 	 */
 	public static void write(EventActivity event) {
 		
+		if( (event.price<0) || (event.price==null) ) {
+			return;
+		}
+		
 		String name = Lookup.getPriceEventKey(event);		
 		
 		Serie serie = DBTimeSeries.getWriteSerie(	event, name, ColumnName.PRICE );
