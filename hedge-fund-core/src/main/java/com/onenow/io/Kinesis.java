@@ -1,21 +1,14 @@
 package com.onenow.io;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 
-import com.amazonaws.AmazonClientException;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
-import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
-import com.amazonaws.services.kinesis.model.ProvisionedThroughputExceededException;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.onenow.admin.InitAmazon;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.TestValues;
 import com.onenow.data.EventActivity;
 import com.onenow.util.Piping;
 import com.onenow.util.StreamUtils;

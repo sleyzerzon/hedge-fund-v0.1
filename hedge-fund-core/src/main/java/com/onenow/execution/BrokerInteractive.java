@@ -124,6 +124,8 @@ public class BrokerInteractive implements BrokerInterface  {
 
 	private void processIndividualMessageUntilSuccessful(DataHistoryChain quoteHistoryChain, Message message) {
 		  boolean reqSuccess = false;
+		  
+		  // TODO: after 100 failed, re-start the connection
 		  while (!reqSuccess) {	// re-try if individual message does not get requested due to connection issues
 			  reqSuccess = processIndividualMessage(quoteHistoryChain, message);
 			  TimeParser.sleep(1);

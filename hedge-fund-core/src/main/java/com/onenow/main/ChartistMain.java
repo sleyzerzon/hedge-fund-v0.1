@@ -105,6 +105,7 @@ public class ChartistMain {
 																	fromDate, toDashedDate);
 			
 			// TODO convert Request type
+			// pacing
 			// readChartToL1FromRTL2(request);
 			
 			lastQueryStamp.put(samplingRate, TimeParser.getTimeMilisecondsNow()); 
@@ -149,10 +150,6 @@ public class ChartistMain {
 			// store in process memory
 			charts.put(key, chart);			
 			
-			// Write to ElastiCache
-			// CacheElastic.write(key, (Object) chart); 
-			// CacheElastic.read(key);
-
 			CacheElastic.write(key,  Piping.serialize((Object) chart));
 			Object readObject = CacheElastic.read(key);
 			Watchr.log(Level.INFO, "Read from elastic cache: " + readObject);

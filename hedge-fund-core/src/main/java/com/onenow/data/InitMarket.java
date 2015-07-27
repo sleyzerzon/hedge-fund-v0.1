@@ -33,7 +33,7 @@ public class InitMarket {
 	private static double rutPriceCenter = 1500.0;
 	
 	private static double strikeIncrement = 5.0;
-	private static int maxTimeSeries = 2;
+	private static int maxTimeSeries = 4;
 
 	/**
 	 * Initialize market instruments: indices, stocks, futures

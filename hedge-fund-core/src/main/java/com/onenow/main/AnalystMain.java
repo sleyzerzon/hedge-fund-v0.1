@@ -38,7 +38,7 @@ public class AnalystMain {
 			version = args[0];	// CI_COMMIT_ID
 		}
 				
-		runCommand(getWordCountCommand(args));
+		// runCommand(getWordCountCommand(args));
 
 		
 	  while(true) {

@@ -12,18 +12,9 @@ import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
 import com.onenow.admin.InitAmazon;
 import com.onenow.admin.NetworkConfig;
-import com.onenow.constant.PriceType;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.StreamingData;
 import com.onenow.data.EventActivity;
-import com.onenow.data.EventActivityGenericStreaming;
-import com.onenow.data.EventActivityGreekHistory;
-import com.onenow.data.EventActivityGreekStreaming;
-import com.onenow.data.EventActivityPriceHistory;
-import com.onenow.data.EventActivityPriceSizeRealtime;
-import com.onenow.data.EventActivityPriceStreaming;
-import com.onenow.data.EventActivitySizeStreaming;
-import com.onenow.data.EventActivityVolatilityStreaming;
 import com.onenow.io.Lookup;
 
 public class BusSystem {
@@ -60,8 +51,8 @@ public class BusSystem {
 			kin = kinesisMap.get(key);
 		}
 		
-		Watchr.log(Level.INFO, "Kinesis map: " + kinesisMap.toString());
-		Watchr.log(Level.INFO, "Kinesis region map: " + kinesisRegion.toString());
+//		Watchr.log(Level.INFO, "Kinesis map: " + kinesisMap.toString());
+//		Watchr.log(Level.INFO, "Kinesis region map: " + kinesisRegion.toString());
 
 		return kin;
 	}
