@@ -30,7 +30,9 @@ public class FlexibleLogger {
 
 		if(!NetworkConfig.isMac()) {
 			// redirect all System.out and System.err log
-			redirectSystemStreams();
+			
+			// TODO: make this optional for high logging scenarios
+			// redirectSystemStreams();
 		}
 
 	  return setup(Level.INFO, mode);
