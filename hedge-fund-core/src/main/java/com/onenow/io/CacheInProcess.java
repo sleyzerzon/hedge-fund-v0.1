@@ -68,7 +68,7 @@ public class CacheInProcess {
 			success = writeRealtimeToMem(event, key, success, writeToMem);
 			
 			// TODO: fix calculation
-			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimeMilisecondsNow()-event.timeInMilisec), broker.getRole());
+			RuntimeMetrics.notifyWallstLatency((Long) (TimeParser.getTimeMilisecondsNow()-event.timeInMsec), broker.getRole());
 		}
 		
 		
@@ -80,7 +80,7 @@ public class CacheInProcess {
 		if(lastEventRT.get(key) == null) { 	// never written before
 			writeToMem = true;
 		} else {
-			if( event.timeInMilisec > lastEventRT.get(key).timeInMilisec ) {
+			if( event.timeInMsec > lastEventRT.get(key).timeInMsec ) {
 				writeToMem = true;
 			}
 		}

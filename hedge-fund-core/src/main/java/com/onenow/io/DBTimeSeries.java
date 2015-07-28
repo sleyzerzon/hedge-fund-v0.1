@@ -144,7 +144,7 @@ public static Serie getWriteSerie(final EventActivity event, String serieName, C
 	.columns(	ColumnName.TIME.toString().toLowerCase(), columnName.toString(), 
 				ColumnName.SOURCE.toString(), ColumnName.TIMING.toString()
 				)					
-	.values(event.timeInMilisec, event.getValue(columnName), 				// basic columns
+	.values(event.timeInMsec, event.getValue(columnName), 				// basic columns
 			"\""+ event.source +"\"", "\""+ event.timing +"\""				// event origination				
 			) 
 

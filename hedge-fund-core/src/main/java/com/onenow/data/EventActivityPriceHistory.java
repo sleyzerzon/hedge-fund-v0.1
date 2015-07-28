@@ -38,7 +38,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		super.timing = DataTiming.HISTORY;
 
 		// super
-		super.timeInMilisec = timeInSec*1000;
+		super.timeInMsec = timeInSec*1000;
 		super.price = close;  	// simplifies to only capture open in the EventActivity
 		super.size = volume;
 		// super.priceType is set after construction, accessing the variable
@@ -77,6 +77,11 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		try {
 			s = s + "-close " + close + " ";
+		} catch (Exception e) {
+		}
+
+		try {
+			s = s + "-volume " + volume + " ";
 		} catch (Exception e) {
 		}
 

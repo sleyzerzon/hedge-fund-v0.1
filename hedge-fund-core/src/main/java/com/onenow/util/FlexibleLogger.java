@@ -15,6 +15,9 @@ import java.util.logging.Handler;
 import com.onenow.admin.NetworkConfig;
 
 public class FlexibleLogger {
+	
+  static public boolean debugMode = false;
+  
   static private FileHandler fileTxt;
   static private SimpleFormatter formatterTxt;
 
@@ -31,8 +34,9 @@ public class FlexibleLogger {
 		if(!NetworkConfig.isMac()) {
 			// redirect all System.out and System.err log
 			
-			// TODO: make this optional for high logging scenarios
-			redirectSystemStreams();
+			if(debugMode) {
+				redirectSystemStreams();
+			}
 		}
 
 	  return setup(Level.INFO, mode);

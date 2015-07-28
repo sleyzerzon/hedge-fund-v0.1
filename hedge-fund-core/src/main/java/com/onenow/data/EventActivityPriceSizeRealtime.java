@@ -33,7 +33,7 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 		super.source = source;
 		super.timing = DataTiming.RT;
 
-		super.timeInMilisec = timeInMilisec;
+		super.timeInMsec = timeInMilisec;
 		super.price = price;
 		super.size = size;
 

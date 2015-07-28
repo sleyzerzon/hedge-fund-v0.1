@@ -23,7 +23,7 @@ public class EventActivityPriceStreaming extends EventActivity {
 		super.source = source;
 		super.timing = DataTiming.STREAM;
 		
-		super.timeInMilisec = timeInMilisec;
+		super.timeInMsec = timeInMilisec;
 		super.price = price;
 	
 	}

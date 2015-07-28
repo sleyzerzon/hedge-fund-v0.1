@@ -138,7 +138,7 @@ public class StratPanel extends StackPanel implements IHistoricalDataHandler, IR
 	}
 
 	private void addBar( EventActivityPriceHistory bar) {
-		m_map.put( bar.timeInMilisec, bar);
+		m_map.put( bar.timeInMsec, bar);
 		m_rows.clear();
 		m_rows.addAll( m_map.values() );
 	}
