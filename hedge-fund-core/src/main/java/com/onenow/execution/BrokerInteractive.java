@@ -118,7 +118,7 @@ public class BrokerInteractive implements BrokerInterface  {
 				  
 				  SQS.deleteMesssage(SQS.getHistoryQueueURL(), serializedMessages);
 			  }
-			  TimeParser.sleep(1); // pace requests for messages from queue 
+			  TimeParser.sleep(2); // pace requests for messages from queue 
 		  } 
 		}
 
@@ -128,7 +128,7 @@ public class BrokerInteractive implements BrokerInterface  {
 		  // TODO: after 100 failed, re-start the connection
 		  while (!reqSuccess) {	// re-try if individual message does not get requested due to connection issues
 			  reqSuccess = processIndividualMessage(quoteHistoryChain, message);
-			  TimeParser.sleep(1);
+			  TimeParser.sleep(3);
 		  } 
 	}
 
