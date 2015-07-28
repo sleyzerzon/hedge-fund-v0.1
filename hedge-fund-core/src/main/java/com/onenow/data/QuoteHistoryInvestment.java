@@ -79,10 +79,14 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 
 	private void clarifyProvenance(EventActivityPriceHistory row) {
 		// Clarify provenance
-		row.setInvestment(investment);
-		row.priceType = priceType;
-		row.source = source;
-		row.timing = timing;	
+		try {
+			row.setInvestment(investment);
+			row.priceType = priceType;
+			row.source = source;
+			row.timing = timing;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 	}
 
 

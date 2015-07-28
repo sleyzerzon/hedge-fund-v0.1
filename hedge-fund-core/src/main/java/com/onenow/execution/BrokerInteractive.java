@@ -126,6 +126,9 @@ public class BrokerInteractive implements BrokerInterface  {
 		  boolean reqSuccess = false;
 		  
 		  // TODO: after 100 failed, re-start the connection
+		  // [Tue Jul 28 21:47:29 UTC 2015] --INFO--  [14:47:29 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.EReader->com.onenow.portfolio.BusController->com.onenow.execution.BusWallStInteractiveBrokers->com.onenow.execution.BusWallStInteractiveBrokers]==>  java.lang.NullPointerException
+		  // [Tue Jul 28 21:47:29 UTC 2015] --INFO--  [14:47:29 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.EReader->com.onenow.execution.EClientSocket]==>  ~ close
+		  // [Tue Jul 28 21:47:29 UTC 2015] --INFO--  [14:47:29 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.EReader->com.onenow.execution.EClientSocket->com.onenow.portfolio.BusController->com.onenow.execution.BusWallStInteractiveBrokers->com.onenow.execution.BusWallStInteractiveBrokers]==>  DISCONNECTED  
 		  while (!reqSuccess) {	// re-try if individual message does not get requested due to connection issues
 			  reqSuccess = processIndividualMessage(quoteHistoryChain, message);
 			  TimeParser.sleep(3);
