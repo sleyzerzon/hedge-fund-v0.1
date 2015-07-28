@@ -141,16 +141,20 @@ public class BrokerInteractive implements BrokerInterface  {
 		
 		  boolean success = false;
 		
-		  // if connected and connection is active, finally request
-		  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
-			  quoteHistoryChain.processHistoryOneRequest(message);
-			  success = true;
-		  } else {
-			  	// wait to see failure mode
-			  if(!evaluatingReconnect) {
-				  evaluateForReconnection(quoteHistoryChain);
+		  try {
+			// if connected and connection is active, finally request
+			  if(!busIB.isConnectionBroken && busIB.isFarmAvailable) {
+				  quoteHistoryChain.processHistoryOneRequest(message);
+				  success = true;
+			  } else {
+				  	// wait to see failure mode
+				  if(!evaluatingReconnect) {
+					  evaluateForReconnection(quoteHistoryChain);
+				  }
 			  }
-		  }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return success;
 	}
 
@@ -166,10 +170,14 @@ public class BrokerInteractive implements BrokerInterface  {
 			@Override public void run () {
 				TimeParser.sleep(60);
 				// received anything in the last seconds to indicate the connection is not broken anymore?
-				if(busIB.isConnectionBroken) {
-					busIB.busController.disconnect();
-					busIB.connectToServer();
-					quoteHistoryChain.controller = busIB.busController; // get the new one
+				try {
+					if(busIB.isConnectionBroken) {
+						busIB.busController.disconnect();
+						busIB.connectToServer();
+						quoteHistoryChain.controller = busIB.busController; // get the new one
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				evaluatingReconnect = false;
 			}
