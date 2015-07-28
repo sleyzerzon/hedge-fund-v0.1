@@ -3,7 +3,7 @@ package com.onenow.data;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
@@ -42,7 +42,7 @@ public class EventRequestRaw extends EventRequest {
 	public EventRequestRaw(	DBQuery dbQuery, ColumnName columnName,
 							Investment inv, PriceType tradeType, SamplingRate sampling, 
 							String fromDashedDate, String toDashedDate,
-							InvDataSource source, InvDataTiming timing) {
+							InvDataSource source, DataTiming timing) {
 		
 		super();
 		this.dbQuery = dbQuery;
@@ -62,7 +62,7 @@ public class EventRequestRaw extends EventRequest {
 
 	public EventRequestRaw(	DBQuery dbQuery, ColumnName columnName,
 							Investment inv, PriceType tradeType, SamplingRate sampling, 
-							InvDataSource source, InvDataTiming timing,
+							InvDataSource source, DataTiming timing,
 							String timeGap, String endPoint) {
 
 		super();

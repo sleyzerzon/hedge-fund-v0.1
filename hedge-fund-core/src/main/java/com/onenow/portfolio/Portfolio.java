@@ -8,11 +8,11 @@ import com.onenow.constant.InvTerm;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
-import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvFuture;
+import com.onenow.instrument.InvIndex;
+import com.onenow.instrument.InvOption;
 import com.onenow.instrument.InvestmentReserved;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 
 public class Portfolio {
@@ -113,7 +113,7 @@ public class Portfolio {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type)) {
 			if (type.equals(InvType.CALL) || type.equals(InvType.PUT)) {
-				InvestmentOption opt = (InvestmentOption) investment;
+				InvOption opt = (InvOption) investment;
 				if(opt.getExpirationDate().equals(exp)) {
 					foundInvs.add(investment);
 				}
@@ -126,7 +126,7 @@ public class Portfolio {
 		List<Investment> foundInvs = new ArrayList<Investment>();
 		for (Investment investment : getInvestments(under, type, exp)) {
 			if (type.equals(InvType.CALL) || type.equals(InvType.PUT)) {
-				InvestmentOption opt = (InvestmentOption) investment;
+				InvOption opt = (InvOption) investment;
 				if(opt.getStrikePrice().equals(strike)) {
 					foundInvs.add(investment);
 				}
@@ -179,7 +179,7 @@ public class Portfolio {
 		
 		s = s + "***INDICES";
 		for(Investment inv:investments) {
-			if(inv instanceof InvestmentIndex) {
+			if(inv instanceof InvIndex) {
 				s = s + "   [[" +quantityMap.get(inv) + "]]" + " ";
 				s = s + investments.get(i);
 			}
@@ -192,7 +192,7 @@ public class Portfolio {
 		Integer i = 0;
 		s = s + "***OPTIONS";
 		for(Investment inv:investments) {
-			if(inv instanceof InvestmentOption) {
+			if(inv instanceof InvOption) {
 				s = s + "   [[" + quantityMap.get(inv) + "]]" + " ";
 				s = s + investments.get(i);
 			}
@@ -205,7 +205,7 @@ public class Portfolio {
 		Integer i = 0;
 		s = s + "***STOCKS";
 		for(Investment inv:investments) {
-			if(inv instanceof InvestmentStock) {
+			if(inv instanceof InvStock) {
 				s = s + "   [[" + quantityMap.get(inv) + "]]" + " ";
 				s = s + investments.get(i);
 			}
@@ -218,7 +218,7 @@ public class Portfolio {
 		Integer i = 0;
 		s = s + "***FUTURES";
 		for(Investment inv:investments) {
-			if(inv instanceof InvestmentFuture) {
+			if(inv instanceof InvFuture) {
 				s = s + "   [[" + quantityMap.get(inv) + "]]" + " ";				
 				s = s + investments.get(i);
 			}

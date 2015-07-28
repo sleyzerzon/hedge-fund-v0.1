@@ -5,7 +5,7 @@ import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.execution.Contract;
-import com.onenow.instrument.InvestmentIndex;
+import com.onenow.instrument.InvIndex;
 import com.onenow.instrument.Underlying;
 
 public class PortfolioAction {
@@ -98,7 +98,7 @@ public class PortfolioAction {
 		
 	// PRIVATE
 	private void lookupIndexPrice() {
-		InvestmentIndex index = new InvestmentIndex(getUnder());
+		InvIndex index = new InvIndex(getUnder());
 		Double price = broker.getPrice(index, PriceType.TRADED);
 		setUnderPrice(price);
 	}

@@ -6,17 +6,17 @@ import java.util.logging.Level;
 import com.onenow.constant.InvType;
 import com.onenow.util.Watchr;
 
-public class InvestmentOption extends Investment { // call, put
+public class InvOption extends Investment { // call, put
 
 	private Double strikePrice;
 	String expirationDate;
 	private int shares = 100;
 
 	// CONSTRUCTORS
-	public InvestmentOption() {
+	public InvOption() {
 	}
 
-	public InvestmentOption(Underlying under, InvType type, String exp,
+	public InvOption(Underlying under, InvType type, String exp,
 			Double strike) {
 		super(under, type);
 		setExpirationDate(exp);

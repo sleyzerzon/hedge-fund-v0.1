@@ -6,17 +6,17 @@ import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.InvType;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.constant.VolatilityType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
-import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvFuture;
+import com.onenow.instrument.InvIndex;
+import com.onenow.instrument.InvOption;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -26,7 +26,7 @@ public class Event {
 	public Long timeInMilisec; // for activities and also for specific time queries, instead of to/from range
 
 	public InvDataSource source;
-	public InvDataTiming timing;
+	public DataTiming timing;
 	
 	public PriceType priceType; 
 	public SizeType sizeType; 
@@ -37,15 +37,15 @@ public class Event {
 	// public ObjectOrigination origin = new ObjectOrigination();
 
 	// investments to facilitate serialization / deserialization
-	public InvestmentIndex index = null;
-	public InvestmentOption option = null;
-	public InvestmentStock stock = null;
-	public InvestmentFuture future = null;	
+	public InvIndex index = null;
+	public InvOption option = null;
+	public InvStock stock = null;
+	public InvFuture future = null;	
 
 	public Event() {
 	}	
 	
-	public Event(Investment investment, InvDataSource source, InvDataTiming timing, PriceType priceType) {
+	public Event(Investment investment, InvDataSource source, DataTiming timing, PriceType priceType) {
 		setInvestment(investment);
 		this.source = source;
 		this.timing = timing;
@@ -59,20 +59,20 @@ public class Event {
 
 	public void setInvestment(Investment inv) {
 		
-		if( (inv instanceof InvestmentIndex) || inv.getInvType().equals(InvType.INDEX)) {
-			index = (InvestmentIndex) inv;
+		if( (inv instanceof InvIndex) || inv.getInvType().equals(InvType.INDEX)) {
+			index = (InvIndex) inv;
 			return;
 		}
-		if( (inv instanceof InvestmentOption) || inv.getInvType().equals(InvType.CALL) || inv.getInvType().equals(InvType.PUT)) {
-			option = (InvestmentOption) inv;
+		if( (inv instanceof InvOption) || inv.getInvType().equals(InvType.CALL) || inv.getInvType().equals(InvType.PUT)) {
+			option = (InvOption) inv;
 			return;
 		}
-		if( (inv instanceof InvestmentStock) || inv.getInvType().equals(InvType.STOCK)) {
-			stock = (InvestmentStock) inv;
+		if( (inv instanceof InvStock) || inv.getInvType().equals(InvType.STOCK)) {
+			stock = (InvStock) inv;
 			return;
 		}
-		if( (inv instanceof InvestmentFuture) || inv.getInvType().equals(InvType.FUTURE)) {
-			future = (InvestmentFuture) inv;
+		if( (inv instanceof InvFuture) || inv.getInvType().equals(InvType.FUTURE)) {
+			future = (InvFuture) inv;
 			return;
 		}
 		try {

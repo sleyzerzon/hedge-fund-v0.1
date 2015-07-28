@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.ib.client.TickType;
 import com.ib.client.Types.MktDataType;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.PriceType;
@@ -30,7 +30,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	public Investment investment;
 	private PriceType priceType; 
 	private InvDataSource source;
-	private InvDataTiming timing;
+	private DataTiming timing;
 	
 	private Channel channel;
 

@@ -4,14 +4,14 @@ import com.ib.client.Types.BarSize;
 import com.ib.client.Types.DurationUnit;
 import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 
 public class HistorianConfig {
 
 	public InvDataSource source;
-	public InvDataTiming timing;
+	public DataTiming timing;
 	
 	public SamplingRate sampling;
 
@@ -24,7 +24,7 @@ public class HistorianConfig {
 		
 	}
 
-	public HistorianConfig(	InvDataSource source, InvDataTiming timing,
+	public HistorianConfig(	InvDataSource source, DataTiming timing,
 							int durations, DurationUnit durationUnit, BarSize barSize, WhatToShow whatToShow,
 							SamplingRate sampling) {
 

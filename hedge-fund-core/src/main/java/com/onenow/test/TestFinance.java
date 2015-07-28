@@ -5,7 +5,7 @@ import java.util.Date;
 import com.onenow.admin.DatabaseSystemActivityImpl;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvOption;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Sequence;
 import com.onenow.portfolio.StrategyCallSpread;

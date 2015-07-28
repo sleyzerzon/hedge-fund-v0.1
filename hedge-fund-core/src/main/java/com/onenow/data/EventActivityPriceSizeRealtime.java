@@ -1,7 +1,7 @@
 package com.onenow.data;
 
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.constant.DataType;
@@ -25,13 +25,13 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 											InvDataSource source) {
 
 		super();
-		super.streamingData = DataType.PRICESIZE_RT;
+		super.dataType = DataType.PRICESIZE_RT;
 
 		setInvestment(inv);
 		super.priceType = PriceType.TRADED; 		// by definition of RTVolume the priceType is TRADED
 		super.sizeType = SizeType.TRADED_SIZE; 		// by definition of RTVolume the priceType is TRADED
 		super.source = source;
-		super.timing = InvDataTiming.REALTIME;
+		super.timing = DataTiming.RT;
 
 		super.timeInMilisec = timeInMilisec;
 		super.price = price;

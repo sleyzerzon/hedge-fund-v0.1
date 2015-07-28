@@ -5,7 +5,7 @@ import java.util.List;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvOption;
 
 public class Transaction {
 		
@@ -60,7 +60,7 @@ public class Transaction {
 					if(trade.tradeType.equals(PriceType.ASK)) {
 					
 						Investment inv = trade.investment;
-						prob += ((InvestmentOption) inv).getProbabilityOfProfit();
+						prob += ((InvOption) inv).getProbabilityOfProfit();
 					}	
 			}
 		}	

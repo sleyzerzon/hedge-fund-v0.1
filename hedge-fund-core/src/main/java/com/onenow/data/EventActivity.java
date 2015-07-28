@@ -6,7 +6,7 @@ import com.onenow.constant.DataType;
 
 public class EventActivity extends Event {
 	
-	public DataType streamingData;
+	public DataType dataType;
 	
 	public Double price;
 	public Long size; 
@@ -38,7 +38,7 @@ public class EventActivity extends Event {
 	public String toString() {
 		String s = "";
 		
-		s = s + "->streamingData " + streamingData.toString() + " ";
+		s = s + "-> " + dataType.toString() + " ";
 				
 		try {
 			if(price!=null) {

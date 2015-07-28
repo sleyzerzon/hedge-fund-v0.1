@@ -16,7 +16,7 @@ import com.onenow.data.MarketPrice;
 import com.onenow.data.QuoteDepth;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentIndex;
+import com.onenow.instrument.InvIndex;
 import com.onenow.instrument.Underlying;
 import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
@@ -238,7 +238,7 @@ public class BrokerInteractive implements BrokerInterface  {
 	    List<Investment> invs = getMarketPortfolio().investments;
 	    Integer notDone=0;
 	    for(Investment inv:invs) {
-	      if(inv instanceof InvestmentIndex) { // only check the index
+	      if(inv instanceof InvIndex) { // only check the index
 	        Double buyPrice = marketPrices.readPrice(inv, PriceType.BID);
 	        if(buyPrice==null) {
 	          notDone++;

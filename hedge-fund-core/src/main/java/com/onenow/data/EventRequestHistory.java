@@ -3,7 +3,7 @@ package com.onenow.data;
 import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentIndex;
+import com.onenow.instrument.InvIndex;
 import com.onenow.util.TimeParser;
 
 // https://www.interactivebrokers.com/en/software/api/apiguide/tables/historical_data_limitations.htm
@@ -53,7 +53,7 @@ public class EventRequestHistory extends EventRequest {
 		}
 		
 		// override for indices that don't trade themselves
-		if(getInvestment() instanceof InvestmentIndex) {
+		if(getInvestment() instanceof InvIndex) {
 			type = PriceType.CALCULATED;
 		}
 

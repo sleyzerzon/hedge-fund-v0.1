@@ -2,14 +2,14 @@ package com.onenow.instrument;
 
 import com.onenow.constant.InvType;
 
-public class InvestmentStock extends Investment {
+public class InvStock extends Investment {
 
 	// CONSTRUCTOR
-	public InvestmentStock() {
+	public InvStock() {
 		
 	}
 	
-	public InvestmentStock (Underlying underlying) {
+	public InvStock (Underlying underlying) {
 		super(underlying, InvType.STOCK);
 	}
 	

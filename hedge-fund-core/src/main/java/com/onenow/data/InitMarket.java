@@ -7,10 +7,10 @@ import java.util.logging.Level;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
-import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvFuture;
+import com.onenow.instrument.InvIndex;
+import com.onenow.instrument.InvOption;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.portfolio.Trade;
@@ -23,7 +23,7 @@ import com.onenow.util.Watchr;
  */
 public class InitMarket {
 
-	private InvestmentIndex index;
+	private InvIndex index;
 	private static Portfolio marketPortfolio;
 	
 	private List<String> indices = new ArrayList<String>();
@@ -132,7 +132,7 @@ public class InitMarket {
 	 */
 	private static void addIndicesToPortfolio(List<Underlying> unders) {
 		for(Underlying under:unders) {
-			InvestmentIndex index = new InvestmentIndex(under);
+			InvIndex index = new InvIndex(under);
 			Trade indexTrade = new Trade(index, PriceType.CALCULATED, 1, 0.0);
 			Transaction indexTrans = new Transaction(indexTrade);
 			marketPortfolio.enterTransaction(indexTrans);
@@ -154,7 +154,7 @@ public class InitMarket {
 		}
 	}
 	private static void initExpFutures(Underlying under, String expDate) {
-		InvestmentFuture future = new InvestmentFuture(under, expDate);
+		InvFuture future = new InvFuture(under, expDate);
 		Trade trade = new Trade(future, PriceType.BID, 1, 0.0);
 		Transaction trans = new Transaction(trade);
 		marketPortfolio.enterTransaction(trans);		
@@ -197,8 +197,8 @@ public class InitMarket {
 	private static void addOptionsToPortfolio(Underlying under, String expDate, Double lowestStrike, Double highestStrike) {
 		
 		for (Double strike=lowestStrike; strike<highestStrike; strike=strike+strikeIncrement) {
-			Investment call = new InvestmentOption(under, InvType.CALL, expDate, strike);
-			Investment put = new InvestmentOption(under, InvType.PUT, expDate, strike);
+			Investment call = new InvOption(under, InvType.CALL, expDate, strike);
+			Investment put = new InvOption(under, InvType.PUT, expDate, strike);
 			Trade callTrade = new Trade(call, PriceType.BID, 1, 0.0);
 			Trade putTrade = new Trade(put, PriceType.BID, 1, 0.0);
 			Transaction trans = new Transaction(callTrade, putTrade); 
@@ -245,7 +245,7 @@ public class InitMarket {
 	}
 
 	private static void setStock(Underlying under) {
-		InvestmentStock stock = new InvestmentStock(under);
+		InvStock stock = new InvStock(under);
 		Trade stockTrade = new Trade(stock, PriceType.BID, 1, 0.0);
 		Transaction stockTrans = new Transaction(stockTrade);
 		marketPortfolio.enterTransaction(stockTrans);		

@@ -8,7 +8,7 @@ public class EventActivityGreekHistory extends EventActivity {
 		
 		super();
 		
-		super.streamingData = DataType.GREEK_HIST;
+		super.dataType = DataType.GREEK_HIST;
 
 	}
 	

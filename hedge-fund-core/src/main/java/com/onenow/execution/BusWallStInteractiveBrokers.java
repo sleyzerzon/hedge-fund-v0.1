@@ -14,10 +14,10 @@ import com.onenow.constant.Topology;
 import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.data.QuoteSharedHandler;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
-import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvFuture;
+import com.onenow.instrument.InvIndex;
+import com.onenow.instrument.InvOption;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.io.BusSystem;
 import com.onenow.portfolio.BusController;
@@ -346,7 +346,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 			tickType = tickType + "101, "; 	// Contains option Open Interest (currently for stocks)
 
-			if(!(inv instanceof InvestmentStock) && !(inv instanceof InvestmentIndex) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
+			if(!(inv instanceof InvStock) && !(inv instanceof InvIndex) && !(inv instanceof InvFuture) && !(inv instanceof InvStock)) {
 				tickType = tickType + "104, ";	// Historical Volatility (currently for stocks)
 			}
 			
@@ -358,7 +358,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			// tickType = tickType + "125, ";  // Bond Analytic Data
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock)) {
+			if(!(inv instanceof InvOption) && !(inv instanceof InvFuture) && !(inv instanceof InvStock)) {
 				tickType = tickType + "162, ";	// Index Future Premium 
 			}
 			
@@ -369,7 +369,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "221, ";	// Mark Price (used in TWS P&L computations)
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture)) {
+			if(!(inv instanceof InvOption) && !(inv instanceof InvFuture)) {
 				tickType = tickType + "225, ";	// Auction values (volume, price and imbalance)
 			}										// TickType.AUCTION_VOLUME
 													// Contains auction values (volume, price and imbalance)
@@ -384,7 +384,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 			// tickType = tickType + "47, ";  // Fundamentals
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock) && !(inv instanceof InvestmentIndex)) {
+			if(!(inv instanceof InvOption) && !(inv instanceof InvFuture) && !(inv instanceof InvStock) && !(inv instanceof InvIndex)) {
 				tickType = tickType + "256, "; 	// Inventory
 			}
 			
@@ -392,7 +392,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			
 			tickType = tickType + "291, ";	// IVCLOSE
 			
-			if(!(inv instanceof InvestmentOption) && !(inv instanceof InvestmentFuture) && !(inv instanceof InvestmentStock) && !(inv instanceof InvestmentIndex)) {
+			if(!(inv instanceof InvOption) && !(inv instanceof InvFuture) && !(inv instanceof InvStock) && !(inv instanceof InvIndex)) {
 				tickType = tickType + "292, ";	// Receive top news for underlying contracts from TWS for news feeds to which you have subscribed
 			}
 			

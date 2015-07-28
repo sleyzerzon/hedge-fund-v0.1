@@ -1,6 +1,6 @@
 package com.onenow.data;
 
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.DataType;
 
 public class EventActivityPriceHistory extends EventActivity {
@@ -34,8 +34,8 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		
 		super();
-		super.streamingData = DataType.PRICE_HIST;
-		super.timing = InvDataTiming.HISTORICAL;
+		super.dataType = DataType.PRICE_HIST;
+		super.timing = DataTiming.HISTORY;
 
 		// super
 		super.timeInMilisec = timeInSec*1000;

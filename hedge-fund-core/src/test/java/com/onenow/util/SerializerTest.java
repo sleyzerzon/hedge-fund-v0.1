@@ -10,12 +10,12 @@ import com.onenow.data.EventRequestHistory;
 import com.onenow.data.HistorianConfig;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 
 public class SerializerTest {
 	
-	Investment inv = new InvestmentStock(new Underlying("AAPL"));
+	Investment inv = new InvStock(new Underlying("AAPL"));
 	String toDashedDate = TimeParser.getTodayDashed();
 	HistorianConfig config = HistorianService.getConfig(InvDataSource.IB, BarSize._5_mins, WhatToShow.TRADES);
 

@@ -15,7 +15,7 @@ import com.ib.client.Types.WhatToShow;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SamplingRate;
@@ -25,7 +25,7 @@ import com.onenow.data.EventRequestRaw;
 import com.onenow.data.InitMarket;
 import com.onenow.execution.HistorianService;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
+import com.onenow.instrument.InvFuture;
 import com.onenow.io.DBTimeSeriesPrice;
 import com.onenow.io.SQS;
 import com.onenow.portfolio.Portfolio;
@@ -98,7 +98,7 @@ public class HistorianMain {
 		
 		String todayDateOf = TimeParser.getDateMinusDashed(getThroughToday(), 1);
 		
-		if(TimeParser.isWeekDay(todayDateOf) || (inv instanceof InvestmentFuture)) {
+		if(TimeParser.isWeekDay(todayDateOf) || (inv instanceof InvFuture)) {
 			updateDataL2HistoryFromL3(getThroughToday(), inv);
 		} else {
 			Watchr.log("Skipping today's data " + todayDateOf + " FOR " + inv.toString());
@@ -109,7 +109,7 @@ public class HistorianMain {
 		
 		String backDayOf = TimeParser.getDateMinusDashed(toDashedDate, 1);	
 		
-		if(TimeParser.isWeekDay(backDayOf) || (inv instanceof InvestmentFuture)) {
+		if(TimeParser.isWeekDay(backDayOf) || (inv instanceof InvFuture)) {
 			updateDataL2HistoryFromL3(toDashedDate, inv);
 		} else {
 			Watchr.log("Skipping back data " + backDayOf + " FOR " + inv.toString());
@@ -178,7 +178,7 @@ public class HistorianMain {
 			EventRequestRaw rawReq = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE,
 															request.getInvestment(), PriceType.ASK, SamplingRate.HIFREQ,
 															fromDashedDate, request.toDashedDate,
-															InvDataSource.IB, InvDataTiming.HISTORICAL);
+															InvDataSource.IB, DataTiming.HISTORY);
 			storedPrices = DBTimeSeriesPrice.read(rawReq);
 		} catch (Exception e) {
 			e.printStackTrace();

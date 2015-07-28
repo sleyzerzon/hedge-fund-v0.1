@@ -37,7 +37,7 @@ import com.onenow.data.QuoteHistoryInvestment;
 import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteOptionHandler;
 import com.onenow.execution.Contract;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvOption;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -420,7 +420,7 @@ public class BusController implements EWrapper {
     	
     	m_topMktDataMap.put( reqId, handler);
     	
-    	if(handler.investment instanceof InvestmentOption) {
+    	if(handler.investment instanceof InvOption) {
     		m_optionCompMap.put( reqId, (QuoteOptionHandler) handler);
     	}
     	

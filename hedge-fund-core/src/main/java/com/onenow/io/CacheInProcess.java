@@ -6,7 +6,7 @@ import java.util.List;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.PriceType;
@@ -120,7 +120,7 @@ public class CacheInProcess {
 	private Double readPriceFromL0(Investment inv, PriceType tradeType) {
 		
 		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.REALTIME;
+		DataTiming timing = DataTiming.RT;
 		
 		
 		Event event = new Event(inv, source, timing, tradeType);
@@ -139,7 +139,7 @@ public class CacheInProcess {
 		SamplingRate scalping = SamplingRate.TREND;
 		String today = TimeParser.getTodayDashed();
 		InvDataSource source = InvDataSource.IB;
-		InvDataTiming timing = InvDataTiming.REALTIME;
+		DataTiming timing = DataTiming.RT;
 				
 		EventRequest request = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE, 
 													inv, tradeType, scalping, 

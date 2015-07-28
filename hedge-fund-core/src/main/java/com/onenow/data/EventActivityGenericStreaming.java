@@ -9,7 +9,7 @@ public class EventActivityGenericStreaming extends EventActivity {
 		
 		super();
 		
-		super.streamingData = DataType.GENERIC_STREAM;
+		super.dataType = DataType.GENERIC_STREAM;
 		
 	}
 }

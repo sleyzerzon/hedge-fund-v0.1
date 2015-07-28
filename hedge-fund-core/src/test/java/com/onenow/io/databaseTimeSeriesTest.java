@@ -16,7 +16,7 @@ import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBQuery;
 import com.onenow.constant.DBname;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
@@ -26,7 +26,7 @@ import com.onenow.data.EventRequest;
 import com.onenow.data.EventRequestHistory;
 import com.onenow.data.EventRequestRaw;
 import com.onenow.execution.HistorianService;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.research.Candle;
 import com.onenow.util.TimeParser;
@@ -73,9 +73,9 @@ public class databaseTimeSeriesTest {
 		
 	  EventActivityPriceHistory event = new EventActivityPriceHistory(reqId, timeSeconds, high, low, open, close, wap, volume, count);	
 
-	  event.setInvestment(new InvestmentStock(new Underlying("PABLO")));
+	  event.setInvestment(new InvStock(new Underlying("PABLO")));
 	  event.source = InvDataSource.AMERITRADE;
-	  event.timing = InvDataTiming.HISTORICAL;
+	  event.timing = DataTiming.HISTORY;
 	  
 	  return event;
   }

@@ -11,10 +11,10 @@ import com.ib.client.Types.SecType;
 import com.onenow.constant.InvType;
 import com.onenow.data.Channel;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
-import com.onenow.instrument.InvestmentIndex;
-import com.onenow.instrument.InvestmentOption;
-import com.onenow.instrument.InvestmentStock;
+import com.onenow.instrument.InvFuture;
+import com.onenow.instrument.InvIndex;
+import com.onenow.instrument.InvOption;
+import com.onenow.instrument.InvStock;
 import com.onenow.instrument.Underlying;
 import com.onenow.util.TimeParser;
 import com.onenow.util.Watchr;
@@ -40,25 +40,25 @@ public class ContractFactory {
 				
 		Contract contract = new Contract();
 		
-		if(inv instanceof InvestmentIndex) {
+		if(inv instanceof InvIndex) {
 			contract = getIndexToQuote(inv);
 			System.out.println("GOT INDEX CONTRACT FOR " + contract.toString());
 			return contract;
 		}
 
-		if(inv instanceof InvestmentOption) {
+		if(inv instanceof InvOption) {
 			contract = getOptionToQuote(inv);
 			System.out.println("GOT OPTION CONTRACT FOR " + contract.toString());
 			return contract;			
 		}
 
-		if(inv instanceof InvestmentStock) {
+		if(inv instanceof InvStock) {
 			contract = getStockToQuote(inv);
 			System.out.println("GOT STOCK CONTRACT FOR " + contract.toString());
 			return contract;			
 		}
 
-		if(inv instanceof InvestmentFuture) {
+		if(inv instanceof InvFuture) {
 			contract = getFutureToQuote(inv);
 			System.out.println("GOT FUTURE CONTRACT FOR " + contract.toString());
 			return contract;			
@@ -94,9 +94,9 @@ public class ContractFactory {
 		String p_expiry="";
 		double p_strike=0.0;
 		String p_right="";
-		if(inv instanceof InvestmentOption) {
-			p_expiry=((InvestmentOption) inv).getExpirationDate();	
-			p_strike=((InvestmentOption) inv).getStrikePrice();		
+		if(inv instanceof InvOption) {
+			p_expiry=((InvOption) inv).getExpirationDate();	
+			p_strike=((InvOption) inv).getStrikePrice();		
 			p_right=inv.getInvType().toString(); 					
 		}
 		
@@ -127,7 +127,7 @@ public class ContractFactory {
 		
 		int p_conId = 0;
 		
-		String p_expiry=((InvestmentFuture) inv).getExpirationDate();
+		String p_expiry=((InvFuture) inv).getExpirationDate();
 		String p_multiplier="50";		
 		
 		double p_strike=0.0;

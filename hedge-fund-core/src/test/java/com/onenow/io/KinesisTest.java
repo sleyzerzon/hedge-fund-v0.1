@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.StreamName;
 import com.onenow.constant.TestValues;
 import com.onenow.constant.PriceType;

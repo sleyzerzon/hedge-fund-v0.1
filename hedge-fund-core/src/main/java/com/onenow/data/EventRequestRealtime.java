@@ -1,7 +1,7 @@
 package com.onenow.data;
 
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
@@ -14,7 +14,7 @@ public class EventRequestRealtime extends EventRequest {
 	}
 
 	public EventRequestRealtime(	Investment inv,
-									InvDataSource source, InvDataTiming timing, 
+									InvDataSource source, DataTiming timing, 
 									SamplingRate sampling, PriceType tradeType,
 									String fromDashedDate, String toDashedDate) {
 		

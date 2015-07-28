@@ -5,8 +5,8 @@ import com.onenow.constant.PriceType;
 import com.onenow.data.Event;
 import com.onenow.data.EventRequest;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentFuture;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvFuture;
+import com.onenow.instrument.InvOption;
 import com.onenow.instrument.Underlying;
 import com.onenow.util.Watchr;
 
@@ -90,9 +90,9 @@ public class Lookup {
 	private static String lookupOptions(Event event, String s) {
 		// OPTIONS
 		try {
-			if (event.getInvestment() instanceof InvestmentOption) {
-				String exp = (String) ((InvestmentOption) event.getInvestment()).getExpirationDate();
-				Double strike = ((InvestmentOption) event.getInvestment()).getStrikePrice();
+			if (event.getInvestment() instanceof InvOption) {
+				String exp = (String) ((InvOption) event.getInvestment()).getExpirationDate();
+				Double strike = ((InvOption) event.getInvestment()).getStrikePrice();
 				s = s + separator + exp + separator + strike; 
 			}
 		} catch (Exception e) {
@@ -105,8 +105,8 @@ public class Lookup {
 	private static String lookupFutures(Event event, String s) {
 		// FUTURES
 		try {
-			if (event.getInvestment() instanceof InvestmentFuture) {
-				String exp = (String) ((InvestmentFuture) event.getInvestment()).getExpirationDate();
+			if (event.getInvestment() instanceof InvFuture) {
+				String exp = (String) ((InvFuture) event.getInvestment()).getExpirationDate();
 				s = s + separator + exp;
 			}
 		} catch (Exception e) {

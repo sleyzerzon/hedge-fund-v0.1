@@ -9,7 +9,7 @@ import com.onenow.alpha.BrokerInterface;
 import com.onenow.constant.ColumnName;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.VolatilityType;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;

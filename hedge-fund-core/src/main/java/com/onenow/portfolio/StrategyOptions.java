@@ -3,7 +3,7 @@ package com.onenow.portfolio;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvOption;
 
 public class StrategyOptions extends Strategy {
 
@@ -119,7 +119,7 @@ public class StrategyOptions extends Strategy {
 		for(Trade trade:trans.getTrades()){
 			if(trade.tradeType.equals(tradeType)) {
 				Investment inv = trade.investment;		
-				InvestmentOption opt = (InvestmentOption) inv;
+				InvOption opt = (InvOption) inv;
 				// TODO: go get from broker
 				// Double delta = opt.getGreeks().getDelta(); 
 				Double delta = 0.0;
@@ -136,7 +136,7 @@ public class StrategyOptions extends Strategy {
 		for(Trade trade:trans.getTrades()) {
 			if(trade.tradeType.equals(tradeType)) {
 				Investment inv = trade.investment;
-				InvestmentOption opt = (InvestmentOption) inv;
+				InvOption opt = (InvOption) inv;
 				// TODO: go get from broker
 				// Double delta = opt.getGreeks().getDelta();
 				Double delta = 0.0;

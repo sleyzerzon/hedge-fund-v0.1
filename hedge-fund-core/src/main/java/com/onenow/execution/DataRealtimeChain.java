@@ -8,7 +8,7 @@ import com.onenow.data.QuoteSharedHandler;
 import com.onenow.data.QuoteOptionHandler;
 import com.onenow.execution.DataRealtimeChain;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvOption;
 import com.onenow.portfolio.BusController;
 
 
@@ -36,7 +36,7 @@ public class DataRealtimeChain extends AbstractTableModel {
 		
 		QuoteSharedHandler quoteHandler = null;
 		
-		if(investment instanceof InvestmentOption) {
+		if(investment instanceof InvOption) {
 			quoteHandler = new QuoteOptionHandler(investment, this);						
 		} else {
 			quoteHandler = new QuoteSharedHandler(investment, this);			

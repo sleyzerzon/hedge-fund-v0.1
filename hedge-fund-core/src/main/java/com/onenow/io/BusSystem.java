@@ -132,7 +132,7 @@ public class BusSystem {
 
 	public static void write(EventActivity activityToSend) {
 		
-		StreamName streamName = getStreamName(activityToSend.streamingData);
+		StreamName streamName = getStreamName(activityToSend.dataType);
 		Watchr.log(Level.INFO, "Cache writing into Stream " + "<" + streamName + ">" + " OBJECT: " + activityToSend.toString());
 
 		boolean success = false;

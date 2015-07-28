@@ -50,7 +50,7 @@ public class ExpirationDate {
 		// requestContractdDetail
 		getIndexExpList().add("20150807");
 		getIndexExpList().add("20150814");
-		getIndexExpList().add("20150815"); // wrong
+		// getIndexExpList().add("20150815"); // wrong
 		getIndexExpList().add("20150820"); // added
 		getIndexExpList().add("20150828");
 		getIndexExpList().add("20150831");

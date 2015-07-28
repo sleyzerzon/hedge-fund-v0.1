@@ -8,7 +8,7 @@ public class EventActivityGreekStreaming extends EventActivity {
 	
 		super();
 		
-		super.streamingData = DataType.GREEK_STREAM;
+		super.dataType = DataType.GREEK_STREAM;
 
 	}
 }

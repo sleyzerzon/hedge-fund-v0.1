@@ -2,17 +2,17 @@ package com.onenow.instrument;
 
 import com.onenow.constant.InvType;
 
-public class InvestmentFuture extends Investment {
+public class InvFuture extends Investment {
 
 	
 	String expirationDate;
 
 	// CONSTRUCTOR
-	public InvestmentFuture() {
+	public InvFuture() {
 		
 	}
 	
-	public InvestmentFuture (Underlying underlying, String expDate) {
+	public InvFuture (Underlying underlying, String expDate) {
 		super(underlying, InvType.FUTURE);
 		setExpirationDate(expDate);
 	}

@@ -1,6 +1,6 @@
 package com.onenow.portfolio;
 
-import com.onenow.instrument.InvestmentIndex;
+import com.onenow.instrument.InvIndex;
 import com.onenow.instrument.Underlying;
 
 public class EntranceExitDecisioning {

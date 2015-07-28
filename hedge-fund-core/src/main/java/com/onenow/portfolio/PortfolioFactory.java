@@ -8,7 +8,7 @@ import com.onenow.constant.ColumnName;
 import com.onenow.constant.DBQuery;
 import com.onenow.constant.InvApproach;
 import com.onenow.constant.InvDataSource;
-import com.onenow.constant.InvDataTiming;
+import com.onenow.constant.DataTiming;
 import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.data.Channel;
@@ -21,7 +21,7 @@ import com.onenow.execution.BrokerInteractive;
 import com.onenow.execution.Contract;
 import com.onenow.execution.ContractFactory;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentIndex;
+import com.onenow.instrument.InvIndex;
 import com.onenow.instrument.Underlying;
 import com.onenow.research.Candle;
 import com.onenow.research.Chart;
@@ -96,7 +96,7 @@ public class PortfolioFactory {
 			for(Investment inv:getMarketPortfolio().investments) {
 				EventRequest request = new EventRequestRaw(	DBQuery.MEAN, ColumnName.PRICE,
 															inv, PriceType.TRADED, sampling, fromDashedDate, toDashedDate, 
-															InvDataSource.IB, InvDataTiming.REALTIME); 
+															InvDataSource.IB, DataTiming.RT); 
 				getInvestmentChart(request);
 			}
 		}

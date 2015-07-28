@@ -7,7 +7,7 @@ public class EventActivityVolatilityStreaming  extends EventActivity {
 	public EventActivityVolatilityStreaming() {
 		
 		super();
-		super.streamingData = DataType.VOLATILITY_STREAM;
+		super.dataType = DataType.VOLATILITY_STREAM;
 
 	}
 }

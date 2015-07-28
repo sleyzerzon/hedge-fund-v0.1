@@ -3,7 +3,7 @@ package com.onenow.portfolio;
 import com.onenow.constant.InvType;
 import com.onenow.constant.PriceType;
 import com.onenow.instrument.Investment;
-import com.onenow.instrument.InvestmentOption;
+import com.onenow.instrument.InvOption;
 import com.onenow.risk.Reward;
 import com.onenow.risk.Risk;
 
@@ -32,7 +32,7 @@ public class Trade {
 		Double strike = 0.0;
 		InvType invType = investment.getInvType();
 		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
-			InvestmentOption option = (InvestmentOption) investment;
+			InvOption option = (InvOption) investment;
 			strike = option.getStrikePrice();
 		}
 		return strike;
@@ -42,7 +42,7 @@ public class Trade {
 		Double value = 0.0;
 		InvType invType = investment.getInvType();
 		if (invType.equals(InvType.CALL) || invType.equals(InvType.PUT)) {
-			InvestmentOption option = (InvestmentOption) investment;
+			InvOption option = (InvOption) investment;
 			value = option.getValue(marketPrice) * quantity;
 		}
 		if (tradeType.equals(PriceType.ASK)) {
