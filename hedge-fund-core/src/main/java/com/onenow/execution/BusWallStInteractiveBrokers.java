@@ -122,20 +122,33 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		isConnectionBroken = false;
 	    show(ConnectionStatus.CONNECTED.toString());
 
-	    busController.reqCurrentTime( new ITimeHandler() {
-	      @Override public void currentTime(long time) {
-	        show( "Server date/time is " + Formats.fmtDate(time * 1000) + " OR " + TimeParser.getFormatedPacificDateTime(time*1000));
-	      }
-	    });
+	    try {
+			busController.reqCurrentTime(getTimeHandler());
+		    busController.reqBulletins( true, getBulletinHandler());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	  }
 
-	    busController.reqBulletins( true, new IBulletinHandler() {
+	private IBulletinHandler getBulletinHandler() {
+		return new IBulletinHandler() {
 	      @Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
 	        String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
 	        show( str);
 	        show( message);
 	      }
-	    });
-	  }
+	    };
+	}
+
+	private ITimeHandler getTimeHandler() {
+		return new ITimeHandler() {
+	      @Override public void currentTime(long time) {
+	        show( "Server date/time is " + Formats.fmtDate(time * 1000) + " OR " + TimeParser.getFormatedPacificDateTime(time*1000));
+	      }
+	    };
+	}
+	  
+	  
 
 	  @Override
 	  public void disconnected() {

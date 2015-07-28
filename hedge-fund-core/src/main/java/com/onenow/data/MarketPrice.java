@@ -44,7 +44,7 @@ public class MarketPrice {
 	}
 	
 	// HISTORY	
-	public static void handleRow(final EventActivityPriceHistory row) {
+	public static void writePriceHistory(final EventActivityPriceHistory row) {
 		
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
 		

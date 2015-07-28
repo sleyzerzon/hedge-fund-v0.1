@@ -55,7 +55,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		
 		clarifyProvenance(row);
 
-		MarketPrice.handleRow(row);
+		MarketPrice.writePriceHistory(row);
 		
 		if(hasGaps) {
 			Watchr.log(Level.WARNING, "Historic data has gaps!");
@@ -74,7 +74,7 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		
 		clarifyProvenance(row);
 		
-		MarketPrice.handleRow(row);
+		MarketPrice.writePriceHistory(row);
 	}
 
 	private void clarifyProvenance(EventActivityPriceHistory row) {

@@ -145,11 +145,15 @@ public class BrokerInteractive implements BrokerInterface  {
 			  success = true;
 		  } else {
 			  	// TODO: wait to see failure mode
-				// evaluateForReconnection(quoteHistoryChain);
+				evaluateForReconnection(quoteHistoryChain);
 		  }
 		return success;
 	}
 
+//	[Tue Jul 28 22:27:58 UTC 2015] --INFO--  [15:27:58 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.DataHistoryChain->com.onenow.execution.DataHistoryChain->com.onenow.portfolio.BusController->com.onenow.execution.EClientSocket->com.onenow.execution.EClientSocket]==>  ~ notConnected  
+//	[Tue Jul 28 22:27:58 UTC 2015] --WARNING--  [15:27:58 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.DataHistoryChain->com.onenow.execution.DataHistoryChain->com.onenow.portfolio.BusController->com.onenow.execution.EClientSocket->com.onenow.execution.EClientSocket]==>  ERROR: NOT CONNECTED  
+//	[Tue Jul 28 22:27:58 UTC 2015] --WARNING--  [15:27:58 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.DataHistoryChain->com.onenow.portfolio.BusController->com.onenow.execution.EClientSocket->com.onenow.execution.EClientSocket->com.onenow.execution.EClientSocket]==>  ~ IBerror: -ID -1 -PAIR com.onenow.execution.EClientErrors$CodeMsgPair@102cec62 -TAIL   
+//	[Tue Jul 28 22:27:58 UTC 2015] --SEVERE--  [15:27:58 Pacific Daylight Time 07-28-2015] [ip-172-31-36-250/172.31.36.250] [com.onenow.execution.EClientSocket->com.onenow.execution.EClientSocket->com.onenow.portfolio.BusController->com.onenow.execution.BusWallStInteractiveBrokers->com.onenow.execution.BusWallStInteractiveBrokers]==>  Connection Error: -id -1 -code 504 -message Not connected -1  
 	private void evaluateForReconnection(
 			final DataHistoryChain quoteHistoryChain) {
 		new Thread () {
