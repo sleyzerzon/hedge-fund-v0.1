@@ -32,7 +32,7 @@ public class FlexibleLogger {
 			// redirect all System.out and System.err log
 			
 			// TODO: make this optional for high logging scenarios
-			// redirectSystemStreams();
+			redirectSystemStreams();
 		}
 
 	  return setup(Level.INFO, mode);

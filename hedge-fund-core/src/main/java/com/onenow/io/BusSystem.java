@@ -138,6 +138,7 @@ public class BusSystem {
 					Watchr.log(Level.SEVERE, "Write to Kinesis failed after re-tries: <" + streamName + "> FOR " + activityToSend.toString());
 					return;
 				}
+				e.printStackTrace();
 			}
 		}
 	}

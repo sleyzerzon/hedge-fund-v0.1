@@ -75,7 +75,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		}		
 		
 		try {
-			s = s + "-close " + close;
+			s = s + "-close " + close + " ";
 		} catch (Exception e) {
 		}
 
