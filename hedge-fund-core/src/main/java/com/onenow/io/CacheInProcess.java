@@ -48,7 +48,7 @@ public class CacheInProcess {
  */
 	public boolean writeEvent(final EventActivity event) {		
 		boolean success = writeToMem(event);
-		writeThreadActivityThroughRing(event);
+		BusSystem.writeThreadActivityThroughRing(event);
 		return success; 
 	}
 
@@ -92,21 +92,7 @@ public class CacheInProcess {
 		}
 		return success;
 	}
-
-	// CRITICAL PATH
-	private void writeThreadActivityThroughRing(final EventActivity event) {
-		new Thread () {
-			@Override public void run () {
-				try {
-					// TODO: FAST WRITE TO RING		
-					BusSystem.write(event);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
-		
+	
 	
 	// READ PRICE
 	/**

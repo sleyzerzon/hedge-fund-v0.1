@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 import com.onenow.data.EventActivity;
 import com.onenow.data.EventActivityGenericStreaming;
 import com.onenow.data.EventActivityGreekStreaming;

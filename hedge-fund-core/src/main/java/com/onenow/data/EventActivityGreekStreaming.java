@@ -1,6 +1,6 @@
 package com.onenow.data;
 
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 
 public class EventActivityGreekStreaming extends EventActivity {
 	
@@ -8,7 +8,7 @@ public class EventActivityGreekStreaming extends EventActivity {
 	
 		super();
 		
-		super.streamingData = StreamingData.GREEK_STREAMING;
+		super.streamingData = DataType.GREEK_STREAM;
 
 	}
 }

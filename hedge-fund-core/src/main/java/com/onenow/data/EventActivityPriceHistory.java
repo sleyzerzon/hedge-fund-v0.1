@@ -1,7 +1,7 @@
 package com.onenow.data;
 
 import com.onenow.constant.InvDataTiming;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 
 public class EventActivityPriceHistory extends EventActivity {
 	
@@ -17,9 +17,10 @@ public class EventActivityPriceHistory extends EventActivity {
 	// weight
 	public final Long volume; 
 
-	// other
-	public final double wap;
-	public final int count;
+	// other: removed to fit 
+	// com.amazonaws.AmazonServiceException: 1 validation error detected: Member must have length less than or equal to 256
+//	public final double wap;
+//	public final int count;
 	
 	
 //	public EventHistory() {
@@ -33,7 +34,7 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		
 		super();
-		super.streamingData = StreamingData.PRICE_HISTORY;
+		super.streamingData = DataType.PRICE_HIST;
 		super.timing = InvDataTiming.HISTORICAL;
 
 		// super
@@ -48,9 +49,9 @@ public class EventActivityPriceHistory extends EventActivity {
 		this.low = low;
 		this.open = open;
 		this.close = close;
-		this.wap = wap;
 		this.volume = volume;
-		this.count = count;
+//		this.wap = wap;
+//		this.count = count;
 				
 	}
 	

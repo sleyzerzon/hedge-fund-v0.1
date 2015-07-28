@@ -1,12 +1,12 @@
 package com.onenow.data;
 
 import com.onenow.constant.ColumnName;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 
 
 public class EventActivity extends Event {
 	
-	public StreamingData streamingData;
+	public DataType streamingData;
 	
 	public Double price;
 	public Long size; 

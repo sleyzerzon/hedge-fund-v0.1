@@ -13,7 +13,7 @@ import com.onenow.util.Watchr;
 import com.onenow.admin.InitAmazon;
 import com.onenow.admin.NetworkConfig;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 import com.onenow.data.EventActivity;
 import com.onenow.io.Lookup;
 
@@ -116,6 +116,20 @@ public class BusSystem {
 //		return true;
 	}
 
+	// CRITICAL PATH
+	public static void writeThreadActivityThroughRing(final EventActivity event) {
+		new Thread () {
+			@Override public void run () {
+				try {
+					// TODO: FAST WRITE TO RING		
+					BusSystem.write(event);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
 	public static void write(EventActivity activityToSend) {
 		
 		StreamName streamName = getStreamName(activityToSend.streamingData);
@@ -129,7 +143,8 @@ public class BusSystem {
 			try {
 				tries++;
 				success = true;
-				createStreamIfNotExists(streamName);
+				// TODO: the stream is required to exist ahead of time
+				//createStreamIfNotExists(streamName);
 				getKinesis().sendObject(activityToSend, streamName);
 			} catch (Exception e) {
 				success = false;
@@ -190,41 +205,41 @@ public class BusSystem {
 
 	// HISTORY
 	public static void readPriceHistory(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.PRICE_HISTORY, initialPosition);		
+		readStreamingData(DataType.PRICE_HIST, initialPosition);		
 	}
 
 	public static void readGreekHistory(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.GREEK_HISTORY, initialPosition);		
+		readStreamingData(DataType.GREEK_HIST, initialPosition);		
 	}
 
 	// REALTIME
 	public static void readPriceSizeRealtime(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.PRICESIZE_REALTIME, initialPosition);		
+		readStreamingData(DataType.PRICESIZE_RT, initialPosition);		
 	}
 
 	// STREAMING
 	public static void readPriceStreaming(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.PRICE_STREAMING, initialPosition);		
+		readStreamingData(DataType.PRICE_STREAM, initialPosition);		
 	}
 
 	public static void readSizeStreaming(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.SIZE_STREAMING, initialPosition);		
+		readStreamingData(DataType.SIZE_STREAM, initialPosition);		
 	}
 	
 	public static void readGreekStreaming(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.GREEK_STREAMING, initialPosition);		
+		readStreamingData(DataType.GREEK_STREAM, initialPosition);		
 	}
 
 	public static void readVolatilityStreaming(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.VOLATILITY_STREAMING, initialPosition);		
+		readStreamingData(DataType.VOLATILITY_STREAM, initialPosition);		
 	}
 
 	public static void readGenericStreaming(InitialPositionInStream initialPosition) {
-		readStreamingData(StreamingData.GENERIC_STREAMING, initialPosition);		
+		readStreamingData(DataType.GENERIC_STREAM, initialPosition);		
 	}
 	
 	
-	private static void readStreamingData(	final StreamingData streamingData, 
+	private static void readStreamingData(	final DataType streamingData, 
 											final InitialPositionInStream initialPosition) {	
 		new Thread () {
 			@Override public void run () {
@@ -241,7 +256,7 @@ public class BusSystem {
 
 	}
 	
-	private static IRecordProcessorFactory getRecordProcessorFactory(StreamingData streamingData) {
+	private static IRecordProcessorFactory getRecordProcessorFactory(DataType streamingData) {
 		IRecordProcessorFactory factory = null;
 		StreamName streamName = getStreamName(streamingData);
 
@@ -274,55 +289,55 @@ public class BusSystem {
 	}
 	
 	// TODO: break down non-mac into staging / production
-    public static StreamName getStreamName(StreamingData key) {
+    public static StreamName getStreamName(DataType key) {
     	
     	StreamName stream = null;
 
 		// HISTORY
-		if(key.equals(StreamingData.PRICE_HISTORY)) {
+		if(key.equals(DataType.PRICE_HIST)) {
 				if(!NetworkConfig.isMac()) {
 					stream = StreamName.PRICE_HISTORY_STAGING;		
 				}
 		}
 
-		if(key.equals(StreamingData.GREEK_HISTORY)) {
+		if(key.equals(DataType.GREEK_HIST)) {
 			if(!NetworkConfig.isMac()) {
 				stream = StreamName.GREEK_HISTORY_STAGING;
 			}
 		}
 
 		// REALTIME
-		if(key.equals(StreamingData.PRICESIZE_REALTIME)) {
+		if(key.equals(DataType.PRICESIZE_RT)) {
 				if(!NetworkConfig.isMac()) {
 					stream = StreamName.PRICESIZE_REALTIME_STAGING;
 				}
 		}
 
-		if(key.equals(StreamingData.PRICE_STREAMING)) {
+		if(key.equals(DataType.PRICE_STREAM)) {
 			if(!NetworkConfig.isMac()) {
 				stream = StreamName.PRICE_STREAMING_STAGING;
 			}
 		}
 
-		if(key.equals(StreamingData.SIZE_STREAMING)) {
+		if(key.equals(DataType.SIZE_STREAM)) {
 			if(!NetworkConfig.isMac()) {
 				stream = StreamName.SIZE_STREAMING_STAGING;
 			}
 		}
 
-		if(key.equals(StreamingData.GREEK_STREAMING)) {
+		if(key.equals(DataType.GREEK_STREAM)) {
 			if(!NetworkConfig.isMac()) {
 				stream = StreamName.GREEK_STREAMING_STAGING;
 			}
 		}
 
-		if(key.equals(StreamingData.VOLATILITY_STREAMING)) {
+		if(key.equals(DataType.VOLATILITY_STREAM)) {
 			if(!NetworkConfig.isMac()) {
 				stream = StreamName.VOLATILITY_STREAMING_STAGING;
 			}
 		}
 
-		if(key.equals(StreamingData.GENERIC_STREAMING)) {
+		if(key.equals(DataType.GENERIC_STREAM)) {
 			if(!NetworkConfig.isMac()) {
 				stream = StreamName.GENERIC_STREAMING_STAGING;
 			}

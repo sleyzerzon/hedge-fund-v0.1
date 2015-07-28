@@ -2,7 +2,7 @@ package com.onenow.main;
 
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.onenow.constant.StreamName;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 import com.onenow.io.BusProcessingFactory;
 import com.onenow.io.BusSystem;
 import com.onenow.util.FlexibleLogger;

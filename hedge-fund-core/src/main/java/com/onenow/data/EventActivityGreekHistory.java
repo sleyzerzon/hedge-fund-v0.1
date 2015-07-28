@@ -1,6 +1,6 @@
 package com.onenow.data;
 
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 
 public class EventActivityGreekHistory extends EventActivity {
 
@@ -8,7 +8,7 @@ public class EventActivityGreekHistory extends EventActivity {
 		
 		super();
 		
-		super.streamingData = StreamingData.GREEK_HISTORY;
+		super.streamingData = DataType.GREEK_HIST;
 
 	}
 	

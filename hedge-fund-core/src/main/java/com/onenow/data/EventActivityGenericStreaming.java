@@ -1,7 +1,7 @@
 package com.onenow.data;
 
 import com.onenow.constant.StreamName;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 
 public class EventActivityGenericStreaming extends EventActivity {
 
@@ -9,7 +9,7 @@ public class EventActivityGenericStreaming extends EventActivity {
 		
 		super();
 		
-		super.streamingData = StreamingData.GENERIC_STREAMING;
+		super.streamingData = DataType.GENERIC_STREAM;
 		
 	}
 }

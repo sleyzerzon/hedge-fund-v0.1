@@ -3,7 +3,7 @@ package com.onenow.data;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.PriceType;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 import com.onenow.instrument.Investment;
 
 public class EventActivityPriceStreaming extends EventActivity {
@@ -16,7 +16,7 @@ public class EventActivityPriceStreaming extends EventActivity {
 										InvDataSource source) {
 
 		super();
-		super.streamingData = StreamingData.PRICE_STREAMING;
+		super.streamingData = DataType.PRICE_STREAM;
 
 		setInvestment(inv);
 		super.priceType = priceType; 

@@ -4,7 +4,7 @@ import com.onenow.constant.InvDataSource;
 import com.onenow.constant.InvDataTiming;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
-import com.onenow.constant.StreamingData;
+import com.onenow.constant.DataType;
 import com.onenow.instrument.Investment;
 
 public class EventActivityPriceSizeRealtime extends EventActivity {
@@ -25,7 +25,7 @@ public class EventActivityPriceSizeRealtime extends EventActivity {
 											InvDataSource source) {
 
 		super();
-		super.streamingData = StreamingData.PRICESIZE_REALTIME;
+		super.streamingData = DataType.PRICESIZE_RT;
 
 		setInvestment(inv);
 		super.priceType = PriceType.TRADED; 		// by definition of RTVolume the priceType is TRADED
