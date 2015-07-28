@@ -12,7 +12,7 @@ public class ExpirationDate {
 	List<String> futuresExpList = new ArrayList<String>();
 	List<String> futuresCompleteExpList = new ArrayList<String>();
 	
-	private int optionsMaxTimeRange = 45; // from 90
+	private int optionsMaxTimeRange = 35; // from 90
 	private int optionsMinTimeRange = 0;
 
 	private int futuresMaxTimeRange = 120; 

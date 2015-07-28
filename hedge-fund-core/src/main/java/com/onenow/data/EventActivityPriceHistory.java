@@ -9,9 +9,9 @@ public class EventActivityPriceHistory extends EventActivity {
 	private int reqId = 0;
 
 	// candle
-	public final double high;
-	public final double low;
-	public final double open;
+//	public final double high;
+//	public final double low;
+//	public final double open;
 	public final double close;
 	
 	// weight
@@ -45,9 +45,9 @@ public class EventActivityPriceHistory extends EventActivity {
 
 		// this
 		this.reqId = reqId;
-		this.high = high;
-		this.low = low;
-		this.open = open;
+//		this.high = high;
+//		this.low = low;
+//		this.open = open;
 		this.close = close;
 		this.volume = volume;
 //		this.wap = wap;
@@ -60,20 +60,20 @@ public class EventActivityPriceHistory extends EventActivity {
 		
 		s = s  + super.toString() + " ";
 
-		try {
-			s = s + "-high " +  high + " ";
-		} catch (Exception e) {
-		}
-		
-		try {
-			s = s + "-low " + low + " ";
-		} catch (Exception e) {
-		}
-							
-		try {
-			s = s + "-open " + open + " ";
-		} catch (Exception e) {
-		}		
+//		try {
+//			s = s + "-high " +  high + " ";
+//		} catch (Exception e) {
+//		}
+//		
+//		try {
+//			s = s + "-low " + low + " ";
+//		} catch (Exception e) {
+//		}
+//							
+//		try {
+//			s = s + "-open " + open + " ";
+//		} catch (Exception e) {
+//		}		
 		
 		try {
 			s = s + "-close " + close + " ";

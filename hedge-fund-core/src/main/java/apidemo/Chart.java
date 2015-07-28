@@ -33,23 +33,23 @@ public class Chart extends JComponent {
 	
 		int x = 1;
 		for (EventActivityPriceHistory bar : m_rows) {
-			int high = getY( bar.high );
-			int low = getY( bar.low ); 
-			int open = getY( bar.open );
+//			int high = getY( bar.high );
+//			int low = getY( bar.low ); 
+//			int open = getY( bar.open );
 			int close = getY( bar.close );
 
 			// draw high/low line
 			g.setColor( Color.black);
-			g.drawLine(x + 1, high, x + 1, low);
+//			g.drawLine(x + 1, high, x + 1, low);
 			
-			if (bar.close > bar.open ) {
-				g.setColor( Color.green);
-				g.fillRect(x, close, 3, open - close);
-			}
-			else {
-				g.setColor( Color.red);
-				g.fillRect(x, open, 3, close - open);
-			}
+//			if (bar.close > bar.open ) {
+//				g.setColor( Color.green);
+//				g.fillRect(x, close, 3, open - close);
+//			}
+//			else {
+//				g.setColor( Color.red);
+//				g.fillRect(x, open, 3, close - open);
+//			}
 
 			x += width;
 		}
@@ -75,7 +75,7 @@ public class Chart extends JComponent {
 	private double getMin() {
 		double min = Double.MAX_VALUE;
 		for( EventActivityPriceHistory bar : m_rows) {
-			min = Math.min( min, bar.low );
+//			min = Math.min( min, bar.low );
 		}
 		return min;
 	}
@@ -83,7 +83,7 @@ public class Chart extends JComponent {
 	private double getMax() {
 		double max = 0;
 		for( EventActivityPriceHistory bar : m_rows) {
-			max = Math.max( max, bar.high );
+//			max = Math.max( max, bar.high );
 		}
 		return max;
 	}
