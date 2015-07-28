@@ -88,8 +88,9 @@ public class HistorianMain {
 		// updates historical L1 from L2
 		for(Investment inv:marketPortfolio.investments) {
 			
-			updateBackDataL2HistoryFromL3(toDashedDate, inv);			
-			updateTodayDataL2HistoryFromL3(inv);
+			updateBackDataL2HistoryFromL3(toDashedDate, inv);
+			// Let today's data be filled by real-time/streaming only
+			// updateTodayDataL2HistoryFromL3(inv);
 		}
 	}
 

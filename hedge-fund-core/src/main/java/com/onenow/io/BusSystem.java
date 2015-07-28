@@ -135,7 +135,7 @@ public class BusSystem {
 				success = false;
 				// SERVICE: AMAZONKINESIS; STATUS CODE: 400; ERROR CODE: LIMITEXCEEDEDEXCEPTION
 				if(tries>maxTries) {
-					Watchr.log(Level.SEVERE, "Write to Kinesis failed after re-tries");
+					Watchr.log(Level.SEVERE, "Write to Kinesis failed after re-tries: <" + streamName + "> FOR " + activityToSend.toString());
 					return;
 				}
 			}
