@@ -479,7 +479,7 @@ public class MarketDataPanel extends JPanel {
 					case 3: return row.low;
 					case 4: return row.close;
 					case 5: return row.size;
-					case 6: return row.wap;
+//					case 6: return row.wap;
 					default: return null;
 				}
 			}
