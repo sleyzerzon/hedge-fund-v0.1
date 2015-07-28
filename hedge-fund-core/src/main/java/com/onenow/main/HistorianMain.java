@@ -1,14 +1,8 @@
 package com.onenow.main;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import com.ib.client.Types.BarSize;
 import com.ib.client.Types.WhatToShow;

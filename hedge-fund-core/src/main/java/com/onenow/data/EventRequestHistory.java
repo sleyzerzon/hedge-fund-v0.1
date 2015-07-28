@@ -52,10 +52,10 @@ public class EventRequestHistory extends EventRequest {
 			type = PriceType.TRADED;
 		}
 		
-		// override for indices that don't trade themselves
-		if(getInvestment() instanceof InvIndex) {
-			type = PriceType.CALCULATED;
-		}
+//		// override for indices that don't trade themselves
+//		if(getInvestment() instanceof InvIndex) {
+//			type = PriceType.CALCULATED;
+//		}
 
 		return type;
 	}	

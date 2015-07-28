@@ -21,7 +21,7 @@ public class Watchr {
 		String machineMessage = machineTextLogFormatter(message);
 		
 		boolean skipLog = 	(level.equals(Level.FINE) || level.equals(Level.FINER) || level.equals(Level.FINEST)) && 
-							!FlexibleLogger.debugMode;
+							!FlexibleLogger.fineMode;
 
 		if(!skipLog) {
 			fanoutLog(level, prepend+message+postpend, machineMessage);

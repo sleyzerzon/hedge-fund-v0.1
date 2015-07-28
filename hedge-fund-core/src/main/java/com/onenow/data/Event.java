@@ -2,13 +2,10 @@ package com.onenow.data;
 
 import java.util.logging.Level;
 
-import com.ib.client.Types.WhatToShow;
-import com.onenow.constant.ColumnName;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.DataTiming;
 import com.onenow.constant.InvType;
-import com.onenow.constant.SamplingRate;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.constant.VolatilityType;

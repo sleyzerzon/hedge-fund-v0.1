@@ -16,7 +16,8 @@ import com.onenow.admin.NetworkConfig;
 
 public class FlexibleLogger {
 	
-  static public boolean debugMode = false;
+  static private boolean debugMode = true;
+  static public boolean fineMode = false;
   
   static private FileHandler fileTxt;
   static private SimpleFormatter formatterTxt;
