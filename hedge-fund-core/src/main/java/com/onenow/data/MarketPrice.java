@@ -10,11 +10,13 @@ import com.onenow.constant.ColumnName;
 import com.onenow.constant.GenericType;
 import com.onenow.constant.InvDataSource;
 import com.onenow.constant.DataTiming;
+import com.onenow.constant.MemoryLevel;
 import com.onenow.constant.VolatilityType;
 import com.onenow.constant.PriceType;
 import com.onenow.constant.SizeType;
 import com.onenow.execution.BrokerInteractive;
 import com.onenow.instrument.Investment;
+import com.onenow.io.BusSystem;
 import com.onenow.io.CacheInProcess;
 import com.onenow.portfolio.Portfolio;
 import com.onenow.research.Chart;
@@ -41,6 +43,15 @@ public class MarketPrice {
 		this.sampling = new DataSampling();
 	}
 	
+	// HISTORY	
+	public static void handleRow(final EventActivityPriceHistory row) {
+		
+		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
+		
+		cache.writeEvent(row);
+				
+	}
+
 	
 	// WRITE REAL-TIME 
 	// TODO: handle VWAP & VOLUME, SPLITFLAG

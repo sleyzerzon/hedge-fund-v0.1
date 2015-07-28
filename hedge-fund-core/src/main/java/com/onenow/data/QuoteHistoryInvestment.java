@@ -52,7 +52,10 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	@Override public void historicalData(EventActivityPriceHistory row, boolean hasGaps) {
 		
 		quoteRows.add(row);
-		handleRow(row);
+		
+		clarifyProvenance(row);
+
+		MarketPrice.handleRow(row);
 		
 		if(hasGaps) {
 			Watchr.log(Level.WARNING, "Historic data has gaps!");
@@ -69,20 +72,17 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 
 		quoteRows.add(row); 
 		
-		handleRow(row);
+		clarifyProvenance(row);
+		
+		MarketPrice.handleRow(row);
 	}
 
-	private void handleRow(final EventActivityPriceHistory row) {
-		
+	private void clarifyProvenance(EventActivityPriceHistory row) {
 		// Clarify provenance
 		row.setInvestment(investment);
 		row.priceType = priceType;
 		row.source = source;
-		row.timing = timing;
-		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
-		
-		BusSystem.writeThreadActivityThroughRing(row);
-				
+		row.timing = timing;	
 	}
 
 
