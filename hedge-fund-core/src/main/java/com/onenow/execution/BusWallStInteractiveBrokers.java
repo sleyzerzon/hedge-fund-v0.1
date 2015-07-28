@@ -114,6 +114,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	
 	  @Override
 	  public void connected() {
+		Watchr.log(Level.FINEST, "called connected()");
+		
 		isConnectionBroken = false;
 	    show(ConnectionStatus.CONNECTED.toString());
 
@@ -126,6 +128,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	  }
 
 	private IBulletinHandler getBulletinHandler() {
+		Watchr.log(Level.FINEST, "called getBulletinHandler()");
+
 		return new IBulletinHandler() {
 	      @Override public void bulletin(int msgId, NewsType newsType, String message, String exchange) {
 	        String str = String.format( "Received bulletin:  type=%s  exchange=%s", newsType, exchange);
@@ -136,6 +140,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	}
 
 	private ITimeHandler getTimeHandler() {
+		Watchr.log(Level.FINEST, "called getTimeHandler()");
+
 		return new ITimeHandler() {
 	      @Override public void currentTime(long time) {
 	        show( "Server date/time is " + Formats.fmtDate(time * 1000) + " OR " + TimeParser.getFormatedPacificDateTime(time*1000));
@@ -147,6 +153,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  @Override
 	  public void disconnected() {
+		  Watchr.log(Level.FINEST, "called disconnected()");
+
 		isConnectionBroken = true;
 	    show(ConnectionStatus.DISCONNECTED.toString());
 	    Watchr.log(Level.SEVERE, "disconnected() in BusWallStreetInteractiveBrokers");
@@ -155,6 +163,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  @Override
 	  public void accountList(ArrayList<String> list) {
+	    Watchr.log(Level.FINEST, "called accountList()");
+
 	    show( "Received account list");
 	    accountList.clear();
 	    accountList.addAll( list);
@@ -162,6 +172,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  @Override
 	  public void error(Exception e) {
+		Watchr.log(Level.FINEST, "called error()");
+
 	    show( e.toString() );
 	  }
 
@@ -207,6 +219,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 	    // TODO: look for IBmessage and IBerror in the log
 	  @Override
 	  public void message(int id, int code, String message) {
+		Watchr.log(Level.FINEST, "called message()");
+
 		
 		boolean warning = false;
 		boolean severe = false;
@@ -342,6 +356,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 
 	  @Override
 	  public void show(String log) {
+		Watchr.log(Level.FINEST, "called show()");
 	  	Watchr.log(Level.INFO, log);
 	  }
 	  
