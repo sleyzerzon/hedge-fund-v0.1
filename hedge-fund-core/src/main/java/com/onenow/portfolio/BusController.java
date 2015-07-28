@@ -106,7 +106,11 @@ public class BusController implements EWrapper {
 
 	public void disconnect() {
 		m_client.eDisconnect();
-		m_connectionHandler.disconnected();
+		try {
+			m_connectionHandler.disconnected();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		sendEOM();
 	}
 
@@ -115,7 +119,12 @@ public class BusController implements EWrapper {
 		for( StringTokenizer st = new StringTokenizer( accounts, ","); st.hasMoreTokens(); ) {
 			list.add( st.nextToken() );
 		}
-		m_connectionHandler.accountList( list);
+		
+		try {
+			m_connectionHandler.accountList( list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		recEOM();
 	}
 
@@ -123,13 +132,21 @@ public class BusController implements EWrapper {
 		m_orderId = orderId;
 		m_reqId = m_orderId + 10000000; // let order id's not collide with other request id's
 		if (m_connectionHandler != null) {
-			m_connectionHandler.connected();
+			try {
+				m_connectionHandler.connected();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		recEOM();
 	}
 
 	@Override public void error(Exception e) {
-		m_connectionHandler.error(e);
+		try {
+			m_connectionHandler.error(e);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@Override public void error(int id, int errorCode, String errorMsg) {
@@ -150,12 +167,20 @@ public class BusController implements EWrapper {
 			}
 		}
 
-		m_connectionHandler.message(id, errorCode, errorMsg);
+		try {
+			m_connectionHandler.message(id, errorCode, errorMsg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		recEOM();
 	}
 
 	@Override public void connectionClosed() {
-		m_connectionHandler.disconnected();
+		try {
+			m_connectionHandler.disconnected();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -1037,7 +1062,11 @@ public class BusController implements EWrapper {
 	}
 
 	public void show(String string) {
-		m_connectionHandler.show( string);
+		try {
+			m_connectionHandler.show( string);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
     private static <K,V> K getAndRemoveKey( HashMap<K,V> map, V value) {
