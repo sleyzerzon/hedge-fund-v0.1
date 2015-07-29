@@ -48,7 +48,7 @@ public class MarketPrice {
 		
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + row.toString());
 		
-		cache.writeEvent(row);
+		// cache.writeEvent(row);
 				
 	}
 
