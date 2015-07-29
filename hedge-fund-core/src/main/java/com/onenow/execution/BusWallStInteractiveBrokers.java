@@ -332,7 +332,7 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 		  return isFarmAvailable;
 	  }
 		  
-
+	  // Data Warning: -id 10000433 -code 322 -message Error processing request:-'wd' : cause - Only 50 simultaneous API historical data requests allowed.  -conid 0 -symbol SPX -secType OPT -expiry 20150831 -strike 2105.0 -right CALL -multiplier 100 -exchange SMART -currency USD  -END 20150727 24:00:00 -DURATION 1 -DURUNIT DAY -BARSIZE 5 mins -WHATTOSHOW ASK -RTHONLY false  
 	  private boolean isFarmUnavailable(int messageCode) {
 		  
 		  if(   messageCode==322 || 			// Only 50 simultaneous API historical data requests allowed

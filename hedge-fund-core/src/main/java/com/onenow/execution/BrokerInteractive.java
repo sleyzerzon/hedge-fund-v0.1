@@ -171,7 +171,7 @@ public class BrokerInteractive implements BrokerInterface  {
 				TimeParser.sleep(60);
 				// received anything in the last seconds to indicate the connection is not broken anymore?
 				try {
-					if(busIB.isConnectionBroken) {
+					if(busIB.isConnectionBroken || !busIB.isFarmAvailable) {
 						busIB.busController.disconnect();
 						busIB.connectToServer();
 						quoteHistoryChain.controller = busIB.busController; // get the new one
