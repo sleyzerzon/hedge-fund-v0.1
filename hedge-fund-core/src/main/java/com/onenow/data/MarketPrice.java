@@ -49,7 +49,7 @@ public class MarketPrice {
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + history.toString());
 		
 		// TODO: why does this cause NullPointerException?
-		// cache.writeEvent(history);
+		 // cache.writeEvent(history);
 		
 		BusSystem.writeThreadActivityThroughRing(history);		
 				
