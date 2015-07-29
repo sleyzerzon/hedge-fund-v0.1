@@ -23,7 +23,7 @@ import com.onenow.util.Watchr;
  * Handle historical data call-backs 
  *
  */
-public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTimeBarHandler, ITopMktDataHandler {  
+public class QuoteHistoryInvestment implements IHistoricalDataHandler { // , IRealTimeBarHandler, ITopMktDataHandler {  
 
 	public ArrayList<EventActivityPriceHistory> quoteRows = new ArrayList<EventActivityPriceHistory>();
 	
@@ -68,14 +68,16 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 		return size;
 	}	
 	
-	@Override public void realtimeBar(EventActivityPriceHistory row) {		
-
-		quoteRows.add(row); 
-		
-		clarifyProvenance(row);
-		
-		MarketPrice.writePriceHistory(row);
-	}
+//	// TODO: why is this method here?
+//	@Override public void realtimeBar(EventActivityPriceHistory row) {		
+//
+//		quoteRows.add(row); 
+//		
+//		// TODO: why shouldn't this be here?
+//		// clarifyProvenance(row);
+//		
+//		MarketPrice.writePriceHistory(row);
+//	}
 
 	private void clarifyProvenance(EventActivityPriceHistory row) {
 		// Clarify provenance
@@ -94,31 +96,31 @@ public class QuoteHistoryInvestment implements IHistoricalDataHandler, IRealTime
 	}
 
 	// INTERFACE: ITopMktDataHandler 
-	@Override
-	public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
-	}
-
-	@Override
-	public void tickSize(TickType tickType, Integer size) {
-	}
-
-	@Override
-	public void tickString(TickType tickType, String value) {
-	}
-
-	@Override
-	public void tickSnapshotEnd() {
-	}
-
-	@Override
-	public void marketDataType(MktDataType marketDataType) {
-	}	
-
-	@Override
-	public void tickGeneric(TickType tickType, Double value) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void tickPrice(TickType tickType, Double price, Integer canAutoExecute) {
+//	}
+//
+//	@Override
+//	public void tickSize(TickType tickType, Integer size) {
+//	}
+//
+//	@Override
+//	public void tickString(TickType tickType, String value) {
+//	}
+//
+//	@Override
+//	public void tickSnapshotEnd() {
+//	}
+//
+//	@Override
+//	public void marketDataType(MktDataType marketDataType) {
+//	}	
+//
+//	@Override
+//	public void tickGeneric(TickType tickType, Double value) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 	// PRINT
 	public String toString() {

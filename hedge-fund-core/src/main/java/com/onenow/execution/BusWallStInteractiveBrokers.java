@@ -452,6 +452,8 @@ public class BusWallStInteractiveBrokers implements ConnectionHandler {
 			// tickType = tickType + "517, "; 	// HVOLRT200 (PER-UNDERLYING)
 			// tickType = tickType + "545";	// VSIV
 			
+			READ MESSAGE
+			
 			return tickType;
 		} 
   
