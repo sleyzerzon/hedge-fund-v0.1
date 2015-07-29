@@ -44,13 +44,13 @@ public class MarketPrice {
 	}
 	
 	// HISTORY	
-	public static void writePriceHistory(final EventActivityPriceHistory history) {
+	public static void writePriceHistory(EventActivityPriceHistory history) {
 		
 		Watchr.log(Level.INFO, "Received History from " + MemoryLevel.L3PARTNER + " " + history.toString());
 		
-//		cache.writeEvent(history);
+		cache.writeEvent(history);
 		
-		BusSystem.writeThreadActivityThroughRing(history);		
+		// BusSystem.writeThreadActivityThroughRing(history);		
 				
 	}
 

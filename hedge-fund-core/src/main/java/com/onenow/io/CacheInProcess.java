@@ -46,8 +46,13 @@ public class CacheInProcess {
  * @param event
  * @return
  */
-	public boolean writeEvent(final EventActivity event) {		
-		boolean success = writeToMem(event);
+	public boolean writeEvent(EventActivity event) {		
+		boolean success = false;
+		try {
+			success = writeToMem(event);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		BusSystem.writeThreadActivityThroughRing(event);
 		return success; 
 	}
